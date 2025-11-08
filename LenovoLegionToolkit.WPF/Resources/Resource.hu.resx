@@ -735,6 +735,36 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző 
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Ez a készülék nem kompatibilis a Lenovo Legion Toolkit-tel.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Az eszköz hiányozhatnak a szükséges rendszerkomponensek (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Ha az "OK" gombra kattint a folytatáshoz:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- A szoftver korlátozott módban fog futni</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Néhány funkció le lesz tiltva (Irányítópult, Automatizálás, Makrók)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- A többi alapvető funkció továbbra is elérhető marad</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Eszköz információ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Gyártó:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Modell:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Gép típusa:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Kattintson az "OK" gombra a folytatáshoz, vagy a "Mégse" gombra a kilépéshez.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Nem találtunk kompatibilis billentyűzeteket</value>
   </data>

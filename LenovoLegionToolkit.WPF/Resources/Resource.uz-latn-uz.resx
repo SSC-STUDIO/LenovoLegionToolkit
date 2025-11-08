@@ -729,6 +729,36 @@ DIQQAT: Eger ishki displey óshirilgen bolsa, bul háreket durıs orınlanbaydı
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Bul qurılma Lenovo Legion Toolkit penen mas kelmeydi.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Qurılmanızda zarur tizim komponentlari (LenovoGameZoneData) yo'q bo'lishi mumkin.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Agar davom etish uchun "OK"ni bosangiz:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Dastur cheklangan rejimda ishlaydi</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Ba'zi funksiyalar o'chiriladi (Boshqaruv paneli, Avtomatlashtirish, Makrolar)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Boshqa asosiy funksiyalar mavjud bo'lib qoladi</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Qurılma ma'lumotlari:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Ishlab chiqaruvchi:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Mashina turi:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Davom etish uchun "OK"ni yoki chiqish uchun "Bekor qilish"ni bosing.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Mas klaviatura tabılmadı</value>
   </data>
