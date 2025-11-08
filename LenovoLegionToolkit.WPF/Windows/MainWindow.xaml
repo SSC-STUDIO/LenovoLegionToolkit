@@ -121,6 +121,11 @@
                         Icon="Box24"
                         PageTag="packages"
                         PageType="{x:Type pages:PackagesPage}" />
+                    <custom:NavigationItem
+                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
+                        Icon="Toolbox24"
+                        PageTag="windowsOptimization"
+                        PageType="{x:Type pages:WindowsOptimizationPage}" />
                 </wpfui:NavigationStore.Items>
 
                 <wpfui:NavigationStore.Footer>
