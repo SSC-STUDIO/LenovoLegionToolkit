@@ -816,6 +816,9 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
     <value>Downloads</value>
   </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>Windows optimization</value>
+  </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -1223,6 +1226,9 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Cleanup failed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>These actions modify system services and files. Administrator privileges may be required.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Disable Lenovo Hotkeys</value>

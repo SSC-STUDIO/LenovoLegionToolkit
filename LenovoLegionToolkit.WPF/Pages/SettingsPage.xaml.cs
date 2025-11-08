@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,6 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Integrations;
-using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
@@ -41,7 +39,6 @@ public partial class SettingsPage
     private readonly IpcServer _ipcServer = IoCContainer.Resolve<IpcServer>();
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
     private readonly UpdateCheckSettings _updateCheckSettings = IoCContainer.Resolve<UpdateCheckSettings>();
-    private readonly WindowsOptimizationService _windowsOptimizationService = IoCContainer.Resolve<WindowsOptimizationService>();
 
     private bool _isRefreshing;
 
@@ -532,72 +529,6 @@ public partial class SettingsPage
         _smartKeyDoublePressActionCard.Visibility = state.Value ? Visibility.Visible : Visibility.Collapsed;
         _notificationsCard.Visibility = state.Value ? Visibility.Visible : Visibility.Collapsed;
         _excludeRefreshRatesCard.Visibility = state.Value ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    private async void WindowsOptimizationButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_isRefreshing)
-            return;
-
-        _windowsOptimizationButton.IsEnabled = false;
-        _windowsCleanupButton.IsEnabled = false;
-
-        try
-        {
-            await _windowsOptimizationService.ApplyPerformanceOptimizationsAsync(CancellationToken.None);
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                Resource.SettingsPage_WindowsOptimization_Performance_Success,
-                SnackbarType.Success);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to apply Windows optimization tweaks. Exception: {ex.Message}", ex);
-
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                Resource.SettingsPage_WindowsOptimization_Performance_Error,
-                SnackbarType.Error);
-        }
-        finally
-        {
-            _windowsOptimizationButton.IsEnabled = true;
-            _windowsCleanupButton.IsEnabled = true;
-        }
-    }
-
-    private async void WindowsCleanupButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_isRefreshing)
-            return;
-
-        _windowsOptimizationButton.IsEnabled = false;
-        _windowsCleanupButton.IsEnabled = false;
-
-        try
-        {
-            await _windowsOptimizationService.RunCleanupAsync(CancellationToken.None);
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                Resource.SettingsPage_WindowsOptimization_Cleanup_Success,
-                SnackbarType.Success);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to run Windows cleanup. Exception: {ex.Message}", ex);
-
-            await SnackbarHelper.ShowAsync(
-                Resource.SettingsPage_WindowsOptimization_Title,
-                Resource.SettingsPage_WindowsOptimization_Cleanup_Error,
-                SnackbarType.Error);
-        }
-        finally
-        {
-            _windowsOptimizationButton.IsEnabled = true;
-            _windowsCleanupButton.IsEnabled = true;
-        }
     }
 
     private void NotificationsCard_Click(object sender, RoutedEventArgs e)

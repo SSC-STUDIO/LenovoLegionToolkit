@@ -3128,6 +3128,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Windows optimization.
+        /// </summary>
+        public static string MainWindow_NavigationItem_WindowsOptimization {
+            get {
+                return ResourceManager.GetString("MainWindow_NavigationItem_WindowsOptimization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string MainWindow_NavigationItem_Settings {
@@ -5190,6 +5199,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_WindowsOptimization_Cleanup_Error {
             get {
                 return ResourceManager.GetString("SettingsPage_WindowsOptimization_Cleanup_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These actions modify system services and files. Administrator privileges may be required..
+        /// </summary>
+        public static string WindowsOptimizationPage_Info {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Info", resourceCulture);
             }
         }
         
