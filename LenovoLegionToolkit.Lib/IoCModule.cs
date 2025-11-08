@@ -14,6 +14,7 @@ using LenovoLegionToolkit.Lib.Features.PanelLogo;
 using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
@@ -136,5 +137,6 @@ public class IoCModule : Module
         builder.Register<SunriseSunset>();
 
         builder.Register<BatteryDischargeRateMonitorService>();
+        builder.Register<WindowsOptimizationService>();
     }
 }
