@@ -736,6 +736,36 @@ UYARI: Dahili ekran kapalıysa bu işlem doğru çalışmaz.</value>
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Bu cihaz, Lenovo Legion Toolkit ile uyumlu değildir.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Cihazınızda gerekli sistem bileşenleri (LenovoGameZoneData) eksik olabilir.</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Devam etmek için "Tamam"a tıklarsanız:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Yazılım kısıtlı modda çalışacak</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Bazı özellikler devre dışı bırakılacak (Pano, Otomasyon, Makrolar)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Diğer temel özellikler kullanılabilir olmaya devam edecek</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Cihaz Bilgisi:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Üretici:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Makine Tipi:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Devam etmek için "Tamam"a veya çıkmak için "İptal"e tıklayın.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Uyumlu klavye bulunmadı</value>
   </data>

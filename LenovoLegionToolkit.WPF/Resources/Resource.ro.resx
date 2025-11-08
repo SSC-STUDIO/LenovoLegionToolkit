@@ -713,6 +713,36 @@ ATENȚIE: Această acțiune nu va rula corect dacă afișajul incorporat este op
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Acest dispozitiv nu este compatibil cu Lenovo Legion Toolkit.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Dispozitivul dvs. poate să nu aibă componentele de sistem necesare (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Dacă faceți clic pe "OK" pentru a continua:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Software-ul va rula în modul restricționat</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Unele funcții vor fi dezactivate (Tablou de bord, Automatizare, Macro-uri)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Alte funcții de bază vor rămâne disponibile</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Informații despre dispozitiv:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Producător:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Tipul mașinii:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Faceți clic pe "OK" pentru a continua sau pe "Anulare" pentru a ieși.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Nicio tastatură compatibilă găsită</value>
   </data>

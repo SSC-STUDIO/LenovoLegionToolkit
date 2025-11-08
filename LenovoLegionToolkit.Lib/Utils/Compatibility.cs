@@ -77,6 +77,14 @@ public static partial class Compatibility
 
     public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
 
+    public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
+    {
+        if (!machineInformation.Vendor.Equals(ALLOWED_VENDOR, StringComparison.InvariantCultureIgnoreCase))
+            return false;
+
+        return AllowedModelsPrefix.Any(allowedModel => machineInformation.Model.Contains(allowedModel, StringComparison.InvariantCultureIgnoreCase));
+    }
+
     public static async Task<(bool isCompatible, MachineInformation machineInformation)> IsCompatibleAsync()
     {
         var mi = await GetMachineInformationAsync().ConfigureAwait(false);
@@ -84,14 +92,7 @@ public static partial class Compatibility
         if (!await CheckBasicCompatibilityAsync().ConfigureAwait(false))
             return (false, mi);
 
-        if (!mi.Vendor.Equals(ALLOWED_VENDOR, StringComparison.InvariantCultureIgnoreCase))
-            return (false, mi);
-
-        foreach (var allowedModel in AllowedModelsPrefix)
-            if (mi.Model.Contains(allowedModel, StringComparison.InvariantCultureIgnoreCase))
-                return (true, mi);
-
-        return (false, mi);
+        return (IsSupportedLegionMachine(mi), mi);
     }
 
     public static async Task<MachineInformation> GetMachineInformationAsync()
