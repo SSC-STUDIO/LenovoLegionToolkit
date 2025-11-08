@@ -156,6 +156,27 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
+        <custom:CardControl Margin="0,0,0,24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <wpfui:Button
+                    x:Name="_windowsOptimizationButton"
+                    MinWidth="220"
+                    Margin="0,0,8,0"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Performance_Button}"
+                    Click="WindowsOptimizationButton_Click"
+                    Content="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Performance_Button}" />
+                <wpfui:Button
+                    x:Name="_windowsCleanupButton"
+                    MinWidth="160"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Cleanup_Button}"
+                    Click="WindowsCleanupButton_Click"
+                    Content="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Cleanup_Button}" />
+            </StackPanel>
+        </custom:CardControl>
+
         <custom:CardControl Margin="0,0,0,8">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_SmartFnLock_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_SmartFnLock_Message}" />
