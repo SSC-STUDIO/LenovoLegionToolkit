@@ -5122,6 +5122,78 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Windows optimization.
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply recommended performance tweaks and clean temporary files..
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply performance &amp; service tweaks.
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Performance_Button {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Performance_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performance optimizations applied..
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Performance_Success {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Performance_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t apply performance optimizations..
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Performance_Error {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Performance_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run cleanup.
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Cleanup_Button {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Cleanup_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleanup completed..
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Cleanup_Success {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Cleanup_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleanup failed..
+        /// </summary>
+        public static string SettingsPage_WindowsOptimization_Cleanup_Error {
+            get {
+                return ResourceManager.GetString("SettingsPage_WindowsOptimization_Cleanup_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Lenovo Hotkeys.
         /// </summary>
         public static string SettingsPage_DisableLenovoHotkeys_Title {

@@ -1200,6 +1200,30 @@ Restart is recommended after changing this option.</value>
 If disabled, this app will handle Fn shortcuts.
 Restart is recommended after changing this option.</value>
   </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>Windows optimization</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Apply recommended performance tweaks and clean temporary files.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Apply performance &amp; service tweaks</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Performance optimizations applied.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Couldn't apply performance optimizations.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Run cleanup</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Cleanup completed.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Cleanup failed.</value>
+  </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Disable Lenovo Hotkeys</value>
   </data>
