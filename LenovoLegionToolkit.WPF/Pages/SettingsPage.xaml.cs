@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
@@ -545,14 +546,20 @@ public partial class SettingsPage
         try
         {
             await _windowsOptimizationService.ApplyPerformanceOptimizationsAsync(CancellationToken.None);
-            await SnackbarHelper.ShowAsync($"{Resource.SettingsPage_WindowsOptimization_Title}", $"{Resource.SettingsPage_WindowsOptimization_Performance_Success}", SnackbarType.Success);
+            await SnackbarHelper.ShowAsync(
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Title),
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Performance_Success),
+                SnackbarType.Success);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("Failed to apply Windows optimization tweaks.", ex);
 
-            await SnackbarHelper.ShowAsync($"{Resource.SettingsPage_WindowsOptimization_Title}", $"{Resource.SettingsPage_WindowsOptimization_Performance_Error}", SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Title),
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Performance_Error),
+                SnackbarType.Error);
         }
         finally
         {
@@ -572,14 +579,20 @@ public partial class SettingsPage
         try
         {
             await _windowsOptimizationService.RunCleanupAsync(CancellationToken.None);
-            await SnackbarHelper.ShowAsync($"{Resource.SettingsPage_WindowsOptimization_Title}", $"{Resource.SettingsPage_WindowsOptimization_Cleanup_Success}", SnackbarType.Success);
+            await SnackbarHelper.ShowAsync(
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Title),
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Cleanup_Success),
+                SnackbarType.Success);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("Failed to run Windows cleanup.", ex);
 
-            await SnackbarHelper.ShowAsync($"{Resource.SettingsPage_WindowsOptimization_Title}", $"{Resource.SettingsPage_WindowsOptimization_Cleanup_Error}", SnackbarType.Error);
+            await SnackbarHelper.ShowAsync(
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Title),
+                FormattableStringFactory.Create("{0}", Resource.SettingsPage_WindowsOptimization_Cleanup_Error),
+                SnackbarType.Error);
         }
         finally
         {
