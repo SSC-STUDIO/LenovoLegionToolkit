@@ -737,6 +737,36 @@ AVERTISSEMENT : Cette action ne fonctionnera pas correctement si l'affichage int
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Cet appareil n'est pas compatible avec Lenovo Legion Toolkit.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Votre appareil peut manquer des composants système requis (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Si vous cliquez sur "OK" pour continuer :</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Le logiciel fonctionnera en mode restreint</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Certaines fonctionnalités seront désactivées (Tableau de bord, Automatisation, Macros)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- D'autres fonctionnalités de base resteront disponibles</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Informations sur l'appareil :</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Fabricant :</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Modèle :</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Type de machine :</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Cliquez sur "OK" pour continuer, ou sur "Annuler" pour quitter.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Aucun clavier compatible trouvé</value>
   </data>

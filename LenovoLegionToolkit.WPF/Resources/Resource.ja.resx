@@ -730,6 +730,36 @@ PayPal で寄付するには、下の PayPal ロゴをクリックするかQR �
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>このデバイスは Lenovo Legion Toolkit と互換性がありません。</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>お使いのデバイスに必要なシステムコンポーネント（LenovoGameZoneData）が不足している可能性があります。</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>"OK"をクリックして続行する場合：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- ソフトウェアは制限モードで実行されます</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- 一部の機能が無効になります（ダッシュボード、自動化、マクロ）</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- その他の基本機能は引き続き利用可能です</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>デバイス情報：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>製造元:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>モデル:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>マシンタイプ:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>"OK"をクリックして続行するか、"キャンセル"をクリックして終了します。</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>互換性のあるキーボードが見つかりません</value>
   </data>

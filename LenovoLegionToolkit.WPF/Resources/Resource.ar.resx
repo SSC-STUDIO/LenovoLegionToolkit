@@ -707,6 +707,36 @@
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>هذا الجهاز غير متوافق مع مجموعة أدوات Lenovo Legion.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>قد يفتقر جهازك إلى مكونات النظام المطلوبة (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>إذا نقرت على "موافق" للمتابعة:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- سيعمل البرنامج في وضع مقيد</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- سيتم تعطيل بعض الميزات (لوحة المعلومات، الأتمتة، وحدات الماكرو)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- ستظل الميزات الأساسية الأخرى متاحة</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>معلومات الجهاز:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>الشركة المصنعة:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>الموديل:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>نوع الجهاز:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>انقر على "موافق" للمتابعة أو "إلغاء" للخروج.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>لم يتم العثور على لوحة مفاتيح متوافقة</value>
   </data>

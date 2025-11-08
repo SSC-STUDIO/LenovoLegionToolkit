@@ -735,6 +735,36 @@
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>Αυτή η συσκευή δεν είναι συμβατή με το Lenovo Legion Toolkit.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Η συσκευή σας μπορεί να μην έχει τα απαραίτητα στοιχεία συστήματος (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>Εάν κάνετε κλικ στο "OK" για να συνεχίσετε:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- Το λογισμικό θα εκτελεστεί σε περιορισμένη λειτουργία</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Ορισμένες λειτουργίες θα απενεργοποιηθούν (Πίνακας, Αυτοματοποίηση, Μακροεντολές)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Άλλες βασικές λειτουργίες θα παραμείνουν διαθέσιμες</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Πληροφορίες συσκευής:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Κατασκευαστής:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Μοντέλο:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Τύπος μηχανής:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Κάντε κλικ στο "OK" για να συνεχίσετε ή στο "Ακύρωση" για έξοδο.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Δε βρέθηκαν συμβατά πληκτρολόγια</value>
   </data>

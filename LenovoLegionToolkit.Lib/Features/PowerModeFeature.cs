@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -28,9 +29,21 @@ public class PowerModeFeature(
     public override async Task<PowerModeState[]> GetAllStatesAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        return mi.Properties.SupportsGodMode
-            ? [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.GodMode]
-            : [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance];
+        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+
+        var result = new List<PowerModeState>
+        {
+            PowerModeState.Quiet,
+            PowerModeState.Balance
+        };
+
+        if (isSupportedLegionMachine && mi.SupportedPowerModes.Contains(PowerModeState.Performance))
+            result.Add(PowerModeState.Performance);
+
+        if (isSupportedLegionMachine && mi.Properties.SupportsGodMode && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+            result.Add(PowerModeState.GodMode);
+
+        return [.. result];
     }
 
     public override async Task SetStateAsync(PowerModeState state)
