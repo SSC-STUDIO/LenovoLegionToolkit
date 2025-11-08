@@ -8,6 +8,8 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32;
 
+using ToolkitRegistry = LenovoLegionToolkit.Lib.System.Registry;
+
 namespace LenovoLegionToolkit.Lib.Optimization;
 
 public class WindowsOptimizationService
@@ -119,7 +121,7 @@ public class WindowsOptimizationService
     {
         try
         {
-            Registry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, tweak.Value, true, tweak.Kind);
+            ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, tweak.Value, true, tweak.Kind);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Registry tweak applied. [hive={tweak.Hive}, key={tweak.SubKey}, value={tweak.ValueName}, kind={tweak.Kind}, data={tweak.Value}]");
@@ -135,7 +137,7 @@ public class WindowsOptimizationService
     {
         try
         {
-            Registry.SetValue("HKEY_LOCAL_MACHINE", $@"SYSTEM\CurrentControlSet\Services\{serviceName}", "Start", 4, true, RegistryValueKind.DWord);
+            ToolkitRegistry.SetValue("HKEY_LOCAL_MACHINE", $@"SYSTEM\CurrentControlSet\Services\{serviceName}", "Start", 4, true, RegistryValueKind.DWord);
         }
         catch (Exception ex)
         {
