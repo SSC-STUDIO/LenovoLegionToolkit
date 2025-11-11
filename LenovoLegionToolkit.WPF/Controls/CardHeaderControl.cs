@@ -50,24 +50,44 @@ public class CardHeaderControl : UserControl
 
     private UIElement? _accessory;
 
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title),
+            typeof(string),
+            typeof(CardHeaderControl),
+            new PropertyMetadata(string.Empty, OnTitleChanged));
+
+    public static readonly DependencyProperty SubtitleProperty =
+        DependencyProperty.Register(
+            nameof(Subtitle),
+            typeof(string),
+            typeof(CardHeaderControl),
+            new PropertyMetadata(string.Empty, OnSubtitleChanged));
+
+    public static readonly DependencyProperty WarningProperty =
+        DependencyProperty.Register(
+            nameof(Warning),
+            typeof(string),
+            typeof(CardHeaderControl),
+            new PropertyMetadata(string.Empty, OnWarningChanged));
+
+    public static readonly DependencyProperty SubtitleToolTipProperty =
+        DependencyProperty.Register(
+            nameof(SubtitleToolTip),
+            typeof(string),
+            typeof(CardHeaderControl),
+            new PropertyMetadata(null, OnSubtitleToolTipChanged));
+
     public string Title
     {
-        get => _titleTextBlock.Text;
-        set
-        {
-            _titleTextBlock.Text = value;
-            RefreshLayout();
-        }
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     public string Subtitle
     {
-        get => _subtitleTextBlock.Text;
-        set
-        {
-            _subtitleTextBlock.Text = value;
-            RefreshLayout();
-        }
+        get => (string)GetValue(SubtitleProperty);
+        set => SetValue(SubtitleProperty, value);
     }
 
     public VerticalAlignment TitleVerticalAlignment
@@ -84,23 +104,14 @@ public class CardHeaderControl : UserControl
 
     public string Warning
     {
-        get => _warningTextBlock.Text;
-        set
-        {
-            _warningTextBlock.Text = value;
-            RefreshLayout();
-        }
+        get => (string)GetValue(WarningProperty);
+        set => SetValue(WarningProperty, value);
     }
 
     public string? SubtitleToolTip
     {
-        get => _subtitleTextBlock.ToolTip as string;
-        set
-        {
-            _subtitleTextBlock.ToolTip = value;
-            ToolTipService.SetIsEnabled(_subtitleTextBlock, value is not null);
-            RefreshLayout();
-        }
+        get => (string?)GetValue(SubtitleToolTipProperty);
+        set => SetValue(SubtitleToolTipProperty, value);
     }
 
     public UIElement? Accessory
@@ -175,6 +186,44 @@ public class CardHeaderControl : UserControl
             _subtitleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
             _warningTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
         }
+    }
+
+    private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not CardHeaderControl control)
+            return;
+
+        control._titleTextBlock.Text = e.NewValue as string ?? string.Empty;
+        control.RefreshLayout();
+    }
+
+    private static void OnSubtitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not CardHeaderControl control)
+            return;
+
+        control._subtitleTextBlock.Text = e.NewValue as string ?? string.Empty;
+        control.RefreshLayout();
+    }
+
+    private static void OnWarningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not CardHeaderControl control)
+            return;
+
+        control._warningTextBlock.Text = e.NewValue as string ?? string.Empty;
+        control.RefreshLayout();
+    }
+
+    private static void OnSubtitleToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not CardHeaderControl control)
+            return;
+
+        var value = e.NewValue as string;
+        control._subtitleTextBlock.ToolTip = value;
+        ToolTipService.SetIsEnabled(control._subtitleTextBlock, value is not null);
+        control.RefreshLayout();
     }
 
     private class CardHeaderControlAutomationPeer(CardHeaderControl owner) : FrameworkElementAutomationPeer(owner)

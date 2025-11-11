@@ -5212,6 +5212,897 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply selected actions.
+        /// </summary>
+        public static string WindowsOptimizationPage_ApplySelected_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ApplySelected_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select recommended.
+        /// </summary>
+        public static string WindowsOptimizationPage_SelectRecommended_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_SelectRecommended_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear selection.
+        /// </summary>
+        public static string WindowsOptimizationPage_ClearSelection_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ClearSelection_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run cleanup actions.
+        /// </summary>
+        public static string WindowsOptimizationPage_RunCleanup_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_RunCleanup_Button", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} actions selected.
+        /// </summary>
+        public static string WindowsOptimizationPage_SelectedActions_Count {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_SelectedActions_Count", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No actions selected yet..
+        /// </summary>
+        public static string WindowsOptimizationPage_SelectedActions_Empty {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_SelectedActions_Empty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Selected actions.
+        /// </summary>
+        public static string WindowsOptimizationPage_SelectedActions_Header {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_SelectedActions_Header", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cleanup.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_Cleanup {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_Cleanup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to System optimization.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_Optimization {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_Optimization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        public static string WindowsOptimizationPage_SelectAll {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom cleanup rules.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Header {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose folders and file extensions that should be deleted during cleanup..
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add rule.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Add {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Edit {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Remove {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear all.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Clear {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No custom cleanup rules configured..
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Empty {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include subfolders.
+        /// </summary>
+        public static string WindowsOptimizationPage_CustomCleanup_Recursive_Label {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_CustomCleanup_Recursive_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppX management.
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Header {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select preinstalled Microsoft Store apps to remove for all users..
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No apps selected for removal..
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Empty {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall selected apps.
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Uninstall_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Uninstall_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected apps scheduled for removal..
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Uninstall_Success {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Uninstall_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove selected apps..
+        /// </summary>
+        public static string WindowsOptimizationPage_AppxManagement_Uninstall_Error {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_AppxManagement_Uninstall_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom cleanup rule.
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Title {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Folder_Label {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Folder_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extensions.
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Extensions_Label {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Extensions_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Separate multiple extensions with commas (example: tmp, log, bak).
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Extensions_Hint {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Extensions_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include subfolders.
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Recursive_Label {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Recursive_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse….
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Browse_Button {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Browse_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please choose a folder..
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Error_Folder {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Error_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter at least one file extension..
+        /// </summary>
+        public static string CustomCleanupRuleWindow_Error_Extensions {
+            get {
+                return ResourceManager.GetString("CustomCleanupRuleWindow_Error_Extensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select at least one action..
+        /// </summary>
+        public static string WindowsOptimizationPage_EmptySelection_Message {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_EmptySelection_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected actions completed successfully..
+        /// </summary>
+        public static string WindowsOptimizationPage_ApplySelected_Success {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ApplySelected_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to complete selected actions..
+        /// </summary>
+        public static string WindowsOptimizationPage_ApplySelected_Error {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ApplySelected_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Explorer &amp; interface.
+        /// </summary>
+        public static string WindowsOptimization_Category_Explorer_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Explorer_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tune taskbar, File Explorer and user interface behaviour..
+        /// </summary>
+        public static string WindowsOptimization_Category_Explorer_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Explorer_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performance.
+        /// </summary>
+        public static string WindowsOptimization_Category_Performance_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Performance_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust system performance and responsiveness settings..
+        /// </summary>
+        public static string WindowsOptimization_Category_Performance_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Performance_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Services.
+        /// </summary>
+        public static string WindowsOptimization_Category_Services_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Services_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable background services that consume resources..
+        /// </summary>
+        public static string WindowsOptimization_Category_Services_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Services_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleanup.
+        /// </summary>
+        public static string WindowsOptimization_Category_Cleanup_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Cleanup_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove caches, temporary files and other leftovers..
+        /// </summary>
+        public static string WindowsOptimization_Category_Cleanup_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_Cleanup_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taskbar and start menu layout.
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerTaskbar_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerTaskbar_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide the search box and Task View button, disable taskbar grouping and always show tray icons..
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerTaskbar_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerTaskbar_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Improve Explorer responsiveness.
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerResponsiveness_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerResponsiveness_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reduce menu delays, close hung apps faster and open This PC by default..
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerResponsiveness_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerResponsiveness_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File visibility options.
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerVisibility_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerVisibility_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show file extensions and hidden files in File Explorer..
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerVisibility_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerVisibility_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Explorer suggestions.
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerSuggestions_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerSuggestions_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn off cloud content suggestions and recommendation banners..
+        /// </summary>
+        public static string WindowsOptimization_Action_ExplorerSuggestions_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ExplorerSuggestions_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optimise multimedia scheduling.
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceMultimedia_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceMultimedia_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove network throttling and lower system responsiveness latency..
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceMultimedia_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceMultimedia_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Improve memory management.
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceMemory_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceMemory_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep system cache in memory and avoid paging kernel drivers..
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceMemory_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceMemory_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable acrylic and notification centre.
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceNotifications_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceNotifications_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove acrylic effects on logon and hide the Windows notification centre..
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceNotifications_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceNotifications_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reduce telemetry and tips.
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceTelemetry_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceTelemetry_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable advertising ID, Spotlight features and automatic suggestions..
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformanceTelemetry_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformanceTelemetry_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force high performance plan.
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformancePowerPlan_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformancePowerPlan_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Activate the high performance power scheme and disable hibernation..
+        /// </summary>
+        public static string WindowsOptimization_Action_PerformancePowerPlan_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_PerformancePowerPlan_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable diagnostic services.
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesDiagnostics_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesDiagnostics_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services..
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesDiagnostics_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesDiagnostics_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable SysMain.
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesSysMain_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesSysMain_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn off Superfetch/SysMain to reduce background disk activity..
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesSysMain_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesSysMain_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Windows Search indexing.
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesSearch_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesSearch_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop the Windows Search service to prevent index updates..
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesSearch_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesSearch_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Remote Registry.
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesRemoteRegistry_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesRemoteRegistry_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Secure the system by disabling remote registry access..
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesRemoteRegistry_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesRemoteRegistry_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable error reporting.
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesErrorReporting_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesErrorReporting_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Windows Error Reporting from collecting and sending crash data..
+        /// </summary>
+        public static string WindowsOptimization_Action_ServicesErrorReporting_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_ServicesErrorReporting_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Remote Desktop cache.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupRemoteDesktop_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupRemoteDesktop_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove cached files created by the Remote Desktop client..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupRemoteDesktop_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupRemoteDesktop_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean Windows Update cache.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupWindowsUpdate_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupWindowsUpdate_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete downloaded update files and Delivery Optimisation cache..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupWindowsUpdate_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupWindowsUpdate_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean browser cache.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupBrowserCache_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupBrowserCache_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Internet Explorer and Edge cache and cookie files..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupBrowserCache_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupBrowserCache_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean thumbnail caches.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupThumbnailCache_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupThumbnailCache_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Explorer thumbnail databases and Direct3D shader cache..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupThumbnailCache_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupThumbnailCache_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear .NET native images.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupDotNet_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupDotNet_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove cached .NET Native images to reclaim disk space..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupDotNet_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupDotNet_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove logs and diagnostic data.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupLogs_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupLogs_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Windows logs, error reports and diagnostic traces..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupLogs_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupLogs_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete crash dumps.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupCrashDumps_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupCrashDumps_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove memory dump files left after system crashes..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupCrashDumps_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupCrashDumps_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean Defender scans.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupDefender_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupDefender_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Windows Defender scan history and caches..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupDefender_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupDefender_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean temporary files.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupTempFiles_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupTempFiles_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty Windows and user temporary directories..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupTempFiles_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupTempFiles_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove bundled Windows apps.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupAppx_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupAppx_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall selected preinstalled UWP applications for all users..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupAppx_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupAppx_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty Recycle Bin.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupRecycleBin_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupRecycleBin_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove deleted files stored in the Recycle Bin..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupRecycleBin_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupRecycleBin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear prefetch data.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupPrefetch_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupPrefetch_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Windows prefetch data to regenerate new traces..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupPrefetch_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupPrefetch_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean custom files.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupCustom_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupCustom_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete files matching configured extensions from selected folders..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupCustom_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupCustom_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service component store.
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupComponentStore_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupComponentStore_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run DISM cleanup and clear WinSxS temporary files..
+        /// </summary>
+        public static string WindowsOptimization_Action_CleanupComponentStore_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_CleanupComponentStore_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Lenovo Hotkeys.
         /// </summary>
         public static string SettingsPage_DisableLenovoHotkeys_Title {
@@ -5389,6 +6280,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_MinimizeOnClose_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_MinimizeOnClose_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide the incompatible device warning that appears on startup..
+        /// </summary>
+        public static string SettingsPage_DisableCompatibilityWarning_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_DisableCompatibilityWarning_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable incompatible device warning.
+        /// </summary>
+        public static string SettingsPage_DisableCompatibilityWarning_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_DisableCompatibilityWarning_Title", resourceCulture);
             }
         }
         
@@ -6331,6 +7240,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string UnsupportedWindow_Message {
             get {
                 return ResourceManager.GetString("UnsupportedWindow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can disable this warning at any time in Settings..
+        /// </summary>
+        public static string UnsupportedWindow_DisableHint {
+            get {
+                return ResourceManager.GetString("UnsupportedWindow_DisableHint", resourceCulture);
             }
         }
         

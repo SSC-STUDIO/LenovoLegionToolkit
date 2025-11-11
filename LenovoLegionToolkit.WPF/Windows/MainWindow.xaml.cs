@@ -133,7 +133,7 @@ public partial class MainWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Closing...");
 
-            await App.Current.ShutdownAsync();
+            await App.Current.ShutdownAsync(true);
         }
     }
 

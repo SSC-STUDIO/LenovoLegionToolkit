@@ -49,12 +49,22 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool SynchronizeBrightnessToAllPowerPlans { get; set; }
         public ModifierKey SmartFnLockFlags { get; set; }
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
+        public bool DisableUnsupportedHardwareWarning { get; set; }
+        public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
+        public List<string> AppxPackagesToRemove { get; set; } = [];
     }
 
     public ApplicationSettings() : base("settings.json")
     {
         JsonSerializerSettings.Converters.Add(new LegacyPowerPlanInstanceIdToGuidConverter());
     }
+}
+
+public class CustomCleanupRule
+{
+    public string DirectoryPath { get; set; } = string.Empty;
+    public List<string> Extensions { get; set; } = [];
+    public bool Recursive { get; set; } = true;
 }
 
 internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Introduced in 2.12.0
