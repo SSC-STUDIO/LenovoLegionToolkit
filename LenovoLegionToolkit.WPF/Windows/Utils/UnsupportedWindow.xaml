@@ -57,6 +57,11 @@
                     FontWeight="Medium"
                     Text="{x:Static resources:Resource.UnsupportedWindow_Message}"
                     TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="0,0,0,12"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{x:Static resources:Resource.UnsupportedWindow_DisableHint}"
+                    TextWrapping="Wrap" />
 
                 <Grid>
                     <Grid.RowDefinitions>

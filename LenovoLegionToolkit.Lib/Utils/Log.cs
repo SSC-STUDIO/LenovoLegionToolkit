@@ -38,7 +38,7 @@ public class Log
     private readonly int _maxQueuedEntries = 100;
     private readonly Task _logTask;
     private readonly object _queueLock = new();
-    private bool _isRunning = true;
+    private volatile bool _isRunning = true;
 
     public bool IsTraceEnabled { get; set; }
     public LogLevel CurrentLogLevel { get; set; } = LogLevel.Info;
@@ -278,17 +278,20 @@ public class Log
             ForceWriteToFile(remainingLines);
     }
 
-    public void Shutdown()
+    public async Task ShutdownAsync()
     {
         _isRunning = false;
-        Flush();
-        
+
         try
         {
-            _logTask.Wait(1000); // 等待最多1秒让日志任务完成
+            await Task.WhenAny(_logTask, Task.Delay(1000)).ConfigureAwait(false);
         }
         catch (Exception) { /* 忽略等待过程中的异常 */ }
+
+        Flush();
     }
+
+    public void Shutdown() => ShutdownAsync().GetAwaiter().GetResult();
 
     private static string Serialize(Exception ex) => new StringBuilder()
         .AppendLine("=== Exception ===")
