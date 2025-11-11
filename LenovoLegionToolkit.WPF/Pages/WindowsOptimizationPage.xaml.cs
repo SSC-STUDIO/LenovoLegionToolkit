@@ -164,6 +164,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         SetMode(false);
         SelectRecommended(Categories);
         UpdateSelectedActions();
+        _ = InitializeActionStatesAsync();
     }
 
     private void InitializeCategories()
@@ -387,7 +388,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void UpdateSelectedActions()
     {
-        // 创建新的选定项集合，以便进行比较
+        // Build fresh selection snapshots for comparison
         var newOptimizationActions = new List<SelectedActionViewModel>();
         var newCleanupActions = new List<SelectedActionViewModel>();
 
@@ -415,9 +416,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             newCleanupActions.Add(selectedAppx);
         }
 
-        // 增量更新SelectedOptimizationActions集合
+        // Incrementally update SelectedOptimizationActions
         UpdateCollection(SelectedOptimizationActions, newOptimizationActions);
-        // 增量更新SelectedCleanupActions集合
+        // Incrementally update SelectedCleanupActions
         UpdateCollection(SelectedCleanupActions, newCleanupActions);
 
         OnPropertyChanged(nameof(VisibleSelectedActions));
@@ -427,12 +428,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private static void UpdateCollection<T>(ObservableCollection<T> existing, List<T> updated)
     {
-        // 如果两个集合内容相同，则不进行更新
+        // Skip updates if both collections contain identical elements
         if (existing.Count == updated.Count && existing.SequenceEqual(updated))
             return;
 
-        // 使用增量更新而非完全清空重建，以保持滚动条状态
-        // 1. 移除不再存在的项目
+        // Apply incremental updates instead of clearing everything to keep scroll state intact
+        // 1. Remove items that no longer exist
         for (int i = existing.Count - 1; i >= 0; i--)
         {
             var item = existing[i];
@@ -444,7 +445,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
         }
 
-        // 2. 按照 updated 的顺序重新排列 / 插入元素
+        // 2. Reorder or insert entries to match the updated sequence
         for (int i = 0; i < updated.Count; i++)
         {
             var item = updated[i];
@@ -471,7 +472,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
         }
 
-        // 3. 如果 existing 仍然比 updated 长，移除多余的尾部元素
+        // 3. Remove any trailing entries that no longer have counterparts
         while (existing.Count > updated.Count)
         {
             var lastIndex = existing.Count - 1;
@@ -753,7 +754,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
         else
         {
-            // 即使模式未发生变化，也触发刷新以确保绑定在特殊情况下能够正确更新
+            // Force a refresh even if the mode appears unchanged to keep bindings current
             OnPropertyChanged(nameof(ActiveCategories));
         }
 
@@ -767,6 +768,22 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
         ApplyInteractionState();
+    }
+
+    private async Task InitializeActionStatesAsync()
+    {
+        var actions = Categories.SelectMany(category => category.Actions).ToList();
+
+        foreach (var action in actions)
+        {
+            var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+            if (applied.HasValue)
+            {
+                await Dispatcher.InvokeAsync(() => action.IsSelected = applied.Value);
+            }
+        }
+
+        await Dispatcher.InvokeAsync(UpdateSelectedActions);
     }
 
     private void OptimizationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(false);
@@ -1172,10 +1189,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void SelectedActionsButton_Click(object sender, RoutedEventArgs e)
     {
-        // 关闭已存在的窗口（如果有）
+        // Close the previously opened window if one exists
         _selectedActionsWindow?.Close();
 
-        // 创建并显示弹出窗口
+        // Create and display the dialog window
         _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(VisibleSelectedActions, SelectedActionsEmptyText)
         {
             Owner = Window.GetWindow(this)

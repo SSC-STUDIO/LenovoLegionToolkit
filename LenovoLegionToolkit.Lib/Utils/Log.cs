@@ -50,8 +50,7 @@ public class Log
         _folderPath = Path.Combine(Folders.AppData, "log");
         Directory.CreateDirectory(_folderPath);
         _currentLogPath = CreateNewLogFile();
-        
-        // 启动异步日志写入任务
+        // Start background task that writes log entries asynchronously
         _logTask = Task.Run(ProcessLogQueue);
     }
 
@@ -61,10 +60,8 @@ public class Log
         {
             var timestamp = DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss_fff");
             var logPath = Path.Combine(_folderPath, $"log_{timestamp}.txt");
-            
-            // 清理旧日志文件，保留最近10个
+            // Remove older log files, keeping only the ten most recent entries
             CleanupOldLogFiles();
-            
             return logPath;
         }
     }
@@ -83,10 +80,10 @@ public class Log
                 {
                     File.Delete(logFiles[i]);
                 }
-                catch (Exception) { /* 忽略删除失败的文件 */ }
+                catch (Exception) { /* Ignore failures while deleting legacy log files */ }
             }
         }
-        catch (Exception) { /* 忽略清理过程中的异常 */ }
+        catch (Exception) { /* Ignore unexpected failures while cleaning up logs */ }
     }
 
     public void ErrorReport(string header, Exception ex)
@@ -166,7 +163,7 @@ public class Log
             global::System.Diagnostics.Debug.WriteLine(line);
 #endif
         
-        // 将日志加入队列
+        // Enqueue log lines for asynchronous processing
         EnqueueLogLines(logLines);
     }
     
@@ -174,7 +171,7 @@ public class Log
     {
         lock (_queueLock)
         {
-            // 如果队列已满，强制执行写入
+            // Force a flush when the queue reaches the maximum capacity
             if (_logQueue.Count >= _maxQueuedEntries)
             {
                 ForceWriteToFile(_logQueue.ToList());
@@ -192,7 +189,7 @@ public class Log
         {
             try
             {
-                // 每100ms处理一次队列
+                // Drain the queue every 100 ms
                 await Task.Delay(100).ConfigureAwait(false);
                 
                 List<string>? linesToWrite = null;
@@ -210,7 +207,7 @@ public class Log
                     await WriteToFileAsync(linesToWrite).ConfigureAwait(false);
                 }
             }
-            catch (Exception) { /* 忽略处理队列过程中的异常 */ }
+            catch (Exception) { /* Ignore transient failures while draining the queue */ }
         }
     }
     
@@ -246,10 +243,10 @@ public class Log
         {
             var logPathToUse = GetLogPathWithRotation();
 
-            // 异步写入文件
+            // Append asynchronously to the current log file
             await File.AppendAllLinesAsync(logPathToUse, lines).ConfigureAwait(false);
         }
-        catch (Exception) { /* 忽略写入文件过程中的异常 */ }
+        catch (Exception) { /* Ignore transient write failures */ }
     }
     
     private void ForceWriteToFile(List<string> lines)
@@ -259,7 +256,7 @@ public class Log
             var logPathToUse = GetLogPathWithRotation();
             File.AppendAllLines(logPathToUse, lines);
         }
-        catch (Exception) { /* 忽略强制写入过程中的异常 */ }
+        catch (Exception) { /* Ignore failures during the forced write */ }
     }
 
     public void Flush()
@@ -286,7 +283,7 @@ public class Log
         {
             await Task.WhenAny(_logTask, Task.Delay(1000)).ConfigureAwait(false);
         }
-        catch (Exception) { /* 忽略等待过程中的异常 */ }
+        catch (Exception) { /* Ignore timeout or cancellation while waiting */ }
 
         Flush();
     }
