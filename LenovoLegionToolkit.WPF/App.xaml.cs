@@ -335,7 +335,7 @@ public partial class App
         mainWindow.Show();
     }
 
-    // 优化关闭过程，使用并行执行和统一的错误处理
+    // Optimized shutdown helper that stops services in parallel with unified error handling
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
@@ -354,7 +354,7 @@ public partial class App
         }
     }
 
-    // 带支持检查的服务停止方法
+    // Service stop helper that verifies support before attempting to stop
     private static async Task StopServiceWithSupportCheckAsync<T>(Func<T, Task<bool>> isSupportedAction, Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
@@ -415,7 +415,7 @@ public partial class App
     {
         await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
-        // 并行停止所有服务，提高关闭速度
+        // Stop all services in parallel to speed up shutdown
         await Task.WhenAll(
             StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
             StopServiceWithSupportCheckAsync<RGBKeyboardBacklightController>(
@@ -514,7 +514,7 @@ public partial class App
         if (!Log.Instance.IsTraceEnabled)
             return;
 
-        // 并行获取各软件状态以提高效率
+        // Gather software statuses in parallel to improve efficiency
         var statuses = await Task.WhenAll(
             IoCContainer.Resolve<VantageDisabler>().GetStatusAsync(),
             IoCContainer.Resolve<LegionZoneDisabler>().GetStatusAsync(),
@@ -526,7 +526,7 @@ public partial class App
         Log.Instance.Trace($"FnKeys status: {statuses[2]}");
     }
 
-    // 添加通用的带错误处理的异步执行方法，减少重复代码
+    // Generic async helper with error handling to reduce repetition
     private static async Task RunWithErrorHandlingAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
     {
         try
@@ -573,7 +573,7 @@ public partial class App
                 var feature = IoCContainer.Resolve<PowerModeFeature>();
                 if (await feature.IsSupportedAsync())
                 {
-                    // 优化：先获取支持状态，然后执行所有操作，避免重复调用 IsSupportedAsync
+                    // Optimization: cache the support status to avoid multiple IsSupportedAsync calls
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Ensuring god mode state is applied...");
                     
@@ -586,7 +586,7 @@ public partial class App
                 }
             },
             "power mode feature",
-            false // 不记录成功日志，因为内部有更详细的日志
+            false // Skip success logging because detailed logs exist inside the helper methods
         );
     }
 
@@ -631,7 +631,7 @@ public partial class App
         );
     }
 
-    // 优化后的Spectrum键盘控制器初始化方法
+    // Optimized initialization routine for the Spectrum keyboard controller
     private static async Task InitSpectrumKeyboardControllerAsync()
     {
         await RunWithErrorHandlingAsync(
