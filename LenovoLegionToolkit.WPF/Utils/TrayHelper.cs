@@ -100,7 +100,7 @@ public class TrayHelper : IDisposable
         closeMenuItem.Click += async (_, _) =>
         {
             _contextMenu.IsOpen = false;
-            await App.Current.ShutdownAsync();
+            await App.Current.ShutdownAsync(true);
         };
         _contextMenu.Items.Add(closeMenuItem);
     }

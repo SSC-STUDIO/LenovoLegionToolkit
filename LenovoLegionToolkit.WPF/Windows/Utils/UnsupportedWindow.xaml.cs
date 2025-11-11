@@ -18,9 +18,6 @@ public partial class UnsupportedWindow
 
     public UnsupportedWindow(MachineInformation mi)
     {
-        // Apply theme before initializing component to ensure proper background
-        ApplyTheme();
-
         InitializeComponent();
 
         _vendorText.Text = mi.Vendor;
@@ -47,7 +44,7 @@ public partial class UnsupportedWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to detect system theme, defaulting to Light mode", ex);
             
-            // If theme detection fails, default to light theme (not dark) since user said their system is light
+            // If theme detection fails, fall back to light theme
             Theme.Apply(ThemeType.Light, BackgroundType.Mica, false);
         }
     }

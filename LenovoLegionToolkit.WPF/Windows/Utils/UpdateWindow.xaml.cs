@@ -55,7 +55,7 @@ public partial class UpdateWindow : IProgress<float>
             _downloadCancellationTokenSource = null;
 
             Process.Start(path, $"/SILENT /RESTARTAPPLICATIONS /LANG={Resource.Culture.Name.Replace("-", string.Empty)}");
-            await App.Current.ShutdownAsync();
+            await App.Current.ShutdownAsync(true);
         }
         catch (OperationCanceledException)
         {

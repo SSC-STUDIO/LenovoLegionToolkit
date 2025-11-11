@@ -24,6 +24,7 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Macro;
 using LenovoLegionToolkit.Lib.Services;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI;
@@ -49,6 +50,10 @@ public partial class App
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
     private Task? _backgroundInitializationTask;
+    private readonly object _shutdownLock = new();
+    private Task? _shutdownTask;
+    private bool _exitRequested;
+    private bool _shutdownInvoked;
 
     public new static App Current => (App)Application.Current;
 
@@ -80,6 +85,8 @@ public partial class App
 
         await LocalizationHelper.SetLanguageAsync(true);
 
+        var applicationSettings = new ApplicationSettings();
+
         if (!flags.SkipCompatibilityCheck)
         {
             try
@@ -93,11 +100,25 @@ public partial class App
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Incompatible system detected. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
 
-                    var unsupportedWindow = new UnsupportedWindow(mi);
-                    unsupportedWindow.Show();
+                    var suppressWarning = applicationSettings.Store.DisableUnsupportedHardwareWarning;
+                    var shouldContinue = false;
 
-                    var result = await unsupportedWindow.ShouldContinue;
-                    if (result)
+                    if (suppressWarning)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Compatibility warning suppressed via application settings.");
+
+                        shouldContinue = true;
+                    }
+                    else
+                    {
+                        var unsupportedWindow = new UnsupportedWindow(mi);
+                        unsupportedWindow.Show();
+
+                        shouldContinue = await unsupportedWindow.ShouldContinue;
+                    }
+
+                    if (shouldContinue)
                     {
                         Log.Instance.IsTraceEnabled = true;
 
@@ -281,12 +302,22 @@ public partial class App
     }
 
     private void Application_Exit(object sender, ExitEventArgs e)
+    {
+        try
         {
-            // 关闭日志系统，确保所有日志都被写入
+            ShutdownAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutdown sequence encountered an error.", ex);
+        }
+        finally
+        {
             Log.Instance.Shutdown();
-            
             _singleInstanceMutex?.Close();
         }
+    }
 
     public void RestartMainWindow()
     {
@@ -345,9 +376,44 @@ public partial class App
         }
     }
 
-    public async Task ShutdownAsync()
+    public async Task ShutdownAsync(bool exitApplication = false)
     {
-        await AwaitBackgroundInitializationAsync();
+        Task shutdownTask;
+
+        lock (_shutdownLock)
+        {
+            if (_shutdownTask is null)
+                _shutdownTask = PerformShutdownAsync();
+
+            if (exitApplication)
+                _exitRequested = true;
+
+            shutdownTask = _shutdownTask;
+        }
+
+        await shutdownTask;
+
+        bool shouldInvokeShutdown;
+
+        lock (_shutdownLock)
+        {
+            shouldInvokeShutdown = _exitRequested && !_shutdownInvoked;
+            if (shouldInvokeShutdown)
+                _shutdownInvoked = true;
+        }
+
+        if (shouldInvokeShutdown)
+        {
+            if (Dispatcher.CheckAccess())
+                Shutdown();
+            else
+                await Dispatcher.InvokeAsync(Shutdown);
+        }
+    }
+
+    private async Task PerformShutdownAsync()
+    {
+        await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
         // 并行停止所有服务，提高关闭速度
         await Task.WhenAll(
@@ -367,9 +433,7 @@ public partial class App
             StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
             StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
             StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service")
-        );
-
-        Shutdown();
+        ).ConfigureAwait(false);
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -435,7 +499,7 @@ public partial class App
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
 
-                        await ShutdownAsync();
+                        await ShutdownAsync(true);
                     }
                 });
             }
