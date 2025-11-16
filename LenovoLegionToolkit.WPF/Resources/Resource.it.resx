@@ -1507,6 +1507,36 @@ Spostare il mouse o premere il tasto sulla tastiera per risvegliarli.</value>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Pulizia cache</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Pulire i file di cache di varie applicazioni e del sistema per liberare spazio di archiviazione.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Pulizia file di sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Pulire i file di sistema come file temporanei, log, dump di crash, ecc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Pulizia componenti di sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Pulire i file dei componenti di sistema come la cache di Windows Update, l'archivio dei componenti, ecc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Pulizia prestazioni</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Pulire i file che possono influenzare le prestazioni del sistema, come i file prefetch, ecc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Pulizia personalizzata</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Pulire file e directory specificati utilizzando regole personalizzate.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} azioni selezionate</value>
   </data>

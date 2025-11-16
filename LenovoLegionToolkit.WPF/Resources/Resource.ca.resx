@@ -126,6 +126,36 @@
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Neteja de memòria cau</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Neteja els fitxers de memòria cau de diverses aplicacions i del sistema per alliberar espai d'emmagatzematge.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Neteja de fitxers del sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Neteja els fitxers del sistema com ara fitxers temporals, registres, volcats de memòria, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Neteja de components del sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Neteja els fitxers dels components del sistema com ara la memòria cau de Windows Update, el magatzem de components, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Neteja de rendiment</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Neteja els fitxers que poden afectar el rendiment del sistema, com ara fitxers prefetch, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Neteja personalitzada</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Neteja els fitxers i directoris especificats utilitzant regles personalitzades.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} accions seleccionades</value>
   </data>

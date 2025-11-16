@@ -33,8 +33,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private OptimizationCategoryViewModel? _lastCleanupCategory;
     private bool _isLoadingCustomCleanupRules;
     private bool _isLoadingAppxPackages;
+    private bool _isLoadingAppxList;
     private bool _optimizationInteractionEnabled = true;
     private bool _cleanupInteractionEnabled = true;
+    private long _estimatedCleanupSize;
+    private bool _isCalculatingSize;
+    private CancellationTokenSource? _sizeCalculationCts;
+    private bool _hasInitializedCleanupMode = false;
+        private string _currentOperationText = string.Empty;
 
     [Flags]
     private enum InteractionScope
@@ -83,6 +89,73 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public string SelectedActionsSummary => string.Format(_selectedActionsSummaryFormat, VisibleSelectedActions.Count);
 
     public string SelectedActionsEmptyText => _selectedActionsEmptyText;
+
+    public long EstimatedCleanupSize
+    {
+        get => _estimatedCleanupSize;
+        private set
+        {
+            if (_estimatedCleanupSize == value)
+                return;
+
+            _estimatedCleanupSize = value;
+            OnPropertyChanged(nameof(EstimatedCleanupSize));
+            OnPropertyChanged(nameof(EstimatedCleanupSizeText));
+        }
+    }
+
+    public bool IsCalculatingSize
+    {
+        get => _isCalculatingSize;
+        private set
+        {
+            if (_isCalculatingSize == value)
+                return;
+
+            _isCalculatingSize = value;
+            OnPropertyChanged(nameof(IsCalculatingSize));
+        }
+    }
+
+    public string EstimatedCleanupSizeText
+    {
+        get
+        {
+            if (!_isCleanupMode || EstimatedCleanupSize == 0)
+                return string.Empty;
+
+            return string.Format(Resource.WindowsOptimizationPage_EstimatedCleanupSize, FormatBytes(EstimatedCleanupSize));
+        }
+    }
+
+    public string CurrentOperationText
+    {
+        get => _currentOperationText;
+        private set
+        {
+            if (_currentOperationText == value)
+                return;
+
+            _currentOperationText = value;
+            OnPropertyChanged(nameof(CurrentOperationText));
+        }
+    }
+
+    public string PendingText => GetResource("WindowsOptimizationPage_EstimatedCleanupSize_Pending");
+
+    private static string FormatBytes(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+
+        return $"{len:0.##} {sizes[order]}";
+    }
 
     public IEnumerable<OptimizationCategoryViewModel> ActiveCategories => _isCleanupMode ? CleanupCategories : OptimizationCategories;
 
@@ -162,7 +235,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         InitializeCategories();
         SetMode(false);
-        SelectRecommended(Categories);
+        // Don't select recommended by default - let InitializeActionStatesAsync set the checkboxes based on actual system state
         UpdateSelectedActions();
         _ = InitializeActionStatesAsync();
     }
@@ -206,7 +279,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             categoryVm.SelectionChanged += Category_SelectionChanged;
             Categories.Add(categoryVm);
 
-            if (string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
+            if (category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 CleanupCategories.Add(categoryVm);
             else
                 OptimizationCategories.Add(categoryVm);
@@ -239,8 +312,70 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
+        var selectedKeys = SelectedCleanupActions
+            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
+            .Select(a => a.ActionKey)
+            .ToList();
+
+        var selectedAppxPackages = SelectedCleanupActions
+            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
+            .Select(a => a.ActionKey)
+            .ToList();
+
+        if (selectedKeys.Count == 0 && selectedAppxPackages.Count == 0)
+        {
+            await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_EmptySelection_Message, SnackbarType.Warning);
+            return;
+        }
+
         await ExecuteAsync(
-            _windowsOptimizationService.RunCleanupAsync,
+            async ct =>
+            {
+                // Save selected Appx packages first
+                if (selectedAppxPackages.Count > 0)
+                {
+                    await Dispatcher.InvokeAsync(() => CurrentOperationText = GetResource("WindowsOptimizationPage_AppxManagement_Running"));
+                    var packagesToRemove = AppxPackages
+                        .Where(p => selectedAppxPackages.Contains(p.PackageFullName, StringComparer.OrdinalIgnoreCase) ||
+                                   selectedAppxPackages.Contains(p.PackageId, StringComparer.OrdinalIgnoreCase))
+                        .Where(p => !string.IsNullOrWhiteSpace(p.PackageFullName))
+                        .Select(p => p.PackageFullName)
+                        .ToList();
+
+                    if (packagesToRemove.Count > 0)
+                    {
+                        var previousPackages = _applicationSettings.Store.AppxPackagesToRemove ?? new List<string>();
+                        _applicationSettings.Store.AppxPackagesToRemove = packagesToRemove;
+                        _applicationSettings.SynchronizeStore();
+
+                        // Execute Appx cleanup
+                        await _windowsOptimizationService.ExecuteActionsAsync([WindowsOptimizationService.AppxCleanupActionKey], ct).ConfigureAwait(false);
+
+                        // Restore previous packages if needed (for future selections)
+                        _applicationSettings.Store.AppxPackagesToRemove = packagesToRemove;
+                        _applicationSettings.SynchronizeStore();
+                    }
+                    await Dispatcher.InvokeAsync(() => CurrentOperationText = string.Empty);
+                }
+
+                // Execute other cleanup actions
+                if (selectedKeys.Count > 0)
+                {
+                    // Run one by one to display progress text
+                    var actionsInOrder = SelectedCleanupActions
+                        .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
+                        .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
+                        .ToList();
+
+                    foreach (var action in actionsInOrder)
+                    {
+                        await Dispatcher.InvokeAsync(() =>
+                            CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle));
+                        await _windowsOptimizationService.ExecuteActionsAsync([action.ActionKey], ct).ConfigureAwait(false);
+                    }
+                    await Dispatcher.InvokeAsync(() => CurrentOperationText = string.Empty);
+                }
+            },
             Resource.SettingsPage_WindowsOptimization_Cleanup_Success,
             Resource.SettingsPage_WindowsOptimization_Cleanup_Error,
             InteractionScope.Cleanup);
@@ -325,10 +460,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         foreach (var category in Categories)
         {
-            var isCleanupCategory = string.Equals(
-                category.Key,
-                WindowsOptimizationService.CleanupCategoryKey,
-                StringComparison.OrdinalIgnoreCase);
+            var isCleanupCategory = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 
             if (isCleanupCategory && scope.HasFlag(InteractionScope.Cleanup))
                 yield return category;
@@ -356,11 +488,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_runCleanupButton != null)
             _runCleanupButton.IsEnabled = cleanupEnabled;
 
-        if (_categoryList != null)
-            _categoryList.IsEnabled = IsCleanupMode ? cleanupEnabled : optimizationEnabled;
-
-        if (_actionList != null)
-            _actionList.IsEnabled = IsCleanupMode ? cleanupEnabled : optimizationEnabled;
+        if (_categoriesList != null)
+            _categoriesList.IsEnabled = IsCleanupMode ? cleanupEnabled : optimizationEnabled;
     }
 
     private void ShowOperationIndicator(bool isVisible)
@@ -394,7 +523,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         foreach (var category in Categories)
         {
-            var target = string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase)
+            var target = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
                 ? newCleanupActions
                 : newOptimizationActions;
 
@@ -402,18 +531,27 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 target.Add(new SelectedActionViewModel(category.Key, category.Title, action.Key, action.Title, action.Description, action));
         }
 
-        var appxCategoryTitle = GetResource("WindowsOptimizationPage_AppxManagement_Header");
-        foreach (var package in AppxPackages.Where(package => package.IsSelected))
+        // Add selected Appx packages to cleanup actions if in cleanup mode
+        if (_isCleanupMode)
         {
-            var selectedAppx = new SelectedActionViewModel(
-                WindowsOptimizationService.CleanupCategoryKey,
-                appxCategoryTitle,
-                $"{WindowsOptimizationService.AppxCleanupActionKey}:{package.PackageId}",
-                package.DisplayName,
-                package.Description,
-                package);
+            foreach (var package in AppxPackages.Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.DisplayName) && !string.IsNullOrWhiteSpace(package.PackageId)))
+            {
+                var appxCategoryKey = "cleanup.appx";
+                var appxCategoryTitle = GetResource("WindowsOptimizationPage_AppxManagement_Header");
+                var actionKey = string.IsNullOrWhiteSpace(package.PackageFullName) ? package.PackageId : package.PackageFullName;
+                var actionTitle = package.DisplayName;
+                var actionDescription = string.IsNullOrWhiteSpace(package.Description) ? package.PackageId : package.Description;
 
-            newCleanupActions.Add(selectedAppx);
+                var appxViewModel = new SelectedActionViewModel(
+                    appxCategoryKey,
+                    appxCategoryTitle,
+                    actionKey,
+                    actionTitle,
+                    actionDescription,
+                    package);
+
+                newCleanupActions.Add(appxViewModel);
+            }
         }
 
         // Incrementally update SelectedOptimizationActions
@@ -424,6 +562,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         OnPropertyChanged(nameof(VisibleSelectedActions));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
+
+        if (_isCleanupMode)
+        {
+            _ = UpdateEstimatedCleanupSizeAsync();
+        }
+        else
+        {
+            EstimatedCleanupSize = 0;
+        }
     }
 
     private static void UpdateCollection<T>(ObservableCollection<T> existing, List<T> updated)
@@ -512,9 +659,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         UpdateCleanupControlsState();
     }
 
-    private void LoadAppxPackages()
+    private async void LoadAppxPackages()
     {
+        if (_isLoadingAppxList)
+            return;
+
+        _isLoadingAppxList = true;
         _isLoadingAppxPackages = true;
+
         try
         {
             foreach (var package in AppxPackages.ToList())
@@ -522,23 +674,61 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             AppxPackages.Clear();
 
+            // Show loading state
+            await Dispatcher.InvokeAsync(() =>
+            {
+                var loadingViewModel = new AppxPackageViewModel("", "", "正在加载应用，请稍候...", "", false);
+                AppxPackages.Add(loadingViewModel);
+            });
+
             var stored = _applicationSettings.Store.AppxPackagesToRemove ?? new List<string>();
             var selectedSet = new HashSet<string>(stored, StringComparer.OrdinalIgnoreCase);
 
-            foreach (var definition in AppxPackageDefinitions)
-            {
-                var viewModel = new AppxPackageViewModel(
-                    definition.Id,
-                    definition.DisplayName,
-                    definition.Description,
-                    selectedSet.Contains(definition.Id));
+            // Get installed Appx packages dynamically
+            var packages = await GetInstalledAppxPackagesAsync();
 
-                viewModel.PropertyChanged += AppxPackageViewModel_PropertyChanged;
-                AppxPackages.Add(viewModel);
-            }
+            await Dispatcher.InvokeAsync(() =>
+            {
+                AppxPackages.Clear();
+
+                if (packages.Count == 0)
+                {
+                    var emptyViewModel = new AppxPackageViewModel("", "", "未找到可卸载的应用", "", false);
+                    AppxPackages.Add(emptyViewModel);
+                }
+                else
+                {
+                    foreach (var package in packages.OrderBy(p => p.DisplayName, StringComparer.OrdinalIgnoreCase))
+                    {
+                        var isSelected = selectedSet.Contains(package.PackageId) || selectedSet.Contains(package.PackageFullName);
+                        var viewModel = new AppxPackageViewModel(
+                            package.PackageId,
+                            package.PackageFullName,
+                            package.DisplayName,
+                            package.Description,
+                            isSelected);
+
+                        viewModel.PropertyChanged += AppxPackageViewModel_PropertyChanged;
+                        AppxPackages.Add(viewModel);
+                    }
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to load Appx packages.", ex);
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                AppxPackages.Clear();
+                var errorViewModel = new AppxPackageViewModel("", "", $"加载失败: {ex.Message}", "", false);
+                AppxPackages.Add(errorViewModel);
+            });
         }
         finally
         {
+            _isLoadingAppxList = false;
             _isLoadingAppxPackages = false;
         }
 
@@ -546,14 +736,134 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         UpdateSelectedActions();
     }
 
+    private async Task<List<AppxPackageInfo>> GetInstalledAppxPackagesAsync()
+    {
+        return await Task.Run(() =>
+        {
+            var packages = new List<AppxPackageInfo>();
+
+            try
+            {
+                var psScript = "Get-AppxPackage | Where-Object { !$_.IsFramework -and !$_.NonRemovable } | ForEach-Object { [PSCustomObject]@{ PackageId = $_.Name; PackageFullName = $_.PackageFullName; DisplayName = $_.DisplayName; Publisher = $_.Publisher } } | ConvertTo-Json -Compress";
+
+                using var process = new System.Diagnostics.Process
+                {
+                    StartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psScript}\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                var output = process.StandardOutput.ReadToEnd();
+                var error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                if (process.ExitCode == 0 && !string.IsNullOrWhiteSpace(output))
+                {
+                    try
+                    {
+                        // Parse JSON output
+                        var json = output.Trim();
+                        if (json.StartsWith("["))
+                        {
+                            var packageArray = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement[]>(json);
+                            if (packageArray != null)
+                            {
+                                foreach (var item in packageArray)
+                                {
+                                    var packageId = item.TryGetProperty("PackageId", out var pkgId) ? pkgId.GetString() ?? "" : "";
+                                    var packageFullName = item.TryGetProperty("PackageFullName", out var pkgFullName) ? pkgFullName.GetString() ?? "" : "";
+                                    var displayName = item.TryGetProperty("DisplayName", out var dispName) ? dispName.GetString() ?? "" : "";
+                                    var publisher = item.TryGetProperty("Publisher", out var pub) ? pub.GetString() ?? "" : "";
+
+                                    if (!string.IsNullOrWhiteSpace(packageId) && !string.IsNullOrWhiteSpace(packageFullName))
+                                    {
+                                        packages.Add(new AppxPackageInfo
+                                        {
+                                            PackageId = packageId,
+                                            PackageFullName = packageFullName,
+                                            DisplayName = string.IsNullOrWhiteSpace(displayName) ? packageId : displayName,
+                                            Description = $"Publisher: {publisher}"
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        else if (json.StartsWith("{"))
+                        {
+                            // Single package
+                            var item = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(json);
+                            if (item.TryGetProperty("PackageId", out var pkgId) && item.TryGetProperty("PackageFullName", out var pkgFullName))
+                            {
+                                var packageId = pkgId.GetString() ?? "";
+                                var packageFullName = pkgFullName.GetString() ?? "";
+                                var displayName = item.TryGetProperty("DisplayName", out var dispName) ? dispName.GetString() ?? "" : "";
+                                var publisher = item.TryGetProperty("Publisher", out var pub) ? pub.GetString() ?? "" : "";
+
+                                if (!string.IsNullOrWhiteSpace(packageId) && !string.IsNullOrWhiteSpace(packageFullName))
+                                {
+                                    packages.Add(new AppxPackageInfo
+                                    {
+                                        PackageId = packageId,
+                                        PackageFullName = packageFullName,
+                                        DisplayName = string.IsNullOrWhiteSpace(displayName) ? packageId : displayName,
+                                        Description = $"Publisher: {publisher}"
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to parse Appx packages JSON. [output={output}]", ex);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(error))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"PowerShell error while getting Appx packages. [error={error}]");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get installed Appx packages.", ex);
+            }
+
+            return packages;
+        });
+    }
+
+    private record AppxPackageInfo
+    {
+        public string PackageId { get; init; } = string.Empty;
+        public string PackageFullName { get; init; } = string.Empty;
+        public string DisplayName { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+    }
+
     private void SaveAppxPackages()
     {
         var selectedPackages = AppxPackages
-            .Where(package => package.IsSelected)
+            .Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.PackageFullName))
+            .Select(package => package.PackageFullName) // Use PackageFullName for removal
+            .ToList();
+
+        // Also save PackageId for backward compatibility
+        var selectedPackageIds = AppxPackages
+            .Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.PackageId))
             .Select(package => package.PackageId)
             .ToList();
 
-        _applicationSettings.Store.AppxPackagesToRemove = selectedPackages;
+        // Store both for compatibility
+        _applicationSettings.Store.AppxPackagesToRemove = selectedPackages.Any() ? selectedPackages : selectedPackageIds;
         _applicationSettings.SynchronizeStore();
     }
 
@@ -585,16 +895,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     customAction.IsSelected = false;
             }
 
-            var appxAction = category.Actions.FirstOrDefault(action =>
-                string.Equals(action.Key, WindowsOptimizationService.AppxCleanupActionKey, StringComparison.OrdinalIgnoreCase));
-
-            if (appxAction is not null)
-            {
-                appxAction.IsEnabled = hasSelectedAppxPackages;
-
-                if (!hasSelectedAppxPackages && appxAction.IsSelected)
-                    appxAction.IsSelected = false;
-            }
+            // Appx cleanup action removed - no longer need to update its enabled state
         }
     }
 
@@ -627,6 +928,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         SaveCustomCleanupRules();
         RefreshCleanupActionAvailability();
         UpdateCleanupControlsState();
+
+        if (_isCleanupMode)
+        {
+            _ = UpdateEstimatedCleanupSizeAsync();
+        }
     }
 
     private void AppxPackageViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -742,6 +1048,48 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         CustomCleanupRules.Clear();
     }
 
+    private void RefreshAppxPackagesButton_Click(object sender, RoutedEventArgs e)
+    {
+        LoadAppxPackages();
+    }
+
+    private async Task UpdateEstimatedCleanupSizeAsync()
+    {
+        _sizeCalculationCts?.Cancel();
+        _sizeCalculationCts?.Dispose();
+        _sizeCalculationCts = new CancellationTokenSource();
+
+        var cancellationToken = _sizeCalculationCts.Token;
+
+        try
+        {
+            IsCalculatingSize = true;
+            var actionKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
+            var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                EstimatedCleanupSize = size;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when cancellation is requested
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to estimate cleanup size.", ex);
+        }
+        finally
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                IsCalculatingSize = false;
+            }
+        }
+    }
+
     private void SetMode(bool isCleanup)
     {
         var modeChanged = _isCleanupMode != isCleanup;
@@ -751,6 +1099,23 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             OnPropertyChanged(nameof(IsCleanupMode));
             OnPropertyChanged(nameof(ActiveCategories));
+
+            if (isCleanup)
+            {
+                if (!_hasInitializedCleanupMode)
+                {
+                    _hasInitializedCleanupMode = true;
+                    // Select recommended actions by default when first entering cleanup mode
+                    var activeCategories = ActiveCategories.ToList();
+                    SelectRecommended(activeCategories);
+                    UpdateSelectedActions();
+                }
+                _ = UpdateEstimatedCleanupSizeAsync();
+            }
+            else
+            {
+                EstimatedCleanupSize = 0;
+            }
         }
         else
         {
@@ -758,10 +1123,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             OnPropertyChanged(nameof(ActiveCategories));
         }
 
-        var activeCategories = ActiveCategories.ToList();
+        var activeCategoriesList = ActiveCategories.ToList();
         var preferredCategory = isCleanup ? _lastCleanupCategory : _lastOptimizationCategory;
-        if (preferredCategory is null || !activeCategories.Contains(preferredCategory))
-            preferredCategory = activeCategories.FirstOrDefault();
+        if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
+            preferredCategory = activeCategoriesList.FirstOrDefault();
 
         SelectedCategory = preferredCategory;
         OnPropertyChanged(nameof(VisibleSelectedActions));
@@ -866,9 +1231,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         private bool _isSelected;
 
-        public AppxPackageViewModel(string packageId, string displayName, string description, bool isSelected)
+        public AppxPackageViewModel(string packageId, string packageFullName, string displayName, string description, bool isSelected)
         {
             PackageId = packageId;
+            PackageFullName = packageFullName;
             DisplayName = displayName;
             Description = description;
             _isSelected = isSelected;
@@ -877,6 +1243,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string PackageId { get; }
+
+        public string PackageFullName { get; }
 
         public string DisplayName { get; }
 
@@ -902,6 +1270,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public class OptimizationCategoryViewModel : INotifyPropertyChanged
     {
         private bool _isEnabled = true;
+        private bool _isExpanded = false; // Default to collapsed
         private readonly string _selectionSummaryFormat;
 
         public OptimizationCategoryViewModel(string key, string title, string description, string selectionSummaryFormat, IEnumerable<OptimizationActionViewModel> actions)
@@ -981,6 +1350,19 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         public IEnumerable<string> SelectedActionKeys =>
             Actions.Where(action => action.IsEnabled && action.IsSelected).Select(action => action.Key);
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                if (_isExpanded == value)
+                    return;
+
+                _isExpanded = value;
+                OnPropertyChanged(nameof(IsExpanded));
+            }
+        }
 
         public void SetEnabled(bool isEnabled)
         {

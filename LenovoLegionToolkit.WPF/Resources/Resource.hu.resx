@@ -2227,6 +2227,36 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Gyorsítótár tisztítása</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Tisztítsa meg a különböző alkalmazások és a rendszer gyorsítótárfájljait, hogy felszabadítsa a tárolási területet.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Rendszerfájlok tisztítása</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Tisztítsa meg a rendszerfájlokat, mint például az ideiglenes fájlokat, naplókat, összeomlási memóriaképeket stb.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Rendszerösszetevők tisztítása</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Tisztítsa meg a rendszerösszetevő fájlokat, mint például a Windows Update gyorsítótárat, összetevőtárolót stb.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Teljesítmény tisztítása</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Tisztítsa meg a rendszerteljesítményt befolyásoló fájlokat, mint például a prefetch fájlokat stb.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Egyéni tisztítás</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Tisztítsa meg a megadott fájlokat és könyvtárakat egyéni szabályok használatával.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} actions selected</value>
   </data>

@@ -2187,6 +2187,36 @@ Nécessite un redémarrage.</value>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Nettoyage du cache</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Nettoyer les fichiers de cache de diverses applications et du système pour libérer de l'espace de stockage.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Nettoyage des fichiers système</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Nettoyer les fichiers système tels que les fichiers temporaires, les journaux, les vidages de mémoire, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Nettoyage des composants système</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Nettoyer les fichiers des composants système tels que le cache Windows Update, le magasin de composants, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Nettoyage des performances</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Nettoyer les fichiers qui peuvent affecter les performances du système, tels que les fichiers de préchargement, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Nettoyage personnalisé</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Nettoyer les fichiers et répertoires spécifiés à l'aide de règles personnalisées.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} actions sélectionnées</value>
   </data>

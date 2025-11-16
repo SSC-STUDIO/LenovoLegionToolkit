@@ -2231,6 +2231,36 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Limpieza de caché</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Limpiar archivos de caché de varias aplicaciones y del sistema para liberar espacio de almacenamiento.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Limpieza de archivos del sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Limpiar archivos del sistema como archivos temporales, registros, volcados de memoria, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Limpieza de componentes del sistema</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Limpiar archivos de componentes del sistema como caché de Windows Update, almacén de componentes, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Limpieza de rendimiento</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Limpiar archivos que pueden afectar el rendimiento del sistema, como archivos de prefetch, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Limpieza personalizada</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Limpiar archivos y directorios especificados usando reglas personalizadas.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} acciones seleccionadas</value>
   </data>

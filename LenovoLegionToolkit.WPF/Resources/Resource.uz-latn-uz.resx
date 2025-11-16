@@ -1875,4 +1875,49 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
-<data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve"><value>{0} actions selected</value></data><data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve"><value>No actions selected yet.</value></data><data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve"><value>Selected actions</value></data><data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve"><value>Cleanup</value></data><data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve"><value>System optimization</value></data></root>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Kesh tozalash</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Saqlash maydonini bo'shatish uchun turli ilovalar va tizimning kesh fayllarini tozalang.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Tizim fayllarini tozalash</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Vaqtinchalik fayllar, jurnallar, xotira nusxalari va boshqalar kabi tizim fayllarini tozalang.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Tizim komponentlarini tozalash</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update kesh, komponent ombori va boshqalar kabi tizim komponent fayllarini tozalang.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Ishlashni tozalash</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Prefetch fayllari va boshqalar kabi tizim ishlashiga ta'sir qilishi mumkin bo'lgan fayllarni tozalang.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Maxsus tozalash</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Maxsus qoidalardan foydalanib belgilangan fayl va kataloglarni tozalang.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} amal tanlangan</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Hozircha hech qanday amal tanlanmagan.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Tanlangan amallar</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Tozalash</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Tizim optimallashtirish</value>
+  </data>
+</root>

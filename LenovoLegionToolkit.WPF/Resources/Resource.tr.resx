@@ -2229,4 +2229,49 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
-<data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve"><value>{0} actions selected</value></data><data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve"><value>No actions selected yet.</value></data><data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve"><value>Selected actions</value></data><data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve"><value>Cleanup</value></data><data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve"><value>System optimization</value></data></root>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Önbellek temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Depolama alanını boşaltmak için çeşitli uygulamaların ve sistemin önbellek dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Sistem dosyaları temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Geçici dosyalar, günlükler, çökme dökümleri vb. sistem dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Sistem bileşenleri temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Windows Update önbelleği, bileşen deposu vb. sistem bileşen dosyalarını temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Performans temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Prefetch dosyaları vb. sistem performansını etkileyebilecek dosyaları temizleyin.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Özel temizleme</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Özel kurallar kullanarak belirtilen dosya ve dizinleri temizleyin.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} eylem seçildi</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Henüz eylem seçilmedi.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Seçilen eylemler</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Temizleme</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Sistem optimizasyonu</value>
+  </data>
+</root>

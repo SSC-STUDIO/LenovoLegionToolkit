@@ -2218,4 +2218,49 @@
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
-<data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve"><value>{0} actions selected</value></data><data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve"><value>No actions selected yet.</value></data><data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve"><value>Selected actions</value></data><data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve"><value>Cleanup</value></data><data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve"><value>System optimization</value></data></root>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Очищення кешу</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Очистіть файли кешу різних додатків і системи, щоб звільнити місце для зберігання.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Очищення системних файлів</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Очистіть системні файли, такі як тимчасові файли, журнали, знімки збоїв тощо.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Очищення системних компонентів</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Очистіть файли системних компонентів, такі як кеш оновлень Windows, сховище компонентів тощо.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Очищення продуктивності</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Очистіть файли, які можуть впливати на продуктивність системи, такі як файли попереднього вибору тощо.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Користувацьке очищення</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Очистіть вказані файли та каталоги за допомогою користувацьких правил.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} дій вибрано</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Дії ще не вибрані.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Вибрані дії</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Очищення</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Оптимізація системи</value>
+  </data>
+</root>

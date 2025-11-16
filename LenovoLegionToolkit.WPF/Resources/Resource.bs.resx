@@ -859,6 +859,36 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Čišćenje predmemorije</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Očistite datoteke predmemorije različitih aplikacija i sistema kako biste oslobodili prostor za pohranu.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Čišćenje sistemskih datoteka</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Očistite sistemske datoteke kao što su privremene datoteke, dnevnici, crash dump-ovi itd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Čišćenje sistemskih komponenti</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Očistite datoteke sistemskih komponenti kao što su Windows Update predmemorija, komponentni skladište itd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Čišćenje performansi</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Očistite datoteke koje mogu utjecati na performanse sistema, kao što su prefetch datoteke itd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Prilagođeno čišćenje</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Očistite navedene datoteke i direktorije koristeći prilagođena pravila.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} odabranih radnji</value>
   </data>

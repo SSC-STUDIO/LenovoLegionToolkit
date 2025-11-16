@@ -1666,6 +1666,36 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Čištění mezipaměti</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Vyčistěte soubory mezipaměti různých aplikací a systému, abyste uvolnili úložný prostor.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Čištění systémových souborů</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Vyčistěte systémové soubory, jako jsou dočasné soubory, protokoly, výpisy paměti atd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Čištění systémových komponent</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Vyčistěte soubory systémových komponent, jako je mezipaměť Windows Update, úložiště komponent atd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Čištění výkonu</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Vyčistěte soubory, které mohou ovlivnit výkon systému, jako jsou prefetch soubory atd.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Vlastní čištění</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Vyčistěte zadané soubory a adresáře pomocí vlastních pravidel.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} vybraných akcí</value>
   </data>

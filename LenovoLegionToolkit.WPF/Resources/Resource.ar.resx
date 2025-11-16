@@ -1390,6 +1390,36 @@
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} من {1} إجراءات محددة</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>تنظيف ذاكرة التخزين المؤقت</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>تنظيف ملفات ذاكرة التخزين المؤقت من التطبيقات المختلفة والنظام لتحرير مساحة التخزين.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>تنظيف ملفات النظام</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>تنظيف ملفات النظام مثل الملفات المؤقتة والسجلات وملفات تفريغ الأعطال وغيرها.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>تنظيف مكونات النظام</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>تنظيف ملفات مكونات النظام مثل ذاكرة التخزين المؤقت لتحديثات Windows ومستودع المكونات وغيرها.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>تنظيف الأداء</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>تنظيف الملفات التي قد تؤثر على أداء النظام مثل ملفات prefetch وغيرها.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>تنظيف مخصص</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>تنظيف الملفات والمجلدات المحددة باستخدام قواعد مخصصة.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} إجراءً محددًا</value>
   </data>

@@ -2252,4 +2252,49 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
-<data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve"><value>{0} actions selected</value></data><data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve"><value>No actions selected yet.</value></data><data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve"><value>Selected actions</value></data><data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve"><value>Cleanup</value></data><data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve"><value>System optimization</value></data></root>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Dọn dẹp bộ nhớ cache</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Dọn dẹp các tệp cache từ các ứng dụng và hệ thống khác nhau để giải phóng dung lượng lưu trữ.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Dọn dẹp tệp hệ thống</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Dọn dẹp các tệp hệ thống như tệp tạm, nhật ký, bản dump sự cố, v.v.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Dọn dẹp thành phần hệ thống</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Dọn dẹp các tệp thành phần hệ thống như bộ nhớ cache Windows Update, kho thành phần, v.v.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Dọn dẹp hiệu suất</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Dọn dẹp các tệp có thể ảnh hưởng đến hiệu suất hệ thống, chẳng hạn như tệp prefetch, v.v.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Dọn dẹp tùy chỉnh</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Dọn dẹp các tệp và thư mục được chỉ định bằng cách sử dụng quy tắc tùy chỉnh.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} hành động đã chọn</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>Chưa có hành động nào được chọn.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Các hành động đã chọn</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Dọn dẹp</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Tối ưu hóa hệ thống</value>
+  </data>
+</root>
