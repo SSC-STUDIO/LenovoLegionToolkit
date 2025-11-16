@@ -2332,6 +2332,9 @@
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
     <value>所選操作無法完成。</value>
   </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>操作列表</value>
+  </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>檔案總管與介面</value>
   </data>
@@ -2355,6 +2358,36 @@
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
     <value>移除快取、暫存檔與其他殘留資料。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>快取清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>清理各種應用程式和系統的快取檔案，釋放儲存空間。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>系統檔案清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>清理暫存檔、日誌、當機傾印檔等系統檔案。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>系統元件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>清理 Windows 更新快取、元件存放區等系統元件檔案。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>效能清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>清理可能影響系統效能的檔案，如預取檔等。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>自訂清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>使用自訂規則清理指定的檔案和目錄。</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
     <value>工作列與開始功能表配置</value>
@@ -2514,6 +2547,18 @@
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>已選取 {0}/{1} 個動作</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>預計可清理大小: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>正在估算中…</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>正在執行：{0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>正在卸載所選應用…</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>建議</value>

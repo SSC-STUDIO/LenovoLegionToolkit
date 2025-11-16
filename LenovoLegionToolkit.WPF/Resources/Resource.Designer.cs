@@ -5248,6 +5248,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Estimated cleanup size: {0}.
+        /// </summary>
+        public static string WindowsOptimizationPage_EstimatedCleanupSize {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_EstimatedCleanupSize", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to {0} actions selected.
         /// </summary>
         public static string WindowsOptimizationPage_SelectedActions_Count {

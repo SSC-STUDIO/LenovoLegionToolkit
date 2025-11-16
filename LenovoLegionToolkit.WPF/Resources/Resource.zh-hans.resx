@@ -2399,6 +2399,9 @@
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
     <value>卸载所选应用失败。</value>
   </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>操作列表</value>
+  </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
     <value>自定义清理规则</value>
   </data>
@@ -2456,11 +2459,47 @@
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
     <value>删除缓存、临时文件与其他残留。</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>缓存清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>清理各种应用程序和系统的缓存文件，释放存储空间。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>系统文件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>清理临时文件、日志、崩溃转储等系统文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>系统组件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>清理 Windows 更新缓存、组件存储等系统组件文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>性能清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>清理可能影响系统性能的文件，如预取文件等。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>自定义清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>使用自定义规则清理指定的文件和目录。</value>
+  </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
     <value>任务栏与开始菜单布局</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
     <value>隐藏搜索框和任务视图按钮、禁用任务栏分组并始终显示托盘图标。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>禁用开始菜单并让Win键打开搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>完全禁用开始菜单。当您按下Win键时，将打开搜索而不是开始菜单。</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
     <value>提升资源管理器响应速度</value>
@@ -2629,6 +2668,18 @@
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>推荐</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>预计可清理大小: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>正在估算中…</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>正在执行：{0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>正在卸载所选应用…</value>
   </data>
 
 </root>

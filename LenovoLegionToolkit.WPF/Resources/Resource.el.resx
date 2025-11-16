@@ -2287,6 +2287,36 @@
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Καθαρισμός κρυφής μνήμης</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Καθαρίστε αρχεία κρυφής μνήμης από διάφορες εφαρμογές και το σύστημα για να απελευθερώσετε χώρο αποθήκευσης.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Καθαρισμός αρχείων συστήματος</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Καθαρίστε αρχεία συστήματος όπως προσωρινά αρχεία, αρχεία καταγραφής, dumps σφαλμάτων κ.λπ.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Καθαρισμός συστατικών συστήματος</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Καθαρίστε αρχεία συστατικών συστήματος όπως η κρυφή μνήμη Windows Update, το αποθετήριο συστατικών κ.λπ.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Καθαρισμός απόδοσης</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Καθαρίστε αρχεία που μπορεί να επηρεάσουν την απόδοση του συστήματος, όπως αρχεία prefetch κ.λπ.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Προσαρμοσμένος καθαρισμός</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Καθαρίστε καθορισμένα αρχεία και καταλόγους χρησιμοποιώντας προσαρμοσμένους κανόνες.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} actions selected</value>
   </data>

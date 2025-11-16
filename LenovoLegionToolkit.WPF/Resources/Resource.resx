@@ -1302,6 +1302,9 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
     <value>Failed to remove selected apps.</value>
   </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Actions</value>
+  </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
     <value>Custom cleanup rule</value>
   </data>
@@ -1359,11 +1362,47 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
     <value>Remove caches, temporary files and other leftovers.</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Cache Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Clean up cache files from various applications and the system to free up storage space.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>System Files Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Clean up system files such as temporary files, logs, crash dumps, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>System Components Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Clean up system component files such as Windows Update cache, component store, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Performance Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Clean up files that may affect system performance, such as prefetch files, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Custom Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Clean up specified files and directories using custom rules.</value>
+  </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
     <value>Taskbar and start menu layout</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
     <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Disable start menu and open search with Win key</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
     <value>Improve Explorer responsiveness</value>
@@ -2645,5 +2684,17 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Estimated cleanup size: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Estimating...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Running: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Uninstalling selected apps...</value>
   </data>
 </root>

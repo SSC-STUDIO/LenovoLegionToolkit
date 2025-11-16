@@ -60,9 +60,9 @@ public class TrayHelper : IDisposable
     {
         var pipelines = await _automationProcessor.GetPipelinesAsync();
         pipelines = pipelines.Where(p => p.Trigger is null).ToList();
-        SetAutomationItems(pipelines);
+        await SetAutomationItemsAsync(pipelines);
 
-        _automationProcessor.PipelinesChanged += (_, p) => SetAutomationItems(p);
+        _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p);
     }
 
     private void InitializeStaticItems(INavigation navigation)
@@ -105,17 +105,33 @@ public class TrayHelper : IDisposable
         _contextMenu.Items.Add(closeMenuItem);
     }
 
-    private void SetAutomationItems(List<AutomationPipeline> pipelines)
+    private async Task SetAutomationItemsAsync(List<AutomationPipeline> pipelines)
     {
         foreach (var item in _contextMenu.Items.OfType<Control>().Where(mi => AUTOMATION_TAG.Equals(mi.Tag)).ToArray())
             _contextMenu.Items.Remove(item);
 
         pipelines = pipelines.Where(p => p.Trigger is null).Reverse().ToList();
 
-        if (pipelines.Count != 0)
+        // Filter out pipelines whose steps are not supported on this machine
+        var supportedPipelines = new List<AutomationPipeline>();
+        foreach (var pipeline in pipelines)
+        {
+            try
+            {
+                var supportChecks = await Task.WhenAll(pipeline.Steps.Select(s => s.IsSupportedAsync()));
+                if (supportChecks.All(s => s))
+                    supportedPipelines.Add(pipeline);
+            }
+            catch
+            {
+                // If any check fails, consider the pipeline unsupported
+            }
+        }
+
+        if (supportedPipelines.Count != 0)
             _contextMenu.Items.Insert(0, new Separator { Tag = AUTOMATION_TAG });
 
-        foreach (var pipeline in pipelines)
+        foreach (var pipeline in supportedPipelines)
         {
             var icon = Enum.TryParse<SymbolRegular>(pipeline.IconName, out var iconParsed)
                 ? iconParsed

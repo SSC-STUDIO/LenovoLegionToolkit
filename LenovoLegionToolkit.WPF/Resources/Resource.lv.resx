@@ -1851,6 +1851,36 @@ Nepieciešama restartēšana.</value>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Kešatmiņas tīrīšana</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Notīriet kešatmiņas failus no dažādām lietotnēm un sistēmas, lai atbrīvotu krātuves vietu.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Sistēmas failu tīrīšana</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Notīriet sistēmas failus, piemēram, pagaidu failus, žurnālus, avārijas kopijas utt.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Sistēmas komponentu tīrīšana</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Notīriet sistēmas komponentu failus, piemēram, Windows Update kešatmiņu, komponentu krātuvi utt.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Veiktspējas tīrīšana</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Notīriet failus, kas var ietekmēt sistēmas veiktspēju, piemēram, prefetch failus utt.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Pielāgota tīrīšana</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Notīriet norādītos failus un mapes, izmantojot pielāgotus noteikumus.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} izvēlētas darbības</value>
   </data>

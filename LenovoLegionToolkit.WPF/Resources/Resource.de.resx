@@ -2286,6 +2286,36 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Cache-Bereinigung</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Bereinigen Sie Cache-Dateien von verschiedenen Anwendungen und dem System, um Speicherplatz freizugeben.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>Systemdateien-Bereinigung</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Bereinigen Sie Systemdateien wie temporäre Dateien, Protokolle, Absturzabbilder usw.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>Systemkomponenten-Bereinigung</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Bereinigen Sie Systemkomponentendateien wie Windows Update-Cache, Komponentenspeicher usw.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Leistungsbereinigung</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Bereinigen Sie Dateien, die die Systemleistung beeinträchtigen können, wie Prefetch-Dateien usw.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Benutzerdefinierte Bereinigung</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Bereinigen Sie angegebene Dateien und Verzeichnisse mit benutzerdefinierten Regeln.</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
     <value>{0} Aktionen ausgewählt</value>
   </data>

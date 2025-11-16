@@ -99,10 +99,10 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <wpfui:Button
-                    x:Name="_closeButton"
-                    MinWidth="120"
-                    Click="CloseButton_Click"
-                    Content="关闭" />
+                x:Name="_closeButton"
+                MinWidth="120"
+                Click="CloseButton_Click"
+                Content="{x:Static resources:Resource.Close}" />
             </StackPanel>
     </Grid>
 </wpfui:UiWindow>
