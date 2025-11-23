@@ -2129,6 +2129,9 @@ Formatos suportados são: {1}.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>A desinstalar aplicações selecionadas…</value>
   </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>Libertados {0} em {1}s</value>
+  </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorador e interface</value>
   </data>

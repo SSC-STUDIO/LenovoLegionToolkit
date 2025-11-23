@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.CLI.Lib;
+namespace LenovoLegionToolkit.CLI.Lib;
 
 public class IpcRequest
 {
@@ -17,6 +17,11 @@ public class IpcRequest
         GetRGBPreset,
         SetRGBPreset,
         QuickAction,
+        IsShellRegistered,
+        RunShellCommand,
+        IsShellInstalled,
+        InstallShell,
+        UninstallShell,
     }
 
     public OperationType? Operation { get; init; }

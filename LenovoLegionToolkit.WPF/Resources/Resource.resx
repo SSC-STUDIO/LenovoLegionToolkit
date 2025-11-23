@@ -1254,6 +1254,9 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Cleanup</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Beautification</value>
+  </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimization</value>
   </data>
@@ -1302,6 +1305,21 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
     <value>Failed to remove selected apps.</value>
   </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Loading apps, please wait...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Failed to load: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Publisher: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Registry MRU/history cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+  </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>Actions</value>
   </data>
@@ -1340,6 +1358,153 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>Explorer &amp; interface</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Windows Beautification</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Change right-click menu style.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Switch to modern menu</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Applies the classic style and restarts Explorer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Switch to default right-click menu</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Restores the default style and restarts Explorer.</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>System beautification</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>Right-click menu style</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>Switch between default and classic context menu styles.</value>
+  </data>
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>Enable classic</value>
+  </data>
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>Disable classic</value>
+  </data>
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>Restore default</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>Status: Classic menu installed and enabled</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>Status: Classic menu not installed</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>Status: Installed but not enabled</value>
+  </data>
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>Open style settings</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>Uninstall shell.exe</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Completely uninstall shell.exe and related files</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows Beautification</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Customize Windows appearance including right-click menu style.</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>Menu Style Settings</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>Auto (Follow system theme)</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>Classic</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>Modern</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>Enable transparency effects</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>Rounded corners</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>Shadows</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>Select the theme for the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>Enable transparency effects for the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>Customize the appearance of the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>Failed to enable classic menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>Failed to restore default menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>Failed to install shell.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>Failed to uninstall shell.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>Failed to apply style settings.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Visual effects</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Adjust Windows transparency effects.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Enable transparency effects</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>System beautification</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Tune taskbar, File Explorer and user interface behaviour.</value>
@@ -1421,6 +1586,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
     <value>Turn off cloud content suggestions and recommendation banners.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Change Windows key to open search</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Modify Windows key behavior to open search instead of the start menu.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>Optimise multimedia scheduling</value>
@@ -2697,4 +2868,31 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>Uninstalling selected apps...</value>
   </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Compact view</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+
+    <value>Freed {0} in {1}s</value>
+
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>Launch system tools and utilities.</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>Failed to start tool</value>
+  </data>
+
 </root>

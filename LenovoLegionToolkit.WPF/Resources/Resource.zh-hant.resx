@@ -2320,6 +2320,9 @@
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
     <value>執行清理操作</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Windows 美化</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全選</value>
   </data>
@@ -2334,6 +2337,12 @@
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>操作列表</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Windows 美化</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>變更右鍵選單樣式。</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>檔案總管與介面</value>
@@ -2412,6 +2421,12 @@
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
     <value>關閉雲端內容建議與推播橫幅。</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>將 Windows 鍵改為開啟搜尋</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>修改 Windows 鍵行為，使其開啟搜尋而不是開始功能表。</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>最佳化多媒體排程</value>
@@ -2560,7 +2575,142 @@
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>正在卸載所選應用…</value>
   </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>已清理 {0}，耗時 {1} 秒</value>
+  </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>建議</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>展開全部</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>摺疊全部</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>選單樣式設定</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>主題</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>自動（跟隨系統主題）</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>經典</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>現代</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>啟用透明效果</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>圓角</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>陰影</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>套用</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>選擇右鍵選單的主題。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>為右鍵選單啟用透明效果。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>自訂右鍵選單的外觀。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>找不到 Shell.exe。請確保已安裝 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>找不到設定檔。請確保已安裝 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>啟用經典選單失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>還原預設選單失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>套用樣式設定失敗。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>切換到現代選單</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>套用經典樣式並重新啟動檔案總管。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>切換到預設右鍵選單</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>還原預設樣式並重新啟動檔案總管。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>卸載 shell.exe</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>完全卸載 shell.exe 及相關檔案。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
+    <value>正在刪除: {0}</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>啟動系統工具和實用程式</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>顯示工具</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>遊戲工具</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>記憶體工具</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>其他工具</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>週邊設備工具</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>儲存工具</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>壓力測試工具</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>系統診斷工具</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>啟動工具失敗</value>
   </data>
 </root>

@@ -1,0 +1,893 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WizTree 3\n"
+"POT-Creation-Date: 2017-08-31 12:05\n"
+"PO-Revision-Date: 2025-02-25 12:06+1300\n"
+"Last-Translator: th_sjy <th_sjy@163.com>\n"
+"Language-Team: th_sjy <http://www.th-sjy.com>\n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+
+#: WizTreeMain.pas:673
+msgid "Scanning..."
+msgstr "正在扫描..."
+
+#: WizTreeMain.pas:673 WizTreeMain.pas:4286
+msgid "Folders"
+msgstr "文件夹"
+
+#: WizTreeMain.pas:673 WizTreeMain.pas:4283
+msgid "Files"
+msgstr "文件"
+
+#: WizTreeMain.pas:688
+msgid "Dumping file"
+msgstr "正在转储文件"
+
+#: WizTreeMain.pas:688 WizTreeMain.pas:953
+msgid "MB"
+msgstr "MB"
+
+#: WizTreeMain.pas:950
+msgid "GB"
+msgstr "GB"
+
+#: WizTreeMain.pas:956
+msgid "KB"
+msgstr "KB"
+
+#: WizTreeMain.pas:961
+msgid "Bytes"
+msgstr "字节"
+
+#: WizTreeMain.pas:1141
+msgid "Files in"
+msgstr "文件在"
+
+#: WizTreeMain.pas:1143
+msgid "File in"
+msgstr "文件在"
+
+#: WizTreeMain.pas:1691 WizTreeMain.pas:1738
+msgid "Selected Files"
+msgstr "已选择文件"
+
+#: WizTreeMain.pas:1691 WizTreeMain.pas:1738 WizTreeMain.pas:3593
+msgid "Total Size"
+msgstr "总大小"
+
+#: WizTreeMain.pas:1874 WizTreeMain.pas:1976 WizTreeMain.pas:2033
+msgid "You are about to open"
+msgstr "你即将打开"
+
+#: WizTreeMain.pas:1875
+msgid "Command Prompt windows - are you sure?"
+msgstr "命令提示符窗口 - 你确定?"
+
+#: WizTreeMain.pas:1977
+msgid "Explorer windows - are you sure?"
+msgstr "资源管理器窗口 - 你确定?"
+
+#: WizTreeMain.pas:2034
+msgid "files - are you sure?"
+msgstr "文件 - 你确定?"
+
+#. FileName := FDir;
+#. 2 = select directory
+#: WizTreeMain.pas:2147 WizTreeMain.pas:2162 WizTreeMain.pas:3041
+msgid "Select Folder"
+msgstr "选择文件夹"
+
+#. YMMV
+#: WizTreeMain.pas:2149
+msgid "Select"
+msgstr "选择"
+
+#: WizTreeMain.pas:2202
+msgid "File not found"
+msgstr "文件未找到"
+
+#: WizTreeMain.pas:2326
+msgid "Error"
+msgstr "错误"
+
+#: WizTreeMain.pas:2351
+msgid "Sorting file list..."
+msgstr "正在排序文件列表..."
+
+#: WizTreeMain.pas:2362
+msgid "Loading tree..."
+msgstr "正在加载树..."
+
+#: WizTreeMain.pas:2406
+msgid "Scan complete in"
+msgstr "扫描完成"
+
+#: WizTreeMain.pas:2408
+msgid "seconds"
+msgstr "秒"
+
+#: WizTreeMain.pas:2412
+msgid "canceled"
+msgstr "已取消"
+
+#: WizTreeMain.pas:2480
+msgid "Failed to update Windows Explorer context menu"
+msgstr "更新 Windows 资源管理器上下文菜单失败"
+
+#: WizTreeMain.pas:2560
+msgid "No MFT root found!"
+msgstr "未找到 MFT 根!"
+
+#. we have an update!
+#: WizTreeMain.pas:2640
+msgid "An update is available"
+msgstr "有可用的更新"
+
+#: WizTreeMain.pas:2641
+msgid "Click on the \"View Update\" button to learn more."
+msgstr "点击 \"查看更新\" 按钮了解更多信息."
+
+#. if tag set then display error if any
+#: WizTreeMain.pas:2648
+msgid "No update found."
+msgstr "未找到更新."
+
+#. if tag set then display error if any
+#: WizTreeMain.pas:2660
+msgid "Error checking for updates:"
+msgstr "检查更新时出错:"
+
+#: WizTreeMain.pas:2836
+msgid "Please restart WizTree as Administrator to dump the MFT file"
+msgstr "请以管理员身份重新启动 WizTree 转储 MFT 文件"
+
+#: WizTreeMain.pas:2844
+msgid "Please select an NTFS formatted drive."
+msgstr "请选择 NTFS 格式化的驱动器."
+
+#: WizTreeMain.pas:2869
+msgid "Dumping MFT file, please wait..."
+msgstr "正在转储 MFT 文件, 请稍候..."
+
+#: WizTreeMain.pas:2880
+msgid "MFT data dump complete."
+msgstr "MFT 数据转储完成."
+
+#: WizTreeMain.pas:2884
+msgid "MFT data dumped to file"
+msgstr "MFT 数据转储到文件"
+
+#: WizTreeMain.pas:2991
+msgid "64 bit"
+msgstr "64 位"
+
+#: WizTreeMain.pas:2993
+msgid "32 bit"
+msgstr "32 位"
+
+#: WizTreeMain.pas:3042
+msgid "MFT file"
+msgstr "MFT 文件"
+
+#: WizTreeMain.pas:3487
+msgid "Loading file list..."
+msgstr "正在加载文件列表..."
+
+#: WizTreeMain.pas:3592
+msgid "files"
+msgstr "文件"
+
+#. lblTotalSpacePerc.Caption := '';
+#: WizTreeMain.pas:3636 WizTreeMain.pas:3637 WizTreeMain.pas:3658
+#: WizTreeMain.pas:3663 WizTreeMain.pas:3666 WizTreeMain.pas:3674
+#: WizTreeMain.pas:3675 WizTreeMain.pas:3677 WizTreeMain.pas:3679
+#: WizTreeMain.pas:3681 WizTreeMain.pas:4268 WizTreeMain.pas:4269
+#: WizTreeMain.pas:4270 WizTreeMain.pas:4271 WizTreeMain.pas:4272
+#: WizTreeMain.pas:4273 WizTreeMain.pas:4274
+msgid "n/a"
+msgstr "不适用"
+
+#: WizTreeMain.pas:3648
+msgid "<Folder>"
+msgstr "<文件夹>"
+
+#: WizTreeMain.pas:4228
+msgid "File"
+msgstr "文件"
+
+#: WizTreeMain.pas:4229
+msgid "Options"
+msgstr "选项"
+
+#: WizTreeMain.pas:4230 WizTreeMain.pas:4260
+msgid "Scan"
+msgstr "扫描"
+
+#: WizTreeMain.pas:4231
+msgid "New Instance"
+msgstr "新实例"
+
+#: WizTreeMain.pas:4232
+msgid "Explore Folder"
+msgstr "浏览文件夹"
+
+#: WizTreeMain.pas:4233
+msgid "Command Prompt Here"
+msgstr "命令提示符"
+
+#: WizTreeMain.pas:4234
+msgid "Copy Path"
+msgstr "复制路径"
+
+#: WizTreeMain.pas:4235
+msgid "Delete (to Recycle Bin)"
+msgstr "删除 (到回收站)"
+
+#: WizTreeMain.pas:4236
+msgid "Delete (No undelete possible)"
+msgstr "删除 (无法撤消删除)"
+
+#: WizTreeMain.pas:4237
+msgid "Dump MFT File"
+msgstr "转储 MFT 文件"
+
+#: WizTreeMain.pas:4238
+msgid "Exit"
+msgstr "退出"
+
+#: WizTreeMain.pas:4240
+msgid "Display Dynamic values"
+msgstr "显示动态值"
+
+#: WizTreeMain.pas:4241
+msgid "Display Byte values"
+msgstr "显示字节值"
+
+#: WizTreeMain.pas:4242
+msgid "Display KB values"
+msgstr "显示 KB 值"
+
+#: WizTreeMain.pas:4243
+msgid "Display MB values"
+msgstr "显示 MB 值"
+
+#: WizTreeMain.pas:4244
+msgid "Display GB values"
+msgstr "显示 GB 值"
+
+#: WizTreeMain.pas:4245
+msgid "Windows Explorer context menu"
+msgstr "Windows 资源管理器上下文菜单"
+
+#: WizTreeMain.pas:4246
+msgid "Always Run as Administrator"
+msgstr "总是以管理员身份运行"
+
+#: WizTreeMain.pas:4248
+msgid "Language"
+msgstr "语言"
+
+#: WizTreeMain.pas:4250
+msgid "Restart as Administrator"
+msgstr "以管理员身份重新启动"
+
+#: WizTreeMain.pas:4251
+msgid "WizTree requires \"Administrator\" rights to enable high speed scanning of NTFS hard drives and to access all system files and folders. Click on the \"Restart as Administrator\" button to enable Administrator rights."
+msgstr "WizTree 需要 \"管理员\" 权限, 启用高速扫描 NTFS 硬盘和访问所有的系统文件和文件夹. 点击 \"以管理员身份重新启动\" 按钮启用管理员权限."
+
+#: WizTreeMain.pas:4252
+msgid "Don't show this again"
+msgstr "不要再次显示"
+
+#: WizTreeMain.pas:4254
+msgid "View Update"
+msgstr "查看更新"
+
+#: WizTreeMain.pas:4255
+msgid "Dismiss"
+msgstr "驳回"
+
+#: WizTreeMain.pas:4256
+msgid "Check for updates"
+msgstr "检查更新"
+
+#: WizTreeMain.pas:4257
+msgid "Check for updates now"
+msgstr "现在检查更新"
+
+#: WizTreeMain.pas:4259
+msgid "Select:"
+msgstr "选择:"
+
+#: WizTreeMain.pas:4261
+msgid "Cancel"
+msgstr "取消"
+
+#: WizTreeMain.pas:4262
+msgid "Ready..."
+msgstr "就绪..."
+
+#: WizTreeMain.pas:4263
+msgid "Selection:"
+msgstr "选择:"
+
+#: WizTreeMain.pas:4264
+msgid "Total Space:"
+msgstr "总空间:"
+
+#: WizTreeMain.pas:4265
+msgid "Space Used:"
+msgstr "已用空间:"
+
+#: WizTreeMain.pas:4266
+msgid "Space Free:"
+msgstr "可用空间:"
+
+#: WizTreeMain.pas:4276
+msgid "Help us make WizTree better!"
+msgstr "帮助我们使 WizTree 更好!"
+
+#: WizTreeMain.pas:4278
+msgid "Tree View"
+msgstr "树查看"
+
+#: WizTreeMain.pas:4280
+msgid "Folder"
+msgstr "文件夹"
+
+#: WizTreeMain.pas:4281
+msgid "Percent of Parent"
+msgstr "父级百分比"
+
+#: WizTreeMain.pas:4282 WizTreeMain.pas:4307
+msgid "Size"
+msgstr "大小"
+
+#: WizTreeMain.pas:4284 WizTreeMain.pas:4308
+msgid "Modified"
+msgstr "修改时间"
+
+#: WizTreeMain.pas:4285 WizTreeMain.pas:4309
+msgid "Attributes"
+msgstr "属性"
+
+#: WizTreeMain.pas:4287
+msgid "Items"
+msgstr "项目"
+
+#: WizTreeMain.pas:4288 WizTreeMain.pas:4310
+msgid "Allocated"
+msgstr "分配"
+
+#: WizTreeMain.pas:4290
+msgid "File View"
+msgstr "文件查看"
+
+#: WizTreeMain.pas:4292
+msgid "File Search Filter:"
+msgstr "文件搜索过滤器:"
+
+#: WizTreeMain.pas:4293
+msgid "Clear"
+msgstr "清除"
+
+#: WizTreeMain.pas:4294
+msgid "Match file name only"
+msgstr "仅匹配文件名"
+
+#: WizTreeMain.pas:4295
+msgid "(Fast)"
+msgstr "(快速)"
+
+#: WizTreeMain.pas:4296
+msgid "Match entire path"
+msgstr "匹配整个路径"
+
+#: WizTreeMain.pas:4297
+msgid "(Warning: can be slow!)"
+msgstr "(警告: 可能很慢!)"
+
+#: WizTreeMain.pas:4298
+msgid "Max files to display:"
+msgstr "要显示的最大文件:"
+
+#: WizTreeMain.pas:4300
+msgid "(Selecting ALL can be very slow!)"
+msgstr "(选择所有可能会非常慢!)"
+
+#: WizTreeMain.pas:4301
+msgid "ALL"
+msgstr "所有"
+
+#: WizTreeMain.pas:4303
+msgid "Total Files:"
+msgstr "文件总数:"
+
+#: WizTreeMain.pas:4305
+msgid "File Name"
+msgstr "文件名称"
+
+#: WizTreeMain.pas:4306
+msgid "Percent of Drive"
+msgstr "驱动器百分比"
+
+#: WizTreeMain.pas:4312
+msgid "About"
+msgstr "关于"
+
+#: WizTreeMain.pas:4314
+msgid "If you use WizTree commercially or you'd just like to support the freeware community then please make a donation by clicking on the Donate button at the top right of the screen. Thank you! :)"
+msgstr "如果您想将 WizTree 用于商业用途或想支持我们, 请点击右上角的捐赠按钮进行捐赠. 感谢您!"
+
+#: WizTreeMain.pas:4316
+msgid "What is WizTree?"
+msgstr "什么是 WizTree?"
+
+#: WizTreeMain.pas:4317
+msgid "WizTree is the world's fastest disk space analyzer. It scans your hard drive and shows you which files and folders are using the most disk space."
+msgstr "WizTree 是世界上最快的磁盘空间分析器. 它将扫描您的硬盘驱动器，并显示哪些文件和文件夹使用的磁盘空间最多."
+
+#: WizTreeMain.pas:4318
+msgid "It does this in the FASTEST way possible - you simply won't find any other application of this type that's quicker! Use the information WizTree provides to quickly locate and remove \"space hogs\" from your hard drive."
+msgstr "它将以最快的方式做到这一点 - 您找不到比它更快的这种类型的应用程序! 使用 WizTree 提供的信息, 您可快速的从硬盘中查找和释放被大量占用的空间."
+
+#: WizTreeMain.pas:4320
+msgid "WARNING: Take care not to remove any files that are required for the correct operation of your PC!"
+msgstr "警告: 不要删除任何正确操作计算机所需的文件!"
+
+#: WizTreeMain.pas:4322
+msgid "What makes WizTree so fast?"
+msgstr "WizTree 为什么这么快?"
+
+#: WizTreeMain.pas:4324
+msgid "When scanning NTFS formatted hard drives (most modern hard drives use this format), WizTree reads the hard drive's Master File Table (MFT) directly from the disk."
+msgstr "当扫描 NTFS 格式的硬盘 (大多数的现代硬盘都使用此格式) 时, WizTree 直接从磁盘读取硬盘主文件表 (MFT)."
+
+#: WizTreeMain.pas:4325
+msgid "The MFT is a special hidden file used by the NTFS file system to keep track of all files and folders on a hard drive. Scanning for files this way completely bypasses the operating system (Windows) and provides a huge performance boost."
+msgstr "MFT 是一个特殊的隐藏文件 用于在硬盘的 NTFS 文件系统中跟踪所有的文件和文件夹. 以这种方式扫描文件完全绕过了 Windows 操作系统, 提供了一个巨大的性能提升."
+
+#: WizTreeMain.pas:4327
+msgid "As of version 2.0, WizTree can now also scan non NTFS hard drives, network drives, USB drives, and individual directories."
+msgstr "从 WizTree 2.0 版本开始, 现在也可以扫描非 NTFS 硬盘驱动器, 网络驱动器, USB 驱动器和单个目录."
+
+#: WizTreeMain.pas:4329
+msgid "Please visit the Antibody Software website for more great software, such as:"
+msgstr "想了解更多更好的软件请访问 Antibody 软件网站, 例如:"
+
+#: WizTreeMain.pas:4330 WizTreeMain.pas:4334
+msgid "(click for more information)"
+msgstr "(点击查看更多信息)"
+
+#: WizTreeMain.pas:4331
+msgid "A powerful yet easy to use web gallery downloading tool. It supports most of the popular image hosting sites (such as flickr, facebook, Google image search, imgur, deviantart etc.)."
+msgstr "一个功能强大且易于使用的网络库下载工具. 它支持大多数流行的图像托管网站 (例如 flickr, facebook, Google image search, imgur, deviantart 等)."
+
+#: WizTreeMain.pas:4332
+msgid "It doesn't require any complicated setup or project files - it just works."
+msgstr "它不需要任何复杂的设置或项目文件."
+
+#: WizTreeMain.pas:4335
+msgid "A keyboard enhancement utility that makes it easy to type accented and other special Unicode characters on a standard US/UK keyboard using easy to remember keyboard shortcuts."
+msgstr "一个键盘增强实用工具, 可使用快捷键在键盘上轻松输入带重音符号类型和其它特殊的 Unicode 字符."
+
+#: WizTreeMain.pas:4336
+msgid "For example, to type an à (a with grave accent), you press Ctrl+` then press a. These shortcuts work from any Windows application."
+msgstr "例如, 若要键入一个 à (带有严重重音的 a), 请按 Ctrl+a. 这些快捷方式适用于任何 Windows 应用程序."
+
+#: SelectLanguage.pas:56 supportercode.pas:239
+msgid "OK"
+msgstr "确定"
+
+#: supportercode.pas:143
+msgid "Invalid Key - Please try again."
+msgstr "无效的密钥 - 请重试."
+
+#: supportercode.pas:144
+msgid "It is recommended that you copy and paste your supporter code."
+msgstr "建议您复制并粘贴您的支持者代码."
+
+#: supportercode.pas:145
+msgid "Only use digits 0 to 9 and letters A to F."
+msgstr "只能使用数字 0 到 9 和字母 A 到 F."
+
+#: supportercode.pas:219 WizTreeMain.pas:6266
+msgid "Thank you for your support!"
+msgstr "感谢您的支持!"
+
+#: supportercode.pas:220
+msgid "WizTree will now restart."
+msgstr "WizTree 现在将重新启动."
+
+#: supportercode.pas:241 WizTreeMain.pas:5286
+msgid "Enter Supporter Code"
+msgstr "输入支持者代码"
+
+#: supportercode.pas:242
+msgid "Supporter Code"
+msgstr "支持者代码"
+
+#. warning dialog title
+#: uVistaTaskDialog.pas:228
+msgid "Warning"
+msgstr "警告"
+
+#. confirmation dialog title
+#: uVistaTaskDialog.pas:233
+msgid "Confirmation"
+msgstr "确认"
+
+#. information dialog title
+#: uVistaTaskDialog.pas:243
+msgid "Information"
+msgstr "信息"
+
+#: WizTreeMain.pas:1616
+msgid "(No Extension)"
+msgstr "(无扩展名)"
+
+#: WizTreeMain.pas:5269
+msgid "File Type"
+msgstr "文件类型"
+
+#: WizTreeMain.pas:5272
+msgid "Percent"
+msgstr "百分比"
+
+#: WizTreeMain.pas:5273
+msgid "Extension"
+msgstr "扩展名"
+
+#: WizTreeMain.pas:5276
+msgid "MFT Dump"
+msgstr "MFT 转储"
+
+#: WizTreeMain.pas:5276
+msgid "All Files"
+msgstr "所有文件"
+
+#: WizTreeMain.pas:5277
+msgid "Show Treemap"
+msgstr "显示树图"
+
+#: WizTreeMain.pas:5278
+msgid "Show File Types"
+msgstr "显示文件类型"
+
+#: WizTreeMain.pas:5279
+msgid "Reset tree expansion"
+msgstr "重置树扩展"
+
+#: WizTreeMain.pas:5281
+msgid "Select Parent"
+msgstr "选择父"
+
+#: WizTreeMain.pas:5282
+msgid "Reselect Child"
+msgstr "重新选择子"
+
+#: WizTreeMain.pas:5283
+msgid "Help support WizTree development by making a donation"
+msgstr "通过捐赠支持 WizTree 的发展"
+
+#: WizTreeMain.pas:5284
+msgid "(You can hide the Donate button by making a donation)"
+msgstr "(您可以通过捐赠, 隐藏捐赠按钮)"
+
+#: WizTreeMain.pas:6883
+msgid "Show Allocated Size on Treemap"
+msgstr "在树图上显示分配大小"
+
+#: WizTreeMain.pas:6884
+msgid "Auto scan after making selection"
+msgstr "选择完自动扫描"
+
+#: WizTreeMain.pas:6886
+msgid "Zoom in Treemap"
+msgstr "放大树图"
+
+#: WizTreeMain.pas:6887
+msgid "Zoom out Treemap"
+msgstr "缩小树图"
+
+#: exporttreemap.pas:57 WizTreeMain.pas:7193
+msgid "Save Treemap Image as .png file"
+msgstr "将树图图像另存为. png 文件"
+
+#: exporttreemap.pas:58
+msgid "Save"
+msgstr "保存"
+
+#: exporttreemap.pas:60
+msgid "Width"
+msgstr "宽度"
+
+#: exporttreemap.pas:61
+msgid "Height"
+msgstr "高度"
+
+#: exporttreemap.pas:62
+msgid "Shades of Gray (single color)"
+msgstr "灰色阴影 (单色)"
+
+#: WizTreeMain.pas:7191
+msgid "Show Free Space on Treemap"
+msgstr "在树图上显示可用空间"
+
+msgid "File already exists - overwrite?"
+msgstr "文件已经存在 - 覆盖?"
+
+#: WizTreeMain.pas:3002 WizTreeMain.pas:3217
+msgid "Generated by"
+msgstr "生成由"
+
+#: WizTreeMain.pas:3002 WizTreeMain.pas:3217
+msgid "You can hide this message by making a donation"
+msgstr "您可以通过捐赠隐藏此信息"
+
+#: WizTreeMain.pas:4452
+msgid "MFT Dump cancelled..."
+msgstr "MFT 转储已取消..."
+
+#: WizTreeMain.pas
+msgid "Export complete."
+msgstr "导出完成."
+
+#: WizTreeMain.pas:7815
+msgid "Copy file and size info to clipboard"
+msgstr "将文件和大小信息复制到剪贴板"
+
+#: WizTreeMain.pas:7816
+msgid "Export to .CSV file"
+msgstr "导出到 .CSV 文件"
+
+msgid "Colors"
+msgstr "颜色"
+
+msgid "Default"
+msgstr "默认"
+
+msgid "Color Blind"
+msgstr "色盲"
+
+msgid "CSV file"
+msgstr "CSV 文件"
+
+msgid "Select CSV file"
+msgstr "选择 CSV 文件"
+
+msgid "Failed to import CSV file"
+msgstr "导入 CSV 文件失败"
+
+msgid "Color By"
+msgstr "颜色"
+
+msgid "Color"
+msgstr "颜色"
+
+msgid "File Extension(s)"
+msgstr "文件扩展名"
+
+msgid "Export File Types to CSV file"
+msgstr "将文件类型导出为 CSV 文件"
+
+msgid "Display TB values"
+msgstr "显示 TB 值"
+
+msgid "TB"
+msgstr ""
+
+msgid "UI Theme"
+msgstr "UI 主题"
+
+msgid "Auto"
+msgstr "自动"
+
+msgid "Light"
+msgstr "明亮"
+
+msgid "Dark"
+msgstr "黑暗"
+
+msgid "Sorry, your supporter code is only valid for versions of WizTree with version date"
+msgstr "抱歉, 您的支持者代码仅适用于带有版本日期的 WizTree 版本"
+
+msgid "or earlier."
+msgstr "或更早."
+
+msgid "This version of WizTree has version date"
+msgstr "此版本的 WizTree 有版本日期"
+
+msgid "Please install an older version of WizTree with a suitable version date, or purchase a new supporter code."
+msgstr "请安装具有合适版本日期的旧版 WizTree, 或购买新的支持者代码."
+
+msgid "Version Date:"
+msgstr "版本日期:"
+
+msgid "Supporter license"
+msgstr "支持者许可证"
+
+msgid "Enterprise license"
+msgstr "企业许可证"
+
+#: Displayed as X user license where is number
+msgid "user license"
+msgstr "用户许可证"
+
+msgid "Upgrades until:"
+msgstr "升级至:"
+
+msgid "lifetime"
+msgstr "终身"
+
+msgid "Supporter code not valid for this version"
+msgstr "支持者代码对此版本无效"
+
+msgid "Select Multiple"
+msgstr "选择多个"
+
+msgid "Multiple"
+msgstr "多个"
+
+msgid "Add Folder"
+msgstr "添加文件夹"
+
+msgid "Remove Folder"
+msgstr "移除文件夹"
+
+msgid "is included within"
+msgstr "包含在"
+
+msgid "They cannot both be selected."
+msgstr "他们不能同时被选中."
+
+msgid "Select All"
+msgstr "全选"
+
+msgid "Select None"
+msgstr "全不选"
+
+msgid "Lifetime"
+msgstr "寿命"
+
+msgid "Show Folder and File Names on Treemap"
+msgstr "在树状图上显示文件夹和文件名称"
+
+msgid "Filter Scan Results"
+msgstr "过滤器扫描结果"
+
+msgid "Include Filter:"
+msgstr "包含过滤器:"
+
+msgid "Exclude Filter:"
+msgstr "排除过滤器:"
+
+msgid "Apply Filter"
+msgstr "应用过滤器"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Reset Configuration to default values"
+msgstr "将配置重置为默认值"
+
+msgid "Tweaks"
+msgstr "调整"
+
+msgid "Enable drag/drop"
+msgstr "启用拖放"
+
+msgid "Open file on double click"
+msgstr "双击打开文件"
+
+msgid "Monitor file system for changes"
+msgstr "监视文件系统更改"
+
+msgid "Show max modified date of all sub folders/files as folder's last modified date"
+msgstr "将所有子文件夹/文件的最大修改日期显示为文件夹的最后修改日期"
+
+msgid "Use WizTree classic theme"
+msgstr "使用 WizTree 经典主题"
+
+msgid "Show horizontal lines in grids"
+msgstr "在网格中显示水平线"
+
+msgid "Alternate row colors"
+msgstr "备用行颜色"
+
+msgid "Enable gradient colors in treemap"
+msgstr "在树状图中启用渐变颜色"
+
+msgid "Number of Decimal places to display"
+msgstr "要显示的小数位数"
+
+msgid "WizFile is an extremely rapid file finder application that uses methods similar to WizTree to rapidly index your hard drives. File search results are returned instantly as you type. WizFile provides a real time view of all files on your hard drives - any changes to the file search results will be updated in real time as they occur. It requires minimal CPU and RAM usage and has a negligible impact on the performance of your PC."
+msgstr "WizFile 是一个非常快速的文件查找器应用程序，它使用类似于 WizTree 的方法来快速索引您的硬盘驱动器. 键入时会立即返回文件搜索结果. WizFile 提供了硬盘上所有文件的实时视图 - 对文件搜索结果的任何更改都会立即实时更新. 它需要最少的 CPU 和内存使用率. 对计算机性能的影响可以忽略不计."
+
+msgid "Dup Count"
+msgstr "重复计数"
+
+msgid "Dup Size"
+msgstr "重复大小"
+
+msgid "Duplicate Files:"
+msgstr "重复文件:"
+
+msgid "Duplicates only"
+msgstr "仅重复项"
+
+msgid "Don't locate duplicates"
+msgstr "不查找重复项"
+
+msgid "Locate by Name, Size"
+msgstr "按名称, 大小定位"
+
+msgid "Locate by Name, Size, Date"
+msgstr "按名称, 大小, 日期定位"
+
+msgid "Path"
+msgstr "路径"
+
+msgid "Scan MFT (if possible) when a folder is selected for analysis"
+msgstr "在选择用于分析的文件夹时扫描 MFT (如果可能)"
+
+msgid "Normally the MFT is only scanned when an entire drive is selected. This option can speed up the scanning of folders containing a large number of files, but can be slower for smaller folders."
+msgstr "通常, 仅当选择整个驱动器时才会扫描 MFT. 此选项可加快对包含大量文件的文件夹的扫描速度, 但对于较小的文件夹扫描速度可能会较慢."
+
+msgid "Reserved Space:"
+msgstr "预留空间:"
+
+msgid "Expand All"
+msgstr "全部展开"
+
+msgid "File group minimum size (set to 0 to disable file grouping)"
+msgstr "文件组最小大小 (设置为 0 可禁用文件分组)"
+
+msgid "Export"
+msgstr "导出"
+
+msgid "Export file name:"
+msgstr "导出文件名称:"
+
+msgid "Selection"
+msgstr "选择"
+
+msgid "Selected only"
+msgstr "仅选定"
+
+msgid "Export drive size information"
+msgstr "导出驱动器大小信息"
+
+msgid "Export \"Last Accessed\" and \"Created\" dates"
+msgstr "导出 \"上次访问\" 和 \"创建\" 日期"
+
+msgid "Export total size and allocated size of folders (excluding sub folders)"
+msgstr "导出文件夹 (不包括子文件夹) 的总大小和分配大小"
+
+msgid "Split file names into root, folder, filename and extension"
+msgstr "将文件名拆分为根, 文件夹, 文件名和扩展名"
+
+msgid "Export percentage of parent value"
+msgstr "父值的导出百分比"
+
+msgid "Max folder depth (0 = no limit):"
+msgstr "最大文件夹深度 (0=无限制):"
+
+msgid "Export Files"
+msgstr "导出文件"
+
+msgid "Export Folders"
+msgstr "导出文件夹"
+
+msgid "Either one or both of \"Export Files\" and \"Export Folders\" must be selected for the export to be valid."
+msgstr "必须选择 \"导出文件\" 和 \"导出文件夹\" 中的一个或两个, 导出才有效."
+
+msgid "Export MFT record number"
+msgstr "导出 MFT 记录号"

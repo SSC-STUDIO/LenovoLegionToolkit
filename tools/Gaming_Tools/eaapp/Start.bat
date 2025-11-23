@@ -1,0 +1,1 @@
+Start https://www.tbtool.cn/links/eaapp.html?%random%%random%%random%

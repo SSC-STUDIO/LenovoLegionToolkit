@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Security.AccessControl;
@@ -14,8 +15,11 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI.Features;
+using LenovoLegionToolkit.WPF.Services;
+using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.CLI;
 
@@ -162,6 +166,21 @@ public class IpcServer(
             case IpcRequest.OperationType.SetRGBPreset when req is { Value: not null }:
                 await SetRGBPresetAsync(req.Value);
                 return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.IsShellRegistered:
+                message = await IsShellRegisteredAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true, Message = message };
+            case IpcRequest.OperationType.RunShellCommand when req is { Value: not null }:
+                await RunShellCommandAsync(req.Value).ConfigureAwait(false);
+                return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.IsShellInstalled:
+                message = await IsShellInstalledAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true, Message = message };
+            case IpcRequest.OperationType.InstallShell:
+                await InstallShellAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.UninstallShell:
+                await UninstallShellAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true };
             default:
                 throw new IpcException("Invalid request");
         }
@@ -281,8 +300,203 @@ public class IpcServer(
             throw new InvalidOperationException("Invalid preset");
 
         await rgbKeyboardBacklightController.SetLightControlOwnerAsync(true).ConfigureAwait(false);
+
         await rgbKeyboardBacklightController.SetPresetAsync(preset).ConfigureAwait(false);
 
+
+
         MessagingCenter.Publish(new RGBKeyboardBacklightChangedMessage());
+
+    }
+
+
+
+    private static async Task<string> IsShellRegisteredAsync()
+    {
+        // Use NilesoftShellHelper.IsRegistered() which properly checks the registry
+        // regardless of where shell.exe is located
+        var isRegistered = await Task.Run(() => NilesoftShellHelper.IsRegistered()).ConfigureAwait(false);
+        return isRegistered.ToString().ToLowerInvariant();
+    }
+
+
+
+    private static async Task RunShellCommandAsync(string command)
+    {
+        if (string.IsNullOrEmpty(command) || command.Length > 1000)
+            throw new IpcException("Invalid command");
+
+        // Validate command for dangerous injection patterns
+        // Use the same validation as CMD.cs to prevent command injection attacks
+        if (CMD.ContainsDangerousInput(command))
+            throw new IpcException("Command contains dangerous characters");
+
+        await Task.Run(async () =>
+        {
+            try
+            {
+                var baseDir = AppContext.BaseDirectory;
+                var shellExePath = Path.Combine(baseDir, "shell.exe");
+
+                if (!File.Exists(shellExePath))
+                    throw new IpcException("shell.exe not found");
+
+                using var process = new System.Diagnostics.Process
+                {
+                    StartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = shellExePath,
+                        Arguments = command,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    }
+                };
+
+                process.Start();
+
+                // Read streams asynchronously to prevent deadlock
+                // Both streams must be read even if we don't use the output,
+                // otherwise the process can block waiting for buffer space
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+                var exitTask = process.WaitForExitAsync();
+
+                // Wait for process to exit and streams to finish reading concurrently
+                // This prevents deadlock: if output exceeds buffer size, the process will block
+                // waiting for buffers to be read. By awaiting both concurrently, we ensure
+                // stream reads can proceed while waiting for process exit.
+                await Task.WhenAll(exitTask, outputTask, errorTask).ConfigureAwait(false);
+
+                // Get results after all tasks complete (tasks are already completed, await returns immediately)
+                var output = await outputTask.ConfigureAwait(false);
+                var error = await errorTask.ConfigureAwait(false);
+
+                if (process.ExitCode != 0)
+                {
+                    throw new IpcException($"Shell command failed: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new IpcException($"Failed to execute shell command: {ex.Message}");
+            }
+        }).ConfigureAwait(false);
+    }
+
+    private static async Task<string> IsShellInstalledAsync()
+    {
+        try
+        {
+            var isInstalled = await Task.Run(() =>
+            {
+                try
+                {
+                    // Use NilesoftShellHelper to find shell.exe path (supports multiple locations)
+                    var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
+                    if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
+                        return false;
+
+                    // Use shell.exe's built-in API to check installation status
+                    // This is more accurate as shell.exe can check its own installation state
+                    using var process = new System.Diagnostics.Process
+                    {
+                        StartInfo = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = shellExePath,
+                            Arguments = "-isinstalled",
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true
+                        }
+                    };
+
+                    process.Start();
+                    var output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    // Parse output: shell.exe outputs "true" or "false"
+                    if (string.IsNullOrWhiteSpace(output))
+                        return false;
+
+                    var result = output.Trim().ToLowerInvariant();
+                    return result == "true";
+                }
+                catch
+                {
+                    // Fallback to NilesoftShellService if shell.exe query fails
+                    try
+                    {
+                        return NilesoftShellService.IsInstalled();
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }).ConfigureAwait(false);
+
+            return isInstalled.ToString().ToLowerInvariant();
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to check shell installation status: {ex.Message}");
+        }
+    }
+
+    private static async Task InstallShellAsync()
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    // 使用NilesoftShellService安装Shell
+                    NilesoftShellService.Install();
+                }
+                catch (Exception ex)
+                {
+                    throw new IpcException($"Shell installation failed: {ex.Message}");
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (IpcException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to install shell: {ex.Message}");
+        }
+    }
+
+    private static async Task UninstallShellAsync()
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    // 使用NilesoftShellService卸载Shell
+                    NilesoftShellService.Uninstall();
+                }
+                catch (Exception ex)
+                {
+                    throw new IpcException($"Shell uninstallation failed: {ex.Message}");
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (IpcException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to uninstall shell: {ex.Message}");
+        }
     }
 }

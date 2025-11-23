@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -10,6 +13,12 @@ public static class CMD
 {
     public static async Task<(int, string)> RunAsync(string file, string arguments, bool createNoWindow = true, bool waitForExit = true, Dictionary<string, string?>? environment = null, CancellationToken token = default)
     {
+        // Input validation to prevent command injection
+        if (!IsValidFileName(file))
+            throw new ArgumentException("Invalid file name", nameof(file));
+        if (arguments != null && ContainsDangerousInput(arguments))
+            throw new ArgumentException("Arguments contain dangerous characters", nameof(arguments));
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Running... [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
 
@@ -26,7 +35,12 @@ public static class CMD
         if (environment is not null)
         {
             foreach (var (key, value) in environment)
-                cmd.StartInfo.Environment[key] = value;
+            {
+                if (IsValidEnvironmentVariable(key) && (value == null || !ContainsDangerousInput(value)))
+                    cmd.StartInfo.Environment[key] = value;
+                else
+                    throw new ArgumentException($"Invalid environment variable: {key}");
+            }
         }
 
         cmd.Start();
@@ -48,5 +62,107 @@ public static class CMD
             Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
 
         return (exitCode, output);
+    }
+
+    private static bool IsValidFileName(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return false;
+
+        // Check for dangerous characters and paths in the original input
+        if (fileName.Contains("..") || fileName.Contains('|') || fileName.Contains('&') || fileName.Contains(';') || fileName.Contains('*') || fileName.Contains('?'))
+            return false;
+
+        try
+        {
+            // Check if it's a valid file path
+            var path = Path.GetFullPath(fileName);
+            
+            // Validate the full path for dangerous characters
+            // Path.GetFullPath may expand relative paths, so we need to validate the result
+            if (path.Contains("..") || path.Contains('|') || path.Contains('&') || path.Contains(';') || path.Contains('*') || path.Contains('?'))
+                return false;
+            
+            var fileInfo = new FileInfo(path);
+            
+            // Validate the filename portion using Windows invalid character list
+            // This is more permissive than a whitelist and allows legitimate Windows paths
+            // like "Program Files (x86)\App\tool.exe" while still blocking dangerous characters
+            var fileNameOnly = fileInfo.Name;
+            if (string.IsNullOrWhiteSpace(fileNameOnly))
+                return false;
+            
+            // Use Windows' built-in invalid character list to validate the filename
+            // This allows all valid Windows filename characters including parentheses, brackets, etc.
+            // while still blocking dangerous characters like < > : " / \ | ? *
+            var invalidChars = Path.GetInvalidFileNameChars();
+            if (fileNameOnly.IndexOfAny(invalidChars) >= 0)
+                return false;
+            
+            // Ensure the directory portion exists or is valid (if it's a relative path that was expanded)
+            // Path.GetFullPath will throw if the path is invalid, so if we get here, the path structure is valid
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool IsValidEnvironmentVariable(string variableName)
+    {
+        if (string.IsNullOrWhiteSpace(variableName))
+            return false;
+
+        // Environment variable names should only contain alphanumeric characters and underscores
+        foreach (char c in variableName)
+        {
+            if (!char.IsLetterOrDigit(c) && c != '_')
+                return false;
+        }
+        return true;
+    }
+
+    public static bool ContainsDangerousInput(string input)
+    {
+        // Check for dangerous characters that could be used for command injection
+        // Note: ">" and "<" are allowed for output redirection (e.g., ">nul 2>&1") as they are safe in cmd.exe context
+        // Use the same patterns as WindowsOptimizationService for consistency
+        string[] dangerousPatterns = { "&&", "||", "|", ";", "`", "$(" };
+        foreach (string pattern in dangerousPatterns)
+        {
+            if (input.Contains(pattern, StringComparison.Ordinal))
+                return true;
+        }
+
+        // Check for single "&" command separator (but allow "2>&1" and "1>&2" for output redirection)
+        // Single "&" can be used to chain commands: "command1 & command2"
+        // We check for " & " (with spaces on both sides) which is the most common command chaining pattern
+        // We also check for "& " (ampersand followed by space) and " &" (space before ampersand)
+        // but exclude "2>&1" and "1>&2" patterns where & is part of output redirection
+        
+        // Check for " & " (space before and after) - this is definitely command chaining
+        if (input.Contains(" & ", StringComparison.Ordinal))
+            return true;
+        
+        // Check for "& " (ampersand followed by space) - but exclude "2>&1" and "1>&2"
+        var index = input.IndexOf("& ", StringComparison.Ordinal);
+        if (index >= 0)
+        {
+            // If at start or if previous character is not '>' (not part of "2>&1" or "1>&2")
+            if (index == 0 || (index > 0 && input[index - 1] != '>'))
+                return true;
+        }
+
+        // Check for " &" (space before ampersand) - but exclude "2>&1" and "1>&2"
+        index = input.IndexOf(" &", StringComparison.Ordinal);
+        if (index >= 0)
+        {
+            // If at end or if character after " &" is not '1' (not part of "2>&1" or "1>&2")
+            if (index + 2 >= input.Length || (index + 2 < input.Length && input[index + 2] != '1'))
+                return true;
+        }
+
+        return false;
     }
 }

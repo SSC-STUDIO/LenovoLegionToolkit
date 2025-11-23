@@ -9,10 +9,10 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.AppName}"
-    Width="1150"
-    Height="750"
-    MinWidth="650"
-    MinHeight="600"
+    Width="1300"
+    Height="850"
+    MinWidth="500"
+    MinHeight="400"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
     <Grid>
@@ -123,9 +123,14 @@
                         PageType="{x:Type pages:PackagesPage}" />
                     <custom:NavigationItem
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
-                        Icon="Toolbox24"
+                        Icon="Gauge24"
                         PageTag="windowsOptimization"
                         PageType="{x:Type pages:WindowsOptimizationPage}" />
+                    <custom:NavigationItem
+                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Tools}"
+                        Icon="Toolbox24"
+                        PageTag="tools"
+                        PageType="{x:Type pages:ToolsPage}" />
                 </wpfui:NavigationStore.Items>
 
                 <wpfui:NavigationStore.Footer>

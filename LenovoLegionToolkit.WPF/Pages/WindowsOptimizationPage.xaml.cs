@@ -7,14 +7,21 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Optimization;
+using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Windows.Utils;
+using Microsoft.Win32;
+using System.IO;
+using System.Diagnostics;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -24,30 +31,49 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
         private SelectedActionsWindow? _selectedActionsWindow;
 
+    private enum PageMode
+    {
+        Optimization,
+        Cleanup,
+        Beautification
+    }
+
     private bool _isBusy;
-    private bool _isCleanupMode;
+    private PageMode _currentMode = PageMode.Optimization;
     private string _selectedActionsSummaryFormat = "{0}";
     private string _selectedActionsEmptyText = string.Empty;
     private OptimizationCategoryViewModel? _selectedCategory;
     private OptimizationCategoryViewModel? _lastOptimizationCategory;
     private OptimizationCategoryViewModel? _lastCleanupCategory;
+    private OptimizationCategoryViewModel? _lastBeautificationCategory;
     private bool _isLoadingCustomCleanupRules;
-    private bool _isLoadingAppxPackages;
-    private bool _isLoadingAppxList;
     private bool _optimizationInteractionEnabled = true;
     private bool _cleanupInteractionEnabled = true;
+    private bool _beautificationInteractionEnabled = true;
+    private bool _transparencyEnabled;
+    private bool _roundedCornersEnabled = true;
+    private bool _shadowsEnabled = true;
+    private string _selectedTheme = "auto";
+    private System.Windows.Threading.DispatcherTimer? _beautificationStatusTimer;
+    private MenuStyleSettingsWindow? _styleSettingsWindow;
     private long _estimatedCleanupSize;
     private bool _isCalculatingSize;
     private CancellationTokenSource? _sizeCalculationCts;
     private bool _hasInitializedCleanupMode = false;
         private string _currentOperationText = string.Empty;
+        private string _currentDeletingFile = string.Empty;
+    private bool _isCompactView;
+    private System.Windows.Threading.DispatcherTimer? _actionStateRefreshTimer;
+    private bool _isUserInteracting = false;
+    private DateTime _lastUserInteraction = DateTime.MinValue;
 
     [Flags]
     private enum InteractionScope
     {
         Optimization = 1,
         Cleanup = 2,
-        All = Optimization | Cleanup
+        Beautification = 4,
+        All = Optimization | Cleanup | Beautification
     }
 
     public bool IsBusy
@@ -75,18 +101,34 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     public ObservableCollection<OptimizationCategoryViewModel> CleanupCategories { get; } = [];
 
+    public ObservableCollection<OptimizationCategoryViewModel> BeautificationCategories { get; } = [];
+
     public ObservableCollection<SelectedActionViewModel> SelectedOptimizationActions { get; } = [];
 
     public ObservableCollection<SelectedActionViewModel> SelectedCleanupActions { get; } = [];
 
-    public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _isCleanupMode ? SelectedCleanupActions : SelectedOptimizationActions;
+    public ObservableCollection<SelectedActionViewModel> SelectedBeautificationActions { get; } = [];
+
+    public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _currentMode switch
+    {
+        PageMode.Cleanup => SelectedCleanupActions,
+        PageMode.Beautification => SelectedBeautificationActions,
+        _ => SelectedOptimizationActions
+    };
 
     public ObservableCollection<CustomCleanupRuleViewModel> CustomCleanupRules { get; } = [];
-    public ObservableCollection<AppxPackageViewModel> AppxPackages { get; } = [];
 
     public bool HasSelectedActions => VisibleSelectedActions.Count > 0;
 
-    public string SelectedActionsSummary => string.Format(_selectedActionsSummaryFormat, VisibleSelectedActions.Count);
+    public string SelectedActionsSummary
+    {
+        get
+        {
+            var count = VisibleSelectedActions.Count;
+            var formattedCount = count < 10 ? $"0{count}" : count.ToString();
+            return string.Format(_selectedActionsSummaryFormat, formattedCount);
+        }
+    }
 
     public string SelectedActionsEmptyText => _selectedActionsEmptyText;
 
@@ -121,10 +163,87 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         get
         {
-            if (!_isCleanupMode || EstimatedCleanupSize == 0)
+            if (_currentMode != PageMode.Cleanup || EstimatedCleanupSize == 0)
                 return string.Empty;
 
             return string.Format(Resource.WindowsOptimizationPage_EstimatedCleanupSize, FormatBytes(EstimatedCleanupSize));
+        }
+    }
+
+    public bool TransparencyEnabled
+    {
+        get => _transparencyEnabled;
+        set
+        {
+            if (_transparencyEnabled == value)
+                return;
+
+            _transparencyEnabled = value;
+            OnPropertyChanged(nameof(TransparencyEnabled));
+            SetTransparencyEnabled(value);
+        }
+    }
+
+    public bool RoundedCornersEnabled
+    {
+        get => _roundedCornersEnabled;
+        set
+        {
+            if (_roundedCornersEnabled == value)
+                return;
+
+            _roundedCornersEnabled = value;
+            OnPropertyChanged(nameof(RoundedCornersEnabled));
+        }
+    }
+
+    public bool ShadowsEnabled
+    {
+        get => _shadowsEnabled;
+        set
+        {
+            if (_shadowsEnabled == value)
+                return;
+
+            _shadowsEnabled = value;
+            OnPropertyChanged(nameof(ShadowsEnabled));
+        }
+    }
+
+    public string SelectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            if (_selectedTheme == value)
+                return;
+
+            _selectedTheme = value;
+            OnPropertyChanged(nameof(SelectedTheme));
+        }
+    }
+
+    public string BeautificationStatusText { get; private set; } = string.Empty;
+
+    public bool CanInstall
+    {
+        get
+        {
+            var isInstalled = NilesoftShellHelper.IsInstalled();
+            var isRegistered = NilesoftShellHelper.IsRegistered();
+            // Can install if shell.exe exists but not registered
+            return isInstalled && !isRegistered;
+        }
+    }
+
+    public bool CanUninstall
+    {
+        get
+        {
+            var isInstalled = NilesoftShellHelper.IsInstalled();
+            var isRegistered = NilesoftShellHelper.IsRegistered();
+            // Can uninstall if shell is installed and registered
+            return isInstalled && isRegistered;
         }
     }
 
@@ -141,7 +260,80 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
+    public string CurrentDeletingFile
+    {
+        get => _currentDeletingFile;
+        private set
+        {
+            if (_currentDeletingFile == value)
+                return;
+
+            _currentDeletingFile = value;
+            OnPropertyChanged(nameof(CurrentDeletingFile));
+        }
+    }
+
     public string PendingText => GetResource("WindowsOptimizationPage_EstimatedCleanupSize_Pending");
+
+    public string CompactText => GetResource("Compact");
+    public string ExpandAllText => GetResource("ExpandAll");
+    public string CollapseAllText => GetResource("CollapseAll");
+    public string ExpandCollapseText
+    {
+        get => _expandCollapseText;
+        private set
+        {
+            if (_expandCollapseText == value)
+                return;
+            _expandCollapseText = value;
+            OnPropertyChanged(nameof(ExpandCollapseText));
+        }
+    }
+
+    public bool IsCompactView
+    {
+        get => _isCompactView;
+        set
+        {
+            if (_isCompactView == value)
+                return;
+            _isCompactView = value;
+            OnPropertyChanged(nameof(IsCompactView));
+        }
+    }
+
+    private string _expandCollapseText = string.Empty;
+
+    private void ExpandAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var category in ActiveCategories)
+            category.IsExpanded = true;
+        RefreshExpandCollapseText();
+    }
+
+    private void CollapseAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var category in ActiveCategories)
+            category.IsExpanded = false;
+        RefreshExpandCollapseText();
+    }
+
+    private void ToggleExpandCollapseButton_Click(object sender, RoutedEventArgs e)
+    {
+        var list = ActiveCategories.ToList();
+        var allExpanded = list.Count > 0 && list.All(c => c.IsExpanded);
+        foreach (var category in list)
+            category.IsExpanded = !allExpanded;
+        RefreshExpandCollapseText();
+    }
+
+    // Beautification is integrated as a regular category; no separate modal.
+    private void RefreshExpandCollapseText()
+    {
+        var list = ActiveCategories.ToList();
+        var allExpanded = list.Count > 0 && list.All(c => c.IsExpanded);
+        ExpandCollapseText = allExpanded ? CollapseAllText : ExpandAllText;
+    }
 
     private static string FormatBytes(long bytes)
     {
@@ -157,7 +349,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         return $"{len:0.##} {sizes[order]}";
     }
 
-    public IEnumerable<OptimizationCategoryViewModel> ActiveCategories => _isCleanupMode ? CleanupCategories : OptimizationCategories;
+    public IEnumerable<OptimizationCategoryViewModel> ActiveCategories => _currentMode switch
+    {
+        PageMode.Cleanup => CleanupCategories,
+        PageMode.Beautification => BeautificationCategories,
+        _ => OptimizationCategories
+    };
 
     public OptimizationCategoryViewModel? SelectedCategory
     {
@@ -168,54 +365,26 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 return;
 
             _selectedCategory = value;
-            if (_isCleanupMode)
-                _lastCleanupCategory = value;
-            else
-                _lastOptimizationCategory = value;
+            switch (_currentMode)
+            {
+                case PageMode.Cleanup:
+                    _lastCleanupCategory = value;
+                    break;
+                case PageMode.Beautification:
+                    _lastBeautificationCategory = value;
+                    break;
+                default:
+                    _lastOptimizationCategory = value;
+                    break;
+            }
             OnPropertyChanged(nameof(SelectedCategory));
         }
     }
 
-    public bool IsCleanupMode => _isCleanupMode;
+    public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
+    public bool IsBeautificationMode => _currentMode == PageMode.Beautification;
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    private static readonly AppxPackageDefinition[] AppxPackageDefinitions =
-    {
-        new("Microsoft.BingNews", "Microsoft News", "News headlines and articles."),
-        new("Microsoft.BingWeather", "Weather", "Weather forecasts and alerts."),
-        new("Microsoft.BingFinance", "Money", "Finance and stock information."),
-        new("Microsoft.BingSports", "Sports", "Sports scores and news."),
-        new("Microsoft.GetHelp", "Get Help", "Microsoft support assistant."),
-        new("Microsoft.Getstarted", "Tips", "Windows tips and onboarding app."),
-        new("Microsoft.MixedReality.Portal", "Mixed Reality Portal", "Mixed reality setup experience."),
-        new("Microsoft.Microsoft3DViewer", "3D Viewer", "View and interact with 3D models."),
-        new("Microsoft.MicrosoftOfficeHub", "Office Hub", "Office app launcher and shortcuts."),
-        new("Microsoft.MicrosoftSolitaireCollection", "Solitaire Collection", "Microsoft card games collection."),
-        new("Microsoft.MicrosoftStickyNotes", "Sticky Notes", "Digital sticky notes."),
-        new("Microsoft.OneConnect", "Mobile Plans", "Mobile network configuration app."),
-        new("Microsoft.Paint3D", "Paint 3D", "3D art creation tool."),
-        new("Microsoft.People", "People", "Contacts management app."),
-        new("Microsoft.PowerAutomateDesktop", "Power Automate", "Desktop automation tool."),
-        new("Microsoft.RemoteDesktop", "Remote Desktop", "Remote desktop client."),
-        new("Microsoft.SkypeApp", "Skype", "Skype communications app."),
-        new("Microsoft.Whiteboard", "Whiteboard", "Collaborative whiteboard app."),
-        new("Microsoft.WindowsFeedbackHub", "Feedback Hub", "Send feedback to Microsoft."),
-        new("Microsoft.Xbox.TCUI", "Xbox TCUI", "Xbox social experience components."),
-        new("Microsoft.XboxApp", "Xbox Console Companion", "Legacy Xbox companion app."),
-        new("Microsoft.XboxGameOverlay", "Xbox Game Overlay", "Overlay components for Xbox experiences."),
-        new("Microsoft.XboxGamingOverlay", "Xbox Game Bar", "Xbox Game Bar experience."),
-        new("Microsoft.XboxIdentityProvider", "Xbox Identity Provider", "Xbox authentication components."),
-        new("Microsoft.XboxSpeechToTextOverlay", "Xbox Speech to Text", "Xbox speech overlay components."),
-        new("Microsoft.ZuneMusic", "Groove Music", "Music playback app."),
-        new("Microsoft.ZuneVideo", "Movies & TV", "Video playback app."),
-        new("Microsoft.YourPhone", "Phone Link", "Link your Android phone."),
-        new("Clipchamp.Clipchamp", "Clipchamp", "Microsoft Clipchamp video editor."),
-        new("TikTok.TikTok", "TikTok", "TikTok video application."),
-        new("SpotifyAB.SpotifyMusic", "Spotify", "Spotify music streaming app."),
-        new("Disney.37853FC22B2CE", "Disney+", "Disney+ streaming app."),
-        new("Microsoft.549981C3F5F10", "Cortana", "Cortana digital assistant.")
-    };
 
     public WindowsOptimizationPage()
     {
@@ -224,20 +393,50 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         CustomCleanupRules.CollectionChanged += CustomCleanupRules_CollectionChanged;
         LoadCustomCleanupRules();
-        LoadAppxPackages();
         UpdateCleanupControlsState();
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         if (Categories.Count > 0)
             return;
 
         InitializeCategories();
-        SetMode(false);
-        // Don't select recommended by default - let InitializeActionStatesAsync set the checkboxes based on actual system state
+        SetMode(PageMode.Optimization);
+        // Initialize action states first to set checkboxes based on actual system state
+        // This ensures checkboxes reflect what's actually applied, not recommended
+        await InitializeActionStatesAsync();
         UpdateSelectedActions();
-        _ = InitializeActionStatesAsync();
+        Unloaded += WindowsOptimizationPage_Unloaded;
+    }
+
+    private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _actionStateRefreshTimer?.Stop();
+        _beautificationStatusTimer?.Stop();
+        _styleSettingsWindow?.Close();
+    }
+
+    private void OpenStyleSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Close existing window if open
+            _styleSettingsWindow?.Close();
+
+            // Create and show style settings window
+            _styleSettingsWindow = new MenuStyleSettingsWindow
+            {
+                Owner = Window.GetWindow(this)
+            };
+            _styleSettingsWindow.Closed += (s, args) => _styleSettingsWindow = null;
+            _styleSettingsWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to open style settings window.", ex);
+        }
     }
 
     private void InitializeCategories()
@@ -248,6 +447,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         Categories.Clear();
         OptimizationCategories.Clear();
         CleanupCategories.Clear();
+        BeautificationCategories.Clear();
 
         var selectionSummaryFormat = GetResource("WindowsOptimization_Category_SelectionSummary");
         if (string.IsNullOrWhiteSpace(selectionSummaryFormat))
@@ -262,7 +462,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         _selectedActionsEmptyText = GetResource("WindowsOptimizationPage_SelectedActions_Empty");
         OnPropertyChanged(nameof(SelectedActionsEmptyText));
 
-        foreach (var category in _windowsOptimizationService.GetCategories())
+        foreach (var category in WindowsOptimizationService.GetCategories())
         {
             var categoryVm = new OptimizationCategoryViewModel(
                 category.Key,
@@ -277,10 +477,17 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     recommendedTagText)));
 
             categoryVm.SelectionChanged += Category_SelectionChanged;
+            categoryVm.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(OptimizationCategoryViewModel.IsExpanded))
+                    RefreshExpandCollapseText();
+            };
             Categories.Add(categoryVm);
 
             if (category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 CleanupCategories.Add(categoryVm);
+            else if (category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
+                BeautificationCategories.Add(categoryVm);
             else
                 OptimizationCategories.Add(categoryVm);
         }
@@ -288,11 +495,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         OnPropertyChanged(nameof(ActiveCategories));
         RefreshCleanupActionAvailability();
         SelectedCategory = ActiveCategories.FirstOrDefault();
+        RefreshExpandCollapseText();
     }
 
-    private async void ApplyButton_Click(object sender, RoutedEventArgs e)
+    private async void ApplyBeautificationButton_Click(object sender, RoutedEventArgs e)
     {
         var selectedKeys = Categories
+            .Where(category => category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
             .SelectMany(category => category.SelectedActionKeys)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -307,22 +516,34 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             ct => _windowsOptimizationService.ExecuteActionsAsync(selectedKeys, ct),
             Resource.WindowsOptimizationPage_ApplySelected_Success,
             Resource.WindowsOptimizationPage_ApplySelected_Error,
-            InteractionScope.Optimization);
+            InteractionScope.Beautification);
+
+        // 标记用户交互，防止立即刷新覆盖用户选择
+        _lastUserInteraction = DateTime.Now;
+        _isUserInteracting = true;
+        
+        // 延迟刷新状态，给 shell 注册操作足够的时间完成
+        // shell 注册需要重启资源管理器，可能需要几秒钟
+        await Task.Delay(2000);
+        
+        // Force refresh action states after execution to update checkboxes
+        await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+        
+        // 重置交互标志
+        _isUserInteracting = false;
+        
+        // Refresh beautification status after applying
+        _ = RefreshBeautificationStatusAsync();
     }
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
         var selectedKeys = SelectedCleanupActions
-            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
+            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey))
             .Select(a => a.ActionKey)
             .ToList();
 
-        var selectedAppxPackages = SelectedCleanupActions
-            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
-            .Select(a => a.ActionKey)
-            .ToList();
-
-        if (selectedKeys.Count == 0 && selectedAppxPackages.Count == 0)
+        if (selectedKeys.Count == 0)
         {
             await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_EmptySelection_Message, SnackbarType.Warning);
             return;
@@ -331,54 +552,143 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         await ExecuteAsync(
             async ct =>
             {
-                // Save selected Appx packages first
-                if (selectedAppxPackages.Count > 0)
-                {
-                    await Dispatcher.InvokeAsync(() => CurrentOperationText = GetResource("WindowsOptimizationPage_AppxManagement_Running"));
-                    var packagesToRemove = AppxPackages
-                        .Where(p => selectedAppxPackages.Contains(p.PackageFullName, StringComparer.OrdinalIgnoreCase) ||
-                                   selectedAppxPackages.Contains(p.PackageId, StringComparer.OrdinalIgnoreCase))
-                        .Where(p => !string.IsNullOrWhiteSpace(p.PackageFullName))
-                        .Select(p => p.PackageFullName)
-                        .ToList();
-
-                    if (packagesToRemove.Count > 0)
-                    {
-                        var previousPackages = _applicationSettings.Store.AppxPackagesToRemove ?? new List<string>();
-                        _applicationSettings.Store.AppxPackagesToRemove = packagesToRemove;
-                        _applicationSettings.SynchronizeStore();
-
-                        // Execute Appx cleanup
-                        await _windowsOptimizationService.ExecuteActionsAsync([WindowsOptimizationService.AppxCleanupActionKey], ct).ConfigureAwait(false);
-
-                        // Restore previous packages if needed (for future selections)
-                        _applicationSettings.Store.AppxPackagesToRemove = packagesToRemove;
-                        _applicationSettings.SynchronizeStore();
-                    }
-                    await Dispatcher.InvokeAsync(() => CurrentOperationText = string.Empty);
-                }
-
-                // Execute other cleanup actions
+                // Execute cleanup actions
                 if (selectedKeys.Count > 0)
                 {
-                    // Run one by one to display progress text
+                    // Verify that all selected keys exist in the service
+                    var actionsByKey = WindowsOptimizationService.GetCategories()
+                        .SelectMany(c => c.Actions)
+                        .ToDictionary(a => a.Key, a => a, StringComparer.OrdinalIgnoreCase);
+                    
+                    var missingKeys = selectedKeys.Where(k => !actionsByKey.ContainsKey(k)).ToList();
+                    if (missingKeys.Any())
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Some selected action keys were not found: {string.Join(", ", missingKeys)}");
+                        throw new InvalidOperationException($"无法找到以下操作: {string.Join(", ", missingKeys)}");
+                    }
+                    
+                    // Run one by one, show progress with per-step timing and freed size
                     var actionsInOrder = SelectedCleanupActions
-                        .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !a.CategoryKey.Equals("cleanup.appx", StringComparison.OrdinalIgnoreCase))
                         .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
                         .ToList();
 
+                    if (actionsInOrder.Count == 0)
+                    {
+                        throw new InvalidOperationException("没有找到要执行的操作。请确保已选择有效的清理操作。");
+                    }
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Starting cleanup execution. Selected actions: {actionsInOrder.Count}, Keys: {string.Join(", ", selectedKeys)}");
+
+                    long totalFreedBytes = 0;
+                    var swOverall = System.Diagnostics.Stopwatch.StartNew();
                     foreach (var action in actionsInOrder)
                     {
                         await Dispatcher.InvokeAsync(() =>
-                            CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle));
-                        await _windowsOptimizationService.ExecuteActionsAsync([action.ActionKey], ct).ConfigureAwait(false);
+                        {
+                            CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle);
+                            CurrentDeletingFile = string.Empty;
+                        });
+                        
+                        long sizeBefore = 0;
+                        try 
+                        { 
+                            sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.ActionKey, ct).ConfigureAwait(false);
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Estimated size before cleanup: {FormatBytes(sizeBefore)} for action: {action.ActionKey}");
+                        } 
+                        catch (Exception ex)
+                        { 
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to estimate size before cleanup for action: {action.ActionKey}", ex);
+                        }
+                        
+                        var sw = System.Diagnostics.Stopwatch.StartNew();
+                        
+                        try
+                        {
+                            // For custom cleanup, show file deletion progress
+                            if (action.ActionKey.Equals(WindowsOptimizationService.CustomCleanupActionKey, StringComparison.OrdinalIgnoreCase))
+                            {
+                                await ExecuteCustomCleanupWithProgressAsync(ct);
+                            }
+                            else
+                            {
+                                await _windowsOptimizationService.ExecuteActionsAsync([action.ActionKey], ct).ConfigureAwait(false);
+                            }
+                            
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Action executed: {action.ActionKey}, elapsed: {sw.Elapsed.TotalSeconds:0.0}s");
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Action execution failed: {action.ActionKey}", ex);
+                            throw; // Re-throw to show error to user
+                        }
+                        
+                        sw.Stop();
+                        
+                        // Wait a bit to ensure file system operations complete
+                        await Task.Delay(500, ct).ConfigureAwait(false);
+                        
+                        long sizeAfter = 0;
+                        try 
+                        { 
+                            sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.ActionKey, ct).ConfigureAwait(false);
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Estimated size after cleanup: {FormatBytes(sizeAfter)} for action: {action.ActionKey}");
+                        } 
+                        catch (Exception ex)
+                        { 
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to estimate size after cleanup for action: {action.ActionKey}", ex);
+                        }
+                        
+                        var freed = Math.Max(0, sizeBefore - sizeAfter);
+                        totalFreedBytes += freed;
+                        
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            CurrentOperationText = $"{action.ActionTitle} ✓ {FormatBytes(freed)} in {sw.Elapsed.TotalSeconds:0.0}s";
+                            CurrentDeletingFile = string.Empty;
+                        });
+                        
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Cleanup result for {action.ActionKey}: freed {FormatBytes(freed)}, before: {FormatBytes(sizeBefore)}, after: {FormatBytes(sizeAfter)}");
                     }
-                    await Dispatcher.InvokeAsync(() => CurrentOperationText = string.Empty);
+                    swOverall.Stop();
+                    var summaryFmt = GetResource("WindowsOptimizationPage_CleanupSummary");
+                    if (string.IsNullOrWhiteSpace(summaryFmt))
+                        summaryFmt = "Freed {0} in {1}s";
+                    await Dispatcher.InvokeAsync(() =>
+                        SnackbarHelper.Show(GetResource("SettingsPage_WindowsOptimization_Title"),
+                            string.Format(summaryFmt, FormatBytes(totalFreedBytes), swOverall.Elapsed.TotalSeconds.ToString("0.0")),
+                            SnackbarType.Success));
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        CurrentOperationText = string.Empty;
+                        CurrentDeletingFile = string.Empty;
+                    });
                 }
             },
             Resource.SettingsPage_WindowsOptimization_Cleanup_Success,
             Resource.SettingsPage_WindowsOptimization_Cleanup_Error,
             InteractionScope.Cleanup);
+
+        // After cleanup completes, re-estimate the remaining cleanup size
+        // in case some files were not removable or new files appeared.
+        try
+        {
+            // Reset the last value to force UI update even if it stays the same
+            EstimatedCleanupSize = 0;
+            await UpdateEstimatedCleanupSizeAsync();
+        }
+        catch
+        {
+            // ignore estimation errors
+        }
     }
 
     private void SelectRecommendedButton_Click(object sender, RoutedEventArgs e)
@@ -391,13 +701,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         foreach (var category in ActiveCategories)
             category.ClearSelection();
-
-        if (IsCleanupMode)
-        {
-            foreach (var package in AppxPackages)
-                package.IsSelected = false;
-            SaveAppxPackages();
-        }
 
         UpdateSelectedActions();
     }
@@ -426,12 +729,19 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             await operation(CancellationToken.None).ConfigureAwait(false);
             await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, successMessage, SnackbarType.Success));
         }
+        catch (OperationCanceledException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Windows optimization action was cancelled.");
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, "操作已取消", SnackbarType.Warning));
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Windows optimization action failed. Exception: {ex.Message}", ex);
 
-            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, errorMessage, SnackbarType.Error));
+            var detailedError = $"{errorMessage}\n错误详情: {ex.Message}";
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, detailedError, SnackbarType.Error));
         }
         finally
         {
@@ -449,6 +759,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (scope.HasFlag(InteractionScope.Cleanup))
             _cleanupInteractionEnabled = isEnabled;
 
+        if (scope.HasFlag(InteractionScope.Beautification))
+            _beautificationInteractionEnabled = isEnabled;
+
         foreach (var category in GetCategoriesForScope(scope))
             category.SetEnabled(isEnabled);
 
@@ -461,10 +774,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         foreach (var category in Categories)
         {
             var isCleanupCategory = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
+            var isBeautificationCategory = category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase);
 
             if (isCleanupCategory && scope.HasFlag(InteractionScope.Cleanup))
                 yield return category;
-            else if (!isCleanupCategory && scope.HasFlag(InteractionScope.Optimization))
+            else if (isBeautificationCategory && scope.HasFlag(InteractionScope.Beautification))
+                yield return category;
+            else if (!isCleanupCategory && !isBeautificationCategory && scope.HasFlag(InteractionScope.Optimization))
                 yield return category;
         }
     }
@@ -473,11 +789,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         var optimizationEnabled = _optimizationInteractionEnabled;
         var cleanupEnabled = _cleanupInteractionEnabled;
+        var beautificationEnabled = _beautificationInteractionEnabled;
 
-        if (_applyButton != null)
-            _applyButton.IsEnabled = optimizationEnabled;
-
-        var primaryButtonsEnabled = IsCleanupMode ? cleanupEnabled : optimizationEnabled;
+        var primaryButtonsEnabled = _currentMode switch
+        {
+            PageMode.Cleanup => cleanupEnabled,
+            PageMode.Beautification => beautificationEnabled,
+            _ => optimizationEnabled
+        };
 
         if (_selectRecommendedButton != null)
             _selectRecommendedButton.IsEnabled = primaryButtonsEnabled;
@@ -488,8 +807,19 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_runCleanupButton != null)
             _runCleanupButton.IsEnabled = cleanupEnabled;
 
+        if (_applyBeautificationButton != null)
+            _applyBeautificationButton.IsEnabled = beautificationEnabled;
+
         if (_categoriesList != null)
-            _categoriesList.IsEnabled = IsCleanupMode ? cleanupEnabled : optimizationEnabled;
+        {
+            var listEnabled = _currentMode switch
+            {
+                PageMode.Cleanup => cleanupEnabled,
+                PageMode.Beautification => beautificationEnabled,
+                _ => optimizationEnabled
+            };
+            _categoriesList.IsEnabled = listEnabled;
+        }
     }
 
     private void ShowOperationIndicator(bool isVisible)
@@ -513,57 +843,49 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             ? string.Empty
             : Resource.ResourceManager.GetString(resourceKey) ?? resourceKey;
 
-    private void Category_SelectionChanged(object? sender, EventArgs e) => UpdateSelectedActions();
+    private void Category_SelectionChanged(object? sender, EventArgs e)
+    {
+        _lastUserInteraction = DateTime.Now;
+        _isUserInteracting = true;
+        UpdateSelectedActions();
+        // 3秒后重置交互标志，给用户足够的时间完成操作
+        Task.Delay(3000).ContinueWith(_ => _isUserInteracting = false);
+    }
 
     private void UpdateSelectedActions()
     {
         // Build fresh selection snapshots for comparison
         var newOptimizationActions = new List<SelectedActionViewModel>();
         var newCleanupActions = new List<SelectedActionViewModel>();
+        var newBeautificationActions = new List<SelectedActionViewModel>();
 
         foreach (var category in Categories)
         {
-            var target = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
-                ? newCleanupActions
-                : newOptimizationActions;
+            List<SelectedActionViewModel> target;
+            if (category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+                target = newCleanupActions;
+            else if (category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
+                target = newBeautificationActions;
+            else
+                target = newOptimizationActions;
 
             foreach (var action in category.Actions.Where(action => action.IsEnabled && action.IsSelected))
                 target.Add(new SelectedActionViewModel(category.Key, category.Title, action.Key, action.Title, action.Description, action));
         }
 
-        // Add selected Appx packages to cleanup actions if in cleanup mode
-        if (_isCleanupMode)
-        {
-            foreach (var package in AppxPackages.Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.DisplayName) && !string.IsNullOrWhiteSpace(package.PackageId)))
-            {
-                var appxCategoryKey = "cleanup.appx";
-                var appxCategoryTitle = GetResource("WindowsOptimizationPage_AppxManagement_Header");
-                var actionKey = string.IsNullOrWhiteSpace(package.PackageFullName) ? package.PackageId : package.PackageFullName;
-                var actionTitle = package.DisplayName;
-                var actionDescription = string.IsNullOrWhiteSpace(package.Description) ? package.PackageId : package.Description;
-
-                var appxViewModel = new SelectedActionViewModel(
-                    appxCategoryKey,
-                    appxCategoryTitle,
-                    actionKey,
-                    actionTitle,
-                    actionDescription,
-                    package);
-
-                newCleanupActions.Add(appxViewModel);
-            }
-        }
 
         // Incrementally update SelectedOptimizationActions
         UpdateCollection(SelectedOptimizationActions, newOptimizationActions);
         // Incrementally update SelectedCleanupActions
         UpdateCollection(SelectedCleanupActions, newCleanupActions);
+        // Incrementally update SelectedBeautificationActions
+        UpdateCollection(SelectedBeautificationActions, newBeautificationActions);
 
         OnPropertyChanged(nameof(VisibleSelectedActions));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
 
-        if (_isCleanupMode)
+        if (_currentMode == PageMode.Cleanup)
         {
             _ = UpdateEstimatedCleanupSizeAsync();
         }
@@ -659,213 +981,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         UpdateCleanupControlsState();
     }
 
-    private async void LoadAppxPackages()
-    {
-        if (_isLoadingAppxList)
-            return;
-
-        _isLoadingAppxList = true;
-        _isLoadingAppxPackages = true;
-
-        try
-        {
-            foreach (var package in AppxPackages.ToList())
-                package.PropertyChanged -= AppxPackageViewModel_PropertyChanged;
-
-            AppxPackages.Clear();
-
-            // Show loading state
-            await Dispatcher.InvokeAsync(() =>
-            {
-                var loadingViewModel = new AppxPackageViewModel("", "", "正在加载应用，请稍候...", "", false);
-                AppxPackages.Add(loadingViewModel);
-            });
-
-            var stored = _applicationSettings.Store.AppxPackagesToRemove ?? new List<string>();
-            var selectedSet = new HashSet<string>(stored, StringComparer.OrdinalIgnoreCase);
-
-            // Get installed Appx packages dynamically
-            var packages = await GetInstalledAppxPackagesAsync();
-
-            await Dispatcher.InvokeAsync(() =>
-            {
-                AppxPackages.Clear();
-
-                if (packages.Count == 0)
-                {
-                    var emptyViewModel = new AppxPackageViewModel("", "", "未找到可卸载的应用", "", false);
-                    AppxPackages.Add(emptyViewModel);
-                }
-                else
-                {
-                    foreach (var package in packages.OrderBy(p => p.DisplayName, StringComparer.OrdinalIgnoreCase))
-                    {
-                        var isSelected = selectedSet.Contains(package.PackageId) || selectedSet.Contains(package.PackageFullName);
-                        var viewModel = new AppxPackageViewModel(
-                            package.PackageId,
-                            package.PackageFullName,
-                            package.DisplayName,
-                            package.Description,
-                            isSelected);
-
-                        viewModel.PropertyChanged += AppxPackageViewModel_PropertyChanged;
-                        AppxPackages.Add(viewModel);
-                    }
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to load Appx packages.", ex);
-
-            await Dispatcher.InvokeAsync(() =>
-            {
-                AppxPackages.Clear();
-                var errorViewModel = new AppxPackageViewModel("", "", $"加载失败: {ex.Message}", "", false);
-                AppxPackages.Add(errorViewModel);
-            });
-        }
-        finally
-        {
-            _isLoadingAppxList = false;
-            _isLoadingAppxPackages = false;
-        }
-
-        RefreshCleanupActionAvailability();
-        UpdateSelectedActions();
-    }
-
-    private async Task<List<AppxPackageInfo>> GetInstalledAppxPackagesAsync()
-    {
-        return await Task.Run(() =>
-        {
-            var packages = new List<AppxPackageInfo>();
-
-            try
-            {
-                var psScript = "Get-AppxPackage | Where-Object { !$_.IsFramework -and !$_.NonRemovable } | ForEach-Object { [PSCustomObject]@{ PackageId = $_.Name; PackageFullName = $_.PackageFullName; DisplayName = $_.DisplayName; Publisher = $_.Publisher } } | ConvertTo-Json -Compress";
-
-                using var process = new System.Diagnostics.Process
-                {
-                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "powershell.exe",
-                        Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{psScript}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    }
-                };
-
-                process.Start();
-                var output = process.StandardOutput.ReadToEnd();
-                var error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0 && !string.IsNullOrWhiteSpace(output))
-                {
-                    try
-                    {
-                        // Parse JSON output
-                        var json = output.Trim();
-                        if (json.StartsWith("["))
-                        {
-                            var packageArray = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement[]>(json);
-                            if (packageArray != null)
-                            {
-                                foreach (var item in packageArray)
-                                {
-                                    var packageId = item.TryGetProperty("PackageId", out var pkgId) ? pkgId.GetString() ?? "" : "";
-                                    var packageFullName = item.TryGetProperty("PackageFullName", out var pkgFullName) ? pkgFullName.GetString() ?? "" : "";
-                                    var displayName = item.TryGetProperty("DisplayName", out var dispName) ? dispName.GetString() ?? "" : "";
-                                    var publisher = item.TryGetProperty("Publisher", out var pub) ? pub.GetString() ?? "" : "";
-
-                                    if (!string.IsNullOrWhiteSpace(packageId) && !string.IsNullOrWhiteSpace(packageFullName))
-                                    {
-                                        packages.Add(new AppxPackageInfo
-                                        {
-                                            PackageId = packageId,
-                                            PackageFullName = packageFullName,
-                                            DisplayName = string.IsNullOrWhiteSpace(displayName) ? packageId : displayName,
-                                            Description = $"Publisher: {publisher}"
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (json.StartsWith("{"))
-                        {
-                            // Single package
-                            var item = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(json);
-                            if (item.TryGetProperty("PackageId", out var pkgId) && item.TryGetProperty("PackageFullName", out var pkgFullName))
-                            {
-                                var packageId = pkgId.GetString() ?? "";
-                                var packageFullName = pkgFullName.GetString() ?? "";
-                                var displayName = item.TryGetProperty("DisplayName", out var dispName) ? dispName.GetString() ?? "" : "";
-                                var publisher = item.TryGetProperty("Publisher", out var pub) ? pub.GetString() ?? "" : "";
-
-                                if (!string.IsNullOrWhiteSpace(packageId) && !string.IsNullOrWhiteSpace(packageFullName))
-                                {
-                                    packages.Add(new AppxPackageInfo
-                                    {
-                                        PackageId = packageId,
-                                        PackageFullName = packageFullName,
-                                        DisplayName = string.IsNullOrWhiteSpace(displayName) ? packageId : displayName,
-                                        Description = $"Publisher: {publisher}"
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to parse Appx packages JSON. [output={output}]", ex);
-                    }
-                }
-                else if (!string.IsNullOrWhiteSpace(error))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"PowerShell error while getting Appx packages. [error={error}]");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get installed Appx packages.", ex);
-            }
-
-            return packages;
-        });
-    }
-
-    private record AppxPackageInfo
-    {
-        public string PackageId { get; init; } = string.Empty;
-        public string PackageFullName { get; init; } = string.Empty;
-        public string DisplayName { get; init; } = string.Empty;
-        public string Description { get; init; } = string.Empty;
-    }
-
-    private void SaveAppxPackages()
-    {
-        var selectedPackages = AppxPackages
-            .Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.PackageFullName))
-            .Select(package => package.PackageFullName) // Use PackageFullName for removal
-            .ToList();
-
-        // Also save PackageId for backward compatibility
-        var selectedPackageIds = AppxPackages
-            .Where(package => package.IsSelected && !string.IsNullOrWhiteSpace(package.PackageId))
-            .Select(package => package.PackageId)
-            .ToList();
-
-        // Store both for compatibility
-        _applicationSettings.Store.AppxPackagesToRemove = selectedPackages.Any() ? selectedPackages : selectedPackageIds;
-        _applicationSettings.SynchronizeStore();
-    }
 
     private void SaveCustomCleanupRules()
     {
@@ -880,7 +995,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private void RefreshCleanupActionAvailability()
     {
         var hasCustomRules = CustomCleanupRules.Count > 0;
-        var hasSelectedAppxPackages = AppxPackages.Any(package => package.IsSelected);
 
         foreach (var category in Categories)
         {
@@ -894,8 +1008,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 if (!hasCustomRules && customAction.IsSelected)
                     customAction.IsSelected = false;
             }
-
-            // Appx cleanup action removed - no longer need to update its enabled state
         }
     }
 
@@ -929,27 +1041,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         RefreshCleanupActionAvailability();
         UpdateCleanupControlsState();
 
-        if (_isCleanupMode)
+        if (_currentMode == PageMode.Cleanup)
         {
             _ = UpdateEstimatedCleanupSizeAsync();
         }
     }
 
-    private void AppxPackageViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(AppxPackageViewModel.IsSelected))
-            OnAppxPackagesChanged();
-    }
-
-    private void OnAppxPackagesChanged()
-    {
-        if (_isLoadingAppxPackages)
-            return;
-
-        SaveAppxPackages();
-        RefreshCleanupActionAvailability();
-        UpdateSelectedActions();
-    }
 
     private void AttachRuleEvents(CustomCleanupRuleViewModel rule)
     {
@@ -1048,10 +1145,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         CustomCleanupRules.Clear();
     }
 
-    private void RefreshAppxPackagesButton_Click(object sender, RoutedEventArgs e)
-    {
-        LoadAppxPackages();
-    }
 
     private async Task UpdateEstimatedCleanupSizeAsync()
     {
@@ -1064,6 +1157,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         try
         {
             IsCalculatingSize = true;
+            // Debounce rapid changes in selection to avoid spamming estimations
+            await Task.Delay(300, cancellationToken).ConfigureAwait(false);
             var actionKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
             var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(actionKeys, cancellationToken).ConfigureAwait(false);
 
@@ -1090,17 +1185,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
-    private void SetMode(bool isCleanup)
+    private void SetMode(PageMode mode)
     {
-        var modeChanged = _isCleanupMode != isCleanup;
-        _isCleanupMode = isCleanup;
+        var modeChanged = _currentMode != mode;
+        _currentMode = mode;
 
         if (modeChanged)
         {
             OnPropertyChanged(nameof(IsCleanupMode));
+            OnPropertyChanged(nameof(IsBeautificationMode));
             OnPropertyChanged(nameof(ActiveCategories));
 
-            if (isCleanup)
+            if (mode == PageMode.Cleanup)
             {
                 if (!_hasInitializedCleanupMode)
                 {
@@ -1112,9 +1208,16 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 }
                 _ = UpdateEstimatedCleanupSizeAsync();
             }
+            else if (mode == PageMode.Beautification)
+            {
+                _ = RefreshBeautificationStatusAsync();
+                StartBeautificationStatusMonitoring();
+                TransparencyEnabled = GetTransparencyEnabled();
+            }
             else
             {
                 EstimatedCleanupSize = 0;
+                _beautificationStatusTimer?.Stop();
             }
         }
         else
@@ -1124,7 +1227,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
 
         var activeCategoriesList = ActiveCategories.ToList();
-        var preferredCategory = isCleanup ? _lastCleanupCategory : _lastOptimizationCategory;
+        var preferredCategory = mode switch
+        {
+            PageMode.Cleanup => _lastCleanupCategory,
+            PageMode.Beautification => _lastBeautificationCategory,
+            _ => _lastOptimizationCategory
+        };
         if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
             preferredCategory = activeCategoriesList.FirstOrDefault();
 
@@ -1133,10 +1241,25 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
         ApplyInteractionState();
+        RefreshExpandCollapseText();
     }
 
     private async Task InitializeActionStatesAsync()
     {
+        // 初始化时跳过用户交互检查，确保所有复选框状态正确设置
+        await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+        StartActionStateMonitoring();
+    }
+
+    private async Task RefreshActionStatesAsync(bool skipUserInteractionCheck = false)
+    {
+        // 如果用户正在交互（最近5秒内有操作），跳过更新以避免干扰用户操作
+        // 但在初始化时可以跳过这个检查
+        if (!skipUserInteractionCheck && (_isUserInteracting || (DateTime.Now - _lastUserInteraction).TotalSeconds < 5))
+        {
+            return;
+        }
+
         var actions = Categories.SelectMany(category => category.Actions).ToList();
 
         foreach (var action in actions)
@@ -1144,16 +1267,49 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
             if (applied.HasValue)
             {
-                await Dispatcher.InvokeAsync(() => action.IsSelected = applied.Value);
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    // 只在状态实际改变时才更新，避免覆盖用户的手动选择
+                    var timeSinceLastInteraction = (DateTime.Now - _lastUserInteraction).TotalSeconds;
+                    var isRecentInteraction = timeSinceLastInteraction < 10; // 10秒内的交互认为是最近的操作
+                    
+                    if (action.IsSelected != applied.Value)
+                    {
+                        // 如果用户最近有交互，且用户选择了但检查显示未应用，可能是操作正在进行中，不立即更新
+                        // 但如果用户未选择而检查显示已应用，应该更新（可能是外部操作导致的）
+                        if (isRecentInteraction && action.IsSelected && !applied.Value)
+                        {
+                            // 用户选择了但检查显示未应用，可能是操作正在进行中，暂时不更新
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Skipping state update for {action.Key}: user selected but not yet applied (operation may be in progress)");
+                        }
+                        else
+                        {
+                            action.IsSelected = applied.Value;
+                        }
+                    }
+                });
             }
         }
 
         await Dispatcher.InvokeAsync(UpdateSelectedActions);
     }
 
-    private void OptimizationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(false);
+    private void StartActionStateMonitoring()
+    {
+        _actionStateRefreshTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(10) // Check every 10 seconds (reduced frequency to avoid interfering with user interaction)
+        };
+        _actionStateRefreshTimer.Tick += async (s, e) => await RefreshActionStatesAsync();
+        _actionStateRefreshTimer.Start();
+    }
 
-    private void CleanupNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(true);
+    private void OptimizationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Optimization);
+
+    private void CleanupNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Cleanup);
+
+    private void BeautificationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Beautification);
 
     private void OnPropertyChanged(string propertyName) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -1225,47 +1381,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private record AppxPackageDefinition(string Id, string DisplayName, string Description);
-
-    public class AppxPackageViewModel : INotifyPropertyChanged
-    {
-        private bool _isSelected;
-
-        public AppxPackageViewModel(string packageId, string packageFullName, string displayName, string description, bool isSelected)
-        {
-            PackageId = packageId;
-            PackageFullName = packageFullName;
-            DisplayName = displayName;
-            Description = description;
-            _isSelected = isSelected;
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string PackageId { get; }
-
-        public string PackageFullName { get; }
-
-        public string DisplayName { get; }
-
-        public string Description { get; }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected == value)
-                    return;
-
-                _isSelected = value;
-                OnPropertyChanged(nameof(IsSelected));
-            }
-        }
-
-        private void OnPropertyChanged(string propertyName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 
     public class OptimizationCategoryViewModel : INotifyPropertyChanged
     {
@@ -1463,7 +1578,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public class SelectedActionViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly OptimizationActionViewModel? _sourceAction;
-        private readonly AppxPackageViewModel? _sourceAppxPackage;
 
         public SelectedActionViewModel(
             string categoryKey,
@@ -1480,23 +1594,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             Description = description;
             _sourceAction = sourceAction;
             _sourceAction.PropertyChanged += SourceAction_PropertyChanged;
-        }
-
-        public SelectedActionViewModel(
-            string categoryKey,
-            string categoryTitle,
-            string actionKey,
-            string actionTitle,
-            string description,
-            AppxPackageViewModel sourceAppxPackage)
-        {
-            CategoryKey = categoryKey;
-            CategoryTitle = categoryTitle;
-            ActionKey = actionKey;
-            ActionTitle = actionTitle;
-            Description = description;
-            _sourceAppxPackage = sourceAppxPackage;
-            _sourceAppxPackage.PropertyChanged += SourceAppxPackage_PropertyChanged;
         }
 
         public string CategoryKey { get; }
@@ -1516,9 +1613,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 if (_sourceAction is not null)
                     return _sourceAction.IsSelected;
 
-                if (_sourceAppxPackage is not null)
-                    return _sourceAppxPackage.IsSelected;
-
                 return false;
             }
             set
@@ -1531,14 +1625,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     _sourceAction.IsSelected = value;
                     OnPropertyChanged(nameof(IsSelected));
                 }
-                else if (_sourceAppxPackage is not null)
-                {
-                    if (_sourceAppxPackage.IsSelected == value)
-                        return;
-
-                    _sourceAppxPackage.IsSelected = value;
-                    OnPropertyChanged(nameof(IsSelected));
-                }
             }
         }
 
@@ -1546,9 +1632,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             if (_sourceAction is not null)
                 _sourceAction.PropertyChanged -= SourceAction_PropertyChanged;
-
-            if (_sourceAppxPackage is not null)
-                _sourceAppxPackage.PropertyChanged -= SourceAppxPackage_PropertyChanged;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -1556,12 +1639,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         private void SourceAction_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
-                OnPropertyChanged(nameof(IsSelected));
-        }
-
-        private void SourceAppxPackage_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(AppxPackageViewModel.IsSelected))
                 OnPropertyChanged(nameof(IsSelected));
         }
 
@@ -1581,5 +1658,573 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         };
         _selectedActionsWindow.Closed += (s, args) => _selectedActionsWindow = null;
         _selectedActionsWindow.Show();
+    }
+
+    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer && !e.Handled)
+        {
+            // 确保滚轮事件被ScrollViewer处理，即使鼠标悬停在子控件上
+            e.Handled = true;
+            var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
+            scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
+        }
+    }
+
+    private void StartBeautificationStatusMonitoring()
+    {
+        _beautificationStatusTimer?.Stop();
+        _beautificationStatusTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(2)
+        };
+        _beautificationStatusTimer.Tick += async (s, e) => await RefreshBeautificationStatusAsync();
+        _beautificationStatusTimer.Start();
+    }
+
+    private async Task RefreshBeautificationStatusAsync()
+    {
+        try
+        {
+            var isRegistered = await Task.Run(() => IsContextMenuRegistered());
+            await Dispatcher.InvokeAsync(() =>
+            {
+                TransparencyEnabled = GetTransparencyEnabled();
+                UpdateBeautificationUIForRegistrationStatus(isRegistered);
+            });
+            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    private void UpdateBeautificationUIForRegistrationStatus(bool isRegistered)
+    {
+        var isInstalled = NilesoftShellHelper.IsInstalled();
+        
+        if (!isInstalled)
+        {
+            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_NotInstalled;
+        }
+        else if (isRegistered)
+        {
+            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_Installed;
+        }
+        else
+        {
+            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_InstalledButNotRegistered;
+        }
+        
+        OnPropertyChanged(nameof(BeautificationStatusText));
+        OnPropertyChanged(nameof(CanInstall));
+        OnPropertyChanged(nameof(CanUninstall));
+
+        Dispatcher.Invoke(() =>
+        {
+            var statusTextBlock = FindName("_beautificationStatusText") as System.Windows.Controls.TextBlock;
+            if (statusTextBlock != null)
+            {
+                statusTextBlock.Text = BeautificationStatusText;
+            }
+
+            var installButton = FindName("_installShellButton") as Wpf.Ui.Controls.Button;
+            if (installButton != null)
+            {
+                installButton.IsEnabled = CanInstall;
+            }
+
+            var uninstallButton = FindName("_uninstallShellButton") as Wpf.Ui.Controls.Button;
+            if (uninstallButton != null)
+            {
+                uninstallButton.IsEnabled = CanUninstall;
+            }
+
+            var enableButton = FindName("_enableClassicMenuButton") as Wpf.Ui.Controls.Button;
+            if (enableButton != null)
+            {
+                enableButton.Content = isRegistered
+                    ? Resource.SystemBeautification_RightClick_DisableClassic
+                    : Resource.SystemBeautification_RightClick_EnableClassic;
+                enableButton.Visibility = isRegistered ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            var restoreButton = FindName("_restoreDefaultMenuButton") as Wpf.Ui.Controls.Button;
+            if (restoreButton != null)
+            {
+                restoreButton.Visibility = isRegistered ? Visibility.Visible : Visibility.Collapsed;
+            }
+        });
+    }
+
+    private void LoadBeautificationSettings()
+    {
+        try
+        {
+            var configPath = GetShellConfigPath();
+            if (string.IsNullOrWhiteSpace(configPath))
+            {
+                // Use defaults
+                SelectedTheme = "auto";
+                TransparencyEnabled = GetTransparencyEnabled();
+                RoundedCornersEnabled = true;
+                ShadowsEnabled = true;
+            }
+            else
+            {
+                // Load from config file
+                var configContent = File.ReadAllText(configPath);
+                // Parse config file to get current settings
+                // For now, use defaults
+                SelectedTheme = "auto";
+                TransparencyEnabled = GetTransparencyEnabled();
+                RoundedCornersEnabled = true;
+                ShadowsEnabled = true;
+            }
+
+            // Update radio buttons
+            Dispatcher.Invoke(() =>
+            {
+                var autoRadio = FindName("_beautificationThemeAutoRadio") as System.Windows.Controls.RadioButton;
+                var lightRadio = FindName("_beautificationThemeLightRadio") as System.Windows.Controls.RadioButton;
+                var darkRadio = FindName("_beautificationThemeDarkRadio") as System.Windows.Controls.RadioButton;
+                var classicRadio = FindName("_beautificationThemeClassicRadio") as System.Windows.Controls.RadioButton;
+                var modernRadio = FindName("_beautificationThemeModernRadio") as System.Windows.Controls.RadioButton;
+
+                if (autoRadio != null)
+                    autoRadio.IsChecked = SelectedTheme == "auto";
+                if (lightRadio != null)
+                    lightRadio.IsChecked = SelectedTheme == "light";
+                if (darkRadio != null)
+                    darkRadio.IsChecked = SelectedTheme == "dark";
+                if (classicRadio != null)
+                    classicRadio.IsChecked = SelectedTheme == "classic";
+                if (modernRadio != null)
+                    modernRadio.IsChecked = SelectedTheme == "modern";
+            });
+        }
+        catch
+        {
+            // Use defaults on error
+            SelectedTheme = "auto";
+            TransparencyEnabled = GetTransparencyEnabled();
+            RoundedCornersEnabled = true;
+            ShadowsEnabled = true;
+        }
+    }
+
+    private static bool IsContextMenuRegistered()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(@"CLSID\{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}\InprocServer32", false);
+            return key is not null;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string? GetShellConfigPath()
+    {
+        try
+        {
+            var baseDir = AppContext.BaseDirectory;
+            if (!string.IsNullOrWhiteSpace(baseDir))
+            {
+                var direct = Path.Combine(baseDir, "shell.nss");
+                if (File.Exists(direct))
+                    return direct;
+
+                var files = Directory.GetFiles(baseDir, "shell.nss", SearchOption.AllDirectories);
+                if (files.Length > 0)
+                    return files[0];
+            }
+
+            var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            if (!string.IsNullOrWhiteSpace(programFiles))
+            {
+                var candidate = Path.Combine(programFiles, "Nilesoft Shell", "shell.nss");
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+        return null;
+    }
+
+    private static string? GetShellExePath()
+    {
+        try
+        {
+            var baseDir = AppContext.BaseDirectory;
+            if (!string.IsNullOrWhiteSpace(baseDir))
+            {
+                var direct = Path.Combine(baseDir, "shell.exe");
+                if (File.Exists(direct) && File.Exists(Path.Combine(baseDir, "shell.dll")))
+                    return direct;
+
+                var files = Directory.GetFiles(baseDir, "shell.exe", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    var dir = Path.GetDirectoryName(file);
+                    if (!string.IsNullOrWhiteSpace(dir) && File.Exists(Path.Combine(dir, "shell.dll")))
+                        return file;
+                }
+            }
+
+            var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            if (!string.IsNullOrWhiteSpace(programFiles))
+            {
+                var candidate = Path.Combine(programFiles, "Nilesoft Shell", "shell.exe");
+                if (File.Exists(candidate) && File.Exists(Path.Combine(programFiles, "Nilesoft Shell", "shell.dll")))
+                    return candidate;
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+        return null;
+    }
+
+    private async void InstallShellButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var exe = GetShellExePath();
+            if (string.IsNullOrWhiteSpace(exe))
+            {
+                await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, 
+                    GetResource("WindowsOptimizationPage_Beautification_ShellNotFound"), 
+                    SnackbarType.Warning);
+                return;
+            }
+
+            await ExecuteAsync(
+                async ct =>
+                {
+                    await Task.Run(() =>
+                    {
+                        var process = new System.Diagnostics.Process
+                        {
+                            StartInfo = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = "cmd.exe",
+                                Arguments = $"/c \"\"{exe}\"\" -register -treat -restart",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            }
+                        };
+                        process.Start();
+                        process.WaitForExit();
+                    });
+                },
+                Resource.SystemBeautification_RightClick_Install,
+                GetResource("WindowsOptimizationPage_Beautification_InstallError"),
+                InteractionScope.Beautification);
+
+            await RefreshBeautificationStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to install shell.", ex);
+        }
+    }
+
+    private async void UninstallShellButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var exe = GetShellExePath();
+            if (string.IsNullOrWhiteSpace(exe))
+            {
+                await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, 
+                    GetResource("WindowsOptimizationPage_Beautification_ShellNotFound"), 
+                    SnackbarType.Warning);
+                return;
+            }
+
+            await ExecuteAsync(
+                async ct =>
+                {
+                    await Task.Run(() =>
+                    {
+                        var process = new System.Diagnostics.Process
+                        {
+                            StartInfo = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = "cmd.exe",
+                                Arguments = $"/c \"\"{exe}\"\" -unregister -restart",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            }
+                        };
+                        process.Start();
+                        process.WaitForExit();
+                    });
+                },
+                Resource.SystemBeautification_RightClick_Uninstall,
+                GetResource("WindowsOptimizationPage_Beautification_UninstallError"),
+                InteractionScope.Beautification);
+
+            await RefreshBeautificationStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to uninstall shell.", ex);
+        }
+    }
+
+    private void BeautificationThemeRadio_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.RadioButton radioButton && radioButton.IsChecked == true)
+        {
+            SelectedTheme = radioButton.Name switch
+            {
+                "_beautificationThemeLightRadio" => "light",
+                "_beautificationThemeDarkRadio" => "dark",
+                "_beautificationThemeClassicRadio" => "classic",
+                "_beautificationThemeModernRadio" => "modern",
+                _ => "auto"
+            };
+        }
+    }
+
+    private async void ApplyBeautificationStyleButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var configPath = GetShellConfigPath();
+            if (string.IsNullOrWhiteSpace(configPath))
+            {
+                await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, 
+                    GetResource("WindowsOptimizationPage_Beautification_ConfigNotFound"), 
+                    SnackbarType.Warning);
+                return;
+            }
+
+            await ExecuteAsync(
+                async ct =>
+                {
+                    var config = GenerateShellConfig(SelectedTheme, TransparencyEnabled, RoundedCornersEnabled, ShadowsEnabled);
+                    await Task.Run(() =>
+                    {
+                        File.WriteAllText(configPath, config);
+                    });
+                },
+                Resource.SystemBeautification_MenuStyleSettings_Apply,
+                GetResource("WindowsOptimizationPage_Beautification_ApplyError"),
+                InteractionScope.Beautification);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to apply beautification style.", ex);
+        }
+    }
+
+    private static string GenerateShellConfig(string theme, bool transparencyEnabled, bool roundedCornersEnabled, bool shadowsEnabled)
+    {
+        string themeColors;
+        switch (theme)
+        {
+            case "light":
+                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
+                break;
+            case "dark":
+                themeColors = "background-color: #2d2d2d;\ntext-color: #ffffff;";
+                break;
+            case "classic":
+                themeColors = "background-color: #f0f0f0;\ntext-color: #000000;";
+                break;
+            case "modern":
+                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
+                break;
+            default:
+                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
+                break;
+        }
+
+        return "# Generated by Lenovo Legion Toolkit\n" +
+               $"# Theme: {theme}\n" +
+               $"# Transparency: {(transparencyEnabled ? "enabled" : "disabled")}\n" +
+               $"# Rounded corners: {(roundedCornersEnabled ? "enabled" : "disabled")}\n" +
+               $"# Shadows: {(shadowsEnabled ? "enabled" : "disabled")}\n" +
+               $"\n" +
+               $"# Import base theme configuration\n" +
+               $"import 'imports/theme.nss'\n" +
+               $"import 'imports/images.nss'\n" +
+               $"import 'imports/modify.nss'\n" +
+               $"\n" +
+               $"# Theme settings based on user selection\n" +
+               $"theme\n" +
+               $"{{\n" +
+               $"    # Appearance settings\n" +
+               $"    corner-radius: {(roundedCornersEnabled ? "5" : "0")}px;\n" +
+               $"    shadow: {(shadowsEnabled ? "true" : "false")};\n" +
+               $"    transparency: {(transparencyEnabled ? "true" : "false")};\n" +
+               $"\n" +
+               $"    # Color settings based on selected theme\n" +
+               $"    {themeColors}\n" +
+               $"}}\n" +
+               $"\n" +
+               $"# Additional configuration for different contexts\n" +
+               $".menu\n" +
+               $"{{\n" +
+               $"    padding: 4px;\n" +
+               $"    border-width: 1px;\n" +
+               $"    border-style: solid;\n" +
+               $"    {(roundedCornersEnabled ? "border-radius: 5px;" : "")}\n" +
+               $"}}\n" +
+               $"\n" +
+               $".separator\n" +
+               $"{{\n" +
+               $"    height: 1px;\n" +
+               $"    margin: 4px 20px;\n" +
+               $"}}\n";
+    }
+
+    private void TransparencyToggle_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            bool enabled;
+            if (sender is ToggleSwitch toggleSwitch)
+                enabled = toggleSwitch.IsChecked == true;
+            else if (sender is System.Windows.Controls.CheckBox checkBox)
+                enabled = checkBox.IsChecked == true;
+            else
+                enabled = TransparencyEnabled;
+
+            SetTransparencyEnabled(enabled);
+            TransparencyEnabled = enabled;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to toggle transparency.", ex);
+        }
+    }
+
+    private static bool GetTransparencyEnabled()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", false);
+            var value = key?.GetValue("EnableTransparency");
+            return Convert.ToInt32(value ?? 0) != 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void SetTransparencyEnabled(bool enabled)
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true);
+            key?.SetValue("EnableTransparency", enabled ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    private async Task ExecuteCustomCleanupWithProgressAsync(CancellationToken cancellationToken)
+    {
+        var settings = IoCContainer.Resolve<ApplicationSettings>();
+        var rules = settings.Store.CustomCleanupRules ?? new List<CustomCleanupRule>();
+
+        foreach (var rule in rules)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(rule.DirectoryPath))
+                continue;
+
+            var directoryPath = Environment.ExpandEnvironmentVariables(rule.DirectoryPath.Trim());
+
+            if (!Directory.Exists(directoryPath))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Custom cleanup skipped. Directory not found. [path={directoryPath}]");
+                continue;
+            }
+
+            var normalizedExtensions = (rule.Extensions ?? [])
+                .Select(ext => ext?.TrimStart('.').ToLowerInvariant())
+                .Where(extension => !string.IsNullOrEmpty(extension))
+                .OfType<string>()
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            if (normalizedExtensions.Length == 0)
+                continue;
+
+            var extensionsSet = new HashSet<string>(normalizedExtensions, StringComparer.OrdinalIgnoreCase);
+            var searchOption = rule.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(directoryPath, "*", searchOption))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    string extension;
+                    try
+                    {
+                        extension = Path.GetExtension(file);
+                        if (!string.IsNullOrEmpty(extension))
+                            extension = extension.TrimStart('.').ToLowerInvariant();
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (!extensionsSet.Contains(extension))
+                        continue;
+
+                    try
+                    {
+                        // Update UI with current file being deleted
+                        var fileName = Path.GetFileName(file);
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            var format = GetResource("WindowsOptimizationPage_CurrentDeletingFile");
+                            if (string.IsNullOrWhiteSpace(format))
+                                format = "正在删除: {0}";
+                            CurrentDeletingFile = string.Format(format, fileName);
+                        });
+
+                        File.Delete(file);
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Custom cleanup deleted file. [path={file}]");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Custom cleanup failed to delete file. [path={file}]", ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Custom cleanup failed to enumerate directory. [path={directoryPath}]", ex);
+            }
+        }
     }
 }

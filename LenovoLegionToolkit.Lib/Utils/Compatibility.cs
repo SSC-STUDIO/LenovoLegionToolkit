@@ -79,7 +79,10 @@ public static partial class Compatibility
 
     public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
     {
-        if (!machineInformation.Vendor.Equals(ALLOWED_VENDOR, StringComparison.InvariantCultureIgnoreCase))
+        if (string.IsNullOrEmpty(machineInformation.Vendor) || !machineInformation.Vendor.Equals(ALLOWED_VENDOR, StringComparison.InvariantCultureIgnoreCase))
+            return false;
+
+        if (string.IsNullOrEmpty(machineInformation.Model))
             return false;
 
         return AllowedModelsPrefix.Any(allowedModel => machineInformation.Model.Contains(allowedModel, StringComparison.InvariantCultureIgnoreCase));

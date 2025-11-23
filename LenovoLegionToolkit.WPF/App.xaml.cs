@@ -50,10 +50,12 @@ public partial class App
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
     private Task? _backgroundInitializationTask;
+    private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
     private readonly object _shutdownLock = new();
     private Task? _shutdownTask;
     private bool _exitRequested;
     private bool _shutdownInvoked;
+    private bool _inExitHandler;
 
     public new static App Current => (App)Application.Current;
 
@@ -75,6 +77,9 @@ public partial class App
         var flags = new Flags(e.Args);
 
         Log.Instance.IsTraceEnabled = flags.IsTraceEnabled;
+
+        // Ensure native shell logger writes to the same log file
+        Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
 
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 
@@ -224,6 +229,9 @@ public partial class App
 
     private void StartBackgroundInitialization()
     {
+        _backgroundInitializationCancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
+
         var initializationSteps = new Func<Task>[]
         {
             LogSoftwareStatusAsync,
@@ -248,13 +256,30 @@ public partial class App
         {
             try
             {
-                foreach (var step in initializationSteps)
-                    await step().ConfigureAwait(false);
+                // Check for cancellation before starting initialization steps
+                cancellationToken.ThrowIfCancellationRequested();
 
+                // Run initialization steps in parallel where possible to improve startup performance
+                var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await step().ConfigureAwait(false);
+                })).ToArray();
+                await Task.WhenAll(initializationTasks).ConfigureAwait(false);
+
+                cancellationToken.ThrowIfCancellationRequested();
                 InitMacroController();
 
-                foreach (var step in serviceStartSteps)
+                // Run service start steps in parallel to improve startup performance
+                // Skip service starts if cancellation was requested to avoid race conditions during shutdown
+                var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
                     await step().ConfigureAwait(false);
+                })).ToArray();
+                await Task.WhenAll(serviceStartTasks).ConfigureAwait(false);
+
+                cancellationToken.ThrowIfCancellationRequested();
 
 #if !DEBUG
                 Autorun.Validate();
@@ -263,6 +288,11 @@ public partial class App
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Background initialization completed.");
             }
+            catch (OperationCanceledException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization was cancelled.");
+            }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -270,7 +300,7 @@ public partial class App
 
                 throw;
             }
-        });
+        }, cancellationToken);
     }
 
     private async Task AwaitBackgroundInitializationAsync()
@@ -284,7 +314,20 @@ public partial class App
             if (completedTask != task)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Background initialization still running, proceeding with shutdown.");
+                    Log.Instance.Trace($"Background initialization still running, cancelling and proceeding with shutdown.");
+
+                // Cancel the background initialization task to prevent race conditions during shutdown
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+
+                try
+                {
+                    // Give the task a short time to respond to cancellation
+                    await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ignore exceptions during cancellation wait
+                }
 
                 return;
             }
@@ -293,6 +336,10 @@ public partial class App
         try
         {
             await task;
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when cancellation is requested
         }
         catch (Exception ex)
         {
@@ -305,7 +352,13 @@ public partial class App
     {
         try
         {
-            ShutdownAsync().GetAwaiter().GetResult();
+            // Mark that we're in the exit handler to prevent double Shutdown() call
+            lock (_shutdownLock)
+            {
+                _inExitHandler = true;
+            }
+            
+            ShutdownAsync(true).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -397,7 +450,9 @@ public partial class App
 
         lock (_shutdownLock)
         {
-            shouldInvokeShutdown = _exitRequested && !_shutdownInvoked;
+            // Don't call Shutdown() if we're already in the Application_Exit handler
+            // as that would cause a double shutdown attempt
+            shouldInvokeShutdown = _exitRequested && !_shutdownInvoked && !_inExitHandler;
             if (shouldInvokeShutdown)
                 _shutdownInvoked = true;
         }

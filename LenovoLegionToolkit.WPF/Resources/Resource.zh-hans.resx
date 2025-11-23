@@ -809,6 +809,9 @@
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>设置</value>
   </data>
+  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>新版本可用！</value>
   </data>
@@ -2354,6 +2357,9 @@
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows优化</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Windows美化</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全选</value>
   </data>
@@ -2434,6 +2440,12 @@
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
     <value>无法完成所选操作。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Windows美化</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>更改右键菜单样式。</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>资源管理器与界面</value>
@@ -2518,6 +2530,12 @@
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
     <value>关闭云端内容推荐与提示横幅。</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>将 Windows 键改为打开搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>修改 Windows 键行为，使其打开搜索而不是开始菜单。</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
     <value>优化多媒体调度</value>
@@ -2637,8 +2655,23 @@
     <value>卸载捆绑的 Windows 应用</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+
     <value>为所有用户卸载部分预装 UWP 应用程序。</value>
+
   </data>
+
+  <data name="WindowsOptimization_Category_CleanupAppx_Title" xml:space="preserve">
+
+    <value>Appx软件包</value>
+
+  </data>
+
+  <data name="WindowsOptimization_Category_CleanupAppx_Description" xml:space="preserve">
+
+    <value>卸载选中的Appx软件包（预装软件）。</value>
+
+  </data>
+
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
     <value>清空回收站</value>
   </data>
@@ -2680,6 +2713,138 @@
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>正在卸载所选应用…</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>展开全部</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>折叠全部</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>菜单样式设置</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>自动（跟随系统主题）</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>经典</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>现代</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>启用透明效果</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>圆角</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>阴影</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>选择右键菜单的主题。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>为右键菜单启用透明效果。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>自定义右键菜单的外观。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>未找到 Shell.exe。请确保已安装 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>未找到配置文件。请确保已安装 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>启用经典菜单失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>恢复默认菜单失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>应用样式设置失败。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>切换到现代菜单</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>应用经典样式并重启资源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>切换到默认右键菜单</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>恢复默认样式并重启资源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>卸载 shell.exe</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>完全卸载 shell.exe 及相关文件。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
+    <value>正在删除: {0}</value>
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>启动系统工具和实用程序</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>显示工具</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>游戏工具</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>内存工具</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>其他工具</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>外设工具</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>存储工具</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>压力测试工具</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>系统诊断工具</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>启动工具失败</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。</value>
   </data>
 
 </root>

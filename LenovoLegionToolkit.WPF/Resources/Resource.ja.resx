@@ -2036,4 +2036,7 @@ PayPal で寄付するには、下の PayPal ロゴをクリックするかQR �
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>選択したアプリをアンインストールしています…</value>
   </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>{0} を削除しました（{1} 秒）</value>
+  </data>
 </root>
