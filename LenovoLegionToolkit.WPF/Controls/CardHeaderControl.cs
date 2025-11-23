@@ -193,9 +193,7 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
-        if (control._titleTextBlock is null)
-            return;
-
+        // _titleTextBlock is initialized as a field, so it's never null
         control._titleTextBlock.Text = e.NewValue as string ?? string.Empty;
         control.RefreshLayout();
     }
@@ -205,9 +203,7 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
-        if (control._subtitleTextBlock is null)
-            return;
-
+        // _subtitleTextBlock is initialized as a field, so it's never null
         control._subtitleTextBlock.Text = e.NewValue as string ?? string.Empty;
         control.RefreshLayout();
     }
@@ -217,9 +213,7 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
-        if (control._warningTextBlock is null)
-            return;
-
+        // _warningTextBlock is initialized as a field, so it's never null
         control._warningTextBlock.Text = e.NewValue as string ?? string.Empty;
         control.RefreshLayout();
     }
@@ -229,9 +223,7 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
-        if (control._subtitleTextBlock is null)
-            return;
-
+        // _subtitleTextBlock is initialized as a field, so it's never null
         var value = e.NewValue as string;
         control._subtitleTextBlock.ToolTip = value;
         ToolTipService.SetIsEnabled(control._subtitleTextBlock, value is not null);

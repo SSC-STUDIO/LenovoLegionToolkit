@@ -16,11 +16,11 @@ public static class NilesoftShellService
     }
 
     /// <summary>
-    /// 检查 Nilesoft Shell 是否已注册
+    /// 检查 Nilesoft Shell 是否已安装并注册（使用 shell.exe 的 API）
     /// </summary>
     public static bool IsRegistered()
     {
-        return NilesoftShellHelper.IsRegistered();
+        return NilesoftShellHelper.IsInstalledUsingShellExe();
     }
 
     public static void Install()
@@ -59,7 +59,7 @@ public static class NilesoftShellService
             throw new FileNotFoundException("shell.exe not found. Cannot uninstall shell.");
 
         // First, unregister if currently registered
-        if (NilesoftShellHelper.IsRegistered())
+        if (NilesoftShellHelper.IsInstalledUsingShellExe())
         {
             using var process = new Process
             {

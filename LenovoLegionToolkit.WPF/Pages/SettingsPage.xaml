@@ -12,7 +12,6 @@
     Scrollable="True">
 
     <StackPanel Margin="0,0,16,12">
-
         <TextBlock
             Margin="0,16,0,24"
             AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"

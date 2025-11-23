@@ -2663,7 +2663,7 @@
     <value>還原預設樣式並重新啟動檔案總管。</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>卸載 shell.exe</value>
+    <value>應用新式右鍵選單</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>完全卸載 shell.exe 及相關檔案。</value>
@@ -2712,5 +2712,288 @@
   </data>
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>啟動工具失敗</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>目前沒有可用的工具。請在應用程式目錄下的 tools 資料夾中添加工具。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>電池最大充電容量。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>電池健康</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>電池充電（+）或放電（-）的最大速率。</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>最大充放電功率</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>電池充電（+）或放電（-）的最小速率。</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>最小充放電功率</value>
+  </data>
+
+  <data name="Compact" xml:space="preserve">
+    <value>緊湊檢視</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>瀏覽…</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>請至少輸入一個檔案副檔名。</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>請選擇一個資料夾。</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>使用逗號分隔多個副檔名（例如：tmp, log, bak）</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>副檔名</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>資料夾</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>包含子資料夾</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>自訂清理規則</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>系統美化</value>
+  </data>
+
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>隱藏啟動時出現的不相容裝置警告。</value>
+  </data>
+
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>停用不相容裝置警告</value>
+  </data>
+
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>最大充放電功率</value>
+  </data>
+
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>最小充放電功率</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>調整 Windows 透明度效果。</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>視覺效果</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>啟用透明度效果</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>停用經典選單</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>啟用經典選單</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>開啟樣式設定</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>恢復預設</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>狀態：經典選單已安裝並啟用</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>狀態：已安裝但未啟用</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>狀態：經典選單未安裝</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>在預設和經典右鍵選單樣式之間切換。</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>右鍵選單樣式</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>解除安裝</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>自訂 Windows 外觀，包括右鍵選單樣式。</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows 美化</value>
+  </data>
+
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>您可以在設定中隨時停用此警告。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>No apps selected for removal.</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX management</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>載入失敗：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>正在載入應用程式，請稍候...</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>發佈者：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>解除安裝選取的應用程式</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>無法移除選取的應用程式。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>選取的應用程式已排程移除。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>安裝 shell 失敗。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>解除安裝 shell 失敗。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>新增規則</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>選擇在清理期間應刪除的資料夾和檔案副檔名。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>尚未設定自訂清理規則。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>自訂清理規則</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>包含子資料夾</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>已選取 {0} 個操作</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>尚未選取任何操作。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>已選取的操作</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>清理</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows 最佳化</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>為所有使用者解除安裝選取的預先安裝 UWP 應用程式。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>移除內建的 Windows 應用程式</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>從選取的資料夾中刪除符合設定副檔名的檔案。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>清理自訂檔案</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>清理常見的使用者登錄檔歷史記錄（執行 MRU、最近的文件、開啟/儲存對話方塊、已輸入的路徑）。這不會移除系統關鍵項目。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>登錄檔 MRU/歷史記錄清理</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>完全停用開始功能表。當您按 Win 鍵時，它會開啟搜尋而不是開始功能表。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>停用開始功能表並使用 Win 鍵開啟搜尋</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>系統美化</value>
   </data>
 </root>

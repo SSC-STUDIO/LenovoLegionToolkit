@@ -135,7 +135,7 @@
 
         <Grid
             Grid.Row="0"
-            Margin="0,16,16,12">
+            Margin="0,0,16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -143,7 +143,7 @@
 
             <StackPanel Margin="0,16,0,24">
                 <TextBlock
-                    Margin="0,0,0,12"
+                    Margin="0,0,0,8"
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                     Focusable="True"
                     FontSize="24"
@@ -268,24 +268,6 @@
                                     AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}"
                                     Click="ClearSelectionButton_Click"
                                     Content="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
-                                <wpfui:Button
-                                    x:Name="_runCleanupButton"
-                                    MinWidth="180"
-                                    Margin="0,0,0,0"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
-                                    Click="RunCleanupButton_Click"
-                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
-                                    Style="{StaticResource CleanupActionButtonStyle}" />
-                                <wpfui:Button
-                                    x:Name="_applyBeautificationButton"
-                                    MinWidth="180"
-                                    Margin="0,0,0,0"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    Click="ApplyBeautificationButton_Click"
-                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    Style="{StaticResource BeautificationActionButtonStyle}" />
                                 </WrapPanel>
                             </StackPanel>
                         </Grid>
@@ -799,6 +781,27 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
+                                <!-- Execute Cleanup Button -->
+                                <wpfui:Button
+                                    x:Name="_runCleanupButton"
+                                    MinWidth="180"
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
+                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
+                                    Click="RunCleanupButton_Click"
+                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}">
+                                    <wpfui:Button.Style>
+                                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </wpfui:Button.Style>
+                                </wpfui:Button>
                             </StackPanel>
                         </Border>
 

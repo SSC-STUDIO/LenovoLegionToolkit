@@ -1414,7 +1414,7 @@ Restart is recommended after changing this option.</value>
     <value>Open style settings</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Uninstall shell.exe</value>
+    <value>Apply Modern Context Menu</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>Completely uninstall shell.exe and related files</value>
@@ -2893,6 +2893,51 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>Failed to start tool</value>
+  </data>
+  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
+    <value>Tools will appear here once they are available in the tools directory.</value>
+  </data>
+  <data name="ToolsPage_Launch_Button" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="ToolsPage_Details_Version" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Author" xml:space="preserve">
+    <value>Author: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Path" xml:space="preserve">
+    <value>Path: {0}</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPU Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>Display Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>Gaming Tools</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPU Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>Memory Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>Other Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>Peripheral Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>Storage Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>Stress Test Tools</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>System Diagnostic Tools</value>
   </data>
 
 </root>

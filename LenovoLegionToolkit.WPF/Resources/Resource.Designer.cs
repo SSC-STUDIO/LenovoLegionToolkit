@@ -7004,6 +7004,141 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tools will appear here once they are available in the tools directory.
+        /// </summary>
+        public static string ToolsPage_EmptyDescription {
+            get {
+                return ResourceManager.GetString("ToolsPage_EmptyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch.
+        /// </summary>
+        public static string ToolsPage_Launch_Button {
+            get {
+                return ResourceManager.GetString("ToolsPage_Launch_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version: {0}.
+        /// </summary>
+        public static string ToolsPage_Details_Version {
+            get {
+                return ResourceManager.GetString("ToolsPage_Details_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Author: {0}.
+        /// </summary>
+        public static string ToolsPage_Details_Author {
+            get {
+                return ResourceManager.GetString("ToolsPage_Details_Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path: {0}.
+        /// </summary>
+        public static string ToolsPage_Details_Path {
+            get {
+                return ResourceManager.GetString("ToolsPage_Details_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CPU Tools.
+        /// </summary>
+        public static string ToolsPage_Category_CPU_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_CPU_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Display_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Display_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gaming Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Gaming_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Gaming_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GPU Tools.
+        /// </summary>
+        public static string ToolsPage_Category_GPU_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_GPU_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Memory Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Memory_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Memory_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Other_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Other_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peripheral Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Peripherals_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Peripherals_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Storage_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Storage_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stress Test Tools.
+        /// </summary>
+        public static string ToolsPage_Category_Stress_Testing_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_Stress_Testing_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Diagnostic Tools.
+        /// </summary>
+        public static string ToolsPage_Category_System_Diagnostic_Tools {
+            get {
+                return ResourceManager.GetString("ToolsPage_Category_System_Diagnostic_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string SettingsPage_Update_Title {
