@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Utils;
@@ -20,22 +21,15 @@ public enum LogLevel
 
 public class Log
 {
-    private static Log? _instance;
-    public static Log Instance
-    {
-        get
-        {
-            _instance ??= new Log();
-            return _instance;
-        }
-    }
+    private static readonly Lazy<Log> _instance = new(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
+    public static Log Instance => _instance.Value;
 
     private readonly object _lock = new();
     private readonly string _folderPath;
     private volatile string _currentLogPath;
     private readonly Queue<string> _logQueue = new();
     private readonly int _maxLogSizeBytes = 50 * 1024 * 1024; // 50MB
-    private readonly int _maxQueuedEntries = 100;
+    private readonly int _maxQueuedEntries = 500; // Increase to reduce flush frequency
     private readonly Task _logTask;
     private readonly object _queueLock = new();
     private volatile bool _isRunning = true;
@@ -189,8 +183,8 @@ public class Log
         {
             try
             {
-                // Drain the queue every 100 ms
-                await Task.Delay(100).ConfigureAwait(false);
+                // Drain the queue every 250 ms to reduce I/O operations and improve performance
+                await Task.Delay(250).ConfigureAwait(false);
                 
                 List<string>? linesToWrite = null;
                 lock (_queueLock)
@@ -220,6 +214,7 @@ public class Log
                 try
                 {
                     var fileInfo = new FileInfo(_currentLogPath);
+                    // Only check file size every few writes to reduce disk I/O
                     if (fileInfo.Length > _maxLogSizeBytes)
                         _currentLogPath = CreateNewLogFile();
                 }
@@ -279,13 +274,83 @@ public class Log
     {
         _isRunning = false;
 
+        // Wait for ProcessLogQueue to complete its current iteration and exit the loop
+        // ProcessLogQueue checks _isRunning every 250ms, so we need to wait at least that long
+        // plus some buffer for thread scheduling and I/O operations
+        const int maxWaitTimeMs = 2000; // Total maximum wait time: 2 seconds
+        const int iterationDelayMs = 250; // ProcessLogQueue iteration delay
+        const int bufferTimeMs = 500; // Buffer for I/O and thread scheduling
+        
+        var startTime = DateTime.UtcNow;
+        
         try
         {
-            await Task.WhenAny(_logTask, Task.Delay(1000)).ConfigureAwait(false);
+            // First, wait for the task to complete naturally, but limit to maxWaitTimeMs
+            var firstWaitMs = maxWaitTimeMs;
+            var completedTask = await Task.WhenAny(_logTask, Task.Delay(firstWaitMs)).ConfigureAwait(false);
+            
+            // If the task hasn't completed, calculate remaining time and wait for one more iteration
+            if (completedTask != _logTask)
+            {
+                var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
+                var remainingTimeMs = maxWaitTimeMs - elapsedMs;
+                
+                // Only wait additional time if we haven't exceeded maxWaitTimeMs
+                if (remainingTimeMs > 0)
+                {
+                    // Wait for at least one more iteration cycle plus buffer, but don't exceed remaining time
+                    var additionalWaitMs = Math.Min(iterationDelayMs + bufferTimeMs, remainingTimeMs);
+                    if (additionalWaitMs > 0)
+                    {
+                        var additionalWait = Task.Delay(additionalWaitMs);
+                        completedTask = await Task.WhenAny(_logTask, additionalWait).ConfigureAwait(false);
+                    }
+                }
+            }
+            
+            // Final check: if still not completed, wait synchronously with remaining timeout
+            if (!_logTask.IsCompleted)
+            {
+                try
+                {
+                    // Calculate remaining timeout based on elapsed time, ensuring we don't exceed maxWaitTimeMs
+                    var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
+                    var remainingTimeout = Math.Max(0, Math.Min(500, maxWaitTimeMs - elapsedMs));
+                    if (remainingTimeout > 0)
+                    {
+                        _logTask.Wait(remainingTimeout);
+                    }
+                }
+                catch (Exception) 
+                { 
+                    // If task faults or times out, log it but continue to flush
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace((FormattableString)$"Log task did not complete within timeout during shutdown. Proceeding with flush.");
+                }
+            }
         }
-        catch (Exception) { /* Ignore timeout or cancellation while waiting */ }
+        catch (Exception) 
+        { 
+            // Ignore timeout or cancellation while waiting
+            // Continue to flush to ensure any pending logs are written
+        }
 
+        // Flush any remaining queued entries
+        // This is safe even if ProcessLogQueue is still running because Flush() uses locks
         Flush();
+        
+        // Final attempt to wait for any ongoing write operations to complete
+        // This ensures ProcessLogQueue has finished any File.AppendAllLinesAsync calls
+        if (!_logTask.IsCompleted)
+        {
+            try
+            {
+                // Give a final short wait for any ongoing I/O operations
+                const int finalWaitMs = 300; // Final wait for I/O operations to complete
+                await Task.WhenAny(_logTask, Task.Delay(finalWaitMs)).ConfigureAwait(false);
+            }
+            catch (Exception) { /* Ignore */ }
+        }
     }
 
     public void Shutdown() => ShutdownAsync().GetAwaiter().GetResult();

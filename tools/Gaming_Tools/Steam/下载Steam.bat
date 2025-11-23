@@ -1,0 +1,1 @@
+Start https://www.tbtool.cn/links/steam.html?%random%%random%%random%

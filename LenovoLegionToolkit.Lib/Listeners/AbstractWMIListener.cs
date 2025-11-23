@@ -37,12 +37,12 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
             _disposable = listen(Handler);
         }
-        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass)
+        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
         {
             _isUnsupported = true;
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"WMI class not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]", ex);
+                Log.Instance.Trace($"WMI class or namespace not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]", ex);
         }
         catch (Exception ex)
         {

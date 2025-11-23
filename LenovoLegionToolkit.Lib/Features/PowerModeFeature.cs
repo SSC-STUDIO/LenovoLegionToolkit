@@ -37,10 +37,10 @@ public class PowerModeFeature(
             PowerModeState.Balance
         };
 
-        if (isSupportedLegionMachine && mi.SupportedPowerModes.Contains(PowerModeState.Performance))
+        if (isSupportedLegionMachine && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.Performance))
             result.Add(PowerModeState.Performance);
 
-        if (isSupportedLegionMachine && mi.Properties.SupportsGodMode && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+        if (isSupportedLegionMachine && mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
             result.Add(PowerModeState.GodMode);
 
         return [.. result];

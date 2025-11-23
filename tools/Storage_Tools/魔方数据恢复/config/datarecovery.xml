@@ -1,0 +1,5 @@
+<DataRecovery>
+	<LastRecoverSavePath>C:\</LastRecoverSavePath>
+	<KeepDirWhenRecover>1</KeepDirWhenRecover>
+	<OpenFolderWhenRecoverOver>1</OpenFolderWhenRecoverOver>
+</DataRecovery>

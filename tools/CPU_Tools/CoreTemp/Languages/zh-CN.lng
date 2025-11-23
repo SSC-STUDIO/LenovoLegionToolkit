@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoreTemp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Language>
+    <Name>简体中文</Name>
+    <Culture>zh-CN</Culture>
+    <RightToLeft>false</RightToLeft>
+  </Language>
+  <Menus>
+    <Menu>
+      <Id>109</Id>
+      <IdName>IDC_CoreTempMenu</IdName>
+      <SubMenus>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>&amp;File</OriginalText>
+          <Caption>文件(&amp;F)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>&amp;Options</OriginalText>
+          <Caption>选项(&amp;O)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>&amp;Tools</OriginalText>
+          <Caption>工具(&amp;T)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>G15 &amp;applet</OriginalText>
+          <Caption>G15 小程序(&amp;a)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>&amp;Help</OriginalText>
+          <Caption>帮助(&amp;H)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32774</Id>
+          <IdName>ID_FILE_REFRESH</IdName>
+          <OriginalText />
+          <Caption>刷新(&amp;R)&#9;(F5)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32773</Id>
+          <IdName>IDM_SHOWHIDE</IdName>
+          <OriginalText />
+          <Caption>显示/隐藏(&amp;S)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>105</Id>
+          <IdName>IDM_EXIT</IdName>
+          <OriginalText />
+          <Caption>退出(&amp;x)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32772</Id>
+          <IdName>IDM_SETTINGS</IdName>
+          <OriginalText />
+          <Caption>设置(&amp;S)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32802</Id>
+          <IdName>IDM_ADJUSTOFFSETS</IdName>
+          <OriginalText />
+          <Caption>调整偏移(&amp;d)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32800</Id>
+          <IdName>IDM_OVERHEATPROTECTION</IdName>
+          <OriginalText />
+          <Caption>过热保护(&amp;O)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32779</Id>
+          <IdName>IDM_AOT</IdName>
+          <OriginalText />
+          <Caption>总在最前(&amp;A)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32797</Id>
+          <IdName>IDM_MINIMODE</IdName>
+          <OriginalText />
+          <Caption>切换到迷你模式(&amp;M)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32785</Id>
+          <IdName>IDM_LOGGING</IdName>
+          <OriginalText />
+          <Caption>日志记录(&amp;L)&#9;(F4)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32793</Id>
+          <IdName>IDM_RESETHILO</IdName>
+          <OriginalText />
+          <Caption>复位最高/最低值(&amp;H)&#9;(F6)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32813</Id>
+          <IdName>ID_TOOLS_PLUGINMANAGER</IdName>
+          <OriginalText />
+          <Caption>插件管理器(&amp;P)&#9;(F8)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32804</Id>
+          <IdName>IDM_SYSTEMINFORMATION</IdName>
+          <OriginalText />
+          <Caption>系统与信息(&amp;i)&#9;(F3)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32789</Id>
+          <IdName>IDM_RUNG15APP</IdName>
+          <OriginalText />
+          <Caption>启用 G15 小程序</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32790</Id>
+          <IdName>IDM_KILLG15APP</IdName>
+          <OriginalText />
+          <Caption>禁用 G15 小程序</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32780</Id>
+          <IdName>ID_OPTIONS_REGISTERDUMP</IdName>
+          <OriginalText />
+          <Caption>导出寄存器数据(&amp;R)&#9;(F7)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32781</Id>
+          <IdName>ID_OPTIONS_SCREENSHOT</IdName>
+          <OriginalText />
+          <Caption>截屏(&amp;c)&#9;(F9)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>104</Id>
+          <IdName>IDM_ABOUT</IdName>
+          <OriginalText />
+          <Caption>关于(&amp;A) ...</Caption>
+        </SubMenu>
+      </SubMenus>
+    </Menu>
+    <Menu>
+      <Id>170</Id>
+      <IdName>IDR_Win7TaskbarColorMenu</IdName>
+      <SubMenus>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>&amp;Color</OriginalText>
+          <Caption>颜色(&amp;C)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32808</Id>
+          <IdName>ID_COLOR_GREEN</IdName>
+          <OriginalText />
+          <Caption>绿色(&amp;G)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32809</Id>
+          <IdName>ID_COLOR_YELLOW</IdName>
+          <OriginalText />
+          <Caption>黄色(&amp;Y)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32810</Id>
+          <IdName>ID_COLOR_RED</IdName>
+          <OriginalText />
+          <Caption>红色(&amp;R)</Caption>
+        </SubMenu>
+      </SubMenus>
+    </Menu>
+    <Menu>
+      <Id>182</Id>
+      <IdName>IDR_SystrayColorMenu</IdName>
+      <SubMenus>
+        <SubMenu>
+          <Id>-1</Id>
+          <IdName />
+          <OriginalText>Color</OriginalText>
+          <Caption>颜色</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32811</Id>
+          <IdName>ID_COLOR_TRANSPARENT</IdName>
+          <OriginalText />
+          <Caption>透明(&amp;T)</Caption>
+        </SubMenu>
+        <SubMenu>
+          <Id>32812</Id>
+          <IdName>ID_COLOR_CUSTOMCOLOR</IdName>
+          <OriginalText />
+          <Caption>自定义颜色(&amp;C)</Caption>
+        </SubMenu>
+      </SubMenus>
+    </Menu>
+  </Menus>
+  <Dialogs>
+    <Dialog>
+      <Id>103</Id>
+      <IdName>IDD_ABOUTBOX</IdName>
+      <Caption>关于</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1002</Id>
+          <IdName>IDC_APP_TITLE</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1120</Id>
+          <IdName>IDC_ACopyright</IdName>
+          <Text>版权所有 (C) 2006 - 2022 Alcpu</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>确定</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1121</Id>
+          <IdName>IDC_AAuthor</IdName>
+          <Text>作者: Arthur Liberman</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1000</Id>
+          <IdName>IDC_EMAIL</IdName>
+          <Text>联系作者!</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1001</Id>
+          <IdName>IDC_DONATE</IdName>
+          <Text>赞助!</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1003</Id>
+          <IdName>IDC_HOMEPAGE</IdName>
+          <Text>访问主页</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1122</Id>
+          <IdName>IDC_AThanksRay</IdName>
+          <Text>特别感谢 Ray Adams 对将温度读数放入系统托盘 提供了很大的帮助。</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1123</Id>
+          <IdName>IDC_AThanksMichael</IdName>
+          <Text>特别感谢 Michael Charness 的 Core Temp 图标。</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1124</Id>
+          <IdName>IDC_IDC_AThanksCoolIT</IdName>
+          <Text>特别感谢来自 CPUID 的带数字签名的驱动程序，这些驱动程序在 Windows 7 和 Vista 中是必需的。</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1004</Id>
+          <IdName>IDC_FORUM</IdName>
+          <Text>支持论坛</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1005</Id>
+          <IdName>IDC_SCYTHE</IdName>
+          <Text>Scythe 正式推荐</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1007</Id>
+          <IdName>IDC_FORUM2</IdName>
+          <Text>常见问题</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1006</Id>
+          <IdName>IDC_GADGET</IdName>
+          <Text> Windows 7 和 Vista 请一定要检查的小工具</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1008</Id>
+          <IdName>IDC_TranslationCredits</IdName>
+          <Text>译者：sharin@CCF&amp;DRL, 
+水平有限，翻译错误相关请发 mail:21554835@qq.com</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>158</Id>
+      <IdName>IDD_OVERHEAT</IdName>
+      <Caption>过热保护设置</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>确定</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>2</Id>
+          <IdName>IDCANCEL</IdName>
+          <Text>取消</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1006</Id>
+          <IdName>IDC_ENABLE</IdName>
+          <Text>启用过热保护</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1007</Id>
+          <IdName>GRP_SETTINGS</IdName>
+          <Text>设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1022</Id>
+          <IdName>IDC_ACTAT3</IdName>
+          <Text>自动</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1020</Id>
+          <IdName>IDC_NOTIFYHOT</IdName>
+          <Text>当达到临界温度时仅通知</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1023</Id>
+          <IdName>IDC_ACTAT1</IdName>
+          <Text>在指定的温度下激活</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1025</Id>
+          <IdName>IDC_Celcius</IdName>
+          <Text>°</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1024</Id>
+          <IdName>IDC_ACTAT2</IdName>
+          <Text>达到最高临界温度 -5℃ 时激活</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1008</Id>
+          <IdName>IDC_BALLOON</IdName>
+          <Text>气球弹出</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1009</Id>
+          <IdName>IDC_TBFLASH</IdName>
+          <Text>在任务栏上的闪烁 Core Temp</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1126</Id>
+          <IdName>IDC_OPExecute</IdName>
+          <Text>运行程序:</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1012</Id>
+          <IdName>IDC_BROWSE</IdName>
+          <Text>浏览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1068</Id>
+          <IdName>IDC_OHPExecOnce</IdName>
+          <Text>运行一次</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1127</Id>
+          <IdName>IDC_OPShutdownOptions</IdName>
+          <Text>关闭选项:</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1010</Id>
+          <IdName>IDC_ENABLESHUTDOWN</IdName>
+          <Text>启用</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1015</Id>
+          <IdName>IDC_RADIO_SD3</IdName>
+          <Text>将系统待机</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1016</Id>
+          <IdName>IDC_RADIO_SD4</IdName>
+          <Text>休眠</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1017</Id>
+          <IdName>IDC_RADIO_SD5</IdName>
+          <Text>关机</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1027</Id>
+          <IdName>IDC_LBLSHUTDOWN</IdName>
+          <Text>倒计时...后关机</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1026</Id>
+          <IdName>IDC_LBLSECS</IdName>
+          <Text>秒</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1125</Id>
+          <IdName>IDC_OPNotification</IdName>
+          <Text>注意:</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>159</Id>
+      <IdName>IDD_USREOFFSET</IdName>
+      <Caption>温度偏移</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>确定</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>2</Id>
+          <IdName>IDCANCEL</IdName>
+          <Text>取消</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1132</Id>
+          <IdName>IDC_TOCpuSelect</IdName>
+          <Text>选择CPU</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1068</Id>
+          <IdName>IDC_APPLYALL</IdName>
+          <Text>应用到所有核心</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1069</Id>
+          <IdName>IDC_RESET</IdName>
+          <Text>重置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1036</Id>
+          <IdName>IDC_CORE1</IdName>
+          <Text>核心 0</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1037</Id>
+          <IdName>IDC_CORE2</IdName>
+          <Text>核心 1</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1038</Id>
+          <IdName>IDC_CORE3</IdName>
+          <Text>核心 2</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1039</Id>
+          <IdName>IDC_CORE4</IdName>
+          <Text>核心 3</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1040</Id>
+          <IdName>IDC_CORE5</IdName>
+          <Text>核心 4</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1041</Id>
+          <IdName>IDC_CORE6</IdName>
+          <Text>核心 5</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1042</Id>
+          <IdName>IDC_CORE7</IdName>
+          <Text>核心 6</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1043</Id>
+          <IdName>IDC_CORE8</IdName>
+          <Text>核心 7</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1044</Id>
+          <IdName>IDC_CORE9</IdName>
+          <Text>核心 8</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1045</Id>
+          <IdName>IDC_CORE10</IdName>
+          <Text>核心 9</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1047</Id>
+          <IdName>IDC_CORE12</IdName>
+          <Text>核心 11</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1046</Id>
+          <IdName>IDC_CORE11</IdName>
+          <Text>核心 10</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1048</Id>
+          <IdName>IDC_CORE13</IdName>
+          <Text>核心 12</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1049</Id>
+          <IdName>IDC_CORE14</IdName>
+          <Text>核心 13</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1050</Id>
+          <IdName>IDC_CORE15</IdName>
+          <Text>核心 14</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1051</Id>
+          <IdName>IDC_CORE16</IdName>
+          <Text>核心 15</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>166</Id>
+      <IdName>IDD_SYSTEMINFO</IdName>
+      <Caption>Core Temp 系统信息</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>关闭</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1055</Id>
+          <IdName>IDC_TREESYSINFO</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>2</Id>
+          <IdName>ID_CANCEL</IdName>
+          <Text>取消</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>4</Id>
+          <IdName>ID_REFRESH</IdName>
+          <Text>刷新</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>169</Id>
+      <IdName>IDD_Win7Taskbar</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>确定</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>2</Id>
+          <IdName>IDCANCEL</IdName>
+          <Text>取消</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1058</Id>
+          <IdName>IDC_W7TBEnable</IdName>
+          <Text>启用 Windows 7 任务栏功能</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1064</Id>
+          <IdName>IDC_W7TBFrame</IdName>
+          <Text>设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1059</Id>
+          <IdName>IDC_W7TBTemperature</IdName>
+          <Text>温度</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1060</Id>
+          <IdName>IDC_W7TBFrequency</IdName>
+          <Text>频率</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1061</Id>
+          <IdName>IDC_W7TBLoad</IdName>
+          <Text>CPU 负载</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1063</Id>
+          <IdName>IDC_W7TBMinimize</IdName>
+          <Text>最小化时不隐藏任务栏按钮</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1065</Id>
+          <IdName>IDC_W7TBColor</IdName>
+          <Text>颜色</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1062</Id>
+          <IdName>IDC_W7TBCycle</IdName>
+          <Text>模式之间循环</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1067</Id>
+          <IdName>IDC_W7TBSPINCycleDelay</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1133</Id>
+          <IdName>IDC_W7TBSecondsLabel</IdName>
+          <Text>秒</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>176</Id>
+      <IdName>IDD_SETTINGS</IdName>
+      <Caption>设置</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>确定</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>2</Id>
+          <IdName>IDCANCEL</IdName>
+          <Text>取消</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>全局默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>6</Id>
+          <IdName>IDAPPLY</IdName>
+          <Text>应用</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1141</Id>
+          <IdName>IDC_TAB1</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>4</Id>
+          <IdName>IDCONFIRM</IdName>
+          <Text>确认设置</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>177</Id>
+      <IdName>IDD_SETTINGS_GENERAL</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1097</Id>
+          <IdName>IDC_SGSepSettings</IdName>
+          <Text>设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1134</Id>
+          <IdName>IDC_SGPollingLabel</IdName>
+          <Text>温度轮询间隔：</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1073</Id>
+          <IdName>IDC_SGSpinPolling</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1137</Id>
+          <IdName>IDC_SGMillisecondsLabel</IdName>
+          <Text>以毫秒为单位</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1135</Id>
+          <IdName>IDC_SGLoggingLabel</IdName>
+          <Text>温度记录间隔：</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1075</Id>
+          <IdName>IDC_SGSpinLogging</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1138</Id>
+          <IdName>IDC_SGSecondsLabel</IdName>
+          <Text>秒</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1136</Id>
+          <IdName>IDC_SGLanguageLabel</IdName>
+          <Text>语言:</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1080</Id>
+          <IdName>IDC_SGPlugins</IdName>
+          <Text>启用插件</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1081</Id>
+          <IdName>IDC_SGStartLogging</IdName>
+          <Text>在启动时启用日志记录</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="true">
+          <Id>1082</Id>
+          <IdName>IDC_SGInstances</IdName>
+          <Text>允许运行多个 Core Temp 实例</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1079</Id>
+          <IdName>IDC_SGStartWindows</IdName>
+          <Text>随系统启动 Core Temp</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>178</Id>
+      <IdName>IDD_SETTINGS_DISPLAY</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1076</Id>
+          <IdName>IDC_SDCheckFahrenheit</IdName>
+          <Text>显示华氏温度</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1077</Id>
+          <IdName>IDC_SDCheckMinimized</IdName>
+          <Text>最小化启动 Core Temp</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1078</Id>
+          <IdName>IDC_SDCheckTray</IdName>
+          <Text>关闭 Core Temp 到系统托盘</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1093</Id>
+          <IdName>IDC_SDGroupColors</IdName>
+          <Text>配置域的色彩</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1094</Id>
+          <IdName>IDC_SDSepSettings</IdName>
+          <Text>设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1128</Id>
+          <IdName>IDC_DSTextLabel</IdName>
+          <Text>文本</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1129</Id>
+          <IdName>IDC_DSHotLabel</IdName>
+          <Text>热</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1130</Id>
+          <IdName>IDC_DSCriticalLabel</IdName>
+          <Text>临界</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1098</Id>
+          <IdName>IDC_SDStaticPreview1</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1099</Id>
+          <IdName>IDC_SDStaticPreview2</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1100</Id>
+          <IdName>IDC_SDStaticPreview3</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1065</Id>
+          <IdName>IDC_SDBtnChange1</IdName>
+          <Text>修改</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1066</Id>
+          <IdName>IDC_SDBtnReset1</IdName>
+          <Text>重置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1067</Id>
+          <IdName>IDC_SDBtnChange2</IdName>
+          <Text>修改</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1068</Id>
+          <IdName>IDC_SDBtnReset2</IdName>
+          <Text>重置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1069</Id>
+          <IdName>IDC_SDBtnChange3</IdName>
+          <Text>修改</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1070</Id>
+          <IdName>IDC_SDBtnReset3</IdName>
+          <Text>重置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1131</Id>
+          <IdName>IDC_SDLabels</IdName>
+          <Text>标签</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1101</Id>
+          <IdName>IDC_SDStaticPreview4</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1071</Id>
+          <IdName>IDC_SDBtnChange4</IdName>
+          <Text>修改</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1072</Id>
+          <IdName>IDC_SDBtnReset4</IdName>
+          <Text>重置</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>179</Id>
+      <IdName>IDD_SETTINGS_G15</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1089</Id>
+          <IdName>IDC_SGCheckShowTime</IdName>
+          <Text>在液晶显示屏上显示日期和时间</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1085</Id>
+          <IdName>IDC_SGRadio12Hour</IdName>
+          <Text>12小时的时间格式</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1086</Id>
+          <IdName>IDC_SGRadio24Hour</IdName>
+          <Text>24 小时的时间格式</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1087</Id>
+          <IdName>IDC_SGRadioUserFont</IdName>
+          <Text>用户选择的字体</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1088</Id>
+          <IdName>IDC_SGRadioBuiltInFont</IdName>
+          <Text>使用内置的字体</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>5</Id>
+          <IdName>IDC_SGBtnFont</IdName>
+          <Text>选择字体</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1092</Id>
+          <IdName>IDC_SGStaticPreview</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1095</Id>
+          <IdName>IDC_SGSepTimes</IdName>
+          <Text> 时间显示</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1096</Id>
+          <IdName>IDC_SGSepFonts</IdName>
+          <Text> 文本设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>-1</Id>
+          <IdName>IDC_STATIC</IdName>
+          <Text>*</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1139</Id>
+          <IdName>IDC_SGRestarted</IdName>
+          <Text>Core Temp 必须重新启动使更改生效</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>180</Id>
+      <IdName>IDD_SETTINGS_ADVANCED</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1091</Id>
+          <IdName>IDC_SACheckTjMax</IdName>
+          <Text>在温度栏显示距离 TjMax 的温度</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1092</Id>
+          <IdName>IDC_SACheckOnFlyFsb</IdName>
+          <Text>快速 FSB 检测(占用较多资源)</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1096</Id>
+          <IdName>IDC_SASepSettings</IdName>
+          <Text> 设置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1093</Id>
+          <IdName>IDC_SACheckSnmp</IdName>
+          <Text>启用全局共享内存 (SNMP)</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>181</Id>
+      <IdName>IDD_SETTINGS_SYSTRAY</IdName>
+      <Caption />
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>3</Id>
+          <IdName>IDDEFAULTS</IdName>
+          <Text>默认</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1099</Id>
+          <IdName>IDC_SSSepSettings</IdName>
+          <Text> 托盘图标</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1100</Id>
+          <IdName>IDC_SSRdoAll</IdName>
+          <Text>所有核心</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1101</Id>
+          <IdName>IDC_SSRdoHighestCpu</IdName>
+          <Text>多核处理器只显示温度最高的核心温度</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1102</Id>
+          <IdName>IDC_SSRdoHighest</IdName>
+          <Text>最高温度</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1103</Id>
+          <IdName>IDC_SSRdoIcon</IdName>
+          <Text>仅图标</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1104</Id>
+          <IdName>IDC_SSCheckSpeed</IdName>
+          <Text>处理器主频</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1105</Id>
+          <IdName>IDC_SSCheckLoad</IdName>
+          <Text>处理器负载</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1108</Id>
+          <IdName>IDC_SSStaticPreview</IdName>
+          <Text> 预览</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1065</Id>
+          <IdName>IDC_SSBtnTextColor</IdName>
+          <Text>文本</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1110</Id>
+          <IdName>IDC_SSSepColors</IdName>
+          <Text> 颜色</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1111</Id>
+          <IdName>IDC_SSSepExtra</IdName>
+          <Text> 扩展图标</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1066</Id>
+          <IdName>IDC_SSBtnFont</IdName>
+          <Text>选择字体</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1113</Id>
+          <IdName>IDC_SSBtnBackgroundColor</IdName>
+          <Text>背景</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+    <Dialog>
+      <Id>183</Id>
+      <IdName>IDD_PLUGINMANAGER</IdName>
+      <Caption>插件管理器</Caption>
+      <Controls>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1</Id>
+          <IdName>IDOK</IdName>
+          <Text>关闭</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1114</Id>
+          <IdName>IDC_PMList</IdName>
+          <Text />
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1115</Id>
+          <IdName>IDC_PMStart</IdName>
+          <Text>启动</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1116</Id>
+          <IdName>IDC_PMStop</IdName>
+          <Text>停止</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1117</Id>
+          <IdName>IDC_PMConfigure</IdName>
+          <Text>配置</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1118</Id>
+          <IdName>IDC_PMRemove</IdName>
+          <Text>卸载</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1119</Id>
+          <IdName>IDC_PMEnable</IdName>
+          <Text>启用插件</Text>
+        </Control>
+        <Control RightAlignText="false" RightToLeft="false">
+          <Id>1120</Id>
+          <IdName>IDC_PMRefresh</IdName>
+          <Text>刷新</Text>
+        </Control>
+      </Controls>
+    </Dialog>
+  </Dialogs>
+  <Strings>
+    <String>
+      <Id>109</Id>
+      <IdName>IDC_CoreTempMenu</IdName>
+      <Value>CORETEMP</Value>
+    </String>
+    <String>
+      <Id>103</Id>
+      <IdName>IDS_APP_TITLE</IdName>
+      <Value>Core Temp</Value>
+    </String>
+    <String>
+      <Id>104</Id>
+      <IdName>IDS_APP_TITLE_VER</IdName>
+      <Value>Core Temp 版本</Value>
+    </String>
+    <String>
+      <Id>168</Id>
+      <IdName>IDS_CoreTempMiscRegistryEntryNotFound</IdName>
+      <Value>注册表项没有找到。&#10;&#13;"随系统启动 Core Temp" 选项未能保存。</Value>
+    </String>
+    <String>
+      <Id>167</Id>
+      <IdName>IDS_CoreTempMiscScheduledTask</IdName>
+      <Value>"随系统启动 Core Temp" 的计划任务选项未能创建或修改，设置将不被保存.</Value>
+    </String>
+    <String>
+      <Id>162</Id>
+      <IdName>IDS_InitializeMessageDataInitFailed</IdName>
+      <Value>Core Temp 启动时未能读取到核心数据.&#10;&#13;此程序将终止.</Value>
+    </String>
+    <String>
+      <Id>161</Id>
+      <IdName>IDS_InitializeMessageDriverFailed</IdName>
+      <Value>驱动程序加载失败。Core Temp 将终止.</Value>
+    </String>
+    <String>
+      <Id>164</Id>
+      <IdName>IDS_InitializeMessageDriverOutdated</IdName>
+      <Value>当前加载的驱动程序已经过时了。&#10;&#13;请确定你没有运行任何其他来自 ALCPU 公司的软件，然后尝试重新启动 Core Temp.&#10;&#13;此程序将终止.</Value>
+    </String>
+    <String>
+      <Id>157</Id>
+      <IdName>IDS_InitializeMessageDuplicateInstance</IdName>
+      <Value>Core Temp 的另一个实例已在运行！</Value>
+    </String>
+    <String>
+      <Id>165</Id>
+      <IdName>IDS_InitializeMessageInternalError</IdName>
+      <Value>Core Temp 遇到了一个内部错误！此程序将终止.</Value>
+    </String>
+    <String>
+      <Id>166</Id>
+      <IdName>IDS_InitializeMessageOsNotSupported</IdName>
+      <Value>Core Temp 需要运行在 Windows2000/XP/2003/Vista/7 下。此程序将终止.</Value>
+    </String>
+    <String>
+      <Id>163</Id>
+      <IdName>IDS_InitializeMessageProcessorNotFound</IdName>
+      <Value>Core Temp 没有发现任何受支持的处理器。&#10;&#13;此程序将终止.&#10;&#13;&#10;&#13;如果你确定你的CPU在受支持的处理器列表中，你愿意创建一个寄存器转储文件，以帮助开发人员解决这个问题吗？</Value>
+    </String>
+    <String>
+      <Id>159</Id>
+      <IdName>IDS_InitializeMessageUnsupportedCpuAmd</IdName>
+      <Value>当前这颗 AMD 处理器不被支持。&#10;&#13;Core Temp 将关闭.</Value>
+    </String>
+    <String>
+      <Id>160</Id>
+      <IdName>IDS_InitializeMessageUnsupportedCpuIntel</IdName>
+      <Value>当前这颗 Intel 处理器不被支持.&#10;&#13;Core Temp 将关闭.</Value>
+    </String>
+    <String>
+      <Id>158</Id>
+      <IdName>IDS_InitializeMessageUnsupportedVendor</IdName>
+      <Value>不支持当前处理器供应商.&#10;&#13;Core Temp 将关闭.</Value>
+    </String>
+    <String>
+      <Id>124</Id>
+      <IdName>IDS_MainGuiCoreLoad</IdName>
+      <Value>负载</Value>
+    </String>
+    <String>
+      <Id>129</Id>
+      <IdName>IDS_MainGuiCoreNum</IdName>
+      <Value>核心 #%d:</Value>
+    </String>
+    <String>
+      <Id>105</Id>
+      <IdName>IDS_MainGuiCores</IdName>
+      <Value>核心</Value>
+    </String>
+    <String>
+      <Id>108</Id>
+      <IdName>IDS_MainGuiCpuid</IdName>
+      <Value>步进:</Value>
+    </String>
+    <String>
+      <Id>128</Id>
+      <IdName>IDS_MainGuiCpuNum</IdName>
+      <Value>CPU #%d:</Value>
+    </String>
+    <String>
+      <Id>193</Id>
+      <IdName>IDS_MainGuiDataClockSpeed</IdName>
+      <Value>时钟</Value>
+    </String>
+    <String>
+      <Id>194</Id>
+      <IdName>IDS_MainGuiDataLoad</IdName>
+      <Value>负载</Value>
+    </String>
+    <String>
+      <Id>196</Id>
+      <IdName>IDS_MainGuiDataShortTemperature</IdName>
+      <Value>温度</Value>
+    </String>
+    <String>
+      <Id>195</Id>
+      <IdName>IDS_MainGuiDataToTjMax</IdName>
+      <Value>距 TjMax</Value>
+    </String>
+    <String>
+      <Id>126</Id>
+      <IdName>IDS_MainGuiFreq</IdName>
+      <Value>频率 #%d:</Value>
+    </String>
+    <String>
+      <Id>114</Id>
+      <IdName>IDS_MainGuiFrequency</IdName>
+      <Value>主频:</Value>
+    </String>
+    <String>
+      <Id>113</Id>
+      <IdName>IDS_MainGuiLithography</IdName>
+      <Value>工艺:</Value>
+    </String>
+    <String>
+      <Id>123</Id>
+      <IdName>IDS_MainGuiMaxTemp</IdName>
+      <Value>最高.</Value>
+    </String>
+    <String>
+      <Id>122</Id>
+      <IdName>IDS_MainGuiMinTemp</IdName>
+      <Value>最低.</Value>
+    </String>
+    <String>
+      <Id>112</Id>
+      <IdName>IDS_MainGuiModel</IdName>
+      <Value>型号:</Value>
+    </String>
+    <String>
+      <Id>120</Id>
+      <IdName>IDS_MainGuiModulation</IdName>
+      <Value>步进:</Value>
+    </String>
+    <String>
+      <Id>111</Id>
+      <IdName>IDS_MainGuiPlatform</IdName>
+      <Value>插槽:</Value>
+    </String>
+    <String>
+      <Id>118</Id>
+      <IdName>IDS_MainGuiPowerDraw</IdName>
+      <Value>功率:</Value>
+    </String>
+    <String>
+      <Id>125</Id>
+      <IdName>IDS_MainGuiProcessorNum</IdName>
+      <Value>处理器 #%d</Value>
+    </String>
+    <String>
+      <Id>121</Id>
+      <IdName>IDS_MainGuiProcInfo</IdName>
+      <Value>处理器</Value>
+    </String>
+    <String>
+      <Id>115</Id>
+      <IdName>IDS_MainGuiRevision</IdName>
+      <Value>修订:</Value>
+    </String>
+    <String>
+      <Id>107</Id>
+      <IdName>IDS_MainGuiSelectCpu</IdName>
+      <Value>选择 CPU:</Value>
+    </String>
+    <String>
+      <Id>117</Id>
+      <IdName>IDS_MainGuiTCaseMax</IdName>
+      <Value>极限温度:</Value>
+    </String>
+    <String>
+      <Id>110</Id>
+      <IdName>IDS_MainGuiTdp</IdName>
+      <Value>热设计功耗:</Value>
+    </String>
+    <String>
+      <Id>127</Id>
+      <IdName>IDS_MainGuiTemperatureReadings</IdName>
+      <Value>处理器 #%d: 温度读数</Value>
+    </String>
+    <String>
+      <Id>130</Id>
+      <IdName>IDS_MainGuiTemperatureReadings2</IdName>
+      <Value>温度读数</Value>
+    </String>
+    <String>
+      <Id>106</Id>
+      <IdName>IDS_MainGuiThreads</IdName>
+      <Value>线程</Value>
+    </String>
+    <String>
+      <Id>116</Id>
+      <IdName>IDS_MainGuiTjMax</IdName>
+      <Value>耐热:</Value>
+    </String>
+    <String>
+      <Id>119</Id>
+      <IdName>IDS_MainGuiVid</IdName>
+      <Value>核心电压:</Value>
+    </String>
+    <String>
+      <Id>150</Id>
+      <IdName>IDS_MsgBoxTitleError</IdName>
+      <Value>Core Temp: 错误</Value>
+    </String>
+    <String>
+      <Id>152</Id>
+      <IdName>IDS_MsgBoxTitleInfo</IdName>
+      <Value>Core Temp: 信息</Value>
+    </String>
+    <String>
+      <Id>153</Id>
+      <IdName>IDS_MsgBoxTitleQuestion</IdName>
+      <Value>Core Temp: 问题</Value>
+    </String>
+    <String>
+      <Id>151</Id>
+      <IdName>IDS_MsgBoxTitleWarning</IdName>
+      <Value>Core Temp: 警告</Value>
+    </String>
+    <String>
+      <Id>203</Id>
+      <IdName>IDS_OverheatProtectionCritical</IdName>
+      <Value>危急!</Value>
+    </String>
+    <String>
+      <Id>189</Id>
+      <IdName>IDS_OverheatProtectionDelay</IdName>
+      <Value>你想延迟这个动作60秒?</Value>
+    </String>
+    <String>
+      <Id>187</Id>
+      <IdName>IDS_OverheatProtectionHibernate</IdName>
+      <Value>你的计算机会在 %lu 秒后进入休眠状态。</Value>
+    </String>
+    <String>
+      <Id>204</Id>
+      <IdName>IDS_OverheatProtectionHot</IdName>
+      <Value>过热.</Value>
+    </String>
+    <String>
+      <Id>185</Id>
+      <IdName>IDS_OverheatProtectionOverheatDetected</IdName>
+      <Value>检测到过热!</Value>
+    </String>
+    <String>
+      <Id>188</Id>
+      <IdName>IDS_OverheatProtectionShutDown</IdName>
+      <Value>你的计算机会在 %lu 秒后关闭。</Value>
+    </String>
+    <String>
+      <Id>186</Id>
+      <IdName>IDS_OverheatProtectionStandby</IdName>
+      <Value>你的计算机会在 %lu 秒后进入待机状态。</Value>
+    </String>
+    <String>
+      <Id>205</Id>
+      <IdName>IDS_OverheatProtectionThreshold</IdName>
+      <Value>超过用户指定的阈值。</Value>
+    </String>
+    <String>
+      <Id>182</Id>
+      <IdName>IDS_PluginErrorHandlerErrorInvalidPlugin</IdName>
+      <Value>无效的插件。</Value>
+    </String>
+    <String>
+      <Id>181</Id>
+      <IdName>IDS_PluginErrorHandlerErrorLoad</IdName>
+      <Value>无法加载插件。</Value>
+    </String>
+    <String>
+      <Id>184</Id>
+      <IdName>IDS_PluginErrorHandlerErrorNameUnknown</IdName>
+      <Value>未知的</Value>
+    </String>
+    <String>
+      <Id>180</Id>
+      <IdName>IDS_PluginErrorHandlerErrorPath</IdName>
+      <Value>插件不支持或路径不正确。</Value>
+    </String>
+    <String>
+      <Id>183</Id>
+      <IdName>IDS_PluginErrorHandlerErrorUnknown</IdName>
+      <Value>未知的错误.</Value>
+    </String>
+    <String>
+      <Id>176</Id>
+      <IdName>IDS_PluginErrorHandlerOnConfig</IdName>
+      <Value>配置插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>177</Id>
+      <IdName>IDS_PluginErrorHandlerOnDeinit</IdName>
+      <Value>完成插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>179</Id>
+      <IdName>IDS_PluginErrorHandlerOnException</IdName>
+      <Value>出现错误在</Value>
+    </String>
+    <String>
+      <Id>170</Id>
+      <IdName>IDS_PluginErrorHandlerOnInitiate</IdName>
+      <Value>在启动插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>171</Id>
+      <IdName>IDS_PluginErrorHandlerOnLoad</IdName>
+      <Value>在载入插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>178</Id>
+      <IdName>IDS_PluginErrorHandlerOnRemove</IdName>
+      <Value>在移除插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>173</Id>
+      <IdName>IDS_PluginErrorHandlerOnStart</IdName>
+      <Value>在启动插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>174</Id>
+      <IdName>IDS_PluginErrorHandlerOnStop</IdName>
+      <Value>在停止插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>172</Id>
+      <IdName>IDS_PluginErrorHandlerOnUnload</IdName>
+      <Value>在卸载插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>175</Id>
+      <IdName>IDS_PluginErrorHandlerOnUpdate</IdName>
+      <Value>在更新插件时出现错误</Value>
+    </String>
+    <String>
+      <Id>169</Id>
+      <IdName>IDS_PluginErrorHandlerSystemError</IdName>
+      <Value>系统错误</Value>
+    </String>
+    <String>
+      <Id>190</Id>
+      <IdName>IDS_PluginManagerConfigurationNotImplemented</IdName>
+      <Value>这个插件在不存在任何可配置选项。</Value>
+    </String>
+    <String>
+      <Id>192</Id>
+      <IdName>IDS_PluginManagerConfirmRemove</IdName>
+      <Value>确认插件删除</Value>
+    </String>
+    <String>
+      <Id>132</Id>
+      <IdName>IDS_PluginManagerDescription</IdName>
+      <Value>描述</Value>
+    </String>
+    <String>
+      <Id>131</Id>
+      <IdName>IDS_PluginManagerName</IdName>
+      <Value>名称</Value>
+    </String>
+    <String>
+      <Id>135</Id>
+      <IdName>IDS_PluginManagerPath</IdName>
+      <Value>路径</Value>
+    </String>
+    <String>
+      <Id>191</Id>
+      <IdName>IDS_PluginManagerRemovePlugin</IdName>
+      <Value>您确定您要删除这个插件吗？</Value>
+    </String>
+    <String>
+      <Id>136</Id>
+      <IdName>IDS_PluginManagerStarted</IdName>
+      <Value>启动完毕</Value>
+    </String>
+    <String>
+      <Id>134</Id>
+      <IdName>IDS_PluginManagerStatus</IdName>
+      <Value>状态</Value>
+    </String>
+    <String>
+      <Id>137</Id>
+      <IdName>IDS_PluginManagerStopped</IdName>
+      <Value>已停止</Value>
+    </String>
+    <String>
+      <Id>133</Id>
+      <IdName>IDS_PluginManagerVersion</IdName>
+      <Value>版本</Value>
+    </String>
+    <String>
+      <Id>142</Id>
+      <IdName>IDS_SettingsDialogAdvanced</IdName>
+      <Value>高级</Value>
+    </String>
+    <String>
+      <Id>200</Id>
+      <IdName>IDS_SettingsDialogAdvancedK8Unsupported</IdName>
+      <Value>基于AMD K8处理器不支持此功能。</Value>
+    </String>
+    <String>
+      <Id>201</Id>
+      <IdName>IDS_SettingsDialogAdvancedSnmp</IdName>
+      <Value>主要用于多处理器和/或服务器相关系统。</Value>
+    </String>
+    <String>
+      <Id>139</Id>
+      <IdName>IDS_SettingsDialogDisplay</IdName>
+      <Value>显示</Value>
+    </String>
+    <String>
+      <Id>138</Id>
+      <IdName>IDS_SettingsDialogGeneral</IdName>
+      <Value>常规</Value>
+    </String>
+    <String>
+      <Id>140</Id>
+      <IdName>IDS_SettingsDialogSystemTray</IdName>
+      <Value>系统托盘</Value>
+    </String>
+    <String>
+      <Id>145</Id>
+      <IdName>IDS_SettingsDialogSystemTrayCpu</IdName>
+      <Value>CPU %d</Value>
+    </String>
+    <String>
+      <Id>144</Id>
+      <IdName>IDS_SettingsDialogSystemTrayCpuCore</IdName>
+      <Value>CPU %d / 核心 %d</Value>
+    </String>
+    <String>
+      <Id>147</Id>
+      <IdName>IDS_SettingsDialogSystemTrayFrequency</IdName>
+      <Value>主频</Value>
+    </String>
+    <String>
+      <Id>148</Id>
+      <IdName>IDS_SettingsDialogSystemTrayLoad</IdName>
+      <Value>负载</Value>
+    </String>
+    <String>
+      <Id>146</Id>
+      <IdName>IDS_SettingsDialogSystemTrayTemperature</IdName>
+      <Value>温度</Value>
+    </String>
+    <String>
+      <Id>141</Id>
+      <IdName>IDS_SettingsDialogWin7Taskbar</IdName>
+      <Value>Windows 任务栏</Value>
+    </String>
+    <String>
+      <Id>155</Id>
+      <IdName>IDS_SharedMemoryAccessMappingFailed</IdName>
+      <Value>无法访问文件映射对象。</Value>
+    </String>
+    <String>
+      <Id>154</Id>
+      <IdName>IDS_SharedMemoryCreateMappingFailed</IdName>
+      <Value>无法创建文件映射对象。</Value>
+    </String>
+    <String>
+      <Id>149</Id>
+      <IdName>IDS_SharedMemoryCreateMutexFailed</IdName>
+      <Value>无法创建互斥对象。</Value>
+    </String>
+    <String>
+      <Id>202</Id>
+      <IdName>IDS_SystemTrayBackground</IdName>
+      <Value>后台</Value>
+    </String>
+    <String>
+      <Id>198</Id>
+      <IdName>IDS_SystemTrayCore</IdName>
+      <Value>核心</Value>
+    </String>
+    <String>
+      <Id>199</Id>
+      <IdName>IDS_SystemTrayCpu</IdName>
+      <Value>Cpu</Value>
+    </String>
+    <String>
+      <Id>206</Id>
+      <IdName>IDS_TaskbarButoonTemperature</IdName>
+      <Value>温度</Value>
+    </String>
+    <String>
+      <Id>208</Id>
+      <IdName>IDS_TaskbarButtonClockSpeed</IdName>
+      <Value>时钟速度</Value>
+    </String>
+    <String>
+      <Id>207</Id>
+      <IdName>IDS_TaskbarButtonCpuLoad</IdName>
+      <Value>CPU 负载</Value>
+    </String>
+    <String>
+      <Id>156</Id>
+      <IdName>IDS_TxtDumpFileCreateFailed</IdName>
+      <Value>不能创建文件！</Value>
+    </String>
+    <String>
+      <Id>216</Id>
+      <IdName>IDS_UnitsAmpere</IdName>
+      <Value>1 </Value>
+    </String>
+    <String>
+      <Id>217</Id>
+      <IdName>IDS_Unitsbyte</IdName>
+      <Value>字节</Value>
+    </String>
+    <String>
+      <Id>218</Id>
+      <IdName>IDS_Unitsbytes</IdName>
+      <Value>字节</Value>
+    </String>
+    <String>
+      <Id>211</Id>
+      <IdName>IDS_UnitsGHz</IdName>
+      <Value>GHz</Value>
+    </String>
+    <String>
+      <Id>221</Id>
+      <IdName>IDS_UnitsGigabytes</IdName>
+      <Value>GiB</Value>
+    </String>
+    <String>
+      <Id>214</Id>
+      <IdName>IDS_UnitsGTs</IdName>
+      <Value>GT/s</Value>
+    </String>
+    <String>
+      <Id>219</Id>
+      <IdName>IDS_UnitsKilobytes</IdName>
+      <Value>KiB</Value>
+    </String>
+    <String>
+      <Id>220</Id>
+      <IdName>IDS_UnitsMegabytes</IdName>
+      <Value>MiB</Value>
+    </String>
+    <String>
+      <Id>210</Id>
+      <IdName>IDS_UnitsMHz</IdName>
+      <Value>MHz</Value>
+    </String>
+    <String>
+      <Id>213</Id>
+      <IdName>IDS_UnitsMTs</IdName>
+      <Value>MT/s</Value>
+    </String>
+    <String>
+      <Id>209</Id>
+      <IdName>IDS_UnitsNanometers</IdName>
+      <Value>nm</Value>
+    </String>
+    <String>
+      <Id>223</Id>
+      <IdName>IDS_UnitsPetabytes</IdName>
+      <Value>PiB</Value>
+    </String>
+    <String>
+      <Id>222</Id>
+      <IdName>IDS_UnitsTerabytes</IdName>
+      <Value>TiB</Value>
+    </String>
+    <String>
+      <Id>215</Id>
+      <IdName>IDS_UnitsVolts</IdName>
+      <Value>v</Value>
+    </String>
+    <String>
+      <Id>212</Id>
+      <IdName>IDS_MainGuiTooltipEstimatedPowerConsumption</IdName>
+      <Value>粗略估计，目前的电力消耗为</Value>
+    </String>
+    <String>
+      <Id>197</Id>
+      <IdName>IDS_UnitsWatts</IdName>
+      <Value>瓦</Value>
+    </String>
+    <String>
+      <Id>143</Id>
+      <IdName>IDS_UserOffsetProcessorNum</IdName>
+      <Value>处理器 #%d</Value>
+    </String>
+    <String>
+      <Id>233</Id>
+      <IdName>IDS_CheckDriverUpdate</IdName>
+      <Value>Check for Driver Updates</Value>
+    </String>
+    <String>
+      <Id>234</Id>
+      <IdName>IDS_CheckIntelDriverUpdate</IdName>
+      <Value>Check for Intel Driver Updates</Value>
+    </String>
+    <String>
+      <Id>235</Id>
+      <IdName>IDS_CheckAmdDriverUpdate</IdName>
+      <Value>Check for AMD Driver Updates</Value>
+    </String>
+    <String>
+      <Id>247</Id>
+      <IdName>IDS_CheckBiosUpdate</IdName>
+      <Value>Check for BIOS Updates</Value>
+    </String>
+  </Strings>
+</CoreTemp>

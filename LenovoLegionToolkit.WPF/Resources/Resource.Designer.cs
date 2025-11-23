@@ -3137,6 +3137,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tools.
+        /// </summary>
+        public static string MainWindow_NavigationItem_Tools {
+            get {
+                return ResourceManager.GetString("MainWindow_NavigationItem_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string MainWindow_NavigationItem_Settings {
@@ -5291,6 +5300,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("WindowsOptimizationPage_Tab_Cleanup", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beautification.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_Beautification {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_Beautification", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to System optimization.
@@ -5536,11 +5554,434 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the theme for the context menu..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_Theme_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_Theme_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable transparency effects for the context menu..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_Transparency_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_Transparency_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customize the appearance of the context menu..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_Appearance_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_Appearance_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shell.exe not found. Please make sure Nilesoft Shell is installed..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_ShellNotFound {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_ShellNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration file not found. Please make sure Nilesoft Shell is installed..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_ConfigNotFound {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_ConfigNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to enable classic menu..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_EnableError {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_EnableError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to restore default menu..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_RestoreError {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_RestoreError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to install shell..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_InstallError {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_InstallError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to uninstall shell..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_UninstallError {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_UninstallError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to apply style settings..
+        /// </summary>
+        public static string WindowsOptimizationPage_Beautification_ApplyError {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Beautification_ApplyError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Explorer &amp; interface.
         /// </summary>
         public static string WindowsOptimization_Category_Explorer_Title {
             get {
                 return ResourceManager.GetString("WindowsOptimization_Category_Explorer_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nilesoft Shell integration.
+        /// </summary>
+        public static string WindowsOptimization_Category_NilesoftShell_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_NilesoftShell_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable or disable the Nilesoft Shell context menu and related integration..
+        /// </summary>
+        public static string WindowsOptimization_Category_NilesoftShell_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Category_NilesoftShell_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Nilesoft Shell context menu.
+        /// </summary>
+        public static string WindowsOptimization_Action_NilesoftShell_Enable_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_NilesoftShell_Enable_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registers the Shell context menu handler and applies TreatAs override for Windows 11; restarts Explorer..
+        /// </summary>
+        public static string WindowsOptimization_Action_NilesoftShell_Enable_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_NilesoftShell_Enable_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Nilesoft Shell context menu.
+        /// </summary>
+        public static string WindowsOptimization_Action_NilesoftShell_Disable_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_NilesoftShell_Disable_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unregisters the Shell context menu handler; restarts Explorer..
+        /// </summary>
+        public static string WindowsOptimization_Action_NilesoftShell_Disable_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_NilesoftShell_Disable_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System beautification.
+        /// </summary>
+        public static string MainWindow_NavigationItem_SystemBeautification {
+            get {
+                return ResourceManager.GetString("MainWindow_NavigationItem_SystemBeautification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right-click menu style.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch between default and classic context menu styles..
+        /// </summary>
+        public static string SystemBeautification_RightClick_Subtitle {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable classic.
+        /// </summary>
+        public static string SystemBeautification_RightClick_EnableClassic {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_EnableClassic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore default.
+        /// </summary>
+        public static string SystemBeautification_RightClick_RestoreDefault {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_RestoreDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Install {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Uninstall {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Uninstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable classic.
+        /// </summary>
+        public static string SystemBeautification_RightClick_DisableClassic {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_DisableClassic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Classic menu installed and enabled.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Status_Installed {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Status_Installed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Classic menu not installed.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Status_NotInstalled {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Status_NotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Installed but not enabled.
+        /// </summary>
+        public static string SystemBeautification_RightClick_Status_InstalledButNotRegistered {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_Status_InstalledButNotRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style Settings.
+        /// </summary>
+        public static string SystemBeautification_RightClick_OpenStyleSettings {
+            get {
+                return ResourceManager.GetString("SystemBeautification_RightClick_OpenStyleSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Beautification.
+        /// </summary>
+        public static string SystemBeautification_WindowsBeautification_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_WindowsBeautification_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customize Windows appearance including right-click menu style.
+        /// </summary>
+        public static string SystemBeautification_WindowsBeautification_Subtitle {
+            get {
+                return ResourceManager.GetString("SystemBeautification_WindowsBeautification_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menu Style Settings.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theme.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto (Follow system theme).
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Auto {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Auto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Light {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dark.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Dark {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Classic.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Classic {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Classic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modern.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Theme_Modern {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Theme_Modern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transparency.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Transparency_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Transparency_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable transparency effects.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Transparency_Enable {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Transparency_Enable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appearance.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Appearance_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Appearance_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rounded corners.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shadows.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Appearance_Shadows {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Appearance_Shadows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string SystemBeautification_MenuStyleSettings_Apply {
+            get {
+                return ResourceManager.GetString("SystemBeautification_MenuStyleSettings_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visual effects.
+        /// </summary>
+        public static string SystemBeautification_Effects_Title {
+            get {
+                return ResourceManager.GetString("SystemBeautification_Effects_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust Windows transparency effects..
+        /// </summary>
+        public static string SystemBeautification_Effects_Subtitle {
+            get {
+                return ResourceManager.GetString("SystemBeautification_Effects_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable transparency effects.
+        /// </summary>
+        public static string SystemBeautification_Effects_Transparency {
+            get {
+                return ResourceManager.GetString("SystemBeautification_Effects_Transparency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System beautification.
+        /// </summary>
+        public static string WindowsOptimization_OpenBeautification_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_OpenBeautification_Button", resourceCulture);
             }
         }
         
@@ -5676,6 +6117,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string WindowsOptimization_Action_ExplorerSuggestions_Description {
             get {
                 return ResourceManager.GetString("WindowsOptimization_Action_ExplorerSuggestions_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Windows key to open search.
+        /// </summary>
+        public static string WindowsOptimization_Action_WinKeySearch_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_WinKeySearch_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modify Windows key behavior to open search instead of the start menu..
+        /// </summary>
+        public static string WindowsOptimization_Action_WinKeySearch_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_WinKeySearch_Description", resourceCulture);
             }
         }
         
@@ -6505,6 +6964,42 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools.
+        /// </summary>
+        public static string ToolsPage_Title {
+            get {
+                return ResourceManager.GetString("ToolsPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch system tools and utilities.
+        /// </summary>
+        public static string ToolsPage_Description {
+            get {
+                return ResourceManager.GetString("ToolsPage_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tools available. Please add tools in the tools folder under the application directory.
+        /// </summary>
+        public static string ToolsPage_Empty {
+            get {
+                return ResourceManager.GetString("ToolsPage_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start tool.
+        /// </summary>
+        public static string ToolsPage_Error_StartTool {
+            get {
+                return ResourceManager.GetString("ToolsPage_Error_StartTool", resourceCulture);
             }
         }
         

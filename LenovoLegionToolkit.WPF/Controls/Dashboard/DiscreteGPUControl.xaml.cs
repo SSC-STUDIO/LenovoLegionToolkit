@@ -40,8 +40,6 @@ public partial class DiscreteGPUControl
 
         Visibility = Visibility.Visible;
         _content.Visibility = Visibility.Visible;
-        if (!IsVisible)
-            return;
 
         await _gpuController.StartAsync();
     }

@@ -1,0 +1,544 @@
+{
+    "version": "1.0",
+    "description": "工具目录说明文件，包含所有工具的分类和详细信息",
+    "categories": [
+      {
+        "name": "CPU_Tools",
+        "displayName": "CPU 工具",
+        "description": "CPU 相关的检测、监控和优化工具",
+        "tools": [
+          {
+            "name": "CoreTemp",
+            "description": "Core Temp 是一款轻量级的 CPU 温度监控工具，可以实时显示每个 CPU 核心的温度。",
+            "version": "1.18",
+            "author": "Arthur Liberman"
+          },
+          {
+            "name": "CPUZ",
+            "description": "CPU-Z 是一款免费的硬件信息检测工具，可以显示 CPU、主板、内存等硬件详细信息。",
+            "version": "2.09",
+            "author": "CPUID"
+          },
+          {
+            "name": "ThrottleStop",
+            "description": "ThrottleStop 是一款强大的 CPU 性能调节工具，可以解除 CPU 降频限制，提升性能。",
+            "version": "9.6",
+            "author": "Kevin Glynn"
+          }
+        ]
+      },
+      {
+        "name": "Display_Tools",
+        "displayName": "显示器工具",
+        "description": "显示器测试和校准工具",
+        "tools": [
+          {
+            "name": "Color_Gamut_Test",
+            "description": "色域测试工具，用于检测显示器的色彩覆盖范围。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Online_Screen_Test",
+            "description": "在线屏幕测试工具，用于检测显示器坏点、色彩等问题。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "UFO_Test",
+            "description": "UFO 测试工具，用于检测显示器的响应时间和拖影问题。",
+            "version": "1.0",
+            "author": ""
+          }
+        ]
+      },
+      {
+        "name": "Gaming_Tools",
+        "displayName": "游戏工具",
+        "description": "游戏加速器和游戏平台启动工具",
+        "tools": [
+          {
+            "name": "AxeOx_Accelerator",
+            "description": "AxeOx 游戏加速器，提供低延迟游戏体验。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "battle",
+            "description": "Battle.net 启动器。",
+            "version": "1.0",
+            "author": "Blizzard"
+          },
+          {
+            "name": "eaapp",
+            "description": "EA App 启动器。",
+            "version": "1.0",
+            "author": "Electronic Arts"
+          },
+          {
+            "name": "epic",
+            "description": "Epic Games 启动器。",
+            "version": "1.0",
+            "author": "Epic Games"
+          },
+          {
+            "name": "FLYF_Tools",
+            "description": "FLYF 游戏工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "GameBuff",
+            "description": "GameBuff 游戏加速器。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Player_Power",
+            "description": "Player Power 游戏优化工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Steam",
+            "description": "Steam 游戏平台下载和启动工具。",
+            "version": "1.0",
+            "author": "Valve"
+          },
+          {
+            "name": "Thunder_Accelerator",
+            "description": "迅雷游戏加速器。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "XiaoHeiHe_Accelerator",
+            "description": "小黑盒游戏加速器。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Xunlei_Accelerator",
+            "description": "迅雷游戏加速器。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Xunyou_Accelerator",
+            "description": "迅游游戏加速器。",
+            "version": "1.0",
+            "author": ""
+          }
+        ]
+      },
+      {
+        "name": "GPU_Tools",
+        "displayName": "显卡工具",
+        "description": "显卡检测、监控和优化工具",
+        "tools": [
+          {
+            "name": "DDU",
+            "description": "Display Driver Uninstaller - 显卡驱动完全卸载工具，用于彻底清除显卡驱动残留。",
+            "version": "18.0.7.6",
+            "author": "Wagnardsoft"
+          },
+          {
+            "name": "dxvachecker",
+            "description": "DXVA Checker - DirectX 视频加速检测工具，用于检测显卡的视频解码能力。",
+            "version": "3.0",
+            "author": ""
+          },
+          {
+            "name": "GpuTest_Windows x64",
+            "description": "GpuTest - 显卡性能测试工具，提供多种测试场景。",
+            "version": "1.0",
+            "author": "Geeks3D"
+          },
+          {
+            "name": "GPUZ",
+            "description": "GPU-Z - 显卡信息检测工具，可以显示显卡的详细规格和实时状态。",
+            "version": "2.57",
+            "author": "TechPowerUp"
+          },
+          {
+            "name": "nvidiaInspector",
+            "description": "NVIDIA Inspector - NVIDIA 显卡驱动设置和超频工具。",
+            "version": "1.9.8.8",
+            "author": "Orbmu2k"
+          },
+          {
+            "name": "nvidiaProfileInspector",
+            "description": "NVIDIA Profile Inspector - NVIDIA 显卡配置文件编辑器。",
+            "version": "2.4.0.2",
+            "author": "Orbmu2k"
+          }
+        ]
+      },
+      {
+        "name": "Memory_Tools",
+        "displayName": "内存工具",
+        "description": "内存检测、测试和优化工具",
+        "tools": [
+          {
+            "name": "memtest",
+            "description": "MemTest - 内存测试工具，用于检测内存错误。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "memtest64",
+            "description": "MemTest64 - 64位内存测试工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "memtestpro",
+            "description": "MemTest Pro - 专业内存测试工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Thaiphoon",
+            "description": "Thaiphoon Burner - SPD 信息读取和编辑工具，用于查看和修改内存 SPD 信息。",
+            "version": "17.0",
+            "author": "Thaiphoon"
+          },
+          {
+            "name": "tm5",
+            "description": "TestMem5 - 内存压力测试工具，用于检测内存稳定性。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "ZenTimings",
+            "description": "Zen Timings - AMD Ryzen 平台内存时序查看工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "魔方内存盘",
+            "description": "魔方内存盘 - 将系统内存虚拟为硬盘，提供极速读写性能。",
+            "version": "1.0",
+            "author": ""
+          }
+        ]
+      },
+      {
+        "name": "Other_Tools",
+        "displayName": "其他工具",
+        "description": "系统优化、文件管理和实用工具",
+        "tools": [
+          {
+            "name": "BatteryInfoView",
+            "description": "电池信息查看工具，显示详细的电池状态和健康信息。",
+            "version": "1.25",
+            "author": "NirSoft"
+          },
+          {
+            "name": "bluescreenview",
+            "description": "蓝屏信息查看工具，用于分析 Windows 蓝屏错误。",
+            "version": "1.55",
+            "author": "NirSoft"
+          },
+          {
+            "name": "DesktopOK",
+            "description": "桌面图标位置保存和恢复工具。",
+            "version": "11.20",
+            "author": "SoftwareOK"
+          },
+          {
+            "name": "DirectX_Repair",
+            "description": "DirectX 修复工具，用于修复 DirectX 组件问题。",
+            "version": "4.2",
+            "author": ""
+          },
+          {
+            "name": "Dism++",
+            "description": "DISM++ - 强大的系统优化和清理工具，基于 DISM 的图形化界面。",
+            "version": "10.1.1002.2",
+            "author": "Chuyu Team"
+          },
+          {
+            "name": "Everything",
+            "description": "Everything - 极速文件搜索工具，可以秒搜全盘文件。",
+            "version": "1.5.0.1339",
+            "author": "voidtools"
+          },
+          {
+            "name": "Geek Uninstaller",
+            "description": "Geek Uninstaller - 专业的软件卸载工具，可以彻底清除软件残留。",
+            "version": "1.5.1.162",
+            "author": "Geek Uninstaller"
+          },
+          {
+            "name": "gifcam",
+            "description": "GifCam - 简单易用的 GIF 录制工具。",
+            "version": "7.0",
+            "author": ""
+          },
+          {
+            "name": "MSIAfterburnerSetup",
+            "description": "MSI Afterburner 安装程序 - 显卡超频和监控工具。",
+            "version": "1.0",
+            "author": "MSI"
+          },
+          {
+            "name": "next_itellyou",
+            "description": "Next iTellYou - Windows 系统镜像下载工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "procexp",
+            "description": "Process Explorer - 强大的进程管理工具，可以查看详细的进程信息。",
+            "version": "17.05",
+            "author": "Sysinternals"
+          },
+          {
+            "name": "rufus",
+            "description": "Rufus - USB 启动盘制作工具，支持多种镜像格式。",
+            "version": "4.3",
+            "author": "Pete Batard"
+          },
+          {
+            "name": "ULTRAISO",
+            "description": "UltraISO - 光盘镜像制作和编辑工具。",
+            "version": "9.7",
+            "author": "EZB Systems"
+          },
+          {
+            "name": "ventoy",
+            "description": "Ventoy - 多系统启动盘制作工具，支持在单个 USB 设备上启动多个 ISO 文件。",
+            "version": "1.0.96",
+            "author": "ventoy"
+          },
+          {
+            "name": "WinDbg",
+            "description": "Windows Debugger - Windows 调试工具，用于分析系统崩溃和应用程序错误。",
+            "version": "1.0",
+            "author": "Microsoft"
+          }
+        ]
+      },
+      {
+        "name": "Peripherals_Tools",
+        "displayName": "外设工具",
+        "description": "键盘、鼠标等外设测试工具",
+        "tools": [
+          {
+            "name": "AresonMouseTest",
+            "description": "Areson 鼠标测试软件，用于测试鼠标功能和性能。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "Keyboard Test Utility",
+            "description": "键盘测试工具，用于检测键盘按键是否正常工作。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "KeyTweak",
+            "description": "键盘按键重映射工具，可以自定义键盘按键功能。",
+            "version": "2.3.0",
+            "author": ""
+          },
+          {
+            "name": "Mouse_Single_Double_Click_Tester",
+            "description": "鼠标单击双击测试工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "MOUSERATE",
+            "description": "鼠标回报率测试工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "MouseTester",
+            "description": "鼠标测试工具，用于测试鼠标性能和功能。",
+            "version": "1.0",
+            "author": ""
+          }
+        ]
+      },
+      {
+        "name": "Storage_Tools",
+        "displayName": "存储工具",
+        "description": "硬盘检测、测试和管理工具",
+        "tools": [
+          {
+            "name": "ASSSDBenchmark",
+            "description": "AS SSD Benchmark - SSD 性能测试工具。",
+            "version": "2.0.7316",
+            "author": "Alex Intelligent Software"
+          },
+          {
+            "name": "ATTODISKBENCHMARK",
+            "description": "ATTO Disk Benchmark - 磁盘性能测试工具。",
+            "version": "4.1",
+            "author": "ATTO Technology"
+          },
+          {
+            "name": "CrystalDiskInfo",
+            "description": "CrystalDiskInfo - 硬盘健康状态检测工具，可以显示详细的 SMART 信息。",
+            "version": "9.2.2",
+            "author": "Crystal Dew World"
+          },
+          {
+            "name": "CrystalDiskMark",
+            "description": "CrystalDiskMark - 硬盘性能测试工具，可以测试读写速度。",
+            "version": "8.0.4",
+            "author": "Crystal Dew World"
+          },
+          {
+            "name": "Defraggler",
+            "description": "Defraggler - 磁盘碎片整理工具。",
+            "version": "2.22.995",
+            "author": "Piriform"
+          },
+          {
+            "name": "DiskGenius",
+            "description": "DiskGenius - 强大的磁盘管理和数据恢复工具。",
+            "version": "5.5",
+            "author": "DiskGenius"
+          },
+          {
+            "name": "finaldata",
+            "description": "FinalData - 数据恢复工具，可以恢复误删除的文件。",
+            "version": "3.0",
+            "author": "FinalData"
+          },
+          {
+            "name": "FlashMaster",
+            "description": "Flash Master - U盘检测工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "H2testw",
+            "description": "H2testw - U盘扩容检测工具，可以检测 U盘真实容量。",
+            "version": "1.4",
+            "author": ""
+          },
+          {
+            "name": "HDTune",
+            "description": "HD Tune - 硬盘健康检测和性能测试工具。",
+            "version": "5.75",
+            "author": "EFD Software"
+          },
+          {
+            "name": "LLFTOOL",
+            "description": "Low Level Format Tool - 低级格式化工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "mydisktest",
+            "description": "MyDiskTest - U盘扩容检测工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "SpaceSniffer",
+            "description": "SpaceSniffer - 磁盘空间分析工具，可视化显示磁盘使用情况。",
+            "version": "1.3.0.2",
+            "author": "Uderzo Software"
+          },
+          {
+            "name": "SSD utils",
+            "description": "SSD 工具集。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "SSDZ",
+            "description": "SSD-Z - SSD 信息检测工具。",
+            "version": "17.09.09b",
+            "author": ""
+          },
+          {
+            "name": "TxBENCH",
+            "description": "TxBench - 存储设备性能测试工具。",
+            "version": "0.98",
+            "author": ""
+          },
+          {
+            "name": "URWTEST",
+            "description": "URWtest - U盘读写速度测试工具。",
+            "version": "1.0",
+            "author": ""
+          },
+          {
+            "name": "windirstat",
+            "description": "WinDirStat - 磁盘空间统计工具，可视化显示文件夹大小。",
+            "version": "1.1.2.80",
+            "author": ""
+          },
+          {
+            "name": "WizTree",
+            "description": "WizTree - 极速磁盘空间分析工具，可以快速找出占用空间最大的文件和文件夹。",
+            "version": "4.20",
+            "author": "Antibody Software"
+          },
+          {
+            "name": "魔方数据恢复",
+            "description": "魔方数据恢复 - 数据恢复工具。",
+            "version": "1.0",
+            "author": ""
+          }
+        ]
+      },
+      {
+        "name": "Stress_Testing_Tools",
+        "displayName": "压力测试工具",
+        "description": "硬件压力测试和稳定性测试工具",
+        "tools": [
+          {
+            "name": "FurMark_win64",
+            "description": "FurMark - 显卡压力测试工具，用于测试显卡稳定性和温度。",
+            "version": "1.33",
+            "author": "Geeks3D"
+          }
+        ]
+      },
+      {
+        "name": "System_Diagnostic_Tools",
+        "displayName": "系统诊断工具",
+        "description": "系统硬件信息检测和诊断工具",
+        "tools": [
+          {
+            "name": "AIDA64",
+            "description": "AIDA64 - 强大的系统硬件信息检测工具，可以显示详细的硬件规格和性能数据。",
+            "version": "7.00",
+            "author": "FinalWire"
+          },
+          {
+            "name": "hwinfo",
+            "description": "HWiNFO - 全面的硬件信息检测工具，可以实时监控硬件状态。",
+            "version": "7.60",
+            "author": "REALiX"
+          },
+          {
+            "name": "HWMonitor",
+            "description": "HWMonitor - 硬件监控工具，实时显示 CPU、GPU、硬盘等温度、电压和风扇转速。",
+            "version": "1.52",
+            "author": "CPUID"
+          },
+          {
+            "name": "RWEverything",
+            "description": "RWEverything - 底层硬件访问工具，可以读取和修改硬件寄存器。",
+            "version": "1.7",
+            "author": ""
+          },
+          {
+            "name": "speccy",
+            "description": "Speccy - 系统硬件信息查看工具，可以显示详细的硬件规格。",
+            "version": "1.32",
+            "author": "Piriform"
+          }
+        ]
+      }
+    ]
+  }

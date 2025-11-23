@@ -193,6 +193,9 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
+        if (control._titleTextBlock is null)
+            return;
+
         control._titleTextBlock.Text = e.NewValue as string ?? string.Empty;
         control.RefreshLayout();
     }
@@ -200,6 +203,9 @@ public class CardHeaderControl : UserControl
     private static void OnSubtitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not CardHeaderControl control)
+            return;
+
+        if (control._subtitleTextBlock is null)
             return;
 
         control._subtitleTextBlock.Text = e.NewValue as string ?? string.Empty;
@@ -211,6 +217,9 @@ public class CardHeaderControl : UserControl
         if (d is not CardHeaderControl control)
             return;
 
+        if (control._warningTextBlock is null)
+            return;
+
         control._warningTextBlock.Text = e.NewValue as string ?? string.Empty;
         control.RefreshLayout();
     }
@@ -218,6 +227,9 @@ public class CardHeaderControl : UserControl
     private static void OnSubtitleToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not CardHeaderControl control)
+            return;
+
+        if (control._subtitleTextBlock is null)
             return;
 
         var value = e.NewValue as string;

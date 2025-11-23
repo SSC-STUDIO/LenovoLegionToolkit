@@ -51,7 +51,6 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
         public bool DisableUnsupportedHardwareWarning { get; set; }
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
-        public List<string> AppxPackagesToRemove { get; set; } = [];
     }
 
     public ApplicationSettings() : base("settings.json")
@@ -82,15 +81,37 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         const string prefix = "Microsoft:PowerPlan\\{";
         const string suffix = "}";
 
-        var prefixIndex = value.Contains(prefix, StringComparison.InvariantCulture);
-        var suffixIndex = value.IndexOf(suffix, StringComparison.InvariantCulture);
+        var prefixIndex = value.IndexOf(prefix, StringComparison.InvariantCulture);
+        var suffixIndex = prefixIndex >= 0
+            ? value.IndexOf(suffix, prefixIndex + prefix.Length, StringComparison.InvariantCulture)
+            : -1;
 
-        if (prefixIndex && suffixIndex > 0)
+        // Ensure suffix is found after prefix with at least one character between them for a valid GUID
+        if (prefixIndex >= 0 && suffixIndex > prefixIndex + prefix.Length)
         {
-            value = value[..suffixIndex];
-            value = value[prefix.Length..];
+            var start = prefixIndex + prefix.Length;
+            var length = suffixIndex - start;
+            // Only extract if we have a non-empty substring and valid bounds
+            if (length > 0 && start >= 0 && start + length <= value.Length)
+            {
+                value = value.Substring(start, length);
+            }
+            else
+            {
+                // Invalid format: prefix and suffix found but no valid content between them
+                return Guid.Empty;
+            }
         }
 
-        return Guid.Parse(value);
+        // Handle case where the expected format is not found or value is not a valid GUID
+        if (string.IsNullOrWhiteSpace(value))
+            return Guid.Empty;
+
+        if (Guid.TryParse(value, out var guid))
+            return guid;
+
+        // If parsing fails, return empty GUID instead of throwing FormatException
+        // This allows the application to continue with a default value
+        return Guid.Empty;
     }
 }

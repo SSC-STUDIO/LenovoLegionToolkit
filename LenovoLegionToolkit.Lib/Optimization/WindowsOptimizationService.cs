@@ -36,48 +36,9 @@ public class WindowsOptimizationService
 {
     public const string CleanupCategoryKey = "cleanup";
     public const string CustomCleanupActionKey = "cleanup.custom";
-    public const string AppxCleanupActionKey = "cleanup.appxBloatware";
 
     private readonly record struct RegistryValueDefinition(string Hive, string SubKey, string ValueName, object Value, RegistryValueKind Kind);
 
-    private static readonly string[] DefaultAppxPackages =
-    {
-        "Microsoft.BingNews",
-        "Microsoft.BingWeather",
-        "Microsoft.BingFinance",
-        "Microsoft.BingSports",
-        "Microsoft.GetHelp",
-        "Microsoft.Getstarted",
-        "Microsoft.MixedReality.Portal",
-        "Microsoft.Microsoft3DViewer",
-        "Microsoft.MicrosoftOfficeHub",
-        "Microsoft.MicrosoftSolitaireCollection",
-        "Microsoft.MicrosoftStickyNotes",
-        "Microsoft.OneConnect",
-        "Microsoft.Paint3D",
-        "Microsoft.People",
-        "Microsoft.PowerAutomateDesktop",
-        "Microsoft.RemoteDesktop",
-        "Microsoft.SkypeApp",
-        "Microsoft.Whiteboard",
-        "Microsoft.WindowsFeedbackHub",
-        "Microsoft.Xbox.TCUI",
-        "Microsoft.XboxApp",
-        "Microsoft.XboxGameOverlay",
-        "Microsoft.XboxGamingOverlay",
-        "Microsoft.XboxIdentityProvider",
-        "Microsoft.XboxSpeechToTextOverlay",
-        "Microsoft.ZuneMusic",
-        "Microsoft.ZuneVideo",
-        "Microsoft.YourPhone",
-        "Clipchamp.Clipchamp",
-        "TikTok.TikTok",
-        "SpotifyAB.SpotifyMusic",
-        "Disney.37853FC22B2CE",
-        "Microsoft.549981C3F5F10"
-    };
-
-    public static IReadOnlyList<string> DefaultAppxPackageIds => DefaultAppxPackages;
 
     private static readonly IReadOnlyList<RegistryValueDefinition> ExplorerTaskbarTweaks =
     [
@@ -121,6 +82,12 @@ public class WindowsOptimizationService
         Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SubscribedContent-338388Enabled", 0, RegistryValueKind.DWord),
         Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SystemPaneSuggestionsEnabled", 0, RegistryValueKind.DWord),
         Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SubscribedContent-310093Enabled", 0, RegistryValueKind.DWord)
+    ];
+
+    private static readonly IReadOnlyList<RegistryValueDefinition> WinKeySearchTweaks =
+    [
+        // Set Windows key to open search instead of start menu
+        Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "Start_SearchFiles", 1, RegistryValueKind.DWord)
     ];
 
     private static readonly IReadOnlyList<RegistryValueDefinition> TelemetryTweaks =
@@ -180,7 +147,8 @@ public class WindowsOptimizationService
 
     private static readonly IReadOnlyList<string> DotnetNativeImageCommands =
     [
-        "rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_32\" >nul 2>&1 & rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_64\" >nul 2>&1"
+        "rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_32\" >nul 2>&1",
+        "rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_64\" >nul 2>&1"
     ];
 
     private static readonly IReadOnlyList<string> SystemLogCommands =
@@ -231,34 +199,74 @@ public class WindowsOptimizationService
         "del /f /s /q \"%SystemRoot%\\WinSxS\\Temp\\*\" >nul 2>&1"
     ];
 
-    private static readonly IReadOnlyList<WindowsOptimizationCategoryDefinition> Categories = BuildCategories();
+    // Build base categories once (excluding dynamic integration category)
+    private static readonly IReadOnlyList<WindowsOptimizationCategoryDefinition> StaticBaseCategories = BuildCategories();
 
-    private static readonly IReadOnlyDictionary<string, WindowsOptimizationActionDefinition> ActionsByKey =
-        Categories.SelectMany(category => category.Actions)
+    private static IReadOnlyDictionary<string, WindowsOptimizationActionDefinition> GetActionsByKey()
+    {
+        return GetCategories()
+            .SelectMany(category => category.Actions)
             .GroupBy(action => action.Key, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+    }
 
-    public IReadOnlyList<WindowsOptimizationCategoryDefinition> GetCategories() => Categories;
+    public static IReadOnlyList<WindowsOptimizationCategoryDefinition> GetCategories()
+    {
+        var list = new List<WindowsOptimizationCategoryDefinition>(StaticBaseCategories);
+        // Append beautification (right-click menu style) as a regular category
+        var beautifyCategory = CreateBeautificationCategoryDynamic();
+        if (beautifyCategory.Actions.Count > 0)
+            list.Add(beautifyCategory);
+        return list;
+    }
 
     public async Task ExecuteActionsAsync(IEnumerable<string> actionKeys, CancellationToken cancellationToken)
     {
         if (actionKeys is null)
             return;
 
+        var actionsByKey = GetActionsByKey();
+        var executedCount = 0;
+        var skippedCount = 0;
+
         foreach (var key in actionKeys.Where(k => !string.IsNullOrWhiteSpace(k)).Distinct(StringComparer.OrdinalIgnoreCase))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!ActionsByKey.TryGetValue(key, out var action))
+            if (!actionsByKey.TryGetValue(key, out var action))
+            {
+                skippedCount++;
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Action not found, skipping. [key={key}]");
                 continue;
+            }
 
-            await action.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Executing action. [key={key}]");
+                
+                await action.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+                executedCount++;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Action executed successfully. [key={key}]");
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Action execution failed. [key={key}]", ex);
+                throw; // Re-throw to let caller handle the error
+            }
         }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Actions execution completed. [executed={executedCount}, skipped={skippedCount}]");
     }
 
     public Task ApplyPerformanceOptimizationsAsync(CancellationToken cancellationToken)
     {
-        var keys = Categories
+        var keys = GetCategories()
             .Where(category => !string.Equals(category.Key, CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
             .SelectMany(category => category.Actions.Where(action => action.Recommended).Select(action => action.Key));
 
@@ -267,7 +275,7 @@ public class WindowsOptimizationService
 
     public Task RunCleanupAsync(CancellationToken cancellationToken)
     {
-        var keys = Categories
+        var keys = GetCategories()
             .Where(category => category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
             .SelectMany(category => category.Actions.Where(action => action.Recommended).Select(action => action.Key));
 
@@ -285,13 +293,19 @@ public class WindowsOptimizationService
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!ActionsByKey.TryGetValue(key, out var action))
+            var actionsByKey = GetActionsByKey();
+            if (!actionsByKey.TryGetValue(key, out var action))
                 continue;
 
             try
             {
                 var size = await EstimateActionSizeAsync(key, cancellationToken).ConfigureAwait(false);
                 totalSize += size;
+            }
+            catch (TaskCanceledException)
+            {
+                // Estimation was superseded by a newer request (e.g., user changed selection)
+                // Silently skip without logging to avoid noisy traces.
             }
             catch (Exception ex)
             {
@@ -303,7 +317,7 @@ public class WindowsOptimizationService
         return totalSize;
     }
 
-    private async Task<long> EstimateActionSizeAsync(string actionKey, CancellationToken cancellationToken)
+    public async Task<long> EstimateActionSizeAsync(string actionKey, CancellationToken cancellationToken)
     {
         return actionKey switch
         {
@@ -550,7 +564,8 @@ public class WindowsOptimizationService
 
     public async Task<bool?> TryGetActionAppliedAsync(string actionKey, CancellationToken cancellationToken)
     {
-        if (!ActionsByKey.TryGetValue(actionKey, out var definition))
+        var actionsByKey = GetActionsByKey();
+        if (!actionsByKey.TryGetValue(actionKey, out var definition))
             return null;
 
         if (definition.IsAppliedAsync is null)
@@ -570,14 +585,23 @@ public class WindowsOptimizationService
 
     private static IReadOnlyList<WindowsOptimizationCategoryDefinition> BuildCategories() =>
     [
+
         CreateExplorerCategory(),
+
         CreatePerformanceCategory(),
+
         CreateServicesCategory(),
+
         CreateCleanupCacheCategory(),
+
         CreateCleanupSystemFilesCategory(),
+
         CreateCleanupSystemComponentsCategory(),
+
         CreateCleanupPerformanceCategory(),
+
         CreateCleanupCustomCategory()
+
     ];
 
     private static RegistryValueDefinition Reg(string hive, string subKey, string valueName, object value, RegistryValueKind kind) =>
@@ -657,7 +681,14 @@ public class WindowsOptimizationService
                         "explorer.suggestions",
                         "WindowsOptimization_Action_ExplorerSuggestions_Title",
                         "WindowsOptimization_Action_ExplorerSuggestions_Description",
-                    ExplorerSuggestionsTweaks)
+                        ExplorerSuggestionsTweaks),
+                new WindowsOptimizationActionDefinition(
+                        "explorer.winKeySearch",
+                        "WindowsOptimization_Action_WinKeySearch_Title",
+                        "WindowsOptimization_Action_WinKeySearch_Description",
+                        ExecuteWinKeySearchAsync,
+                        Recommended: false,
+                        IsAppliedAsync: ct => Task.FromResult(AreWinKeySearchTweaksApplied()))
             });
 
     private static WindowsOptimizationCategoryDefinition CreatePerformanceCategory() =>
@@ -773,6 +804,12 @@ public class WindowsOptimizationService
                         "WindowsOptimization_Action_CleanupLogs_Title",
                         "WindowsOptimization_Action_CleanupLogs_Description",
                         SystemLogCommands),
+                    new WindowsOptimizationActionDefinition(
+                        "cleanup.registry",
+                        "WindowsOptimization_Action_CleanupRegistry_Title",
+                        "WindowsOptimization_Action_CleanupRegistry_Description",
+                        ExecuteRegistryCleanupAsync,
+                        Recommended: false),
                     CreateCommandAction(
                         "cleanup.crashDumps",
                         "WindowsOptimization_Action_CleanupCrashDumps_Title",
@@ -834,20 +871,131 @@ public class WindowsOptimizationService
                 });
 
     // Custom Cleanup Category
+
     private static WindowsOptimizationCategoryDefinition CreateCleanupCustomCategory() =>
+
             new(
+
                 "cleanup.custom",
+
                 "WindowsOptimization_Category_CleanupCustom_Title",
+
                 "WindowsOptimization_Category_CleanupCustom_Description",
+
                 new[]
+
                 {
+
                     new WindowsOptimizationActionDefinition(
+
                         CustomCleanupActionKey,
+
                         "WindowsOptimization_Action_CleanupCustom_Title",
+
                         "WindowsOptimization_Action_CleanupCustom_Description",
+
                         ExecuteCustomCleanupAsync,
+
                         Recommended: false)
+
                 });
+
+
+
+
+
+
+    // Nilesoft Shell context menu integration
+
+    // CLS_ContextMenu = {BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}
+
+    // Beautification: Right-click menu style (classic/default) using Nilesoft Shell handler
+
+    private static WindowsOptimizationCategoryDefinition CreateBeautificationCategoryDynamic()
+    {
+        var actions = new List<WindowsOptimizationActionDefinition>();
+        // 使用 NilesoftShellHelper API 来判断是否安装
+        var isInstalled = NilesoftShellHelper.IsInstalled();
+        var isRegistered = NilesoftShellHelper.IsRegistered();
+
+        // Dynamic action based on registration status (not just file existence)
+        // If registered, show "Uninstall" action; if not registered, show "Install/Enable" action
+        if (isRegistered)
+        {
+            // Shell is installed and registered - show "Uninstall" action
+            actions.Add(new WindowsOptimizationActionDefinition(
+                "beautify.contextMenu.uninstallShell",
+                "WindowsOptimization_Action_NilesoftShell_Uninstall_Title",
+                "WindowsOptimization_Action_NilesoftShell_Uninstall_Description",
+                ct =>
+                {
+                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
+                    if (string.IsNullOrWhiteSpace(shellExe))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Uninstall command skipped.");
+                        return Task.CompletedTask;
+                    }
+
+                    var deleteCmds = new List<string>();
+                    
+                    // First, unregister if currently registered
+                    if (NilesoftShellHelper.IsRegistered())
+                        deleteCmds.Add($@"""{shellExe}"" -unregister -restart");
+                    
+                    // Then delete the shell.exe and related files
+                    var shellDir = Path.GetDirectoryName(shellExe);
+                    if (!string.IsNullOrWhiteSpace(shellDir))
+                    {
+                        deleteCmds.Add($@"del /f /q ""{shellExe}"" >nul 2>&1");
+                        var shellDll = Path.Combine(shellDir, "shell.dll");
+                        var shellNss = Path.Combine(shellDir, "shell.nss");
+                        if (File.Exists(shellDll))
+                            deleteCmds.Add($@"del /f /q ""{shellDll}"" >nul 2>&1");
+                        if (File.Exists(shellNss))
+                            deleteCmds.Add($@"del /f /q ""{shellNss}"" >nul 2>&1");
+                    }
+                    
+                    return ExecuteCommandsSequentiallyAsync(ct, deleteCmds.ToArray());
+                },
+                Recommended: false,
+                IsAppliedAsync: ct => Task.FromResult(!NilesoftShellHelper.IsRegistered())));
+        }
+        else if (isInstalled)
+        {
+            // Shell.exe exists but not registered - show "Install/Enable" action
+            actions.Add(new WindowsOptimizationActionDefinition(
+                "beautify.contextMenu.enableClassic",
+                "WindowsOptimization_Action_NilesoftShell_Enable_Title",
+                "WindowsOptimization_Action_NilesoftShell_Enable_Description",
+                ct =>
+                {
+                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
+                    if (string.IsNullOrWhiteSpace(shellExe))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Enable command skipped.");
+                        return Task.CompletedTask;
+                    }
+                    // Register and enable the shell
+                    return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
+                },
+                Recommended: true,  // 设置为推荐选项
+                IsAppliedAsync: async ct => 
+                {
+                    // Use shell.exe's API for more accurate installation status check
+                    // This matches what shell.exe /isinstalled returns
+                    return await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+                }));
+        }
+        // If shell.exe doesn't exist, don't show any action (can't install without the file)
+
+        return new WindowsOptimizationCategoryDefinition(
+            "beautify.contextMenu",
+            "WindowsOptimization_Category_NilesoftShell_Title",
+            "WindowsOptimization_Category_NilesoftShell_Description",
+            actions);
+    }
 
     private static Task ExecuteCustomCleanupAsync(CancellationToken cancellationToken)
     {
@@ -925,39 +1073,51 @@ public class WindowsOptimizationService
         return Task.CompletedTask;
     }
 
-    private static Task ExecuteAppxCleanupAsync(CancellationToken cancellationToken)
+    private static Task ExecuteRegistryCleanupAsync(CancellationToken cancellationToken)
     {
-        var settings = IoCContainer.Resolve<ApplicationSettings>();
-        var packages = settings.Store.AppxPackagesToRemove ?? new List<string>();
+        // Common user MRU/Recent registry keys (safe to clear)
+        (RegistryHive Hive, string SubKey)[] targets =
+        [
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePidlMRU"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU")
+        ];
 
-        if (packages.Count == 0)
+        foreach (var (hive, subKey) in targets)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace((FormattableString)$"AppX cleanup skipped. No packages selected.");
-            return Task.CompletedTask;
+            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                using var baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Default);
+                using var key = baseKey.OpenSubKey(subKey, writable: true);
+                if (key is null)
+                    continue;
+
+                // Delete values
+                foreach (var valueName in key.GetValueNames())
+                {
+                    try { key.DeleteValue(valueName, throwOnMissingValue: false); }
+                    catch { /* ignore */ }
+                }
+                // Delete subkeys
+                foreach (var child in key.GetSubKeyNames())
+                {
+                    try { key.DeleteSubKeyTree(child, throwOnMissingSubKey: false); }
+                    catch { /* ignore */ }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Registry cleanup failed. [key={hive}\\{subKey}]", ex);
+            }
         }
 
-        var sanitizedPackages = packages
-            .Where(package => !string.IsNullOrWhiteSpace(package))
-            .Select(package => package.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Select(package => package.Replace("'", "''"))
-            .ToList();
-
-        if (sanitizedPackages.Count == 0)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace((FormattableString)$"AppX cleanup skipped. Selected packages list empty after sanitization.");
-            return Task.CompletedTask;
-        }
-
-        var packageList = string.Join("','", sanitizedPackages);
-        // Support both PackageFullName and PackageId
-        var command =
-            $"powershell -NoProfile -ExecutionPolicy Bypass -Command \"foreach ($pkg in @('{packageList}')) {{ try {{ $appx = Get-AppxPackage -AllUsers | Where-Object {{ $_.PackageFullName -eq $pkg -or $_.Name -eq $pkg }}; if ($appx) {{ $appx | Remove-AppxPackage -ErrorAction SilentlyContinue }} }} catch {{}} try {{ Get-AppxProvisionedPackage -Online | Where-Object {{ $_.PackageName -eq $pkg -or $_.DisplayName -eq $pkg }} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue }} catch {{}} }}\"";
-
-        return ExecuteCommandsSequentiallyAsync(cancellationToken, command);
+        return Task.CompletedTask;
     }
+
 
     private static bool AreRegistryTweaksApplied(IEnumerable<RegistryValueDefinition> tweaks)
     {
@@ -1118,6 +1278,64 @@ public class WindowsOptimizationService
 
     private static async Task ExecuteCommandLineAsync(string command, CancellationToken cancellationToken)
     {
+        // Validate command to prevent injection attacks
+        if (string.IsNullOrWhiteSpace(command))
+            throw new ArgumentException("Command cannot be null or empty.", nameof(command));
+
+        // Check for dangerous command injection patterns
+        // These patterns could allow arbitrary command execution
+        // Note: ">" and "<" are allowed for output redirection (e.g., ">nul 2>&1") as they are safe in cmd.exe /c context
+        var dangerousPatterns = new[] { "&&", "||", "|", ";", "`", "$(" };
+        foreach (var pattern in dangerousPatterns)
+        {
+            if (command.Contains(pattern, StringComparison.Ordinal))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected potentially dangerous command: {command}");
+                throw new ArgumentException($"Command contains potentially dangerous pattern: {pattern}", nameof(command));
+            }
+        }
+
+        // Check for single "&" command separator (but allow "2>&1" and "1>&2" for output redirection)
+        // Single "&" can be used to chain commands: "command1 & command2"
+        // We check for " & " (with spaces on both sides) which is the most common command chaining pattern
+        // We also check for "& " (ampersand followed by space) and " &" (space before ampersand)
+        // but exclude "2>&1" and "1>&2" patterns where & is part of output redirection
+        
+        // Check for " & " (space before and after) - this is definitely command chaining
+        if (command.Contains(" & ", StringComparison.Ordinal))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Rejected potentially dangerous command: {command}");
+            throw new ArgumentException("Command contains potentially dangerous pattern: & (command chaining)", nameof(command));
+        }
+
+        // Check for "& " (ampersand followed by space) - but exclude "2>&1" and "1>&2"
+        var index = command.IndexOf("& ", StringComparison.Ordinal);
+        if (index >= 0)
+        {
+            // If at start or if previous character is not '>' (not part of "2>&1" or "1>&2")
+            if (index == 0 || (index > 0 && command[index - 1] != '>'))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected potentially dangerous command: {command}");
+                throw new ArgumentException("Command contains potentially dangerous pattern: & (command chaining)", nameof(command));
+            }
+        }
+
+        // Check for " &" (space before ampersand) - but exclude "2>&1" and "1>&2"
+        index = command.IndexOf(" &", StringComparison.Ordinal);
+        if (index >= 0)
+        {
+            // If at end or if character after " &" is not '1' (not part of "2>&1" or "1>&2")
+            if (index + 2 >= command.Length || (index + 2 < command.Length && command[index + 2] != '1'))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected potentially dangerous command: {command}");
+                throw new ArgumentException("Command contains potentially dangerous pattern: & (command chaining)", nameof(command));
+            }
+        }
+
         try
         {
             using var process = new Process
@@ -1128,6 +1346,7 @@ public class WindowsOptimizationService
                     Arguments = "/c " + command,
                     UseShellExecute = false,
                     CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 }
@@ -1186,6 +1405,29 @@ public class WindowsOptimizationService
         return AreRegistryTweaksApplied(StartMenuDisableTweaks);
     }
 
+    private static Task ExecuteWinKeySearchAsync(CancellationToken cancellationToken)
+    {
+        // Apply registry tweaks
+        foreach (var tweak in WinKeySearchTweaks)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ApplyRegistryTweak(tweak);
+        }
+
+        // Notify system of registry changes
+        NotifyExplorerSettingsChanged();
+
+        // Restart Explorer to apply changes immediately
+        RestartExplorer();
+
+        return Task.CompletedTask;
+    }
+
+    private static bool AreWinKeySearchTweaksApplied()
+    {
+        return AreRegistryTweaksApplied(WinKeySearchTweaks);
+    }
+
     private static unsafe void NotifyExplorerSettingsChanged()
     {
         try
@@ -1207,24 +1449,38 @@ public class WindowsOptimizationService
     {
         try
         {
-            // Use taskkill command to gracefully terminate explorer
-            var startInfo = new ProcessStartInfo
+            // First, kill explorer.exe
+            var killInfo = new ProcessStartInfo
             {
-                FileName = "cmd.exe",
-                Arguments = "/c taskkill /f /im explorer.exe & start explorer.exe",
+                FileName = "taskkill.exe",
+                Arguments = "/f /im explorer.exe",
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
 
-            using var process = Process.Start(startInfo);
-            if (process != null)
+            using var killProcess = Process.Start(killInfo);
+            if (killProcess != null)
             {
-                process.WaitForExit(10000);
+                killProcess.WaitForExit(5000);
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Explorer restart command executed. [exitCode={process.ExitCode}]");
+                    Log.Instance.Trace($"Explorer kill command executed. [exitCode={killProcess.ExitCode}]");
             }
+
+            // Then, start explorer.exe
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+
+            using var startProcess = Process.Start(startInfo);
+            if (startProcess != null && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Explorer start command executed.");
         }
         catch (Exception ex)
         {

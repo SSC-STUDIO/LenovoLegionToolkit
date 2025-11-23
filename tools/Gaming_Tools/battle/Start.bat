@@ -1,0 +1,1 @@
+Start https://www.tbtool.cn/links/battle.html?%random%%random%%random%

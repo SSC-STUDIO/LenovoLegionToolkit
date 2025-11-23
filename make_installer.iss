@@ -82,6 +82,9 @@ Type: filesandordirs; Name: "{app}"
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall
 
 [UninstallDelete]
+Type: files; Name: "{app}\shell.exe"
+Type: files; Name: "{app}\shell.dll" 
+Type: files; Name: "{app}\shell.nss"
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 
 [UninstallRun]

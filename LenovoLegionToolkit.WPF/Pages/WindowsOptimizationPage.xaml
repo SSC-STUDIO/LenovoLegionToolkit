@@ -107,19 +107,20 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="ApplyActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource PrimaryActionButtonStyle}">
-            <Setter Property="Visibility" Value="Visible" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
         <Style x:Key="CleanupActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource PrimaryActionButtonStyle}">
             <Setter Property="Visibility" Value="Collapsed" />
             <Setter Property="Margin" Value="0" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="BeautificationActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource PrimaryActionButtonStyle}">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="Margin" Value="0" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
@@ -200,16 +201,27 @@
                         <RadioButton
                             x:Name="_optimizationNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
-                            GroupName="OptimizationCleanupNav"
+                            GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Optimization}"
                             IsChecked="True"
                             Checked="OptimizationNavButton_Checked" />
                         <RadioButton
                             x:Name="_cleanupNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
-                            GroupName="OptimizationCleanupNav"
+                            GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
                             Checked="CleanupNavButton_Checked" />
+                        <RadioButton
+                            x:Name="_beautificationNavButton"
+                            Style="{StaticResource NavRadioButtonStyle}"
+                            GroupName="OptimizationCleanupBeautificationNav"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Beautification}"
+                            Checked="BeautificationNavButton_Checked" />
+                            <wpfui:Button
+                                Margin="12,0,0,0"
+                                Appearance="Transparent"
+                                Content="{Binding ExpandCollapseText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                Click="ToggleExpandCollapseButton_Click" />
                     </StackPanel>
 
                     <Grid Grid.Column="1" VerticalAlignment="Center">
@@ -257,14 +269,6 @@
                                     Click="ClearSelectionButton_Click"
                                     Content="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                 <wpfui:Button
-                                    x:Name="_applyButton"
-                                    Margin="0,0,12,0"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    Click="ApplyButton_Click"
-                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
-                                    Style="{StaticResource ApplyActionButtonStyle}" />
-                                <wpfui:Button
                                     x:Name="_runCleanupButton"
                                     MinWidth="180"
                                     Margin="0,0,0,0"
@@ -273,6 +277,15 @@
                                     Click="RunCleanupButton_Click"
                                     Content="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
                                     Style="{StaticResource CleanupActionButtonStyle}" />
+                                <wpfui:Button
+                                    x:Name="_applyBeautificationButton"
+                                    MinWidth="180"
+                                    Margin="0,0,0,0"
+                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
+                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
+                                    Click="ApplyBeautificationButton_Click"
+                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_ApplySelected_Button}"
+                                    Style="{StaticResource BeautificationActionButtonStyle}" />
                                 </WrapPanel>
                             </StackPanel>
                         </Grid>
@@ -297,13 +310,18 @@
                                 <Setter Property="Width" Value="0" />
                                 <Setter Property="MinWidth" Value="0" />
                                 <Setter Property="MaxWidth" Value="0" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Setter Property="MinWidth" Value="280" />
-                                        <Setter Property="MaxWidth" Value="400" />
-                                    </DataTrigger>
-                                </Style.Triggers>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="MinWidth" Value="280" />
+                                    <Setter Property="MaxWidth" Value="400" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="MinWidth" Value="280" />
+                                    <Setter Property="MaxWidth" Value="400" />
+                                </DataTrigger>
+                            </Style.Triggers>
                             </Style>
                         </ColumnDefinition.Style>
                     </ColumnDefinition>
@@ -318,11 +336,77 @@
                     <ScrollViewer
                         VerticalScrollBarVisibility="Auto"
                         HorizontalScrollBarVisibility="Disabled">
+                        <Grid>
+                            <!-- Beautification Mode Content -->
+                            <StackPanel x:Name="_beautificationMainContent" Visibility="Collapsed">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Border
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="20">
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="18"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{x:Static resources:Resource.SystemBeautification_RightClick_Title}"
+                                        TextWrapping="Wrap" />
+                                    <TextBlock
+                                        Margin="0,6,0,16"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{x:Static resources:Resource.SystemBeautification_RightClick_Subtitle}"
+                                        TextWrapping="Wrap" />
+                                    <TextBlock
+                                        x:Name="_beautificationStatusText"
+                                        Margin="0,0,0,16"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding BeautificationStatusText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                        TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <wpfui:Button
+                                            x:Name="_installShellButton"
+                                            Margin="0,0,8,0"
+                                            Click="InstallShellButton_Click"
+                                            Content="{x:Static resources:Resource.SystemBeautification_RightClick_Install}"
+                                            IsEnabled="{Binding CanInstall, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
+                                        <wpfui:Button
+                                            x:Name="_uninstallShellButton"
+                                            Margin="0,0,8,0"
+                                            Click="UninstallShellButton_Click"
+                                            Content="{x:Static resources:Resource.SystemBeautification_RightClick_Uninstall}"
+                                            IsEnabled="{Binding CanUninstall, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <!-- Other Modes Content -->
                         <ItemsControl
                             x:Name="_categoriesList"
                             ItemsSource="{Binding ActiveCategories}"
                             BorderThickness="0"
-                            Background="Transparent">
+                            Background="Transparent"
+                            Visibility="Visible">
+                            <ItemsControl.Style>
+                                <Style TargetType="ItemsControl">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
                             <ItemsControl.ItemContainerStyle>
                                 <Style TargetType="ContentPresenter">
                                     <Setter Property="Margin" Value="0,0,0,16" />
@@ -371,7 +455,18 @@
                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
                                             BorderBrush="{DynamicResource ControlFillColorDefaultBrush}"
                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                            Content="{Binding SelectionSummary}" />
+                                            Content="{Binding SelectionSummary}">
+                                            <wpfui:Badge.Style>
+                                                <Style TargetType="wpfui:Badge">
+                                                    <Setter Property="Content" Value="{Binding SelectionSummary}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCompactView, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                            <Setter Property="Content" Value="{Binding SelectedActionCount}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </wpfui:Badge.Style>
+                                        </wpfui:Badge>
                                     </Grid>
                                             
                                             <!-- Category Actions -->
@@ -428,6 +523,10 @@
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                     <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCompactView, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                                                     Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
                                                         <Trigger Property="Text" Value="">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </Trigger>
@@ -445,7 +544,8 @@
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ItemsControl>
+                        </Grid>
                     </ScrollViewer>
                     
                 </Border>
@@ -454,13 +554,18 @@
                     Grid.Column="2"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    CanContentScroll="False">
+                    CanContentScroll="False"
+                    PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                     <ScrollViewer.Style>
                         <Style TargetType="ScrollViewer">
                             <Setter Property="MinWidth" Value="0" />
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="MinWidth" Value="260" />
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                                     <Setter Property="MinWidth" Value="260" />
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
@@ -476,6 +581,9 @@
                                     <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                             <Style x:Key="RightColumnCardStyle" TargetType="Border" BasedOn="{StaticResource CardContainerStyle}">
@@ -486,6 +594,14 @@
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style x:Key="RightColumnBeautificationCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -661,6 +777,28 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
+                                <!-- Current deleting file -->
+                                <TextBlock
+                                    Margin="0,8,0,0"
+                                    FontSize="12"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding CurrentDeletingFile, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    TextWrapping="Wrap"
+                                    TextTrimming="CharacterEllipsis">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
                         </Border>
 
@@ -676,7 +814,8 @@
                                     Grid.Row="0"
                                     Margin="0,0,0,12"
                                     VerticalScrollBarVisibility="Auto"
-                                    HorizontalScrollBarVisibility="Disabled">
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                                     <StackPanel>
                                         <TextBlock
                                             FontWeight="Medium"
@@ -786,110 +925,122 @@
                             </Grid>
                         </Border>
 
+                        <!-- Windows Beautification Mode Content -->
+                        <!-- Theme Settings Section -->
                         <Border
-                            Style="{StaticResource RightColumnCleanupCardStyle}">
+                            Style="{StaticResource RightColumnBeautificationCardStyle}">
                             <StackPanel>
-                                <Grid Margin="0,0,0,12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
                                 <TextBlock
                                     FontWeight="Medium"
-                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_AppxManagement_Header}" />
+                                    FontSize="16"
+                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Title}" />
                                 <TextBlock
-                                            Margin="0,4,0,0"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_AppxManagement_Description}"
+                                    Margin="0,4,0,12"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    FontSize="13"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Theme_Description}"
                                     TextWrapping="Wrap" />
-                                    </StackPanel>
-                                    <wpfui:Button
-                                        Grid.Column="1"
-                                        Margin="12,0,0,0"
-                                        Appearance="Secondary"
-                                        Click="RefreshAppxPackagesButton_Click"
-                                        Content="{x:Static resources:Resource.Refresh}" />
-                                </Grid>
-                                <ScrollViewer
-                                    MaxHeight="Infinity"
-                                    VerticalScrollBarVisibility="Auto"
-                                    HorizontalScrollBarVisibility="Disabled">
-                                    <ItemsControl ItemsSource="{Binding AppxPackages}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border
-                                                    Margin="0,0,0,8"
-                                                    Padding="12"
-                                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="8">
-                                                    <StackPanel>
-                                                        <CheckBox
-                                                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                    Content="{Binding DisplayName}"
-                                                            ToolTip="{Binding Description}">
-                                                            <CheckBox.Style>
-                                                                <Style TargetType="CheckBox">
-                                                                    <Setter Property="IsEnabled" Value="True" />
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding PackageId}" Value="">
-                                                                            <Setter Property="IsEnabled" Value="False" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </CheckBox.Style>
-                                                        </CheckBox>
-                                                        <TextBlock
-                                                            Margin="24,4,0,0"
-                                                            FontSize="11"
-                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                            Text="{Binding PackageId}"
-                                                            TextWrapping="Wrap">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                    <Style.Triggers>
-                                                                        <Trigger Property="Text" Value="">
-                                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                                        </Trigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
+                                <StackPanel Margin="0,0,0,0">
+                                    <RadioButton
+                                        x:Name="_beautificationThemeAutoRadio"
+                                        GroupName="BeautificationTheme"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Auto}"
+                                        Margin="0,0,0,8"
+                                        Checked="BeautificationThemeRadio_Checked" />
+                                    <RadioButton
+                                        x:Name="_beautificationThemeLightRadio"
+                                        GroupName="BeautificationTheme"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Light}"
+                                        Margin="0,0,0,8"
+                                        Checked="BeautificationThemeRadio_Checked" />
+                                    <RadioButton
+                                        x:Name="_beautificationThemeDarkRadio"
+                                        GroupName="BeautificationTheme"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Dark}"
+                                        Margin="0,0,0,8"
+                                        Checked="BeautificationThemeRadio_Checked" />
+                                    <RadioButton
+                                        x:Name="_beautificationThemeClassicRadio"
+                                        GroupName="BeautificationTheme"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Classic}"
+                                        Margin="0,0,0,8"
+                                        Checked="BeautificationThemeRadio_Checked" />
+                                    <RadioButton
+                                        x:Name="_beautificationThemeModernRadio"
+                                        GroupName="BeautificationTheme"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Modern}"
+                                        Margin="0,0,0,0"
+                                        Checked="BeautificationThemeRadio_Checked" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Transparency Settings Section -->
+                        <Border
+                            Style="{StaticResource RightColumnBeautificationCardStyle}">
+                            <StackPanel>
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    FontSize="16"
+                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Title}" />
+                                <TextBlock
+                                    Margin="0,4,0,12"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    FontSize="13"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Transparency_Description}"
+                                    TextWrapping="Wrap" />
+                                <wpfui:ToggleSwitch
+                                    x:Name="_beautificationTransparencyToggle"
+                                    IsChecked="{Binding TransparencyEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}"
+                                    Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Enable}"
+                                    Click="TransparencyToggle_Click" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Appearance Settings Section -->
+                        <Border
+                            Style="{StaticResource RightColumnBeautificationCardStyle}">
+                            <StackPanel>
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    FontSize="16"
+                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Title}" />
+                                <TextBlock
+                                    Margin="0,4,0,12"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    FontSize="13"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Appearance_Description}"
+                                    TextWrapping="Wrap" />
+                                <StackPanel Margin="0,0,0,0">
+                                    <wpfui:ToggleSwitch
+                                        x:Name="_beautificationRoundedCornersToggle"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners}"
+                                        Margin="0,0,0,8"
+                                        IsChecked="{Binding RoundedCornersEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}" />
+                                    <wpfui:ToggleSwitch
+                                        x:Name="_beautificationShadowsToggle"
+                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Shadows}"
+                                        Margin="0,0,0,0"
+                                        IsChecked="{Binding ShadowsEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Apply Button Section -->
+                        <Border
+                            Style="{StaticResource RightColumnBeautificationCardStyle}">
+                            <StackPanel>
+                                <wpfui:Button
+                                    x:Name="_applyBeautificationStyleButton"
+                                    MinWidth="120"
+                                    HorizontalAlignment="Stretch"
+                                    Click="ApplyBeautificationStyleButton_Click"
+                                    Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Apply}" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
-
-            <!-- Busy overlay -->
-            <Grid Grid.RowSpan="2"
-                  Background="#80000000"
-                  Visibility="{Binding IsVisible, ElementName=_operationProgressBar, Converter={StaticResource BoolToVisibilityConverter}}"
-                  Panel.ZIndex="100">
-                <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}" Padding="20" CornerRadius="12">
-                    <StackPanel>
-                        <wpfui:ProgressRing IsIndeterminate="True" Width="32" Height="32" />
-                        <TextBlock Margin="12,8,12,0"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                   Text="{Binding CurrentOperationText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, FallbackValue=Please wait..., TargetNullValue=Please wait...}" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
         </Grid>
 
     </Grid>

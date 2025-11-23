@@ -20,6 +20,9 @@ public class PowerModeAutomationStep(PowerModeState state)
             if (!Compatibility.IsSupportedLegionMachine(machineInformation))
                 return false;
 
+            if (machineInformation.SupportedPowerModes is null)
+                return false;
+
             return machineInformation.SupportedPowerModes.Contains(State);
         }
         catch
