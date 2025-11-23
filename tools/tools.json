@@ -10,18 +10,21 @@
           {
             "name": "CoreTemp",
             "description": "Core Temp 是一款轻量级的 CPU 温度监控工具，可以实时显示每个 CPU 核心的温度。",
+            "description_en": "Core Temp is a lightweight CPU temperature monitoring tool that displays real-time temperature for each CPU core.",
             "version": "1.18",
             "author": "Arthur Liberman"
           },
           {
             "name": "CPUZ",
             "description": "CPU-Z 是一款免费的硬件信息检测工具，可以显示 CPU、主板、内存等硬件详细信息。",
+            "description_en": "CPU-Z is a free hardware information detection tool that displays detailed information about CPU, motherboard, memory, and other hardware.",
             "version": "2.09",
             "author": "CPUID"
           },
           {
             "name": "ThrottleStop",
             "description": "ThrottleStop 是一款强大的 CPU 性能调节工具，可以解除 CPU 降频限制，提升性能。",
+            "description_en": "ThrottleStop is a powerful CPU performance tuning tool that can remove CPU throttling limitations and improve performance.",
             "version": "9.6",
             "author": "Kevin Glynn"
           }
@@ -35,18 +38,21 @@
           {
             "name": "Color_Gamut_Test",
             "description": "色域测试工具，用于检测显示器的色彩覆盖范围。",
+            "description_en": "Color gamut test tool for detecting the color coverage range of displays.",
             "version": "1.0",
             "author": ""
           },
           {
             "name": "Online_Screen_Test",
             "description": "在线屏幕测试工具，用于检测显示器坏点、色彩等问题。",
+            "description_en": "Online screen test tool for detecting dead pixels, color issues, and other display problems.",
             "version": "1.0",
             "author": ""
           },
           {
             "name": "UFO_Test",
             "description": "UFO 测试工具，用于检测显示器的响应时间和拖影问题。",
+            "description_en": "UFO test tool for detecting display response time and motion blur issues.",
             "version": "1.0",
             "author": ""
           }

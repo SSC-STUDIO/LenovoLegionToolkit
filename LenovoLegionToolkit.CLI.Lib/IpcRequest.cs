@@ -18,7 +18,6 @@ public class IpcRequest
         SetRGBPreset,
         QuickAction,
         IsShellRegistered,
-        RunShellCommand,
         IsShellInstalled,
         InstallShell,
         UninstallShell,

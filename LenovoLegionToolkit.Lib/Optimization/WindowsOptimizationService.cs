@@ -916,11 +916,11 @@ public class WindowsOptimizationService
         var actions = new List<WindowsOptimizationActionDefinition>();
         // 使用 NilesoftShellHelper API 来判断是否安装
         var isInstalled = NilesoftShellHelper.IsInstalled();
-        var isRegistered = NilesoftShellHelper.IsRegistered();
+        var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
 
         // Dynamic action based on registration status (not just file existence)
-        // If registered, show "Uninstall" action; if not registered, show "Install/Enable" action
-        if (isRegistered)
+        // If installed and registered (using shell.exe API), show "Uninstall" action; if not, show "Install/Enable" action
+        if (isInstalledUsingShellExe)
         {
             // Shell is installed and registered - show "Uninstall" action
             actions.Add(new WindowsOptimizationActionDefinition(
@@ -933,33 +933,27 @@ public class WindowsOptimizationService
                     if (string.IsNullOrWhiteSpace(shellExe))
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Uninstall command skipped.");
+                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Command skipped.");
                         return Task.CompletedTask;
                     }
 
-                    var deleteCmds = new List<string>();
-                    
-                    // First, unregister if currently registered
-                    if (NilesoftShellHelper.IsRegistered())
-                        deleteCmds.Add($@"""{shellExe}"" -unregister -restart");
-                    
-                    // Then delete the shell.exe and related files
-                    var shellDir = Path.GetDirectoryName(shellExe);
-                    if (!string.IsNullOrWhiteSpace(shellDir))
+                    // This action is now "Apply Modern Context Menu"
+                    // When checked: if not installed/registered, register it
+                    // When unchecked: unregister it (handled by HandleActionUncheckedAsync)
+                    // Since this action is only shown when shell is already installed and registered,
+                    // and IsAppliedAsync returns true when installed, checking this action should do nothing
+                    // (it's already applied). Unchecking is handled separately.
+                    if (!NilesoftShellHelper.IsInstalledUsingShellExe())
                     {
-                        deleteCmds.Add($@"del /f /q ""{shellExe}"" >nul 2>&1");
-                        var shellDll = Path.Combine(shellDir, "shell.dll");
-                        var shellNss = Path.Combine(shellDir, "shell.nss");
-                        if (File.Exists(shellDll))
-                            deleteCmds.Add($@"del /f /q ""{shellDll}"" >nul 2>&1");
-                        if (File.Exists(shellNss))
-                            deleteCmds.Add($@"del /f /q ""{shellNss}"" >nul 2>&1");
+                        // If somehow not registered, register it
+                        return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
                     }
                     
-                    return ExecuteCommandsSequentiallyAsync(ct, deleteCmds.ToArray());
+                    // Already installed and registered, no action needed
+                    return Task.CompletedTask;
                 },
                 Recommended: false,
-                IsAppliedAsync: ct => Task.FromResult(!NilesoftShellHelper.IsRegistered())));
+                IsAppliedAsync: ct => Task.FromResult(NilesoftShellHelper.IsInstalledUsingShellExe())));
         }
         else if (isInstalled)
         {

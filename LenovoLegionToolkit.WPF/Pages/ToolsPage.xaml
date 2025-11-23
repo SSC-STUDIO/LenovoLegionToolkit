@@ -34,12 +34,12 @@
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="16" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Margin" Value="0,0,12,12" />
-            <Setter Property="Width" Value="140" />
-            <Setter Property="MinHeight" Value="140" />
+            <Setter Property="Margin" Value="0,0,10,10" />
+            <Setter Property="Width" Value="110" />
+            <Setter Property="MinHeight" Value="110" />
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect
@@ -67,15 +67,16 @@
         </Style>
     </wpfui:UiPage.Resources>
 
-    <Grid Margin="0,0,16,12">
+    <Grid Margin="0,0,16,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Header Section -->
-        <StackPanel Grid.Row="0" Margin="0,16,0,16" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" Margin="0,16,0,24" HorizontalAlignment="Left">
             <TextBlock
                 HorizontalAlignment="Left"
                 Margin="0,0,0,8"
@@ -167,21 +168,25 @@
                                 Tag="{Binding}"
                                 MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                                    <Grid Width="64" Height="64" Margin="0,0,0,12" HorizontalAlignment="Center">
+                                    <Grid Width="48" Height="48" Margin="0,0,0,8" HorizontalAlignment="Center">
                                         <Border
-                                            Width="64"
-                                            Height="64"
+                                            Width="48"
+                                            Height="48"
                                             Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                            CornerRadius="8"
+                                            CornerRadius="6"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1">
                                             <Grid>
                                                 <Image
                                                     Stretch="Uniform"
-                                                    Width="48"
-                                                    Height="48"
+                                                    Width="36"
+                                                    Height="36"
                                                     HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center">
+                                                    VerticalAlignment="Center"
+                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                    RenderOptions.CachingHint="Cache"
+                                                    SnapsToDevicePixels="True"
+                                                    UseLayoutRounding="True">
                                                     <Image.Source>
                                                         <Binding Path="IconSource">
                                                             <Binding.FallbackValue>
@@ -192,6 +197,10 @@
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                            <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                            <Setter Property="UseLayoutRounding" Value="True" />
                                                             <Style.Triggers>
                                                                 <Trigger Property="Source" Value="{x:Null}">
                                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -202,7 +211,7 @@
                                                 </Image>
                                                 <wpfui:SymbolIcon
                                                     Symbol="Desktop24"
-                                                    FontSize="32"
+                                                    FontSize="24"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center">
@@ -222,15 +231,15 @@
                                     </Grid>
                                     <TextBlock
                                         HorizontalAlignment="Center"
-                                        FontSize="13"
+                                        FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Text="{Binding Name}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap"
                                         TextAlignment="Center"
-                                        MaxWidth="120"
-                                        LineHeight="18" />
+                                        MaxWidth="90"
+                                        LineHeight="16" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -274,9 +283,109 @@
                         TextAlignment="Center"
                         MaxWidth="400"
                         HorizontalAlignment="Center"
-                        Text="Tools will appear here once they are available in the tools directory." />
+                        Text="{x:Static resources:Resource.ToolsPage_EmptyDescription}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+
+        <!-- Tool Details Panel (Bottom) -->
+        <Border
+            Grid.Row="3"
+            x:Name="ToolDetailsPanel"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1,1,1,1"
+            Padding="16,16,16,16"
+            Margin="-16,0,-16,0"
+            Visibility="Collapsed">
+            <Grid Margin="16,0,16,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Tool Icon -->
+                <Border
+                    Grid.Column="0"
+                    Width="48"
+                    Height="48"
+                    Margin="0,0,16,0"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    CornerRadius="6"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <Grid>
+                        <Image
+                            x:Name="ToolDetailsIcon"
+                            Stretch="Uniform"
+                            Width="36"
+                            Height="36"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.CachingHint="Cache"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True" />
+                        <wpfui:SymbolIcon
+                            x:Name="ToolDetailsFallbackIcon"
+                            Symbol="Desktop24"
+                            FontSize="24"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="Visible" />
+                    </Grid>
+                </Border>
+                
+                <!-- Tool Details -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="ToolDetailsName"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Margin="0,0,0,4" />
+                    <TextBlock
+                        x:Name="ToolDetailsDescription"
+                        FontSize="13"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"
+                        Margin="0,0,0,4" />
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBlock
+                            x:Name="ToolDetailsVersion"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Margin="0,0,16,0"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="ToolDetailsAuthor"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Margin="0,0,16,0"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="ToolDetailsPath"
+                            FontSize="11"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            TextTrimming="CharacterEllipsis"
+                            Visibility="Collapsed" />
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Action Button -->
+                <wpfui:Button
+                    Grid.Column="2"
+                    x:Name="ToolDetailsLaunchButton"
+                    Content="{x:Static resources:Resource.ToolsPage_Launch_Button}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="ToolDetailsLaunchButton_Click"
+                    Visibility="Collapsed" />
+            </Grid>
+        </Border>
     </Grid>
 </wpfui:UiPage>

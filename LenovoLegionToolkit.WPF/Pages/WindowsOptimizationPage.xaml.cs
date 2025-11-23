@@ -60,12 +60,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private bool _isCalculatingSize;
     private CancellationTokenSource? _sizeCalculationCts;
     private bool _hasInitializedCleanupMode = false;
-        private string _currentOperationText = string.Empty;
-        private string _currentDeletingFile = string.Empty;
+    private string _currentOperationText = string.Empty;
+    private string _currentDeletingFile = string.Empty;
     private bool _isCompactView;
     private System.Windows.Threading.DispatcherTimer? _actionStateRefreshTimer;
     private bool _isUserInteracting = false;
     private DateTime _lastUserInteraction = DateTime.MinValue;
+    private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isRefreshingStates = false; // 标记是否正在刷新状态（程序内部操作，不应触发命令执行）
 
     [Flags]
     private enum InteractionScope
@@ -230,9 +232,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         get
         {
             var isInstalled = NilesoftShellHelper.IsInstalled();
-            var isRegistered = NilesoftShellHelper.IsRegistered();
-            // Can install if shell.exe exists but not registered
-            return isInstalled && !isRegistered;
+            var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
+            // Can install if shell.exe exists but not registered (not installed using shell.exe API)
+            return isInstalled && !isInstalledUsingShellExe;
         }
     }
 
@@ -240,10 +242,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         get
         {
-            var isInstalled = NilesoftShellHelper.IsInstalled();
-            var isRegistered = NilesoftShellHelper.IsRegistered();
-            // Can uninstall if shell is installed and registered
-            return isInstalled && isRegistered;
+            // Can uninstall if shell is installed and registered (using shell.exe API, which checks both file existence and registration)
+            return NilesoftShellHelper.IsInstalledUsingShellExe();
         }
     }
 
@@ -407,6 +407,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         // This ensures checkboxes reflect what's actually applied, not recommended
         await InitializeActionStatesAsync();
         UpdateSelectedActions();
+        
+        // 确保所有交互状态在初始化后都是启用的
+        ToggleInteraction(true, InteractionScope.All);
+        
         Unloaded += WindowsOptimizationPage_Unloaded;
     }
 
@@ -464,17 +468,55 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         foreach (var category in WindowsOptimizationService.GetCategories())
         {
+            var actions = category.Actions.Select(action => new OptimizationActionViewModel(
+                    action.Key,
+                    GetResource(action.TitleResourceKey),
+                    GetResource(action.DescriptionResourceKey),
+                    action.Recommended,
+                    recommendedTagText)).ToList();
+
+            // 为每个Action添加事件监听，处理复选框变化的逻辑，立即应用操作
+            foreach (var actionVm in actions)
+            {
+                actionVm.PropertyChanged += async (_, args) =>
+                {
+                    if (args.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
+                    {
+                        // 如果正在刷新状态（程序内部操作），不执行命令
+                        if (_isRefreshingStates)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"PropertyChanged for {actionVm.Key} ignored: refreshing states");
+                            return;
+                        }
+
+                        // 标记用户交互，防止立即刷新覆盖用户选择
+                        _lastUserInteraction = DateTime.Now;
+                        _isUserInteracting = true;
+
+                        // 如果用户取消勾选，检查是否已应用，如果是则立即执行取消操作
+                        if (!actionVm.IsSelected)
+                        {
+                            // 记录用户取消勾选的意图，防止自动刷新时重新勾选
+                            _userUncheckedActions.Add(actionVm.Key);
+                            await HandleActionUncheckedAsync(actionVm.Key);
+                        }
+                        else
+                        {
+                            // 如果用户重新勾选，从取消列表中移除，并立即执行应用操作
+                            _userUncheckedActions.Remove(actionVm.Key);
+                            await HandleActionCheckedAsync(actionVm.Key);
+                        }
+                    }
+                };
+            }
+
             var categoryVm = new OptimizationCategoryViewModel(
                 category.Key,
                 GetResource(category.TitleResourceKey),
                 GetResource(category.DescriptionResourceKey),
                 selectionSummaryFormat,
-                category.Actions.Select(action => new OptimizationActionViewModel(
-                    action.Key,
-                    GetResource(action.TitleResourceKey),
-                    GetResource(action.DescriptionResourceKey),
-                    action.Recommended,
-                    recommendedTagText)));
+                actions);
 
             categoryVm.SelectionChanged += Category_SelectionChanged;
             categoryVm.PropertyChanged += (_, args) =>
@@ -506,9 +548,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        // 如果没有选择任何操作，只刷新状态，不执行任何操作
         if (selectedKeys.Count == 0)
         {
-            await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_EmptySelection_Message, SnackbarType.Warning);
+            // 刷新美化状态
+            await RefreshBeautificationStatusAsync();
+            // 刷新操作状态
+            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
             return;
         }
 
@@ -543,9 +589,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             .Select(a => a.ActionKey)
             .ToList();
 
+        // 如果没有选择任何操作，只刷新状态，不执行任何操作
         if (selectedKeys.Count == 0)
         {
-            await SnackbarHelper.ShowAsync(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_EmptySelection_Message, SnackbarType.Warning);
+            // 刷新操作状态
+            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
             return;
         }
 
@@ -718,7 +766,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         InteractionScope scope)
     {
         if (IsBusy)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ExecuteAsync skipped: IsBusy is true");
             return;
+        }
+        
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"ExecuteAsync started: successMessage={successMessage}");
 
         IsBusy = true;
         ToggleInteraction(false, scope);
@@ -806,9 +861,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_runCleanupButton != null)
             _runCleanupButton.IsEnabled = cleanupEnabled;
-
-        if (_applyBeautificationButton != null)
-            _applyBeautificationButton.IsEnabled = beautificationEnabled;
 
         if (_categoriesList != null)
         {
@@ -1210,6 +1262,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
             else if (mode == PageMode.Beautification)
             {
+                // 确保切换到美化模式时交互是启用的
+                _beautificationInteractionEnabled = true;
+                foreach (var category in BeautificationCategories)
+                    category.SetEnabled(true);
+                
                 _ = RefreshBeautificationStatusAsync();
                 StartBeautificationStatusMonitoring();
                 TransparencyEnabled = GetTransparencyEnabled();
@@ -1260,39 +1317,352 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             return;
         }
 
-        var actions = Categories.SelectMany(category => category.Actions).ToList();
+        // 标记正在刷新状态，防止触发命令执行
+        _isRefreshingStates = true;
 
-        foreach (var action in actions)
+        try
         {
-            var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
-            if (applied.HasValue)
+            var actions = Categories.SelectMany(category => category.Actions).ToList();
+
+            foreach (var action in actions)
             {
-                await Dispatcher.InvokeAsync(() =>
+                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                if (applied.HasValue)
                 {
-                    // 只在状态实际改变时才更新，避免覆盖用户的手动选择
-                    var timeSinceLastInteraction = (DateTime.Now - _lastUserInteraction).TotalSeconds;
-                    var isRecentInteraction = timeSinceLastInteraction < 10; // 10秒内的交互认为是最近的操作
-                    
-                    if (action.IsSelected != applied.Value)
+                    await Dispatcher.InvokeAsync(() =>
                     {
-                        // 如果用户最近有交互，且用户选择了但检查显示未应用，可能是操作正在进行中，不立即更新
-                        // 但如果用户未选择而检查显示已应用，应该更新（可能是外部操作导致的）
-                        if (isRecentInteraction && action.IsSelected && !applied.Value)
+                        // 只在状态实际改变时才更新，避免覆盖用户的手动选择
+                        var timeSinceLastInteraction = (DateTime.Now - _lastUserInteraction).TotalSeconds;
+                        var isRecentInteraction = timeSinceLastInteraction < 10; // 10秒内的交互认为是最近的操作
+                        
+                        // 如果用户在取消列表中，且当前状态是已应用，说明取消操作可能还在进行中，不要自动勾选
+                        if (_userUncheckedActions.Contains(action.Key) && applied.Value)
                         {
-                            // 用户选择了但检查显示未应用，可能是操作正在进行中，暂时不更新
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Skipping state update for {action.Key}: user selected but not yet applied (operation may be in progress)");
+                            // 用户明确取消了勾选，即使系统状态还是已应用，也不要自动勾选
+                            // 只有当系统状态变成未应用时，才从取消列表中移除
+                            if (!applied.Value)
+                            {
+                                _userUncheckedActions.Remove(action.Key);
+                                action.IsSelected = false;
+                            }
+                            else
+                            {
+                                // 确保复选框保持未勾选状态
+                                if (action.IsSelected)
+                                {
+                                    action.IsSelected = false;
+                                }
+                            }
+                            return;
                         }
-                        else
+                        
+                        if (action.IsSelected != applied.Value)
                         {
-                            action.IsSelected = applied.Value;
+                            // 如果用户最近有交互，且用户选择了但检查显示未应用，可能是操作正在进行中，不立即更新
+                            // 但如果用户未选择而检查显示已应用，应该更新（可能是外部操作导致的）
+                            if (isRecentInteraction && action.IsSelected && !applied.Value)
+                            {
+                                // 用户选择了但检查显示未应用，可能是操作正在进行中，暂时不更新
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Skipping state update for {action.Key}: user selected but not yet applied (operation may be in progress)");
+                            }
+                            else
+                            {
+                                action.IsSelected = applied.Value;
+                                // 如果状态更新为未应用，从取消列表中移除（说明取消操作已完成）
+                                if (!applied.Value && _userUncheckedActions.Contains(action.Key))
+                                {
+                                    _userUncheckedActions.Remove(action.Key);
+                                }
+                            }
                         }
+                    });
+                }
+            }
+
+            await Dispatcher.InvokeAsync(UpdateSelectedActions);
+        }
+        finally
+        {
+            // 重置标志，允许后续的用户操作触发命令
+            _isRefreshingStates = false;
+        }
+    }
+
+    private async Task HandleActionCheckedAsync(string actionKey)
+    {
+        try
+        {
+            // 确定交互范围
+            var interactionScope = actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase)
+                ? InteractionScope.Beautification
+                : actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
+                ? InteractionScope.Cleanup
+                : InteractionScope.Optimization;
+
+            // 对于美化操作，总是执行命令，不检查当前状态
+            if (actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
+            {
+                // 对于右键美化操作，直接执行安装命令，不管当前状态
+                if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"User checked beautify action {actionKey}, executing install/register command");
+                    
+                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
+                    if (!string.IsNullOrWhiteSpace(shellExe))
+                    {
+                        await ExecuteAsync(
+                            async ct =>
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Executing shell.exe register command: {shellExe} -register -treat -restart");
+                                
+                                await Task.Run(() =>
+                                {
+                                    var process = new System.Diagnostics.Process
+                                    {
+                                        StartInfo = new System.Diagnostics.ProcessStartInfo
+                                        {
+                                            FileName = "cmd.exe",
+                                            Arguments = $"/c \"\"{shellExe}\"\" -register -treat -restart",
+                                            UseShellExecute = false,
+                                            CreateNoWindow = true
+                                        }
+                                    };
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Starting process: cmd.exe {process.StartInfo.Arguments}");
+                                    process.Start();
+                                    process.WaitForExit();
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Process exited with code: {process.ExitCode}");
+                                });
+                            },
+                            Resource.WindowsOptimizationPage_ApplySelected_Success,
+                            Resource.WindowsOptimizationPage_ApplySelected_Error,
+                            interactionScope);
                     }
-                });
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Shell.exe not found, cannot execute install command");
+                    }
+                }
+                else
+                {
+                    await ExecuteAsync(
+                        ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
+                        Resource.WindowsOptimizationPage_ApplySelected_Success,
+                        Resource.WindowsOptimizationPage_ApplySelected_Error,
+                        interactionScope);
+                }
+                
+                // 延迟刷新状态，给操作足够的时间完成
+                // shell 注册需要重启资源管理器，可能需要几秒钟
+                var delay = actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase) ? 3000 : 2000;
+                await Task.Delay(delay);
+                
+                // 刷新操作状态
+                await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+                
+                // 刷新美化状态
+                _ = RefreshBeautificationStatusAsync();
+            }
+            else
+            {
+                // 对于非美化操作，检查Action是否已应用
+                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+                
+                // 如果未应用，立即执行应用操作
+                if (applied.HasValue && !applied.Value)
+                {
+                    await ExecuteAsync(
+                        ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
+                        Resource.WindowsOptimizationPage_ApplySelected_Success,
+                        Resource.WindowsOptimizationPage_ApplySelected_Error,
+                        interactionScope);
+                    
+                    // 延迟刷新状态，给操作足够的时间完成
+                    await Task.Delay(2000);
+                    
+                    // 刷新操作状态
+                    await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+                }
             }
         }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to handle checked action: {actionKey}", ex);
+        }
+        finally
+        {
+            // 重置交互标志
+            _isUserInteracting = false;
+        }
+    }
 
-        await Dispatcher.InvokeAsync(UpdateSelectedActions);
+    private async Task HandleActionUncheckedAsync(string actionKey)
+    {
+        try
+        {
+            // 对于右键美化，当用户取消勾选时，立即执行卸载操作（实时应用）
+            // 移除状态检查，总是执行卸载命令
+            if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"User unchecked beautify action {actionKey}, executing uninstall command");
+                
+                // 直接执行卸载命令，总是执行，不管当前状态
+                var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
+                if (!string.IsNullOrWhiteSpace(shellExe))
+                {
+                    await ExecuteAsync(
+                        async ct =>
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Executing shell.exe unregister command: {shellExe} -unregister -restart");
+                            
+                            await Task.Run(() =>
+                            {
+                                var process = new System.Diagnostics.Process
+                                {
+                                    StartInfo = new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = "cmd.exe",
+                                        Arguments = $"/c \"\"{shellExe}\"\" -unregister -restart",
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true
+                                    }
+                                };
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Starting process: cmd.exe {process.StartInfo.Arguments}");
+                                process.Start();
+                                process.WaitForExit();
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Process exited with code: {process.ExitCode}");
+                            });
+                        },
+                        Resource.WindowsOptimizationPage_ApplySelected_Success,
+                        Resource.WindowsOptimizationPage_ApplySelected_Error,
+                        InteractionScope.Beautification);
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Shell.exe not found, cannot execute uninstall command");
+                }
+                    
+                // 延迟刷新状态，给 shell 卸载操作足够的时间完成
+                await Task.Delay(3000); // 增加到3秒，给卸载操作更多时间
+                await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+                
+                // 检查卸载是否成功，如果成功则从取消列表中移除
+                var isStillInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+                if (!isStillInstalled)
+                {
+                    _userUncheckedActions.Remove(actionKey);
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Uninstall successful, removed {actionKey} from unchecked list");
+                }
+                
+                // 刷新美化状态
+                _ = RefreshBeautificationStatusAsync();
+            }
+            else
+            {
+                // 对于优化和清理操作，检查Action是否已应用
+                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+                
+                if (applied.HasValue && applied.Value)
+                {
+                    // Action已应用，但用户取消勾选，实时撤销操作
+                    // 对于优化操作（注册表、服务），可以通过删除注册表值或启用服务来撤销
+                    // 对于清理操作，无法撤销，只能刷新状态
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"User unchecked action {actionKey}, attempting to undo: {actionKey}");
+                    
+                    // 尝试执行撤销操作
+                    await UndoOptimizationActionAsync(actionKey);
+                    
+                    // 延迟刷新状态，给撤销操作足够的时间完成
+                    await Task.Delay(1000); // 1秒延迟，给撤销操作时间
+                    await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+                }
+                else
+                {
+                    // Action未应用，只需刷新状态
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"User unchecked action {actionKey}, action not applied, refreshing state");
+                    await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to handle unchecked action: {actionKey}", ex);
+        }
+        finally
+        {
+            // 重置交互标志
+            _isUserInteracting = false;
+        }
+    }
+
+    private async Task UndoOptimizationActionAsync(string actionKey)
+    {
+        try
+        {
+            // 对于清理操作，无法撤销，只刷新状态
+            if (actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Cleanup action {actionKey} cannot be undone, skipping undo operation");
+                return;
+            }
+
+            // 对于优化操作，尝试撤销
+            // 由于优化操作主要是注册表修改和服务禁用，撤销方式为：
+            // 1. 注册表操作：删除注册表值（恢复默认）
+            // 2. 服务操作：启用服务（将 Start 值改为自动或手动）
+            // 3. 命令操作：大部分不可撤销
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Attempting to undo optimization action: {actionKey}");
+            
+            // 检查操作是否已应用
+            var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+            
+            if (applied.HasValue && applied.Value)
+            {
+                // 由于我们无法直接获取操作的具体内容（哪些注册表项、哪些服务）
+                // 这里我们通过执行反向操作来实现撤销
+                // 对于注册表操作，删除注册表值；对于服务操作，启用服务
+                // 但由于操作定义的复杂性，目前先记录日志，实际的撤销逻辑需要根据操作类型来实现
+                
+                // 尝试通过再次检查操作状态来确认是否需要撤销
+                // 如果操作已应用，我们需要通过删除注册表值或启用服务来撤销
+                // 但由于我们不知道具体的操作内容，这里先实现一个占位符
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Action {actionKey} is applied, attempting to undo by reversing registry/service changes");
+                
+                // TODO: 实现具体的撤销逻辑
+                // 需要根据 actionKey 查找对应的操作定义，然后执行反向操作
+                // 对于注册表操作：删除注册表值
+                // 对于服务操作：启用服务（Start = 2 或 3）
+                // 对于命令操作：无法撤销
+                
+                // 目前先通过刷新状态来反映取消操作
+                // 实际的撤销逻辑需要在 WindowsOptimizationService 中添加 UndoActionAsync 方法
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to undo optimization action: {actionKey}", ex);
+        }
     }
 
     private void StartActionStateMonitoring()
@@ -1686,11 +2056,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
-            var isRegistered = await Task.Run(() => IsContextMenuRegistered());
+            var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe());
             await Dispatcher.InvokeAsync(() =>
             {
                 TransparencyEnabled = GetTransparencyEnabled();
-                UpdateBeautificationUIForRegistrationStatus(isRegistered);
+                UpdateBeautificationUIForRegistrationStatus(isInstalled);
             });
             await RefreshActionStatesAsync(skipUserInteractionCheck: true);
         }
@@ -1814,18 +2184,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
-    private static bool IsContextMenuRegistered()
-    {
-        try
-        {
-            using var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(@"CLSID\{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}\InprocServer32", false);
-            return key is not null;
-        }
-        catch
-        {
-            return false;
-        }
-    }
 
     private static string? GetShellConfigPath()
     {

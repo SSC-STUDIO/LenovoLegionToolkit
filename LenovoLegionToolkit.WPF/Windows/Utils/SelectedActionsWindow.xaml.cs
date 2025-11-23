@@ -2,12 +2,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using Wpf.Ui.Controls;
+using System.Windows.Input;
+using LenovoLegionToolkit.WPF.Windows;
 using SelectedActionViewModel = LenovoLegionToolkit.WPF.Pages.WindowsOptimizationPage.SelectedActionViewModel;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-    public partial class SelectedActionsWindow : UiWindow
+    public partial class SelectedActionsWindow : BaseWindow
     {
         private readonly ObservableCollection<SelectedActionViewModel> _selectedActions;
 
@@ -28,6 +29,18 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 action.PropertyChanged += Action_PropertyChanged;
 
             UpdateEmptyState();
+
+            // 禁用鼠标滚轮缩放
+            PreviewMouseWheel += OnPreviewMouseWheel;
+        }
+
+        private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // 如果按住了 Ctrl 键，禁用缩放功能
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                e.Handled = true;
+            }
         }
 
         private void UpdateEmptyState()
@@ -67,6 +80,8 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
         protected override void OnClosed(EventArgs e)
         {
+            PreviewMouseWheel -= OnPreviewMouseWheel;
+
             base.OnClosed(e);
 
             _selectedActions.CollectionChanged -= SelectedActions_CollectionChanged;

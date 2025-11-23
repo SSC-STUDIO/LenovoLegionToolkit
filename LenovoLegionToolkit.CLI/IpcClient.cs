@@ -186,19 +186,6 @@ public static class IpcClient
 
     }
 
-
-
-    public static Task RunShellCommandAsync(string command)
-    {
-        var req = new IpcRequest
-        {
-            Operation = IpcRequest.OperationType.RunShellCommand,
-            Value = command
-        };
-
-        return SendRequestAsync(req);
-    }
-
     public static async Task<bool> IsShellInstalledAsync()
     {
         var req = new IpcRequest

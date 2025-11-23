@@ -363,28 +363,17 @@ public class Program
                 return;
             }
 
-            // 处理原有命令
+            // Shell command execution removed - use install/uninstall instead
             if (register || unregister || restart || treat)
             {
-                string command = "";
-                if (register) command += " -register";
-                if (unregister) command += " -unregister";
-                if (restart) command += " -restart";
-                if (treat) command += " -treat";
-
-                if (!string.IsNullOrWhiteSpace(command))
-                {
-                    await IpcClient.RunShellCommandAsync(command.Trim());
-                    Console.WriteLine($"Shell command executed: {command.Trim()}");
-                }
+                Console.WriteLine("Shell command execution has been removed. Please use:");
+                Console.WriteLine("  --install (-i): Install Nilesoft Shell (includes registration)");
+                Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell (includes unregistration)");
+                return;
             }
             else
             {
                 Console.WriteLine("Please specify an action:");
-                Console.WriteLine("  --register (-r): Register shell context menu extension");
-                Console.WriteLine("  --unregister (-u): Unregister shell context menu extension");
-                Console.WriteLine("  --restart (-e): Restart explorer after changes");
-                Console.WriteLine("  --treat (-t): Apply theme treatment");
                 Console.WriteLine("  --status (-s): Check current registration status");
                 Console.WriteLine("  --install (-i): Install Nilesoft Shell");
                 Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell");

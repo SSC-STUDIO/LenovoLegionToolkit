@@ -26,7 +26,7 @@ public class Log
 
     private readonly object _lock = new();
     private readonly string _folderPath;
-    private volatile string _currentLogPath;
+    private volatile string _currentLogPath = string.Empty;
     private readonly Queue<string> _logQueue = new();
     private readonly int _maxLogSizeBytes = 50 * 1024 * 1024; // 50MB
     private readonly int _maxQueuedEntries = 500; // Increase to reduce flush frequency
@@ -37,7 +37,7 @@ public class Log
     public bool IsTraceEnabled { get; set; }
     public LogLevel CurrentLogLevel { get; set; } = LogLevel.Info;
 
-    public string LogPath => _currentLogPath;
+    public string LogPath => _currentLogPath ?? string.Empty;
 
     private Log()
     {
