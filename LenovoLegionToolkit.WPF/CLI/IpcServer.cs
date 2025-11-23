@@ -169,9 +169,10 @@ public class IpcServer(
             case IpcRequest.OperationType.IsShellRegistered:
                 message = await IsShellRegisteredAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
-            case IpcRequest.OperationType.RunShellCommand when req is { Value: not null }:
-                await RunShellCommandAsync(req.Value).ConfigureAwait(false);
-                return new IpcResponse { Success = true };
+            // Shell command execution removed - no longer needed
+            // case IpcRequest.OperationType.RunShellCommand when req is { Value: not null }:
+            //     await RunShellCommandAsync(req.Value).ConfigureAwait(false);
+            //     return new IpcResponse { Success = true };
             case IpcRequest.OperationType.IsShellInstalled:
                 message = await IsShellInstalledAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
@@ -313,77 +314,17 @@ public class IpcServer(
 
     private static async Task<string> IsShellRegisteredAsync()
     {
-        // Use NilesoftShellHelper.IsRegistered() which properly checks the registry
-        // regardless of where shell.exe is located
-        var isRegistered = await Task.Run(() => NilesoftShellHelper.IsRegistered()).ConfigureAwait(false);
-        return isRegistered.ToString().ToLowerInvariant();
+        // Use NilesoftShellHelper.IsInstalledUsingShellExe() which properly checks the registry
+        // using shell.exe's own API, more accurate than checking registry directly
+        var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+        return isInstalled.ToString().ToLowerInvariant();
     }
 
-
-
-    private static async Task RunShellCommandAsync(string command)
-    {
-        if (string.IsNullOrEmpty(command) || command.Length > 1000)
-            throw new IpcException("Invalid command");
-
-        // Validate command for dangerous injection patterns
-        // Use the same validation as CMD.cs to prevent command injection attacks
-        if (CMD.ContainsDangerousInput(command))
-            throw new IpcException("Command contains dangerous characters");
-
-        await Task.Run(async () =>
-        {
-            try
-            {
-                var baseDir = AppContext.BaseDirectory;
-                var shellExePath = Path.Combine(baseDir, "shell.exe");
-
-                if (!File.Exists(shellExePath))
-                    throw new IpcException("shell.exe not found");
-
-                using var process = new System.Diagnostics.Process
-                {
-                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = shellExePath,
-                        Arguments = command,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    }
-                };
-
-                process.Start();
-
-                // Read streams asynchronously to prevent deadlock
-                // Both streams must be read even if we don't use the output,
-                // otherwise the process can block waiting for buffer space
-                var outputTask = process.StandardOutput.ReadToEndAsync();
-                var errorTask = process.StandardError.ReadToEndAsync();
-                var exitTask = process.WaitForExitAsync();
-
-                // Wait for process to exit and streams to finish reading concurrently
-                // This prevents deadlock: if output exceeds buffer size, the process will block
-                // waiting for buffers to be read. By awaiting both concurrently, we ensure
-                // stream reads can proceed while waiting for process exit.
-                await Task.WhenAll(exitTask, outputTask, errorTask).ConfigureAwait(false);
-
-                // Get results after all tasks complete (tasks are already completed, await returns immediately)
-                var output = await outputTask.ConfigureAwait(false);
-                var error = await errorTask.ConfigureAwait(false);
-
-                if (process.ExitCode != 0)
-                {
-                    throw new IpcException($"Shell command failed: {error}");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new IpcException($"Failed to execute shell command: {ex.Message}");
-            }
-        }).ConfigureAwait(false);
-    }
+    // Shell command execution removed - no longer needed
+    // private static async Task RunShellCommandAsync(string command)
+    // {
+    //     ...
+    // }
 
     private static async Task<string> IsShellInstalledAsync()
     {

@@ -86,8 +86,8 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
             ? value.IndexOf(suffix, prefixIndex + prefix.Length, StringComparison.InvariantCulture)
             : -1;
 
-        // Ensure suffix is found after prefix with at least one character between them for a valid GUID
-        if (prefixIndex >= 0 && suffixIndex > prefixIndex + prefix.Length)
+        // Ensure suffix is found after prefix (GUID can immediately follow prefix)
+        if (prefixIndex >= 0 && suffixIndex >= prefixIndex + prefix.Length)
         {
             var start = prefixIndex + prefix.Length;
             var length = suffixIndex - start;

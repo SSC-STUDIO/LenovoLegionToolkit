@@ -2024,19 +2024,1107 @@ PayPal で寄付するには、下の PayPal ロゴをクリックするかQR �
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
     <value>操作一覧</value>
   </data>
+
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>推定クリーンアップサイズ: {0}</value>
   </data>
+
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>推定中…</value>
   </data>
+
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>実行中: {0}</value>
   </data>
+
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
     <value>選択したアプリをアンインストールしています…</value>
   </data>
+
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>{0} を削除しました（{1} 秒）</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} 個の操作が選択されています</value>
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>システムツールとユーティリティを起動します。</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>利用可能なツールがありません。アプリケーションディレクトリのtoolsフォルダーにツールを追加してください。</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>ツールの起動に失敗しました</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPUツール</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>ディスプレイツール</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>ゲーミングツール</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPUツール</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>メモリツール</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>その他のツール</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>周辺機器ツール</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>ストレージツール</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>ストレステストツール</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>システム診断ツール</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>Exclusive</value>
+  </data>
+
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>After {0}</value>
+  </data>
+
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+  </data>
+
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>Overnight Battery Charging</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>バッテリーの最大充電容量。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>バッテリーの健康状態</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>バッテリーが充電（+）または放電（-）される最大レート。</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>最大放電レート</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>バッテリーが充電（+）または放電（-）される最小レート。</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>最小放電レート</value>
+  </data>
+
+  <data name="CollapseAll" xml:space="preserve">
+    <value>すべて折りたたむ</value>
+  </data>
+
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Select GPU operating mode based on your computer's usage and power conditions.
+Switching modes may require restart.</value>
+  </data>
+
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>GPU Working Mode</value>
+  </data>
+
+  <data name="Compact" xml:space="preserve">
+    <value>コンパクトビュー</value>
+  </data>
+
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>Error occured when reading device information.</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>参照…</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>少なくとも1つのファイル拡張子を入力してください。</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>フォルダーを選択してください。</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>複数の拡張子をカンマで区切ります（例: tmp, log, bak）</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>拡張子</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>フォルダー</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>サブフォルダーを含める</value>
+  </data>
+
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>カスタムクリーンアップルール</value>
+  </data>
+
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Deselect all</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>Show connected devices only</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>Show removable devices only</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>Show selected devices only</value>
+  </data>
+
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+
+  <data name="ExpandAll" xml:space="preserve">
+    <value>すべて展開</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>The peak power consumption that can be reached by the CPU with a minor delay.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>The maximum power consumption that can be reached by the CPU when both CPU and GPU are fully utilized.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>The continuous power consumption that can be reached by the CPU.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>Short Term Power Limit Duration</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>The amount of time the CPU is allowed to boost and use Short Term Power Limit for. When Tau expires, Long Term Power Limit is used.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>The maximum instantaneous power consumption that can be reached by the CPU.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>The peak power consumption that can be reached by the CPU within a short amount time.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>The maximum temperature that can be reached by the CPU before frequency and power is reduced.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>The additional amount of power that can be allocated to the GPU on top of base power consumption.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>The additional maximum power that can be allocated to the GPU based on the power consumption of the CPU.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>The maximum temperature that can be reached by the GPU before frequency and power is reduced.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU to CPU Dynamic Boost</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>Total Processor Power Target In AC</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>The point at which the CPU triggers dynamic power consumption adjustment for the GPU.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+  </data>
+
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+  </data>
+
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+
+  <data name="HideAll" xml:space="preserve">
+    <value>Hide all</value>
+  </data>
+
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
+If dGPU does not respond at all, please restart your laptop.</value>
+  </data>
+
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+  </data>
+
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>dGPU will disconnect automatically when not in use.</value>
+  </data>
+
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>Could not change GPU Working Mode</value>
+  </data>
+
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>dGPU is currently in use or laptop is not on battery power</value>
+  </data>
+
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone is running in the background.</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>システム美化</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>システム最適化</value>
+  </data>
+
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys is running in the background.</value>
+  </data>
+
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>Always put notification at the top.
+It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+  </data>
+
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>Notification always on top</value>
+  </data>
+
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>Show notification on all screens connected to your device.</value>
+  </data>
+
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>Notification on all screens</value>
+  </data>
+
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Turn backlight on or off.</value>
+  </data>
+
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>You can turn backlight on or off with Fn+Space.</value>
+  </data>
+
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>Core Frequency Offset</value>
+  </data>
+
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>Memory Frequency Offset</value>
+  </data>
+
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>Check if Machine Type and OS are set correctly.</value>
+  </data>
+
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>Changing sorting, filtering results, hiding packages or refreshing the list will stop the download. Do you want to continue?</value>
+  </data>
+
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>Check if your internet connection is up and running.</value>
+  </data>
+
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>Something went wrong</value>
+  </data>
+
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>Common music formats like wav or mp3 are supported.</value>
+  </data>
+
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>Play sound</value>
+  </data>
+
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Turn on or off the backlight of the ports on the back of the laptop.</value>
+  </data>
+
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>Turn on or off backlight of the ports on the back of the laptop.</value>
+  </data>
+
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>{0} power mode is not available without AC power.</value>
+  </data>
+
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.</value>
+  </data>
+
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>S0 Lower Power Model detected</value>
+  </data>
+
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>Run a saved quick action.</value>
+  </data>
+
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>Quick Action</value>
+  </data>
+
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>Enable Command Line Interface that allows control from command line.</value>
+  </data>
+
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Hide the incompatible device warning that appears on startup.</value>
+  </data>
+
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Disable incompatible device warning</value>
+  </data>
+
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone may have not been disabled correctly</value>
+  </data>
+
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone may have not been enabled correctly</value>
+  </data>
+
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>Couldn't enable Lenovo Hotkeys Keys</value>
+  </data>
+
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Run cleanup</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Cleanup failed.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Cleanup completed.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Apply recommended performance tweaks and clean temporary files.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Apply performance &amp; service tweaks</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Couldn't apply performance optimizations.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Performance optimizations applied.</value>
+  </data>
+
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>System optimization</value>
+  </data>
+
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>Power Plan options in Windows Control Panel</value>
+  </data>
+
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>Select Windows Power Plans to apply when Power Mode changes.</value>
+  </data>
+
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+  </data>
+
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>Switch to Custom Mode with Fn+Q</value>
+  </data>
+
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>This effect will be applied to the whole keyboard and will replace all other effects.</value>
+  </data>
+
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Import and apply backlight configuration to the current profile.</value>
+  </data>
+
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>Adjust keyboard backlight profile.</value>
+  </data>
+
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>最大放電レート</value>
+  </data>
+
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>最小放電レート</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Windowsの透明度効果を調整します。</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>視覚効果</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>透明度効果を有効にする</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>角丸</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>影</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>外観</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>適用</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>自動（システムテーマに従う）</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>クラシック</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>ダーク</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>モダン</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>メニュースタイル設定</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>透明度効果を有効にする</value>
+  </data>
+
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>クラシックメニューを無効にする</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>クラシックメニューを有効にする</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>スタイル設定を開く</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>ステータス: クラシックメニューがインストールされ、有効になっています</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>ステータス: インストールされていますが有効になっていません</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>ステータス: クラシックメニューがインストールされていません</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>デフォルトとクラシックのコンテキストメニュースタイルを切り替えます。</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>右クリックメニュースタイル</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>アンインストール</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>右クリックメニュースタイルを含むWindowsの外観をカスタマイズします。</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows美化</value>
+  </data>
+
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>Allow switching between integrated and discrete GPU.
+Requires restart.</value>
+  </data>
+
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>Allow switching between integrated and discrete GPU.
+Requires restart.</value>
+  </data>
+
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>Changing Hybrid Mode requires restart. Do you want to restart now?</value>
+  </data>
+
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>Unexpected exception occurred:
+{0}</value>
+  </data>
+
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>設定でいつでもこの警告を無効にできます。</value>
+  </data>
+
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>Check out project page on GitHub for more information.</value>
+  </data>
+
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>Adjust keyboard backlight brightness.</value>
+  </data>
+
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>You can change brightness with Fn+Space</value>
+  </data>
+
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>Copy current network name</value>
+  </data>
+
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>Leave empty for any Wi-Fi network.</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>選択した操作を適用</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>選択した操作の完了に失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>選択した操作が正常に完了しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>すべてのユーザーに対して削除する事前インストール済みのMicrosoft Storeアプリを選択します。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>削除するアプリが選択されていません。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX管理</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>読み込みに失敗しました: {0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>アプリを読み込んでいます。お待ちください...</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>発行者: {0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>選択したアプリをアンインストール</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>選択したアプリの削除に失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>選択したアプリが削除予定に追加されました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>コンテキストメニューの外観をカスタマイズします。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>スタイル設定の適用に失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>設定ファイルが見つかりません。Nilesoft Shellがインストールされていることを確認してください。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>クラシックメニューの有効化に失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>shellのインストールに失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>デフォルトメニューの復元に失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>Shell.exeが見つかりません。Nilesoft Shellがインストールされていることを確認してください。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>コンテキストメニューのテーマを選択します。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>コンテキストメニューの透明度効果を有効にします。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>shellのアンインストールに失敗しました。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>選択をクリア</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>ルールを追加</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>すべてクリア</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>クリーンアップ中に削除するフォルダーとファイル拡張子を選択します。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>カスタムクリーンアップルールが設定されていません。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>カスタムクリーンアップルール</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>サブフォルダーを含める</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>少なくとも1つの操作を選択してください。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>これらの操作はシステムサービスとファイルを変更します。管理者権限が必要な場合があります。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>クリーンアップ操作を実行</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>すべて選択</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>推奨を選択</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>美化</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>すべてのユーザーに対して選択した事前インストール済みUWPアプリケーションをアンインストールします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>バンドルされたWindowsアプリを削除</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Internet ExplorerとEdgeのキャッシュとCookieファイルを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>ブラウザのキャッシュをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>DISMクリーンアップを実行し、WinSxS一時ファイルをクリアします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>コンポーネントストアをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>システムクラッシュ後に残されたメモリダンプファイルを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>クラッシュダンプを削除</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>選択したフォルダーから設定された拡張子に一致するファイルを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>カスタムファイルをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Windows Defenderのスキャン履歴とキャッシュを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Defenderのスキャンをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>キャッシュされた.NET Nativeイメージを削除してディスク領域を回復します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>.NETネイティブイメージをクリア</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Windowsログ、エラーレポート、診断トレースを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>ログと診断データを削除</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Windowsのプリフェッチデータを削除して新しいトレースを再生成します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>プリフェッチデータをクリア</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>ごみ箱に保存されている削除済みファイルを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>ごみ箱を空にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>一般的なユーザーregistry履歴をクリアします（実行MRU、RecentDocs、開く/保存ダイアログ、TypedPaths）。システムの重要なエントリは削除されません。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Registry MRU/履歴のクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>リモートデスクトップクライアントによって作成されたキャッシュファイルを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>リモートデスクトップのキャッシュをクリア</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Windowsとユーザーの一時ディレクトリを空にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>一時ファイルをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>エクスプローラーのサムネイルデータベースとDirect3Dシェーダーキャッシュを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>サムネイルキャッシュをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>ダウンロードされた更新ファイルと配信最適化キャッシュを削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Windows Updateのキャッシュをクリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>メニューの遅延を減らし、ハングしたアプリを高速で閉じ、デフォルトで「PC」を開きます。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>エクスプローラーの応答性を向上</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>スタートメニューを完全に無効にします。Winキーを押すと、スタートメニューではなく検索が開きます。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>スタートメニューを無効にし、Winキーで検索を開く</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>クラウドコンテンツの提案と推奨バナーをオフにします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>エクスプローラーの提案を無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>検索ボックスとタスクビューボタンを非表示にし、タスクバーのグループ化を無効にし、トレイアイコンを常に表示します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>タスクバーとスタートメニューのレイアウト</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーでファイル拡張子と隠しファイルを表示します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>ファイルの表示オプション</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>デフォルトスタイルを復元し、エクスプローラーを再起動します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>デフォルトの右クリックメニューに切り替え</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>クラシックスタイルを適用し、エクスプローラーを再起動します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>モダンメニューに切り替え</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>shell.exeと関連ファイルを完全にアンインストールします</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>モダンなコンテキストメニューを適用</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>システムキャッシュをメモリに保持し、カーネルドライバーのページングを回避します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>メモリ管理を改善</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>ネットワークのスロットリングを削除し、システムの応答性の遅延を低減します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>マルチメディアのスケジューリングを最適化</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>ログオン時のアクリル効果を削除し、Windows通知センターを非表示にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>アクリルと通知センターを無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>高パフォーマンス電源プランを有効化し、休止状態を無効にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>高パフォーマンスプランを強制</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>広告ID、Spotlight機能、自動提案を無効にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>テレメトリとヒントを削減</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>接続ユーザーエクスペリエンス、診断ハブ、配信最適化サービスを停止して無効にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>診断サービスを無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Windowsエラーレポートがクラッシュデータを収集して送信するのを停止します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>エラーレポートを無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>リモートregistryアクセスを無効にすることでシステムを保護します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>リモートregistryを無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>インデックスの更新を防ぐためにWindows Searchサービスを停止します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Windows Searchのインデックス作成を無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>バックグラウンドディスクアクティビティを減らすためにSuperfetch/SysMainをオフにします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>SysMainを無効にする</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Windowsキーの動作を変更して、スタートメニューの代わりに検索を開きます。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Windowsキーを検索を開くように変更</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>キャッシュ、一時ファイル、その他の残り物を削除します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>クリーンアップ</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>タスクバー、ファイルエクスプローラー、ユーザーインターフェースの動作を調整します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>エクスプローラー &amp; インターフェース</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>右クリックメニューのスタイルを変更します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Windows美化</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>システムのパフォーマンスと応答性の設定を調整します。</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>パフォーマンス</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>リソースを消費するバックグラウンドサービスを無効にします。</value>
+  </data>
+
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>サービス</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>システム美化</value>
   </data>
 </root>
