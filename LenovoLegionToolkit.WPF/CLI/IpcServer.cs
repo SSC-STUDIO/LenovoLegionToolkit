@@ -355,8 +355,23 @@ public class IpcServer(
                     };
 
                     process.Start();
-                    var output = process.StandardOutput.ReadToEnd();
+
+                    // Read streams asynchronously to prevent deadlock
+                    // If we call ReadToEnd() synchronously and then WaitForExit(),
+                    // the process can block waiting for the buffer to be drained
+                    // while the main thread is blocked in ReadToEnd()
+                    var outputTask = process.StandardOutput.ReadToEndAsync();
+                    var errorTask = process.StandardError.ReadToEndAsync();
+
+                    // Wait for both read tasks to complete before calling WaitForExit
+                    // This prevents deadlock when process output exceeds buffer capacity
+                    System.Threading.Tasks.Task.WaitAll(outputTask, errorTask);
+
+                    // Now safe to wait for process exit since all output has been read
                     process.WaitForExit();
+
+                    // Get the results (already completed)
+                    var output = outputTask.Result;
 
                     // Parse output: shell.exe outputs "true" or "false"
                     if (string.IsNullOrWhiteSpace(output))

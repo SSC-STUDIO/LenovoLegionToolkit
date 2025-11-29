@@ -22,6 +22,15 @@ using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Win32;
 using System.IO;
 using System.Diagnostics;
+using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.PackageDownloader;
+using LenovoLegionToolkit.WPF.Controls.Packages;
+using LenovoLegionToolkit.WPF.Extensions;
+using System.Net.Http;
+using System.Windows.Forms;
+using System.Windows.Media;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -30,12 +39,20 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         private readonly WindowsOptimizationService _windowsOptimizationService = IoCContainer.Resolve<WindowsOptimizationService>();
         private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
         private SelectedActionsWindow? _selectedActionsWindow;
+        private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
+        private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();
+
+        private IPackageDownloader? _driverPackageDownloader;
+        private CancellationTokenSource? _driverGetPackagesTokenSource;
+        private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
+        private List<Package>? _driverPackages;
 
     private enum PageMode
     {
         Optimization,
         Cleanup,
-        Beautification
+        Beautification,
+        DriverDownload
     }
 
     private bool _isBusy;
@@ -50,6 +67,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private bool _optimizationInteractionEnabled = true;
     private bool _cleanupInteractionEnabled = true;
     private bool _beautificationInteractionEnabled = true;
+    private bool _isInitializingDriverDownload = false;
     private bool _transparencyEnabled;
     private bool _roundedCornersEnabled = true;
     private bool _shadowsEnabled = true;
@@ -68,6 +86,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private DateTime _lastUserInteraction = DateTime.MinValue;
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
     private bool _isRefreshingStates = false; // 标记是否正在刷新状态（程序内部操作，不应触发命令执行）
+    private DateTime _lastActionItemClickTime = DateTime.MinValue;
+    private string? _lastActionItemKey = null;
 
     [Flags]
     private enum InteractionScope
@@ -111,6 +131,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     public ObservableCollection<SelectedActionViewModel> SelectedBeautificationActions { get; } = [];
 
+    public ObservableCollection<SelectedDriverPackageViewModel> SelectedDriverPackages { get; } = [];
+
     public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _currentMode switch
     {
         PageMode.Cleanup => SelectedCleanupActions,
@@ -120,13 +142,25 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     public ObservableCollection<CustomCleanupRuleViewModel> CustomCleanupRules { get; } = [];
 
-    public bool HasSelectedActions => VisibleSelectedActions.Count > 0;
+    public bool HasSelectedActions => _currentMode switch
+    {
+        PageMode.DriverDownload => SelectedDriverPackages.Count > 0,
+        _ => VisibleSelectedActions.Count > 0
+    };
 
     public string SelectedActionsSummary
     {
         get
         {
-            var count = VisibleSelectedActions.Count;
+            int count;
+            if (_currentMode == PageMode.DriverDownload)
+            {
+                count = SelectedDriverPackages.Count;
+            }
+            else
+            {
+                count = VisibleSelectedActions.Count;
+            }
             var formattedCount = count < 10 ? $"0{count}" : count.ToString();
             return string.Format(_selectedActionsSummaryFormat, formattedCount);
         }
@@ -303,6 +337,20 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     }
 
     private string _expandCollapseText = string.Empty;
+    private string _driverExpandCollapseText = string.Empty;
+    private bool _driverPackagesExpanded = false;
+
+    public string DriverExpandCollapseText
+    {
+        get => _driverExpandCollapseText;
+        private set
+        {
+            if (_driverExpandCollapseText == value)
+                return;
+            _driverExpandCollapseText = value;
+            OnPropertyChanged(nameof(DriverExpandCollapseText));
+        }
+    }
 
     private void ExpandAllButton_Click(object sender, RoutedEventArgs e)
     {
@@ -353,6 +401,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         PageMode.Cleanup => CleanupCategories,
         PageMode.Beautification => BeautificationCategories,
+        PageMode.DriverDownload => [], // 驱动下载模式下返回空集合
         _ => OptimizationCategories
     };
 
@@ -383,6 +432,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
     public bool IsBeautificationMode => _currentMode == PageMode.Beautification;
+    public bool IsDriverDownloadMode => _currentMode == PageMode.DriverDownload;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -394,6 +444,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         CustomCleanupRules.CollectionChanged += CustomCleanupRules_CollectionChanged;
         LoadCustomCleanupRules();
         UpdateCleanupControlsState();
+        
+        // 初始化驱动下载模式的展开/折叠文本
+        RefreshDriverExpandCollapseText();
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -443,6 +496,41 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
+    private void ActionItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            // 获取点击的操作项
+            if (sender is not System.Windows.FrameworkElement element)
+                return;
+
+            if (element.DataContext is not OptimizationActionViewModel actionViewModel)
+                return;
+
+            // 检测双击：检查是否是同一个操作项，且两次点击间隔小于 500ms
+            var now = DateTime.Now;
+            var isDoubleClick = _lastActionItemKey == actionViewModel.Key &&
+                               (now - _lastActionItemClickTime).TotalMilliseconds < 500;
+
+            // 更新上次点击信息
+            _lastActionItemClickTime = now;
+            _lastActionItemKey = actionViewModel.Key;
+
+            // 如果是双击，且是美化相关的操作（特别是右键菜单美化）
+            if (isDoubleClick && actionViewModel.Key.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+            {
+                // 打开样式设置窗口
+                OpenStyleSettingsButton_Click(sender, e);
+                e.Handled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to handle action item click.", ex);
+        }
+    }
+
     private void InitializeCategories()
     {
         foreach (var existing in Categories.ToList())
@@ -458,6 +546,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             selectionSummaryFormat = "{0} / {1}";
 
         var recommendedTagText = GetResource("WindowsOptimization_Action_Recommended_Tag");
+        // 如果资源不存在，使用默认值
+        if (string.IsNullOrWhiteSpace(recommendedTagText))
+            recommendedTagText = "推荐";
 
         _selectedActionsSummaryFormat = GetResource("WindowsOptimizationPage_SelectedActions_Count");
         if (string.IsNullOrWhiteSpace(_selectedActionsSummaryFormat))
@@ -584,9 +675,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
+        // 在执行清理前，确保 SelectedCleanupActions 是最新的
+        UpdateSelectedActions();
+        
         var selectedKeys = SelectedCleanupActions
-            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey))
+            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !string.IsNullOrWhiteSpace(a.ActionKey))
             .Select(a => a.ActionKey)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         // 如果没有选择任何操作，只刷新状态，不执行任何操作
@@ -617,12 +712,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     }
                     
                     // Run one by one, show progress with per-step timing and freed size
+                    // 直接使用 SelectedCleanupActions 中所有有 CategoryKey 的项，确保与 selectedKeys 一致
                     var actionsInOrder = SelectedCleanupActions
-                        .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
+                        .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
                         .ToList();
 
                     if (actionsInOrder.Count == 0)
                     {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"No actions found. SelectedCleanupActions count: {SelectedCleanupActions.Count}, selectedKeys count: {selectedKeys.Count}, Keys: {string.Join(", ", selectedKeys)}");
                         throw new InvalidOperationException("没有找到要执行的操作。请确保已选择有效的清理操作。");
                     }
 
@@ -741,22 +839,178 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void SelectRecommendedButton_Click(object sender, RoutedEventArgs e)
     {
-        SelectRecommended(ActiveCategories);
-        UpdateSelectedActions();
+        if (_currentMode == PageMode.DriverDownload)
+        {
+            DriverSelectRecommendedButton_Click(sender, e);
+        }
+        else
+        {
+            SelectRecommended(ActiveCategories);
+            UpdateSelectedActions();
+        }
     }
 
     private void ClearSelectionButton_Click(object sender, RoutedEventArgs e)
     {
-        foreach (var category in ActiveCategories)
-            category.ClearSelection();
+        if (_currentMode == PageMode.DriverDownload)
+        {
+            DriverPauseAllButton_Click(sender, e);
+        }
+        else
+        {
+            foreach (var category in ActiveCategories)
+                category.ClearSelection();
 
-        UpdateSelectedActions();
+            UpdateSelectedActions();
+        }
     }
 
     private void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
     {
         foreach (var category in categories)
             category.SelectRecommended();
+    }
+
+    // 驱动下载模式的事件处理函数
+    private void DriverScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (e.Handled)
+            return;
+
+        // 优先使用字段引用，如果不可用则使用 sender
+        var scrollViewer = _driverScrollViewer ?? sender as System.Windows.Controls.ScrollViewer;
+        
+        if (scrollViewer != null)
+        {
+            // 确保滚轮事件被ScrollViewer处理，即使鼠标悬停在子控件上
+            e.Handled = true;
+            var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
+            scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
+        }
+    }
+
+    private void DriverToggleExpandCollapseButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        _driverPackagesExpanded = !_driverPackagesExpanded;
+        RefreshDriverExpandCollapseText();
+        
+        // 驱动包没有展开/折叠功能，暂时只更新文本
+        // 未来可以添加展开/折叠详细信息的逻辑
+    }
+
+    private void RefreshDriverExpandCollapseText()
+    {
+        DriverExpandCollapseText = _driverPackagesExpanded ? CollapseAllText : ExpandAllText;
+    }
+
+    private void DriverSelectRecommendedButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        // 选择所有推荐的驱动包（可更新项目）
+        foreach (var child in _driverPackagesStackPanel.Children)
+        {
+            if (child is Controls.Packages.PackageControl packageControl && packageControl.IsRecommended)
+            {
+                packageControl.IsSelected = true;
+            }
+        }
+        
+        UpdateSelectedDriverPackages();
+    }
+
+    private void DriverClearSelectionButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        // 清除所有驱动包的选择
+        foreach (var child in _driverPackagesStackPanel.Children)
+        {
+            if (child is Controls.Packages.PackageControl packageControl)
+            {
+                packageControl.IsSelected = false;
+            }
+        }
+        
+        UpdateSelectedDriverPackages();
+    }
+
+    private void DriverPauseAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        // 暂停所有正在下载或安装的驱动包
+        foreach (var child in _driverPackagesStackPanel.Children)
+        {
+            if (child is Controls.Packages.PackageControl packageControl)
+            {
+                // 如果正在下载或安装，取消选择以停止操作
+                if (packageControl.Status == Controls.Packages.PackageControl.PackageStatus.Downloading ||
+                    packageControl.Status == Controls.Packages.PackageControl.PackageStatus.Installing)
+                {
+                    packageControl.IsSelected = false;
+                }
+            }
+        }
+        
+        UpdateSelectedDriverPackages();
+    }
+
+    private void UpdateSelectedDriverPackages()
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        var newSelectedPackages = new List<SelectedDriverPackageViewModel>();
+
+        foreach (var child in _driverPackagesStackPanel.Children)
+        {
+            if (child is Controls.Packages.PackageControl packageControl && packageControl.IsSelected)
+            {
+                var existing = SelectedDriverPackages.FirstOrDefault(p => p.PackageId == packageControl.Package.Id);
+                if (existing != null)
+                {
+                    newSelectedPackages.Add(existing);
+                }
+                else
+                {
+                    newSelectedPackages.Add(new SelectedDriverPackageViewModel(
+                        packageControl.Package.Id,
+                        packageControl.Package.Title,
+                        packageControl.Package.Description ?? string.Empty,
+                        packageControl.Package.Category,
+                        packageControl));
+                }
+            }
+        }
+
+        // 清理不再选择的包
+        foreach (var existing in SelectedDriverPackages.ToList())
+        {
+            if (!newSelectedPackages.Any(p => p.PackageId == existing.PackageId))
+            {
+                existing.Dispose();
+                SelectedDriverPackages.Remove(existing);
+            }
+        }
+
+        // 添加新选择的包
+        foreach (var newPackage in newSelectedPackages)
+        {
+            if (!SelectedDriverPackages.Any(p => p.PackageId == newPackage.PackageId))
+            {
+                SelectedDriverPackages.Add(newPackage);
+            }
+        }
+
+        OnPropertyChanged(nameof(HasSelectedActions));
+        OnPropertyChanged(nameof(SelectedActionsSummary));
     }
 
     private async Task ExecuteAsync(
@@ -862,7 +1116,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_runCleanupButton != null)
             _runCleanupButton.IsEnabled = cleanupEnabled;
 
-        if (_categoriesList != null)
+        var categoriesList = FindName("_categoriesList") as System.Windows.Controls.ItemsControl;
+        if (categoriesList != null)
         {
             var listEnabled = _currentMode switch
             {
@@ -870,7 +1125,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 PageMode.Beautification => beautificationEnabled,
                 _ => optimizationEnabled
             };
-            _categoriesList.IsEnabled = listEnabled;
+            categoriesList.IsEnabled = listEnabled;
         }
     }
 
@@ -1244,9 +1499,40 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (modeChanged)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"SetMode called: {mode}, IsDriverDownloadMode will be: {mode == PageMode.DriverDownload}");
+            
             OnPropertyChanged(nameof(IsCleanupMode));
             OnPropertyChanged(nameof(IsBeautificationMode));
+            OnPropertyChanged(nameof(IsDriverDownloadMode));
             OnPropertyChanged(nameof(ActiveCategories));
+            OnPropertyChanged(nameof(VisibleSelectedActions));
+            OnPropertyChanged(nameof(HasSelectedActions));
+            OnPropertyChanged(nameof(SelectedActionsSummary));
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"After property change: IsDriverDownloadMode = {IsDriverDownloadMode}");
+
+            // 可见性切换已通过 XAML 中的 DataTrigger 自动处理
+            // 这里保留代码以确保兼容性，但主要依赖 XAML 中的 DataTrigger
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var categoriesList = FindName("_categoriesList") as System.Windows.Controls.ScrollViewer;
+                
+                // 由于 XAML 中的 DataTrigger 已经处理了可见性，这里主要是为了确保兼容性
+                // 如果 DataTrigger 没有正确工作，这里的代码可以作为后备
+                if (categoriesList != null)
+                {
+                    if (mode == PageMode.DriverDownload)
+                    {
+                        categoriesList.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        categoriesList.Visibility = Visibility.Visible;
+                    }
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
 
             if (mode == PageMode.Cleanup)
             {
@@ -1271,6 +1557,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 StartBeautificationStatusMonitoring();
                 TransparencyEnabled = GetTransparencyEnabled();
             }
+            else if (mode == PageMode.DriverDownload)
+            {
+                // 初始化驱动下载模式，立即开始刷新
+                RefreshDriverExpandCollapseText();
+                _ = InitializeDriverDownloadModeAsync();
+            }
             else
             {
                 EstimatedCleanupSize = 0;
@@ -1283,22 +1575,26 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             OnPropertyChanged(nameof(ActiveCategories));
         }
 
-        var activeCategoriesList = ActiveCategories.ToList();
-        var preferredCategory = mode switch
+        // 驱动下载模式下不需要设置 SelectedCategory 和相关的优化界面属性
+        if (mode != PageMode.DriverDownload)
         {
-            PageMode.Cleanup => _lastCleanupCategory,
-            PageMode.Beautification => _lastBeautificationCategory,
-            _ => _lastOptimizationCategory
-        };
-        if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
-            preferredCategory = activeCategoriesList.FirstOrDefault();
+            var activeCategoriesList = ActiveCategories.ToList();
+            var preferredCategory = mode switch
+            {
+                PageMode.Cleanup => _lastCleanupCategory,
+                PageMode.Beautification => _lastBeautificationCategory,
+                _ => _lastOptimizationCategory
+            };
+            if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
+                preferredCategory = activeCategoriesList.FirstOrDefault();
 
-        SelectedCategory = preferredCategory;
-        OnPropertyChanged(nameof(VisibleSelectedActions));
-        OnPropertyChanged(nameof(HasSelectedActions));
-        OnPropertyChanged(nameof(SelectedActionsSummary));
-        ApplyInteractionState();
-        RefreshExpandCollapseText();
+            SelectedCategory = preferredCategory;
+            OnPropertyChanged(nameof(VisibleSelectedActions));
+            OnPropertyChanged(nameof(HasSelectedActions));
+            OnPropertyChanged(nameof(SelectedActionsSummary));
+            ApplyInteractionState();
+            RefreshExpandCollapseText();
+        }
     }
 
     private async Task InitializeActionStatesAsync()
@@ -1681,6 +1977,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void BeautificationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Beautification);
 
+    private void DriverDownloadNavButton_Checked(object sender, RoutedEventArgs e)
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace((FormattableString)$"Driver download tab clicked, switching to DriverDownload mode");
+        SetMode(PageMode.DriverDownload);
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace((FormattableString)$"IsDriverDownloadMode = {IsDriverDownloadMode}");
+    }
+
     private void OnPropertyChanged(string propertyName) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -1948,6 +2253,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public class SelectedActionViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly OptimizationActionViewModel? _sourceAction;
+        private bool _isSelected; // 用于驱动下载模式，当 sourceAction 为 null 时存储选中状态
 
         public SelectedActionViewModel(
             string categoryKey,
@@ -1963,7 +2269,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             ActionTitle = actionTitle;
             Description = description;
             _sourceAction = sourceAction;
-            _sourceAction.PropertyChanged += SourceAction_PropertyChanged;
+            if (_sourceAction is not null)
+                _sourceAction.PropertyChanged += SourceAction_PropertyChanged;
         }
 
         public string CategoryKey { get; }
@@ -1976,6 +2283,22 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         public string Description { get; }
 
+        // 用于存储驱动下载模式下的额外信息（如 SelectedDriverPackageViewModel）
+        public object? Tag { get; set; }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                // 如果是驱动下载模式且已完成，则禁用复选框
+                if (_sourceAction is null && Tag is SelectedDriverPackageViewModel driverPackage)
+                {
+                    return !driverPackage.IsCompleted;
+                }
+                return true;
+            }
+        }
+
         public bool IsSelected
         {
             get
@@ -1983,7 +2306,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 if (_sourceAction is not null)
                     return _sourceAction.IsSelected;
 
-                return false;
+                return _isSelected; // 驱动下载模式：返回存储的选中状态
             }
             set
             {
@@ -1993,6 +2316,41 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         return;
 
                     _sourceAction.IsSelected = value;
+                    OnPropertyChanged(nameof(IsSelected));
+                }
+                else
+                {
+                    // 驱动下载模式：更新存储的选中状态
+                    if (_isSelected == value)
+                        return;
+
+                    // 如果取消选中，检查是否是已完成的驱动包
+                    if (!value && Tag is SelectedDriverPackageViewModel driverPackage)
+                    {
+                        if (driverPackage.IsCompleted)
+                        {
+                            // 已完成的不能取消，恢复选中状态
+                            _isSelected = true;
+                            OnPropertyChanged(nameof(IsSelected));
+                            return;
+                        }
+                        
+                        // 未完成的，取消选中（这会触发PackageControl的Unchecked事件，停止下载/安装）
+                        if (driverPackage._sourcePackageControl != null)
+                        {
+                            driverPackage._sourcePackageControl.IsSelected = false;
+                        }
+                    }
+                    else if (value && Tag is SelectedDriverPackageViewModel driverPackage2)
+                    {
+                        // 重新选中
+                        if (driverPackage2._sourcePackageControl != null)
+                        {
+                            driverPackage2._sourcePackageControl.IsSelected = true;
+                        }
+                    }
+
+                    _isSelected = value;
                     OnPropertyChanged(nameof(IsSelected));
                 }
             }
@@ -2021,11 +2379,44 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         // Close the previously opened window if one exists
         _selectedActionsWindow?.Close();
 
-        // Create and display the dialog window
-        _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(VisibleSelectedActions, SelectedActionsEmptyText)
+        if (_currentMode == PageMode.DriverDownload)
         {
-            Owner = Window.GetWindow(this)
-        };
+            // 驱动下载模式：显示已选择的驱动包，默认选中（除了已完成的）
+            var driverPackages = new ObservableCollection<SelectedActionViewModel>();
+            foreach (var dp in SelectedDriverPackages)
+            {
+                var viewModel = new SelectedActionViewModel(
+                    dp.Category,
+                    dp.Category,
+                    dp.PackageId,
+                    dp.Title,
+                    $"{dp.Description}{(dp.IsCompleted ? " [已完成]" : string.Empty)}", // 在描述中显示状态
+                    null!); // null! 表示我们知道这里可以为 null，因为驱动包不需要 sourceAction
+                
+                // 存储对 SelectedDriverPackageViewModel 的引用，以便取消时能访问状态
+                viewModel.Tag = dp;
+                
+                // 已完成的默认选中且不可取消，未完成的默认选中
+                viewModel.IsSelected = true;
+                driverPackages.Add(viewModel);
+            }
+            
+            _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(
+                driverPackages,
+                Resource.WindowsOptimizationPage_SelectedActions_Empty ?? string.Empty)
+            {
+                Owner = Window.GetWindow(this)
+            };
+        }
+        else
+        {
+            // 其他模式：显示已选择的操作
+            _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(VisibleSelectedActions, SelectedActionsEmptyText)
+            {
+                Owner = Window.GetWindow(this)
+            };
+        }
+        
         _selectedActionsWindow.Closed += (s, args) => _selectedActionsWindow = null;
         _selectedActionsWindow.Show();
     }
@@ -2584,5 +2975,632 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     Log.Instance.Trace($"Custom cleanup failed to enumerate directory. [path={directoryPath}]", ex);
             }
         }
+    }
+
+    // Driver Download Mode Methods
+    private async Task InitializeDriverDownloadModeAsync()
+    {
+        try
+        {
+            // 确保在 UI 线程上执行
+            if (!Dispatcher.CheckAccess())
+            {
+                await Dispatcher.InvokeAsync(() => _ = InitializeDriverDownloadModeAsync());
+                return;
+            }
+
+            // 标记正在初始化，避免触发来源切换事件
+            _isInitializingDriverDownload = true;
+
+            // 等待控件加载完成
+            await Task.Delay(100);
+
+            // 确保驱动下载内容可见
+            var driverLoader = FindName("_driverLoader") as System.Windows.Controls.Grid;
+            if (driverLoader != null)
+                driverLoader.Visibility = Visibility.Visible;
+
+
+            if (_driverMachineTypeTextBox != null && _driverOsComboBox != null && _driverDownloadToText != null)
+            {
+                var machineInfo = await Compatibility.GetMachineInformationAsync();
+                _driverMachineTypeTextBox.Text = machineInfo.MachineType;
+                _driverOsComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
+
+                var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
+                _driverDownloadToText.PlaceholderText = downloadsFolder;
+                _driverDownloadToText.Text = Directory.Exists(_packageDownloaderSettings.Store.DownloadPath)
+                    ? _packageDownloaderSettings.Store.DownloadPath
+                    : downloadsFolder;
+
+
+                if (_driverSourcePrimaryRadio != null)
+                    _driverSourcePrimaryRadio.Tag = PackageDownloaderFactory.Type.Vantage;
+                if (_driverSourceSecondaryRadio != null)
+                    _driverSourceSecondaryRadio.Tag = PackageDownloaderFactory.Type.PCSupport;
+
+                // 如果机器类型和操作系统已经设置好了，立即开始加载驱动包
+                var machineType = _driverMachineTypeTextBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(machineType) && machineType.Length == 4 &&
+                    _driverOsComboBox != null && _driverOsComboBox.TryGetSelectedItem<OS>(out _))
+                {
+                    // 自动触发加载驱动包
+                    DriverDownloadPackagesButton_Click(this, new RoutedEventArgs());
+                }
+            }
+            else
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace((FormattableString)$"Driver download controls not found, they may not be loaded yet.");
+            }
+            
+            // 初始化完成，允许来源切换事件触发刷新
+            _isInitializingDriverDownload = false;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to initialize driver download mode.", ex);
+        }
+        finally
+        {
+            // 确保在异常情况下也重置标志
+            _isInitializingDriverDownload = false;
+        }
+    }
+
+    private void DriverDownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_driverDownloadToText == null)
+            return;
+
+        var location = _driverDownloadToText.Text;
+
+        if (!Directory.Exists(location))
+            return;
+
+        _packageDownloaderSettings.Store.DownloadPath = location;
+        _packageDownloaderSettings.SynchronizeStore();
+    }
+
+    private void DriverOpenDownloadToButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var location = GetDriverDownloadLocation();
+
+            if (!Directory.Exists(location))
+                return;
+
+            Process.Start("explorer", location);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to open download location.", ex);
+        }
+    }
+
+    private void DriverDownloadToButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverDownloadToText == null)
+            return;
+
+        using var ofd = new FolderBrowserDialog();
+        ofd.InitialDirectory = _driverDownloadToText.Text;
+
+        if (ofd.ShowDialog() != DialogResult.OK)
+            return;
+
+        var selectedPath = ofd.SelectedPath;
+        _driverDownloadToText.Text = selectedPath;
+        _packageDownloaderSettings.Store.DownloadPath = selectedPath;
+        _packageDownloaderSettings.SynchronizeStore();
+    }
+
+    private async void DriverDownloadPackagesButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        var errorOccurred = false;
+        try
+        {
+            if (_driverLoader != null)
+            {
+                _driverLoader.Visibility = Visibility.Visible;
+            }
+            _driverPackages = null;
+
+            if (_driverPackagesStackPanel != null)
+                _driverPackagesStackPanel.Children.Clear();
+            if (_driverScrollViewer != null)
+                _driverScrollViewer.ScrollToHome();
+
+            if (_driverFilterTextBox != null)
+                _driverFilterTextBox.Text = string.Empty;
+            if (_driverSortingComboBox != null)
+                _driverSortingComboBox.SelectedIndex = 2;
+
+            var machineType = _driverMachineTypeTextBox?.Text.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(machineType) || machineType.Length != 4 ||
+                _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem(out OS os))
+            {
+                await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
+                    Resource.PackagesPage_DownloadFailed_Message);
+                return;
+            }
+
+            // 显示加载提示
+            var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
+            if (loadingIndicator != null)
+                loadingIndicator.Visibility = Visibility.Visible;
+
+            if (_driverGetPackagesTokenSource is not null)
+                await _driverGetPackagesTokenSource.CancelAsync();
+
+            _driverGetPackagesTokenSource = new();
+
+            var token = _driverGetPackagesTokenSource.Token;
+
+            var packageDownloaderType = new[] { _driverSourcePrimaryRadio, _driverSourceSecondaryRadio }
+                .Where(r => r != null && r.IsChecked == true)
+                .Select(r => (PackageDownloaderFactory.Type)r.Tag)
+                .FirstOrDefault();
+
+            if (_driverOnlyShowUpdatesCheckBox != null)
+            {
+                switch (packageDownloaderType)
+                {
+                    case PackageDownloaderFactory.Type.Vantage:
+                        _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Visible;
+                        _driverOnlyShowUpdatesCheckBox.IsChecked = _packageDownloaderSettings.Store.OnlyShowUpdates;
+                        break;
+                    default:
+                        _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Hidden;
+                        _driverOnlyShowUpdatesCheckBox.IsChecked = false;
+                        break;
+                }
+            }
+
+            _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
+
+            _driverPackages = packages;
+
+            DriverReload();
+
+            // 隐藏加载提示
+            if (loadingIndicator != null)
+                loadingIndicator.Visibility = Visibility.Collapsed;
+        }
+        catch (UpdateCatalogNotFoundException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Update catalog not found.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_UpdateCatalogNotFound_Title, Resource.PackagesPage_UpdateCatalogNotFound_Message, SnackbarType.Info);
+
+            errorOccurred = true;
+        }
+        catch (OperationCanceledException)
+        {
+            errorOccurred = true;
+        }
+        catch (HttpRequestException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error occurred when downloading packages.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, Resource.PackagesPage_Error_CheckInternet_Message, SnackbarType.Error);
+
+            errorOccurred = true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error occurred when downloading packages.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
+
+            errorOccurred = true;
+        }
+        finally
+        {
+            // 确保在异常情况下也隐藏加载提示
+            var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
+            if (loadingIndicator != null)
+                loadingIndicator.Visibility = Visibility.Collapsed;
+
+            if (errorOccurred)
+            {
+                if (_driverPackagesStackPanel != null)
+                    _driverPackagesStackPanel.Children.Clear();
+                if (_driverLoader != null)
+                {
+                    _driverLoader.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+    }
+
+    private void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
+    {
+        // 如果正在初始化，不触发刷新
+        if (_isInitializingDriverDownload)
+            return;
+        
+        // 如果还没有加载过驱动包，不触发刷新
+        if (_driverPackages == null || _driverPackages.Count == 0)
+            return;
+        
+        // 检查机器类型和操作系统是否已设置
+        var machineType = _driverMachineTypeTextBox?.Text.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(machineType) || machineType.Length != 4 ||
+            _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem<OS>(out _))
+        {
+            return;
+        }
+        
+        // 切换来源时自动刷新驱动包列表
+        DriverDownloadPackagesButton_Click(this, new RoutedEventArgs());
+    }
+
+    private async void DriverFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        try
+        {
+            if (_driverPackages is null)
+                return;
+
+            if (_driverFilterDebounceCancellationTokenSource is not null)
+                await _driverFilterDebounceCancellationTokenSource.CancelAsync();
+
+            _driverFilterDebounceCancellationTokenSource = new();
+
+            await Task.Delay(500, _driverFilterDebounceCancellationTokenSource.Token);
+
+            if (_driverPackagesStackPanel != null)
+                _driverPackagesStackPanel.Children.Clear();
+            if (_driverScrollViewer != null)
+                _driverScrollViewer.ScrollToHome();
+
+            DriverReload();
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    private async void DriverOnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)
+    {
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        if (_driverPackages is null)
+            return;
+
+        if (_driverOnlyShowUpdatesCheckBox != null)
+        {
+            _packageDownloaderSettings.Store.OnlyShowUpdates = _driverOnlyShowUpdatesCheckBox.IsChecked ?? false;
+            _packageDownloaderSettings.SynchronizeStore();
+        }
+
+        if (_driverPackagesStackPanel != null)
+            _driverPackagesStackPanel.Children.Clear();
+        if (_driverScrollViewer != null)
+            _driverScrollViewer.ScrollToHome();
+
+        DriverReload();
+    }
+
+    private async void DriverSortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        if (_driverPackages is null)
+            return;
+
+        if (_driverPackagesStackPanel != null)
+            _driverPackagesStackPanel.Children.Clear();
+        if (_driverScrollViewer != null)
+            _driverScrollViewer.ScrollToHome();
+
+        DriverReload();
+    }
+
+    private string GetDriverDownloadLocation()
+    {
+        if (_driverDownloadToText == null)
+            return KnownFolders.GetPath(KnownFolder.Downloads);
+
+        var location = _driverDownloadToText.Text.Trim();
+
+        if (!Directory.Exists(location))
+        {
+            var downloads = KnownFolders.GetPath(KnownFolder.Downloads);
+            location = downloads;
+            _driverDownloadToText.Text = downloads;
+            _packageDownloaderSettings.Store.DownloadPath = downloads;
+            _packageDownloaderSettings.SynchronizeStore();
+        }
+
+        return location;
+    }
+
+    private ContextMenu? GetDriverContextMenu(Package package, IEnumerable<Package> packages)
+    {
+        if (_packageDownloaderSettings.Store.HiddenPackages.Contains(package.Id))
+            return null;
+
+        var hideMenuItem = new MenuItem
+        {
+            SymbolIcon = SymbolRegular.EyeOff24,
+            Header = Resource.Hide,
+        };
+        hideMenuItem.Click += (_, _) =>
+        {
+            _packageDownloaderSettings.Store.HiddenPackages.Add(package.Id);
+            _packageDownloaderSettings.SynchronizeStore();
+
+            DriverReload();
+        };
+
+        var hideAllMenuItem = new MenuItem
+        {
+            SymbolIcon = SymbolRegular.EyeOff24,
+            Header = Resource.HideAll,
+        };
+        hideAllMenuItem.Click += (_, _) =>
+        {
+            foreach (var id in packages.Select(p => p.Id))
+                _packageDownloaderSettings.Store.HiddenPackages.Add(id);
+            _packageDownloaderSettings.SynchronizeStore();
+
+            DriverReload();
+        };
+
+        var cm = new ContextMenu();
+        cm.Items.Add(hideMenuItem);
+        cm.Items.Add(hideAllMenuItem);
+        return cm;
+    }
+
+    private async Task<bool> ShouldInterruptDriverDownloadsIfRunning()
+    {
+        if (_driverPackagesStackPanel?.Children is null)
+            return true;
+
+        if (_driverPackagesStackPanel.Children.ToArray().OfType<PackageControl>().Where(pc => pc.IsDownloading).IsEmpty())
+            return true;
+
+        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);
+    }
+
+    private void DriverReload()
+    {
+        if (_driverPackageDownloader is null || _driverPackagesStackPanel == null)
+            return;
+
+        _driverPackagesStackPanel.Children.Clear();
+
+        if (_driverPackages is null || _driverPackages.Count == 0)
+            return;
+
+        var packages = DriverSortAndFilter(_driverPackages);
+
+        foreach (var package in packages)
+        {
+            var control = new PackageControl(_driverPackageDownloader, package, GetDriverDownloadLocation)
+            {
+                ContextMenu = GetDriverContextMenu(package, packages)
+            };
+            
+            // 监听选择状态变化
+            control.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(PackageControl.IsSelected))
+                {
+                    UpdateSelectedDriverPackages();
+                }
+                // 监听状态变化，如果变成已完成则隐藏控件
+                else if (e.PropertyName == nameof(PackageControl.Status))
+                {
+                    if (control.Status == Controls.Packages.PackageControl.PackageStatus.Completed)
+                    {
+                        control.Visibility = Visibility.Collapsed;
+                    }
+                }
+            };
+            
+            _driverPackagesStackPanel.Children.Add(control);
+        }
+        
+        // 初始化已选择的驱动包列表
+        UpdateSelectedDriverPackages();
+        
+        // 检查已选择的驱动包，如果已完成则隐藏对应的控件
+        foreach (var selectedPackage in SelectedDriverPackages)
+        {
+            if (selectedPackage.IsCompleted && selectedPackage._sourcePackageControl != null)
+            {
+                selectedPackage._sourcePackageControl.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        if (packages.IsEmpty())
+        {
+            var tb = new TextBlock
+            {
+                Text = Resource.PackagesPage_NoMatchingDownloads,
+                Foreground = (SolidColorBrush)FindResource("TextFillColorSecondaryBrush"),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new(0, 32, 0, 32),
+                Focusable = true
+            };
+            _driverPackagesStackPanel.Children.Add(tb);
+        }
+
+        if (_packageDownloaderSettings.Store.HiddenPackages.Count != 0)
+        {
+            var clearHidden = new Hyperlink
+            {
+                Icon = SymbolRegular.Eye24,
+                Content = "Show hidden downloads",
+                HorizontalAlignment = HorizontalAlignment.Right,
+            };
+            clearHidden.Click += (_, _) =>
+            {
+                _packageDownloaderSettings.Store.HiddenPackages.Clear();
+                _packageDownloaderSettings.SynchronizeStore();
+
+                DriverReload();
+            };
+            _driverPackagesStackPanel.Children.Add(clearHidden);
+        }
+    }
+
+    private List<Package> DriverSortAndFilter(List<Package> packages)
+    {
+        var selectedIndex = _driverSortingComboBox?.SelectedIndex ?? 2;
+        var result = selectedIndex switch
+        {
+            0 => packages.OrderBy(p => p.Title),
+            1 => packages.OrderBy(p => p.Category),
+            2 => packages.OrderByDescending(p => p.ReleaseDate),
+            _ => packages.AsEnumerable(),
+        };
+
+        result = result.Where(p => !_packageDownloaderSettings.Store.HiddenPackages.Contains(p.Id));
+
+        if (_driverOnlyShowUpdatesCheckBox?.IsChecked ?? false)
+            result = result.Where(p => p.IsUpdate);
+
+        var filterText = _driverFilterTextBox?.Text ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(filterText))
+            result = result.Where(p => p.Index.Contains(filterText, StringComparison.InvariantCultureIgnoreCase));
+
+        return result.ToList();
+    }
+
+    private class DriverDownloadProgressReporter : IProgress<float>
+    {
+        private readonly WindowsOptimizationPage _page;
+
+        public DriverDownloadProgressReporter(WindowsOptimizationPage page)
+        {
+            _page = page;
+        }
+
+        public void Report(float value) => _page.Dispatcher.Invoke(() =>
+        {
+            // LoadableControl removed, no loading indicator needed
+        });
+    }
+
+    public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposable
+    {
+        internal readonly Controls.Packages.PackageControl? _sourcePackageControl;
+
+        public SelectedDriverPackageViewModel(
+            string packageId,
+            string title,
+            string description,
+            string category,
+            Controls.Packages.PackageControl sourcePackageControl)
+        {
+            PackageId = packageId;
+            Title = title;
+            Description = description;
+            Category = category;
+            _sourcePackageControl = sourcePackageControl;
+            _sourcePackageControl.PropertyChanged += SourcePackageControl_PropertyChanged;
+        }
+
+        public string PackageId { get; }
+        public string Title { get; }
+        public string Description { get; }
+        public string Category { get; }
+
+        public bool IsSelected
+        {
+            get
+            {
+                if (_sourcePackageControl is not null)
+                    return _sourcePackageControl.IsSelected;
+
+                return false;
+            }
+            set
+            {
+                if (_sourcePackageControl is not null)
+                {
+                    if (_sourcePackageControl.IsSelected == value)
+                        return;
+
+                    _sourcePackageControl.IsSelected = value;
+                    OnPropertyChanged(nameof(IsSelected));
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_sourcePackageControl is not null)
+                _sourcePackageControl.PropertyChanged -= SourcePackageControl_PropertyChanged;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public string StatusText
+        {
+            get
+            {
+                if (_sourcePackageControl is not null)
+                {
+                    return _sourcePackageControl.Status switch
+                    {
+                        Controls.Packages.PackageControl.PackageStatus.Downloading => "下载中",
+                        Controls.Packages.PackageControl.PackageStatus.Installing => "安装中",
+                        Controls.Packages.PackageControl.PackageStatus.Completed => "已完成",
+                        _ => string.Empty
+                    };
+                }
+                return string.Empty;
+            }
+        }
+
+        public bool IsCompleted
+        {
+            get
+            {
+                if (_sourcePackageControl is not null)
+                    return _sourcePackageControl.IsCompleted;
+                return false;
+            }
+        }
+
+        private void SourcePackageControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Controls.Packages.PackageControl.IsSelected))
+                OnPropertyChanged(nameof(IsSelected));
+            else if (e.PropertyName == nameof(Controls.Packages.PackageControl.Status))
+            {
+                OnPropertyChanged(nameof(StatusText));
+                OnPropertyChanged(nameof(IsCompleted));
+                
+                // 如果状态变成已完成，隐藏控件（在主界面中）
+                if (_sourcePackageControl != null && _sourcePackageControl.Status == Controls.Packages.PackageControl.PackageStatus.Completed)
+                {
+                    _sourcePackageControl.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

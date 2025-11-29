@@ -1257,6 +1257,9 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
     <value>Beautification</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Driver Download</value>
+  </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimization</value>
   </data>
@@ -2595,6 +2598,21 @@ Supported formats are: {1}.</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Download</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Installation failed</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>File not found, please download first</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Installation started</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Starting installer: {0}</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
     <value>Open README</value>

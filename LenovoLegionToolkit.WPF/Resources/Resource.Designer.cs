@@ -3870,6 +3870,51 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string PackageControl_Install {
+            get {
+                return ResourceManager.GetString("PackageControl_Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installation failed.
+        /// </summary>
+        public static string PackageControl_InstallError_Title {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallError_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found, please download first.
+        /// </summary>
+        public static string PackageControl_InstallError_FileNotFound {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallError_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installation started.
+        /// </summary>
+        public static string PackageControl_InstallStarted_Title {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallStarted_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting installer: {0}.
+        /// </summary>
+        public static string PackageControl_InstallStarted_Message {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallStarted_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} downloaded!.
         /// </summary>
         public static string PackageControl_DownloadComplete_Message {
@@ -5307,6 +5352,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string WindowsOptimizationPage_Tab_Beautification {
             get {
                 return ResourceManager.GetString("WindowsOptimizationPage_Tab_Beautification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Driver Download.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_DriverDownload {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_DriverDownload", resourceCulture);
             }
         }
 

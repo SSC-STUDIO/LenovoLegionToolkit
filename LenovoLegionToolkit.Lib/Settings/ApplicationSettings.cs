@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;
 
 namespace LenovoLegionToolkit.Lib.Settings;
@@ -76,7 +77,8 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
 
     public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-        var value = reader.Value?.ToString() ?? string.Empty;
+        var originalValue = reader.Value?.ToString() ?? string.Empty;
+        var value = originalValue;
 
         const string prefix = "Microsoft:PowerPlan\\{";
         const string suffix = "}";
@@ -91,27 +93,47 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         {
             var start = prefixIndex + prefix.Length;
             var length = suffixIndex - start;
-            // Only extract if we have a non-empty substring and valid bounds
-            if (length > 0 && start >= 0 && start + length <= value.Length)
+            
+            // Validate bounds: start must be within string, and start + length must not exceed string length
+            if (start >= 0 && start < value.Length && length >= 0 && start + length <= value.Length)
             {
-                value = value.Substring(start, length);
+                if (length > 0)
+                {
+                    value = value.Substring(start, length);
+                }
+                else
+                {
+                    // Invalid format: prefix and suffix found but no content between them
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"LegacyPowerPlanInstanceIdToGuidConverter: Invalid format - prefix and suffix found but no GUID content between them. Original value: '{originalValue}'");
+                    return Guid.Empty;
+                }
             }
             else
             {
-                // Invalid format: prefix and suffix found but no valid content between them
+                // Invalid bounds: substring extraction would be out of range
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"LegacyPowerPlanInstanceIdToGuidConverter: Invalid bounds for substring extraction. Start: {start}, Length: {length}, Value length: {value.Length}. Original value: '{originalValue}'");
                 return Guid.Empty;
             }
         }
 
         // Handle case where the expected format is not found or value is not a valid GUID
         if (string.IsNullOrWhiteSpace(value))
+        {
+            if (Log.Instance.IsTraceEnabled && !string.IsNullOrWhiteSpace(originalValue))
+                Log.Instance.Trace($"LegacyPowerPlanInstanceIdToGuidConverter: Empty or whitespace GUID value after extraction. Original value: '{originalValue}'");
             return Guid.Empty;
+        }
 
         if (Guid.TryParse(value, out var guid))
             return guid;
 
-        // If parsing fails, return empty GUID instead of throwing FormatException
-        // This allows the application to continue with a default value
+        // If parsing fails, log the error but return empty GUID to allow the application to continue
+        // This maintains backward compatibility while alerting to potential data corruption
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"LegacyPowerPlanInstanceIdToGuidConverter: Failed to parse GUID from value '{value}' (original: '{originalValue}'). Returning Guid.Empty. This may indicate corrupt settings data.");
+        
         return Guid.Empty;
     }
 }

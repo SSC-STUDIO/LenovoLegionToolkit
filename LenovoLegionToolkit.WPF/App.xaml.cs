@@ -90,6 +90,10 @@ public partial class App
 
         await LocalizationHelper.SetLanguageAsync(true);
 
+        // Note: ApplicationSettings is created here before IoC initialization for compatibility check.
+        // This is safe because ApplicationSettings uses a shared storage mechanism, so changes will
+        // be reflected in the IoC-resolved instance later. However, we should use the IoC instance
+        // after initialization for consistency.
         var applicationSettings = new ApplicationSettings();
 
         if (!flags.SkipCompatibilityCheck)
@@ -105,6 +109,7 @@ public partial class App
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Incompatible system detected. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
 
+                    // Use the local instance for reading settings before IoC initialization
                     var suppressWarning = applicationSettings.Store.DisableUnsupportedHardwareWarning;
                     var shouldContinue = false;
 
@@ -215,7 +220,10 @@ public partial class App
     {
         try
         {
-            var tier = RenderCapability.Tier >> 16;
+            // RenderCapability.Tier already returns a properly formatted value (0-3)
+            // where 0 = no hardware acceleration, 1 = partial, 2+ = full hardware acceleration
+            // No bit shift is needed as the value is already in the correct format
+            var tier = RenderCapability.Tier;
             return tier >= 2 ? RenderMode.Default : RenderMode.SoftwareOnly;
         }
         catch (Exception ex)
@@ -353,11 +361,14 @@ public partial class App
         try
         {
             // Mark that we're in the exit handler to prevent double Shutdown() call
+            // The flag is checked inside ShutdownAsync under lock, so we set it here under lock
+            // and ShutdownAsync will see it when it checks
             lock (_shutdownLock)
             {
                 _inExitHandler = true;
             }
             
+            // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
             ShutdownAsync(true).GetAwaiter().GetResult();
         }
         catch (Exception ex)

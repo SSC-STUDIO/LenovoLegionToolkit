@@ -11,6 +11,9 @@
     Height="500"
     MinWidth="600"
     MinHeight="500"
+    MaxWidth="600"
+    MaxHeight="500"
+    ResizeMode="CanMinimize"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     WindowStartupLocation="CenterOwner">
 
@@ -80,6 +83,7 @@
                                     FontWeight="Medium"
                                     Content="{Binding ActionTitle}"
                                     IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                    IsEnabled="{Binding IsEnabled, Mode=OneWay}"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <TextBlock
                                     Margin="0,4,0,0"

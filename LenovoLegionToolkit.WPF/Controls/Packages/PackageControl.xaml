@@ -19,14 +19,24 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
 
+                <CheckBox
+                    x:Name="_selectCheckBox"
+                    Grid.Row="0"
+                    Grid.RowSpan="7"
+                    Grid.Column="0"
+                    Width="20"
+                    Margin="0,0,12,0"
+                    VerticalAlignment="Center" />
+
                 <StackPanel
                     x:Name="_updateRebootStackPanel"
                     Grid.Row="0"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Margin="0,0,0,8"
                     Orientation="Horizontal">
 
@@ -69,7 +79,7 @@
                 <TextBlock
                     x:Name="_dateTextBlock"
                     Grid.Row="1"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     FontSize="12"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextTrimming="CharacterEllipsis" />
@@ -77,25 +87,40 @@
                 <TextBlock
                     x:Name="_categoryTextBlock"
                     Grid.Row="2"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Margin="0,4,0,8"
                     FontWeight="Medium"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp" />
 
-                <TextBlock
-                    x:Name="_titleTextBlock"
+                <StackPanel
                     Grid.Row="3"
-                    Grid.Column="0"
-                    FontSize="14"
-                    FontWeight="Medium"
-                    MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
-                    TextTrimming="CharacterEllipsis" />
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        x:Name="_titleTextBlock"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
+                        TextTrimming="CharacterEllipsis" />
+                    <wpfui:Badge
+                        x:Name="_recommendedBadge"
+                        Margin="8,0,0,0"
+                        Appearance="Secondary"
+                        Background="{DynamicResource SystemFillColorSuccessBrush}"
+                        BorderBrush="{DynamicResource SystemFillColorSuccessBrush}"
+                        Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                        Visibility="Collapsed">
+                        <wpfui:Badge.Content>
+                            <TextBlock Text="推荐" />
+                        </wpfui:Badge.Content>
+                    </wpfui:Badge>
+                </StackPanel>
 
                 <TextBlock
                     x:Name="_descriptionTextBlock"
                     Grid.Row="4"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Margin="0,8,0,8"
                     FontSize="13"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -105,7 +130,7 @@
                 <TextBlock
                     x:Name="_detailTextBlock"
                     Grid.Row="5"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Margin="0,4,0,0"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
@@ -114,7 +139,7 @@
                 <TextBlock
                     x:Name="_warningTextBlock"
                     Grid.Row="6"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Margin="0,4,0,0"
                     Foreground="{DynamicResource SystemFillColorCautionBrush}"
                     Text="{x:Static resources:Resource.PackageControl_OldPackageWarning}"
@@ -125,7 +150,7 @@
                     x:Name="_idleStackPanel"
                     Grid.Row="0"
                     Grid.RowSpan="6"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
 
@@ -138,6 +163,8 @@
                         ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}" />
 
                     <wpfui:Button
+                        x:Name="_downloadButton"
+                        Margin="0,0,8,0"
                         Click="DownloadButton_Click"
                         FontSize="18"
                         Icon="ArrowDownload24"
@@ -149,7 +176,7 @@
                     x:Name="_downloadingStackPanel"
                     Grid.Row="0"
                     Grid.RowSpan="7"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Visibility="Collapsed">
