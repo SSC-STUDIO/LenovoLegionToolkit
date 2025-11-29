@@ -158,8 +158,30 @@ public static class CMD
         index = input.IndexOf(" &", StringComparison.Ordinal);
         if (index >= 0)
         {
-            // If at end or if character after " &" is not '1' (not part of "2>&1" or "1>&2")
-            if (index + 2 >= input.Length || (index + 2 < input.Length && input[index + 2] != '1'))
+            // Check if this is part of a valid redirection pattern (2>&1 or 1>&2)
+            // index points to the space in " &", so:
+            // - input[index-2] and input[index-1] should be "2>" or "1>"
+            // - input[index+1] should be '&'
+            // - input[index+2] should be '1' or '2'
+            bool isRedirectionPattern = false;
+            if (index >= 2 && index + 2 < input.Length)
+            {
+                var charBeforeSpace = input[index - 1]; // Should be '>'
+                var charTwoBeforeSpace = input[index - 2]; // Should be '2' or '1'
+                var charAfterSpace = input[index + 1]; // Should be '&'
+                var charAfterAmpersand = input[index + 2]; // Should be '1' or '2'
+                
+                // Valid patterns: "2>&1" or "1>&2"
+                if (charBeforeSpace == '>' && charAfterSpace == '&' &&
+                    ((charTwoBeforeSpace == '2' && charAfterAmpersand == '1') ||
+                     (charTwoBeforeSpace == '1' && charAfterAmpersand == '2')))
+                {
+                    isRedirectionPattern = true;
+                }
+            }
+            
+            // If it's not a valid redirection pattern, it's potentially dangerous
+            if (!isRedirectionPattern)
                 return true;
         }
 

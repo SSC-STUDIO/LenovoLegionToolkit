@@ -117,11 +117,6 @@
                         PageTag="macro"
                         PageType="{x:Type pages:MacroPage}" />
                     <custom:NavigationItem
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Packages}"
-                        Icon="Box24"
-                        PageTag="packages"
-                        PageType="{x:Type pages:PackagesPage}" />
-                    <custom:NavigationItem
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
                         Icon="Gauge24"
                         PageTag="windowsOptimization"

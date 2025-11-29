@@ -377,11 +377,11 @@ public class WindowsOptimizationService
                     Environment.ExpandEnvironmentVariables("%SystemRoot%\\memory.dmp"),
                     cancellationToken).ConfigureAwait(false) +
                 await EstimateDirectorySizeAsync(
-                Environment.GetEnvironmentVariable("SystemDrive") + "\\",
+                Environment.ExpandEnvironmentVariables("%SystemDrive%\\"),
                 filePattern: "*.dmp",
                 cancellationToken: cancellationToken).ConfigureAwait(false),
             "cleanup.recycleBin" => await EstimateDirectorySizeAsync(
-                Environment.GetEnvironmentVariable("SystemDrive") + "\\$Recycle.bin",
+                Environment.ExpandEnvironmentVariables("%SystemDrive%\\$Recycle.bin"),
                 filePattern: null,
                 cancellationToken: cancellationToken).ConfigureAwait(false),
             "cleanup.defender" => await EstimateDirectorySizeAsync(
@@ -1321,8 +1321,30 @@ public class WindowsOptimizationService
         index = command.IndexOf(" &", StringComparison.Ordinal);
         if (index >= 0)
         {
-            // If at end or if character after " &" is not '1' (not part of "2>&1" or "1>&2")
-            if (index + 2 >= command.Length || (index + 2 < command.Length && command[index + 2] != '1'))
+            // Check if this is part of a valid redirection pattern (2>&1 or 1>&2)
+            // index points to the space in " &", so:
+            // - command[index-2] and command[index-1] should be "2>" or "1>"
+            // - command[index+1] should be '&'
+            // - command[index+2] should be '1' or '2'
+            bool isRedirectionPattern = false;
+            if (index >= 2 && index + 2 < command.Length)
+            {
+                var charBeforeSpace = command[index - 1]; // Should be '>'
+                var charTwoBeforeSpace = command[index - 2]; // Should be '2' or '1'
+                var charAfterSpace = command[index + 1]; // Should be '&'
+                var charAfterAmpersand = command[index + 2]; // Should be '1' or '2'
+                
+                // Valid patterns: "2>&1" or "1>&2"
+                if (charBeforeSpace == '>' && charAfterSpace == '&' &&
+                    ((charTwoBeforeSpace == '2' && charAfterAmpersand == '1') ||
+                     (charTwoBeforeSpace == '1' && charAfterAmpersand == '2')))
+                {
+                    isRedirectionPattern = true;
+                }
+            }
+            
+            // If it's not a valid redirection pattern, it's potentially dangerous
+            if (!isRedirectionPattern)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Rejected potentially dangerous command: {command}");
