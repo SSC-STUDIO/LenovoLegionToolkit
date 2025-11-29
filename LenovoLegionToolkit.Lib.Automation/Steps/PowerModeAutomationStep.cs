@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;
@@ -17,16 +18,23 @@ public class PowerModeAutomationStep(PowerModeState state)
         try
         {
             var (_, machineInformation) = await Compatibility.IsCompatibleAsync().ConfigureAwait(false);
+            
             if (!Compatibility.IsSupportedLegionMachine(machineInformation))
                 return false;
 
             if (machineInformation.SupportedPowerModes is null)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SupportedPowerModes is null, PowerModeAutomationStep is not supported.");
                 return false;
+            }
 
             return machineInformation.SupportedPowerModes.Contains(State);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception occurred while checking PowerModeAutomationStep support.", ex);
             return false;
         }
     }
