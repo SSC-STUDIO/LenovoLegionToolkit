@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -2801,4 +2801,130 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>Failed to start tool</value>
   </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+    <value>COM Component Registration + Configuration File</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Implementation Type:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
+    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
+    <value>Configuration File Not Found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
+    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
+    <value>Settings Applied</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
+    <value>Failed to apply settings: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
+    <value>1. COM Component Registration:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
+    <value>   shell.exe -register -treat -restart</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
+    <value>   Path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
+    <value>2. Configuration File (shell.nss):</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
+    <value>   Configuration file path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
+    <value>   Uses CSS-like syntax to define menu styles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
+    <value>3. Configuration File Format Example:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
+    <value>   theme
+   {
+       background-color: #2d2d2d;
+       text-color: #ffffff;
+       corner-radius: 5px;
+       shadow: true;
+       transparency: true;
+   }</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
+    <value>4. Working Principle:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
+    <value>   - Shell.dll is registered as a COM component in the system</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
+    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
+    <value>   - Reads shell.nss configuration file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
+    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
+    <value>   - Renders the beautified context menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
+    <value>5. Effect Description:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
+    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
+    <value>   - Transparency: Enables menu background transparency effect</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
+    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
+    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Executing {0}%</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Operation cancelled</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Error details: {0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Select language</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Synchronise zones</value>
+  </data>
+
 </root>

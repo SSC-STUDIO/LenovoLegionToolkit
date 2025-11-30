@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -42,6 +42,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
+    // 传感器数据缓存，缓存时间为100ms
+    private readonly object _cacheLock = new();
+    private SensorsData? _cachedSensorsData;
+    private DateTime _lastCacheUpdateTime = DateTime.MinValue;
+    private const int _cacheExpirationMs = 100;
+
     public abstract Task<bool> IsSupportedAsync();
 
     public Task PrepareAsync()
@@ -53,6 +59,16 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<SensorsData> GetDataAsync()
     {
+        // 检查缓存是否有效，如果有效则返回缓存数据
+        var now = DateTime.UtcNow;
+        lock (_cacheLock)
+        {
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < _cacheExpirationMs)
+            {
+                return _cachedSensorsData.Value;
+            }
+        }
+
         const int genericMaxUtilization = 100;
         const int genericMaxTemperature = 100;
 
@@ -91,6 +107,13 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             gpuMaxFanSpeed);
         var result = new SensorsData(cpu, gpu);
 
+        // 更新缓存
+        lock (_cacheLock)
+        {
+            _cachedSensorsData = result;
+            _lastCacheUpdateTime = now;
+        }
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
 
@@ -99,9 +122,19 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()
     {
-        var cpuFanSpeed = await GetCpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        var gpuFanSpeed = await GetGpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        return (cpuFanSpeed, gpuFanSpeed);
+        // 检查缓存是否有效，如果有效则从缓存中获取风扇速度
+        var now = DateTime.UtcNow;
+        lock (_cacheLock)
+        {
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < _cacheExpirationMs)
+            {
+                return (_cachedSensorsData.Value.CPU.FanSpeed, _cachedSensorsData.Value.GPU.FanSpeed);
+            }
+        }
+
+        // 缓存无效，重新获取数据
+        var data = await GetDataAsync().ConfigureAwait(false);
+        return (data.CPU.FanSpeed, data.GPU.FanSpeed);
     }
 
     protected abstract Task<int> GetCpuCurrentTemperatureAsync();

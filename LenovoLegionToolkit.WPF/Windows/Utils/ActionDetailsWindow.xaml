@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
-    Title="操作详情"
+    Title="{x:Static resources:Resource.ActionDetailsWindow_Title}"
     Height="600"
     Width="800"
     WindowStartupLocation="CenterOwner"
@@ -19,7 +19,7 @@
 
         <ScrollViewer Grid.Row="0" Margin="20,20,20,0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <!-- 操作标题 -->
+                <!-- Action title -->
                 <TextBlock
                     x:Name="_titleTextBlock"
                     FontSize="20"
@@ -28,7 +28,7 @@
                     Margin="0,0,0,8"
                     TextWrapping="Wrap" />
 
-                <!-- 操作描述 -->
+                <!-- Action description -->
                 <TextBlock
                     x:Name="_descriptionTextBlock"
                     FontSize="14"
@@ -36,17 +36,17 @@
                     Margin="0,0,0,20"
                     TextWrapping="Wrap" />
 
-                <!-- 技术实现细节 -->
+                <!-- Technical implementation details -->
                 <wpfui:CardControl Margin="0,0,0,16">
                     <wpfui:CardControl.Header>
                         <TextBlock
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="技术实现细节" />
+                            Text="{x:Static resources:Resource.ActionDetailsWindow_TechnicalDetails}" />
                     </wpfui:CardControl.Header>
                     <StackPanel Margin="0,12,0,0">
-                        <!-- 实现类型 -->
+                        <!-- Implementation type -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -56,7 +56,7 @@
                                 Grid.Column="0"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="实现类型：" />
+                                Text="{x:Static resources:Resource.ActionDetailsWindow_ImplementationType}" />
                             <TextBlock
                                 x:Name="_implementationTypeTextBlock"
                                 Grid.Column="1"
@@ -65,7 +65,7 @@
                                 TextWrapping="Wrap" />
                         </Grid>
 
-                        <!-- 详细信息 -->
+                        <!-- Detailed information -->
                         <Border
                             x:Name="_detailsBorder"
                             Padding="12"
@@ -84,10 +84,10 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- 关闭按钮 -->
+        <!-- Close button -->
         <Grid Grid.Row="1" Margin="20" HorizontalAlignment="Right">
             <wpfui:Button
-                Content="关闭"
+                Content="{x:Static resources:Resource.ActionDetailsWindow_Close_Button}"
                 Appearance="Primary"
                 Click="CloseButton_Click"
                 MinWidth="100" />

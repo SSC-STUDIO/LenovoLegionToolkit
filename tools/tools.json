@@ -1,11 +1,14 @@
 {
     "version": "1.0",
     "description": "工具目录说明文件，包含所有工具的分类和详细信息",
+    "description_en": "Tools directory description file, containing all tool categories and detailed information",
     "categories": [
       {
         "name": "CPU_Tools",
         "displayName": "CPU 工具",
+        "displayName_en": "CPU Tools",
         "description": "CPU 相关的检测、监控和优化工具",
+        "description_en": "CPU-related detection, monitoring, and optimization tools",
         "tools": [
           {
             "name": "CoreTemp",
@@ -33,7 +36,9 @@
       {
         "name": "Display_Tools",
         "displayName": "显示器工具",
+        "displayName_en": "Display Tools",
         "description": "显示器测试和校准工具",
+        "description_en": "Display testing and calibration tools",
         "tools": [
           {
             "name": "Color_Gamut_Test",
@@ -61,7 +66,9 @@
       {
         "name": "Gaming_Tools",
         "displayName": "游戏工具",
+        "displayName_en": "Gaming Tools",
         "description": "游戏加速器和游戏平台启动工具",
+        "description_en": "Game accelerators and game platform launchers",
         "tools": [
           {
             "name": "AxeOx_Accelerator",
@@ -140,7 +147,9 @@
       {
         "name": "GPU_Tools",
         "displayName": "显卡工具",
+        "displayName_en": "GPU Tools",
         "description": "显卡检测、监控和优化工具",
+        "description_en": "GPU detection, monitoring, and optimization tools",
         "tools": [
           {
             "name": "DDU",
@@ -183,7 +192,9 @@
       {
         "name": "Memory_Tools",
         "displayName": "内存工具",
+        "displayName_en": "Memory Tools",
         "description": "内存检测、测试和优化工具",
+        "description_en": "Memory detection, testing, and optimization tools",
         "tools": [
           {
             "name": "memtest",
@@ -232,7 +243,9 @@
       {
         "name": "Other_Tools",
         "displayName": "其他工具",
+        "displayName_en": "Other Tools",
         "description": "系统优化、文件管理和实用工具",
+        "description_en": "System optimization, file management, and utility tools",
         "tools": [
           {
             "name": "BatteryInfoView",
@@ -329,7 +342,9 @@
       {
         "name": "Peripherals_Tools",
         "displayName": "外设工具",
+        "displayName_en": "Peripherals Tools",
         "description": "键盘、鼠标等外设测试工具",
+        "description_en": "Keyboard, mouse, and other peripheral testing tools",
         "tools": [
           {
             "name": "AresonMouseTest",
@@ -372,7 +387,9 @@
       {
         "name": "Storage_Tools",
         "displayName": "存储工具",
+        "displayName_en": "Storage Tools",
         "description": "硬盘检测、测试和管理工具",
+        "description_en": "Hard disk detection, testing, and management tools",
         "tools": [
           {
             "name": "ASSSDBenchmark",
@@ -499,7 +516,9 @@
       {
         "name": "Stress_Testing_Tools",
         "displayName": "压力测试工具",
+        "displayName_en": "Stress Testing Tools",
         "description": "硬件压力测试和稳定性测试工具",
+        "description_en": "Hardware stress testing and stability testing tools",
         "tools": [
           {
             "name": "FurMark_win64",
@@ -512,7 +531,9 @@
       {
         "name": "System_Diagnostic_Tools",
         "displayName": "系统诊断工具",
+        "displayName_en": "System Diagnostic Tools",
         "description": "系统硬件信息检测和诊断工具",
+        "description_en": "System hardware information detection and diagnostic tools",
         "tools": [
           {
             "name": "AIDA64",

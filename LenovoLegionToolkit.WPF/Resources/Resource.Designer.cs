@@ -1616,6 +1616,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Implementation Type:.
+        /// </summary>
+        public static string ActionDetailsWindow_ImplementationType {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_ImplementationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to COM component registration + configuration file.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Implementation_Type_Value {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Implementation_Type_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dGPU disconnected.
         /// </summary>
         public static string DGPU_Disconnected_Title {
@@ -6869,6 +6887,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show donate button.
+        /// </summary>
+        public static string SettingsPage_ShowDonateButton_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_ShowDonateButton_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the donate button in the navigation menu..
+        /// </summary>
+        public static string SettingsPage_ShowDonateButton_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_ShowDonateButton_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configure which notifications are shown..
         /// </summary>
         public static string SettingsPage_Notifications_Message {
@@ -8158,6 +8194,562 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string Yes {
             get {
                 return ResourceManager.GetString("Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended.
+        /// </summary>
+        public static string WindowsOptimization_Action_Recommended_Tag {
+            get {
+                return ResourceManager.GetString("WindowsOptimization_Action_Recommended_Tag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause all.
+        /// </summary>
+        public static string WindowsOptimizationPage_PauseAll_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_PauseAll_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action Details.
+        /// </summary>
+        public static string ActionDetailsWindow_Title {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Implementation and Effect Principles.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Implementation_Title {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Implementation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Implementation Type:.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Implementation_Type {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Implementation_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technical Details.
+        /// </summary>
+        public static string ActionDetailsWindow_TechnicalDetails {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_TechnicalDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string ActionDetailsWindow_Close_Button {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_Close_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect..
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Implementation_Principle {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Implementation_Principle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration file not found. Please make sure Nilesoft Shell is installed..
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigFileNotFound_Message {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigFileNotFound_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration File Not Found.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigFileNotFound_Title {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigFileNotFound_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings applied successfully. Changes will take effect after restarting File Explorer..
+        /// </summary>
+        public static string MenuStyleSettingsWindow_SettingsApplied_Message {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_SettingsApplied_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings Applied.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_SettingsApplied_Title {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_SettingsApplied_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to apply settings: {0}.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_FailedToApplySettings_Message {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_FailedToApplySettings_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Error_Title {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. COM Component Registration:.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_COMRegistration {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_COMRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    shell.exe -register -treat -restart.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ShellExeCommand {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ShellExeCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    Path: {0}.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Path {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2. Configuration File (shell.nss):.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ConfigFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    Configuration file path: {0}.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ConfigFilePath {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ConfigFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    Uses CSS-like syntax to define menu styles.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ConfigFileSyntax {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ConfigFileSyntax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Configuration File Format Example:.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ConfigFileExample {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ConfigFileExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    theme
+        ///    {
+        ///        background-color: #2d2d2d;
+        ///        text-color: #ffffff;
+        ///        corner-radius: 5px;
+        ///        shadow: true;
+        ///        transparency: true;
+        ///    }.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_ThemeExample {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_ThemeExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4. Working Principle:.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_WorkingPrinciple {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_WorkingPrinciple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Shell.dll is registered as a COM component in the system.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Principle1 {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Principle1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Implements IContextMenu interface to intercept right-click menu creation.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Principle2 {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Principle2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Reads shell.nss configuration file.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Principle3 {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Principle3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Applies custom styles (theme, rounded corners, shadows, etc.).
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Principle4 {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Principle4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Renders the beautified context menu.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_Principle5 {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_Principle5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5. Effect Description:.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_EffectDescription {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Auto Theme: Follows system theme (light/dark).
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_EffectAutoTheme {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectAutoTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Transparency: Enables menu background transparency effect.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_EffectTransparency {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectTransparency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Rounded Corners: Adds rounded corner borders to menu items.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_EffectRoundedCorners {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectRoundedCorners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to    - Shadows: Adds shadow effects to menus, enhancing depth perception.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Details_EffectShadows {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectShadows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading.
+        /// </summary>
+        public static string PackageControl_Downloading {
+            get {
+                return ResourceManager.GetString("PackageControl_Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing.
+        /// </summary>
+        public static string PackageControl_Installing {
+            get {
+                return ResourceManager.GetString("PackageControl_Installing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string PackageControl_Completed {
+            get {
+                return ResourceManager.GetString("PackageControl_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended.
+        /// </summary>
+        public static string PackageControl_Recommended {
+            get {
+                return ResourceManager.GetString("PackageControl_Recommended", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action definition not found.
+        /// </summary>
+        public static string ActionDetailsWindow_NotFound {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technical implementation details are not available for this action.
+        /// </summary>
+        public static string ActionDetailsWindow_NoDetailsAvailable {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_NoDetailsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load failed.
+        /// </summary>
+        public static string ActionDetailsWindow_LoadFailed {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_LoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string ActionDetailsWindow_UnknownImplementation {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_UnknownImplementation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command execution.
+        /// </summary>
+        public static string ActionDetailsWindow_CommandExecution {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_CommandExecution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registry modification.
+        /// </summary>
+        public static string ActionDetailsWindow_RegistryModification {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_RegistryModification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service management.
+        /// </summary>
+        public static string ActionDetailsWindow_ServiceManagement {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_ServiceManagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registry modification + PowerShell script.
+        /// </summary>
+        public static string ActionDetailsWindow_RegistryAndScript {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_RegistryAndScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registry cleanup.
+        /// </summary>
+        public static string ActionDetailsWindow_RegistryCleanup {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_RegistryCleanup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DISM command.
+        /// </summary>
+        public static string ActionDetailsWindow_DISMCommand {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_DISMCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Windows built-in registry cleanup functionality.
+        /// </summary>
+        public static string ActionDetailsWindow_CleanupRegistry {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_CleanupRegistry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ipconfig /flushdns (Flush DNS cache).
+        /// </summary>
+        public static string ActionDetailsWindow_NetworkFlushDNS {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_NetworkFlushDNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to netsh winsock reset (Reset Winsock protocol stack).
+        /// </summary>
+        public static string ActionDetailsWindow_NetworkResetWinsock {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_NetworkResetWinsock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to netsh int ip reset (Reset TCP/IP protocol stack).
+        /// </summary>
+        public static string ActionDetailsWindow_NetworkResetTCPIP {
+            get {
+                return ResourceManager.GetString("ActionDetailsWindow_NetworkResetTCPIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to shell.exe not found.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ShellExeNotFound {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ShellExeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration file path: Not found.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigPathNotFound {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigPathNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executing {0}%.
+        /// </summary>
+        public static string WindowsOptimizationPage_RunCleanupButtonText_Format {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_RunCleanupButtonText_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation cancelled.
+        /// </summary>
+        public static string WindowsOptimizationPage_OperationCancelled {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_OperationCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error details: {0}.
+        /// </summary>
+        public static string WindowsOptimizationPage_ErrorDetails {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ErrorDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show hidden downloads.
+        /// </summary>
+        public static string WindowsOptimizationPage_ShowHiddenDownloads {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_ShowHiddenDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show hidden downloads.
+        /// </summary>
+        public static string PackagesPage_ShowHiddenDownloads {
+            get {
+                return ResourceManager.GetString("PackagesPage_ShowHiddenDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select language.
+        /// </summary>
+        public static string LanguageSelectorWindow_SelectLanguage {
+            get {
+                return ResourceManager.GetString("LanguageSelectorWindow_SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        public static string DeviceAutomationPipelineTriggerTabItemContent_NotConnected {
+            get {
+                return ResourceManager.GetString("DeviceAutomationPipelineTriggerTabItemContent_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Synchronise zones.
+        /// </summary>
+        public static string RGBKeyboardBacklightControl_SynchroniseZones {
+            get {
+                return ResourceManager.GetString("RGBKeyboardBacklightControl_SynchroniseZones", resourceCulture);
             }
         }
     }

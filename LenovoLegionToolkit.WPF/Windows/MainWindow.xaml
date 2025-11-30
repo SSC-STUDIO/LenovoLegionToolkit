@@ -135,6 +135,7 @@
                         PageTag="settings"
                         PageType="{x:Type pages:SettingsPage}" />
                     <custom:NavigationItem
+                        x:Name="_donateNavigationItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Donate}"
                         Icon="Money24"
                         PageTag="donate"

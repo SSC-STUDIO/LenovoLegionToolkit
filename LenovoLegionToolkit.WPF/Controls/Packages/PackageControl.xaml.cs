@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -53,7 +53,6 @@ public partial class PackageControl : IProgress<float>
                 return;
             _status = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(StatusText));
             OnPropertyChanged(nameof(IsCompleted));
             UpdateStatusDisplay();
             
@@ -64,14 +63,6 @@ public partial class PackageControl : IProgress<float>
             }
         }
     }
-
-    public string StatusText => Status switch
-    {
-        PackageStatus.Downloading => "下载中",
-        PackageStatus.Installing => "安装中",
-        PackageStatus.Completed => "已完成",
-        _ => string.Empty
-    };
 
     public bool IsCompleted => Status == PackageStatus.Completed;
 
@@ -194,7 +185,7 @@ public partial class PackageControl : IProgress<float>
             // 确保推荐标签有内容
             if (string.IsNullOrEmpty(_recommendedBadge.Content?.ToString()))
             {
-                _recommendedBadge.Content = "推荐";
+                _recommendedBadge.Content = Resource.PackageControl_Recommended;
             }
             _recommendedBadge.Visibility = IsRecommended && Status != PackageStatus.Completed 
                 ? Visibility.Visible 
@@ -653,7 +644,7 @@ public partial class PackageControl : IProgress<float>
             // 未完成且是推荐项目时显示推荐标签
             if (string.IsNullOrEmpty(_recommendedBadge.Content?.ToString()))
             {
-                _recommendedBadge.Content = "推荐";
+                _recommendedBadge.Content = Resource.PackageControl_Recommended;
             }
             _recommendedBadge.Visibility = Visibility.Visible;
         }

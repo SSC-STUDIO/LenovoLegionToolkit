@@ -29,7 +29,7 @@ public class Log
     private volatile string _currentLogPath = string.Empty;
     private readonly Queue<string> _logQueue = new();
     private readonly int _maxLogSizeBytes = 50 * 1024 * 1024; // 50MB
-    private readonly int _maxQueuedEntries = 500; // Increase to reduce flush frequency
+    private readonly int _maxQueuedEntries = 1000; // Increased to reduce flush frequency
     private readonly Task _logTask;
     private readonly object _queueLock = new();
     private volatile bool _isRunning = true;
@@ -183,8 +183,8 @@ public class Log
         {
             try
             {
-                // Drain the queue every 250 ms to reduce I/O operations and improve performance
-                await Task.Delay(250).ConfigureAwait(false);
+                // Drain the queue every 500 ms to reduce I/O operations and improve performance
+                await Task.Delay(500).ConfigureAwait(false);
                 
                 List<string>? linesToWrite = null;
                 lock (_queueLock)
@@ -202,33 +202,6 @@ public class Log
                 }
             }
             catch (Exception) { /* Ignore transient failures while draining the queue */ }
-        }
-    }
-    
-    private string GetLogPathWithRotation()
-    {
-        lock (_lock)
-        {
-            if (File.Exists(_currentLogPath))
-            {
-                try
-                {
-                    var fileInfo = new FileInfo(_currentLogPath);
-                    // Only check file size every few writes to reduce disk I/O
-                    if (fileInfo.Length > _maxLogSizeBytes)
-                        _currentLogPath = CreateNewLogFile();
-                }
-                catch (Exception)
-                {
-                    _currentLogPath = CreateNewLogFile();
-                }
-            }
-            else
-            {
-                _currentLogPath = CreateNewLogFile();
-            }
-
-            return _currentLogPath;
         }
     }
 
@@ -324,13 +297,21 @@ public class Log
 
     public async Task ShutdownAsync()
     {
+        // First, wait for ProcessLogQueue to complete its current iteration
+        // This ensures any logs enqueued before shutdown are processed
+        // ProcessLogQueue checks _isRunning every 500ms, so wait for one iteration
+        const int iterationDelayMs = 500; // ProcessLogQueue iteration delay
+        await Task.Delay(iterationDelayMs + 100).ConfigureAwait(false);
+        
+        // Now set the flag to stop ProcessLogQueue from starting new iterations
+        // This prevents new logs from being processed, but any logs already in the queue
+        // will be handled by Flush() at the end
         _isRunning = false;
 
-        // Wait for ProcessLogQueue to complete its current iteration and exit the loop
-        // ProcessLogQueue checks _isRunning every 250ms, so we need to wait at least that long
+        // Wait for ProcessLogQueue to exit its loop
+        // ProcessLogQueue checks _isRunning every 500ms, so we need to wait at least that long
         // plus some buffer for thread scheduling and I/O operations
         const int maxWaitTimeMs = 2000; // Total maximum wait time: 2 seconds
-        const int iterationDelayMs = 250; // ProcessLogQueue iteration delay
         const int bufferTimeMs = 500; // Buffer for I/O and thread scheduling
         
         var startTime = DateTime.UtcNow;
