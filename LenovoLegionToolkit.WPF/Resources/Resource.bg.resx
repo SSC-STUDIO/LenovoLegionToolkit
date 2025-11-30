@@ -2069,13 +2069,13 @@
     <value>Почистете посочените файлове и директории, използвайки персонализирани правила.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} избрани действия</value>
+    <value>{0} елемента избрани</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Все още няма избрани действия.</value>
+    <value>Все още няма избрани елементи.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Избрани действия</value>
+    <value>Избрани елементи</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Почистване</value>

@@ -49,9 +49,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private enum PageMode
     {
-        Optimization,
+        Optimization,  // 系统优美化（包含优化和美化）
         Cleanup,
-        Beautification,
         DriverDownload
     }
 
@@ -74,12 +73,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private string _selectedTheme = "auto";
     private System.Windows.Threading.DispatcherTimer? _beautificationStatusTimer;
     private MenuStyleSettingsWindow? _styleSettingsWindow;
+    private ActionDetailsWindow? _actionDetailsWindow;
     private long _estimatedCleanupSize;
     private bool _isCalculatingSize;
     private CancellationTokenSource? _sizeCalculationCts;
     private bool _hasInitializedCleanupMode = false;
     private string _currentOperationText = string.Empty;
     private string _currentDeletingFile = string.Empty;
+    private string _runCleanupButtonText = string.Empty;
     private bool _isCompactView;
     private System.Windows.Threading.DispatcherTimer? _actionStateRefreshTimer;
     private bool _isUserInteracting = false;
@@ -114,6 +115,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             _isBusy = value;
             OnPropertyChanged(nameof(IsBusy));
+            
+            // 当IsBusy状态改变时，更新按钮状态（特别是驱动下载模式）
+            ApplyInteractionState();
         }
     }
 
@@ -136,7 +140,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _currentMode switch
     {
         PageMode.Cleanup => SelectedCleanupActions,
-        PageMode.Beautification => SelectedBeautificationActions,
+        // Optimization模式（系统优美化）同时显示优化和美化操作
+        PageMode.Optimization => new ObservableCollection<SelectedActionViewModel>(
+            SelectedOptimizationActions.Concat(SelectedBeautificationActions)),
         _ => SelectedOptimizationActions
     };
 
@@ -145,6 +151,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public bool HasSelectedActions => _currentMode switch
     {
         PageMode.DriverDownload => SelectedDriverPackages.Count > 0,
+        PageMode.Cleanup => CleanupCategories
+            .SelectMany(c => c.Actions)
+            .Any(a => a.IsEnabled && a.IsSelected),
         _ => VisibleSelectedActions.Count > 0
     };
 
@@ -156,6 +165,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             if (_currentMode == PageMode.DriverDownload)
             {
                 count = SelectedDriverPackages.Count;
+            }
+            else if (_currentMode == PageMode.Cleanup)
+            {
+                // 在清理模式下，直接从 CleanupCategories 计算实际选中的操作数量
+                // 注意：只检查 IsSelected，不检查 IsEnabled，因为操作可能在执行清理时被临时禁用
+                // 但用户仍然应该看到他们选中的项目数量
+                count = CleanupCategories
+                    .SelectMany(c => c.Actions)
+                    .Count(a => a.IsSelected);
             }
             else
             {
@@ -307,6 +325,21 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
+    public string RunCleanupButtonText
+    {
+        get => string.IsNullOrWhiteSpace(_runCleanupButtonText) 
+            ? GetResource("WindowsOptimizationPage_RunCleanup_Button")
+            : _runCleanupButtonText;
+        private set
+        {
+            if (_runCleanupButtonText == value)
+                return;
+
+            _runCleanupButtonText = value;
+            OnPropertyChanged(nameof(RunCleanupButtonText));
+        }
+    }
+
     public string PendingText => GetResource("WindowsOptimizationPage_EstimatedCleanupSize_Pending");
 
     public string CompactText => GetResource("Compact");
@@ -400,9 +433,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public IEnumerable<OptimizationCategoryViewModel> ActiveCategories => _currentMode switch
     {
         PageMode.Cleanup => CleanupCategories,
-        PageMode.Beautification => BeautificationCategories,
         PageMode.DriverDownload => [], // 驱动下载模式下返回空集合
-        _ => OptimizationCategories
+        _ => OptimizationCategories.Concat(BeautificationCategories) // 系统优美化模式下同时显示优化和美化分类
     };
 
     public OptimizationCategoryViewModel? SelectedCategory
@@ -419,11 +451,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 case PageMode.Cleanup:
                     _lastCleanupCategory = value;
                     break;
-                case PageMode.Beautification:
-                    _lastBeautificationCategory = value;
-                    break;
                 default:
-                    _lastOptimizationCategory = value;
+                    // Optimization模式（系统优美化）同时保存优化和美化分类的选中状态
+                    if (value != null && value.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
+                        _lastBeautificationCategory = value;
+                    else
+                        _lastOptimizationCategory = value;
                     break;
             }
             OnPropertyChanged(nameof(SelectedCategory));
@@ -431,7 +464,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     }
 
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
-    public bool IsBeautificationMode => _currentMode == PageMode.Beautification;
+    public bool IsBeautificationMode => _currentMode == PageMode.Optimization && BeautificationCategories.Count > 0; // 已合并到Optimization模式，当存在美化分类时显示美化UI
     public bool IsDriverDownloadMode => _currentMode == PageMode.DriverDownload;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -472,6 +505,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         _actionStateRefreshTimer?.Stop();
         _beautificationStatusTimer?.Stop();
         _styleSettingsWindow?.Close();
+        _actionDetailsWindow?.Close();
     }
 
     private void OpenStyleSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -496,6 +530,42 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
 
+    private void OpenActionDetailsWindow(string actionKey)
+    {
+        try
+        {
+            // Close existing window if open
+            _actionDetailsWindow?.Close();
+
+            // Get action definition
+            WindowsOptimizationActionDefinition? actionDefinition = null;
+            var categories = WindowsOptimizationService.GetCategories();
+            foreach (var category in categories)
+            {
+                var action = category.Actions.FirstOrDefault(a => 
+                    string.Equals(a.Key, actionKey, StringComparison.OrdinalIgnoreCase));
+                if (action != null)
+                {
+                    actionDefinition = action;
+                    break;
+                }
+            }
+
+            // Create and show action details window
+            _actionDetailsWindow = new ActionDetailsWindow(actionKey, actionDefinition)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            _actionDetailsWindow.Closed += (s, args) => _actionDetailsWindow = null;
+            _actionDetailsWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to open action details window.", ex);
+        }
+    }
+
     private void ActionItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         try
@@ -516,12 +586,24 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             _lastActionItemClickTime = now;
             _lastActionItemKey = actionViewModel.Key;
 
-            // 如果是双击，且是美化相关的操作（特别是右键菜单美化）
-            if (isDoubleClick && actionViewModel.Key.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+            // 如果是双击
+            if (isDoubleClick)
             {
-                // 打开样式设置窗口
-                OpenStyleSettingsButton_Click(sender, e);
-                e.Handled = true;
+                // 美化相关的操作：打开样式设置窗口
+                if (actionViewModel.Key.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+                {
+                    OpenStyleSettingsButton_Click(sender, e);
+                    e.Handled = true;
+                }
+                // 优化和清理操作：打开操作详情窗口
+                else if (actionViewModel.Key.StartsWith("explorer.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("performance.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("services.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+                {
+                    OpenActionDetailsWindow(actionViewModel.Key);
+                    e.Handled = true;
+                }
             }
         }
         catch (Exception ex)
@@ -675,18 +757,34 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        // 在执行清理前，确保 SelectedCleanupActions 是最新的
-        UpdateSelectedActions();
+        // 直接从 Categories 中获取当前选中的清理操作，确保获取的是最新状态
+        // 而不是依赖 SelectedCleanupActions 集合（可能包含过时的实例）
+        var selectedCleanupActions = new List<(string CategoryKey, string CategoryTitle, string ActionKey, string ActionTitle, string Description)>();
         
-        var selectedKeys = SelectedCleanupActions
-            .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && !string.IsNullOrWhiteSpace(a.ActionKey))
+        foreach (var category in CleanupCategories)
+        {
+            foreach (var action in category.Actions.Where(a => a.IsEnabled && a.IsSelected))
+            {
+                selectedCleanupActions.Add((category.Key, category.Title, action.Key, action.Title, action.Description));
+            }
+        }
+
+        var selectedKeys = selectedCleanupActions
             .Select(a => a.ActionKey)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        // 如果没有选择任何操作，只刷新状态，不执行任何操作
+        // 如果没有选择任何操作，提示用户并返回
         if (selectedKeys.Count == 0)
         {
+            // 记录详细信息以便调试
+            if (Log.Instance.IsTraceEnabled)
+            {
+                var totalCleanupActions = CleanupCategories.SelectMany(c => c.Actions).Count();
+                var selectedCleanupActionsCount = CleanupCategories.SelectMany(c => c.Actions).Count(a => a.IsEnabled && a.IsSelected);
+                Log.Instance.Trace($"RunCleanup: No selected actions. Total cleanup actions: {totalCleanupActions}, Selected: {selectedCleanupActionsCount}");
+            }
+            
             // 刷新操作状态
             await RefreshActionStatesAsync(skipUserInteractionCheck: true);
             return;
@@ -712,15 +810,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     }
                     
                     // Run one by one, show progress with per-step timing and freed size
-                    // 直接使用 SelectedCleanupActions 中所有有 CategoryKey 的项，确保与 selectedKeys 一致
-                    var actionsInOrder = SelectedCleanupActions
-                        .Where(a => !string.IsNullOrWhiteSpace(a.CategoryKey) && selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
+                    // 使用从 Categories 中获取的当前选中操作列表，确保使用最新状态
+                    var actionsInOrder = selectedCleanupActions
+                        .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
                         .ToList();
 
                     if (actionsInOrder.Count == 0)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"No actions found. SelectedCleanupActions count: {SelectedCleanupActions.Count}, selectedKeys count: {selectedKeys.Count}, Keys: {string.Join(", ", selectedKeys)}");
+                            Log.Instance.Trace($"No actions found. selectedKeys count: {selectedKeys.Count}, Keys: {string.Join(", ", selectedKeys)}");
                         throw new InvalidOperationException("没有找到要执行的操作。请确保已选择有效的清理操作。");
                     }
 
@@ -729,12 +827,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
                     long totalFreedBytes = 0;
                     var swOverall = System.Diagnostics.Stopwatch.StartNew();
+                    var totalActions = actionsInOrder.Count;
+                    var currentActionIndex = 0;
                     foreach (var action in actionsInOrder)
                     {
+                        currentActionIndex++;
+                        var progressPercentage = (int)Math.Round((double)currentActionIndex / totalActions * 100);
+                        
                         await Dispatcher.InvokeAsync(() =>
                         {
                             CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle);
                             CurrentDeletingFile = string.Empty;
+                            RunCleanupButtonText = $"正在执行 {progressPercentage}%";
                         });
                         
                         long sizeBefore = 0;
@@ -816,6 +920,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     {
                         CurrentOperationText = string.Empty;
                         CurrentDeletingFile = string.Empty;
+                        // 清理完成，重置按钮文本
+                        RunCleanupButtonText = string.Empty;
                     });
                 }
             },
@@ -846,7 +952,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         else
         {
             SelectRecommended(ActiveCategories);
-            UpdateSelectedActions();
         }
     }
 
@@ -867,8 +972,29 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
     {
-        foreach (var category in categories)
-            category.SelectRecommended();
+        // 标记正在刷新状态，防止触发命令执行和状态刷新覆盖
+        _isRefreshingStates = true;
+        
+        try
+        {
+            // 先清除所有推荐操作在取消列表中的记录，因为用户现在明确选择了推荐项目
+            var allActions = categories.SelectMany(c => c.Actions);
+            foreach (var action in allActions.Where(a => a.Recommended))
+            {
+                _userUncheckedActions.Remove(action.Key);
+            }
+            
+            // 然后调用每个分类的SelectRecommended方法
+            foreach (var category in categories)
+                category.SelectRecommended();
+            
+            UpdateSelectedActions();
+        }
+        finally
+        {
+            // 重置标志，允许后续的用户操作触发命令
+            _isRefreshingStates = false;
+        }
     }
 
     // 驱动下载模式的事件处理函数
@@ -1034,6 +1160,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         try
         {
+            // 如果是清理操作，初始化按钮文本
+            if (scope.HasFlag(InteractionScope.Cleanup))
+            {
+                RunCleanupButtonText = "正在执行 0%";
+            }
+            
             ShowOperationIndicator(true);
             await operation(CancellationToken.None).ConfigureAwait(false);
             await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, successMessage, SnackbarType.Success));
@@ -1055,7 +1187,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         finally
         {
             IsBusy = false;
-            Dispatcher.Invoke(() => ToggleInteraction(true, scope));
+            Dispatcher.Invoke(() => 
+            {
+                ToggleInteraction(true, scope);
+                // 如果是在清理模式下，重置按钮文本
+                if (scope.HasFlag(InteractionScope.Cleanup))
+                {
+                    RunCleanupButtonText = string.Empty;
+                }
+            });
             ShowOperationIndicator(false);
         }
     }
@@ -1103,7 +1243,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         var primaryButtonsEnabled = _currentMode switch
         {
             PageMode.Cleanup => cleanupEnabled,
-            PageMode.Beautification => beautificationEnabled,
+            // Optimization模式（系统优美化）同时启用优化和美化交互
+            PageMode.Optimization => optimizationEnabled || beautificationEnabled,
+            // 驱动下载模式：按钮应该始终启用（除非正在执行驱动下载相关的操作）
+            // 清理操作的 IsBusy 状态不应该影响驱动下载模式的按钮
+            PageMode.DriverDownload => !IsDriverDownloadBusy(),
             _ => optimizationEnabled
         };
 
@@ -1122,7 +1266,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             var listEnabled = _currentMode switch
             {
                 PageMode.Cleanup => cleanupEnabled,
-                PageMode.Beautification => beautificationEnabled,
+                // Optimization模式（系统优美化）同时启用优化和美化交互
+                PageMode.Optimization => optimizationEnabled || beautificationEnabled,
                 _ => optimizationEnabled
             };
             categoriesList.IsEnabled = listEnabled;
@@ -1131,18 +1276,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void ShowOperationIndicator(bool isVisible)
     {
-        if (!Dispatcher.CheckAccess())
-        {
-            Dispatcher.Invoke(() => ShowOperationIndicator(isVisible));
-            return;
-        }
-
-        var visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-        if (_operationProgressBar != null)
-        {
-            _operationProgressBar.IsIndeterminate = isVisible;
-            _operationProgressBar.Visibility = visibility;
-        }
+        // 进度条已被移除，此方法保留为空实现以保持接口兼容性
     }
 
     private static string GetResource(string resourceKey) =>
@@ -1155,6 +1289,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         _lastUserInteraction = DateTime.Now;
         _isUserInteracting = true;
         UpdateSelectedActions();
+        // 确保 SelectedActionsSummary 也被更新
+        OnPropertyChanged(nameof(SelectedActionsSummary));
         // 3秒后重置交互标志，给用户足够的时间完成操作
         Task.Delay(3000).ContinueWith(_ => _isUserInteracting = false);
     }
@@ -1194,7 +1330,16 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            _ = UpdateEstimatedCleanupSizeAsync();
+            // 只有当有选中的操作时才估算，如果没有选择任何操作，直接设置为0
+            if (HasSelectedActions)
+            {
+                _ = UpdateEstimatedCleanupSizeAsync();
+            }
+            else
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+            }
         }
         else
         {
@@ -1350,7 +1495,16 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            _ = UpdateEstimatedCleanupSizeAsync();
+            // 只有当有选中的操作时才估算，如果没有选择任何操作，直接设置为0
+            if (HasSelectedActions)
+            {
+                _ = UpdateEstimatedCleanupSizeAsync();
+            }
+            else
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+            }
         }
     }
 
@@ -1455,6 +1609,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async Task UpdateEstimatedCleanupSizeAsync()
     {
+        // 如果没有选中的操作，直接设置为0并返回
+        if (!HasSelectedActions)
+        {
+            EstimatedCleanupSize = 0;
+            IsCalculatingSize = false;
+            return;
+        }
+
         _sizeCalculationCts?.Cancel();
         _sizeCalculationCts?.Dispose();
         _sizeCalculationCts = new CancellationTokenSource();
@@ -1467,6 +1629,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             // Debounce rapid changes in selection to avoid spamming estimations
             await Task.Delay(300, cancellationToken).ConfigureAwait(false);
             var actionKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
+            
+            // 再次检查（延迟后可能选择已改变）
+            if (actionKeys.Count == 0)
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+                return;
+            }
+            
             var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(actionKeys, cancellationToken).ConfigureAwait(false);
 
             if (!cancellationToken.IsCancellationRequested)
@@ -1546,9 +1717,26 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 }
                 _ = UpdateEstimatedCleanupSizeAsync();
             }
-            else if (mode == PageMode.Beautification)
+            else if (mode == PageMode.DriverDownload)
             {
-                // 确保切换到美化模式时交互是启用的
+                // 初始化驱动下载模式，立即开始刷新
+                RefreshDriverExpandCollapseText();
+                // 确保切换到驱动下载模式时按钮状态正确（不依赖清理或优化模式的交互状态）
+                // ApplyInteractionState() 会在 SetMode 末尾被调用，这里提前调用以确保按钮立即启用
+                ApplyInteractionState();
+                // 确保驱动下载内容区域可见
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    var driverLoader = FindName("_driverLoader") as System.Windows.Controls.Grid;
+                    if (driverLoader != null)
+                        driverLoader.Visibility = Visibility.Visible;
+                }), System.Windows.Threading.DispatcherPriority.Loaded);
+                _ = InitializeDriverDownloadModeAsync();
+            }
+            else if (mode == PageMode.Optimization)
+            {
+                // 系统优美化模式：同时处理优化和美化
+                // 确保切换到优化模式时交互是启用的
                 _beautificationInteractionEnabled = true;
                 foreach (var category in BeautificationCategories)
                     category.SetEnabled(true);
@@ -1556,12 +1744,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 _ = RefreshBeautificationStatusAsync();
                 StartBeautificationStatusMonitoring();
                 TransparencyEnabled = GetTransparencyEnabled();
-            }
-            else if (mode == PageMode.DriverDownload)
-            {
-                // 初始化驱动下载模式，立即开始刷新
-                RefreshDriverExpandCollapseText();
-                _ = InitializeDriverDownloadModeAsync();
+                EstimatedCleanupSize = 0;
             }
             else
             {
@@ -1582,7 +1765,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             var preferredCategory = mode switch
             {
                 PageMode.Cleanup => _lastCleanupCategory,
-                PageMode.Beautification => _lastBeautificationCategory,
+                // Optimization模式（系统优美化）优先选择优化分类，如果没有则选择美化分类
+                PageMode.Optimization => _lastOptimizationCategory ?? _lastBeautificationCategory,
                 _ => _lastOptimizationCategory
             };
             if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
@@ -1737,6 +1921,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             Resource.WindowsOptimizationPage_ApplySelected_Success,
                             Resource.WindowsOptimizationPage_ApplySelected_Error,
                             interactionScope);
+                        
+                        // 安装操作完成后，清除缓存以强制下次重新检查状态
+                        NilesoftShellHelper.ClearInstallationStatusCache();
                     }
                     else
                     {
@@ -1842,6 +2029,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Resource.WindowsOptimizationPage_ApplySelected_Success,
                         Resource.WindowsOptimizationPage_ApplySelected_Error,
                         InteractionScope.Beautification);
+                    
+                    // 卸载操作完成后，清除缓存以强制下次重新检查状态
+                    NilesoftShellHelper.ClearInstallationStatusCache();
                 }
                 else
                 {
@@ -1975,7 +2165,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void CleanupNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Cleanup);
 
-    private void BeautificationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Beautification);
 
     private void DriverDownloadNavButton_Checked(object sender, RoutedEventArgs e)
     {
@@ -2180,7 +2369,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             RaiseSelectionChanged();
         }
 
-        private void RaiseSelectionChanged()
+        public void RaiseSelectionChanged()
         {
             OnPropertyChanged(nameof(HeaderCheckState));
             OnPropertyChanged(nameof(SelectionSummary));
@@ -3110,6 +3299,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             {
                 _driverLoader.Visibility = Visibility.Visible;
             }
+            
+            // 确保 InfoBar 始终可见
+            var driverInfoBar = FindName("_driverInfoBar") as Controls.Custom.InfoBar;
+            if (driverInfoBar != null)
+            {
+                driverInfoBar.IsOpen = true;
+            }
+            
             _driverPackages = null;
 
             if (_driverPackagesStackPanel != null)
@@ -3127,6 +3324,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             if (string.IsNullOrWhiteSpace(machineType) || machineType.Length != 4 ||
                 _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem(out OS os))
             {
+                // 确保 _driverLoader 可见，以便用户可以看到筛选和排序控件
+                if (_driverLoader != null)
+                {
+                    _driverLoader.Visibility = Visibility.Visible;
+                }
                 await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
                     Resource.PackagesPage_DownloadFailed_Message);
                 return;
@@ -3151,16 +3353,17 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             if (_driverOnlyShowUpdatesCheckBox != null)
             {
-                switch (packageDownloaderType)
+                // 两种来源都支持"仅显示更新"功能，始终显示复选框
+                _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Visible;
+                // 根据来源类型设置默认选中状态
+                if (packageDownloaderType == PackageDownloaderFactory.Type.Vantage)
                 {
-                    case PackageDownloaderFactory.Type.Vantage:
-                        _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Visible;
-                        _driverOnlyShowUpdatesCheckBox.IsChecked = _packageDownloaderSettings.Store.OnlyShowUpdates;
-                        break;
-                    default:
-                        _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Hidden;
-                        _driverOnlyShowUpdatesCheckBox.IsChecked = false;
-                        break;
+                    _driverOnlyShowUpdatesCheckBox.IsChecked = _packageDownloaderSettings.Store.OnlyShowUpdates;
+                }
+                else
+                {
+                    // 备用来源默认不选中"仅显示更新"
+                    _driverOnlyShowUpdatesCheckBox.IsChecked = false;
                 }
             }
 
@@ -3174,6 +3377,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             // 隐藏加载提示
             if (loadingIndicator != null)
                 loadingIndicator.Visibility = Visibility.Collapsed;
+            
+            // 加载完成后，更新按钮状态
+            ApplyInteractionState();
         }
         catch (UpdateCatalogNotFoundException ex)
         {
@@ -3217,22 +3423,20 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             {
                 if (_driverPackagesStackPanel != null)
                     _driverPackagesStackPanel.Children.Clear();
+                // 不在错误时隐藏 _driverLoader，保持可见以显示错误状态或允许用户重试
+                // 确保 _driverLoader 始终可见，以便用户可以看到错误信息或重试
                 if (_driverLoader != null)
                 {
-                    _driverLoader.Visibility = Visibility.Collapsed;
+                    _driverLoader.Visibility = Visibility.Visible;
                 }
             }
         }
     }
 
-    private void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
+    private async void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
     {
         // 如果正在初始化，不触发刷新
         if (_isInitializingDriverDownload)
-            return;
-        
-        // 如果还没有加载过驱动包，不触发刷新
-        if (_driverPackages == null || _driverPackages.Count == 0)
             return;
         
         // 检查机器类型和操作系统是否已设置
@@ -3243,7 +3447,27 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             return;
         }
         
-        // 切换来源时自动刷新驱动包列表
+        // 如果正在扫描驱动包，取消当前扫描并重新开始
+        if (_driverGetPackagesTokenSource != null && !_driverGetPackagesTokenSource.Token.IsCancellationRequested)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Cancelling current driver package scan due to source change...");
+            
+            // 取消当前扫描
+            await _driverGetPackagesTokenSource.CancelAsync();
+            
+            // 等待一小段时间确保取消操作完成
+            await Task.Delay(100);
+        }
+        
+        // 确保 InfoBar 始终可见
+        var driverInfoBar = FindName("_driverInfoBar") as Controls.Custom.InfoBar;
+        if (driverInfoBar != null)
+        {
+            driverInfoBar.IsOpen = true;
+        }
+        
+        // 切换来源时自动刷新驱动包列表（无论之前是否已经加载过）
         DriverDownloadPackagesButton_Click(this, new RoutedEventArgs());
     }
 
@@ -3369,6 +3593,27 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         return cm;
     }
 
+    /// <summary>
+    /// 检查驱动下载相关的操作是否正在进行
+    /// </summary>
+    private bool IsDriverDownloadBusy()
+    {
+        // 只检查是否有驱动包正在下载或安装
+        // 加载驱动包列表时不应该禁用按钮，因为用户仍然可以选择推荐项或暂停操作
+        if (_driverPackagesStackPanel?.Children != null)
+        {
+            var isAnyDownloadingOrInstalling = _driverPackagesStackPanel.Children
+                .OfType<Controls.Packages.PackageControl>()
+                .Any(pc => pc.Status == Controls.Packages.PackageControl.PackageStatus.Downloading ||
+                          pc.Status == Controls.Packages.PackageControl.PackageStatus.Installing ||
+                          pc.IsDownloading);
+            if (isAnyDownloadingOrInstalling)
+                return true;
+        }
+
+        return false;
+    }
+
     private async Task<bool> ShouldInterruptDriverDownloadsIfRunning()
     {
         if (_driverPackagesStackPanel?.Children is null)
@@ -3407,11 +3652,17 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     UpdateSelectedDriverPackages();
                 }
                 // 监听状态变化，如果变成已完成则隐藏控件
-                else if (e.PropertyName == nameof(PackageControl.Status))
+                else if (e.PropertyName == nameof(PackageControl.Status) || 
+                         e.PropertyName == nameof(PackageControl.IsDownloading))
                 {
                     if (control.Status == Controls.Packages.PackageControl.PackageStatus.Completed)
                     {
                         control.Visibility = Visibility.Collapsed;
+                    }
+                    // 当驱动包状态改变时，更新按钮状态（如果当前在驱动下载模式）
+                    if (_currentMode == PageMode.DriverDownload)
+                    {
+                        ApplyInteractionState();
                     }
                 }
             };

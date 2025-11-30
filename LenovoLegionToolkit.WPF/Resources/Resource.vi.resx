@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -2283,13 +2283,13 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Dọn dẹp các tệp và thư mục được chỉ định bằng cách sử dụng quy tắc tùy chỉnh.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} hành động đã chọn</value>
+    <value>{0} mục đã chọn</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Chưa có hành động nào được chọn.</value>
+    <value>Chưa có mục nào được chọn.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Các hành động đã chọn</value>
+    <value>Các mục đã chọn</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Dọn dẹp</value>

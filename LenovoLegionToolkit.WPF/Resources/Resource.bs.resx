@@ -890,13 +890,13 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Očistite navedene datoteke i direktorije koristeći prilagođena pravila.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} odabranih radnji</value>
+    <value>{0} stavki odabrane</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Još nema odabranih radnji.</value>
+    <value>Još nema odabranih stavki.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Odabrane radnje</value>
+    <value>Odabrane stavke</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Čišćenje</value>

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1728,13 +1728,13 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
     <value>Vyčistite špecifikované súbory a adresáre pomocou vlastných pravidiel.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} vybraných akcií</value>
+    <value>{0} položiek vybraných</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Zatiaľ nie sú vybrané žiadne akcie.</value>
+    <value>Zatiaľ nie sú vybrané žiadne položky.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Vybrané akcie</value>
+    <value>Vybrané položky</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Čistenie</value>

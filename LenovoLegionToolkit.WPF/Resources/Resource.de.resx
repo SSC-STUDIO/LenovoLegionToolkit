@@ -2317,13 +2317,13 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
     <value>Bereinigen Sie angegebene Dateien und Verzeichnisse mit benutzerdefinierten Regeln.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} Aktionen ausgewählt</value>
+    <value>{0} Elemente ausgewählt</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Noch keine Aktionen ausgewählt.</value>
+    <value>Noch keine Elemente ausgewählt.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Ausgewählte Aktionen</value>
+    <value>Ausgewählte Elemente</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Bereinigung</value>

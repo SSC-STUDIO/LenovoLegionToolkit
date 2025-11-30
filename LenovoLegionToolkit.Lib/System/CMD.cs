@@ -22,7 +22,7 @@ public static class CMD
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Running... [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
 
-        var cmd = new Process();
+        using var cmd = new Process();
         cmd.StartInfo.UseShellExecute = false;
         cmd.StartInfo.CreateNoWindow = createNoWindow;
         cmd.StartInfo.RedirectStandardOutput = createNoWindow;
@@ -36,10 +36,24 @@ public static class CMD
         {
             foreach (var (key, value) in environment)
             {
-                if (IsValidEnvironmentVariable(key) && (value == null || !ContainsDangerousInput(value)))
-                    cmd.StartInfo.Environment[key] = value;
-                else
+                if (!IsValidEnvironmentVariable(key))
                     throw new ArgumentException($"Invalid environment variable: {key}");
+                
+                if (value == null)
+                {
+                    // If value is null, remove the environment variable
+                    // ProcessStartInfo.Environment does not accept null values
+                    cmd.StartInfo.Environment.Remove(key);
+                }
+                else if (!ContainsDangerousInput(value))
+                {
+                    // Only set the value if it's not null and doesn't contain dangerous input
+                    cmd.StartInfo.Environment[key] = value;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid environment variable value: {key}");
+                }
             }
         }
 
@@ -69,17 +83,21 @@ public static class CMD
         if (string.IsNullOrWhiteSpace(fileName))
             return false;
 
-        // Check for dangerous characters and paths in the original input
+        // Check for dangerous characters and paths in the original input BEFORE normalization
+        // This prevents directory traversal attacks that could bypass checks after Path.GetFullPath normalization
         if (fileName.Contains("..") || fileName.Contains('|') || fileName.Contains('&') || fileName.Contains(';') || fileName.Contains('*') || fileName.Contains('?'))
             return false;
 
         try
         {
             // Check if it's a valid file path
+            // Path.GetFullPath normalizes relative paths, which could bypass ".." checks
+            // So we validate the original input first, then validate the normalized result
             var path = Path.GetFullPath(fileName);
             
-            // Validate the full path for dangerous characters
-            // Path.GetFullPath may expand relative paths, so we need to validate the result
+            // Validate the full path for dangerous characters after normalization
+            // Even though we checked the original input, we also check the normalized path
+            // to catch any edge cases where normalization might introduce dangerous patterns
             if (path.Contains("..") || path.Contains('|') || path.Contains('&') || path.Contains(';') || path.Contains('*') || path.Contains('?'))
                 return false;
             

@@ -193,6 +193,31 @@ public class WindowsOptimizationService
         "powercfg -h off"
     ];
 
+    private static readonly IReadOnlyList<RegistryValueDefinition> NetworkAccelerationTweaks =
+    [
+        // TCP/IP 优化
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpAckFrequency", 1, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TCPNoDelay", 1, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "Tcp1323Opts", 3, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "DefaultTTL", 64, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "EnablePMTUBHDetect", 0, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "EnablePMTUDiscovery", 1, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "GlobalMaxTcpWindowSize", 65535, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpMaxDupAcks", 2, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "SackOpts", 1, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpTimedWaitDelay", 30, RegistryValueKind.DWord),
+        // DNS 缓存优化
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxCacheTtl", 3600, RegistryValueKind.DWord),
+        Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxNegativeCacheTtl", 300, RegistryValueKind.DWord)
+    ];
+
+    private static readonly IReadOnlyList<string> NetworkOptimizationCommands =
+    [
+        "ipconfig /flushdns",
+        "netsh winsock reset",
+        "netsh int ip reset"
+    ];
+
     private static readonly IReadOnlyList<string> ComponentStoreCommands =
     [
         "dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase",
@@ -592,6 +617,8 @@ public class WindowsOptimizationService
 
         CreateServicesCategory(),
 
+        CreateNetworkAccelerationCategory(),
+
         CreateCleanupCacheCategory(),
 
         CreateCleanupSystemFilesCategory(),
@@ -760,6 +787,26 @@ public class WindowsOptimizationService
                         "WindowsOptimization_Action_ServicesErrorReporting_Description",
                     ErrorReportingService)
             });
+
+    private static WindowsOptimizationCategoryDefinition CreateNetworkAccelerationCategory() =>
+            new(
+                "network",
+                "WindowsOptimization_Category_NetworkAcceleration_Title",
+                "WindowsOptimization_Category_NetworkAcceleration_Description",
+                new[]
+                {
+                CreateRegistryAction(
+                        "network.acceleration",
+                        "WindowsOptimization_Action_NetworkAcceleration_Title",
+                        "WindowsOptimization_Action_NetworkAcceleration_Description",
+                    NetworkAccelerationTweaks),
+                CreateCommandAction(
+                        "network.optimization",
+                        "WindowsOptimization_Action_NetworkOptimization_Title",
+                        "WindowsOptimization_Action_NetworkOptimization_Description",
+                    NetworkOptimizationCommands,
+                    recommended: false)
+                });
 
     // Cache Cleanup Category
     private static WindowsOptimizationCategoryDefinition CreateCleanupCacheCategory() =>

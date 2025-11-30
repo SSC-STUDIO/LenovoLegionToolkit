@@ -2006,14 +2006,11 @@ PayPal で寄付するには、下の PayPal ロゴをクリックするかQR �
   <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
     <value>カスタムルールを使用して指定されたファイルとディレクトリをクリーンアップします。</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} 件のアクションを選択</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>まだアクションが選択されていません。</value>
+    <value>まだ項目が選択されていません。</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>選択したアクション</value>
+    <value>選択した項目</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>クリーンアップ</value>
@@ -2046,7 +2043,7 @@ PayPal で寄付するには、下の PayPal ロゴをクリックするかQR �
   </data>
 
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} 個の操作が選択されています</value>
+    <value>{0} 個の項目が選択されています</value>
   </data>
   <data name="ToolsPage_Title" xml:space="preserve">
     <value>ツール</value>

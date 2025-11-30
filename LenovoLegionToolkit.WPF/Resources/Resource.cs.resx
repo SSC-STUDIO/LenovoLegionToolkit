@@ -1697,13 +1697,13 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
     <value>Vyčistěte zadané soubory a adresáře pomocí vlastních pravidel.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} vybraných akcí</value>
+    <value>{0} položek vybráno</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Zatím nejsou vybrány žádné akce.</value>
+    <value>Zatím nejsou vybrány žádné položky.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Vybrané akce</value>
+    <value>Vybrané položky</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Vyčištění</value>

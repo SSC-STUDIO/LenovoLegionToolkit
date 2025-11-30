@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
@@ -12,6 +13,12 @@ namespace LenovoLegionToolkit.Lib.System;
 public static class NilesoftShellHelper
 {
     private const string NilesoftShellContextMenuClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
+    
+    // 缓存安装状态检查结果，避免频繁调用 shell.exe
+    private static bool? _cachedInstallationStatus;
+    private static DateTime _cacheTimestamp = DateTime.MinValue;
+    private static readonly TimeSpan CacheExpiration = TimeSpan.FromSeconds(5); // 缓存5秒
+    private static readonly object _cacheLock = new object();
 
     public static bool IsInstalled()
     {
@@ -29,9 +36,30 @@ public static class NilesoftShellHelper
 
     public static bool IsInstalledUsingShellExe()
     {
+        // For backward compatibility, provide synchronous wrapper that calls async version
+        // Using GetAwaiter().GetResult() is acceptable here since this is an internal helper
+        // and most callers already wrap it in Task.Run() or similar
+        return IsInstalledUsingShellExeAsync().GetAwaiter().GetResult();
+    }
+
+    public static async Task<bool> IsInstalledUsingShellExeAsync()
+    {
+        // 检查缓存
+        lock (_cacheLock)
+        {
+            if (_cachedInstallationStatus.HasValue && 
+                DateTime.UtcNow - _cacheTimestamp < CacheExpiration)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Nilesoft Shell installation status (from cache): {_cachedInstallationStatus.Value}");
+                return _cachedInstallationStatus.Value;
+            }
+        }
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Checking if Nilesoft Shell is installed using shell.exe API...");
 
+        bool result;
         try
         {
             var shellExePath = GetNilesoftShellExePath();
@@ -39,7 +67,15 @@ public static class NilesoftShellHelper
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Nilesoft Shell executable not found at path: {shellExePath ?? "null"}");
-                return false;
+                result = false;
+                
+                // 缓存结果
+                lock (_cacheLock)
+                {
+                    _cachedInstallationStatus = result;
+                    _cacheTimestamp = DateTime.UtcNow;
+                }
+                return result;
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -57,7 +93,16 @@ public static class NilesoftShellHelper
                         var isInstalledFromRegistry = intValue != 0;
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Nilesoft Shell installation status (from registry): {isInstalledFromRegistry}");
-                        return isInstalledFromRegistry;
+                        
+                        result = isInstalledFromRegistry;
+                        
+                        // 缓存结果
+                        lock (_cacheLock)
+                        {
+                            _cachedInstallationStatus = result;
+                            _cacheTimestamp = DateTime.UtcNow;
+                        }
+                        return result;
                     }
                 }
             }
@@ -90,17 +135,43 @@ public static class NilesoftShellHelper
             var outputTask = process.StandardOutput.ReadToEndAsync();
             var errorTask = process.StandardError.ReadToEndAsync();
 
-            // Wait for both read tasks to complete before calling WaitForExit
+            // Wait for both read tasks to complete asynchronously before calling WaitForExit
             // This prevents deadlock when process output exceeds buffer capacity
             // The process can write to buffers while we're reading from them
-            Task.WaitAll(outputTask, errorTask);
+            // Wrap in try-catch to ensure WaitForExitAsync is always called even if tasks throw exceptions
+            try
+            {
+                await Task.WhenAll(outputTask, errorTask).ConfigureAwait(false);
+            }
+            catch
+            {
+                // If either task throws an exception, we still need to wait for the process to exit
+                // to prevent leaving the process handle open and unreleased
+            }
 
-            // Now safe to wait for process exit since all output has been read
-            process.WaitForExit();
+            // Now safe to wait for process exit since all output has been read (or read failed)
+            // This must be called regardless of whether the read tasks succeeded or failed
+            await process.WaitForExitAsync().ConfigureAwait(false);
 
-            // Get the results (already completed)
-            var output = outputTask.Result;
-            var error = errorTask.Result;
+            // Get the results (already completed or may throw exception)
+            string output;
+            string error;
+            try
+            {
+                output = await outputTask.ConfigureAwait(false);
+            }
+            catch
+            {
+                output = string.Empty;
+            }
+            try
+            {
+                error = await errorTask.ConfigureAwait(false);
+            }
+            catch
+            {
+                error = string.Empty;
+            }
 
             // Parse output: shell.exe outputs "true" or "false"
             if (string.IsNullOrWhiteSpace(output))
@@ -123,12 +194,18 @@ public static class NilesoftShellHelper
             }
 
             var outputResult = output.Trim().ToLowerInvariant();
-            var isInstalled = outputResult == "true";
+            result = outputResult == "true";
             
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Nilesoft Shell installation status (from shell.exe stdout): {isInstalled}, output: {output.Trim()}");
+                Log.Instance.Trace($"Nilesoft Shell installation status (from shell.exe stdout): {result}, output: {output.Trim()}");
 
-            return isInstalled;
+            // 缓存结果
+            lock (_cacheLock)
+            {
+                _cachedInstallationStatus = result;
+                _cacheTimestamp = DateTime.UtcNow;
+            }
+            return result;
         }
         catch (Exception ex)
         {
@@ -137,7 +214,29 @@ public static class NilesoftShellHelper
             
             // Fallback: If we can't query shell.exe, just check if file exists
             // Note: Without shell.exe API, we can't accurately determine registration status
-            return IsInstalled();
+            result = IsInstalled();
+            
+            // 缓存结果（即使是fallback结果）
+            lock (_cacheLock)
+            {
+                _cachedInstallationStatus = result;
+                _cacheTimestamp = DateTime.UtcNow;
+            }
+            return result;
+        }
+    }
+    
+    /// <summary>
+    /// 清除安装状态缓存，强制下次调用时重新检查
+    /// </summary>
+    public static void ClearInstallationStatusCache()
+    {
+        lock (_cacheLock)
+        {
+            _cachedInstallationStatus = null;
+            _cacheTimestamp = DateTime.MinValue;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Nilesoft Shell installation status cache cleared");
         }
     }
 

@@ -37,9 +37,16 @@ public class PowerModeFeature(
             PowerModeState.Balance
         };
 
-        if (isSupportedLegionMachine && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.Performance))
-            result.Add(PowerModeState.Performance);
+        // For supported Legion machines, always include Performance mode
+        // If SupportedPowerModes is null, fall back to including Performance (behavioral compatibility)
+        // If SupportedPowerModes is not null, check if it contains Performance
+        if (isSupportedLegionMachine)
+        {
+            if (mi.SupportedPowerModes is null || mi.SupportedPowerModes.Contains(PowerModeState.Performance))
+                result.Add(PowerModeState.Performance);
+        }
 
+        // GodMode requires explicit support check
         if (isSupportedLegionMachine && mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
             result.Add(PowerModeState.GodMode);
 

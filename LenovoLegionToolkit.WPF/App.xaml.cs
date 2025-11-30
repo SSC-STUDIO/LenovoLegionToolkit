@@ -220,10 +220,10 @@ public partial class App
     {
         try
         {
-            // RenderCapability.Tier already returns a properly formatted value (0-3)
+            // RenderCapability.Tier stores the rendering tier value in the upper 16 bits
+            // We need to right shift by 16 bits to extract the tier value (0-3)
             // where 0 = no hardware acceleration, 1 = partial, 2+ = full hardware acceleration
-            // No bit shift is needed as the value is already in the correct format
-            var tier = RenderCapability.Tier;
+            var tier = RenderCapability.Tier >> 16;
             return tier >= 2 ? RenderMode.Default : RenderMode.SoftwareOnly;
         }
         catch (Exception ex)

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1538,13 +1538,13 @@ Spostare il mouse o premere il tasto sulla tastiera per risvegliarli.</value>
     <value>Pulire file e directory specificati utilizzando regole personalizzate.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} azioni selezionate</value>
+    <value>{0} elementi selezionati</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Nessuna azione selezionata.</value>
+    <value>Nessun elemento selezionato.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Azioni selezionate</value>
+    <value>Elementi selezionati</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Pulizia</value>

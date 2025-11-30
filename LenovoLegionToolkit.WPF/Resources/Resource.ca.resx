@@ -157,13 +157,13 @@
     <value>Neteja els fitxers i directoris especificats utilitzant regles personalitzades.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} accions seleccionades</value>
+    <value>{0} elements seleccionats</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Encara no s'ha seleccionat cap acció.</value>
+    <value>Encara no s'ha seleccionat cap element.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Accions seleccionades</value>
+    <value>Elements seleccionats</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Neteja</value>

@@ -693,38 +693,39 @@ public class SpectrumKeyboardBacklightController
 
     private static Task SetFeatureInternalAsync<T>(SafeHandle handle, T str) where T : notnull
     {
-        return Task.Run(() =>
+        // Execute synchronously to ensure atomicity with semaphore protection
+        // Using Task.Run() could allow interleaving of unsafe operations at the thread pool level
+        // Since we're already protected by IoSemaphore, we can execute directly
+        unsafe
         {
-            unsafe
+            var ptr = IntPtr.Zero;
+            try
             {
-                var ptr = IntPtr.Zero;
-                try
+                int size;
+                if (str is byte[] bytes)
                 {
-                    int size;
-                    if (str is byte[] bytes)
-                    {
-                        size = bytes.Length;
-                        ptr = Marshal.AllocHGlobal(size);
-                        Marshal.Copy(bytes, 0, ptr, size);
-                    }
-                    else
-                    {
-                        size = Marshal.SizeOf<T>();
-                        ptr = Marshal.AllocHGlobal(size);
-                        Marshal.StructureToPtr(str, ptr, false);
-                    }
+                    size = bytes.Length;
+                    ptr = Marshal.AllocHGlobal(size);
+                    Marshal.Copy(bytes, 0, ptr, size);
+                }
+                else
+                {
+                    size = Marshal.SizeOf<T>();
+                    ptr = Marshal.AllocHGlobal(size);
+                    Marshal.StructureToPtr(str, ptr, false);
+                }
 
-                    var result = PInvoke.HidD_SetFeature(handle, ptr.ToPointer(), (uint)size);
-                    if (!result)
-                        PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
-                }
-                finally
-                {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
-                }
+                var result = PInvoke.HidD_SetFeature(handle, ptr.ToPointer(), (uint)size);
+                if (!result)
+                    PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
             }
-        });
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ptr);
+            }
+        }
+        return Task.CompletedTask;
     }
 
     private static async Task<T> GetFeatureAsync<T>(SafeHandle handle) where T : struct
@@ -742,30 +743,30 @@ public class SpectrumKeyboardBacklightController
 
     private static Task<T> GetFeatureInternalAsync<T>(SafeHandle handle) where T : struct
     {
-        return Task.Run(() =>
+        // Execute synchronously to ensure atomicity with semaphore protection
+        // Using Task.Run() could allow interleaving of unsafe operations at the thread pool level
+        // Since we're already protected by IoSemaphore, we can execute directly
+        unsafe
         {
-            unsafe
+            var ptr = IntPtr.Zero;
+            try
             {
-                var ptr = IntPtr.Zero;
-                try
-                {
-                    var size = Marshal.SizeOf<T>();
-                    ptr = Marshal.AllocHGlobal(size);
-                    Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
+                var size = Marshal.SizeOf<T>();
+                ptr = Marshal.AllocHGlobal(size);
+                Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                    var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
-                    if (!result)
-                        PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
+                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                if (!result)
+                    PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
 
-                    return Marshal.PtrToStructure<T>(ptr);
-                }
-                finally
-                {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
-                }
+                return Task.FromResult(Marshal.PtrToStructure<T>(ptr));
             }
-        });
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ptr);
+            }
+        }
     }
 
     private static async Task<byte[]> GetFeatureAsync(SafeHandle handle, int size)
@@ -783,31 +784,31 @@ public class SpectrumKeyboardBacklightController
 
     private static Task<byte[]> GetFeatureInternalAsync(SafeHandle handle, int size)
     {
-        return Task.Run(() =>
+        // Execute synchronously to ensure atomicity with semaphore protection
+        // Using Task.Run() could allow interleaving of unsafe operations at the thread pool level
+        // Since we're already protected by IoSemaphore, we can execute directly
+        unsafe
         {
-            unsafe
+            var ptr = IntPtr.Zero;
+            try
             {
-                var ptr = IntPtr.Zero;
-                try
-                {
-                    ptr = Marshal.AllocHGlobal(size);
-                    Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
+                ptr = Marshal.AllocHGlobal(size);
+                Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                    var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
-                    if (!result)
-                        PInvokeExtensions.ThrowIfWin32Error("bytes");
+                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                if (!result)
+                    PInvokeExtensions.ThrowIfWin32Error("bytes");
 
-                    var resultBytes = new byte[size];
-                    Marshal.Copy(ptr, resultBytes, 0, size);
-                    return resultBytes;
-                }
-                finally
-                {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
-                }
+                var resultBytes = new byte[size];
+                Marshal.Copy(ptr, resultBytes, 0, size);
+                return Task.FromResult(resultBytes);
             }
-        });
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ptr);
+            }
+        }
     }
 
     // Removed SetFeature and GetFeature synchronous wrappers to prevent deadlocks.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2318,13 +2318,13 @@
     <value>Καθαρίστε καθορισμένα αρχεία και καταλόγους χρησιμοποιώντας προσαρμοσμένους κανόνες.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} actions selected</value>
+    <value>{0} στοιχεία επιλέχθηκαν</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>No actions selected yet.</value>
+    <value>Δεν έχουν επιλεγεί ακόμη στοιχεία.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Selected actions</value>
+    <value>Επιλεγμένα στοιχεία</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Cleanup</value>

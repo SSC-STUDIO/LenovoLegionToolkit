@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -2262,13 +2262,13 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
     <value>Limpiar archivos y directorios especificados usando reglas personalizadas.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} acciones seleccionadas</value>
+    <value>{0} elementos seleccionados</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Todavía no se han seleccionado acciones.</value>
+    <value>Todavía no se han seleccionado elementos.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Acciones seleccionadas</value>
+    <value>Elementos seleccionados</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Limpieza</value>
