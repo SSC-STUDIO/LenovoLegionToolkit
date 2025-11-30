@@ -98,6 +98,7 @@ public partial class MainWindow
 
         LoadDeviceInfo();
         UpdateIndicators();
+        UpdateDonateButtonVisibility();
         CheckForUpdates();
 
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
@@ -342,6 +343,13 @@ public partial class MainWindow
         SetEfficiencyMode(true);
         Hide();
         ShowInTaskbar = true;
+    }
+
+    public void UpdateDonateButtonVisibility()
+    {
+        _donateNavigationItem.Visibility = _applicationSettings.Store.ShowDonateButton
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     private static unsafe void SetEfficiencyMode(bool enabled)

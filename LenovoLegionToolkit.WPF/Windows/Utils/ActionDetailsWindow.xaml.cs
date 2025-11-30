@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using LenovoLegionToolkit.WPF.Resources;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.System;
@@ -37,7 +38,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 else
                 {
                     _titleTextBlock.Text = _actionKey;
-                    _descriptionTextBlock.Text = "未找到操作定义";
+                    _descriptionTextBlock.Text = Resource.ActionDetailsWindow_NotFound;
                 }
 
                 // 获取技术实现细节
@@ -65,7 +66,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 {
                     var noDetailsText = new TextBlock
                     {
-                        Text = "此操作的技术实现细节不可用",
+                        Text = Resource.ActionDetailsWindow_NoDetailsAvailable,
                         FontSize = 12,
                         Foreground = (System.Windows.Media.Brush)FindResource("TextFillColorSecondaryBrush"),
                         Margin = new Thickness(0, 8, 0, 0)
@@ -78,7 +79,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to load action details.", ex);
                 
-                _titleTextBlock.Text = "加载失败";
+                _titleTextBlock.Text = Resource.ActionDetailsWindow_LoadFailed;
                 _descriptionTextBlock.Text = ex.Message;
             }
         }
@@ -86,45 +87,45 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         private (string ImplementationType, List<string> Details) GetActionImplementationDetails(string actionKey)
         {
             var details = new List<string>();
-            string implementationType = "未知";
+            string implementationType = Resource.ActionDetailsWindow_UnknownImplementation;
 
             try
             {
                 // 根据操作key获取实现细节
                 if (actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 {
-                    implementationType = "命令执行";
+                    implementationType = Resource.ActionDetailsWindow_CommandExecution;
                     details.AddRange(GetCleanupCommands(actionKey));
                 }
                 else if (actionKey.StartsWith("explorer.", StringComparison.OrdinalIgnoreCase) ||
                          actionKey.StartsWith("performance.", StringComparison.OrdinalIgnoreCase))
                 {
-                    implementationType = "注册表修改";
+                    implementationType = Resource.ActionDetailsWindow_RegistryModification;
                     details.AddRange(GetRegistryTweaks(actionKey));
                 }
                 else if (actionKey.StartsWith("services.", StringComparison.OrdinalIgnoreCase))
                 {
-                    implementationType = "服务管理";
+                    implementationType = Resource.ActionDetailsWindow_ServiceManagement;
                     details.AddRange(GetServiceDetails(actionKey));
                 }
                 else if (actionKey == "performance.powerPlan")
                 {
-                    implementationType = "命令执行";
+                    implementationType = Resource.ActionDetailsWindow_CommandExecution;
                     details.AddRange(GetPowerPlanCommands());
                 }
                 else if (actionKey == "explorer.startMenu" || actionKey == "explorer.winKeySearch")
                 {
-                    implementationType = "注册表修改 + PowerShell脚本";
+                    implementationType = Resource.ActionDetailsWindow_RegistryAndScript;
                     details.AddRange(GetExplorerSpecialActions(actionKey));
                 }
                 else if (actionKey == "cleanup.registry")
-                {
-                    implementationType = "注册表清理";
-                    details.Add("使用 Windows 内置的注册表清理功能");
-                }
+            {
+                implementationType = Resource.ActionDetailsWindow_RegistryCleanup;
+                details.Add(Resource.ActionDetailsWindow_CleanupRegistry);
+            }
                 else if (actionKey == "cleanup.componentStore")
                 {
-                    implementationType = "DISM命令";
+                    implementationType = Resource.ActionDetailsWindow_DISMCommand;
                     details.AddRange(GetComponentStoreCommands());
                 }
             }
@@ -189,9 +190,9 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                     commands.Add("rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_64\" >nul 2>&1");
                     break;
                 case "network.optimization":
-                    commands.Add("ipconfig /flushdns (刷新DNS缓存)");
-                    commands.Add("netsh winsock reset (重置Winsock协议栈)");
-                    commands.Add("netsh int ip reset (重置TCP/IP协议栈)");
+                    commands.Add(Resource.ActionDetailsWindow_NetworkFlushDNS);
+                    commands.Add(Resource.ActionDetailsWindow_NetworkResetWinsock);
+                    commands.Add(Resource.ActionDetailsWindow_NetworkResetTCPIP);
                     break;
             }
 
