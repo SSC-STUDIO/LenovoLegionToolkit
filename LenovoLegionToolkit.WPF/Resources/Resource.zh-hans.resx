@@ -801,7 +801,7 @@
     <value>键盘</value>
   </data>
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>驱动下载</value>
+    <value>驱动更新</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>系统优化</value>
@@ -1042,7 +1042,7 @@
     <value>来源</value>
   </data>
   <data name="PackagesPage_Title" xml:space="preserve">
-    <value>驱动下载</value>
+    <value>驱动更新</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>粘贴</value>
@@ -1071,6 +1071,15 @@
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
     <value>Windows 电源计划</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>正在扫描可用驱动包，请稍候...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>清理信息</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>查看清理操作的进度和估算大小。</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>调节键盘背光预设</value>
@@ -2343,7 +2352,7 @@
     <value>清理失败。</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>这些操作将修改系统服务和文件，可能需要管理员权限。</value>
+    <value>这些操作将修改系统服务和文件，可能需要管理员权限。双击子项目可以打开对应的设置窗口或查看技术实现细节。</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
     <value>应用所选操作</value>
@@ -2370,13 +2379,13 @@
     <value>垃圾清理</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
-    <value>设置优化</value>
+    <value>系统优美化</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
     <value>系统美化</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
-    <value>驱动下载</value>
+    <value>驱动更新</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全选</value>
@@ -2460,10 +2469,10 @@
     <value>无法完成所选操作。</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>右键菜单美化</value>
+    <value>系统美化</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>更改右键菜单样式。</value>
+    <value>替换部分和更改系统UI样式。</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
     <value>资源管理器与界面</value>
@@ -2482,6 +2491,12 @@
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
     <value>禁用占用资源的后台服务。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>网络加速</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>优化网络设置以提升网络速度和响应性能。</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>垃圾清理</value>
@@ -2578,6 +2593,18 @@
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
     <value>禁用广告 ID、聚焦内容和自动建议。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
+    <value>TCP/IP 和 DNS 优化</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
+    <value>优化 TCP/IP 参数和 DNS 缓存设置，提升网络连接速度和响应性能。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
+    <value>重置网络配置</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
+    <value>刷新 DNS 缓存并重置 Winsock 和 TCP/IP 协议栈配置，修复网络连接问题。</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
     <value>强制使用高性能电源计划</value>

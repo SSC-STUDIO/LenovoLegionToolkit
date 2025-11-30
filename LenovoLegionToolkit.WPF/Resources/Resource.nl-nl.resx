@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -2253,13 +2253,13 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Opgegeven bestanden en mappen opschonen met aangepaste regels.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} geselecteerde acties</value>
+    <value>{0} items geselecteerd</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Nog geen acties geselecteerd.</value>
+    <value>Nog geen items geselecteerd.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Geselecteerde acties</value>
+    <value>Geselecteerde items</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Opschonen</value>

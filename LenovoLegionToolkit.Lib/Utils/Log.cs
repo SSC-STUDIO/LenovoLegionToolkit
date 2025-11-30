@@ -236,9 +236,34 @@ public class Log
     {
         try
         {
-            var logPathToUse = GetLogPathWithRotation();
+            // Capture the log path atomically with rotation check to prevent race conditions
+            // where another thread could rotate the log file between path retrieval and write
+            string logPathToUse;
+            lock (_lock)
+            {
+                // Check rotation and get path while holding the lock
+                if (File.Exists(_currentLogPath))
+                {
+                    try
+                    {
+                        var fileInfo = new FileInfo(_currentLogPath);
+                        if (fileInfo.Length > _maxLogSizeBytes)
+                            _currentLogPath = CreateNewLogFile();
+                    }
+                    catch (Exception)
+                    {
+                        _currentLogPath = CreateNewLogFile();
+                    }
+                }
+                else
+                {
+                    _currentLogPath = CreateNewLogFile();
+                }
+                logPathToUse = _currentLogPath;
+            }
 
-            // Append asynchronously to the current log file
+            // Append asynchronously to the captured log file path
+            // The path is captured while holding the lock, preventing rotation during write
             await File.AppendAllLinesAsync(logPathToUse, lines).ConfigureAwait(false);
         }
         catch (Exception) { /* Ignore transient write failures */ }
@@ -248,7 +273,34 @@ public class Log
     {
         try
         {
-            var logPathToUse = GetLogPathWithRotation();
+            // Capture the log path atomically with rotation check to prevent race conditions
+            // where another thread could rotate the log file between path retrieval and write
+            string logPathToUse;
+            lock (_lock)
+            {
+                // Check rotation and get path while holding the lock
+                if (File.Exists(_currentLogPath))
+                {
+                    try
+                    {
+                        var fileInfo = new FileInfo(_currentLogPath);
+                        if (fileInfo.Length > _maxLogSizeBytes)
+                            _currentLogPath = CreateNewLogFile();
+                    }
+                    catch (Exception)
+                    {
+                        _currentLogPath = CreateNewLogFile();
+                    }
+                }
+                else
+                {
+                    _currentLogPath = CreateNewLogFile();
+                }
+                logPathToUse = _currentLogPath;
+            }
+
+            // Append to the captured log file path
+            // The path is captured while holding the lock, preventing rotation during write
             File.AppendAllLines(logPathToUse, lines);
         }
         catch (Exception) { /* Ignore failures during the forced write */ }
@@ -324,8 +376,15 @@ public class Log
                 catch (Exception) 
                 { 
                     // If task faults or times out, log it but continue to flush
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace((FormattableString)$"Log task did not complete within timeout during shutdown. Proceeding with flush.");
+                    // Note: We must use ForceWriteToFile directly here because _isRunning is already false,
+                    // so ProcessLogQueue has exited and won't process queued messages
+                    if (IsTraceEnabled)
+                    {
+                        var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                        var threadId = Environment.CurrentManagedThreadId;
+                        var logLine = $"[{timestamp}] [{threadId}] [Log.cs#380:ShutdownAsync] [Trace] Log task did not complete within timeout during shutdown. Proceeding with flush.";
+                        ForceWriteToFile(new List<string> { logLine });
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -2243,13 +2243,13 @@ Obsługiwane formaty obrazka: {1}.</value>
     <value>Wyczyść określone pliki i katalogi za pomocą niestandardowych reguł.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} akcji wybranych</value>
+    <value>{0} elementów wybranych</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Nie wybrano jeszcze żadnych akcji.</value>
+    <value>Nie wybrano jeszcze żadnych elementów.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Wybrane akcje</value>
+    <value>Wybrane elementy</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Czyszczenie</value>

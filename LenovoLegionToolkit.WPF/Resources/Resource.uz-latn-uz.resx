@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1906,13 +1906,13 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Maxsus qoidalardan foydalanib belgilangan fayl va kataloglarni tozalang.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} amal tanlangan</value>
+    <value>{0} element tanlangan</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Hozircha hech qanday amal tanlanmagan.</value>
+    <value>Hozircha hech qanday element tanlanmagan.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Tanlangan amallar</value>
+    <value>Tanlangan elementlar</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Tozalash</value>

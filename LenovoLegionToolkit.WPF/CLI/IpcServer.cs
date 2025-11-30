@@ -365,9 +365,19 @@ public class IpcServer(
 
                     // Wait for both read tasks to complete before calling WaitForExit
                     // This prevents deadlock when process output exceeds buffer capacity
-                    System.Threading.Tasks.Task.WaitAll(outputTask, errorTask);
+                    // Wrap in try-catch to ensure WaitForExit is always called even if tasks throw exceptions
+                    try
+                    {
+                        System.Threading.Tasks.Task.WaitAll(outputTask, errorTask);
+                    }
+                    catch
+                    {
+                        // If either task throws an exception, we still need to wait for the process to exit
+                        // to prevent leaving the process handle open and unreleased
+                    }
 
-                    // Now safe to wait for process exit since all output has been read
+                    // Now safe to wait for process exit since all output has been read (or read failed)
+                    // This must be called regardless of whether the read tasks succeeded or failed
                     process.WaitForExit();
 
                     // Get the results (already completed)

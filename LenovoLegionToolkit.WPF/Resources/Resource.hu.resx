@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -2258,13 +2258,13 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Tisztítsa meg a megadott fájlokat és könyvtárakat egyéni szabályok használatával.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} actions selected</value>
+    <value>{0} elem kiválasztva</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>No actions selected yet.</value>
+    <value>Még nincsenek kiválasztott elemek.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Selected actions</value>
+    <value>Kiválasztott elemek</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Cleanup</value>

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1628,13 +1628,13 @@ Aceste setări au efect doar atunci când modul Personalizat este activat.</valu
     <value>Curățați fișierele și directoarele specificate folosind reguli personalizate.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} acțiuni selectate</value>
+    <value>{0} elemente selectate</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Nu au fost selectate încă acțiuni.</value>
+    <value>Nu au fost selectate încă elemente.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Acțiuni selectate</value>
+    <value>Elemente selectate</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Curățare</value>

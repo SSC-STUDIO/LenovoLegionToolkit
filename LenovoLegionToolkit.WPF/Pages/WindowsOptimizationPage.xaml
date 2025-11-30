@@ -177,7 +177,7 @@
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
                     <TextBlock
-                        Margin="0,4,0,0"
+                        Margin="0,2,0,0"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         Text="{Binding SelectedActionsSummary, FallbackValue=''}"
                         TextWrapping="Wrap" />
@@ -216,12 +216,6 @@
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
                             Checked="CleanupNavButton_Checked" />
                         <RadioButton
-                            x:Name="_beautificationNavButton"
-                            Style="{StaticResource NavRadioButtonStyle}"
-                            GroupName="OptimizationCleanupBeautificationNav"
-                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Beautification}"
-                            Checked="BeautificationNavButton_Checked" />
-                        <RadioButton
                             x:Name="_driverDownloadNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
@@ -230,77 +224,60 @@
                     </StackPanel>
 
                     <Grid Grid.Column="1" VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Text=""
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                FontSize="14"
-                                Visibility="Collapsed" />
-
-                            <StackPanel
-                                Grid.Column="1"
-                                HorizontalAlignment="Right">
-                                <StackPanel.Resources>
-                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                        <Setter Property="MinHeight" Value="36" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <WrapPanel ItemHeight="36" ItemWidth="Auto" Orientation="Horizontal">
-                                <wpfui:Button
-                                    x:Name="_selectRecommendedButton"
-                                    MinWidth="180"
-                                    Margin="0,0,12,0"
-                                    Appearance="Secondary"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
-                                    Click="SelectRecommendedButton_Click"
-                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}" />
-                                <wpfui:Button
-                                    x:Name="_clearButton"
-                                    MinWidth="160"
-                                    Margin="0,0,12,0"
-                                    Appearance="Secondary"
-                                    Click="ClearSelectionButton_Click">
-                                    <wpfui:Button.Style>
-                                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                            <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
-                                            <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
-                                            <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                                    <Setter Property="ToolTip" Value="全部暂停" />
-                                                    <Setter Property="AutomationProperties.Name" Value="全部暂停" />
-                                                    <Setter Property="Content" Value="全部暂停" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </wpfui:Button.Style>
-                                </wpfui:Button>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Grid>
-
-                        <ProgressBar
-                            x:Name="_operationProgressBar"
-                            Grid.Row="1"
-                            Height="4"
-                            Margin="0,12,0,0"
-                            Minimum="0"
-                            Maximum="1"
-                            IsIndeterminate="True"
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Text=""
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            FontSize="14"
                             Visibility="Collapsed" />
+
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Right">
+                            <StackPanel.Resources>
+                                <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                    <Setter Property="MinHeight" Value="36" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <WrapPanel ItemHeight="36" ItemWidth="Auto" Orientation="Horizontal">
+                            <wpfui:Button
+                                x:Name="_selectRecommendedButton"
+                                MinWidth="180"
+                                Margin="0,0,12,0"
+                                Appearance="Secondary"
+                                ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
+                                AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
+                                Click="SelectRecommendedButton_Click"
+                                Content="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}" />
+                            <wpfui:Button
+                                x:Name="_clearButton"
+                                MinWidth="160"
+                                Margin="0,0,12,0"
+                                Appearance="Secondary"
+                                Click="ClearSelectionButton_Click">
+                                <wpfui:Button.Style>
+                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                        <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
+                                        <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
+                                        <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                <Setter Property="ToolTip" Value="全部暂停" />
+                                                <Setter Property="AutomationProperties.Name" Value="全部暂停" />
+                                                <Setter Property="Content" Value="全部暂停" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </wpfui:Button.Style>
+                            </wpfui:Button>
+                            </WrapPanel>
+                        </StackPanel>
                     </Grid>
             </Grid>
 
@@ -419,17 +396,17 @@
                 </ScrollViewer>
 
                 <!-- 驱动下载模式下的内容 -->
-                <Border Grid.Column="0" Margin="0,0,16,0">
-                    <Border.Style>
-                        <Style TargetType="Border" BasedOn="{StaticResource CardContainerStyle}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                    </Border.Style>
+                <Grid Grid.Column="0" Margin="0,0,16,0">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -653,7 +630,7 @@
                                         <TextBlock
                                                     VerticalAlignment="Center"
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="正在扫描可用驱动包，请稍候..." />
+                                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_ScanningDrivers}" />
                                                 </StackPanel>
                                         </Border>
 
@@ -664,7 +641,7 @@
                                     </ScrollViewer>
                                     </Grid>
                                         </Grid>
-                </Border>
+                </Grid>
                 <ScrollViewer
                     Grid.Column="2"
                     VerticalScrollBarVisibility="Auto"
@@ -741,7 +718,7 @@
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
                                 <TextBlock
                                     Grid.Row="1"
-                                    Margin="0,4,0,12"
+                                    Margin="0,2,0,12"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding SelectedActionsSummary}" />
 
@@ -845,13 +822,13 @@
                                 <!-- Header section matching left side Expander.Header style -->
                                 <TextBlock
                                     FontWeight="Medium"
-                                    Margin="0,0,0,4"
-                                    Text="清理信息" />
+                                    Margin="0,0,0,2"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
                                 <TextBlock
                                     Margin="0,0,0,12"
                                     FontSize="12"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="查看清理操作的进度和估算大小。"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupDescription}"
                                     TextWrapping="Wrap" />
                                 
                                 <!-- Show current running step during cleanup run; otherwise show estimation -->
@@ -901,9 +878,13 @@
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Text, ElementName=_estimatedCleanupText}" Value="">
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Text, ElementName=_estimatedCleanupText}" Value="" />
+                                                        <Condition Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
                                                     <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
+                                                </MultiDataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBlock.Style>
@@ -936,10 +917,10 @@
                                     MinWidth="180"
                                     Margin="0,0,0,0"
                                     HorizontalAlignment="Stretch"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}"
+                                    ToolTip="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    AutomationProperties.Name="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
                                     Click="RunCleanupButton_Click"
-                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_RunCleanup_Button}">
+                                    Content="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}">
                                     <wpfui:Button.Style>
                                         <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -971,7 +952,7 @@
                                     <StackPanel>
                                         <TextBlock
                                             FontWeight="Medium"
-                                            Margin="0,0,0,4"
+                                            Margin="0,0,0,2"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
                                         <TextBlock
                                             Margin="0,0,0,12"

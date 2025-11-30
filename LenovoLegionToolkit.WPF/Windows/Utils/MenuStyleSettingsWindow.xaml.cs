@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using Wpf.Ui.Controls;
@@ -14,6 +15,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             InitializeComponent();
             LoadSettings();
+            LoadImplementationDetails();
         }
 
         private void LoadSettings()
@@ -197,6 +199,102 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                         $"}}\n";
 
             return config;
+        }
+
+        private void LoadImplementationDetails()
+        {
+            try
+            {
+                var details = GetContextMenuImplementationDetails();
+                
+                // 清空并填充详细信息
+                _detailsStackPanel.Children.Clear();
+                foreach (var detail in details)
+                {
+                    var textBlock = new System.Windows.Controls.TextBlock
+                    {
+                        Text = detail,
+                        FontFamily = new System.Windows.Media.FontFamily("Consolas, Courier New"),
+                        FontSize = 12,
+                        Foreground = (System.Windows.Media.Brush)FindResource("TextFillColorPrimaryBrush"),
+                        Margin = new Thickness(0, 0, 0, 8),
+                        TextWrapping = TextWrapping.Wrap
+                    };
+                    _detailsStackPanel.Children.Add(textBlock);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"Failed to load implementation details.", ex);
+            }
+        }
+
+        private List<string> GetContextMenuImplementationDetails()
+        {
+            var details = new List<string>();
+            
+            // COM注册命令
+            details.Add("1. COM组件注册:");
+            var shellExePath = Lib.System.NilesoftShellHelper.GetNilesoftShellExePath();
+            if (!string.IsNullOrWhiteSpace(shellExePath))
+            {
+                details.Add($"   shell.exe -register -treat -restart");
+                details.Add($"   路径: {shellExePath}");
+            }
+            else
+            {
+                details.Add("   shell.exe 未找到");
+            }
+            
+            details.Add("");
+            
+            // 配置文件说明
+            details.Add("2. 配置文件 (shell.nss):");
+            var configPath = GetShellConfigPath();
+            if (!string.IsNullOrWhiteSpace(configPath))
+            {
+                details.Add($"   配置文件路径: {configPath}");
+            }
+            else
+            {
+                details.Add("   配置文件路径: 未找到");
+            }
+            details.Add("   使用类似CSS的语法定义菜单样式");
+            
+            details.Add("");
+            
+            // 配置文件格式示例
+            details.Add("3. 配置文件格式示例:");
+            details.Add("   theme");
+            details.Add("   {");
+            details.Add("       background-color: #2d2d2d;");
+            details.Add("       text-color: #ffffff;");
+            details.Add("       corner-radius: 5px;");
+            details.Add("       shadow: true;");
+            details.Add("       transparency: true;");
+            details.Add("   }");
+            
+            details.Add("");
+            
+            // 工作原理
+            details.Add("4. 工作原理:");
+            details.Add("   - Shell.dll 作为 COM 组件注册到系统");
+            details.Add("   - 实现 IContextMenu 接口，拦截右键菜单创建");
+            details.Add("   - 读取 shell.nss 配置文件");
+            details.Add("   - 应用自定义样式（主题、圆角、阴影等）");
+            details.Add("   - 渲染美化后的上下文菜单");
+            
+            details.Add("");
+            
+            // 效果说明
+            details.Add("5. 效果说明:");
+            details.Add("   - 自动主题: 跟随系统主题（亮色/暗色）");
+            details.Add("   - 透明度: 启用菜单背景透明效果");
+            details.Add("   - 圆角: 为菜单项添加圆角边框");
+            details.Add("   - 阴影: 为菜单添加阴影效果，增强层次感");
+            
+            return details;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

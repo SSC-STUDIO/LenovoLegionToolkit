@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1882,13 +1882,13 @@ Nepieciešama restartēšana.</value>
     <value>Notīriet norādītos failus un mapes, izmantojot pielāgotus noteikumus.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>{0} izvēlētas darbības</value>
+    <value>{0} elementi izvēlēti</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>Pašlaik nav izvēlētu darbību.</value>
+    <value>Pašlaik nav izvēlētu elementu.</value>
   </data>
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>Izvēlētās darbības</value>
+    <value>Izvēlētie elementi</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
     <value>Tīrīšana</value>

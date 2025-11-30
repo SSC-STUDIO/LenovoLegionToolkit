@@ -1,4 +1,4 @@
-<root>
+﻿<root>
   <!-- 
     Microsoft ResX Schema 
     
@@ -2942,15 +2942,15 @@
   </data>
 
   <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
-    <value>已選取 {0} 個操作</value>
+    <value>已選取 {0} 個項目</value>
   </data>
 
   <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
-    <value>尚未選取任何操作。</value>
+    <value>尚未選取任何項目。</value>
   </data>
 
   <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
-    <value>已選取的操作</value>
+    <value>已選取的項目</value>
   </data>
 
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
