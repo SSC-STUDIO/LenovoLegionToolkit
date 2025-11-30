@@ -22,60 +22,80 @@ public static class CMD
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Running... [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
 
-        using var cmd = new Process();
-        cmd.StartInfo.UseShellExecute = false;
-        cmd.StartInfo.CreateNoWindow = createNoWindow;
-        cmd.StartInfo.RedirectStandardOutput = createNoWindow;
-        cmd.StartInfo.RedirectStandardError = createNoWindow;
-        cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
-        cmd.StartInfo.FileName = file;
-        if (!string.IsNullOrWhiteSpace(arguments))
-            cmd.StartInfo.Arguments = arguments;
-
-        if (environment is not null)
+        Process cmd = new Process();
+        try
         {
-            foreach (var (key, value) in environment)
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.StartInfo.CreateNoWindow = createNoWindow;
+            cmd.StartInfo.RedirectStandardOutput = createNoWindow;
+            cmd.StartInfo.RedirectStandardError = createNoWindow;
+            cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
+            cmd.StartInfo.FileName = file;
+            if (!string.IsNullOrWhiteSpace(arguments))
+                cmd.StartInfo.Arguments = arguments;
+
+            if (environment is not null)
             {
-                if (!IsValidEnvironmentVariable(key))
-                    throw new ArgumentException($"Invalid environment variable: {key}");
-                
-                if (value == null)
+                foreach (var (key, value) in environment)
                 {
-                    // If value is null, remove the environment variable
-                    // ProcessStartInfo.Environment does not accept null values
-                    cmd.StartInfo.Environment.Remove(key);
-                }
-                else if (!ContainsDangerousInput(value))
-                {
-                    // Only set the value if it's not null and doesn't contain dangerous input
-                    cmd.StartInfo.Environment[key] = value;
-                }
-                else
-                {
-                    throw new ArgumentException($"Invalid environment variable value: {key}");
+                    if (!IsValidEnvironmentVariable(key))
+                        throw new ArgumentException($"Invalid environment variable: {key}");
+                    
+                    if (value == null)
+                    {
+                        // If value is null, remove the environment variable
+                        // ProcessStartInfo.Environment does not accept null values
+                        cmd.StartInfo.Environment.Remove(key);
+                    }
+                    else if (!ContainsDangerousInput(value))
+                    {
+                        // Only set the value if it's not null and doesn't contain dangerous input
+                        cmd.StartInfo.Environment[key] = value;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Invalid environment variable value: {key}");
+                    }
                 }
             }
-        }
 
-        cmd.Start();
+            cmd.Start();
 
-        if (!waitForExit)
-        {
+            if (!waitForExit)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
+
+                // When waitForExit is false, the process runs asynchronously.
+                // We must not dispose the Process object while the process is still running,
+                // as disposing may close redirected streams and affect the running process.
+                // The process will continue running independently, and the Process object
+                // will be garbage collected when no longer referenced.
+                // Note: This intentionally leaks the Process object to allow the process to complete.
+                cmd = null!; // Release reference, process continues running
+                return (-1, string.Empty);
+            }
+
+            await cmd.WaitForExitAsync(token).ConfigureAwait(false);
+
+            var exitCode = cmd.ExitCode;
+            var output = createNoWindow ? await cmd.StandardOutput.ReadToEndAsync(token).ConfigureAwait(false) : string.Empty;
+
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
+                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
 
-            return (-1, string.Empty);
+            return (exitCode, output);
         }
-
-        await cmd.WaitForExitAsync(token).ConfigureAwait(false);
-
-        var exitCode = cmd.ExitCode;
-        var output = createNoWindow ? await cmd.StandardOutput.ReadToEndAsync(token).ConfigureAwait(false) : string.Empty;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
-
-        return (exitCode, output);
+        finally
+        {
+            // Only dispose if we're waiting for exit (waitForExit = true)
+            // When waitForExit is false, the process runs asynchronously and we don't dispose
+            // to avoid closing redirected streams that the process may still be using
+            if (waitForExit && cmd is not null)
+            {
+                cmd.Dispose();
+            }
+        }
     }
 
     private static bool IsValidFileName(string fileName)

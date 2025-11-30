@@ -1000,7 +1000,12 @@ public class WindowsOptimizationService
                     return Task.CompletedTask;
                 },
                 Recommended: false,
-                IsAppliedAsync: ct => Task.FromResult(NilesoftShellHelper.IsInstalledUsingShellExe())));
+                IsAppliedAsync: async ct => 
+                {
+                    // Use shell.exe's API for more accurate installation status check
+                    // Call the async version directly since we're already in an async context
+                    return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
+                }));
         }
         else if (isInstalled)
         {
@@ -1026,7 +1031,8 @@ public class WindowsOptimizationService
                 {
                     // Use shell.exe's API for more accurate installation status check
                     // This matches what shell.exe /isinstalled returns
-                    return await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+                    // Call the async version directly since we're already in an async context
+                    return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
                 }));
         }
         // If shell.exe doesn't exist, don't show any action (can't install without the file)

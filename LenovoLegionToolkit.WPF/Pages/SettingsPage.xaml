@@ -119,7 +119,7 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
-        <custom:CardControl Margin="0,0,0,24">
+        <custom:CardControl Margin="0,0,0,8">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Message}" />
             </custom:CardControl.Header>
@@ -128,6 +128,18 @@
                 Margin="0,0,0,8"
                 AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}"
                 Click="DisableCompatibilityWarningToggle_Click"
+                Visibility="Hidden" />
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_ShowDonateButton_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_ShowDonateButton_Message}" />
+            </custom:CardControl.Header>
+            <wpfui:ToggleSwitch
+                x:Name="_showDonateButtonToggle"
+                Margin="0,0,0,8"
+                AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ShowDonateButton_Title}"
+                Click="ShowDonateButtonToggle_Click"
                 Visibility="Hidden" />
         </custom:CardControl>
 

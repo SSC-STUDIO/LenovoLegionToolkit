@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="LenovoLegionToolkit.WPF.Controls.Packages.PackageControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -112,7 +112,7 @@
                         Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                         Visibility="Collapsed">
                         <wpfui:Badge.Content>
-                            <TextBlock Text="推荐" />
+                            <TextBlock Text="{x:Static resources:Resource.WindowsOptimization_Action_Recommended_Tag}" />
                         </wpfui:Badge.Content>
                     </wpfui:Badge>
                 </StackPanel>

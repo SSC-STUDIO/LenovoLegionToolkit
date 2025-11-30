@@ -352,9 +352,12 @@ public partial class ToolsPage : INotifyPropertyChanged
                     var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) || 
                                    string.IsNullOrEmpty(currentLanguage);
                     
+                    // 优先使用当前语言的翻译，如果没有则使用英文翻译作为默认值
                     var description = isEnglish && !string.IsNullOrEmpty(cachedInfo.DescriptionEn)
                         ? cachedInfo.DescriptionEn
-                        : cachedInfo.Description;
+                        : !isEnglish && !string.IsNullOrEmpty(cachedInfo.DescriptionEn)
+                            ? cachedInfo.DescriptionEn
+                            : cachedInfo.Description;
                     
                     return new ToolInfo
                     {
@@ -384,8 +387,14 @@ public partial class ToolsPage : INotifyPropertyChanged
                         var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) || 
                                        string.IsNullOrEmpty(currentLanguage);
                         
+                        // 优先使用当前语言的翻译，如果没有则使用英文翻译作为默认值
                         if (isEnglish && !string.IsNullOrEmpty(toolInfo.DescriptionEn))
                         {
+                            toolInfo.Description = toolInfo.DescriptionEn;
+                        }
+                        else if (!isEnglish && !string.IsNullOrEmpty(toolInfo.DescriptionEn))
+                        {
+                            // 非英文语言时，如果有英文翻译则使用英文翻译作为默认值
                             toolInfo.Description = toolInfo.DescriptionEn;
                         }
                         
@@ -468,7 +477,13 @@ public partial class ToolsPage : INotifyPropertyChanged
 
         if (resourceKey != null)
         {
-            var value = Resource.ResourceManager.GetString(resourceKey);
+            // 首先尝试使用当前文化查找资源
+            var value = Resource.ResourceManager.GetString(resourceKey, Resource.Culture);
+            if (!string.IsNullOrEmpty(value))
+                return value;
+            
+            // 如果当前文化找不到资源，尝试使用英文查找
+            value = Resource.ResourceManager.GetString(resourceKey, new CultureInfo("en"));
             if (!string.IsNullOrEmpty(value))
                 return value;
         }
@@ -542,8 +557,8 @@ public partial class ToolsPage : INotifyPropertyChanged
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to start tool: {tool.Name}", ex);
             
-            var title = Resource.ResourceManager.GetString("ToolsPage_Title") ?? "Tools";
-            var errorMsg = Resource.ResourceManager.GetString("ToolsPage_Error_StartTool") ?? "Failed to start tool";
+            var title = Resource.ResourceManager.GetString("ToolsPage_Title", Resource.Culture) ?? "Tools";
+            var errorMsg = Resource.ResourceManager.GetString("ToolsPage_Error_StartTool", Resource.Culture) ?? "Failed to start tool";
             SnackbarHelper.Show(title, $"{errorMsg}: {tool.Name}", SnackbarType.Error);
         }
     }
@@ -603,7 +618,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         // 更新版本
         if (!string.IsNullOrEmpty(_selectedTool.Version))
         {
-            var versionFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Version") ?? "Version: {0}";
+            var versionFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Version", Resource.Culture) ?? "Version: {0}";
             ToolDetailsVersion.Text = string.Format(versionFormat, _selectedTool.Version);
             ToolDetailsVersion.Visibility = Visibility.Visible;
         }
@@ -615,7 +630,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         // 更新作者
         if (!string.IsNullOrEmpty(_selectedTool.Author))
         {
-            var authorFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Author") ?? "Author: {0}";
+            var authorFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Author", Resource.Culture) ?? "Author: {0}";
             ToolDetailsAuthor.Text = string.Format(authorFormat, _selectedTool.Author);
             ToolDetailsAuthor.Visibility = Visibility.Visible;
         }
@@ -625,7 +640,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
 
         // 更新路径
-        var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path") ?? "Path: {0}";
+        var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path", Resource.Culture) ?? "Path: {0}";
         ToolDetailsPath.Text = string.Format(pathFormat, _selectedTool.ExecutablePath);
         ToolDetailsPath.Visibility = Visibility.Visible;
 

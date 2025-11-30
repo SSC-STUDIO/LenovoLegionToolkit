@@ -94,17 +94,17 @@
                     </StackPanel>
                 </wpfui:CardControl>
 
-                <!-- 实现方式和效果原理 -->
+                <!-- Implementation method and effect principles -->
                 <wpfui:CardControl Margin="0,0,0,16">
                     <wpfui:CardControl.Header>
                         <TextBlock
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="实现方式和效果原理" />
+                            Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Title}" />
                     </wpfui:CardControl.Header>
                     <StackPanel Margin="0,8,0,0">
-                        <!-- 实现类型 -->
+                        <!-- Implementation type -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -114,17 +114,17 @@
                                 Grid.Column="0"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="实现类型：" />
+                                Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Type}" />
                             <TextBlock
                                 x:Name="_implementationTypeTextBlock"
                                 Grid.Column="1"
                                 Margin="8,0,0,0"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 TextWrapping="Wrap"
-                                Text="COM组件注册 + 配置文件" />
+                                Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Type_Value}" />
                         </Grid>
 
-                        <!-- 工作原理说明 -->
+                        <!-- Working principle explanation -->
                         <TextBlock
                             x:Name="_principleTextBlock"
                             FontSize="13"
@@ -132,9 +132,9 @@
                             Margin="0,0,0,12"
                             TextWrapping="Wrap"
                             LineHeight="20"
-                            Text="通过注册Nilesoft Shell作为Windows上下文菜单的COM处理程序，拦截系统右键菜单的创建和显示。当用户右键点击文件或文件夹时，Shell会读取shell.nss配置文件并应用自定义的主题、透明度、圆角和阴影等样式设置，实现美化的右键菜单效果。" />
+                            Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Principle}" />
 
-                        <!-- 技术实现细节 -->
+                        <!-- Technical implementation details -->
                         <Border
                             x:Name="_detailsBorder"
                             Padding="12"

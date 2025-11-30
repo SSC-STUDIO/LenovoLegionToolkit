@@ -139,7 +139,7 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="Synchronise zones"
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
                         SymbolIcon="ArrowsBidirectional24" />
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
@@ -161,7 +161,7 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="Synchronise zones"
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
                         SymbolIcon="ArrowsBidirectional24" />
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
@@ -183,7 +183,7 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="Synchronise zones"
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
                         SymbolIcon="ArrowsBidirectional24" />
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
@@ -205,7 +205,7 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="Synchronise zones"
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
                         SymbolIcon="ArrowsBidirectional24" />
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
