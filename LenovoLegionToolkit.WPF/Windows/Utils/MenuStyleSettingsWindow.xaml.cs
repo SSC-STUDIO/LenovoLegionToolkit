@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
@@ -100,8 +101,8 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 if (string.IsNullOrEmpty(_shellConfigPath))
                 {
                     MessageBox.Show(
-                        "Configuration file not found. Please make sure Nilesoft Shell is installed.",
-                        "Configuration File Not Found",
+                        Resource.MenuStyleSettingsWindow_ConfigFileNotFound_Message,
+                        Resource.MenuStyleSettingsWindow_ConfigFileNotFound_Title,
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return;
@@ -114,16 +115,16 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 File.WriteAllText(_shellConfigPath, themeConfig);
 
                 MessageBox.Show(
-                    "Settings applied successfully. Changes will take effect after restarting File Explorer.",
-                    "Settings Applied",
+                    Resource.MenuStyleSettingsWindow_SettingsApplied_Message,
+                    Resource.MenuStyleSettingsWindow_SettingsApplied_Title,
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Failed to apply settings: {ex.Message}",
-                    "Error",
+                    string.Format(Resource.MenuStyleSettingsWindow_FailedToApplySettings_Message, ex.Message),
+                    Resource.MenuStyleSettingsWindow_Error_Title,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
@@ -235,64 +236,57 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             var details = new List<string>();
             
             // COM注册命令
-            details.Add("1. COM组件注册:");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_COMRegistration);
             var shellExePath = Lib.System.NilesoftShellHelper.GetNilesoftShellExePath();
             if (!string.IsNullOrWhiteSpace(shellExePath))
             {
-                details.Add($"   shell.exe -register -treat -restart");
-                details.Add($"   路径: {shellExePath}");
+                details.Add(Resource.MenuStyleSettingsWindow_Details_ShellExeCommand);
+                details.Add(string.Format(Resource.MenuStyleSettingsWindow_Details_Path, shellExePath));
             }
             else
             {
-                details.Add("   shell.exe 未找到");
+                details.Add($"   {Resource.MenuStyleSettingsWindow_ShellExeNotFound}");
             }
             
             details.Add("");
             
             // 配置文件说明
-            details.Add("2. 配置文件 (shell.nss):");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_ConfigFile);
             var configPath = GetShellConfigPath();
             if (!string.IsNullOrWhiteSpace(configPath))
             {
-                details.Add($"   配置文件路径: {configPath}");
+                details.Add(string.Format(Resource.MenuStyleSettingsWindow_Details_ConfigFilePath, configPath));
             }
             else
             {
-                details.Add("   配置文件路径: 未找到");
+                details.Add($"   {Resource.MenuStyleSettingsWindow_ConfigPathNotFound}");
             }
-            details.Add("   使用类似CSS的语法定义菜单样式");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_ConfigFileSyntax);
             
             details.Add("");
             
             // 配置文件格式示例
-            details.Add("3. 配置文件格式示例:");
-            details.Add("   theme");
-            details.Add("   {");
-            details.Add("       background-color: #2d2d2d;");
-            details.Add("       text-color: #ffffff;");
-            details.Add("       corner-radius: 5px;");
-            details.Add("       shadow: true;");
-            details.Add("       transparency: true;");
-            details.Add("   }");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_ConfigFileExample);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_ThemeExample);
             
             details.Add("");
             
             // 工作原理
-            details.Add("4. 工作原理:");
-            details.Add("   - Shell.dll 作为 COM 组件注册到系统");
-            details.Add("   - 实现 IContextMenu 接口，拦截右键菜单创建");
-            details.Add("   - 读取 shell.nss 配置文件");
-            details.Add("   - 应用自定义样式（主题、圆角、阴影等）");
-            details.Add("   - 渲染美化后的上下文菜单");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_WorkingPrinciple);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_Principle1);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_Principle2);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_Principle3);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_Principle4);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_Principle5);
             
             details.Add("");
             
             // 效果说明
-            details.Add("5. 效果说明:");
-            details.Add("   - 自动主题: 跟随系统主题（亮色/暗色）");
-            details.Add("   - 透明度: 启用菜单背景透明效果");
-            details.Add("   - 圆角: 为菜单项添加圆角边框");
-            details.Add("   - 阴影: 为菜单添加阴影效果，增强层次感");
+            details.Add(Resource.MenuStyleSettingsWindow_Details_EffectDescription);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_EffectAutoTheme);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_EffectTransparency);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_EffectRoundedCorners);
+            details.Add(Resource.MenuStyleSettingsWindow_Details_EffectShadows);
             
             return details;
         }

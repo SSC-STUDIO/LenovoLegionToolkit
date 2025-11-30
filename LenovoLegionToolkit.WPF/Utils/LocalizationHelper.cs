@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Humanizer;
+using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Utils;
@@ -90,6 +91,19 @@ public static class LocalizationHelper
 
         if (interactive && await GetLanguageFromFile() is null)
         {
+            // 在显示语言选择窗口之前，先应用系统主题
+            try
+            {
+                var isDarkMode = SystemTheme.IsDarkMode();
+                var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+                Wpf.Ui.Appearance.Theme.Apply(themeType, Wpf.Ui.Appearance.BackgroundType.Mica, false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to apply system theme before showing language selector window.", ex);
+            }
+
             var window = new LanguageSelectorWindow(Languages, DefaultLanguage);
             window.Show();
             cultureInfo = await window.ShouldContinue;

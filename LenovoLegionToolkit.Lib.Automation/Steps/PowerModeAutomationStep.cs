@@ -22,11 +22,13 @@ public class PowerModeAutomationStep(PowerModeState state)
             if (!Compatibility.IsSupportedLegionMachine(machineInformation))
                 return false;
 
+            // For backward compatibility, when SupportedPowerModes is null, allow Performance mode
+            // This matches the behavior in PowerModeFeature.GetAllStatesAsync()
             if (machineInformation.SupportedPowerModes is null)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SupportedPowerModes is null, PowerModeAutomationStep is not supported.");
-                return false;
+                // Only Performance mode is allowed when SupportedPowerModes is null (backward compatibility)
+                // Other modes like GodMode require explicit support check
+                return State == PowerModeState.Performance;
             }
 
             return machineInformation.SupportedPowerModes.Contains(State);

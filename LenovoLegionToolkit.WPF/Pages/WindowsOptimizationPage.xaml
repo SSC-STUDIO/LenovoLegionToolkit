@@ -268,9 +268,9 @@
                                         <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                                <Setter Property="ToolTip" Value="全部暂停" />
-                                                <Setter Property="AutomationProperties.Name" Value="全部暂停" />
-                                                <Setter Property="Content" Value="全部暂停" />
+                                                <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
+                                                <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
+                                                <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -287,7 +287,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- 优化、垃圾清理、系统美化模式下的类别列表 -->
+                <!-- Category list for optimization, cleanup, and beautification modes -->
                 <ScrollViewer
                     x:Name="_categoriesList"
                     Grid.Column="0"
@@ -395,7 +395,7 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <!-- 驱动下载模式下的内容 -->
+                <!-- Content for driver download mode -->
                 <Grid Grid.Column="0" Margin="0,0,16,0">
                     <Grid.Style>
                         <Style TargetType="Grid">
@@ -611,7 +611,7 @@
                                             </ComboBox>
                                         </Grid>
 
-                                        <!-- 加载提示 -->
+                                        <!-- Loading indicator -->
                                     <Border
                                             x:Name="_driverLoadingIndicator"
                                             Margin="0,16,0,16"

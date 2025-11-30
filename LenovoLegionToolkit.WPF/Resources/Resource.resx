@@ -558,6 +558,9 @@ Thanks in advance!</value>
   <data name="DonatePage_Title" xml:space="preserve">
     <value>Donate</value>
   </data>
+  <data name="DonatePage_CanBeHidden_Message" xml:space="preserve">
+    <value>Note: You can hide this donate button in the navigation menu by disabling "Show donate button" in Settings.</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -818,6 +821,9 @@ WARNING: This action will not run correctly if the internal display is off.</val
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>System optimization</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
+    <value>Tools</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
@@ -1389,92 +1395,12 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>Restores the default style and restarts Explorer.</value>
   </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
-    <value>Right-click menu style</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>Switch between default and classic context menu styles.</value>
-  </data>
-  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
-    <value>Enable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
-    <value>Disable classic</value>
-  </data>
-  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
-    <value>Restore default</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>Status: Classic menu installed and enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>Status: Classic menu not installed</value>
-  </data>
-  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>Status: Installed but not enabled</value>
-  </data>
-  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
+
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>Apply Modern Context Menu</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>Completely uninstall shell.exe and related files</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance including right-click menu style.</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
-    <value>Auto (Follow system theme)</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
-    <value>Enable transparency effects</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
-  </data>
-  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
     <value>Select the theme for the context menu.</value>
@@ -1506,15 +1432,6 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
     <value>Failed to apply style settings.</value>
   </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
-  </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
-  </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
     <value>System beautification</value>
   </data>
@@ -1532,6 +1449,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
     <value>Disable background services that consume resources.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>Network Acceleration</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>Optimize network settings to improve network speed and responsiveness.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>Cleanup</value>
@@ -1806,6 +1729,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
     <value>Disable incompatible device warning</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Message" xml:space="preserve">
+    <value>Show or hide the donate button in the navigation menu.</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Title" xml:space="preserve">
+    <value>Show donate button</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>Configure which notifications are shown.</value>
@@ -2157,6 +2086,54 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
   </data>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
     <value>Restart recommended</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Installing</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Action definition not found</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Technical implementation details are not available for this action</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Load failed</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Command execution</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Registry modification</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Service management</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Registry modification + PowerShell script</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Registry cleanup</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM command</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve">
+    <value>shell.exe not found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve">
+    <value>Configuration file path: Not found</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Save &amp; Close</value>
@@ -2880,6 +2857,115 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>Recommended</value>
   </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Pause all</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
+    <value>Implementation and Effect Principles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve">
+    <value>Implementation Type:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+    <value>COM Component Registration + Configuration File</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
+    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
+    <value>Configuration File Not Found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
+    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
+    <value>Settings Applied</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
+    <value>Failed to apply settings: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
+    <value>1. COM Component Registration:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
+    <value>   shell.exe -register -treat -restart</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
+    <value>   Path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
+    <value>2. Configuration File (shell.nss):</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
+    <value>   Configuration file path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
+    <value>   Uses CSS-like syntax to define menu styles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
+    <value>3. Configuration File Format Example:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
+    <value>   theme
+   {
+       background-color: #2d2d2d;
+       text-color: #ffffff;
+       corner-radius: 5px;
+       shadow: true;
+       transparency: true;
+   }</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
+    <value>4. Working Principle:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
+    <value>   - Shell.dll is registered as a COM component in the system</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
+    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
+    <value>   - Reads shell.nss configuration file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
+    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
+    <value>   - Renders the beautified context menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
+    <value>5. Effect Description:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
+    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
+    <value>   - Transparency: Enables menu background transparency effect</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
+    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
+    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Action Details</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Technical Implementation Details</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Implementation Type:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
     <value>{0} of {1} actions selected</value>
   </data>
@@ -2988,7 +3074,7 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
     <value>Transparency</value>
   </data>
-</root> name="ExpandAll" xml:space="preserve">
+  <data name="ExpandAll" xml:space="preserve">
     <value>Expand all</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
@@ -3055,6 +3141,42 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
     <value>System Diagnostic Tools</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Executing {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Operation cancelled</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Error details: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Select language</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Synchronise zones</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Using Windows built-in registry cleanup functionality</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (Flush DNS cache)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Reset Winsock protocol stack)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (Reset TCP/IP protocol stack)</value>
   </data>
 
 </root>

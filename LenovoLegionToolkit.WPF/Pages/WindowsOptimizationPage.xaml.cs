@@ -630,7 +630,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         var recommendedTagText = GetResource("WindowsOptimization_Action_Recommended_Tag");
         // 如果资源不存在，使用默认值
         if (string.IsNullOrWhiteSpace(recommendedTagText))
-            recommendedTagText = "推荐";
+            recommendedTagText = Resource.WindowsOptimization_Action_Recommended_Tag;
 
         _selectedActionsSummaryFormat = GetResource("WindowsOptimizationPage_SelectedActions_Count");
         if (string.IsNullOrWhiteSpace(_selectedActionsSummaryFormat))
@@ -838,7 +838,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         {
                             CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle);
                             CurrentDeletingFile = string.Empty;
-                            RunCleanupButtonText = $"正在执行 {progressPercentage}%";
+                            RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, progressPercentage);
                         });
                         
                         long sizeBefore = 0;
@@ -1163,7 +1163,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             // 如果是清理操作，初始化按钮文本
             if (scope.HasFlag(InteractionScope.Cleanup))
             {
-                RunCleanupButtonText = "正在执行 0%";
+                RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, 0);
             }
             
             ShowOperationIndicator(true);
@@ -1174,14 +1174,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace((FormattableString)$"Windows optimization action was cancelled.");
-            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, "操作已取消", SnackbarType.Warning));
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_OperationCancelled, SnackbarType.Warning));
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Windows optimization action failed. Exception: {ex.Message}", ex);
 
-            var detailedError = $"{errorMessage}\n错误详情: {ex.Message}";
+            var detailedError = $"{errorMessage}\n{string.Format(Resource.WindowsOptimizationPage_ErrorDetails, ex.Message)}";
             await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, detailedError, SnackbarType.Error));
         }
         finally
@@ -1282,7 +1282,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private static string GetResource(string resourceKey) =>
         string.IsNullOrWhiteSpace(resourceKey)
             ? string.Empty
-            : Resource.ResourceManager.GetString(resourceKey) ?? resourceKey;
+            : Resource.ResourceManager.GetString(resourceKey, Resource.Culture) ?? resourceKey;
 
     private void Category_SelectionChanged(object? sender, EventArgs e)
     {
@@ -3700,7 +3700,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             var clearHidden = new Hyperlink
             {
                 Icon = SymbolRegular.Eye24,
-                Content = "Show hidden downloads",
+                Content = Resource.WindowsOptimizationPage_ShowHiddenDownloads,
                 HorizontalAlignment = HorizontalAlignment.Right,
             };
             clearHidden.Click += (_, _) =>

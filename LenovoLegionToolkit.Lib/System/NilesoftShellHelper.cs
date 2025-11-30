@@ -37,9 +37,9 @@ public static class NilesoftShellHelper
     public static bool IsInstalledUsingShellExe()
     {
         // For backward compatibility, provide synchronous wrapper that calls async version
-        // Using GetAwaiter().GetResult() is acceptable here since this is an internal helper
-        // and most callers already wrap it in Task.Run() or similar
-        return IsInstalledUsingShellExeAsync().GetAwaiter().GetResult();
+        // Use Task.Run to avoid deadlocks when called from synchronization contexts
+        // This ensures the async method runs on a thread pool thread
+        return Task.Run(async () => await IsInstalledUsingShellExeAsync().ConfigureAwait(false)).GetAwaiter().GetResult();
     }
 
     public static async Task<bool> IsInstalledUsingShellExeAsync()
