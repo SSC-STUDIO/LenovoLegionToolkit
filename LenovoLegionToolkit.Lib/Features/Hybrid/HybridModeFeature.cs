@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
@@ -105,17 +105,17 @@ public class HybridModeFeature(GSyncFeature gSyncFeature, IGPUModeFeature igpuMo
         {
             try
             {
-                const int maxRetries = 5;
-                const int delay = 5 * 1000;
+                const int MAX_RETRIES = 5;
+                const int DELAY = 5 * 1000;
 
                 var retry = 1;
 
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Will make sure that dGPU is ejected. [maxRetries={maxRetries}, delay={delay}ms]");
+                    Log.Instance.Trace($"Will make sure that dGPU is ejected. [maxRetries={MAX_RETRIES}, delay={DELAY}ms]");
 
-                while (retry <= maxRetries)
+                while (retry <= MAX_RETRIES)
                 {
-                    await Task.Delay(delay).ConfigureAwait(false);
+                    await Task.Delay(DELAY).ConfigureAwait(false);
 
                     if (_ensureDGPUEjectedIfNeededCancellationTokenSource.IsCancellationRequested)
                     {
@@ -139,7 +139,7 @@ public class HybridModeFeature(GSyncFeature gSyncFeature, IGPUModeFeature igpuMo
                     }
 
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Notifying dGPU... [retry={retry}, maxRetries={maxRetries}]");
+                        Log.Instance.Trace($"Notifying dGPU... [retry={retry}, maxRetries={MAX_RETRIES}]");
 
                     await dgpuNotify.NotifyAsync(false).ConfigureAwait(false);
 

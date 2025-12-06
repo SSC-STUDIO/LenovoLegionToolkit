@@ -9,24 +9,50 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.ToolsPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Scrollable="True"
+    Scrollable="False"
     Loaded="ToolsPage_Loaded">
 
     <wpfui:UiPage.Resources>
-        <!-- Category Button Style -->
+        <!-- Category Button Style - Enhanced -->
+        <!-- Browser-style Tab Button Style -->
         <Style x:Key="CategoryButtonStyle" TargetType="wpfui:Button">
-            <Setter Property="Margin" Value="0,0,8,0" />
-            <Setter Property="Padding" Value="16,8" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Padding" Value="20,10" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="BorderThickness" Value="1,1,1,0" />
+            <Setter Property="CornerRadius" Value="8,8,0,0" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="wpfui:Button">
+                        <Border
+                            x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}">
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Content}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         
         <!-- Tool Card Button Style -->
@@ -65,14 +91,56 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <!-- Batch Tool List Item Style - Compact design for batch scripts -->
+        <Style x:Key="BatchToolListItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="4"
+                        ShadowDepth="1"
+                        Opacity="0.05"
+                        Color="Black" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect
+                                BlurRadius="6"
+                                ShadowDepth="2"
+                                Opacity="0.1"
+                                Color="Black" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </wpfui:UiPage.Resources>
 
-    <Grid Margin="0,0,16,0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="0" Margin="0,0,16,0" MouseWheel="ToolsPage_MouseWheel">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Header Section -->
@@ -94,53 +162,70 @@
                 LineHeight="20" />
         </StackPanel>
 
-        <!-- Category Navigation -->
-        <ScrollViewer
+        <!-- Category Navigation - Browser-style tabs -->
+        <Border
             Grid.Row="1"
-            VerticalScrollBarVisibility="Disabled"
-            HorizontalScrollBarVisibility="Auto"
-            Margin="0,0,0,24">
-            <ItemsControl ItemsSource="{Binding ToolCategories}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <wpfui:Button
-                            Content="{Binding CategoryName}"
-                            Click="CategoryButton_Click"
-                            Tag="{Binding}">
-                            <wpfui:Button.Style>
-                                <Style TargetType="wpfui:Button" BasedOn="{StaticResource CategoryButtonStyle}">
-                                    <Setter Property="CornerRadius" Value="6" />
-                                    <Setter Property="FontWeight" Value="Medium" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-                                            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </wpfui:Button.Style>
-                        </wpfui:Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+            Background="Transparent"
+            Margin="0,0,0,0"
+            Padding="0,0,0,0">
+            <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Disabled"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalContentAlignment="Center">
+                    <ItemsControl ItemsSource="{Binding ToolCategories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <wpfui:Button
+                                    Content="{Binding CategoryName}"
+                                    Click="CategoryButton_Click"
+                                    Tag="{Binding}"
+                                    Margin="0,0,0,0">
+                                    <wpfui:Button.Style>
+                                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource CategoryButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                    <Setter Property="BorderThickness" Value="1,1,1,0" />
+                                                    <Setter Property="Margin" Value="0,-2,0,0" />
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsSelected}" Value="True" />
+                                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:Button}, Path=IsMouseOver}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </wpfui:Button.Style>
+                                </wpfui:Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Border>
 
         <!-- Tools Content -->
         <ScrollViewer
             Grid.Row="2"
+            x:Name="ToolsScrollViewer"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled"
             Padding="0,0,0,24"
-            PreviewMouseWheel="ToolsScrollViewer_PreviewMouseWheel">
+            Margin="0,0,0,0"
+            MouseWheel="ToolsScrollViewer_MouseWheel">
             <Grid>
                 <ItemsControl
-                    ItemsSource="{Binding FilteredTools}"
+                    ItemsSource="{Binding SelectedCategory.SubCategories}"
                     BorderThickness="0"
                     Background="Transparent">
                     <ItemsControl.Style>
@@ -150,8 +235,219 @@
                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.HasTools}" Value="False">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.FilteredTools.Count}" Value="0">
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory}" Value="{x:Null}">
                                     <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.SubCategories.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,24">
+                                <!-- SubCategory Title -->
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Margin="0,0,0,12"
+                                    Text="{Binding SubCategoryName}" />
+                                <!-- Tools in this subcategory -->
+                                <ItemsControl ItemsSource="{Binding Tools}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.Style>
+                                        <Style TargetType="ItemsControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                    <Setter Property="ItemsPanel">
+                                                        <Setter.Value>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Vertical" />
+                                                            </ItemsPanelTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ItemsControl.Style>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <!-- Regular Tool Card Style -->
+                                            <Border
+                                                Tag="{Binding}"
+                                                MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                                <Border.Style>
+                                                    <Style TargetType="Border" BasedOn="{StaticResource ToolCardButtonStyle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                <Setter Property="BorderThickness" Value="1" />
+                                                                <Setter Property="CornerRadius" Value="6" />
+                                                                <Setter Property="Padding" Value="12,8" />
+                                                                <Setter Property="Margin" Value="0,0,0,6" />
+                                                                <Setter Property="Width" Value="NaN" />
+                                                                <Setter Property="MinHeight" Value="0" />
+                                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="4"
+                                                                            ShadowDepth="1"
+                                                                            Opacity="0.05"
+                                                                            Color="Black" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                    <Setter Property="Orientation" Value="Horizontal" />
+                                                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <!-- Icon Area - Hidden for batch files -->
+                                                    <Grid Width="48" Height="48" Margin="0,0,0,8" HorizontalAlignment="Center">
+                                                        <Grid.Style>
+                                                            <Style TargetType="Grid">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsBatchFile}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Grid.Style>
+                                                        <Border
+                                                            Width="48"
+                                                            Height="48"
+                                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                                            CornerRadius="6"
+                                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                            BorderThickness="1">
+                                                            <Grid>
+                                                                <Image
+                                                                    Stretch="Uniform"
+                                                                    Width="36"
+                                                                    Height="36"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                                    RenderOptions.CachingHint="Cache"
+                                                                    SnapsToDevicePixels="True"
+                                                                    UseLayoutRounding="True">
+                                                                    <Image.Source>
+                                                                        <Binding Path="IconSource">
+                                                                            <Binding.FallbackValue>
+                                                                                <x:Null />
+                                                                            </Binding.FallbackValue>
+                                                                        </Binding>
+                                                                    </Image.Source>
+                                                                    <Image.Style>
+                                                                        <Style TargetType="Image">
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                                            <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                            <Setter Property="UseLayoutRounding" Value="True" />
+                                                                            <Style.Triggers>
+                                                                                <Trigger Property="Source" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                                </Trigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Image.Style>
+                                                                </Image>
+                                                                <wpfui:SymbolIcon
+                                                                    Symbol="Desktop24"
+                                                                    FontSize="24"
+                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center">
+                                                                    <wpfui:SymbolIcon.Style>
+                                                                        <Style TargetType="wpfui:SymbolIcon">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </wpfui:SymbolIcon.Style>
+                                                                </wpfui:SymbolIcon>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        FontSize="12"
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding Name}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        TextWrapping="Wrap"
+                                                        TextAlignment="Center"
+                                                        LineHeight="16">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="MaxWidth" Value="90" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                        <Setter Property="TextAlignment" Value="Left" />
+                                                                        <Setter Property="TextTrimming" Value="None" />
+                                                                        <!-- <Setter Property="MaxWidth" Value="999999" /> -->
+                                                                        <Setter Property="FontSize" Value="13" />
+                                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                                        <Setter Property="Margin" Value="0" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <!-- Fallback: Show tools directly if no subcategories -->
+                <ItemsControl
+                    ItemsSource="{Binding FilteredTools}"
+                    BorderThickness="0"
+                    Background="Transparent">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory}" Value="{x:Null}" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.SubCategories.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -287,18 +583,28 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+        </Grid>
 
-        <!-- Tool Details Panel (Bottom) -->
+        <!-- Tool Details Panel (Bottom - Fixed, Outside Scrollable Content) -->
         <Border
-            Grid.Row="3"
+            Grid.Row="1"
             x:Name="ToolDetailsPanel"
             Background="{DynamicResource ControlFillColorDefaultBrush}"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="1,1,1,1"
-            Padding="16,16,16,16"
-            Margin="-16,0,-16,0"
+            BorderThickness="0,1,0,0"
+            Padding="0,8,12,8"
+            Margin="0,0,0,0"
+            MaxHeight="80"
             Visibility="Collapsed">
-            <Grid Margin="16,0,16,0">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="8"
+                    ShadowDepth="-2"
+                    Opacity="0.1"
+                    Color="Black"
+                    Direction="270" />
+            </Border.Effect>
+            <Grid Margin="0,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -308,9 +614,9 @@
                 <!-- Tool Icon -->
                 <Border
                     Grid.Column="0"
-                    Width="48"
-                    Height="48"
-                    Margin="0,0,16,0"
+                    Width="36"
+                    Height="36"
+                    Margin="0,0,12,0"
                     Background="{DynamicResource ControlFillColorSecondaryBrush}"
                     CornerRadius="6"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -344,34 +650,37 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock
                         x:Name="ToolDetailsName"
-                        FontSize="16"
-                        FontWeight="SemiBold"
+                        FontSize="14"
+                        FontWeight="Medium"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Margin="0,0,0,4" />
+                        Margin="0,0,0,2" />
                     <TextBlock
                         x:Name="ToolDetailsDescription"
-                        FontSize="13"
+                        FontSize="12"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         TextWrapping="Wrap"
-                        Margin="0,0,0,4" />
-                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        MaxHeight="36"
+                        TextTrimming="CharacterEllipsis"
+                        Margin="0,0,0,2" />
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                         <TextBlock
                             x:Name="ToolDetailsVersion"
-                            FontSize="12"
+                            FontSize="10"
                             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                            Margin="0,0,16,0"
+                            Margin="0,0,10,0"
                             Visibility="Collapsed" />
                         <TextBlock
                             x:Name="ToolDetailsAuthor"
-                            FontSize="12"
+                            FontSize="10"
                             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                            Margin="0,0,16,0"
+                            Margin="0,0,10,0"
                             Visibility="Collapsed" />
                         <TextBlock
                             x:Name="ToolDetailsPath"
-                            FontSize="11"
+                            FontSize="10"
                             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                             TextTrimming="CharacterEllipsis"
+                            MaxWidth="200"
                             Visibility="Collapsed" />
                     </StackPanel>
                 </StackPanel>

@@ -1,1 +1,0 @@
-start https://screen.bmcx.com/#welcome

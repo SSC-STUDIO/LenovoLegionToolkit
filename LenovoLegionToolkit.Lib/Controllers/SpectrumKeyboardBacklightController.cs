@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -581,10 +581,10 @@ public class SpectrumKeyboardBacklightController
 
                 SafeFileHandle? newDeviceHandle = null;
 
-                const int retries = 3;
-                const int delay = 50;
+                const int RETRIES = 3;
+                const int DELAY = 50;
 
-                for (var i = 0; i < retries; i++)
+                for (var i = 0; i < RETRIES; i++)
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Refreshing handle... [retry={i + 1}]");
@@ -596,7 +596,7 @@ public class SpectrumKeyboardBacklightController
                         break;
                     }
 
-                    await Task.Delay(delay).ConfigureAwait(false);
+                    await Task.Delay(DELAY).ConfigureAwait(false);
                 }
 
                 if (newDeviceHandle is null)
