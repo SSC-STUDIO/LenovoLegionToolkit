@@ -1784,6 +1784,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Note: You can hide this donate button in the navigation menu by disabling \"Show donate button\" in Settings..
+        /// </summary>
+        public static string DonatePage_CanBeHidden_Message {
+            get {
+                return ResourceManager.GetString("DonatePage_CanBeHidden_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change scaling of the built-in display.
         ///
         ///WARNING: This action will not run correctly, if internal display is off..

@@ -25,46 +25,46 @@ public static class CMD
         Process cmd = new Process();
         try
         {
-            cmd.StartInfo.UseShellExecute = false;
-            cmd.StartInfo.CreateNoWindow = createNoWindow;
-            cmd.StartInfo.RedirectStandardOutput = createNoWindow;
-            cmd.StartInfo.RedirectStandardError = createNoWindow;
-            cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
-            cmd.StartInfo.FileName = file;
-            if (!string.IsNullOrWhiteSpace(arguments))
-                cmd.StartInfo.Arguments = arguments;
+        cmd.StartInfo.UseShellExecute = false;
+        cmd.StartInfo.CreateNoWindow = createNoWindow;
+        cmd.StartInfo.RedirectStandardOutput = createNoWindow;
+        cmd.StartInfo.RedirectStandardError = createNoWindow;
+        cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
+        cmd.StartInfo.FileName = file;
+        if (!string.IsNullOrWhiteSpace(arguments))
+            cmd.StartInfo.Arguments = arguments;
 
-            if (environment is not null)
+        if (environment is not null)
+        {
+            foreach (var (key, value) in environment)
             {
-                foreach (var (key, value) in environment)
+                if (!IsValidEnvironmentVariable(key))
+                    throw new ArgumentException($"Invalid environment variable: {key}");
+                
+                if (value == null)
                 {
-                    if (!IsValidEnvironmentVariable(key))
-                        throw new ArgumentException($"Invalid environment variable: {key}");
-                    
-                    if (value == null)
-                    {
-                        // If value is null, remove the environment variable
-                        // ProcessStartInfo.Environment does not accept null values
-                        cmd.StartInfo.Environment.Remove(key);
-                    }
-                    else if (!ContainsDangerousInput(value))
-                    {
-                        // Only set the value if it's not null and doesn't contain dangerous input
-                        cmd.StartInfo.Environment[key] = value;
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Invalid environment variable value: {key}");
-                    }
+                    // If value is null, remove the environment variable
+                    // ProcessStartInfo.Environment does not accept null values
+                    cmd.StartInfo.Environment.Remove(key);
+                }
+                else if (!ContainsDangerousInput(value))
+                {
+                    // Only set the value if it's not null and doesn't contain dangerous input
+                    cmd.StartInfo.Environment[key] = value;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid environment variable value: {key}");
                 }
             }
+        }
 
-            cmd.Start();
+        cmd.Start();
 
-            if (!waitForExit)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
+        if (!waitForExit)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
 
                 // When waitForExit is false, the process runs asynchronously.
                 // We must not dispose the Process object while the process is still running,
@@ -73,18 +73,18 @@ public static class CMD
                 // will be garbage collected when no longer referenced.
                 // Note: This intentionally leaks the Process object to allow the process to complete.
                 cmd = null!; // Release reference, process continues running
-                return (-1, string.Empty);
-            }
+            return (-1, string.Empty);
+        }
 
-            await cmd.WaitForExitAsync(token).ConfigureAwait(false);
+        await cmd.WaitForExitAsync(token).ConfigureAwait(false);
 
-            var exitCode = cmd.ExitCode;
-            var output = createNoWindow ? await cmd.StandardOutput.ReadToEndAsync(token).ConfigureAwait(false) : string.Empty;
+        var exitCode = cmd.ExitCode;
+        var output = createNoWindow ? await cmd.StandardOutput.ReadToEndAsync(token).ConfigureAwait(false) : string.Empty;
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
 
-            return (exitCode, output);
+        return (exitCode, output);
         }
         finally
         {

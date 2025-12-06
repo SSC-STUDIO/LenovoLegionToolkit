@@ -69,10 +69,10 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             }
         }
 
-        const int genericMaxUtilization = 100;
-        const int genericMaxTemperature = 100;
+        const int GENERIC_MAX_UTILIZATION = 100;
+        const int GENERIC_MAX_TEMPERATURE = 100;
 
-        var cpuUtilization = GetCpuUtilization(genericMaxUtilization);
+        var cpuUtilization = GetCpuUtilization(GENERIC_MAX_UTILIZATION);
         var cpuMaxCoreClock = _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false);
         var cpuCoreClock = GetCpuCoreClock();
         var cpuCurrentTemperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
@@ -81,22 +81,22 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         var gpuInfo = await GetGPUInfoAsync().ConfigureAwait(false);
         var gpuCurrentTemperature = gpuInfo.Temperature >= 0 ? gpuInfo.Temperature : await GetGpuCurrentTemperatureAsync().ConfigureAwait(false);
-        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : genericMaxTemperature;
+        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
         var gpuCurrentFanSpeed = await GetGpuCurrentFanSpeedAsync().ConfigureAwait(false);
         var gpuMaxFanSpeed = _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false);
 
         var cpu = new SensorData(cpuUtilization,
-            genericMaxUtilization,
+            GENERIC_MAX_UTILIZATION,
             cpuCoreClock,
             cpuMaxCoreClock,
             -1,
             -1,
             cpuCurrentTemperature,
-            genericMaxTemperature,
+            GENERIC_MAX_TEMPERATURE,
             cpuCurrentFanSpeed,
             cpuMaxFanSpeed);
         var gpu = new SensorData(gpuInfo.Utilization,
-            genericMaxUtilization,
+            GENERIC_MAX_UTILIZATION,
             gpuInfo.CoreClock,
             gpuInfo.MaxCoreClock,
             gpuInfo.MemoryClock,
