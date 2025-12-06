@@ -3051,6 +3051,15 @@
   <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
     <value>系统诊断工具</value>
   </data>
+  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
+    <value>硬件工具</value>
+  </data>
+  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
+    <value>系统工具</value>
+  </data>
+  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
+    <value>批处理脚本</value>
+  </data>
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>启动工具失败</value>
   </data>

@@ -22,14 +22,16 @@
 
     <wpfui:UiPage.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <!-- Browser-style Tab RadioButton Style -->
         <Style TargetType="RadioButton" x:Key="NavRadioButtonStyle">
-            <Setter Property="Margin" Value="0,0,12,0" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Padding" Value="20,10" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="1,1,1,0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -39,29 +41,44 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="16">
+                            CornerRadius="8,8,0,0"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}">
                             <ContentPresenter
                                 x:Name="ContentPresenter"
-                                Margin="8,2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 RecognizesAccessKey="True"
                                 Content="{TemplateBinding Content}"
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
                                 TextElement.FontWeight="{TemplateBinding FontWeight}"
-                                TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                TextElement.FontSize="{TemplateBinding FontSize}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
                                 <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
                                 <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderThickness" Value="1,1,1,0" />
+                                <Setter TargetName="RootBorder" Property="Margin" Value="0,-2,0,0" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </MultiTrigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
                                 <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
@@ -197,11 +214,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                <StackPanel
+                <Border
                     Grid.Column="0"
-                    Orientation="Horizontal"
-                    VerticalAlignment="Center"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="0,0,0,1"
                     Margin="0,0,24,0">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <RadioButton
                             x:Name="_optimizationNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
@@ -222,6 +242,7 @@
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
                             Checked="DriverDownloadNavButton_Checked" />
                     </StackPanel>
+                </Border>
 
                     <Grid Grid.Column="1" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
