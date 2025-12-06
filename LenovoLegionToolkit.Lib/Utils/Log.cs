@@ -300,8 +300,8 @@ public class Log
         // First, wait for ProcessLogQueue to complete its current iteration
         // This ensures any logs enqueued before shutdown are processed
         // ProcessLogQueue checks _isRunning every 500ms, so wait for one iteration
-        const int iterationDelayMs = 500; // ProcessLogQueue iteration delay
-        await Task.Delay(iterationDelayMs + 100).ConfigureAwait(false);
+        const int ITERATION_DELAY_MS = 500; // ProcessLogQueue iteration delay
+        await Task.Delay(ITERATION_DELAY_MS + 100).ConfigureAwait(false);
         
         // Now set the flag to stop ProcessLogQueue from starting new iterations
         // This prevents new logs from being processed, but any logs already in the queue
@@ -311,28 +311,28 @@ public class Log
         // Wait for ProcessLogQueue to exit its loop
         // ProcessLogQueue checks _isRunning every 500ms, so we need to wait at least that long
         // plus some buffer for thread scheduling and I/O operations
-        const int maxWaitTimeMs = 2000; // Total maximum wait time: 2 seconds
-        const int bufferTimeMs = 500; // Buffer for I/O and thread scheduling
+        const int MAX_WAIT_TIME_MS = 2000; // Total maximum wait time: 2 seconds
+        const int BUFFER_TIME_MS = 500; // Buffer for I/O and thread scheduling
         
         var startTime = DateTime.UtcNow;
         
         try
         {
-            // First, wait for the task to complete naturally, but limit to maxWaitTimeMs
-            var firstWaitMs = maxWaitTimeMs;
+            // First, wait for the task to complete naturally, but limit to MAX_WAIT_TIME_MS
+            var firstWaitMs = MAX_WAIT_TIME_MS;
             var completedTask = await Task.WhenAny(_logTask, Task.Delay(firstWaitMs)).ConfigureAwait(false);
             
             // If the task hasn't completed, calculate remaining time and wait for one more iteration
             if (completedTask != _logTask)
             {
                 var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                var remainingTimeMs = maxWaitTimeMs - elapsedMs;
+                var remainingTimeMs = MAX_WAIT_TIME_MS - elapsedMs;
                 
-                // Only wait additional time if we haven't exceeded maxWaitTimeMs
+                // Only wait additional time if we haven't exceeded MAX_WAIT_TIME_MS
                 if (remainingTimeMs > 0)
                 {
                     // Wait for at least one more iteration cycle plus buffer, but don't exceed remaining time
-                    var additionalWaitMs = Math.Min(iterationDelayMs + bufferTimeMs, remainingTimeMs);
+                    var additionalWaitMs = Math.Min(ITERATION_DELAY_MS + BUFFER_TIME_MS, remainingTimeMs);
                     if (additionalWaitMs > 0)
                     {
                         var additionalWait = Task.Delay(additionalWaitMs);
@@ -346,9 +346,9 @@ public class Log
             {
                 try
                 {
-                    // Calculate remaining timeout based on elapsed time, ensuring we don't exceed maxWaitTimeMs
+                    // Calculate remaining timeout based on elapsed time, ensuring we don't exceed MAX_WAIT_TIME_MS
                     var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                    var remainingTimeout = Math.Max(0, Math.Min(500, maxWaitTimeMs - elapsedMs));
+                    var remainingTimeout = Math.Max(0, Math.Min(500, MAX_WAIT_TIME_MS - elapsedMs));
                     if (remainingTimeout > 0)
                     {
                         _logTask.Wait(remainingTimeout);
@@ -386,8 +386,8 @@ public class Log
             try
             {
                 // Give a final short wait for any ongoing I/O operations
-                const int finalWaitMs = 300; // Final wait for I/O operations to complete
-                await Task.WhenAny(_logTask, Task.Delay(finalWaitMs)).ConfigureAwait(false);
+                const int FINAL_WAIT_MS = 300; // Final wait for I/O operations to complete
+                await Task.WhenAny(_logTask, Task.Delay(FINAL_WAIT_MS)).ConfigureAwait(false);
             }
             catch (Exception) { /* Ignore */ }
         }

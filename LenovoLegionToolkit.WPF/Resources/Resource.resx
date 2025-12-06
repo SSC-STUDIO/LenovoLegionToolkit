@@ -3142,6 +3142,15 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
     <value>System Diagnostic Tools</value>
   </data>
+  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
+    <value>Hardware Tools</value>
+  </data>
+  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
+    <value>System Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
+    <value>Batch Scripts</value>
+  </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Executing {0}%</value>
   </data>

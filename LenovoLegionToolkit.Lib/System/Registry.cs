@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -210,13 +210,13 @@ public static class Registry
 
             var accessControl = key.GetAccessControl();
 
-            const RegistryRights rights = RegistryRights.FullControl;
-            const AccessControlType type = AccessControlType.Allow;
-            accessControl.AddAccessRule(new(user, rights, type));
+            const RegistryRights RIGHTS = RegistryRights.FullControl;
+            const AccessControlType TYPE = AccessControlType.Allow;
+            accessControl.AddAccessRule(new(user, RIGHTS, TYPE));
             key.SetAccessControl(accessControl);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Permissions added on {hive}\\{subKey} for {current.Name}. [rights={rights}, type={type}]");
+                Log.Instance.Trace($"Permissions added on {hive}\\{subKey} for {current.Name}. [rights={RIGHTS}, type={TYPE}]");
 
             return true;
         }

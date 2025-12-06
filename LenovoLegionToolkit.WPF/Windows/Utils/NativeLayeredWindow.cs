@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -125,8 +125,8 @@ public class NativeLayeredWindow : NativeWindow, IDisposable
 
     private void CreateLayeredWindow()
     {
-        const WINDOW_STYLE style = WINDOW_STYLE.WS_POPUP;
-        const WINDOW_EX_STYLE exStyle = WINDOW_EX_STYLE.WS_EX_TOPMOST |
+        const WINDOW_STYLE STYLE = WINDOW_STYLE.WS_POPUP;
+        const WINDOW_EX_STYLE EX_STYLE = WINDOW_EX_STYLE.WS_EX_TOPMOST |
                                         WINDOW_EX_STYLE.WS_EX_TOOLWINDOW |
                                         WINDOW_EX_STYLE.WS_EX_LAYERED |
                                         WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
@@ -139,8 +139,8 @@ public class NativeLayeredWindow : NativeWindow, IDisposable
             Height = Size.Height,
             Width = Size.Width,
             Parent = nint.Zero,
-            Style = unchecked((int)style),
-            ExStyle = (int)exStyle
+            Style = unchecked((int)STYLE),
+            ExStyle = (int)EX_STYLE
         };
         CreateHandle(cp);
         UpdateLayeredWindow();
