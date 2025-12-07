@@ -85,9 +85,19 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         const string suffix = "}";
 
         var prefixIndex = value.IndexOf(prefix, StringComparison.InvariantCulture);
-        var suffixIndex = prefixIndex >= 0
-            ? value.IndexOf(suffix, prefixIndex + prefix.Length, StringComparison.InvariantCulture)
-            : -1;
+        
+        // Validate prefixIndex and calculate safe start position before calling IndexOf for suffix
+        // This prevents integer overflow and bounds issues when calculating prefixIndex + prefix.Length
+        int suffixIndex = -1;
+        if (prefixIndex >= 0)
+        {
+            // Calculate the start position for suffix search, checking for overflow and bounds
+            var suffixStartPos = prefixIndex + prefix.Length;
+            if (suffixStartPos >= 0 && suffixStartPos <= value.Length && suffixStartPos >= prefixIndex)
+            {
+                suffixIndex = value.IndexOf(suffix, suffixStartPos, StringComparison.InvariantCulture);
+            }
+        }
 
         // Ensure suffix is found after prefix (GUID can immediately follow prefix)
         // Must check suffixIndex >= 0 first to ensure suffix was actually found before using it in calculations
@@ -97,6 +107,8 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
             var length = suffixIndex - start;
             
             // Validate bounds: start must be within string, and start + length must not exceed string length
+            // Additional validation is redundant here since we already validated suffixStartPos above,
+            // but kept for defensive programming and clarity
             if (start >= 0 && start < value.Length && length >= 0 && start + length <= value.Length)
             {
                 if (length > 0)

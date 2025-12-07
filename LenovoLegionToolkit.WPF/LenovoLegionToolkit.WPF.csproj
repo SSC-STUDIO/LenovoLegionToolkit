@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -7,8 +7,8 @@
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
 		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
 		<Copyright>© 2024 Bartosz Cichecki</Copyright>
-		<FileVersion>0.0.1</FileVersion>
-		<Version>0.0.1</Version>
+		<FileVersion>1.0</FileVersion>
+		<Version>1.0</Version>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>

@@ -3058,7 +3058,7 @@
     <value>系统工具</value>
   </data>
   <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
-    <value>批处理脚本</value>
+    <value>快捷工具</value>
   </data>
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>启动工具失败</value>
