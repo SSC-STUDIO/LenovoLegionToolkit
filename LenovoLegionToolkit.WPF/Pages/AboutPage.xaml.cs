@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -15,12 +15,13 @@ public partial class AboutPage
     {
         get
         {
-            var version = Assembly.GetEntryAssembly()?.GetName().Version;
+            // 使用当前程序集获取版本号，而不是Assembly.GetEntryAssembly()
+            var version = typeof(AboutPage).Assembly.GetName().Version;
             if (version is null)
                 return string.Empty;
             if (version.IsBeta())
-                return "BETA";
-            return version.ToString(3);
+                return $"{version.ToString(3)} BETA";
+            return $"{version.ToString(3)} 正式版";
         }
     }
 

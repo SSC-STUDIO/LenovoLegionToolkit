@@ -435,35 +435,35 @@
         ]
       },
       {
-        "name": "Storage_Tools",
-        "displayName": "存储工具",
-        "displayName_en": "Storage Tools",
-        "description": "硬盘检测、测试和管理工具",
-        "description_en": "Hard disk detection, testing, and management tools",
-        "tools": [
-          {
-            "name": "ASSSDBenchmark",
+      "name": "Storage_Tools",
+      "displayName": "存储工具",
+      "displayName_en": "Storage Tools",
+      "description": "硬盘检测、测试和管理工具",
+      "description_en": "Hard disk detection, testing, and management tools",
+      "tools": [
+        {
+          "name": "ASSSDBenchmark",
             "displayName": "AS SSD Benchmark",
-            "description": "AS SSD Benchmark - SSD 性能测试工具。",
+          "description": "AS SSD Benchmark - SSD 性能测试工具。",
             "description_en": "AS SSD Benchmark - SSD performance testing tool.",
-            "version": "2.0.7316",
-            "author": "Alex Intelligent Software"
-          },
-          {
-            "name": "ATTODISKBENCHMARK",
+          "version": "2.0.7316",
+          "author": "Alex Intelligent Software"
+        },
+        {
+          "name": "ATTODISKBENCHMARK",
             "displayName": "ATTO Disk Benchmark",
-            "description": "ATTO Disk Benchmark - 磁盘性能测试工具。",
+          "description": "ATTO Disk Benchmark - 磁盘性能测试工具。",
             "description_en": "ATTO Disk Benchmark - Disk performance testing tool.",
-            "version": "4.1",
-            "author": "ATTO Technology"
-          },
-          {
-            "name": "CrystalDiskInfo",
+          "version": "4.1",
+          "author": "ATTO Technology"
+        },
+        {
+          "name": "CrystalDiskInfo",
             "displayName": "CrystalDiskInfo",
-            "description": "CrystalDiskInfo - 硬盘健康状态检测工具，可以显示详细的 SMART 信息。",
+          "description": "CrystalDiskInfo - 硬盘健康状态检测工具，可以显示详细的 SMART 信息。",
             "description_en": "CrystalDiskInfo - Hard disk health status detection tool that displays detailed SMART information.",
-            "version": "9.2.2",
-            "author": "Crystal Dew World"
+          "version": "9.2.2",
+          "author": "Crystal Dew World"
           },
           {
             "name": "CrystalDiskMark",
@@ -654,8 +654,8 @@
             "description_en": "Speccy - System hardware information viewing tool.",
             "version": "1.0",
             "author": "Piriform"
-          }
-        ]
-      }
+        }
+      ]
+    }
     ]
   }

@@ -2,7 +2,7 @@
 setlocal
 
 IF "%1"=="" (
-	SET VERSION=0.0.1
+	SET VERSION=1.0
 ) ELSE (
 	SET VERSION=%1
 )

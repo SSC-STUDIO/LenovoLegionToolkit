@@ -66,7 +66,7 @@ public static class NilesoftShellService
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = shellExePath,
-                    Arguments = "-unregister -restart",
+                    Arguments = "-unregister -treat -restart",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -105,6 +105,11 @@ public static class NilesoftShellService
                 throw new InvalidOperationException($"Failed to delete shell files: {ex.Message}", ex);
             }
         }
+
+        // Clear registry installation status
+        NilesoftShellHelper.ClearRegistryInstallationStatus();
+        // Clear cache to ensure fresh check next time
+        NilesoftShellHelper.ClearInstallationStatusCache();
     }
 
 }

@@ -45,7 +45,7 @@ public partial class App
 {
     private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
-    private const int BackgroundInitializationWaitTimeoutMs = 3000;
+    private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
@@ -318,7 +318,7 @@ public partial class App
 
         if (!task.IsCompleted)
         {
-            var completedTask = await Task.WhenAny(task, Task.Delay(BackgroundInitializationWaitTimeoutMs));
+            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS));
             if (completedTask != task)
             {
                 if (Log.Instance.IsTraceEnabled)

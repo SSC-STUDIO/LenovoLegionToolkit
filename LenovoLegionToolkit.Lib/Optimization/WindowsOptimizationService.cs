@@ -84,11 +84,7 @@ public class WindowsOptimizationService
         Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SubscribedContent-310093Enabled", 0, RegistryValueKind.DWord)
     ];
 
-    private static readonly IReadOnlyList<RegistryValueDefinition> WinKeySearchTweaks =
-    [
-        // Set Windows key to open search instead of start menu
-        Reg("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "Start_SearchFiles", 1, RegistryValueKind.DWord)
-    ];
+
 
     private static readonly IReadOnlyList<RegistryValueDefinition> TelemetryTweaks =
     [
@@ -709,13 +705,7 @@ public class WindowsOptimizationService
                         "WindowsOptimization_Action_ExplorerSuggestions_Title",
                         "WindowsOptimization_Action_ExplorerSuggestions_Description",
                         ExplorerSuggestionsTweaks),
-                new WindowsOptimizationActionDefinition(
-                        "explorer.winKeySearch",
-                        "WindowsOptimization_Action_WinKeySearch_Title",
-                        "WindowsOptimization_Action_WinKeySearch_Description",
-                        ExecuteWinKeySearchAsync,
-                        Recommended: false,
-                        IsAppliedAsync: ct => Task.FromResult(AreWinKeySearchTweaksApplied()))
+
             });
 
     private static WindowsOptimizationCategoryDefinition CreatePerformanceCategory() =>
@@ -1474,28 +1464,7 @@ public class WindowsOptimizationService
         return AreRegistryTweaksApplied(StartMenuDisableTweaks);
     }
 
-    private static Task ExecuteWinKeySearchAsync(CancellationToken cancellationToken)
-    {
-        // Apply registry tweaks
-        foreach (var tweak in WinKeySearchTweaks)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            ApplyRegistryTweak(tweak);
-        }
 
-        // Notify system of registry changes
-        NotifyExplorerSettingsChanged();
-
-        // Restart Explorer to apply changes immediately
-        RestartExplorer();
-
-        return Task.CompletedTask;
-    }
-
-    private static bool AreWinKeySearchTweaksApplied()
-    {
-        return AreRegistryTweaksApplied(WinKeySearchTweaks);
-    }
 
     private static unsafe void NotifyExplorerSettingsChanged()
     {

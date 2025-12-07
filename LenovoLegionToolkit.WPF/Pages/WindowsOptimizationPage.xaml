@@ -209,15 +209,19 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                 <Border
+                    Grid.Row="0"
                     Grid.Column="0"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="0,0,0,1"
+                    Background="Transparent"
                     Margin="0,0,24,0">
                     <StackPanel
                         Orientation="Horizontal"
@@ -243,8 +247,17 @@
                             Checked="DriverDownloadNavButton_Checked" />
                     </StackPanel>
                 </Border>
+                
+                <Border 
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Height="1"
+                    Background="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    HorizontalAlignment="Stretch"
+                    SnapsToDevicePixels="True" />
 
-                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />

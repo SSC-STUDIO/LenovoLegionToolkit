@@ -1945,6 +1945,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 var delay = actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase) ? 3000 : 2000;
                 await Task.Delay(delay);
                 
+                // 在刷新状态前清除缓存，确保使用最新的实际状态
+                if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
+                {
+                    NilesoftShellHelper.ClearInstallationStatusCache();
+                }
+                
                 // 刷新操作状态
                 await RefreshActionStatesAsync(skipUserInteractionCheck: true);
                 
@@ -2004,7 +2010,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         async ct =>
                         {
                             if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Executing shell.exe unregister command: {shellExe} -unregister -restart");
+                                Log.Instance.Trace($"Executing shell.exe unregister command: {shellExe} -unregister -treat -restart");
                             
                             await Task.Run(() =>
                             {
@@ -2013,7 +2019,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                                     StartInfo = new System.Diagnostics.ProcessStartInfo
                                     {
                                         FileName = "cmd.exe",
-                                        Arguments = $"/c \"\"{shellExe}\"\" -unregister -restart",
+                                        Arguments = $"/c \"\"{shellExe}\"\" -unregister -treat -restart",
                                         UseShellExecute = false,
                                         CreateNoWindow = true
                                     }
@@ -2030,8 +2036,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Resource.WindowsOptimizationPage_ApplySelected_Error,
                         InteractionScope.Beautification);
                     
-                    // 卸载操作完成后，清除缓存以强制下次重新检查状态
+                    // 卸载操作完成后，清除缓存和注册表中的安装状态值
+                    // 这确保下次检查时不会从注册表读取到旧的已安装状态
                     NilesoftShellHelper.ClearInstallationStatusCache();
+                    NilesoftShellHelper.ClearRegistryInstallationStatus();
+                    
+                    // 将操作添加到用户取消列表，防止在状态刷新时自动勾选
+                    if (!_userUncheckedActions.Contains(actionKey))
+                    {
+                        _userUncheckedActions.Add(actionKey);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Added {actionKey} to unchecked list to prevent auto-checking");
+                    }
                 }
                 else
                 {
@@ -2040,16 +2056,42 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 }
                     
                 // 延迟刷新状态，给 shell 卸载操作足够的时间完成
-                await Task.Delay(3000); // 增加到3秒，给卸载操作更多时间
+                // await Task.Delay(3000); // 增加到3秒，给卸载操作更多时间
+                
+                // 再次清除注册表值和缓存，确保卸载后的状态被正确反映
+                // 必须在检查状态之前清除缓存，否则会使用旧的缓存值
+                // NilesoftShellHelper.ClearRegistryInstallationStatus();
+                NilesoftShellHelper.ClearInstallationStatusCache();
+                
                 await RefreshActionStatesAsync(skipUserInteractionCheck: true);
                 
                 // 检查卸载是否成功，如果成功则从取消列表中移除
+                // 在检查前再次清除缓存，确保不使用旧的缓存值
+                NilesoftShellHelper.ClearInstallationStatusCache();
                 var isStillInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
                 if (!isStillInstalled)
                 {
                     _userUncheckedActions.Remove(actionKey);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Uninstall successful, removed {actionKey} from unchecked list");
+                }
+                else
+                {
+                    // 如果卸载后仍然显示已安装，可能是注册表值未更新，强制清除并再次检查
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Uninstall may not have completed, clearing registry and rechecking...");
+                    NilesoftShellHelper.ClearRegistryInstallationStatus();
+                    NilesoftShellHelper.ClearInstallationStatusCache();
+                    await Task.Delay(1000); // 再等待1秒
+                    // 在重新检查前再次清除缓存，确保不使用旧的缓存值
+                    NilesoftShellHelper.ClearInstallationStatusCache();
+                    var recheckInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+                    if (!recheckInstalled)
+                    {
+                        _userUncheckedActions.Remove(actionKey);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Recheck confirmed uninstall successful, removed {actionKey} from unchecked list");
+                    }
                 }
                 
                 // 刷新美化状态
@@ -2899,7 +2941,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             StartInfo = new System.Diagnostics.ProcessStartInfo
                             {
                                 FileName = "cmd.exe",
-                                Arguments = $"/c \"\"{exe}\"\" -unregister -restart",
+                                Arguments = $"/c \"\"{exe}\"\" -unregister -treat -restart",
                                 UseShellExecute = false,
                                 CreateNoWindow = true
                             }
