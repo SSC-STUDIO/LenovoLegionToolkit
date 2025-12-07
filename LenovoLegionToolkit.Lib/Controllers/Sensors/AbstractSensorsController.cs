@@ -46,7 +46,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
-    private const int _cacheExpirationMs = 100;
+    private const int CACHE_EXPIRATION_MS = 100;
 
     public abstract Task<bool> IsSupportedAsync();
 
@@ -63,7 +63,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
-            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < _cacheExpirationMs)
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
             {
                 return _cachedSensorsData.Value;
             }
@@ -126,7 +126,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
-            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < _cacheExpirationMs)
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
             {
                 return (_cachedSensorsData.Value.CPU.FanSpeed, _cachedSensorsData.Value.GPU.FanSpeed);
             }

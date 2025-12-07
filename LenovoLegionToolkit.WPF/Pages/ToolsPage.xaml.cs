@@ -41,10 +41,8 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             _toolCategories = value;
             HasTools = value != null && value.Count > 0;
-            if (value != null && value.Count > 0 && _selectedCategory == null)
-            {
-                SelectedCategory = value.FirstOrDefault();
-            }
+            // 不在 setter 中自动选择，让调用者显式控制选择哪个分类
+            // 这样可以确保快捷工具被优先选中
             OnPropertyChanged();
         }
     }
@@ -63,7 +61,9 @@ public partial class ToolsPage : INotifyPropertyChanged
             _selectedCategory = value;
             
             if (_selectedCategory != null)
+            {
                 _selectedCategory.IsSelected = true;
+            }
             
             OnPropertyChanged();
             OnPropertyChanged(nameof(FilteredTools));
@@ -275,8 +275,37 @@ public partial class ToolsPage : INotifyPropertyChanged
             // 回到 UI 线程更新界面
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
+                // 在设置 ToolCategories 之前，先找到快捷工具分类
+                var batchToolsCategory = categories.FirstOrDefault(c => c.IsBatchToolsCategory);
+                
+                // 先清空当前选择，避免在设置 ToolCategories 时触发自动选择
+                var previousSelected = _selectedCategory;
+                if (previousSelected != null)
+                {
+                    previousSelected.IsSelected = false;
+                }
+                _selectedCategory = null;
+                
+                // 设置分类列表
                 ToolCategories = new ObservableCollection<ToolCategoryViewModel>(categories);
             });
+            
+            // 延迟一下，确保 UI 已经渲染完成，然后再设置选中状态
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var batchToolsCategory = ToolCategories?.FirstOrDefault(c => c.IsBatchToolsCategory);
+                
+                // 确保默认选中快捷工具（Batch_Tools），如果存在的话
+                if (batchToolsCategory != null)
+                {
+                    SelectedCategory = batchToolsCategory;
+                }
+                else if (ToolCategories != null && ToolCategories.Count > 0)
+                {
+                    // 如果没有快捷工具，选择第一个
+                    SelectedCategory = ToolCategories.FirstOrDefault();
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
         catch (Exception ex)
         {
@@ -310,9 +339,18 @@ public partial class ToolsPage : INotifyPropertyChanged
                 // 如果有命令，则创建命令工具（不需要查找文件）
                 if (!string.IsNullOrEmpty(toolInfo.Command))
                 {
+                    // 确保名称不为空
+                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName) 
+                        ? toolInfo.DisplayName 
+                        : !string.IsNullOrWhiteSpace(toolInfo.Name) 
+                            ? toolInfo.Name 
+                            : !string.IsNullOrWhiteSpace(toolName) 
+                                ? toolName 
+                                : "Unknown Tool";
+                    
                     var tool = new ToolViewModel
                     {
-                        Name = toolInfo.DisplayName ?? toolInfo.Name ?? toolName,
+                        Name = toolDisplayName,
                         Description = toolInfo.Description ?? GetToolDescription(toolName),
                         ExecutablePath = string.Empty, // 命令工具不需要路径
                         WorkingDirectory = subDir,
@@ -336,10 +374,19 @@ public partial class ToolsPage : INotifyPropertyChanged
                     // 检查是否为 .bat 文件
                     var isBatchFile = toolPath.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
                     
+                    // 确保名称不为空
+                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName) 
+                        ? toolInfo.DisplayName 
+                        : !string.IsNullOrWhiteSpace(toolInfo.Name) 
+                            ? toolInfo.Name 
+                            : !string.IsNullOrWhiteSpace(toolName) 
+                                ? toolName 
+                                : "Unknown Tool";
+                    
                     // 先创建工具对象，不立即提取图标（延迟加载以提高初始加载速度）
                     var tool = new ToolViewModel
                     {
-                        Name = toolInfo.DisplayName ?? toolInfo.Name ?? toolName,
+                        Name = toolDisplayName,
                         Description = toolInfo.Description ?? GetToolDescription(toolName),
                         ExecutablePath = toolPath,
                         WorkingDirectory = subDir,
@@ -353,62 +400,62 @@ public partial class ToolsPage : INotifyPropertyChanged
                     // 只有非 .bat 文件才加载图标
                     if (!isBatchFile)
                     {
-                        // 延迟加载图标以提高初始加载速度
-                        // 图标将在后台异步加载，不阻塞主加载流程
-                        var iconLoadTask = Task.Run(async () =>
+                    // 延迟加载图标以提高初始加载速度
+                    // 图标将在后台异步加载，不阻塞主加载流程
+                    var iconLoadTask = Task.Run(async () =>
+                    {
+                        try
                         {
-                            try
+                            // 提取图标 - ExtractAssociatedIcon 通常会提取 32x32 的图标
+                            var icon = System.Drawing.Icon.ExtractAssociatedIcon(toolPath);
+                            if (icon != null)
                             {
-                                // 提取图标 - ExtractAssociatedIcon 通常会提取 32x32 的图标
-                                var icon = System.Drawing.Icon.ExtractAssociatedIcon(toolPath);
-                                if (icon != null)
+                                // 在 UI 线程创建 ImageSource
+                                var iconSource = await Application.Current.Dispatcher.InvokeAsync(() =>
                                 {
-                                    // 在 UI 线程创建 ImageSource
-                                    var iconSource = await Application.Current.Dispatcher.InvokeAsync(() =>
+                                    try
                                     {
-                                        try
-                                        {
-                                            // 创建位图源，使用高质量渲染
-                                            var imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
-                                                icon.Handle,
-                                                System.Windows.Int32Rect.Empty,
-                                                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                                            
-                                            imageSource.Freeze(); // 冻结以便跨线程使用
-                                            return imageSource;
-                                        }
-                                        catch
-                                        {
-                                            return null;
-                                        }
-                                        finally
-                                        {
-                                            icon?.Dispose();
-                                        }
-                                    });
-                                    
-                                    // 更新工具的图标（这会触发 UI 更新）
-                                    if (iconSource != null)
-                                    {
-                                        await Application.Current.Dispatcher.InvokeAsync(() =>
-                                        {
-                                            tool.IconSource = iconSource;
-                                        });
+                                        // 创建位图源，使用高质量渲染
+                                        var imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                                            icon.Handle,
+                                            System.Windows.Int32Rect.Empty,
+                                            System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                        
+                                        imageSource.Freeze(); // 冻结以便跨线程使用
+                                        return imageSource;
                                     }
+                                    catch
+                                    {
+                                        return null;
+                                    }
+                                    finally
+                                    {
+                                        icon?.Dispose();
+                                    }
+                                });
+                                
+                                // 更新工具的图标（这会触发 UI 更新）
+                                if (iconSource != null)
+                                {
+                                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                                    {
+                                        tool.IconSource = iconSource;
+                                    });
                                 }
                             }
-                            catch
-                            {
-                                // 忽略图标提取错误
-                            }
-                        });
-                    
-                        // 配置任务以忽略未观察的异常
-                        _ = iconLoadTask.ContinueWith(t =>
+                        }
+                        catch
                         {
-                            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Failed to load icon for tool: {toolName}", t.Exception);
-                        }, TaskContinuationOptions.OnlyOnFaulted);
+                            // 忽略图标提取错误
+                        }
+                    });
+                    
+                    // 配置任务以忽略未观察的异常
+                    _ = iconLoadTask.ContinueWith(t =>
+                    {
+                        if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to load icon for tool: {toolName}", t.Exception);
+                    }, TaskContinuationOptions.OnlyOnFaulted);
                     }
                     
                     return Task.FromResult<ToolViewModel?>(tool);
@@ -701,14 +748,14 @@ public partial class ToolsPage : INotifyPropertyChanged
             else
             {
                 // 否则执行可执行文件
-                var processStartInfo = new ProcessStartInfo
-                {
-                    FileName = tool.ExecutablePath,
-                    WorkingDirectory = tool.WorkingDirectory,
-                    UseShellExecute = true
-                };
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = tool.ExecutablePath,
+                WorkingDirectory = tool.WorkingDirectory,
+                UseShellExecute = true
+            };
 
-                Process.Start(processStartInfo);
+            Process.Start(processStartInfo);
             }
             
             // 启动成功后，清除选择
@@ -735,7 +782,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
             scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
-            e.Handled = true;
+        e.Handled = true;
         }
     }
 
@@ -748,8 +795,8 @@ public partial class ToolsPage : INotifyPropertyChanged
             var scrollViewer = FindVisualChild<System.Windows.Controls.ScrollViewer>(grid);
             if (scrollViewer != null && scrollViewer.ScrollableHeight > 0)
             {
-                var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
-                scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
+        var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
+        scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
                 e.Handled = true;
             }
         }
@@ -808,7 +855,11 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
 
         // 更新文本信息
-        ToolDetailsName.Text = _selectedTool.Name;
+        // 确保名称不为空，如果为空则使用默认值
+        var toolName = !string.IsNullOrWhiteSpace(_selectedTool.Name) 
+            ? _selectedTool.Name 
+            : "Unknown Tool";
+        ToolDetailsName.Text = toolName;
         ToolDetailsDescription.Text = _selectedTool.Description ?? "";
 
         // 更新版本
@@ -835,10 +886,22 @@ public partial class ToolsPage : INotifyPropertyChanged
             ToolDetailsAuthor.Visibility = Visibility.Collapsed;
         }
 
-        // 更新路径
-        var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path", Resource.Culture) ?? "Path: {0}";
-        ToolDetailsPath.Text = string.Format(pathFormat, _selectedTool.ExecutablePath);
-        ToolDetailsPath.Visibility = Visibility.Visible;
+        // 更新路径 - 只有当路径不为空且不是命令工具时才显示
+        // 如果 Command 不为空，说明是命令工具，不显示路径
+        // 如果 ExecutablePath 为空或 null，也不显示路径
+        var hasValidPath = !string.IsNullOrWhiteSpace(_selectedTool.ExecutablePath);
+        var isCommandTool = !string.IsNullOrWhiteSpace(_selectedTool.Command);
+        
+        if (hasValidPath && !isCommandTool)
+        {
+            var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path", Resource.Culture) ?? "Path: {0}";
+            ToolDetailsPath.Text = string.Format(pathFormat, _selectedTool.ExecutablePath);
+            ToolDetailsPath.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            ToolDetailsPath.Visibility = Visibility.Collapsed;
+        }
 
         // 显示启动按钮
         ToolDetailsLaunchButton.Visibility = Visibility.Visible;

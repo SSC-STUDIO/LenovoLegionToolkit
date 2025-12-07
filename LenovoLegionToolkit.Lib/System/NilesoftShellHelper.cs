@@ -17,7 +17,7 @@ public static class NilesoftShellHelper
     // 缓存安装状态检查结果，避免频繁调用 shell.exe
     private static bool? _cachedInstallationStatus;
     private static DateTime _cacheTimestamp = DateTime.MinValue;
-    private static readonly TimeSpan CacheExpiration = TimeSpan.FromSeconds(5); // 缓存5秒
+    private static readonly TimeSpan CacheExpiration = TimeSpan.FromSeconds(2); // 缓存2秒，减少缓存时间以避免使用过期数据
     private static readonly object _cacheLock = new object();
 
     public static bool IsInstalled()
@@ -185,12 +185,27 @@ public static class NilesoftShellHelper
                         var isInstalledFromError = errorResult == "true";
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Nilesoft Shell installation status (from stderr): {isInstalledFromError}");
+                        
+                        // 缓存结果
+                        lock (_cacheLock)
+                        {
+                            _cachedInstallationStatus = isInstalledFromError;
+                            _cacheTimestamp = DateTime.UtcNow;
+                        }
                         return isInstalledFromError;
                     }
                 }
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Nilesoft Shell installation status query returned empty output");
-                return false;
+                
+                result = false;
+                // 缓存结果
+                lock (_cacheLock)
+                {
+                    _cachedInstallationStatus = result;
+                    _cacheTimestamp = DateTime.UtcNow;
+                }
+                return result;
             }
 
             var outputResult = output.Trim().ToLowerInvariant();
@@ -237,6 +252,28 @@ public static class NilesoftShellHelper
             _cacheTimestamp = DateTime.MinValue;
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace((FormattableString)$"Nilesoft Shell installation status cache cleared");
+        }
+    }
+
+    /// <summary>
+    /// 清除注册表中的Shell安装状态值
+    /// </summary>
+    public static void ClearRegistryInstallationStatus()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\LenovoLegionToolkit", true);
+            if (key != null)
+            {
+                key.DeleteValue("ShellInstalled", false);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace((FormattableString)$"Nilesoft Shell registry installation status cleared");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to clear Nilesoft Shell registry installation status", ex);
         }
     }
 

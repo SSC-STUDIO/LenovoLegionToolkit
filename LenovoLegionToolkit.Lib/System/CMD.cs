@@ -103,22 +103,24 @@ public static class CMD
         if (string.IsNullOrWhiteSpace(fileName))
             return false;
 
-        // Check for dangerous characters and paths in the original input BEFORE normalization
-        // This prevents directory traversal attacks that could bypass checks after Path.GetFullPath normalization
-        if (fileName.Contains("..") || fileName.Contains('|') || fileName.Contains('&') || fileName.Contains(';') || fileName.Contains('*') || fileName.Contains('?'))
+        // Check for dangerous characters in the original input BEFORE normalization
+        // This prevents directory traversal attacks
+        // Note: & and ; are valid characters in Windows directory names (e.g., "Program Files (x) & Co")
+        // They should only be rejected when used as command separators in arguments, not in file paths
+        // The ContainsDangerousInput method handles argument validation separately
+        if (fileName.Contains("..") || fileName.Contains('|'))
             return false;
 
         try
         {
             // Check if it's a valid file path
-            // Path.GetFullPath normalizes relative paths, which could bypass ".." checks
+            // Path.GetFullPath normalizes relative paths, which could expand ".." patterns
             // So we validate the original input first, then validate the normalized result
             var path = Path.GetFullPath(fileName);
             
-            // Validate the full path for dangerous characters after normalization
-            // Even though we checked the original input, we also check the normalized path
-            // to catch any edge cases where normalization might introduce dangerous patterns
-            if (path.Contains("..") || path.Contains('|') || path.Contains('&') || path.Contains(';') || path.Contains('*') || path.Contains('?'))
+            // After normalization, check again for directory traversal (in case normalization introduced it)
+            // Note: | is not valid in Windows paths, but & and ; are valid in directory names
+            if (path.Contains("..") || path.Contains('|'))
                 return false;
             
             var fileInfo = new FileInfo(path);
@@ -131,8 +133,9 @@ public static class CMD
                 return false;
             
             // Use Windows' built-in invalid character list to validate the filename
-            // This allows all valid Windows filename characters including parentheses, brackets, etc.
-            // while still blocking dangerous characters like < > : " / \ | ? *
+            // This includes wildcards (*, ?) which are not valid in actual executable filenames
+            // but are legitimate in file patterns/glob expressions - however, for file execution
+            // we need a specific file, not a pattern, so we reject wildcards in the filename
             var invalidChars = Path.GetInvalidFileNameChars();
             if (fileNameOnly.IndexOfAny(invalidChars) >= 0)
                 return false;

@@ -31,23 +31,35 @@ public class PowerModeFeature(
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
         var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
 
-        var result = new List<PowerModeState>
-        {
-            PowerModeState.Quiet,
-            PowerModeState.Balance
-        };
+        var result = new List<PowerModeState>();
 
-        // For supported Legion machines, always include Performance mode
-        // If SupportedPowerModes is null, fall back to including Performance (behavioral compatibility)
-        // If SupportedPowerModes is not null, check if it contains Performance
-        if (isSupportedLegionMachine)
+        // Only include power modes for supported Legion machines
+        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
+        // to ensure consistency between advertised states and actually supported states
+        if (!isSupportedLegionMachine)
+            return [.. result];
+
+        // For backward compatibility, when SupportedPowerModes is null, include Quiet, Balance, and Performance
+        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
+        if (mi.SupportedPowerModes is null)
         {
-            if (mi.SupportedPowerModes is null || mi.SupportedPowerModes.Contains(PowerModeState.Performance))
+            result.Add(PowerModeState.Quiet);
+            result.Add(PowerModeState.Balance);
+            result.Add(PowerModeState.Performance);
+        }
+        else
+        {
+            // When SupportedPowerModes is specified, only include modes that are explicitly supported
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Quiet))
+                result.Add(PowerModeState.Quiet);
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Balance))
+                result.Add(PowerModeState.Balance);
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Performance))
                 result.Add(PowerModeState.Performance);
         }
 
         // GodMode requires explicit support check
-        if (isSupportedLegionMachine && mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+        if (mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
             result.Add(PowerModeState.GodMode);
 
         return [.. result];

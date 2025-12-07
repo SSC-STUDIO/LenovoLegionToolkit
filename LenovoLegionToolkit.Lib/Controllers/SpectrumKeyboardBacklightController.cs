@@ -20,7 +20,7 @@ namespace LenovoLegionToolkit.Lib.Controllers;
 
 public class SpectrumKeyboardBacklightController
 {
-    public interface IScreenCapture
+    public interface ISpectrumScreenCapture
     {
         void CaptureScreen(ref RGBColor[,] buffer, int width, int height, CancellationToken token);
     }
@@ -42,7 +42,7 @@ public class SpectrumKeyboardBacklightController
 
     private readonly SpecialKeyListener _listener;
     private readonly VantageDisabler _vantageDisabler;
-    private readonly IScreenCapture _screenCapture;
+    private readonly ISpectrumScreenCapture _screenCapture;
 
     private SafeFileHandle? _deviceHandle;
 
@@ -59,7 +59,7 @@ public class SpectrumKeyboardBacklightController
 
     public bool ForceDisable { get; set; }
 
-    public SpectrumKeyboardBacklightController(SpecialKeyListener listener, VantageDisabler vantageDisabler, IScreenCapture screenCapture)
+    public SpectrumKeyboardBacklightController(SpecialKeyListener listener, VantageDisabler vantageDisabler, ISpectrumScreenCapture screenCapture)
     {
         _listener = listener;
         _vantageDisabler = vantageDisabler;

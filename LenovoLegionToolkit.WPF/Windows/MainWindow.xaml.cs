@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -75,6 +75,27 @@ public partial class MainWindow
         }
 
         Title = _title.Text;
+        
+        // 监听 Frame 导航事件，更新窗口标题为当前页面标题
+        _rootFrame.Navigated += RootFrame_Navigated;
+    }
+
+    private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+    {
+        // 当页面导航完成时，更新窗口标题为：应用名称 - 页面标题
+        var appName = Resource.ResourceManager.GetString("AppName", Resource.Culture) ?? "Lenovo Legion Toolkit";
+        
+        if (e.Content is UiPage page && !string.IsNullOrWhiteSpace(page.Title))
+        {
+            Title = $"{appName} - {page.Title}";
+            _title.Text = $"{appName} - {page.Title}";
+        }
+        else
+        {
+            // 如果没有页面标题，只显示应用名称
+            Title = appName;
+            _title.Text = appName;
+        }
     }
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e) => RestoreSize();
