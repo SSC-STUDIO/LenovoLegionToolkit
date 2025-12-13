@@ -16,6 +16,7 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
@@ -138,5 +139,14 @@ public class IoCModule : Module
 
         builder.Register<BatteryDischargeRateMonitorService>();
         builder.Register<WindowsOptimizationService>();
+
+        // 注册插件管理器
+        builder.Register<PluginManager>().As<IPluginManager>().SingleInstance();
+        
+        // 注册内置插件
+        builder.Register<SystemOptimizationPlugin>();
+        builder.Register<ToolsPlugin>();
+        builder.Register<CleanupPlugin>();
+        builder.Register<DriverDownloadPlugin>();
     }
 }

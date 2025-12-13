@@ -24,6 +24,7 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Macro;
 using LenovoLegionToolkit.Lib.Services;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
@@ -102,7 +103,7 @@ public partial class App
             {
                 // Check compatibility - IsCompatibleAsync already includes basic compatibility check
                 var (isCompatible, mi) = await Compatibility.IsCompatibleAsync();
-                
+
                 // If check fails, show the unsupported window only once
                 if (!isCompatible)
                 {
@@ -183,6 +184,9 @@ public partial class App
 
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
+        // Initialize plugins
+        InitializePlugins();
+
         StartBackgroundInitialization();
 
         var mainWindow = new MainWindow
@@ -232,6 +236,33 @@ public partial class App
                 Log.Instance.Trace($"Falling back to software rendering.", ex);
 
             return RenderMode.SoftwareOnly;
+        }
+    }
+
+    private static void InitializePlugins()
+    {
+        try
+        {
+            var pluginManager = IoCContainer.Resolve<IPluginManager>();
+            
+            // Register all built-in plugins
+            var systemOptimizationPlugin = IoCContainer.Resolve<SystemOptimizationPlugin>();
+            var toolsPlugin = IoCContainer.Resolve<ToolsPlugin>();
+            var cleanupPlugin = IoCContainer.Resolve<CleanupPlugin>();
+            var driverDownloadPlugin = IoCContainer.Resolve<DriverDownloadPlugin>();
+            
+            pluginManager.RegisterPlugin(systemOptimizationPlugin);
+            pluginManager.RegisterPlugin(toolsPlugin);
+            pluginManager.RegisterPlugin(cleanupPlugin);
+            pluginManager.RegisterPlugin(driverDownloadPlugin);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugins initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to initialize plugins.", ex);
         }
     }
 
@@ -367,7 +398,7 @@ public partial class App
             {
                 _inExitHandler = true;
             }
-            
+
             // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
             ShutdownAsync(true).GetAwaiter().GetResult();
         }
@@ -612,7 +643,8 @@ public partial class App
     private static async Task InitHybridModeAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var feature = IoCContainer.Resolve<HybridModeFeature>();
                 await feature.EnsureDGPUEjectedIfNeededAsync();
             },
@@ -623,7 +655,8 @@ public partial class App
     private static async Task InitAutomationProcessorAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
                 await automationProcessor.InitializeAsync();
                 automationProcessor.RunOnStartup();
@@ -635,19 +668,20 @@ public partial class App
     private static async Task InitPowerModeFeatureAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var feature = IoCContainer.Resolve<PowerModeFeature>();
                 if (await feature.IsSupportedAsync())
                 {
                     // Optimization: cache the support status to avoid multiple IsSupportedAsync calls
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Ensuring god mode state is applied...");
-                    
+
                     await feature.EnsureGodModeStateIsAppliedAsync();
-                    
+
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Ensuring correct power plan is set...");
-                    
+
                     await feature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
                 }
             },
@@ -659,7 +693,8 @@ public partial class App
     private static async Task InitBatteryFeatureAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var feature = IoCContainer.Resolve<BatteryFeature>();
                 if (await feature.IsSupportedAsync())
                 {
@@ -677,7 +712,8 @@ public partial class App
     private static async Task InitRgbKeyboardControllerAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var controller = IoCContainer.Resolve<RGBKeyboardBacklightController>();
                 if (await controller.IsSupportedAsync())
                 {
@@ -701,7 +737,8 @@ public partial class App
     private static async Task InitSpectrumKeyboardControllerAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
                 if (await controller.IsSupportedAsync())
                 {
@@ -734,7 +771,8 @@ public partial class App
     private static async Task InitGpuOverclockControllerAsync()
     {
         await RunWithErrorHandlingAsync(
-            async () => {
+            async () =>
+            {
                 var controller = IoCContainer.Resolve<GPUOverclockController>();
                 if (await controller.IsSupportedAsync())
                 {

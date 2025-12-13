@@ -238,13 +238,15 @@
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
-                            Checked="CleanupNavButton_Checked" />
+                            Checked="CleanupNavButton_Checked"
+                            Visibility="Collapsed" />
                         <RadioButton
                             x:Name="_driverDownloadNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
-                            Checked="DriverDownloadNavButton_Checked" />
+                            Checked="DriverDownloadNavButton_Checked"
+                            Visibility="Collapsed" />
                     </StackPanel>
                 </Border>
                 
@@ -727,15 +729,79 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                            <Style x:Key="RightColumnBeautificationCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
+                            <Style x:Key="RightColumnExtensionsCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsExtensionsMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style x:Key="RightColumnBeautificationCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
                         </StackPanel.Resources>
+                        
+                        <!-- Extensions Mode Content -->
+                        <Border
+                            Style="{StaticResource RightColumnExtensionsCardStyle}">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+                                <Viewbox Width="128" Height="128" Margin="0,0,0,24" HorizontalAlignment="Center">
+                                    <Path
+                                        Data="M12 2L2 7L12 12L22 7L12 2Z M12 14L2 19L12 24L22 19L12 14Z"
+                                        Fill="{DynamicResource TextFillColorTertiaryBrush}" />
+                                </Viewbox>
+                                <TextBlock
+                                    FontSize="24"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    TextAlignment="Center"
+                                    Margin="0,0,0,12"
+                                    Text="{x:Static resources:Resource.ToolsPage_Extensions_Title}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    TextWrapping="Wrap"
+                                    TextAlignment="Center"
+                                    MaxWidth="500"
+                                    HorizontalAlignment="Center"
+                                    Text="{x:Static resources:Resource.ToolsPage_Extensions_Description}"
+                                    Margin="0,0,0,32"
+                                    LineHeight="22" />
+                                <custom:CardControl MaxWidth="600" Margin="0,0,0,16">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+                                        <TextBlock
+                                            FontSize="18"
+                                            FontWeight="Medium"
+                                            TextAlignment="Center"
+                                            Margin="0,0,0,8"
+                                            Text="{x:Static resources:Resource.ToolsPage_Extensions_ComingSoon_Title}" />
+                                        <TextBlock
+                                            FontSize="14"
+                                            TextAlignment="Center"
+                                            Text="{x:Static resources:Resource.ToolsPage_Extensions_ComingSoon_Message}" />
+                                    </StackPanel>
+                                </custom:CardControl>
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    TextAlignment="Center"
+                                    Text="当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。"
+                                    Margin="0,0,0,0" />
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    TextAlignment="Center"
+                                    Text="Tools will appear here once they are available in the tools directory."
+                                    Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        
                         <Border
                             Style="{StaticResource RightColumnOptimizationCardStyle}">
                             <Grid>
