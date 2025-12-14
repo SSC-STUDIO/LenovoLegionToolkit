@@ -815,6 +815,48 @@
   <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
     <value>工具箱</value>
   </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>插件扩展</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>导航项设置</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>配置侧边栏中显示哪些导航项。仪表盘和设置将始终显示。</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏键盘导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏电池导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏自动化导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏宏导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏系统优化导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏工具箱导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏插件扩展导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏捐赠导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏关于导航项</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>导航项</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>配置侧边栏中显示哪些导航项</value>
+  </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>新版本可用！</value>
   </data>
@@ -1286,6 +1328,12 @@
   </data>
   <data name="SettingsPage_ShowDonateButton_Title" xml:space="preserve">
     <value>显示赞助按钮</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
+    <value>启用扩展</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
+    <value>启用扩展系统以在工具箱页面中访问插件市场。</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>选择显示哪些通知弹窗。</value>
@@ -2444,6 +2492,18 @@
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>驱动更新</value>
   </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>扩展</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>安装和管理扩展以扩展功能</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>即将推出</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>扩展市场将在未来的更新中提供。</value>
+  </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全选</value>
   </data>
@@ -3060,6 +3120,15 @@
   <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
     <value>快捷工具</value>
   </data>
+  <data name="ToolsPage_ContextMenu_OpenFileLocation" xml:space="preserve">
+    <value>打开文件位置</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_CopyPath" xml:space="preserve">
+    <value>复制路径</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_OpenToolsDirectory" xml:space="preserve">
+    <value>打开工具目录</value>
+  </data>
   <data name="ToolsPage_Error_StartTool" xml:space="preserve">
     <value>启动工具失败</value>
   </data>
@@ -3248,6 +3317,39 @@
   </data>
   <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
     <value>netsh int ip reset (重置TCP/IP协议栈)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>插件扩展</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>安装和管理插件以扩展功能</value>
+  </data>
+  <data name="PluginExtensionsPage_SystemOptimization_Title" xml:space="preserve">
+    <value>系统优化插件</value>
+  </data>
+  <data name="PluginExtensionsPage_SystemOptimization_Description" xml:space="preserve">
+    <value>安装系统优化插件以访问系统优化和清理功能</value>
+  </data>
+  <data name="PluginExtensionsPage_Tools_Title" xml:space="preserve">
+    <value>工具箱插件</value>
+  </data>
+  <data name="PluginExtensionsPage_Tools_Description" xml:space="preserve">
+    <value>安装工具箱插件以访问各种系统工具和实用程序</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallBasePlugin" xml:space="preserve">
+    <value>系统优化插件是基础插件，当有其他插件安装时无法卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallBasePluginMessage" xml:space="preserve">
+    <value>系统优化插件是基础插件。当有其他插件安装时，系统优化插件无法卸载。请先卸载其他插件后再卸载系统优化插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>无法卸载</value>
   </data>
 
 </root>

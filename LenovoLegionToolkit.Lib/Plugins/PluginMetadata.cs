@@ -12,3 +12,4 @@ public class PluginMetadata
     public bool IsSystemPlugin { get; set; }
     public string[]? Dependencies { get; set; }
 }
+

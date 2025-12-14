@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -11,17 +12,20 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Pages;
+using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Xaml.Behaviors.Core;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 #if !DEBUG
 using System.Reflection;
@@ -35,6 +39,7 @@ namespace LenovoLegionToolkit.WPF.Windows;
 public partial class MainWindow
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+    private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly SpecialKeyListener _specialKeyListener = IoCContainer.Resolve<SpecialKeyListener>();
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
@@ -75,16 +80,19 @@ public partial class MainWindow
         }
 
         Title = _title.Text;
-        
+
         // 监听 Frame 导航事件，更新窗口标题为当前页面标题
         _rootFrame.Navigated += RootFrame_Navigated;
+
+        // 订阅插件状态变化事件
+        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
     }
 
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // 当页面导航完成时，更新窗口标题为：应用名称 - 页面标题
         var appName = Resource.ResourceManager.GetString("AppName", Resource.Culture) ?? "Lenovo Legion Toolkit";
-        
+
         if (e.Content is UiPage page && !string.IsNullOrWhiteSpace(page.Title))
         {
             Title = $"{appName} - {page.Title}";
@@ -107,6 +115,9 @@ public partial class MainWindow
         if (!await KeyboardBacklightPage.IsSupportedAsync())
             _navigationStore.Items.Remove(_keyboardItem);
 
+        // 根据扩展设置控制 WindowsOptimization 导航项的可见性
+        UpdateNavigationVisibility();
+
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
 
         _specialKeyListener.Changed += (_, args) =>
@@ -127,7 +138,16 @@ public partial class MainWindow
 
         var key = (int)Key.D1;
         foreach (var item in _navigationStore.Items.OfType<NavigationItem>())
-            InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
+        {
+            if (item.PageTag != null)
+                InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
+        }
+        
+        // 设置插件拓展导航项的文本
+        if (_pluginExtensionsItem != null)
+        {
+            _pluginExtensionsItem.Content = Resource.ResourceManager.GetString("MainWindow_NavigationItem_PluginExtensions", Resource.Culture) ?? "Plugin Extensions";
+        }
 
         var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
         await trayHelper.InitializeAsync();
@@ -364,6 +384,175 @@ public partial class MainWindow
         SetEfficiencyMode(true);
         Hide();
         ShowInTaskbar = true;
+    }
+
+    public void UpdateNavigationVisibility()
+    {
+        UpdateWindowsOptimizationNavigationVisibility();
+        UpdateToolsNavigationVisibility();
+        UpdatePluginExtensionsNavigationVisibility();
+        UpdateNavigationItemsVisibilityFromSettings();
+    }
+
+    private void UpdateNavigationItemsVisibilityFromSettings()
+    {
+        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
+
+        // 更新键盘导航项
+        if (_keyboardItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("keyboardBacklight", visibilitySettings);
+            _keyboardItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新电池导航项
+        if (_batteryItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("battery", visibilitySettings);
+            _batteryItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新自动化导航项
+        if (_automationItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("automation", visibilitySettings);
+            _automationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新宏导航项
+        if (_macroItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("macro", visibilitySettings);
+            _macroItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新系统优化导航项
+        if (_windowsOptimizationItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
+            _windowsOptimizationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新工具箱导航项（现在是默认界面，不再需要检查插件状态）
+        if (_toolsItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("tools", visibilitySettings);
+            _toolsItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新捐赠导航项
+        if (_donateNavigationItem != null)
+        {
+            var shouldShow = _applicationSettings.Store.ShowDonateButton && GetNavigationItemVisibility("donate", visibilitySettings);
+            _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // 更新关于导航项
+        if (_aboutItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("about", visibilitySettings);
+            _aboutItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
+    {
+        // 仪表盘和设置必须始终显示
+        if (pageTag == "dashboard" || pageTag == "settings")
+            return true;
+
+        // keyboardBacklight 应该使用 keyboard 键
+        if (pageTag == "keyboardBacklight")
+            pageTag = "keyboard";
+
+        if (visibilitySettings.TryGetValue(pageTag, out var visibility))
+            return visibility;
+
+        // 默认可见
+        return true;
+    }
+
+    private void UpdatePluginExtensionsNavigationVisibility()
+    {
+        // 根据扩展功能是否启用来控制插件拓展导航项的可见性
+        var extensionsEnabled = _applicationSettings.Store.ExtensionsEnabled;
+        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
+        var shouldShow = extensionsEnabled && GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
+        
+        if (_pluginExtensionsItem != null)
+        {
+            _pluginExtensionsItem.Visibility = shouldShow 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+        }
+    }
+
+    public void UpdateWindowsOptimizationNavigationVisibility()
+    {
+        if (_windowsOptimizationItem == null)
+            return;
+
+        // 系统优化界面现在作为默认界面，确保在导航项列表中
+        var isInItems = _navigationStore.Items.Contains(_windowsOptimizationItem);
+        
+        if (!isInItems)
+        {
+            // 找到 Macro 导航项的位置，在它之后插入
+            var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
+            if (macroItem != null)
+            {
+                var macroIndex = _navigationStore.Items.IndexOf(macroItem);
+                _navigationStore.Items.Insert(macroIndex + 1, _windowsOptimizationItem);
+            }
+            else
+            {
+                _navigationStore.Items.Add(_windowsOptimizationItem);
+            }
+        }
+        
+        // 可见性由 UpdateNavigationItemsVisibilityFromSettings 控制
+    }
+
+    private void UpdateToolsNavigationVisibility()
+    {
+        // 工具箱界面现在作为默认界面，确保在导航项列表中
+        if (_toolsItem != null)
+        {
+            var isInItems = _navigationStore.Items.Contains(_toolsItem);
+            if (!isInItems)
+            {
+                // 找到系统优化导航项的位置，在它之后插入；如果没有系统优化，则在 Macro 之后插入
+                var insertIndex = -1;
+                if (_navigationStore.Items.Contains(_windowsOptimizationItem))
+                {
+                    insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
+                    _navigationStore.Items.Insert(insertIndex + 1, _toolsItem);
+                }
+                else
+                {
+                    var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
+                    if (macroItem != null)
+                    {
+                        insertIndex = _navigationStore.Items.IndexOf(macroItem);
+                        _navigationStore.Items.Insert(insertIndex + 1, _toolsItem);
+                    }
+                    else
+                    {
+                        _navigationStore.Items.Add(_toolsItem);
+                    }
+                }
+            }
+        }
+        // 可见性由 UpdateNavigationItemsVisibilityFromSettings 控制
+    }
+
+    private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
+    {
+        // 当插件状态变化时，更新导航栏可见性
+        Dispatcher.Invoke(() =>
+        {
+            UpdateNavigationVisibility();
+        });
     }
 
     public void UpdateDonateButtonVisibility()

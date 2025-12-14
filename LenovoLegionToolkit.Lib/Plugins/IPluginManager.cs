@@ -63,3 +63,4 @@ public class PluginEventArgs : EventArgs
         IsInstalled = isInstalled;
     }
 }
+

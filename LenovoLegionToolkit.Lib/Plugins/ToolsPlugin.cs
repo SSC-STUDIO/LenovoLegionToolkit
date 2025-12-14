@@ -24,3 +24,4 @@ public class ToolsPlugin : IPlugin
         // 插件卸载时的逻辑
     }
 }
+

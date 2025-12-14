@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 
@@ -53,11 +55,59 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool DisableUnsupportedHardwareWarning { get; set; }
         public bool ShowDonateButton { get; set; } = true;
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
+        public bool ExtensionsEnabled { get; set; } = false;
+        public List<string> InstalledExtensions { get; set; } = [];
+        public Dictionary<string, bool> NavigationItemsVisibility { get; set; } = new()
+        {
+            { "keyboard", true },
+            { "battery", true },
+            { "automation", true },
+            { "macro", true },
+            { "windowsOptimization", true },
+            { "tools", true },
+            { "pluginExtensions", true },
+            { "donate", true },
+            { "about", true }
+        };
     }
 
     public ApplicationSettings() : base("settings.json")
     {
         JsonSerializerSettings.Converters.Add(new LegacyPowerPlanInstanceIdToGuidConverter());
+    }
+
+    public override ApplicationSettingsStore? LoadStore()
+    {
+        var store = base.LoadStore();
+        var settingsStorePath = Path.Combine(Folders.AppData, "settings.json");
+        
+        // If store is null (file doesn't exist), return null to use default (ShowDonateButton = true)
+        if (store is null)
+            return null;
+        
+        // Check if the JSON file contains ShowDonateButton field
+        // If not, it means this is an upgrade from an older version, so default to true
+        try
+        {
+            if (File.Exists(settingsStorePath))
+            {
+                var settingsJson = File.ReadAllText(settingsStorePath);
+                var jsonObject = JObject.Parse(settingsJson);
+                
+                // If ShowDonateButton field doesn't exist in JSON, ensure it defaults to true
+                if (!jsonObject.ContainsKey("ShowDonateButton"))
+                {
+                    store.ShowDonateButton = true;
+                }
+            }
+        }
+        catch
+        {
+            // If parsing fails, ensure default is true
+            store.ShowDonateButton = true;
+        }
+        
+        return store;
     }
 }
 
@@ -85,7 +135,7 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         const string suffix = "}";
 
         var prefixIndex = value.IndexOf(prefix, StringComparison.InvariantCulture);
-        
+
         // Validate prefixIndex and calculate safe start position before calling IndexOf for suffix
         // This prevents integer overflow and bounds issues when calculating prefixIndex + prefix.Length
         int suffixIndex = -1;
@@ -105,7 +155,7 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         {
             var start = prefixIndex + prefix.Length;
             var length = suffixIndex - start;
-            
+
             // Validate bounds: start must be within string, and start + length must not exceed string length
             // Additional validation is redundant here since we already validated suffixStartPos above,
             // but kept for defensive programming and clarity
@@ -147,7 +197,7 @@ internal class LegacyPowerPlanInstanceIdToGuidConverter : JsonConverter // Intro
         // This maintains backward compatibility while alerting to potential data corruption
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"LegacyPowerPlanInstanceIdToGuidConverter: Failed to parse GUID from value '{value}' (original: '{originalValue}'). Returning Guid.Empty. This may indicate corrupt settings data.");
-        
+
         return Guid.Empty;
     }
 }

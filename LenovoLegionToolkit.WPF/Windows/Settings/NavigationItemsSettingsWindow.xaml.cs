@@ -1,0 +1,71 @@
+using System.Collections.Generic;
+using System.Windows;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.WPF.Windows;
+
+namespace LenovoLegionToolkit.WPF.Windows.Settings;
+
+public partial class NavigationItemsSettingsWindow : BaseWindow
+{
+    private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+    private bool _isInitializing;
+
+    public NavigationItemsSettingsWindow()
+    {
+        InitializeComponent();
+        Loaded += NavigationItemsSettingsWindow_Loaded;
+    }
+
+    private void NavigationItemsSettingsWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        _isInitializing = true;
+        
+        // 初始化所有导航项的开关状态
+        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
+        
+        _keyboardToggle.IsChecked = GetNavigationItemVisibility("keyboard", visibilitySettings);
+        _batteryToggle.IsChecked = GetNavigationItemVisibility("battery", visibilitySettings);
+        _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
+        _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
+        _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
+        _toolsToggle.IsChecked = GetNavigationItemVisibility("tools", visibilitySettings);
+        _pluginExtensionsToggle.IsChecked = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
+        _donateToggle.IsChecked = GetNavigationItemVisibility("donate", visibilitySettings);
+        _aboutToggle.IsChecked = GetNavigationItemVisibility("about", visibilitySettings);
+        
+        _isInitializing = false;
+    }
+
+    private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
+    {
+        // 仪表盘和设置必须始终显示，但不在这个窗口中配置
+        if (pageTag == "dashboard" || pageTag == "settings")
+            return true;
+            
+        if (visibilitySettings.TryGetValue(pageTag, out var visibility))
+            return visibility;
+            
+        // 默认可见
+        return true;
+    }
+
+    private void NavigationItemToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isInitializing)
+            return;
+
+        if (sender is not Wpf.Ui.Controls.ToggleSwitch toggleSwitch || toggleSwitch.Tag is not string pageTag)
+            return;
+
+        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
+        visibilitySettings[pageTag] = toggleSwitch.IsChecked == true;
+        _applicationSettings.SynchronizeStore();
+
+        // 更新主窗口的导航项可见性
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.UpdateNavigationVisibility();
+        }
+    }
+}

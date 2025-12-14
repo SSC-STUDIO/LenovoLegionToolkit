@@ -7,6 +7,5 @@ public static class PluginConstants
 {
     public const string SystemOptimization = "SystemOptimization";
     public const string Tools = "Tools";
-    public const string Cleanup = "Cleanup";
-    public const string DriverDownload = "DriverDownload";
 }
+

@@ -27,6 +27,7 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.WPF.Controls.Packages;
 using LenovoLegionToolkit.WPF.Extensions;
+using LenovoLegionToolkit.WPF.Services;
 using System.Net.Http;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -469,35 +470,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         if (IsVisible)
         {
-            UpdatePluginTabsVisibility();
-        }
-    }
-
-    private void UpdatePluginTabsVisibility()
-    {
-        // 更新清理标签页可见性
-        var hasCleanupPlugin = _pluginManager.IsInstalled(PluginConstants.Cleanup);
-        if (_cleanupNavButton != null)
-        {
-            _cleanupNavButton.Visibility = hasCleanupPlugin ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // 更新驱动下载标签页可见性
-        var hasDriverDownloadPlugin = _pluginManager.IsInstalled(PluginConstants.DriverDownload);
-        if (_driverDownloadNavButton != null)
-        {
-            _driverDownloadNavButton.Visibility = hasDriverDownloadPlugin ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // 如果当前模式是已卸载的插件模式，切换到优化模式
-        if (!hasCleanupPlugin && _currentMode == PageMode.Cleanup)
-        {
-            SetMode(PageMode.Optimization);
-        }
-
-        if (!hasDriverDownloadPlugin && _currentMode == PageMode.DriverDownload)
-        {
-            SetMode(PageMode.Optimization);
+            // 页面可见时初始化
         }
     }
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
@@ -518,21 +491,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         // 初始化驱动下载模式的展开/折叠文本
         RefreshDriverExpandCollapseText();
-
-        // 订阅插件状态变化事件
-        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
-    }
-
-    private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
-    {
-        // 如果清理或驱动下载插件状态发生变化，更新标签页可见性
-        if (e.PluginId == PluginConstants.Cleanup || e.PluginId == PluginConstants.DriverDownload)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                UpdatePluginTabsVisibility();
-            });
-        }
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -541,10 +499,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             return;
 
         InitializeCategories();
-        
-        // 更新插件标签页可见性
-        UpdatePluginTabsVisibility();
-        
         SetMode(PageMode.Optimization);
         // Initialize action states first to set checkboxes based on actual system state
         // This ensures checkboxes reflect what's actually applied, not recommended
@@ -1728,21 +1682,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void SetMode(PageMode mode)
     {
-        // 检查是否可以切换到指定模式（需要插件支持）
-        if (mode == PageMode.Cleanup && !_pluginManager.IsInstalled(PluginConstants.Cleanup))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Cannot switch to Cleanup mode: plugin not installed");
-            return;
-        }
-
-        if (mode == PageMode.DriverDownload && !_pluginManager.IsInstalled(PluginConstants.DriverDownload))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Cannot switch to DriverDownload mode: plugin not installed");
-            return;
-        }
-
         var modeChanged = _currentMode != mode;
         _currentMode = mode;
 
@@ -1996,22 +1935,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
                             await Task.Run(() =>
                             {
-                                var process = new System.Diagnostics.Process
+                                try
                                 {
-                                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                                    {
-                                        FileName = "cmd.exe",
-                                        Arguments = $"/c \"\"{shellExe}\"\" -register -treat -restart",
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true
-                                    }
-                                };
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Starting install process: cmd.exe {process.StartInfo.Arguments}");
-                                process.Start();
-                                process.WaitForExit();
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Install process exited with code: {process.ExitCode}");
+                                    NilesoftShellService.Install();
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Nilesoft Shell installed successfully");
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Failed to install Nilesoft Shell: {ex.Message}", ex);
+                                    throw;
+                                }
                             });
 
                             // 安装后清除缓存并等待一下，让系统有时间完成安装
@@ -2152,26 +2087,23 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         async ct =>
                         {
                             if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Executing shell.exe unregister command: {shellExe} -unregister -treat -restart");
+                                Log.Instance.Trace($"Uninstalling Nilesoft Shell");
 
                             await Task.Run(() =>
                             {
-                                var process = new System.Diagnostics.Process
+                                try
                                 {
-                                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                                    {
-                                        FileName = "cmd.exe",
-                                        Arguments = $"/c \"\"{shellExe}\"\" -unregister -treat -restart",
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true
-                                    }
-                                };
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Starting process: cmd.exe {process.StartInfo.Arguments}");
-                                process.Start();
-                                process.WaitForExit();
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Process exited with code: {process.ExitCode}");
+                                    // 使用 NilesoftShellService 执行卸载
+                                    NilesoftShellService.Uninstall();
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Nilesoft Shell uninstalled successfully");
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Failed to uninstall Nilesoft Shell: {ex.Message}", ex);
+                                    throw;
+                                }
                             });
                         },
                         Resource.WindowsOptimizationPage_ApplySelected_Success,
@@ -2348,6 +2280,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private void OptimizationNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Optimization);
 
     private void CleanupNavButton_Checked(object sender, RoutedEventArgs e) => SetMode(PageMode.Cleanup);
+
 
     private void DriverDownloadNavButton_Checked(object sender, RoutedEventArgs e)
     {

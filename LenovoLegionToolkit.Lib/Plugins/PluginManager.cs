@@ -176,3 +176,4 @@ public class PluginManager : IPluginManager
         PluginStateChanged?.Invoke(this, new PluginEventArgs(pluginId, isInstalled));
     }
 }
+

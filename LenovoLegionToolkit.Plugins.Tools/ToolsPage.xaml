@@ -1,0 +1,739 @@
+<UserControl
+    x:Class="LenovoLegionToolkit.Plugins.Tools.ToolsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="0" Margin="0,0,16,0" MouseWheel="ToolsPage_MouseWheel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header Section -->
+        <StackPanel Grid.Row="0" Margin="0,16,0,16" HorizontalAlignment="Left">
+            <TextBlock
+                x:Name="_titleTextBlock"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,10"
+                Focusable="True"
+                FontSize="26"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock
+                x:Name="_descriptionTextBlock"
+                HorizontalAlignment="Left"
+                MaxWidth="600"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                FontSize="14"
+                LineHeight="22"
+                TextWrapping="Wrap"
+                TextAlignment="Left" />
+        </StackPanel>
+
+        <!-- Category Navigation - Browser-style tabs (same style as WindowsOptimizationPage) -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="1" />
+            </Grid.RowDefinitions>
+            <Border
+                Grid.Row="0"
+                Background="Transparent"
+                Margin="0,0,24,0">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Disabled"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalContentAlignment="Center"
+                    Padding="0,4,0,0">
+                    <ItemsControl ItemsSource="{Binding ToolCategories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton
+                                    Content="{Binding CategoryName}"
+                                    Click="CategoryRadioButton_Checked"
+                                    Tag="{Binding}"
+                                    GroupName="ToolCategoriesGroup"
+                                    IsChecked="{Binding IsSelected}">
+                                    <RadioButton.Style>
+                                        <Style TargetType="RadioButton">
+                                            <Setter Property="Margin" Value="0,0,0,0" />
+                                            <Setter Property="Padding" Value="20,10" />
+                                            <Setter Property="FontWeight" Value="Medium" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                            <Setter Property="BorderThickness" Value="1,1,1,0" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="RadioButton">
+                                                        <Border
+                                                            x:Name="RootBorder"
+                                                            Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="8,8,0,0"
+                                                            Padding="{TemplateBinding Padding}"
+                                                            Margin="{TemplateBinding Margin}">
+                                                            <ContentPresenter
+                                                                x:Name="ContentPresenter"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                RecognizesAccessKey="True"
+                                                                Content="{TemplateBinding Content}"
+                                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                                                TextElement.FontSize="{TemplateBinding FontSize}"
+                                                                TextElement.Foreground="{TemplateBinding Foreground}" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                <Setter TargetName="RootBorder" Property="BorderThickness" Value="1,1,1,0" />
+                                                                <Setter TargetName="RootBorder" Property="Margin" Value="0,-2,0,0" />
+                                                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="False">
+                                                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                            </Trigger>
+                                                            <MultiTrigger>
+                                                                <MultiTrigger.Conditions>
+                                                                    <Condition Property="IsChecked" Value="True" />
+                                                                    <Condition Property="IsMouseOver" Value="True" />
+                                                                </MultiTrigger.Conditions>
+                                                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                            </MultiTrigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </RadioButton.Style>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+            <Border 
+                Grid.Row="1"
+                Height="1"
+                Background="{DynamicResource ControlStrokeColorDefaultBrush}"
+                HorizontalAlignment="Stretch"
+                SnapsToDevicePixels="True" />
+        </Grid>
+
+        <!-- Tools Content -->
+        <ScrollViewer
+            Grid.Row="2"
+            x:Name="ToolsScrollViewer"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled"
+            Padding="0,0,0,24"
+            Margin="0,0,0,0"
+            MouseWheel="ToolsScrollViewer_MouseWheel">
+            <!-- Regular tools list -->
+            <ScrollViewer
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                Padding="0,0,0,0">
+                <Grid>
+                    <!-- Empty State -->
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0,80,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasTools}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding FilteredTools.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <wpfui:SymbolIcon
+                            Symbol="Toolbox24"
+                            FontSize="64"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Margin="0,0,0,16"
+                            HorizontalAlignment="Center" />
+                        <TextBlock
+                            x:Name="_emptyTitleTextBlock"
+                            FontSize="18"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            TextAlignment="Center"
+                            Margin="0,0,0,8" />
+                        <TextBlock
+                            x:Name="_emptyDescriptionTextBlock"
+                            FontSize="14"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap"
+                            TextAlignment="Center"
+                            MaxWidth="400"
+                            HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                <ItemsControl
+                    ItemsSource="{Binding SelectedCategory.SubCategories}"
+                    BorderThickness="0"
+                    Background="Transparent">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasTools}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedCategory}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedCategory.SubCategories.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,32">
+                                <!-- SubCategory Title with decorative element -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                    <Border
+                                        Width="3"
+                                        Height="16"
+                                        Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                        CornerRadius="1.5"
+                                        Margin="0,0,10,0"
+                                        VerticalAlignment="Center" />
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding SubCategoryName}" />
+                                </StackPanel>
+                                <!-- Tools in this subcategory -->
+                                <ItemsControl ItemsSource="{Binding Tools}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.Style>
+                                        <Style TargetType="ItemsControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                    <Setter Property="ItemsPanel">
+                                                        <Setter.Value>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Vertical" />
+                                                            </ItemsPanelTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ItemsControl.Style>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <!-- Regular Tool Card Style -->
+                                            <Border
+                                                Tag="{Binding}"
+                                                MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                        <Setter Property="BorderThickness" Value="1" />
+                                                        <Setter Property="CornerRadius" Value="8" />
+                                                        <Setter Property="Padding" Value="14" />
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                        <Setter Property="Margin" Value="0,0,12,12" />
+                                                        <Setter Property="Width" Value="110" />
+                                                        <Setter Property="MinHeight" Value="110" />
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect
+                                                                    BlurRadius="8"
+                                                                    ShadowDepth="2"
+                                                                    Opacity="0.1"
+                                                                    Color="Black" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                <Setter Property="BorderThickness" Value="1" />
+                                                                <Setter Property="CornerRadius" Value="6" />
+                                                                <Setter Property="Padding" Value="12,8" />
+                                                                <Setter Property="Margin" Value="0,0,0,6" />
+                                                                <Setter Property="Width" Value="NaN" />
+                                                                <Setter Property="MinHeight" Value="0" />
+                                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="4"
+                                                                            ShadowDepth="1"
+                                                                            Opacity="0.05"
+                                                                            Color="Black" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                                                                <Setter Property="RenderTransform">
+                                                                    <Setter.Value>
+                                                                        <TranslateTransform Y="-2" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="12"
+                                                                            ShadowDepth="4"
+                                                                            Opacity="0.15"
+                                                                            Color="Black" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                    <Setter Property="Orientation" Value="Horizontal" />
+                                                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <!-- Icon Area - Hidden for batch files -->
+                                                    <Grid Width="48" Height="48" Margin="0,0,0,10" HorizontalAlignment="Center">
+                                                        <Grid.Style>
+                                                            <Style TargetType="Grid">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsBatchFile}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Grid.Style>
+                                                        <Border
+                                                            Width="48"
+                                                            Height="48"
+                                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                                            CornerRadius="8"
+                                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                            BorderThickness="1">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect
+                                                                    BlurRadius="4"
+                                                                    ShadowDepth="1"
+                                                                    Opacity="0.08"
+                                                                    Color="Black" />
+                                                            </Border.Effect>
+                                                            <Grid>
+                                                                <Image
+                                                                    Stretch="Uniform"
+                                                                    Width="36"
+                                                                    Height="36"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                                    RenderOptions.CachingHint="Cache"
+                                                                    SnapsToDevicePixels="True"
+                                                                    UseLayoutRounding="True">
+                                                                    <Image.Source>
+                                                                        <Binding Path="IconSource">
+                                                                            <Binding.FallbackValue>
+                                                                                <x:Null />
+                                                                            </Binding.FallbackValue>
+                                                                        </Binding>
+                                                                    </Image.Source>
+                                                                    <Image.Style>
+                                                                        <Style TargetType="Image">
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                                            <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                            <Setter Property="UseLayoutRounding" Value="True" />
+                                                                            <Style.Triggers>
+                                                                                <Trigger Property="Source" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                                </Trigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Image.Style>
+                                                                </Image>
+                                                                <wpfui:SymbolIcon
+                                                                    Symbol="Desktop24"
+                                                                    FontSize="24"
+                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center">
+                                                                    <wpfui:SymbolIcon.Style>
+                                                                        <Style TargetType="wpfui:SymbolIcon">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </wpfui:SymbolIcon.Style>
+                                                                </wpfui:SymbolIcon>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        FontSize="12"
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding Name}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        TextWrapping="Wrap"
+                                                        TextAlignment="Center"
+                                                        LineHeight="18"
+                                                        Margin="0,2,0,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="MaxWidth" Value="90" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                        <Setter Property="TextAlignment" Value="Left" />
+                                                                        <Setter Property="TextTrimming" Value="None" />
+                                                                        <Setter Property="MaxWidth" Value="999999" />
+                                                                        <Setter Property="FontSize" Value="13" />
+                                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                                        <Setter Property="Margin" Value="0" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <!-- Fallback: Show tools directly if no subcategories -->
+                <ItemsControl
+                    ItemsSource="{Binding FilteredTools}"
+                    BorderThickness="0"
+                    Background="Transparent">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding SelectedCategory}" Value="{x:Null}" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding SelectedCategory.SubCategories.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Tag="{Binding}"
+                                MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                        <Setter Property="BorderThickness" Value="1" />
+                                        <Setter Property="CornerRadius" Value="8" />
+                                        <Setter Property="Padding" Value="14" />
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="Margin" Value="0,0,12,12" />
+                                        <Setter Property="Width" Value="110" />
+                                        <Setter Property="MinHeight" Value="110" />
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect
+                                                    BlurRadius="8"
+                                                    ShadowDepth="2"
+                                                    Opacity="0.1"
+                                                    Color="Black" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                                                <Setter Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <TranslateTransform Y="-2" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect
+                                                            BlurRadius="12"
+                                                            ShadowDepth="4"
+                                                            Opacity="0.15"
+                                                            Color="Black" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                    <Grid Width="48" Height="48" Margin="0,0,0,8" HorizontalAlignment="Center">
+                                        <Border
+                                            Width="48"
+                                            Height="48"
+                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                            CornerRadius="6"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            BorderThickness="1">
+                                            <Grid>
+                                                <Image
+                                                    Stretch="Uniform"
+                                                    Width="36"
+                                                    Height="36"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                    RenderOptions.CachingHint="Cache"
+                                                    SnapsToDevicePixels="True"
+                                                    UseLayoutRounding="True">
+                                                    <Image.Source>
+                                                        <Binding Path="IconSource">
+                                                            <Binding.FallbackValue>
+                                                                <x:Null />
+                                                            </Binding.FallbackValue>
+                                                        </Binding>
+                                                    </Image.Source>
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                            <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                            <Setter Property="UseLayoutRounding" Value="True" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Source" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <wpfui:SymbolIcon
+                                                    Symbol="Desktop24"
+                                                    FontSize="24"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                                    <wpfui:SymbolIcon.Style>
+                                                        <Style TargetType="wpfui:SymbolIcon">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </wpfui:SymbolIcon.Style>
+                                                </wpfui:SymbolIcon>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding Name}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        TextAlignment="Center"
+                                        MaxWidth="90"
+                                        LineHeight="16" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+        </ScrollViewer>
+        </Grid>
+
+        <!-- Tool Details Panel (Bottom - Fixed, Outside Scrollable Content) -->
+        <Border
+            Grid.Row="1"
+            x:Name="ToolDetailsPanel"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0"
+            Padding="0,8,12,8"
+            Margin="0,0,0,0"
+            MaxHeight="80"
+            Visibility="Collapsed">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="8"
+                    ShadowDepth="-2"
+                    Opacity="0.1"
+                    Color="Black"
+                    Direction="270" />
+            </Border.Effect>
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Tool Icon -->
+                <Border
+                    Grid.Column="0"
+                    Width="36"
+                    Height="36"
+                    Margin="0,0,12,0"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    CornerRadius="6"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <Grid>
+                        <Image
+                            x:Name="ToolDetailsIcon"
+                            Stretch="Uniform"
+                            Width="36"
+                            Height="36"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.CachingHint="Cache"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True" />
+                        <wpfui:SymbolIcon
+                            x:Name="ToolDetailsFallbackIcon"
+                            Symbol="Desktop24"
+                            FontSize="24"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="Visible" />
+                    </Grid>
+                </Border>
+                
+                <!-- Tool Details -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="ToolDetailsName"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Margin="0,0,0,2" />
+                    <TextBlock
+                        x:Name="ToolDetailsDescription"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"
+                        MaxHeight="36"
+                        TextTrimming="CharacterEllipsis"
+                        Margin="0,0,0,2" />
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock
+                            x:Name="ToolDetailsVersion"
+                            FontSize="10"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Margin="0,0,10,0"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="ToolDetailsAuthor"
+                            FontSize="10"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Margin="0,0,10,0"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="ToolDetailsPath"
+                            FontSize="10"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxWidth="200"
+                            Visibility="Collapsed" />
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Action Button -->
+                <wpfui:Button
+                    Grid.Column="2"
+                    x:Name="ToolDetailsLaunchButton"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="ToolDetailsLaunchButton_Click"
+                    Visibility="Collapsed" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
+

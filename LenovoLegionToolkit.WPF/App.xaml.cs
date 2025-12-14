@@ -248,13 +248,9 @@ public partial class App
             // Register all built-in plugins
             var systemOptimizationPlugin = IoCContainer.Resolve<SystemOptimizationPlugin>();
             var toolsPlugin = IoCContainer.Resolve<ToolsPlugin>();
-            var cleanupPlugin = IoCContainer.Resolve<CleanupPlugin>();
-            var driverDownloadPlugin = IoCContainer.Resolve<DriverDownloadPlugin>();
             
             pluginManager.RegisterPlugin(systemOptimizationPlugin);
             pluginManager.RegisterPlugin(toolsPlugin);
-            pluginManager.RegisterPlugin(cleanupPlugin);
-            pluginManager.RegisterPlugin(driverDownloadPlugin);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugins initialized successfully.");

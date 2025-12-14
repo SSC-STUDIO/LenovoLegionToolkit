@@ -3182,6 +3182,132 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin Extensions.
+        /// </summary>
+        public static string MainWindow_NavigationItem_PluginExtensions {
+            get {
+                return ResourceManager.GetString("MainWindow_NavigationItem_PluginExtensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigation Items Settings.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_Title {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure which navigation items are displayed in the sidebar. Dashboard and Settings will always be visible..
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Keyboard navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Battery navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Automation navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Macro navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the System Optimization navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Tools navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Plugin Extensions navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the Donate navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show or hide the About navigation item.
+        /// </summary>
+        public static string NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description {
+            get {
+                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigation Items.
+        /// </summary>
+        public static string SettingsPage_NavigationItems_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_NavigationItems_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure which navigation items are displayed in the sidebar.
+        /// </summary>
+        public static string SettingsPage_NavigationItems_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_NavigationItems_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update available!.
         /// </summary>
         public static string MainWindow_UpdateAvailable {
@@ -5390,7 +5516,43 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("WindowsOptimizationPage_Tab_DriverDownload", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extensions.
+        /// </summary>
+        public static string WindowsOptimizationPage_Tab_Extensions {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Tab_Extensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install and manage extensions to extend functionality.
+        /// </summary>
+        public static string WindowsOptimizationPage_Extensions_Description {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Extensions_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coming Soon.
+        /// </summary>
+        public static string WindowsOptimizationPage_Extensions_ComingSoon_Title {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Extensions_ComingSoon_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extension marketplace will be available in a future update..
+        /// </summary>
+        public static string WindowsOptimizationPage_Extensions_ComingSoon_Message {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Extensions_ComingSoon_Message", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to System optimization.
         /// </summary>
@@ -6905,6 +7067,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Extensions.
+        /// </summary>
+        public static string SettingsPage_ExtensionsEnabled_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_ExtensionsEnabled_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable the extension system to access the plugin market in the Tools page..
+        /// </summary>
+        public static string SettingsPage_ExtensionsEnabled_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_ExtensionsEnabled_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show or hide the donate button in the navigation menu..
         /// </summary>
         public static string SettingsPage_ShowDonateButton_Message {
@@ -7103,6 +7283,105 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin Extensions.
+        /// </summary>
+        public static string PluginExtensionsPage_Title {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install and manage plugins to extend functionality.
+        /// </summary>
+        public static string PluginExtensionsPage_Description {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Optimization Plugin.
+        /// </summary>
+        public static string PluginExtensionsPage_SystemOptimization_Title {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SystemOptimization_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install the system optimization plugin to access system optimization and cleanup features.
+        /// </summary>
+        public static string PluginExtensionsPage_SystemOptimization_Description {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SystemOptimization_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools Plugin.
+        /// </summary>
+        public static string PluginExtensionsPage_Tools_Title {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Tools_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install the tools plugin to access various system tools and utilities.
+        /// </summary>
+        public static string PluginExtensionsPage_Tools_Description {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Tools_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string PluginExtensionsPage_InstallPlugin {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_InstallPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installed.
+        /// </summary>
+        public static string PluginExtensionsPage_PluginInstalled {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PluginInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The system optimization plugin is a base plugin and cannot be uninstalled when other plugins are installed.
+        /// </summary>
+        public static string PluginExtensionsPage_CannotUninstallBasePlugin {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CannotUninstallBasePlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The system optimization plugin is a base plugin. When other plugins are installed, the system optimization plugin cannot be uninstalled. Please uninstall other plugins first before uninstalling the system optimization plugin..
+        /// </summary>
+        public static string PluginExtensionsPage_CannotUninstallBasePluginMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CannotUninstallBasePluginMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot Uninstall.
+        /// </summary>
+        public static string PluginExtensionsPage_CannotUninstallTitle {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CannotUninstallTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Launch system tools and utilities.
         /// </summary>
         public static string ToolsPage_Description {
@@ -7144,6 +7423,33 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string ToolsPage_Launch_Button {
             get {
                 return ResourceManager.GetString("ToolsPage_Launch_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open File Location.
+        /// </summary>
+        public static string ToolsPage_ContextMenu_OpenFileLocation {
+            get {
+                return ResourceManager.GetString("ToolsPage_ContextMenu_OpenFileLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Path.
+        /// </summary>
+        public static string ToolsPage_ContextMenu_CopyPath {
+            get {
+                return ResourceManager.GetString("ToolsPage_ContextMenu_CopyPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Tools Directory.
+        /// </summary>
+        public static string ToolsPage_ContextMenu_OpenToolsDirectory {
+            get {
+                return ResourceManager.GetString("ToolsPage_ContextMenu_OpenToolsDirectory", resourceCulture);
             }
         }
         
