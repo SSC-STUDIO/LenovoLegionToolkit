@@ -15,39 +15,66 @@
     <wpfui:UiPage.Resources>
         <!-- Category Button Style - Enhanced -->
         <!-- Browser-style Tab Button Style -->
-        <Style x:Key="CategoryButtonStyle" TargetType="wpfui:Button">
+        <Style TargetType="RadioButton" x:Key="CategoryRadioButtonStyle">
             <Setter Property="Margin" Value="0,0,0,0" />
             <Setter Property="Padding" Value="20,10" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1,1,1,0" />
-            <Setter Property="CornerRadius" Value="8,8,0,0" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1,1,1,0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="wpfui:Button">
+                    <ControlTemplate TargetType="RadioButton">
                         <Border
-                            x:Name="Border"
+                            x:Name="RootBorder"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
+                            CornerRadius="8,8,0,0"
                             Padding="{TemplateBinding Padding}"
                             Margin="{TemplateBinding Margin}">
                             <ContentPresenter
+                                x:Name="ContentPresenter"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Content="{TemplateBinding Content}" />
+                                RecognizesAccessKey="True"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                TextElement.FontSize="{TemplateBinding FontSize}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderThickness" Value="1,1,1,0" />
+                                <Setter TargetName="RootBorder" Property="Margin" Value="0,-2,0,0" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -195,32 +222,13 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <wpfui:Button
+                                <RadioButton
                                     Content="{Binding CategoryName}"
-                                    Click="CategoryButton_Click"
-                                    Tag="{Binding}"
-                                    Margin="0,0,0,0">
-                                    <wpfui:Button.Style>
-                                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource CategoryButtonStyle}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                                                    <Setter Property="BorderThickness" Value="1,1,1,0" />
-                                                    <Setter Property="Margin" Value="0,-2,0,0" />
-                                                </DataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsSelected}" Value="True" />
-                                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:Button}, Path=IsMouseOver}" Value="True" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                                </MultiDataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </wpfui:Button.Style>
-                                </wpfui:Button>
+                                    Style="{StaticResource CategoryRadioButtonStyle}"
+                                    GroupName="ToolCategoriesNav"
+                                    IsChecked="{Binding IsSelected}"
+                                    Checked="CategoryRadioButton_Checked"
+                                    Tag="{Binding}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -238,6 +246,11 @@
             Margin="0,0,0,0"
             MouseWheel="ToolsScrollViewer_MouseWheel">
             <Grid>
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenToolsDirectory}" Click="ToolsContentContextMenu_OpenToolsDirectory_Click" />
+                    </ContextMenu>
+                </Grid.ContextMenu>
                 <ItemsControl
                     ItemsSource="{Binding SelectedCategory.SubCategories}"
                     BorderThickness="0"
@@ -305,6 +318,12 @@
                                             <Border
                                                 Tag="{Binding}"
                                                 MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                                <Border.ContextMenu>
+                                                    <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                        <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenFileLocation}" Click="ToolCardContextMenu_OpenFileLocation_Click" />
+                                                        <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_CopyPath}" Click="ToolCardContextMenu_CopyPath_Click" />
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
                                                 <Border.Style>
                                                     <Style TargetType="Border" BasedOn="{StaticResource ToolCardButtonStyle}">
                                                         <Style.Triggers>

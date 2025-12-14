@@ -24,3 +24,4 @@ public class SystemOptimizationPlugin : IPlugin
         // 插件卸载时的逻辑
     }
 }
+

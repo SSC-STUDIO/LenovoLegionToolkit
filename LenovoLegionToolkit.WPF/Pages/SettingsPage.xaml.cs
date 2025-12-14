@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -95,8 +95,19 @@ public partial class SettingsPage
         _autorunComboBox.SetItems(Enum.GetValues<AutorunState>(), Autorun.State, t => t.GetDisplayName());
         _minimizeToTrayToggle.IsChecked = _settings.Store.MinimizeToTray;
         _minimizeOnCloseToggle.IsChecked = _settings.Store.MinimizeOnClose;
-        _disableCompatibilityWarningToggle.IsChecked = _settings.Store.DisableUnsupportedHardwareWarning;
-        _showDonateButtonToggle.IsChecked = _settings.Store.ShowDonateButton;
+        
+        // Only show compatibility warning setting on incompatible devices
+        var (isCompatible, _) = await Compatibility.IsCompatibleAsync();
+        if (!isCompatible)
+        {
+            _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
+            _disableCompatibilityWarningToggle.IsChecked = _settings.Store.DisableUnsupportedHardwareWarning;
+        }
+        else
+        {
+            _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
+        }
+        
 
         var vantageStatus = await _vantageDisabler.GetStatusAsync();
         _vantageCard.Visibility = vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
@@ -179,8 +190,10 @@ public partial class SettingsPage
         _autorunComboBox.Visibility = Visibility.Visible;
         _minimizeToTrayToggle.Visibility = Visibility.Visible;
         _minimizeOnCloseToggle.Visibility = Visibility.Visible;
-        _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
-        _showDonateButtonToggle.Visibility = Visibility.Visible;
+        if (_disableCompatibilityWarningCard.Visibility == Visibility.Visible)
+        {
+            _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
+        }
         _vantageToggle.Visibility = Visibility.Visible;
         _legionZoneToggle.Visibility = Visibility.Visible;
         _fnKeysToggle.Visibility = Visibility.Visible;
@@ -566,6 +579,15 @@ public partial class SettingsPage
         window.ShowDialog();
     }
 
+    private void NavigationItemsSettingsCard_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var window = new NavigationItemsSettingsWindow { Owner = Window.GetWindow(this) };
+        window.ShowDialog();
+    }
+
     private void SynchronizeBrightnessToAllPowerPlansToggle_Click(object sender, RoutedEventArgs e)
     {
         if (_isRefreshing)
@@ -712,22 +734,4 @@ public partial class SettingsPage
         SystemPath.SetCLI(_cliPathToggle.IsChecked ?? false);
     }
 
-    private void ShowDonateButtonToggle_Click(object sender, RoutedEventArgs e)
-    {
-        if (_isRefreshing)
-            return;
-
-        var state = _showDonateButtonToggle.IsChecked;
-        if (state is null)
-            return;
-
-        _settings.Store.ShowDonateButton = state.Value;
-        _settings.SynchronizeStore();
-
-        // Notify MainWindow to update the donate button visibility
-        if (Application.Current.MainWindow is MainWindow mainWindow)
-        {
-            mainWindow.UpdateDonateButtonVisibility();
-        }
-    }
 }
