@@ -238,15 +238,13 @@
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
-                            Checked="CleanupNavButton_Checked"
-                            Visibility="Collapsed" />
+                            Checked="CleanupNavButton_Checked" />
                         <RadioButton
                             x:Name="_driverDownloadNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
-                            Checked="DriverDownloadNavButton_Checked"
-                            Visibility="Collapsed" />
+                            Checked="DriverDownloadNavButton_Checked" />
                     </StackPanel>
                 </Border>
                 
@@ -762,7 +760,7 @@
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     TextAlignment="Center"
                                     Margin="0,0,0,12"
-                                    Text="{x:Static resources:Resource.ToolsPage_Extensions_Title}" />
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Extensions}" />
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -770,7 +768,7 @@
                                     TextAlignment="Center"
                                     MaxWidth="500"
                                     HorizontalAlignment="Center"
-                                    Text="{x:Static resources:Resource.ToolsPage_Extensions_Description}"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Extensions_Description}"
                                     Margin="0,0,0,32"
                                     LineHeight="22" />
                                 <custom:CardControl MaxWidth="600" Margin="0,0,0,16">
@@ -780,11 +778,11 @@
                                             FontWeight="Medium"
                                             TextAlignment="Center"
                                             Margin="0,0,0,8"
-                                            Text="{x:Static resources:Resource.ToolsPage_Extensions_ComingSoon_Title}" />
+                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_Extensions_ComingSoon_Title}" />
                                         <TextBlock
                                             FontSize="14"
                                             TextAlignment="Center"
-                                            Text="{x:Static resources:Resource.ToolsPage_Extensions_ComingSoon_Message}" />
+                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_Extensions_ComingSoon_Message}" />
                                     </StackPanel>
                                 </custom:CardControl>
                                 <TextBlock

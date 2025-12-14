@@ -1,4 +1,4 @@
-﻿<local:BaseWindow
+<local:BaseWindow
     x:Class="LenovoLegionToolkit.WPF.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -102,26 +102,31 @@
                         PageTag="keyboardBacklight"
                         PageType="{x:Type pages:KeyboardBacklightPage}" />
                     <custom:NavigationItem
+                        x:Name="_batteryItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Battery}"
                         Icon="BatteryCheckmark24"
                         PageTag="battery"
                         PageType="{x:Type pages:BatteryPage}" />
                     <custom:NavigationItem
+                        x:Name="_automationItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
                         Icon="Rocket24"
                         PageTag="automation"
                         PageType="{x:Type pages:AutomationPage}" />
                     <custom:NavigationItem
+                        x:Name="_macroItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
                         Icon="ReceiptPlay24"
                         PageTag="macro"
                         PageType="{x:Type pages:MacroPage}" />
                     <custom:NavigationItem
+                        x:Name="_windowsOptimizationItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
                         Icon="Gauge24"
                         PageTag="windowsOptimization"
                         PageType="{x:Type pages:WindowsOptimizationPage}" />
                     <custom:NavigationItem
+                        x:Name="_toolsItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Tools}"
                         Icon="Toolbox24"
                         PageTag="tools"
@@ -135,12 +140,19 @@
                         PageTag="settings"
                         PageType="{x:Type pages:SettingsPage}" />
                     <custom:NavigationItem
+                        x:Name="_pluginExtensionsItem"
+                        Content="插件扩展"
+                        Icon="Apps24"
+                        PageTag="pluginExtensions"
+                        PageType="{x:Type pages:PluginExtensionsPage}" />
+                    <custom:NavigationItem
                         x:Name="_donateNavigationItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Donate}"
                         Icon="Money24"
                         PageTag="donate"
                         PageType="{x:Type pages:DonatePage}" />
                     <custom:NavigationItem
+                        x:Name="_aboutItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
                         Icon="Info24"
                         PageTag="about"

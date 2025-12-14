@@ -146,7 +146,5 @@ public class IoCModule : Module
         // 注册内置插件
         builder.Register<SystemOptimizationPlugin>();
         builder.Register<ToolsPlugin>();
-        builder.Register<CleanupPlugin>();
-        builder.Register<DriverDownloadPlugin>();
     }
 }

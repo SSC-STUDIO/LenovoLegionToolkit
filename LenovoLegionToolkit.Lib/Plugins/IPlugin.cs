@@ -45,3 +45,4 @@ public interface IPlugin
     /// </summary>
     void OnUninstalled();
 }
+

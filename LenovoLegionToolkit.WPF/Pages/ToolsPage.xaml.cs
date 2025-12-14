@@ -14,10 +14,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using LenovoLegionToolkit.WPF.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Wpf.Ui.Common;
@@ -28,11 +31,14 @@ namespace LenovoLegionToolkit.WPF.Pages;
 public partial class ToolsPage : INotifyPropertyChanged
 {
     private readonly string _toolsDirectory;
+    private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+    private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private ObservableCollection<ToolCategoryViewModel> _toolCategories = new();
     private ToolCategoryViewModel? _selectedCategory;
     private bool _hasTools;
     private ToolViewModel? _selectedTool;
     private static Dictionary<string, ToolInfoFromJson>? _toolsInfoCache;
+    private bool _extensionsEnabled;
 
     public ObservableCollection<ToolCategoryViewModel> ToolCategories
     {
@@ -54,19 +60,22 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             if (_selectedCategory == value)
                 return;
-            
+
             if (_selectedCategory != null)
                 _selectedCategory.IsSelected = false;
-            
+
             _selectedCategory = value;
-            
+
             if (_selectedCategory != null)
             {
                 _selectedCategory.IsSelected = true;
             }
-            
+
             OnPropertyChanged();
             OnPropertyChanged(nameof(FilteredTools));
+            
+            // 刷新插件市场UI，以便更新列宽度
+            RefreshExtensionsUI();
         }
     }
 
@@ -96,14 +105,182 @@ public partial class ToolsPage : INotifyPropertyChanged
     {
         var appDirectory = AppDomain.CurrentDomain.BaseDirectory;
         _toolsDirectory = Path.Combine(appDirectory, "tools");
-        
+
         InitializeComponent();
         DataContext = this;
+    }
+
+    public bool ExtensionsEnabled
+    {
+        get => _extensionsEnabled;
+        set
+        {
+            if (_extensionsEnabled == value)
+                return;
+            _extensionsEnabled = value;
+            OnPropertyChanged();
+        }
     }
 
     private async void ToolsPage_Loaded(object sender, RoutedEventArgs e)
     {
         await LoadToolsAsync();
+        RefreshExtensionsUI();
+    }
+
+    public async void RefreshExtensionsUI()
+    {
+        var previousExtensionsEnabled = ExtensionsEnabled;
+        ExtensionsEnabled = _applicationSettings.Store.ExtensionsEnabled;
+        
+        // 如果扩展功能的启用状态发生了变化，需要重新加载工具列表
+        if (previousExtensionsEnabled != ExtensionsEnabled)
+        {
+            // 重新加载工具列表
+            await LoadToolsAsync();
+            return;
+        }
+        
+        // 更新插件UI（新设计：类似工具箱工具列表）
+        UpdatePluginsUI();
+    }
+
+    /// <summary>
+    /// 通用的插件安装方法
+    /// </summary>
+    /// <param name="pluginId">要安装的插件ID</param>
+    private void InstallPlugin(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        _pluginManager.InstallPlugin(pluginId);
+        
+        // 刷新UI
+        RefreshExtensionsUI();
+        UpdatePluginsUI();
+        
+        // 更新主窗口导航栏
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.UpdateNavigationVisibility();
+        }
+    }
+
+    /// <summary>
+    /// 更新插件UI显示状态
+    /// </summary>
+    private void UpdatePluginsUI()
+    {
+        if (!ExtensionsEnabled)
+            return;
+
+        var hasSystemOptimization = _pluginManager.IsInstalled(PluginConstants.SystemOptimization);
+        var hasOtherPlugins = _pluginManager.GetInstalledPluginIds()
+            .Any(ext => !string.Equals(ext, PluginConstants.SystemOptimization, StringComparison.OrdinalIgnoreCase));
+
+        // 系统优化插件UI元素
+        var systemOptimizationPluginName = this.FindName("_systemOptimizationPluginName") as System.Windows.Controls.TextBlock;
+        var systemOptimizationPluginActions = this.FindName("_systemOptimizationPluginActions") as System.Windows.Controls.StackPanel;
+        var systemOptimizationInstalledStatus = this.FindName("_systemOptimizationInstalledStatus") as System.Windows.Controls.StackPanel;
+        var systemOptimizationInstallButton = this.FindName("_systemOptimizationInstallButton") as Wpf.Ui.Controls.Button;
+        var systemOptimizationUninstallButton = this.FindName("_systemOptimizationUninstallButton") as Wpf.Ui.Controls.Button;
+        var systemOptimizationUninstallButtonInStatus = this.FindName("_systemOptimizationUninstallButtonInStatus") as Wpf.Ui.Controls.Button;
+        var systemOptimizationInstallButtonText = this.FindName("_systemOptimizationInstallButtonText") as System.Windows.Controls.TextBlock;
+        var systemOptimizationInstalledStatusText = this.FindName("_systemOptimizationInstalledStatusText") as System.Windows.Controls.TextBlock;
+
+        if (systemOptimizationPluginName != null)
+        {
+            systemOptimizationPluginName.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Title", Resource.Culture) ?? "系统优化插件";
+        }
+
+        // 设置插件描述（一行说明）
+        var systemOptimizationPluginDescription = this.FindName("_systemOptimizationPluginDescription") as System.Windows.Controls.TextBlock;
+        if (systemOptimizationPluginDescription != null)
+        {
+            systemOptimizationPluginDescription.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Description", Resource.Culture) ?? "安装系统优化插件以访问系统优化和清理功能";
+        }
+
+        if (systemOptimizationPluginActions != null && systemOptimizationInstalledStatus != null)
+        {
+            if (hasSystemOptimization || hasOtherPlugins)
+            {
+                // 已安装状态
+                systemOptimizationPluginActions.Visibility = Visibility.Collapsed;
+                systemOptimizationInstalledStatus.Visibility = Visibility.Visible;
+                
+                if (systemOptimizationInstalledStatusText != null)
+                {
+                    systemOptimizationInstalledStatusText.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_PluginInstalled", Resource.Culture) ?? "已安装";
+                }
+
+                // 如果有其他插件，禁用卸载按钮（因为系统优化插件是基础插件）
+                var uninstallButtons = new List<Wpf.Ui.Controls.Button>();
+                if (systemOptimizationUninstallButton != null)
+                    uninstallButtons.Add(systemOptimizationUninstallButton);
+                if (systemOptimizationUninstallButtonInStatus != null)
+                    uninstallButtons.Add(systemOptimizationUninstallButtonInStatus);
+
+                foreach (var uninstallButton in uninstallButtons)
+                {
+                    if (hasOtherPlugins)
+                    {
+                        // 有其他插件时，系统优化插件无法卸载
+                        uninstallButton.IsEnabled = false;
+                        uninstallButton.ToolTip = Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallBasePlugin", Resource.Culture) ?? "系统优化插件是基础插件，当有其他插件安装时无法卸载";
+                    }
+                    else
+                    {
+                        // 只有系统优化插件时，可以卸载
+                        uninstallButton.IsEnabled = true;
+                        uninstallButton.ToolTip = null;
+                    }
+                }
+            }
+            else
+            {
+                // 未安装状态
+                systemOptimizationPluginActions.Visibility = Visibility.Visible;
+                systemOptimizationInstalledStatus.Visibility = Visibility.Collapsed;
+
+                if (systemOptimizationInstallButtonText != null)
+                {
+                    systemOptimizationInstallButtonText.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_InstallPlugin", Resource.Culture) ?? "安装";
+                }
+            }
+        }
+    }
+
+    private void _systemOptimizationPluginButton_Click(object sender, RoutedEventArgs e)
+    {
+        InstallPlugin(PluginConstants.SystemOptimization);
+        // 刷新UI以更新按钮状态
+        UpdatePluginsUI();
+    }
+
+    private void _systemOptimizationUninstallButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_pluginManager.UninstallPlugin(PluginConstants.SystemOptimization))
+        {
+            // 无法卸载（可能因为还有其他插件）
+            System.Windows.MessageBox.Show(
+                Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallBasePluginMessage", Resource.Culture) ?? 
+                "系统优化插件是基础插件。当有其他插件安装时，系统优化插件无法卸载。请先卸载其他插件后再卸载系统优化插件。",
+                Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallTitle", Resource.Culture) ?? "无法卸载",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+            return;
+        }
+
+        // 刷新UI
+        RefreshExtensionsUI();
+        UpdatePluginsUI();
+
+        // 更新主窗口导航栏
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.UpdateNavigationVisibility();
+        }
     }
 
     private async Task LoadToolsAsync()
@@ -112,13 +289,13 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Looking for tools directory: {_toolsDirectory}");
-            
+
             // 快速检查目录是否存在（在主线程）
             if (!Directory.Exists(_toolsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Tools directory not found: {_toolsDirectory}");
-                
+
                 // 发生错误时也设置空集合以显示空状态提示
                 ToolCategories = new ObservableCollection<ToolCategoryViewModel>();
                 return;
@@ -129,7 +306,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             {
                 // 加载工具信息缓存（从 tools.json）
                 LoadToolsInfoCache(_toolsDirectory);
-                
+
                 var result = new Dictionary<string, ToolCategoryViewModel>();
                 var categoryDirs = Directory.GetDirectories(_toolsDirectory);
 
@@ -159,17 +336,17 @@ public partial class ToolsPage : INotifyPropertyChanged
                 {
                     var physicalCategoryName = Path.GetFileName(categoryDir);
                     var tools = await ScanToolsInDirectoryAsync(categoryDir);
-                    
+
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Category '{physicalCategoryName}': found {tools.Count} tools");
-                    
+
                     if (tools.Count > 0)
                     {
                         // 获取显示分类名称
                         var displayCategoryName = categoryMapping.TryGetValue(physicalCategoryName, out var mappedName)
                             ? mappedName
                             : physicalCategoryName;
-                        
+
                         return new
                         {
                             DisplayCategoryName = displayCategoryName,
@@ -181,19 +358,22 @@ public partial class ToolsPage : INotifyPropertyChanged
                 });
 
                 var categoryResults = await Task.WhenAll(categoryTasks);
-                
+
                 // 分离命令工具（有 command 字段的工具）和普通工具
                 var commandToolsByCategory = new Dictionary<string, List<ToolViewModel>>();
                 var regularTools = new List<(string DisplayCategoryName, string PhysicalCategoryName, List<ToolViewModel> Tools)>();
-                
+
+                // 从 tools.json 直接加载所有有 command 字段的工具（不需要物理文件夹）
+                LoadCommandToolsFromJson(_toolsDirectory, commandToolsByCategory);
+
                 foreach (var categoryResult in categoryResults.Where(c => c != null)!)
                 {
                     if (categoryResult == null) continue;
-                    
-                    // 分离命令工具和普通工具（命令工具包括有 command 字段的工具和 .bat 文件）
-                    var commandToolsInCategory = categoryResult.Tools.Where(t => !string.IsNullOrEmpty(t.Command) || t.IsBatchFile).ToList();
-                    var regularToolsInCategory = categoryResult.Tools.Where(t => string.IsNullOrEmpty(t.Command) && !t.IsBatchFile).ToList();
-                    
+
+                    // 分离命令工具和普通工具（命令工具包括有 command 字段的工具）
+                    var commandToolsInCategory = categoryResult.Tools.Where(t => !string.IsNullOrEmpty(t.Command)).ToList();
+                    var regularToolsInCategory = categoryResult.Tools.Where(t => string.IsNullOrEmpty(t.Command)).ToList();
+
                     // 收集命令工具，按原始分类分组
                     if (commandToolsInCategory.Count > 0)
                     {
@@ -203,14 +383,14 @@ public partial class ToolsPage : INotifyPropertyChanged
                         }
                         commandToolsByCategory[categoryResult.PhysicalCategoryName].AddRange(commandToolsInCategory);
                     }
-                    
+
                     // 收集普通工具
                     if (regularToolsInCategory.Count > 0)
                     {
                         regularTools.Add((categoryResult.DisplayCategoryName, categoryResult.PhysicalCategoryName, regularToolsInCategory));
                     }
                 }
-                
+
                 // 处理普通工具
                 foreach (var (displayCategoryName, physicalCategoryName, tools) in regularTools)
                 {
@@ -223,7 +403,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                             SubCategories = new ObservableCollection<ToolSubCategoryViewModel>()
                         };
                     }
-                    
+
                     // 添加子分类
                     var subCategory = new ToolSubCategoryViewModel
                     {
@@ -231,14 +411,14 @@ public partial class ToolsPage : INotifyPropertyChanged
                         Tools = new ObservableCollection<ToolViewModel>(tools)
                     };
                     result[displayCategoryName].SubCategories.Add(subCategory);
-                    
+
                     // 同时添加到主工具列表（用于向后兼容）
                     foreach (var tool in tools)
                     {
                         result[displayCategoryName].Tools.Add(tool);
                     }
                 }
-                
+
                 // 处理命令工具（批处理脚本），按原始分类组织
                 if (commandToolsByCategory.Count > 0)
                 {
@@ -249,7 +429,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                         SubCategories = new ObservableCollection<ToolSubCategoryViewModel>(),
                         IsBatchToolsCategory = true
                     };
-                    
+
                     foreach (var kvp in commandToolsByCategory)
                     {
                         var subCategory = new ToolSubCategoryViewModel
@@ -258,7 +438,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                             Tools = new ObservableCollection<ToolViewModel>(kvp.Value)
                         };
                         result["Batch_Tools"].SubCategories.Add(subCategory);
-                        
+
                         foreach (var tool in kvp.Value)
                         {
                             result["Batch_Tools"].Tools.Add(tool);
@@ -266,10 +446,15 @@ public partial class ToolsPage : INotifyPropertyChanged
                     }
                 }
 
+                // 不再添加扩展分类（移除插件拓展标签页）
+
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Total display categories with tools: {result.Count}");
 
-                return result.Values.OrderBy(c => c.CategoryName).ToList();
+                // 所有分类按名称排序
+                return result.Values
+                    .OrderBy(c => c.CategoryName)
+                    .ToList();
             });
 
             // 回到 UI 线程更新界面
@@ -277,7 +462,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             {
                 // 在设置 ToolCategories 之前，先找到快捷工具分类
                 var batchToolsCategory = categories.FirstOrDefault(c => c.IsBatchToolsCategory);
-                
+
                 // 先清空当前选择，避免在设置 ToolCategories 时触发自动选择
                 var previousSelected = _selectedCategory;
                 if (previousSelected != null)
@@ -285,16 +470,17 @@ public partial class ToolsPage : INotifyPropertyChanged
                     previousSelected.IsSelected = false;
                 }
                 _selectedCategory = null;
-                
+
                 // 设置分类列表
                 ToolCategories = new ObservableCollection<ToolCategoryViewModel>(categories);
+                
             });
-            
+
             // 延迟一下，确保 UI 已经渲染完成，然后再设置选中状态
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var batchToolsCategory = ToolCategories?.FirstOrDefault(c => c.IsBatchToolsCategory);
-                
+
                 // 确保默认选中快捷工具（Batch_Tools），如果存在的话
                 if (batchToolsCategory != null)
                 {
@@ -311,7 +497,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to load tools.", ex);
-            
+
             // 发生错误时也设置空集合以显示空状态提示
             ToolCategories = new ObservableCollection<ToolCategoryViewModel>();
         }
@@ -324,30 +510,30 @@ public partial class ToolsPage : INotifyPropertyChanged
         try
         {
             var subDirs = Directory.GetDirectories(directory);
-            
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Scanning directory '{directory}': found {subDirs.Length} subdirectories");
-            
+
             // 并行处理每个工具以提高性能
             var toolTasks = subDirs.Select(subDir =>
             {
                 var toolName = Path.GetFileName(subDir);
-                
+
                 // 先尝试加载工具信息 JSON 文件，检查是否有命令
                 var toolInfo = LoadToolInfo(subDir, toolName);
-                
+
                 // 如果有命令，则创建命令工具（不需要查找文件）
                 if (!string.IsNullOrEmpty(toolInfo.Command))
                 {
                     // 确保名称不为空
-                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName) 
-                        ? toolInfo.DisplayName 
-                        : !string.IsNullOrWhiteSpace(toolInfo.Name) 
-                            ? toolInfo.Name 
-                            : !string.IsNullOrWhiteSpace(toolName) 
-                                ? toolName 
+                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName)
+                        ? toolInfo.DisplayName
+                        : !string.IsNullOrWhiteSpace(toolInfo.Name)
+                            ? toolInfo.Name
+                            : !string.IsNullOrWhiteSpace(toolName)
+                                ? toolName
                                 : "Unknown Tool";
-                    
+
                     var tool = new ToolViewModel
                     {
                         Name = toolDisplayName,
@@ -355,34 +541,31 @@ public partial class ToolsPage : INotifyPropertyChanged
                         ExecutablePath = string.Empty, // 命令工具不需要路径
                         WorkingDirectory = subDir,
                         IconSource = null,
-                        IsBatchFile = true,
+                        IsBatchFile = false, // 不再区分批处理文件，统一使用 command 字段
                         Command = toolInfo.Command,
                         Version = toolInfo.Version,
                         Author = toolInfo.Author
                     };
                     return Task.FromResult<ToolViewModel?>(tool);
                 }
-                
+
                 // 如果没有命令，则查找可执行文件
                 var toolPath = FindToolExecutable(subDir);
-                
+
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Tool '{toolName}': executable path = {toolPath ?? "NOT FOUND"}");
-                
+
                 if (toolPath != null)
                 {
-                    // 检查是否为 .bat 文件
-                    var isBatchFile = toolPath.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
-                    
                     // 确保名称不为空
-                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName) 
-                        ? toolInfo.DisplayName 
-                        : !string.IsNullOrWhiteSpace(toolInfo.Name) 
-                            ? toolInfo.Name 
-                            : !string.IsNullOrWhiteSpace(toolName) 
-                                ? toolName 
+                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName)
+                        ? toolInfo.DisplayName
+                        : !string.IsNullOrWhiteSpace(toolInfo.Name)
+                            ? toolInfo.Name
+                            : !string.IsNullOrWhiteSpace(toolName)
+                                ? toolName
                                 : "Unknown Tool";
-                    
+
                     // 先创建工具对象，不立即提取图标（延迟加载以提高初始加载速度）
                     var tool = new ToolViewModel
                     {
@@ -391,73 +574,72 @@ public partial class ToolsPage : INotifyPropertyChanged
                         ExecutablePath = toolPath,
                         WorkingDirectory = subDir,
                         IconSource = null, // 延迟加载图标
-                        IsBatchFile = isBatchFile,
+                        IsBatchFile = false, // 不再支持 .bat 文件，统一使用 command 字段
                         Command = null,
                         Version = toolInfo.Version,
                         Author = toolInfo.Author
                     };
-                    
-                    // 只有非 .bat 文件才加载图标
-                    if (!isBatchFile)
+
+                    // 加载图标（现在所有工具都是可执行文件，都可以加载图标）
                     {
-                    // 延迟加载图标以提高初始加载速度
-                    // 图标将在后台异步加载，不阻塞主加载流程
-                    var iconLoadTask = Task.Run(async () =>
-                    {
-                        try
+                        // 延迟加载图标以提高初始加载速度
+                        // 图标将在后台异步加载，不阻塞主加载流程
+                        var iconLoadTask = Task.Run(async () =>
                         {
-                            // 提取图标 - ExtractAssociatedIcon 通常会提取 32x32 的图标
-                            var icon = System.Drawing.Icon.ExtractAssociatedIcon(toolPath);
-                            if (icon != null)
+                            try
                             {
-                                // 在 UI 线程创建 ImageSource
-                                var iconSource = await Application.Current.Dispatcher.InvokeAsync(() =>
+                                // 提取图标 - ExtractAssociatedIcon 通常会提取 32x32 的图标
+                                var icon = System.Drawing.Icon.ExtractAssociatedIcon(toolPath);
+                                if (icon != null)
                                 {
-                                    try
+                                    // 在 UI 线程创建 ImageSource
+                                    var iconSource = await Application.Current.Dispatcher.InvokeAsync(() =>
                                     {
-                                        // 创建位图源，使用高质量渲染
-                                        var imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
-                                            icon.Handle,
-                                            System.Windows.Int32Rect.Empty,
-                                            System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                                        
-                                        imageSource.Freeze(); // 冻结以便跨线程使用
-                                        return imageSource;
-                                    }
-                                    catch
-                                    {
-                                        return null;
-                                    }
-                                    finally
-                                    {
-                                        icon?.Dispose();
-                                    }
-                                });
-                                
-                                // 更新工具的图标（这会触发 UI 更新）
-                                if (iconSource != null)
-                                {
-                                    await Application.Current.Dispatcher.InvokeAsync(() =>
-                                    {
-                                        tool.IconSource = iconSource;
+                                        try
+                                        {
+                                            // 创建位图源，使用高质量渲染
+                                            var imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                                                icon.Handle,
+                                                System.Windows.Int32Rect.Empty,
+                                                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+
+                                            imageSource.Freeze(); // 冻结以便跨线程使用
+                                            return imageSource;
+                                        }
+                                        catch
+                                        {
+                                            return null;
+                                        }
+                                        finally
+                                        {
+                                            icon?.Dispose();
+                                        }
                                     });
+
+                                    // 更新工具的图标（这会触发 UI 更新）
+                                    if (iconSource != null)
+                                    {
+                                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                                        {
+                                            tool.IconSource = iconSource;
+                                        });
+                                    }
                                 }
                             }
-                        }
-                        catch
+                            catch
+                            {
+                                // 忽略图标提取错误
+                            }
+                        });
+
+                        // 配置任务以忽略未观察的异常
+                        _ = iconLoadTask.ContinueWith(t =>
                         {
-                            // 忽略图标提取错误
-                        }
-                    });
-                    
-                    // 配置任务以忽略未观察的异常
-                    _ = iconLoadTask.ContinueWith(t =>
-                    {
-                        if (t.IsFaulted && Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to load icon for tool: {toolName}", t.Exception);
-                    }, TaskContinuationOptions.OnlyOnFaulted);
+                            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to load icon for tool: {toolName}", t.Exception);
+                        }, TaskContinuationOptions.OnlyOnFaulted);
                     }
-                    
+
                     return Task.FromResult<ToolViewModel?>(tool);
                 }
                 return Task.FromResult<ToolViewModel?>(null);
@@ -484,12 +666,12 @@ public partial class ToolsPage : INotifyPropertyChanged
         try
         {
             _toolsInfoCache = new Dictionary<string, ToolInfoFromJson>(StringComparer.OrdinalIgnoreCase);
-            
+
             if (File.Exists(toolsJsonPath))
             {
                 var jsonContent = File.ReadAllText(toolsJsonPath);
                 var toolsData = JsonConvert.DeserializeObject<ToolsJsonData>(jsonContent);
-                
+
                 if (toolsData?.Categories != null)
                 {
                     foreach (var category in toolsData.Categories)
@@ -504,7 +686,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                             }
                         }
                     }
-                    
+
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Loaded {_toolsInfoCache.Count} tools from tools.json");
                 }
@@ -518,6 +700,88 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
     }
 
+    private static void LoadCommandToolsFromJson(string toolsDirectory, Dictionary<string, List<ToolViewModel>> commandToolsByCategory)
+    {
+        var toolsJsonPath = Path.Combine(toolsDirectory, "tools.json");
+        try
+        {
+            if (!File.Exists(toolsJsonPath))
+                return;
+
+            var jsonContent = File.ReadAllText(toolsJsonPath);
+            var toolsData = JsonConvert.DeserializeObject<ToolsJsonData>(jsonContent);
+
+            if (toolsData?.Categories == null)
+                return;
+
+            // 根据当前语言选择描述
+            var currentLanguage = Resource.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
+            var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
+                           string.IsNullOrEmpty(currentLanguage);
+
+            foreach (var category in toolsData.Categories)
+            {
+                if (category.Tools == null)
+                    continue;
+
+                foreach (var toolInfo in category.Tools)
+                {
+                    // 只处理有 command 字段的工具
+                    if (string.IsNullOrWhiteSpace(toolInfo.Command))
+                        continue;
+
+                    // 检查工具文件夹是否存在，如果存在则跳过（因为会在 ScanToolsInDirectoryAsync 中处理）
+                    var toolFolderPath = Path.Combine(toolsDirectory, category.Name, toolInfo.Name);
+                    if (Directory.Exists(toolFolderPath))
+                        continue; // 如果文件夹存在，跳过这里，让 ScanToolsInDirectoryAsync 处理
+
+                    // 创建工具对象
+                    var toolDisplayName = !string.IsNullOrWhiteSpace(toolInfo.DisplayName)
+                        ? toolInfo.DisplayName
+                        : !string.IsNullOrWhiteSpace(toolInfo.Name)
+                            ? toolInfo.Name
+                            : "Unknown Tool";
+
+                    var description = isEnglish && !string.IsNullOrEmpty(toolInfo.DescriptionEn)
+                        ? toolInfo.DescriptionEn
+                        : toolInfo.Description;
+
+                    var tool = new ToolViewModel
+                    {
+                        Name = toolDisplayName,
+                        Description = description ?? string.Empty,
+                        ExecutablePath = string.Empty,
+                        WorkingDirectory = toolsDirectory, // 使用工具根目录作为工作目录
+                        IconSource = null,
+                        IsBatchFile = false,
+                        Command = toolInfo.Command,
+                        Version = toolInfo.Version,
+                        Author = toolInfo.Author
+                    };
+
+                    // 添加到对应分类
+                    if (!commandToolsByCategory.ContainsKey(category.Name))
+                    {
+                        commandToolsByCategory[category.Name] = new List<ToolViewModel>();
+                    }
+
+                    commandToolsByCategory[category.Name].Add(tool);
+                }
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+            {
+                var totalCommandTools = commandToolsByCategory.Values.Sum(tools => tools.Count);
+                Log.Instance.Trace($"Loaded {totalCommandTools} command tools from tools.json (without physical folders)");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to load command tools from tools.json: {toolsJsonPath}", ex);
+        }
+    }
+
     private ToolInfo LoadToolInfo(string toolDirectory, string defaultName)
     {
         try
@@ -528,21 +792,21 @@ public partial class ToolsPage : INotifyPropertyChanged
                 var categoryName = Path.GetFileName(Path.GetDirectoryName(toolDirectory));
                 var toolName = Path.GetFileName(toolDirectory);
                 var cacheKey = $"{categoryName}/{toolName}";
-                
+
                 if (_toolsInfoCache.TryGetValue(cacheKey, out var cachedInfo))
                 {
                     // 根据当前语言返回对应的描述
                     var currentLanguage = Resource.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
-                    var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) || 
+                    var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
                                    string.IsNullOrEmpty(currentLanguage);
-                    
+
                     // 优先使用当前语言的翻译，如果没有则使用英文翻译作为默认值
                     var description = isEnglish && !string.IsNullOrEmpty(cachedInfo.DescriptionEn)
                         ? cachedInfo.DescriptionEn
                         : !isEnglish && !string.IsNullOrEmpty(cachedInfo.DescriptionEn)
                             ? cachedInfo.DescriptionEn
                             : cachedInfo.Description;
-                    
+
                     return new ToolInfo
                     {
                         Name = cachedInfo.Name,
@@ -554,10 +818,10 @@ public partial class ToolsPage : INotifyPropertyChanged
                     };
                 }
             }
-            
+
             // 如果缓存中没有，尝试查找 tool.json 或 info.json
             var jsonFiles = new[] { "tool.json", "info.json" };
-            
+
             foreach (var jsonFile in jsonFiles)
             {
                 var jsonPath = Path.Combine(toolDirectory, jsonFile);
@@ -565,14 +829,14 @@ public partial class ToolsPage : INotifyPropertyChanged
                 {
                     var jsonContent = File.ReadAllText(jsonPath);
                     var toolInfo = JsonConvert.DeserializeObject<ToolInfo>(jsonContent);
-                    
+
                     if (toolInfo != null)
                     {
                         // 根据当前语言返回对应的描述
                         var currentLanguage = Resource.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
-                        var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) || 
+                        var isEnglish = currentLanguage.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
                                        string.IsNullOrEmpty(currentLanguage);
-                        
+
                         // 优先使用当前语言的翻译，如果没有则使用英文翻译作为默认值
                         if (isEnglish && !string.IsNullOrEmpty(toolInfo.DescriptionEn))
                         {
@@ -583,7 +847,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                             // 非英文语言时，如果有英文翻译则使用英文翻译作为默认值
                             toolInfo.Description = toolInfo.DescriptionEn;
                         }
-                        
+
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Loaded tool info from {jsonPath}: Name={toolInfo.Name}, Description={toolInfo.Description}");
                         return toolInfo;
@@ -611,18 +875,13 @@ public partial class ToolsPage : INotifyPropertyChanged
             {
                 // 优先选择与目录名相同的exe文件
                 var dirName = Path.GetFileName(directory);
-                var matchingExe = exeFiles.FirstOrDefault(f => 
+                var matchingExe = exeFiles.FirstOrDefault(f =>
                     Path.GetFileNameWithoutExtension(f).Equals(dirName, StringComparison.OrdinalIgnoreCase));
-                
+
                 return matchingExe ?? exeFiles[0];
             }
 
-            // 查找 .bat 文件
-            var batFiles = Directory.GetFiles(directory, "*.bat", SearchOption.TopDirectoryOnly);
-            if (batFiles.Length > 0)
-            {
-                return batFiles[0];
-            }
+            // 不再查找 .bat 文件，所有命令都应该通过 tools.json 的 command 字段配置
 
             // 递归查找子目录中的exe文件（最多一层）
             var subDirs = Directory.GetDirectories(directory);
@@ -653,6 +912,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             "Gaming_Tools" => "ToolsPage_Category_Gaming_Tools",
             "System_Tools" => "ToolsPage_Category_System_Tools",
             "Batch_Tools" => "ToolsPage_Category_Batch_Tools",
+            "Extensions" => "ToolsPage_Category_Extensions",
             // 保留原有分类映射（向后兼容）
             "CPU_Tools" => "ToolsPage_Category_CPU_Tools",
             "Display_Tools" => "ToolsPage_Category_Display_Tools",
@@ -672,7 +932,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             var value = Resource.ResourceManager.GetString(resourceKey, Resource.Culture);
             if (!string.IsNullOrEmpty(value))
                 return value;
-            
+
             // 如果当前文化找不到资源，尝试使用英文查找
             value = Resource.ResourceManager.GetString(resourceKey, new CultureInfo("en"));
             if (!string.IsNullOrEmpty(value))
@@ -699,9 +959,9 @@ public partial class ToolsPage : INotifyPropertyChanged
         return description;
     }
 
-    private void CategoryButton_Click(object sender, RoutedEventArgs e)
+    private void CategoryRadioButton_Checked(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not ToolCategoryViewModel category)
+        if (sender is not System.Windows.Controls.RadioButton radioButton || radioButton.Tag is not ToolCategoryViewModel category)
             return;
 
         SelectedCategory = category;
@@ -724,6 +984,90 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
     }
 
+    private void ToolCardContextMenu_OpenFileLocation_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem menuItem)
+        {
+            // 从 ContextMenu 的 DataContext 获取工具
+            var contextMenu = menuItem.Parent as System.Windows.Controls.ContextMenu;
+            var tool = contextMenu?.DataContext as ToolViewModel;
+            
+            if (tool != null)
+            {
+                if (!string.IsNullOrWhiteSpace(tool.ExecutablePath) && File.Exists(tool.ExecutablePath))
+                {
+                    try
+                    {
+                        Process.Start("explorer.exe", $"/select,\"{tool.ExecutablePath}\"");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to open file location for {tool.ExecutablePath}", ex);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(tool.WorkingDirectory) && Directory.Exists(tool.WorkingDirectory))
+                {
+                    try
+                    {
+                        Process.Start("explorer.exe", tool.WorkingDirectory);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to open directory {tool.WorkingDirectory}", ex);
+                    }
+                }
+            }
+        }
+    }
+
+    private void ToolCardContextMenu_CopyPath_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem menuItem)
+        {
+            // 从 ContextMenu 的 DataContext 获取工具
+            var contextMenu = menuItem.Parent as System.Windows.Controls.ContextMenu;
+            var tool = contextMenu?.DataContext as ToolViewModel;
+            
+            if (tool != null)
+            {
+                var pathToCopy = !string.IsNullOrWhiteSpace(tool.ExecutablePath) 
+                    ? tool.ExecutablePath 
+                    : (!string.IsNullOrWhiteSpace(tool.WorkingDirectory) ? tool.WorkingDirectory : string.Empty);
+
+                if (!string.IsNullOrWhiteSpace(pathToCopy))
+                {
+                    try
+                    {
+                        System.Windows.Clipboard.SetText(pathToCopy);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to copy path to clipboard", ex);
+                    }
+                }
+            }
+        }
+    }
+
+    private void ToolsContentContextMenu_OpenToolsDirectory_Click(object sender, RoutedEventArgs e)
+    {
+        if (Directory.Exists(_toolsDirectory))
+        {
+            try
+            {
+                Process.Start("explorer.exe", _toolsDirectory);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to open tools directory", ex);
+            }
+        }
+    }
+
     private void LaunchTool(ToolViewModel tool)
     {
         if (tool == null)
@@ -731,14 +1075,15 @@ public partial class ToolsPage : INotifyPropertyChanged
 
         try
         {
-            // 如果有命令，直接执行命令
+            // 如果有命令，直接执行命令（所有命令都通过 cmd.exe 执行）
             if (!string.IsNullOrEmpty(tool.Command))
             {
+                var command = tool.Command.Trim();
                 var processStartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c {tool.Command}",
-                    WorkingDirectory = tool.WorkingDirectory,
+                    Arguments = $"/c {command}",
+                    WorkingDirectory = tool.WorkingDirectory ?? string.Empty,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
@@ -748,16 +1093,16 @@ public partial class ToolsPage : INotifyPropertyChanged
             else
             {
                 // 否则执行可执行文件
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = tool.ExecutablePath,
-                WorkingDirectory = tool.WorkingDirectory,
-                UseShellExecute = true
-            };
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = tool.ExecutablePath,
+                    WorkingDirectory = tool.WorkingDirectory,
+                    UseShellExecute = true
+                };
 
-            Process.Start(processStartInfo);
+                Process.Start(processStartInfo);
             }
-            
+
             // 启动成功后，清除选择
             SelectedTool = null;
         }
@@ -765,10 +1110,98 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to start tool: {tool.Name}", ex);
-            
+
             var title = Resource.ResourceManager.GetString("ToolsPage_Title", Resource.Culture) ?? "Tools";
             var errorMsg = Resource.ResourceManager.GetString("ToolsPage_Error_StartTool", Resource.Culture) ?? "Failed to start tool";
             SnackbarHelper.Show(title, $"{errorMsg}: {tool.Name}", SnackbarType.Error);
+        }
+    }
+
+    private void PluginCard_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        // 如果点击的是按钮，不处理（让按钮的点击事件处理）
+        var source = e.OriginalSource as System.Windows.DependencyObject;
+        if (source != null)
+        {
+            // 检查点击的元素是否是按钮或其子元素
+            var current = source;
+            while (current != null)
+            {
+                if (current is Wpf.Ui.Controls.Button || current is System.Windows.Controls.Button)
+                    return; // 点击的是按钮，不处理
+                current = System.Windows.Media.VisualTreeHelper.GetParent(current);
+            }
+        }
+
+        if (sender is not System.Windows.Controls.Border border)
+            return;
+
+        var pluginId = border.Tag?.ToString();
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        // 显示插件详细信息
+        ShowPluginDetails(pluginId);
+        
+        // 阻止事件冒泡
+        e.Handled = true;
+    }
+
+    private void ShowPluginDetails(string pluginId)
+    {
+        if (pluginId == "SystemOptimization")
+        {
+            // 显示系统优化插件的详细信息
+            var pluginName = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Title", Resource.Culture) ?? "系统优化插件";
+            var pluginDescription = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Description", Resource.Culture) ?? 
+                "安装系统优化插件以访问系统优化和清理功能。此插件将在导航菜单中启用‘系统优化’页面。";
+
+            // 更新工具详情面板
+            if (ToolDetailsPanel != null)
+            {
+                ToolDetailsPanel.Visibility = Visibility.Visible;
+
+                // 更新图标
+                if (ToolDetailsIcon != null && ToolDetailsFallbackIcon != null)
+                {
+                    ToolDetailsIcon.Visibility = Visibility.Collapsed;
+                    ToolDetailsFallbackIcon.Symbol = Wpf.Ui.Common.SymbolRegular.Gauge24;
+                    ToolDetailsFallbackIcon.Visibility = Visibility.Visible;
+                }
+
+                // 更新文本信息
+                if (ToolDetailsName != null)
+                {
+                    ToolDetailsName.Text = pluginName;
+                }
+
+                if (ToolDetailsDescription != null)
+                {
+                    ToolDetailsDescription.Text = pluginDescription;
+                }
+
+                // 隐藏版本、作者、路径等信息（插件不需要显示这些）
+                if (ToolDetailsVersion != null)
+                {
+                    ToolDetailsVersion.Visibility = Visibility.Collapsed;
+                }
+
+                if (ToolDetailsAuthor != null)
+                {
+                    ToolDetailsAuthor.Visibility = Visibility.Collapsed;
+                }
+
+                if (ToolDetailsPath != null)
+                {
+                    ToolDetailsPath.Visibility = Visibility.Collapsed;
+                }
+
+                // 隐藏启动按钮（插件不需要启动）
+                if (ToolDetailsLaunchButton != null)
+                {
+                    ToolDetailsLaunchButton.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 
@@ -782,7 +1215,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
             scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
-        e.Handled = true;
+            e.Handled = true;
         }
     }
 
@@ -795,8 +1228,8 @@ public partial class ToolsPage : INotifyPropertyChanged
             var scrollViewer = FindVisualChild<System.Windows.Controls.ScrollViewer>(grid);
             if (scrollViewer != null && scrollViewer.ScrollableHeight > 0)
             {
-        var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
-        scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
+                var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
+                scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
                 e.Handled = true;
             }
         }
@@ -809,7 +1242,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
             if (child is T result)
                 return result;
-            
+
             var childOfChild = FindVisualChild<T>(child);
             if (childOfChild != null)
                 return childOfChild;
@@ -824,7 +1257,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         {
             if (_selectedTool == value)
                 return;
-            
+
             _selectedTool = value;
             UpdateToolDetailsPanel();
             OnPropertyChanged();
@@ -856,8 +1289,8 @@ public partial class ToolsPage : INotifyPropertyChanged
 
         // 更新文本信息
         // 确保名称不为空，如果为空则使用默认值
-        var toolName = !string.IsNullOrWhiteSpace(_selectedTool.Name) 
-            ? _selectedTool.Name 
+        var toolName = !string.IsNullOrWhiteSpace(_selectedTool.Name)
+            ? _selectedTool.Name
             : "Unknown Tool";
         ToolDetailsName.Text = toolName;
         ToolDetailsDescription.Text = _selectedTool.Description ?? "";
@@ -891,7 +1324,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         // 如果 ExecutablePath 为空或 null，也不显示路径
         var hasValidPath = !string.IsNullOrWhiteSpace(_selectedTool.ExecutablePath);
         var isCommandTool = !string.IsNullOrWhiteSpace(_selectedTool.Command);
-        
+
         if (hasValidPath && !isCommandTool)
         {
             var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path", Resource.Culture) ?? "Path: {0}";
@@ -937,6 +1370,7 @@ public class ToolCategoryViewModel : INotifyPropertyChanged
     public ObservableCollection<ToolViewModel> Tools { get; set; } = new();
     public ObservableCollection<ToolSubCategoryViewModel> SubCategories { get; set; } = new();
     public bool IsBatchToolsCategory { get; set; } = false;
+    public bool IsExtensionsCategory { get; set; } = false;
 
     public bool IsSelected
     {
@@ -968,7 +1402,7 @@ public class ToolViewModel : INotifyPropertyChanged
     public string WorkingDirectory { get; set; } = string.Empty;
     public bool IsBatchFile { get; set; } = false;
     public string? Command { get; set; }
-    
+
     public ImageSource? IconSource
     {
         get => _iconSource;
@@ -980,7 +1414,7 @@ public class ToolViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
     public string? Version { get; set; }
     public string? Author { get; set; }
 
@@ -1011,7 +1445,7 @@ public class ToolInfo
 
     [JsonProperty("author")]
     public string? Author { get; set; }
-    
+
     [JsonProperty("command")]
     public string? Command { get; set; }
 }
@@ -1020,22 +1454,22 @@ public class ToolInfoFromJson
 {
     [JsonProperty("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     [JsonProperty("displayName")]
     public string? DisplayName { get; set; }
-    
+
     [JsonProperty("description")]
     public string Description { get; set; } = string.Empty;
-    
+
     [JsonProperty("description_en")]
     public string? DescriptionEn { get; set; }
-    
+
     [JsonProperty("version")]
     public string? Version { get; set; }
-    
+
     [JsonProperty("author")]
     public string? Author { get; set; }
-    
+
     [JsonProperty("command")]
     public string? Command { get; set; }
 }
