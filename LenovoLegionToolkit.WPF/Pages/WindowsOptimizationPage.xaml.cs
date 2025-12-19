@@ -49,10 +49,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private CancellationTokenSource? _driverGetPackagesTokenSource;
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private List<Package>? _driverPackages;
+    private System.Windows.Threading.DispatcherTimer? _driverRetryTimer;
+    private string? _driverRetryMachineType;
+    private OS? _driverRetryOS;
+    private PackageDownloaderFactory.Type? _driverRetryPackageDownloaderType;
 
     private enum PageMode
     {
-        Optimization,  // 系统优美化（包含优化和美化）
+        Optimization,  // System optimization (includes optimization and beautification)
         Cleanup,
         DriverDownload
     }
@@ -89,7 +93,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private bool _isUserInteracting = false;
     private DateTime _lastUserInteraction = DateTime.MinValue;
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
-    private bool _isRefreshingStates = false; // 标记是否正在刷新状态（程序内部操作，不应触发命令执行）
+    private bool _isRefreshingStates = false; // Flag indicating whether states are being refreshed (internal operation, should not trigger command execution)
     private DateTime _lastActionItemClickTime = DateTime.MinValue;
     private string? _lastActionItemKey = null;
 
@@ -119,7 +123,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             _isBusy = value;
             OnPropertyChanged(nameof(IsBusy));
 
-            // 当IsBusy状态改变时，更新按钮状态（特别是驱动下载模式）
+            // When IsBusy state changes, update button states (especially for driver download mode)
             ApplyInteractionState();
         }
     }
@@ -143,7 +147,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _currentMode switch
     {
         PageMode.Cleanup => SelectedCleanupActions,
-        // Optimization模式（系统优美化）同时显示优化和美化操作
+        // Optimization mode (system optimization) displays both optimization and beautification operations
         PageMode.Optimization => new ObservableCollection<SelectedActionViewModel>(
             SelectedOptimizationActions.Concat(SelectedBeautificationActions)),
         _ => SelectedOptimizationActions
@@ -171,9 +175,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
             else if (_currentMode == PageMode.Cleanup)
             {
-                // 在清理模式下，直接从 CleanupCategories 计算实际选中的操作数量
-                // 注意：只检查 IsSelected，不检查 IsEnabled，因为操作可能在执行清理时被临时禁用
-                // 但用户仍然应该看到他们选中的项目数量
+                // In cleanup mode, directly calculate the actual selected action count from CleanupCategories
+                // Note: Only check IsSelected, not IsEnabled, because actions might be temporarily disabled during cleanup execution
+                // But users should still see the number of items they selected
                 count = CleanupCategories
                     .SelectMany(c => c.Actions)
                     .Count(a => a.IsSelected);
@@ -436,8 +440,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public IEnumerable<OptimizationCategoryViewModel> ActiveCategories => _currentMode switch
     {
         PageMode.Cleanup => CleanupCategories,
-        PageMode.DriverDownload => [], // 驱动下载模式下返回空集合
-        _ => OptimizationCategories.Concat(BeautificationCategories) // 系统优美化模式下同时显示优化和美化分类
+        PageMode.DriverDownload => [], // Return empty collection for driver download mode
+        _ => OptimizationCategories.Concat(BeautificationCategories) // Show both optimization and beautification categories in system optimization mode
     };
 
     public OptimizationCategoryViewModel? SelectedCategory
@@ -455,7 +459,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     _lastCleanupCategory = value;
                     break;
                 default:
-                    // Optimization模式（系统优美化）同时保存优化和美化分类的选中状态
+                    // Optimization mode (system optimization) saves selected states for both optimization and beautification categories
                     if (value != null && value.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
                         _lastBeautificationCategory = value;
                     else
@@ -470,11 +474,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         if (IsVisible)
         {
-            // 页面可见时初始化
+            // Initialize when page becomes visible
         }
     }
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
-    public bool IsBeautificationMode => _currentMode == PageMode.Optimization && BeautificationCategories.Count > 0; // 已合并到Optimization模式，当存在美化分类时显示美化UI
+    public bool IsBeautificationMode => _currentMode == PageMode.Optimization && BeautificationCategories.Count > 0; // Merged into Optimization mode, show beautification UI when beautification categories exist
     public bool IsDriverDownloadMode => _currentMode == PageMode.DriverDownload;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -489,7 +493,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         LoadCustomCleanupRules();
         UpdateCleanupControlsState();
 
-        // 初始化驱动下载模式的展开/折叠文本
+        // Initialize expand/collapse text for driver download mode
         RefreshDriverExpandCollapseText();
     }
 
@@ -505,7 +509,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         await InitializeActionStatesAsync();
         UpdateSelectedActions();
 
-        // 确保所有交互状态在初始化后都是启用的
+        // Ensure all interaction states are enabled after initialization
         ToggleInteraction(true, InteractionScope.All);
 
         Unloaded += WindowsOptimizationPage_Unloaded;
@@ -581,32 +585,32 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
-            // 获取点击的操作项
+            // Get the clicked action item
             if (sender is not System.Windows.FrameworkElement element)
                 return;
 
             if (element.DataContext is not OptimizationActionViewModel actionViewModel)
                 return;
 
-            // 检测双击：检查是否是同一个操作项，且两次点击间隔小于 500ms
+            // Detect double click: check if it's the same action item and the interval between clicks is less than 500ms
             var now = DateTime.Now;
             var isDoubleClick = _lastActionItemKey == actionViewModel.Key &&
                                (now - _lastActionItemClickTime).TotalMilliseconds < 500;
 
-            // 更新上次点击信息
+            // Update last click information
             _lastActionItemClickTime = now;
             _lastActionItemKey = actionViewModel.Key;
 
-            // 如果是双击
+            // If it's a double click
             if (isDoubleClick)
             {
-                // 美化相关的操作：打开样式设置窗口
+                // Beautification-related action: Open style settings window
                 if (actionViewModel.Key.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
                 {
                     OpenStyleSettingsButton_Click(sender, e);
                     e.Handled = true;
                 }
-                // 优化和清理操作：打开操作详情窗口
+                // Optimization and cleanup action: Open action details window
                 else if (actionViewModel.Key.StartsWith("explorer.", StringComparison.OrdinalIgnoreCase) ||
                          actionViewModel.Key.StartsWith("performance.", StringComparison.OrdinalIgnoreCase) ||
                          actionViewModel.Key.StartsWith("services.", StringComparison.OrdinalIgnoreCase) ||
@@ -639,7 +643,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             selectionSummaryFormat = "{0} / {1}";
 
         var recommendedTagText = GetResource("WindowsOptimization_Action_Recommended_Tag");
-        // 如果资源不存在，使用默认值
+        // If the resource doesn't exist, use default value
         if (string.IsNullOrWhiteSpace(recommendedTagText))
             recommendedTagText = Resource.WindowsOptimization_Action_Recommended_Tag;
 
@@ -659,14 +663,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     action.Recommended,
                     recommendedTagText)).ToList();
 
-            // 为每个Action添加事件监听，处理复选框变化的逻辑，立即应用操作
+            // Add event listeners for each Action to handle checkbox changes and apply actions immediately
             foreach (var actionVm in actions)
             {
                 actionVm.PropertyChanged += async (_, args) =>
                 {
                     if (args.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
                     {
-                        // 如果正在刷新状态（程序内部操作），不执行命令
+                        // If status is being refreshed (internal operation), don't execute command
                         if (_isRefreshingStates)
                         {
                             if (Log.Instance.IsTraceEnabled)
@@ -674,20 +678,20 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             return;
                         }
 
-                        // 标记用户交互，防止立即刷新覆盖用户选择
+                        // Mark user interaction to prevent immediate refresh from overwriting user selection
                         _lastUserInteraction = DateTime.Now;
                         _isUserInteracting = true;
 
-                        // 如果用户取消勾选，检查是否已应用，如果是则立即执行取消操作
+                        // If user unchecks, check if applied, and execute undo operation immediately if so
                         if (!actionVm.IsSelected)
                         {
-                            // 记录用户取消勾选的意图，防止自动刷新时重新勾选
+                            // Record user's unchecking intent to prevent re-checking during auto-refresh
                             _userUncheckedActions.Add(actionVm.Key);
                             await HandleActionUncheckedAsync(actionVm.Key);
                         }
                         else
                         {
-                            // 如果用户重新勾选，从取消列表中移除，并立即执行应用操作
+                            // If user re-checks, remove from cancellation list and execute apply operation immediately
                             _userUncheckedActions.Remove(actionVm.Key);
                             await HandleActionCheckedAsync(actionVm.Key);
                         }
@@ -732,12 +736,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        // 如果没有选择任何操作，只刷新状态，不执行任何操作
+        // If no actions are selected, only refresh status, don't execute any operations
         if (selectedKeys.Count == 0)
         {
-            // 刷新美化状态
+            // Refresh beautification status
             await RefreshBeautificationStatusAsync();
-            // 刷新操作状态
+            // Refresh action status
             await RefreshActionStatesAsync(skipUserInteractionCheck: true);
             return;
         }
@@ -748,18 +752,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             Resource.WindowsOptimizationPage_ApplySelected_Error,
             InteractionScope.Beautification);
 
-        // 标记用户交互，防止立即刷新覆盖用户选择
+        // Mark user interaction to prevent immediate refresh from overwriting user selection
         _lastUserInteraction = DateTime.Now;
         _isUserInteracting = true;
 
-        // 延迟刷新状态，给 shell 注册操作足够的时间完成
-        // shell 注册需要重启资源管理器，可能需要几秒钟
+        // Delay status refresh to give shell registration operations enough time to complete
+        // Shell registration requires Explorer restart, which may take a few seconds
         await Task.Delay(2000);
 
         // Force refresh action states after execution to update checkboxes
         await RefreshActionStatesAsync(skipUserInteractionCheck: true);
 
-        // 重置交互标志
+        // Reset interaction flag
         _isUserInteracting = false;
 
         // Refresh beautification status after applying
@@ -768,8 +772,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        // 直接从 Categories 中获取当前选中的清理操作，确保获取的是最新状态
-        // 而不是依赖 SelectedCleanupActions 集合（可能包含过时的实例）
+        // Get currently selected cleanup actions directly from Categories to ensure latest status
+        // Instead of relying on SelectedCleanupActions collection (may contain outdated instances)
         var selectedCleanupActions = new List<(string CategoryKey, string CategoryTitle, string ActionKey, string ActionTitle, string Description)>();
 
         foreach (var category in CleanupCategories)
@@ -785,10 +789,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        // 如果没有选择任何操作，显示警告提示并返回
+        // If no actions are selected, show warning and return
         if (selectedKeys.Count == 0)
         {
-            // 记录详细信息以便调试
+            // Record details for debugging
             if (Log.Instance.IsTraceEnabled)
             {
                 var totalCleanupActions = CleanupCategories.SelectMany(c => c.Actions).Count();
@@ -796,13 +800,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 Log.Instance.Trace($"RunCleanup: No selected actions. Total cleanup actions: {totalCleanupActions}, Selected: {selectedCleanupActionsCount}");
             }
 
-            // 显示警告提示（从主窗口底部弹出的橙色警告窗口）
+            // Show warning prompt (orange warning window at bottom of main window)
             await SnackbarHelper.ShowAsync(
                 Resource.SettingsPage_WindowsOptimization_Title,
-                GetResource("WindowsOptimizationPage_Cleanup_NoSelection_Warning") ?? "请至少选择一个清理选项后再执行清理操作。",
+                GetResource("WindowsOptimizationPage_Cleanup_NoSelection_Warning") ?? "Please select at least one cleanup option before executing cleanup operations.",
                 SnackbarType.Warning);
 
-            // 刷新操作状态
+            // Refresh action status
             await RefreshActionStatesAsync(skipUserInteractionCheck: true);
             return;
         }
@@ -823,11 +827,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Some selected action keys were not found: {string.Join(", ", missingKeys)}");
-                        throw new InvalidOperationException($"无法找到以下操作: {string.Join(", ", missingKeys)}");
+                        throw new InvalidOperationException($"Unable to find the following actions: {string.Join(", ", missingKeys)}");
                     }
 
                     // Run one by one, show progress with per-step timing and freed size
-                    // 使用从 Categories 中获取的当前选中操作列表，确保使用最新状态
+                    // Use the currently selected action list from Categories to ensure latest status
                     var actionsInOrder = selectedCleanupActions
                         .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
                         .ToList();
@@ -836,7 +840,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"No actions found. selectedKeys count: {selectedKeys.Count}, Keys: {string.Join(", ", selectedKeys)}");
-                        throw new InvalidOperationException("没有找到要执行的操作。请确保已选择有效的清理操作。");
+                        throw new InvalidOperationException("No actions to execute found. Please ensure valid cleanup actions are selected.");
                     }
 
                     if (Log.Instance.IsTraceEnabled)
@@ -937,7 +941,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     {
                         CurrentOperationText = string.Empty;
                         CurrentDeletingFile = string.Empty;
-                        // 清理完成，重置按钮文本
+                        // Cleanup completed, reset button text
                         RunCleanupButtonText = string.Empty;
                     });
                 }
@@ -989,19 +993,19 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
     {
-        // 标记正在刷新状态，防止触发命令执行和状态刷新覆盖
+        // Mark as refreshing status to prevent triggering command execution and status refresh override
         _isRefreshingStates = true;
 
         try
         {
-            // 先清除所有推荐操作在取消列表中的记录，因为用户现在明确选择了推荐项目
+            // First clear all recommended actions from cancellation list, since user has explicitly selected recommended items
             var allActions = categories.SelectMany(c => c.Actions);
             foreach (var action in allActions.Where(a => a.Recommended))
             {
                 _userUncheckedActions.Remove(action.Key);
             }
 
-            // 然后调用每个分类的SelectRecommended方法
+            // Then call SelectRecommended method for each category
             foreach (var category in categories)
                 category.SelectRecommended();
 
@@ -1009,23 +1013,23 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
         finally
         {
-            // 重置标志，允许后续的用户操作触发命令
+            // Reset flag to allow subsequent user operations to trigger commands
             _isRefreshingStates = false;
         }
     }
 
-    // 驱动下载模式的事件处理函数
+    // Event handler for driver download mode
     private void DriverScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (e.Handled)
             return;
 
-        // 优先使用字段引用，如果不可用则使用 sender
+        // Prefer field reference, use sender if not available
         var scrollViewer = _driverScrollViewer ?? sender as System.Windows.Controls.ScrollViewer;
 
         if (scrollViewer != null)
         {
-            // 确保滚轮事件被ScrollViewer处理，即使鼠标悬停在子控件上
+            // Ensure scroll wheel events are handled by ScrollViewer even when mouse is over child controls
             e.Handled = true;
             var offset = scrollViewer.VerticalOffset - (e.Delta / 3.0);
             scrollViewer.ScrollToVerticalOffset(Math.Max(0, Math.Min(offset, scrollViewer.ScrollableHeight)));
@@ -1040,8 +1044,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         _driverPackagesExpanded = !_driverPackagesExpanded;
         RefreshDriverExpandCollapseText();
 
-        // 驱动包没有展开/折叠功能，暂时只更新文本
-        // 未来可以添加展开/折叠详细信息的逻辑
+        // Driver packages don't have expand/collapse functionality, only update text for now
+        // Can add expand/collapse detailed information logic in the future
     }
 
     private void RefreshDriverExpandCollapseText()
@@ -1054,7 +1058,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_driverPackagesStackPanel == null)
             return;
 
-        // 选择所有推荐的驱动包（可更新项目）
+        // Select all recommended driver packages (updatable items)
         foreach (var child in _driverPackagesStackPanel.Children)
         {
             if (child is Controls.Packages.PackageControl packageControl && packageControl.IsRecommended)
@@ -1071,7 +1075,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_driverPackagesStackPanel == null)
             return;
 
-        // 清除所有驱动包的选择
+        // Clear selection of all driver packages
         foreach (var child in _driverPackagesStackPanel.Children)
         {
             if (child is Controls.Packages.PackageControl packageControl)
@@ -1088,12 +1092,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         if (_driverPackagesStackPanel == null)
             return;
 
-        // 暂停所有正在下载或安装的驱动包
+        // Pause all driver packages that are downloading or installing
         foreach (var child in _driverPackagesStackPanel.Children)
         {
             if (child is Controls.Packages.PackageControl packageControl)
             {
-                // 如果正在下载或安装，取消选择以停止操作
+                // If downloading or installing, unselect to stop operation
                 if (packageControl.Status == Controls.Packages.PackageControl.PackageStatus.Downloading ||
                     packageControl.Status == Controls.Packages.PackageControl.PackageStatus.Installing)
                 {
@@ -1133,7 +1137,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
         }
 
-        // 清理不再选择的包
+        // Clean up packages that are no longer selected
         foreach (var existing in SelectedDriverPackages.ToList())
         {
             if (!newSelectedPackages.Any(p => p.PackageId == existing.PackageId))
@@ -1143,7 +1147,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
         }
 
-        // 添加新选择的包
+        // Add newly selected packages
         foreach (var newPackage in newSelectedPackages)
         {
             if (!SelectedDriverPackages.Any(p => p.PackageId == newPackage.PackageId))
@@ -1177,7 +1181,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         try
         {
-            // 如果是清理操作，初始化按钮文本
+            // If it's a cleanup operation, initialize button text
             if (scope.HasFlag(InteractionScope.Cleanup))
             {
                 RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, 0);
@@ -1207,7 +1211,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             Dispatcher.Invoke(() =>
             {
                 ToggleInteraction(true, scope);
-                // 如果是在清理模式下，重置按钮文本
+                // If in cleanup mode, reset button text
                 if (scope.HasFlag(InteractionScope.Cleanup))
                 {
                     RunCleanupButtonText = string.Empty;
@@ -1260,10 +1264,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         var primaryButtonsEnabled = _currentMode switch
         {
             PageMode.Cleanup => cleanupEnabled,
-            // Optimization模式（系统优美化）同时启用优化和美化交互
+            // Optimization mode enables both optimization and beautification interactions
             PageMode.Optimization => optimizationEnabled || beautificationEnabled,
-            // 驱动下载模式：按钮应该始终启用（除非正在执行驱动下载相关的操作）
-            // 清理操作的 IsBusy 状态不应该影响驱动下载模式的按钮
+            // Driver download mode: Button should always be enabled (unless driver download operations are in progress)
+            // Cleanup operation's IsBusy state should not affect driver download mode button
             PageMode.DriverDownload => !IsDriverDownloadBusy(),
             _ => optimizationEnabled
         };
@@ -1283,7 +1287,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             var listEnabled = _currentMode switch
             {
                 PageMode.Cleanup => cleanupEnabled,
-                // Optimization模式（系统优美化）同时启用优化和美化交互
+                // Optimization mode enables both optimization and beautification interactions
                 PageMode.Optimization => optimizationEnabled || beautificationEnabled,
                 _ => optimizationEnabled
             };
@@ -1293,7 +1297,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private void ShowOperationIndicator(bool isVisible)
     {
-        // 进度条已被移除，此方法保留为空实现以保持接口兼容性
+        // Progress bar has been removed, this method remains as empty implementation for interface compatibility
     }
 
     private static string GetResource(string resourceKey) =>
@@ -1306,9 +1310,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         _lastUserInteraction = DateTime.Now;
         _isUserInteracting = true;
         UpdateSelectedActions();
-        // 确保 SelectedActionsSummary 也被更新
+        // Ensure SelectedActionsSummary is also updated
         OnPropertyChanged(nameof(SelectedActionsSummary));
-        // 3秒后重置交互标志，给用户足够的时间完成操作
+        // Reset interaction flag after 3 seconds to give user enough time to complete operation
         Task.Delay(3000).ContinueWith(_ => _isUserInteracting = false);
     }
 
@@ -1347,7 +1351,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            // 只有当有选中的操作时才估算，如果没有选择任何操作，直接设置为0
+            // Only estimate when there are selected actions, set to 0 directly if no actions are selected
             if (HasSelectedActions)
             {
                 _ = UpdateEstimatedCleanupSizeAsync();
@@ -1512,7 +1516,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            // 只有当有选中的操作时才估算，如果没有选择任何操作，直接设置为0
+            // Only estimate when there are selected actions, set to 0 directly if no actions are selected
             if (HasSelectedActions)
             {
                 _ = UpdateEstimatedCleanupSizeAsync();
@@ -1626,7 +1630,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async Task UpdateEstimatedCleanupSizeAsync()
     {
-        // 如果没有选中的操作，直接设置为0并返回
+        // If no actions are selected, set to 0 directly and return
         if (!HasSelectedActions)
         {
             EstimatedCleanupSize = 0;
@@ -1647,7 +1651,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             await Task.Delay(300, cancellationToken).ConfigureAwait(false);
             var actionKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
 
-            // 再次检查（延迟后可能选择已改变）
+            // Check again (selection may have changed after delay)
             if (actionKeys.Count == 0)
             {
                 EstimatedCleanupSize = 0;
@@ -1701,14 +1705,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace((FormattableString)$"After property change: IsDriverDownloadMode = {IsDriverDownloadMode}");
 
-            // 可见性切换已通过 XAML 中的 DataTrigger 自动处理
-            // 这里保留代码以确保兼容性，但主要依赖 XAML 中的 DataTrigger
+            // Visibility toggling is automatically handled by DataTrigger in XAML
+            // Code is preserved here for compatibility, but primarily relies on DataTrigger in XAML
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 var categoriesList = FindName("_categoriesList") as System.Windows.Controls.ScrollViewer;
 
-                // 由于 XAML 中的 DataTrigger 已经处理了可见性，这里主要是为了确保兼容性
-                // 如果 DataTrigger 没有正确工作，这里的代码可以作为后备
+                // Since DataTrigger in XAML already handles visibility, this is mainly for compatibility
+                // If DataTrigger doesn't work correctly, this code can serve as a fallback
                 if (categoriesList != null)
                 {
                     if (mode == PageMode.DriverDownload)
@@ -1736,12 +1740,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
             else if (mode == PageMode.DriverDownload)
             {
-                // 初始化驱动下载模式，立即开始刷新
+                // Initialize driver download mode, start refreshing immediately
                 RefreshDriverExpandCollapseText();
-                // 确保切换到驱动下载模式时按钮状态正确（不依赖清理或优化模式的交互状态）
-                // ApplyInteractionState() 会在 SetMode 末尾被调用，这里提前调用以确保按钮立即启用
+                // Ensure button state is correct when switching to driver download mode (not dependent on cleanup or optimization mode interaction states)
+                // ApplyInteractionState() will be called at the end of SetMode, but is called early here to ensure buttons are enabled immediately
                 ApplyInteractionState();
-                // 确保驱动下载内容区域可见
+                // Ensure driver download content area is visible
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     var driverLoader = FindName("_driverLoader") as System.Windows.Controls.Grid;
@@ -1750,10 +1754,16 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 }), System.Windows.Threading.DispatcherPriority.Loaded);
                 _ = InitializeDriverDownloadModeAsync();
             }
-            else if (mode == PageMode.Optimization)
+            else
             {
-                // 系统优美化模式：同时处理优化和美化
-                // 确保切换到优化模式时交互是启用的
+                // 切换到其他模式时，停止驱动下载重试计时器
+                StopDriverRetryTimer();
+            }
+            
+            if (mode == PageMode.Optimization)
+            {
+                // System optimization and beautification mode: handle both optimization and beautification simultaneously
+                // Ensure interaction is enabled when switching to optimization mode
                 _beautificationInteractionEnabled = true;
                 foreach (var category in BeautificationCategories)
                     category.SetEnabled(true);
@@ -1775,14 +1785,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             OnPropertyChanged(nameof(ActiveCategories));
         }
 
-        // 驱动下载模式下不需要设置 SelectedCategory 和相关的优化界面属性
+        // No need to set SelectedCategory and related optimization interface properties in driver download mode
         if (mode != PageMode.DriverDownload)
         {
             var activeCategoriesList = ActiveCategories.ToList();
             var preferredCategory = mode switch
             {
                 PageMode.Cleanup => _lastCleanupCategory,
-                // Optimization模式（系统优美化）优先选择优化分类，如果没有则选择美化分类
+                // Optimization mode (system optimization and beautification) prioritizes optimization categories, then beautification categories if none
                 PageMode.Optimization => _lastOptimizationCategory ?? _lastBeautificationCategory,
                 _ => _lastOptimizationCategory
             };
@@ -1800,21 +1810,21 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
     private async Task InitializeActionStatesAsync()
     {
-        // 初始化时跳过用户交互检查，确保所有复选框状态正确设置
+        // Skip user interaction check during initialization to ensure all checkbox states are correctly set
         await RefreshActionStatesAsync(skipUserInteractionCheck: true);
         StartActionStateMonitoring();
     }
 
     private async Task RefreshActionStatesAsync(bool skipUserInteractionCheck = false)
     {
-        // 如果用户正在交互（最近5秒内有操作），跳过更新以避免干扰用户操作
-        // 但在初始化时可以跳过这个检查
+        // If user is interacting (has operations within the last 5 seconds), skip update to avoid interrupting user operations
+        // But this check can be skipped during initialization
         if (!skipUserInteractionCheck && (_isUserInteracting || (DateTime.Now - _lastUserInteraction).TotalSeconds < 5))
         {
             return;
         }
 
-        // 标记正在刷新状态，防止触发命令执行
+        // Mark as refreshing status to prevent triggering command execution
         _isRefreshingStates = true;
 
         try
@@ -1828,15 +1838,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 {
                     await Dispatcher.InvokeAsync(() =>
                     {
-                        // 只在状态实际改变时才更新，避免覆盖用户的手动选择
+                        // Only update when status actually changes, to avoid overwriting user's manual selection
                         var timeSinceLastInteraction = (DateTime.Now - _lastUserInteraction).TotalSeconds;
-                        var isRecentInteraction = timeSinceLastInteraction < 10; // 10秒内的交互认为是最近的操作
+                        var isRecentInteraction = timeSinceLastInteraction < 10; // Interactions within 10 seconds are considered recent operations
 
-                        // 如果用户在取消列表中，且当前状态是已应用，说明取消操作可能还在进行中，不要自动勾选
+                        // If user is in cancellation list and current status is applied, cancellation operation may still be in progress, don't auto-check
                         if (_userUncheckedActions.Contains(action.Key) && applied.Value)
                         {
-                            // 用户明确取消了勾选，即使系统状态还是已应用，也不要自动勾选
-                            // 只有当系统状态变成未应用时，才从取消列表中移除
+                            // User explicitly unchecked, don't auto-check even if system status is still applied
+                            // Only remove from cancellation list when system status becomes not applied
                             if (!applied.Value)
                             {
                                 _userUncheckedActions.Remove(action.Key);
@@ -1844,7 +1854,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             }
                             else
                             {
-                                // 确保复选框保持未勾选状态
+                                // Ensure checkbox remains unchecked
                                 if (action.IsSelected)
                                 {
                                     action.IsSelected = false;
@@ -1855,18 +1865,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
                         if (action.IsSelected != applied.Value)
                         {
-                            // 如果用户最近有交互，且用户选择了但检查显示未应用，可能是操作正在进行中，不立即更新
-                            // 但如果用户未选择而检查显示已应用，应该更新（可能是外部操作导致的）
+                            // If user has recent interaction and user selected but check shows not applied, operation may be in progress, don't update immediately
+                            // But if user didn't select but check shows applied, should update (may be caused by external operation)
                             if (isRecentInteraction && action.IsSelected && !applied.Value)
                             {
-                                // 用户选择了但检查显示未应用，可能是操作正在进行中，暂时不更新
+                                // User selected but check shows not applied, operation may be in progress, don't update temporarily
                                 if (Log.Instance.IsTraceEnabled)
                                     Log.Instance.Trace($"Skipping state update for {action.Key}: user selected but not yet applied (operation may be in progress)");
                             }
                             else
                             {
                                 action.IsSelected = applied.Value;
-                                // 如果状态更新为未应用，从取消列表中移除（说明取消操作已完成）
+                                // If status updates to not applied, remove from cancellation list (indicating cancellation operation is complete)
                                 if (!applied.Value && _userUncheckedActions.Contains(action.Key))
                                 {
                                     _userUncheckedActions.Remove(action.Key);
@@ -1881,7 +1891,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
         finally
         {
-            // 重置标志，允许后续的用户操作触发命令
+            // Reset flag to allow subsequent user operations to trigger commands
             _isRefreshingStates = false;
         }
     }
@@ -1890,23 +1900,23 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
-            // 确定交互范围
+            // Determine interaction scope
             var interactionScope = actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase)
                 ? InteractionScope.Beautification
                 : actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
                 ? InteractionScope.Cleanup
                 : InteractionScope.Optimization;
 
-            // 对于美化操作，总是执行命令，不检查当前状态
+            // For beautification operations, always execute command without checking current status
             if (actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
             {
-                // 对于右键美化操作，先检查是否已安装，如果没有安装则先安装，然后应用
+                // For right-click beautification operations, first check if installed, if not installed, install first then apply
                 if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"User checked beautify action {actionKey}, checking installation status first");
 
-                    // 先检查是否已安装
+                    // First check if installed
                     var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
                     
                     var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
@@ -1919,7 +1929,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         {
                             SnackbarHelper.Show(
                                 GetResource("WindowsOptimizationPage_Beautification_ShellNotFound_Title") ?? Resource.SettingsPage_WindowsOptimization_Title,
-                                GetResource("WindowsOptimizationPage_Beautification_ShellNotFound_Message") ?? "无法找到 shell.exe，请确保 Nilesoft Shell 已正确安装。",
+                                GetResource("WindowsOptimizationPage_Beautification_ShellNotFound_Message") ?? "Cannot find shell.exe, please ensure Nilesoft Shell is correctly installed.",
                                 SnackbarType.Warning);
                         });
                         return;
@@ -1927,7 +1937,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
                     try
                     {
-                        // 如果没有安装，先安装；如果已安装，直接应用设置
+                        // If not installed, install first; if installed, apply settings directly
                         if (!isInstalled)
                         {
                             if (Log.Instance.IsTraceEnabled)
@@ -1949,13 +1959,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                                 }
                             });
 
-                            // 安装后清除缓存并等待一下，让系统有时间完成安装
+                            // Clear cache after installation and wait a moment to allow system time to complete installation
                             NilesoftShellHelper.ClearInstallationStatusCache();
                             await Task.Delay(2000);
                         }
                         else
                         {
-                            // 如果已安装，直接应用设置（注册并重启资源管理器）
+                            // If installed, apply settings directly (register and restart Explorer)
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Nilesoft Shell already installed, applying settings: {shellExe} -register -treat -restart");
 
@@ -1980,15 +1990,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             });
                         }
 
-                        // 应用操作完成后，清除缓存以强制下次重新检查状态
+                        // Clear cache after applying operation to force re-checking status next time
                         NilesoftShellHelper.ClearInstallationStatusCache();
 
-                        // 使用 Snackbar 从底部弹出显示成功消息
+                        // Use Snackbar to display success message at bottom of window
                         await Dispatcher.InvokeAsync(() =>
                         {
                             SnackbarHelper.Show(
                                 Resource.SettingsPage_WindowsOptimization_Title,
-                                GetResource("WindowsOptimizationPage_ApplySelected_Success") ?? "设置已成功应用。",
+                                GetResource("WindowsOptimizationPage_ApplySelected_Success") ?? "Settings have been successfully applied.",
                                 SnackbarType.Success);
                         });
                     }
@@ -1999,8 +2009,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
                         await Dispatcher.InvokeAsync(() =>
                         {
-                            var errorMessage = GetResource("WindowsOptimizationPage_ApplySelected_Error") ?? "应用设置时发生错误。";
-                            var detailedError = $"{errorMessage}\n{string.Format(Resource.WindowsOptimizationPage_ErrorDetails ?? "错误详情: {0}", ex.Message)}";
+                            var errorMessage = GetResource("WindowsOptimizationPage_ApplySelected_Error") ?? "An error occurred while applying settings.";
+                            var detailedError = $"{errorMessage}\n{string.Format(Resource.WindowsOptimizationPage_ErrorDetails ?? "Error details: {0}", ex.Message)}";
                             SnackbarHelper.Show(
                                 Resource.SettingsPage_WindowsOptimization_Title,
                                 detailedError,
@@ -2017,29 +2027,29 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         interactionScope);
                 }
 
-                // 延迟刷新状态，给操作足够的时间完成
-                // shell 注册需要重启资源管理器，可能需要几秒钟
+                // Delay status refresh to give operation enough time to complete
+                // Shell registration requires Explorer restart, which may take a few seconds
                 var delay = actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase) ? 3000 : 2000;
                 await Task.Delay(delay);
 
-                // 在刷新状态前清除缓存，确保使用最新的实际状态
+                // Clear cache before refreshing status to ensure using latest actual status
                 if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
                 {
                     NilesoftShellHelper.ClearInstallationStatusCache();
                 }
 
-                // 刷新操作状态
+                // Refresh action status
                 await RefreshActionStatesAsync(skipUserInteractionCheck: true);
 
-                // 刷新美化状态
+                // Refresh beautification status
                 _ = RefreshBeautificationStatusAsync();
             }
             else
             {
-                // 对于非美化操作，检查Action是否已应用
+                // For non-beautification operations, check if Action is applied
                 var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
 
-                // 如果未应用，立即执行应用操作
+                // If not applied, execute apply operation immediately
                 if (applied.HasValue && !applied.Value)
                 {
                     await ExecuteAsync(
@@ -2048,10 +2058,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Resource.WindowsOptimizationPage_ApplySelected_Error,
                         interactionScope);
 
-                    // 延迟刷新状态，给操作足够的时间完成
+                    // Delay status refresh to give operation enough time to complete
                     await Task.Delay(2000);
 
-                    // 刷新操作状态
+                    // Refresh action status
                     await RefreshActionStatesAsync(skipUserInteractionCheck: true);
                 }
             }
@@ -2063,7 +2073,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
         finally
         {
-            // 重置交互标志
+            // Reset interaction flag
             _isUserInteracting = false;
         }
     }
@@ -2072,14 +2082,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
-            // 对于右键美化，当用户取消勾选时，立即执行卸载操作（实时应用）
-            // 移除状态检查，总是执行卸载命令
+            // For right-click beautification, execute uninstall operation immediately when user unchecks (real-time application)
+            // Remove status check, always execute uninstall command
             if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"User unchecked beautify action {actionKey}, executing uninstall command");
 
-                // 直接执行卸载命令，总是执行，不管当前状态
+                // Directly execute uninstall command, always execute regardless of current status
                 var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
                 if (!string.IsNullOrWhiteSpace(shellExe))
                 {
@@ -2093,7 +2103,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             {
                                 try
                                 {
-                                    // 使用 NilesoftShellService 执行卸载
+                                    // Use NilesoftShellService to execute uninstall
                                     NilesoftShellService.Uninstall();
                                     if (Log.Instance.IsTraceEnabled)
                                         Log.Instance.Trace($"Nilesoft Shell uninstalled successfully");
@@ -2110,12 +2120,12 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Resource.WindowsOptimizationPage_ApplySelected_Error,
                         InteractionScope.Beautification);
 
-                    // 卸载操作完成后，清除缓存和注册表中的安装状态值
-                    // 这确保下次检查时不会从注册表读取到旧的已安装状态
+                    // After uninstall operation completes, clear cache and installation status values from registry
+                    // This ensures old installed status is not read from registry during next check
                     NilesoftShellHelper.ClearInstallationStatusCache();
                     NilesoftShellHelper.ClearRegistryInstallationStatus();
 
-                    // 将操作添加到用户取消列表，防止在状态刷新时自动勾选
+                    // Add operation to user cancellation list to prevent auto-checking during status refresh
                     if (!_userUncheckedActions.Contains(actionKey))
                     {
                         _userUncheckedActions.Add(actionKey);
@@ -2129,18 +2139,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Log.Instance.Trace($"Shell.exe not found, cannot execute uninstall command");
                 }
 
-                // 延迟刷新状态，给 shell 卸载操作足够的时间完成
-                // await Task.Delay(3000); // 增加到3秒，给卸载操作更多时间
-
-                // 再次清除注册表值和缓存，确保卸载后的状态被正确反映
-                // 必须在检查状态之前清除缓存，否则会使用旧的缓存值
-                // NilesoftShellHelper.ClearRegistryInstallationStatus();
+                // Delay status refresh to give shell uninstall operation enough time to complete
+                // Clear cache again to ensure uninstalled status is correctly reflected
+                // Must clear cache before checking status, otherwise old cached values will be used
                 NilesoftShellHelper.ClearInstallationStatusCache();
 
                 await RefreshActionStatesAsync(skipUserInteractionCheck: true);
 
-                // 检查卸载是否成功，如果成功则从取消列表中移除
-                // 在检查前再次清除缓存，确保不使用旧的缓存值
+                // Check if uninstall was successful, if so remove from cancellation list
+                // Clear cache again before checking to ensure old cached values are not used
                 NilesoftShellHelper.ClearInstallationStatusCache();
                 var isStillInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
                 if (!isStillInstalled)
@@ -2151,13 +2158,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 }
                 else
                 {
-                    // 如果卸载后仍然显示已安装，可能是注册表值未更新，强制清除并再次检查
+                    // If still showing as installed after uninstall, registry values may not have updated, force clear and check again
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Uninstall may not have completed, clearing registry and rechecking...");
                     NilesoftShellHelper.ClearRegistryInstallationStatus();
                     NilesoftShellHelper.ClearInstallationStatusCache();
-                    await Task.Delay(1000); // 再等待1秒
-                    // 在重新检查前再次清除缓存，确保不使用旧的缓存值
+                    await Task.Delay(1000); // Wait another second
+                    // Clear cache again before rechecking to ensure old cached values are not used
                     NilesoftShellHelper.ClearInstallationStatusCache();
                     var recheckInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
                     if (!recheckInstalled)
@@ -2168,23 +2175,23 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     }
                 }
 
-                // 刷新美化状态
+                // Refresh beautification status
                 _ = RefreshBeautificationStatusAsync();
             }
             else
             {
-                // 对于优化和清理操作，检查Action是否已应用
+                // For optimization and cleanup operations, check if Action is applied
                 var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
 
                 if (applied.HasValue && applied.Value)
                 {
-                    // Action已应用，但用户取消勾选，实时撤销操作
-                    // 对于优化操作（注册表、服务），可以通过删除注册表值或启用服务来撤销
-                    // 对于清理操作，无法撤销，只能刷新状态
+                    // Action is applied, but user unchecked, undo operation in real-time
+                    // For optimization operations (registry, services), can be undone by deleting registry values or enabling services
+                    // For cleanup operations, cannot be undone, only status can be refreshed
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"User unchecked action {actionKey}, attempting to undo: {actionKey}");
 
-                    // 尝试执行撤销操作
+                    // Attempt to execute undo operation
                     await UndoOptimizationActionAsync(actionKey);
 
                     // 延迟刷新状态，给撤销操作足够的时间完成
@@ -3493,6 +3500,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             DriverReload();
 
+            // 停止自动重试计时器（如果正在运行）
+            StopDriverRetryTimer();
+
             // 隐藏加载提示
             if (loadingIndicator != null)
                 loadingIndicator.Visibility = Visibility.Collapsed;
@@ -3533,10 +3543,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
         finally
         {
-            // 确保在异常情况下也隐藏加载提示
-            var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
-            if (loadingIndicator != null)
-                loadingIndicator.Visibility = Visibility.Collapsed;
+            // 只有在非网络错误的情况下才隐藏加载提示
+            // 网络错误时，加载提示会保持可见并显示"网络出问题了"
+            if (!errorOccurred)
+            {
+                var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
+                if (loadingIndicator != null)
+                    loadingIndicator.Visibility = Visibility.Collapsed;
+            }
 
             if (errorOccurred)
             {
@@ -3731,6 +3745,118 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 启动驱动下载自动重试计时器
+    /// </summary>
+    private void StartDriverRetryTimer()
+    {
+        // 停止已有的计时器（如果存在）
+        StopDriverRetryTimer();
+
+        // 创建新的计时器，每5秒触发一次
+        _driverRetryTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(5)
+        };
+        
+        _driverRetryTimer.Tick += async (sender, e) =>
+        {
+            if (_driverRetryMachineType == null || _driverRetryOS == null || _driverRetryPackageDownloaderType == null)
+            {
+                StopDriverRetryTimer();
+                return;
+            }
+
+            // 更新文本为"正在重新获取驱动包..."
+            var loadingText = FindName("_driverLoadingText") as System.Windows.Controls.TextBlock;
+            if (loadingText != null)
+                loadingText.Text = Resource.WindowsOptimizationPage_RetryingDrivers;
+
+            try
+            {
+                // 取消之前的请求
+                if (_driverGetPackagesTokenSource is not null)
+                    await _driverGetPackagesTokenSource.CancelAsync();
+
+                _driverGetPackagesTokenSource = new();
+                var token = _driverGetPackagesTokenSource.Token;
+
+                // 重新获取驱动包
+                _driverPackageDownloader = _packageDownloaderFactory.GetInstance(_driverRetryPackageDownloaderType.Value);
+                var packages = await _driverPackageDownloader.GetPackagesAsync(_driverRetryMachineType, _driverRetryOS.Value, new DriverDownloadProgressReporter(this), token);
+
+                // 成功获取到数据，停止重试
+                StopDriverRetryTimer();
+
+                _driverPackages = packages;
+                DriverReload();
+
+                // 隐藏加载提示
+                var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
+                if (loadingIndicator != null)
+                    loadingIndicator.Visibility = Visibility.Collapsed;
+
+                // 更新按钮状态
+                ApplyInteractionState();
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace((FormattableString)$"Driver packages successfully retrieved after network error.");
+            }
+            catch (HttpRequestException)
+            {
+                // 仍然网络错误，继续重试
+                var loadingText2 = FindName("_driverLoadingText") as System.Windows.Controls.TextBlock;
+                if (loadingText2 != null)
+                    loadingText2.Text = Resource.WindowsOptimizationPage_NetworkError;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace((FormattableString)$"Network error persists, will retry again...");
+            }
+            catch (OperationCanceledException)
+            {
+                // 用户取消，停止重试
+                StopDriverRetryTimer();
+            }
+            catch (Exception ex)
+            {
+                // 其他错误，停止重试
+                StopDriverRetryTimer();
+                
+                var loadingIndicator = FindName("_driverLoadingIndicator") as System.Windows.Controls.Border;
+                if (loadingIndicator != null)
+                    loadingIndicator.Visibility = Visibility.Collapsed;
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error during driver retry: {ex.Message}", ex);
+            }
+        };
+
+        _driverRetryTimer.Start();
+        
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace((FormattableString)$"Driver retry timer started.");
+    }
+
+    /// <summary>
+    /// 停止驱动下载自动重试计时器
+    /// </summary>
+    private void StopDriverRetryTimer()
+    {
+        if (_driverRetryTimer != null)
+        {
+            _driverRetryTimer.Stop();
+            _driverRetryTimer = null;
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Driver retry timer stopped.");
+        }
+
+        // 清空重试参数
+        _driverRetryMachineType = null;
+        _driverRetryOS = null;
+        _driverRetryPackageDownloaderType = null;
     }
 
     private async Task<bool> ShouldInterruptDriverDownloadsIfRunning()

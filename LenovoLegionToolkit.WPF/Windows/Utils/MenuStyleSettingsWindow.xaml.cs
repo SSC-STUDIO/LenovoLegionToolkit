@@ -208,7 +208,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             {
                 var details = GetContextMenuImplementationDetails();
                 
-                // 清空并填充详细信息
+                // Clear and fill in detailed information
                 _detailsStackPanel.Children.Clear();
                 foreach (var detail in details)
                 {
@@ -235,7 +235,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             var details = new List<string>();
             
-            // COM注册命令
+            // COM registration command
             details.Add(Resource.MenuStyleSettingsWindow_Details_COMRegistration);
             var shellExePath = Lib.System.NilesoftShellHelper.GetNilesoftShellExePath();
             if (!string.IsNullOrWhiteSpace(shellExePath))
@@ -250,7 +250,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             
             details.Add("");
             
-            // 配置文件说明
+            // Configuration file description
             details.Add(Resource.MenuStyleSettingsWindow_Details_ConfigFile);
             var configPath = GetShellConfigPath();
             if (!string.IsNullOrWhiteSpace(configPath))
@@ -265,13 +265,13 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             
             details.Add("");
             
-            // 配置文件格式示例
+            // Configuration file format example
             details.Add(Resource.MenuStyleSettingsWindow_Details_ConfigFileExample);
             details.Add(Resource.MenuStyleSettingsWindow_Details_ThemeExample);
             
             details.Add("");
             
-            // 工作原理
+            // How it works
             details.Add(Resource.MenuStyleSettingsWindow_Details_WorkingPrinciple);
             details.Add(Resource.MenuStyleSettingsWindow_Details_Principle1);
             details.Add(Resource.MenuStyleSettingsWindow_Details_Principle2);
@@ -281,7 +281,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             
             details.Add("");
             
-            // 效果说明
+            // Effect description
             details.Add(Resource.MenuStyleSettingsWindow_Details_EffectDescription);
             details.Add(Resource.MenuStyleSettingsWindow_Details_EffectAutoTheme);
             details.Add(Resource.MenuStyleSettingsWindow_Details_EffectTransparency);

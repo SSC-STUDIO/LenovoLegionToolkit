@@ -1116,6 +1116,12 @@ Performance mode can also be changed with Fn+Q.</value>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Scanning for available driver packages, please wait...</value>
   </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Network error occurred. Retrying automatically...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Retrying to fetch driver packages...</value>
+  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Cleanup Info</value>
   </data>
@@ -3288,6 +3294,117 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Cannot Uninstall</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Plugin Settings</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Plugin Name</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Plugin Description</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>This plugin has no configurable settings.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Plugin not found: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Author: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Plugin configuration interface format is incorrect.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Error loading plugin settings: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Search plugins...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Not Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>No plugins available</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>The plugin store is currently empty. Stay tuned for future plugin updates.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Use Application Default</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>Found {0} plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Plugin installed successfully</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Plugin has been successfully installed</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Installation failed</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Unable to install plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Plugin uninstalled successfully</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Plugin has been successfully uninstalled</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Uninstall failed</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Unable to uninstall plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Open failed</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Unable to open plugin settings: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Please install plugin first</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Plugin must be installed before use</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Unable to open plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Minimum compatible version: {0}</value>
   </data>
 
 </root>

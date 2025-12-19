@@ -1,7 +1,7 @@
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件元数据，用于描述插件的信息
+/// Plugin metadata, used to describe plugin information
 /// </summary>
 public class PluginMetadata
 {
@@ -11,5 +11,8 @@ public class PluginMetadata
     public string Icon { get; set; } = string.Empty;
     public bool IsSystemPlugin { get; set; }
     public string[]? Dependencies { get; set; }
+    public string Version { get; set; } = "1.0.0";
+    public string MinimumHostVersion { get; set; } = "1.0.0";
+    public string? Author { get; set; }
 }
 

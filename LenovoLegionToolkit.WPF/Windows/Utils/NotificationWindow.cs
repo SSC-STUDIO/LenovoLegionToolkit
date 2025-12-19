@@ -80,7 +80,7 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
     public void Close(bool immediate)
     {
-        WindowStyle = WindowStyle.None;
+        WindowStyle = System.Windows.WindowStyle.None;
         Close();
     }
 

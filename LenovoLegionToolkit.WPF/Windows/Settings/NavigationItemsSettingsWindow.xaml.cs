@@ -21,7 +21,7 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
     {
         _isInitializing = true;
         
-        // 初始化所有导航项的开关状态
+        // Initialize the toggle states of all navigation items
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         
         _keyboardToggle.IsChecked = GetNavigationItemVisibility("keyboard", visibilitySettings);
@@ -39,14 +39,14 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
     {
-        // 仪表盘和设置必须始终显示，但不在这个窗口中配置
+        // Dashboard and settings must always be visible but are not configured in this window
         if (pageTag == "dashboard" || pageTag == "settings")
             return true;
             
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
             
-        // 默认可见
+        // Visible by default
         return true;
     }
 
@@ -62,7 +62,7 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         visibilitySettings[pageTag] = toggleSwitch.IsChecked == true;
         _applicationSettings.SynchronizeStore();
 
-        // 更新主窗口的导航项可见性
+        // Update navigation items visibility in main window
         if (Application.Current.MainWindow is MainWindow mainWindow)
         {
             mainWindow.UpdateNavigationVisibility();

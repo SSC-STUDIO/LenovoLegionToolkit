@@ -13,6 +13,7 @@ using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Plugins;
+using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
@@ -47,6 +48,7 @@ public partial class MainWindow
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
 
     private TrayHelper? _trayHelper;
+    private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
 
     public bool TrayTooltipEnabled { get; init; } = true;
     public bool DisableConflictingSoftwareWarning { get; set; }
@@ -81,16 +83,16 @@ public partial class MainWindow
 
         Title = _title.Text;
 
-        // 监听 Frame 导航事件，更新窗口标题为当前页面标题
+        // Listen to Frame navigation events to update window title to current page title
         _rootFrame.Navigated += RootFrame_Navigated;
 
-        // 订阅插件状态变化事件
+        // Subscribe to plugin state changed events
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
     }
 
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
-        // 当页面导航完成时，更新窗口标题为：应用名称 - 页面标题
+        // When page navigation is complete, update window title to: App Name - Page Title
         var appName = Resource.ResourceManager.GetString("AppName", Resource.Culture) ?? "Lenovo Legion Toolkit";
 
         if (e.Content is UiPage page && !string.IsNullOrWhiteSpace(page.Title))
@@ -100,7 +102,7 @@ public partial class MainWindow
         }
         else
         {
-            // 如果没有页面标题，只显示应用名称
+            // If there is no page title, only show the app name
             Title = appName;
             _title.Text = appName;
         }
@@ -115,7 +117,7 @@ public partial class MainWindow
         if (!await KeyboardBacklightPage.IsSupportedAsync())
             _navigationStore.Items.Remove(_keyboardItem);
 
-        // 根据扩展设置控制 WindowsOptimization 导航项的可见性
+        // Control WindowsOptimization navigation item visibility based on extension settings
         UpdateNavigationVisibility();
 
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
@@ -143,7 +145,7 @@ public partial class MainWindow
                 InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
         }
         
-        // 设置插件拓展导航项的文本
+        // Set the plugin extensions navigation item text
         if (_pluginExtensionsItem != null)
         {
             _pluginExtensionsItem.Content = Resource.ResourceManager.GetString("MainWindow_NavigationItem_PluginExtensions", Resource.Culture) ?? "Plugin Extensions";
@@ -391,6 +393,7 @@ public partial class MainWindow
         UpdateWindowsOptimizationNavigationVisibility();
         UpdateToolsNavigationVisibility();
         UpdatePluginExtensionsNavigationVisibility();
+        UpdateInstalledPluginsNavigationItems(); // Ensure installed plugins have navigation items on startup
         UpdateNavigationItemsVisibilityFromSettings();
     }
 
@@ -398,56 +401,56 @@ public partial class MainWindow
     {
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-        // 更新键盘导航项
+        // Update keyboard navigation item
         if (_keyboardItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("keyboardBacklight", visibilitySettings);
             _keyboardItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新电池导航项
+        // Update battery navigation item
         if (_batteryItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("battery", visibilitySettings);
             _batteryItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新自动化导航项
+        // Update automation navigation item
         if (_automationItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("automation", visibilitySettings);
             _automationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新宏导航项
+        // Update macro navigation item
         if (_macroItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("macro", visibilitySettings);
             _macroItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新系统优化导航项
+        // Update Windows optimization navigation item
         if (_windowsOptimizationItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
             _windowsOptimizationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新工具箱导航项（现在是默认界面，不再需要检查插件状态）
+        // Update tools navigation item (now the default interface, no need to check plugin status)
         if (_toolsItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("tools", visibilitySettings);
             _toolsItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新捐赠导航项
+        // Update donate navigation item
         if (_donateNavigationItem != null)
         {
             var shouldShow = _applicationSettings.Store.ShowDonateButton && GetNavigationItemVisibility("donate", visibilitySettings);
             _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // 更新关于导航项
+        // Update about navigation item
         if (_aboutItem != null)
         {
             var shouldShow = GetNavigationItemVisibility("about", visibilitySettings);
@@ -457,24 +460,24 @@ public partial class MainWindow
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
     {
-        // 仪表盘和设置必须始终显示
+        // Dashboard and settings must always be visible
         if (pageTag == "dashboard" || pageTag == "settings")
             return true;
 
-        // keyboardBacklight 应该使用 keyboard 键
+        // keyboardBacklight should use the keyboard key
         if (pageTag == "keyboardBacklight")
             pageTag = "keyboard";
 
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
 
-        // 默认可见
+        // Visible by default
         return true;
     }
 
     private void UpdatePluginExtensionsNavigationVisibility()
     {
-        // 根据扩展功能是否启用来控制插件拓展导航项的可见性
+        // Control plugin extensions navigation item visibility based on whether extensions are enabled
         var extensionsEnabled = _applicationSettings.Store.ExtensionsEnabled;
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         var shouldShow = extensionsEnabled && GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
@@ -492,12 +495,12 @@ public partial class MainWindow
         if (_windowsOptimizationItem == null)
             return;
 
-        // 系统优化界面现在作为默认界面，确保在导航项列表中
+        // Windows optimization interface is now the default interface, ensure it's in the navigation items list
         var isInItems = _navigationStore.Items.Contains(_windowsOptimizationItem);
         
         if (!isInItems)
         {
-            // 找到 Macro 导航项的位置，在它之后插入
+            // Find the position of the Macro navigation item and insert after it
             var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
             if (macroItem != null)
             {
@@ -510,18 +513,18 @@ public partial class MainWindow
             }
         }
         
-        // 可见性由 UpdateNavigationItemsVisibilityFromSettings 控制
+        // Visibility is controlled by UpdateNavigationItemsVisibilityFromSettings
     }
 
     private void UpdateToolsNavigationVisibility()
     {
-        // 工具箱界面现在作为默认界面，确保在导航项列表中
+        // Tools interface is now the default interface, ensure it's in the navigation items list
         if (_toolsItem != null)
         {
             var isInItems = _navigationStore.Items.Contains(_toolsItem);
             if (!isInItems)
             {
-                // 找到系统优化导航项的位置，在它之后插入；如果没有系统优化，则在 Macro 之后插入
+                // Find the position of the Windows optimization navigation item and insert after it; if not found, insert after Macro
                 var insertIndex = -1;
                 if (_navigationStore.Items.Contains(_windowsOptimizationItem))
                 {
@@ -543,16 +546,134 @@ public partial class MainWindow
                 }
             }
         }
-        // 可见性由 UpdateNavigationItemsVisibilityFromSettings 控制
+        // Visibility is controlled by UpdateNavigationItemsVisibilityFromSettings
     }
 
     private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
     {
-        // 当插件状态变化时，更新导航栏可见性
+        // When plugin status changes, update navigation bar visibility and plugin navigation items
         Dispatcher.Invoke(() =>
         {
+            UpdateInstalledPluginsNavigationItems();
             UpdateNavigationVisibility();
         });
+    }
+
+    /// <summary>
+    /// Update navigation items for installed plugins
+    /// </summary>
+    private void UpdateInstalledPluginsNavigationItems()
+    {
+        try
+        {
+            // Get all installed plugins (excluding system plugins like Tools and SystemOptimization)
+            var installedPluginIds = _pluginManager.GetInstalledPluginIds().ToList();
+            var registeredPlugins = _pluginManager.GetRegisteredPlugins().ToList();
+            
+            // Filter out system plugins and built-in plugins
+            var pluginsToShow = registeredPlugins
+                .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase)
+                    && !p.IsSystemPlugin
+                    && p.Id != PluginConstants.Tools
+                    && p.Id != PluginConstants.SystemOptimization)
+                .ToList();
+
+            // Remove navigation items for uninstalled plugins
+            var pluginIdsToRemove = _pluginNavigationItems.Keys
+                .Where(id => !pluginsToShow.Any(p => p.Id == id))
+                .ToList();
+
+            foreach (var pluginId in pluginIdsToRemove)
+            {
+                if (_pluginNavigationItems.TryGetValue(pluginId, out var navItem))
+                {
+                    _navigationStore.Items.Remove(navItem);
+                    _pluginNavigationItems.Remove(pluginId);
+                }
+            }
+
+            // Add or update navigation items for installed plugins
+            foreach (var plugin in pluginsToShow)
+            {
+                if (!_pluginNavigationItems.ContainsKey(plugin.Id))
+                {
+                    // Get plugin metadata for version info
+                    var pluginMetadata = _pluginManager.GetPluginMetadata(plugin.Id);
+                    var pluginDisplayName = plugin.Name;
+                    
+                    // Create new navigation item for this plugin with icon
+                    var navItem = new NavigationItem
+                    {
+                        Content = pluginDisplayName,
+                        PageTag = $"plugin:{plugin.Id}",
+                        PageType = typeof(PluginPageWrapper),
+                        Tag = pluginMetadata // Store metadata in Tag for later use
+                    };
+                    
+                    // Set icon from plugin's Icon property
+                    if (!string.IsNullOrWhiteSpace(plugin.Icon))
+                    {
+                        navItem.Icon = GetSymbolFromString(plugin.Icon);
+                    }
+                    else
+                    {
+                        // Default icon if plugin doesn't specify one
+                        navItem.Icon = SymbolRegular.Apps24;
+                    }
+
+                    // Register the page tag mapping
+                    PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
+
+                    // Find the position to insert (after tools item, before plugin extensions item)
+                    var insertIndex = -1;
+                    if (_toolsItem != null && _navigationStore.Items.Contains(_toolsItem))
+                    {
+                        insertIndex = _navigationStore.Items.IndexOf(_toolsItem);
+                    }
+                    else if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
+                    {
+                        insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
+                    }
+                    else
+                    {
+                        var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
+                        if (macroItem != null)
+                        {
+                            insertIndex = _navigationStore.Items.IndexOf(macroItem);
+                        }
+                    }
+
+                    // Insert the navigation item
+                    if (insertIndex >= 0)
+                    {
+                        _navigationStore.Items.Insert(insertIndex + 1, navItem);
+                    }
+                    else
+                    {
+                        _navigationStore.Items.Add(navItem);
+                    }
+
+                    _pluginNavigationItems[plugin.Id] = navItem;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error updating plugin navigation items: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Convert string to SymbolRegular enum
+    /// </summary>
+    private SymbolRegular GetSymbolFromString(string symbolString)
+    {
+        if (Enum.TryParse<SymbolRegular>(symbolString, out var symbol))
+        {
+            return symbol;
+        }
+        return SymbolRegular.Apps24;
     }
 
     public void UpdateDonateButtonVisibility()

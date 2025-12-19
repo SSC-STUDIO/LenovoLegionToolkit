@@ -100,7 +100,7 @@ public partial class StatusWindow
 
         Loaded += StatusWindow_Loaded;
 
-        WindowStyle = WindowStyle.None;
+        WindowStyle = System.Windows.WindowStyle.None;
         WindowStartupLocation = WindowStartupLocation.Manual;
         WindowBackdropType = BackgroundType.None;
         ResizeMode = ResizeMode.NoResize;

@@ -16,6 +16,8 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI;
+using LenovoLegionToolkit.WPF.Controls;
+using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
@@ -101,7 +103,7 @@ public partial class SettingsPage
         if (!isCompatible)
         {
             _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
-            _disableCompatibilityWarningToggle.IsChecked = _settings.Store.DisableUnsupportedHardwareWarning;
+        _disableCompatibilityWarningToggle.IsChecked = _settings.Store.DisableUnsupportedHardwareWarning;
         }
         else
         {
@@ -192,7 +194,7 @@ public partial class SettingsPage
         _minimizeOnCloseToggle.Visibility = Visibility.Visible;
         if (_disableCompatibilityWarningCard.Visibility == Visibility.Visible)
         {
-            _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
+        _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
         }
         _vantageToggle.Visibility = Visibility.Visible;
         _legionZoneToggle.Visibility = Visibility.Visible;
@@ -246,6 +248,7 @@ public partial class SettingsPage
 
         _themeManager.Apply();
     }
+
 
     private void AccentColorPicker_Changed(object sender, EventArgs e)
     {

@@ -169,10 +169,7 @@ public class IpcServer(
             case IpcRequest.OperationType.IsShellRegistered:
                 message = await IsShellRegisteredAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
-            // Shell command execution removed - no longer needed
-            // case IpcRequest.OperationType.RunShellCommand when req is { Value: not null }:
-            //     await RunShellCommandAsync(req.Value).ConfigureAwait(false);
-            //     return new IpcResponse { Success = true };
+
             case IpcRequest.OperationType.IsShellInstalled:
                 message = await IsShellInstalledAsync().ConfigureAwait(false);
                 return new IpcResponse { Success = true, Message = message };
@@ -320,11 +317,7 @@ public class IpcServer(
         return isInstalled.ToString().ToLowerInvariant();
     }
 
-    // Shell command execution removed - no longer needed
-    // private static async Task RunShellCommandAsync(string command)
-    // {
-    //     ...
-    // }
+
 
     private static async Task<string> IsShellInstalledAsync()
     {

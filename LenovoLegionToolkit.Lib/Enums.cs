@@ -591,6 +591,14 @@ public enum AccentColorSource
     Custom
 }
 
+public enum WindowBackdropStyle
+{
+    [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_Windows")]
+    Windows,
+    [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_macOS")]
+    macOS
+}
+
 public enum TemperatureUnit
 {
     C,

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,10 +53,7 @@ public class TrayHelper : IDisposable
             Text = Resource.AppName
         };
 
-        // 不再使用 ToolTipWindow，悬停时只显示应用名称
-        // 状态信息已合并到右键菜单中
-        // if (trayTooltipEnabled)
-        //     notifyIcon.ToolTipWindow = async () => await StatusWindow.CreateAsync();
+
 
         notifyIcon.ContextMenu = _contextMenu;
         notifyIcon.OnClick += (_, _) => _bringToForeground();

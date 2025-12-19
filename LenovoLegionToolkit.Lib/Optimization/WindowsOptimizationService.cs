@@ -191,7 +191,7 @@ public class WindowsOptimizationService
 
     private static readonly IReadOnlyList<RegistryValueDefinition> NetworkAccelerationTweaks =
     [
-        // TCP/IP 优化
+        // TCP/IP optimization
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpAckFrequency", 1, RegistryValueKind.DWord),
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TCPNoDelay", 1, RegistryValueKind.DWord),
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "Tcp1323Opts", 3, RegistryValueKind.DWord),
@@ -202,7 +202,7 @@ public class WindowsOptimizationService
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpMaxDupAcks", 2, RegistryValueKind.DWord),
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "SackOpts", 1, RegistryValueKind.DWord),
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "TcpTimedWaitDelay", 30, RegistryValueKind.DWord),
-        // DNS 缓存优化
+        // DNS cache optimization
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxCacheTtl", 3600, RegistryValueKind.DWord),
         Reg("HKEY_LOCAL_MACHINE", @"SYSTEM\CurrentControlSet\Services\Dnscache\Parameters", "MaxNegativeCacheTtl", 300, RegistryValueKind.DWord)
     ];
@@ -951,7 +951,7 @@ public class WindowsOptimizationService
     private static WindowsOptimizationCategoryDefinition CreateBeautificationCategoryDynamic()
     {
         var actions = new List<WindowsOptimizationActionDefinition>();
-        // 使用 NilesoftShellHelper API 来判断是否安装
+        // Use NilesoftShellHelper API to check if installed
         var isInstalled = NilesoftShellHelper.IsInstalled();
         var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
 
@@ -1016,7 +1016,7 @@ public class WindowsOptimizationService
                     // Register and enable the shell
                     return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
                 },
-                Recommended: true,  // 设置为推荐选项
+                Recommended: true,  // Set as recommended option
                 IsAppliedAsync: async ct => 
                 {
                     // Use shell.exe's API for more accurate installation status check

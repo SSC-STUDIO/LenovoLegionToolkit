@@ -1,47 +1,47 @@
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件接口，定义插件的基本信息和行为
+/// Plugin interface, defines basic plugin information and behavior
 /// </summary>
 public interface IPlugin
 {
     /// <summary>
-    /// 插件唯一标识符
+    /// Plugin unique identifier
     /// </summary>
     string Id { get; }
 
     /// <summary>
-    /// 插件名称（用于显示）
+    /// Plugin name (for display)
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// 插件描述
+    /// Plugin description
     /// </summary>
     string Description { get; }
 
     /// <summary>
-    /// 插件图标（WPF UI Symbol）
+    /// Plugin icon (WPF UI Symbol)
     /// </summary>
     string Icon { get; }
 
     /// <summary>
-    /// 是否为系统基础插件（基础插件在某些情况下无法卸载）
+    /// Whether it's a system base plugin (base plugins cannot be uninstalled in some cases)
     /// </summary>
     bool IsSystemPlugin { get; }
 
     /// <summary>
-    /// 是否依赖其他插件
+    /// Whether it depends on other plugins
     /// </summary>
     string[]? Dependencies { get; }
 
     /// <summary>
-    /// 插件安装时调用
+    /// Called when the plugin is installed
     /// </summary>
     void OnInstalled();
 
     /// <summary>
-    /// 插件卸载时调用
+    /// Called when the plugin is uninstalled
     /// </summary>
     void OnUninstalled();
 }

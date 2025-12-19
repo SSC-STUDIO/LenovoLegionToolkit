@@ -15,13 +15,13 @@ public partial class AboutPage
     {
         get
         {
-            // 使用当前程序集获取版本号，而不是Assembly.GetEntryAssembly()
+            // Use current assembly to get version, not Assembly.GetEntryAssembly()
             var version = typeof(AboutPage).Assembly.GetName().Version;
             if (version is null)
                 return string.Empty;
             if (version.IsBeta())
-                return $"{version.ToString(3)} BETA";
-            return $"{version.ToString(3)} 正式版";
+                return $"{version.ToString(4)} BETA";
+            return version.ToString(4);
         }
     }
 

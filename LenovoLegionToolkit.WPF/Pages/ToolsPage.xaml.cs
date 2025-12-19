@@ -140,7 +140,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             await LoadToolsAsync();
             return;
         }
-        
+
         // 更新插件UI（新设计：类似工具箱工具列表）
         UpdatePluginsUI();
     }
@@ -153,7 +153,7 @@ public partial class ToolsPage : INotifyPropertyChanged
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
-
+            
         _pluginManager.InstallPlugin(pluginId);
         
         // 刷新UI
@@ -273,13 +273,13 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
 
         // 刷新UI
-        RefreshExtensionsUI();
-        UpdatePluginsUI();
+            RefreshExtensionsUI();
+            UpdatePluginsUI();
 
-        // 更新主窗口导航栏
-        if (Application.Current.MainWindow is MainWindow mainWindow)
-        {
-            mainWindow.UpdateNavigationVisibility();
+            // 更新主窗口导航栏
+            if (Application.Current.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.UpdateNavigationVisibility();
         }
     }
 
@@ -1180,21 +1180,7 @@ public partial class ToolsPage : INotifyPropertyChanged
                     ToolDetailsDescription.Text = pluginDescription;
                 }
 
-                // 隐藏版本、作者、路径等信息（插件不需要显示这些）
-                if (ToolDetailsVersion != null)
-                {
-                    ToolDetailsVersion.Visibility = Visibility.Collapsed;
-                }
-
-                if (ToolDetailsAuthor != null)
-                {
-                    ToolDetailsAuthor.Visibility = Visibility.Collapsed;
-                }
-
-                if (ToolDetailsPath != null)
-                {
-                    ToolDetailsPath.Visibility = Visibility.Collapsed;
-                }
+                // 版本、作者、路径等信息已从UI中移除
 
                 // 隐藏启动按钮（插件不需要启动）
                 if (ToolDetailsLaunchButton != null)
@@ -1295,46 +1281,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         ToolDetailsName.Text = toolName;
         ToolDetailsDescription.Text = _selectedTool.Description ?? "";
 
-        // 更新版本
-        if (!string.IsNullOrEmpty(_selectedTool.Version))
-        {
-            var versionFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Version", Resource.Culture) ?? "Version: {0}";
-            ToolDetailsVersion.Text = string.Format(versionFormat, _selectedTool.Version);
-            ToolDetailsVersion.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            ToolDetailsVersion.Visibility = Visibility.Collapsed;
-        }
-
-        // 更新作者
-        if (!string.IsNullOrEmpty(_selectedTool.Author))
-        {
-            var authorFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Author", Resource.Culture) ?? "Author: {0}";
-            ToolDetailsAuthor.Text = string.Format(authorFormat, _selectedTool.Author);
-            ToolDetailsAuthor.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            ToolDetailsAuthor.Visibility = Visibility.Collapsed;
-        }
-
-        // 更新路径 - 只有当路径不为空且不是命令工具时才显示
-        // 如果 Command 不为空，说明是命令工具，不显示路径
-        // 如果 ExecutablePath 为空或 null，也不显示路径
-        var hasValidPath = !string.IsNullOrWhiteSpace(_selectedTool.ExecutablePath);
-        var isCommandTool = !string.IsNullOrWhiteSpace(_selectedTool.Command);
-
-        if (hasValidPath && !isCommandTool)
-        {
-            var pathFormat = Resource.ResourceManager.GetString("ToolsPage_Details_Path", Resource.Culture) ?? "Path: {0}";
-            ToolDetailsPath.Text = string.Format(pathFormat, _selectedTool.ExecutablePath);
-            ToolDetailsPath.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            ToolDetailsPath.Visibility = Visibility.Collapsed;
-        }
+        // 版本、作者、路径等信息已从UI中移除
 
         // 显示启动按钮
         ToolDetailsLaunchButton.Visibility = Visibility.Visible;

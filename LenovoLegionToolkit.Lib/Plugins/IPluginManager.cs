@@ -4,53 +4,58 @@ using System.Collections.Generic;
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// 插件管理器接口
+/// Plugin manager interface
 /// </summary>
 public interface IPluginManager
 {
     /// <summary>
-    /// 插件状态变化事件
+    /// Plugin state changed event
     /// </summary>
     event EventHandler<PluginEventArgs>? PluginStateChanged;
 
     /// <summary>
-    /// 注册插件
+    /// Register plugin
     /// </summary>
     void RegisterPlugin(IPlugin plugin);
 
     /// <summary>
-    /// 获取所有已注册的插件
+    /// Get all registered plugins
     /// </summary>
     IEnumerable<IPlugin> GetRegisteredPlugins();
 
     /// <summary>
-    /// 获取插件元数据
+    /// Get plugin metadata
     /// </summary>
     PluginMetadata? GetPluginMetadata(string pluginId);
 
     /// <summary>
-    /// 检查插件是否已安装
+    /// Check if plugin is installed
     /// </summary>
     bool IsInstalled(string pluginId);
 
     /// <summary>
-    /// 安装插件
+    /// Install plugin
     /// </summary>
     void InstallPlugin(string pluginId);
 
     /// <summary>
-    /// 卸载插件
+    /// Uninstall plugin
     /// </summary>
     bool UninstallPlugin(string pluginId);
 
     /// <summary>
-    /// 获取所有已安装的插件ID
+    /// Get all installed plugin IDs
     /// </summary>
     IEnumerable<string> GetInstalledPluginIds();
+
+    /// <summary>
+    /// Scan and load plugins from the plugins directory
+    /// </summary>
+    void ScanAndLoadPlugins();
 }
 
 /// <summary>
-/// 插件事件参数
+/// Plugin event arguments
 /// </summary>
 public class PluginEventArgs : EventArgs
 {
