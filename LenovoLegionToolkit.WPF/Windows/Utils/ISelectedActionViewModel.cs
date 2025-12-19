@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
 /// <summary>
-/// 选中操作的视图模型接口，用于 SelectedActionsWindow
+/// View model interface for selected actions, used in SelectedActionsWindow
 /// </summary>
 public interface ISelectedActionViewModel : INotifyPropertyChanged
 {
@@ -16,3 +16,8 @@ public interface ISelectedActionViewModel : INotifyPropertyChanged
     bool IsEnabled { get; }
     object? Tag { get; set; }
 }
+
+
+
+
+

@@ -141,7 +141,7 @@
                         PageType="{x:Type pages:SettingsPage}" />
                     <custom:NavigationItem
                         x:Name="_pluginExtensionsItem"
-                        Content="插件扩展"
+                        Content="Plugin Extensions"
                         Icon="Apps24"
                         PageTag="pluginExtensions"
                         PageType="{x:Type pages:PluginExtensionsPage}" />

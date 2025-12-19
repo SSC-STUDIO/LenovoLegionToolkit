@@ -30,13 +30,13 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
             UpdateEmptyState();
 
-            // 禁用鼠标滚轮缩放
+            // Disable mouse wheel zoom
             PreviewMouseWheel += OnPreviewMouseWheel;
         }
 
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            // 如果按住了 Ctrl 键，禁用缩放功能
+            // Disable zoom function if Ctrl key is pressed
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
                 e.Handled = true;

@@ -186,6 +186,9 @@ public partial class App
 
         // Initialize plugins
         InitializePlugins();
+        
+        // Apply plugin-specific language settings after plugins are loaded
+        LocalizationHelper.SetPluginResourceCultures();
 
         StartBackgroundInitialization();
 
@@ -245,12 +248,13 @@ public partial class App
         {
             var pluginManager = IoCContainer.Resolve<IPluginManager>();
             
-            // Register all built-in plugins
-            var systemOptimizationPlugin = IoCContainer.Resolve<SystemOptimizationPlugin>();
-            var toolsPlugin = IoCContainer.Resolve<ToolsPlugin>();
-            
-            pluginManager.RegisterPlugin(systemOptimizationPlugin);
-            pluginManager.RegisterPlugin(toolsPlugin);
+            // System Optimization and Tools are now default interfaces, not plugins
+            // They are registered directly in MainWindow.xaml as NavigationItems
+            // No need to register them as plugins
+
+            // Scan and load plugins from the plugins directory
+            // This will automatically discover and register external plugins
+            pluginManager.ScanAndLoadPlugins();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugins initialized successfully.");

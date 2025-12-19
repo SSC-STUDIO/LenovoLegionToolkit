@@ -42,7 +42,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
-    // 传感器数据缓存，缓存时间为100ms
+    // Sensor data cache, cache time is 100ms
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
@@ -59,7 +59,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<SensorsData> GetDataAsync()
     {
-        // 检查缓存是否有效，如果有效则返回缓存数据
+        // Check if cache is valid, return cached data if it is
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
@@ -107,7 +107,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             gpuMaxFanSpeed);
         var result = new SensorsData(cpu, gpu);
 
-        // 更新缓存
+        // Update cache
         lock (_cacheLock)
         {
             _cachedSensorsData = result;
@@ -122,7 +122,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()
     {
-        // 检查缓存是否有效，如果有效则从缓存中获取风扇速度
+        // Check if cache is valid, get fan speeds from cache if it is
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {

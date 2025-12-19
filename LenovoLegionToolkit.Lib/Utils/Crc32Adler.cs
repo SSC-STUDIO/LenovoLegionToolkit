@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -49,5 +50,44 @@ public static class Crc32Adler
         return Calculate(buffer);
     }
 
-    private static uint Calculate(IEnumerable<byte> data) => ~data.Aggregate(0xFFFFFFFF, (current, d) => LookUpTable[(current ^ d) & 0xFF] ^ (current >> 8));
+    public static uint Calculate(byte[] data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        return Calculate((IEnumerable<byte>)data);
+    }
+
+    public static uint Calculate(byte[] data, int offset, int count)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        if (offset < 0)
+            throw new ArgumentOutOfRangeException(nameof(offset));
+        if (count < 0)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        if (offset + count > data.Length)
+            throw new ArgumentException("Offset and count exceed array bounds");
+        
+        return Calculate(data.AsSpan(offset, count));
+    }
+
+    public static uint Calculate(ReadOnlySpan<byte> data)
+    {
+        var crc = 0xFFFFFFFFu;
+        foreach (var b in data)
+        {
+            crc = LookUpTable[(crc ^ b) & 0xFF] ^ (crc >> 8);
+        }
+        return ~crc;
+    }
+
+    public static uint Calculate(IEnumerable<byte> data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        
+        var crc = 0xFFFFFFFFu;
+        foreach (var b in data)
+        {
+            crc = LookUpTable[(crc ^ b) & 0xFF] ^ (crc >> 8);
+        }
+        return ~crc;
+    }
 }

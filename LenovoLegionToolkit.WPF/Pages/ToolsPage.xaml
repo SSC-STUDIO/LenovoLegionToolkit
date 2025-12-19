@@ -167,14 +167,14 @@
         </Style>
     </wpfui:UiPage.Resources>
 
-    <Grid>
+    <Grid ClipToBounds="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Main Content Area -->
-        <Grid Grid.Row="0" Margin="0,0,16,0" MouseWheel="ToolsPage_MouseWheel">
+        <Grid Grid.Row="0" Margin="0,0,16,0" MouseWheel="ToolsPage_MouseWheel" ClipToBounds="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -182,7 +182,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header Section -->
-        <StackPanel Grid.Row="0" Margin="0,24,0,16" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" Margin="0,16,0,16" HorizontalAlignment="Left">
             <TextBlock
                 HorizontalAlignment="Left"
                 Margin="0,0,0,10"
@@ -203,18 +203,23 @@
         </StackPanel>
 
         <!-- Category Navigation - Browser-style tabs -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="1" />
+            </Grid.RowDefinitions>
         <Border
-            Grid.Row="1"
+                Grid.Row="0"
             Background="Transparent"
-            Margin="0,0,0,20"
-            Padding="0,0,0,0">
-            <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+                Margin="0,0,0,0"
+                ClipToBounds="False">
                 <ScrollViewer
                     VerticalScrollBarVisibility="Disabled"
                     HorizontalScrollBarVisibility="Auto"
                     VerticalContentAlignment="Center"
-                    Padding="0,4,0,0">
-                    <ItemsControl ItemsSource="{Binding ToolCategories}">
+                    ClipToBounds="False">
+                    <Border Padding="0,2,0,0" ClipToBounds="False">
+                        <ItemsControl ItemsSource="{Binding ToolCategories}" ClipToBounds="False">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
@@ -222,19 +227,26 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <RadioButton
+                                    <RadioButton
                                     Content="{Binding CategoryName}"
-                                    Style="{StaticResource CategoryRadioButtonStyle}"
-                                    GroupName="ToolCategoriesNav"
-                                    IsChecked="{Binding IsSelected}"
-                                    Checked="CategoryRadioButton_Checked"
-                                    Tag="{Binding}" />
+                                        Style="{StaticResource CategoryRadioButtonStyle}"
+                                        GroupName="ToolCategoriesNav"
+                                        IsChecked="{Binding IsSelected}"
+                                        Checked="CategoryRadioButton_Checked"
+                                        Tag="{Binding}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    </Border>
                 </ScrollViewer>
             </Border>
-        </Border>
+            <Border 
+                Grid.Row="1"
+                Height="1"
+                Background="{DynamicResource ControlStrokeColorDefaultBrush}"
+                HorizontalAlignment="Stretch"
+                SnapsToDevicePixels="True" />
+        </Grid>
 
         <!-- Tools Content -->
         <ScrollViewer
@@ -639,12 +651,12 @@
         <Border
             Grid.Row="1"
             x:Name="ToolDetailsPanel"
-            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
             BorderThickness="0,1,0,0"
-            Padding="0,8,12,8"
+            Padding="16,12"
             Margin="0,0,0,0"
-            MaxHeight="80"
+            CornerRadius="0"
             Visibility="Collapsed">
             <Border.Effect>
                 <DropShadowEffect
@@ -654,31 +666,28 @@
                     Color="Black"
                     Direction="270" />
             </Border.Effect>
-            <Grid Margin="0,0,0,0">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
                 <!-- Tool Icon -->
                 <Border
                     Grid.Column="0"
-                    Width="36"
-                    Height="36"
-                    Margin="0,0,12,0"
-                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                    CornerRadius="6"
+                    Width="48"
+                    Height="48"
+                    Margin="0,0,16,0"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="8"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
+                    BorderThickness="1">
                     <Grid>
                         <Image
                             x:Name="ToolDetailsIcon"
                             Stretch="Uniform"
-                            Width="36"
-                            Height="36"
+                            Width="48"
+                            Height="48"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             RenderOptions.BitmapScalingMode="HighQuality"
@@ -691,59 +700,46 @@
                             FontSize="24"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Visibility="Visible" />
+                            VerticalAlignment="Center" />
                     </Grid>
                 </Border>
                 
                 <!-- Tool Details -->
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock
-                        x:Name="ToolDetailsName"
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Margin="0,0,0,2" />
-                    <TextBlock
-                        x:Name="ToolDetailsDescription"
-                        FontSize="12"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap"
-                        MaxHeight="36"
-                        TextTrimming="CharacterEllipsis"
-                        Margin="0,0,0,2" />
-                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0">
                         <TextBlock
-                            x:Name="ToolDetailsVersion"
-                            FontSize="10"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                            Margin="0,0,10,0"
-                            Visibility="Collapsed" />
+                            x:Name="ToolDetailsName"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Margin="0,0,0,2" />
                         <TextBlock
-                            x:Name="ToolDetailsAuthor"
-                            FontSize="10"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                            Margin="0,0,10,0"
-                            Visibility="Collapsed" />
-                        <TextBlock
-                            x:Name="ToolDetailsPath"
-                            FontSize="10"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            x:Name="ToolDetailsDescription"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap"
+                            MaxHeight="100"
                             TextTrimming="CharacterEllipsis"
-                            MaxWidth="200"
+                            Margin="0,0,0,8" />
+                    </StackPanel>
+                    
+                    <!-- Action Buttons -->
+                    <StackPanel 
+                        Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <wpfui:Button
+                            x:Name="ToolDetailsLaunchButton"
+                            Content="{x:Static resources:Resource.ToolsPage_Launch_Button}"
+                            Click="ToolDetailsLaunchButton_Click"
                             Visibility="Collapsed" />
                     </StackPanel>
-                </StackPanel>
-                
-                <!-- Action Button -->
-                <wpfui:Button
-                    Grid.Column="2"
-                    x:Name="ToolDetailsLaunchButton"
-                    Content="{x:Static resources:Resource.ToolsPage_Launch_Button}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Click="ToolDetailsLaunchButton_Click"
-                    Visibility="Collapsed" />
+                </Grid>
             </Grid>
         </Border>
     </Grid>

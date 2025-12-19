@@ -29,7 +29,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             try
             {
-                // 设置标题和描述
+                // Set title and description
                 if (_actionDefinition != null)
                 {
                     _titleTextBlock.Text = GetResourceString(_actionDefinition.TitleResourceKey) ?? _actionKey;
@@ -41,11 +41,11 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                     _descriptionTextBlock.Text = Resource.ActionDetailsWindow_NotFound;
                 }
 
-                // 获取技术实现细节
+                // Get technical implementation details
                 var details = GetActionImplementationDetails(_actionKey);
                 _implementationTypeTextBlock.Text = details.ImplementationType;
                 
-                // 清空并填充详细信息
+                // Clear and fill in detailed information
                 _detailsStackPanel.Children.Clear();
                 foreach (var detail in details.Details)
                 {
@@ -61,7 +61,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                     _detailsStackPanel.Children.Add(textBlock);
                 }
 
-                // 如果没有详细信息，显示提示
+                // Show prompt if no detailed information is available
                 if (details.Details.Count == 0)
                 {
                     var noDetailsText = new TextBlock
@@ -91,7 +91,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
             try
             {
-                // 根据操作key获取实现细节
+                // Get implementation details based on action key
                 if (actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 {
                     implementationType = Resource.ActionDetailsWindow_CommandExecution;
@@ -133,7 +133,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to get implementation details for action: {actionKey}", ex);
-                details.Add($"获取实现细节时出错: {ex.Message}");
+                details.Add($"Error getting implementation details: {ex.Message}");
             }
 
             return (implementationType, details);
@@ -143,7 +143,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             var commands = new List<string>();
             
-            // 根据actionKey返回对应的命令
+            // Return the corresponding command based on actionKey
             switch (actionKey)
             {
                 case "cleanup.browserCache":
@@ -203,60 +203,60 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             var tweaks = new List<string>();
             
-            // 这里需要从WindowsOptimizationService获取注册表项
-            // 由于无法直接访问私有字段，我们根据已知的key返回描述
+            // Need to get registry entries from WindowsOptimizationService here
+            // Since we can't directly access private fields, we return descriptions based on known keys
             switch (actionKey)
             {
                 case "explorer.taskbar":
                     tweaks.Add("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
-                    tweaks.Add("  - TaskbarDa: 0 (禁用任务栏动画)");
-                    tweaks.Add("  - TaskbarAnimations: 0 (禁用任务栏动画效果)");
+                    tweaks.Add("  - TaskbarDa: 0 (Disable taskbar animations)");
+                    tweaks.Add("  - TaskbarAnimations: 0 (Disable taskbar animation effects)");
                     break;
                 case "explorer.responsiveness":
                     tweaks.Add("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
-                    tweaks.Add("  - DesktopProcess: 1 (优化桌面进程)");
-                    tweaks.Add("  - DisablePreviewDesktop: 1 (禁用桌面预览)");
+                    tweaks.Add("  - DesktopProcess: 1 (Optimize desktop process)");
+                    tweaks.Add("  - DisablePreviewDesktop: 1 (Disable desktop preview)");
                     break;
                 case "explorer.visibility":
                     tweaks.Add("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
-                    tweaks.Add("  - Hidden: 1 (显示隐藏文件)");
-                    tweaks.Add("  - ShowSuperHidden: 0 (不显示系统保护文件)");
+                    tweaks.Add("  - Hidden: 1 (Show hidden files)");
+                    tweaks.Add("  - ShowSuperHidden: 0 (Don't show system protected files)");
                     break;
                 case "explorer.suggestions":
                     tweaks.Add("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
-                    tweaks.Add("  - ShowTaskViewButton: 0 (隐藏任务视图按钮)");
-                    tweaks.Add("  - ShowCortanaButton: 0 (隐藏Cortana按钮)");
+                    tweaks.Add("  - ShowTaskViewButton: 0 (Hide Task View button)");
+                    tweaks.Add("  - ShowCortanaButton: 0 (Hide Cortana button)");
                     break;
                 case "performance.multimedia":
                     tweaks.Add("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Multimedia\\SystemProfile");
-                    tweaks.Add("  - SystemResponsiveness: 0 (优化多媒体响应)");
-                    tweaks.Add("  - NetworkThrottlingIndex: 4294967295 (禁用网络节流)");
+                    tweaks.Add("  - SystemResponsiveness: 0 (Optimize multimedia responsiveness)");
+                    tweaks.Add("  - NetworkThrottlingIndex: 4294967295 (Disable network throttling)");
                     break;
                 case "performance.memory":
                     tweaks.Add("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management");
-                    tweaks.Add("  - DisablePagingExecutive: 1 (禁用分页执行)");
-                    tweaks.Add("  - LargeSystemCache: 0 (优化系统缓存)");
+                    tweaks.Add("  - DisablePagingExecutive: 1 (Disable paging executive)");
+                    tweaks.Add("  - LargeSystemCache: 0 (Optimize system cache)");
                     break;
                 case "performance.telemetry":
                     tweaks.Add("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection");
-                    tweaks.Add("  - AllowTelemetry: 0 (禁用遥测)");
+                    tweaks.Add("  - AllowTelemetry: 0 (Disable telemetry)");
                     break;
                 case "performance.notifications":
                     tweaks.Add("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings");
-                    tweaks.Add("  - 禁用各种通知相关的注册表项");
+                    tweaks.Add("  - Disable various notification-related registry entries");
                     break;
                 case "network.acceleration":
                     tweaks.Add("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters");
-                    tweaks.Add("  - TcpAckFrequency: 1 (优化TCP确认频率)");
-                    tweaks.Add("  - TCPNoDelay: 1 (禁用Nagle算法)");
-                    tweaks.Add("  - Tcp1323Opts: 3 (启用TCP时间戳和窗口缩放)");
-                    tweaks.Add("  - DefaultTTL: 64 (设置默认TTL)");
-                    tweaks.Add("  - EnablePMTUDiscovery: 1 (启用路径MTU发现)");
-                    tweaks.Add("  - GlobalMaxTcpWindowSize: 65535 (增大TCP窗口大小)");
-                    tweaks.Add("  - SackOpts: 1 (启用选择性确认)");
+                    tweaks.Add("  - TcpAckFrequency: 1 (Optimize TCP acknowledgment frequency)");
+                    tweaks.Add("  - TCPNoDelay: 1 (Disable Nagle algorithm)");
+                    tweaks.Add("  - Tcp1323Opts: 3 (Enable TCP timestamps and window scaling)");
+                    tweaks.Add("  - DefaultTTL: 64 (Set default TTL)");
+                    tweaks.Add("  - EnablePMTUDiscovery: 1 (Enable Path MTU Discovery)");
+                    tweaks.Add("  - GlobalMaxTcpWindowSize: 65535 (Increase TCP window size)");
+                    tweaks.Add("  - SackOpts: 1 (Enable selective acknowledgment)");
                     tweaks.Add("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Dnscache\\Parameters");
-                    tweaks.Add("  - MaxCacheTtl: 3600 (DNS缓存最大TTL)");
-                    tweaks.Add("  - MaxNegativeCacheTtl: 300 (DNS负缓存TTL)");
+                    tweaks.Add("  - MaxCacheTtl: 3600 (DNS cache max TTL)");
+                    tweaks.Add("  - MaxNegativeCacheTtl: 300 (DNS negative cache TTL)");
                     break;
             }
 
@@ -270,18 +270,18 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             switch (actionKey)
             {
                 case "services.diagnostics":
-                    services.Add("服务名称: DiagTrack");
-                    services.Add("服务名称: diagnosticshub.standardcollector.service");
-                    services.Add("服务名称: DoSvc");
-                    services.Add("操作: 禁用并停止服务");
+                    services.Add("Service name: DiagTrack");
+                    services.Add("Service name: diagnosticshub.standardcollector.service");
+                    services.Add("Service name: DoSvc");
+                    services.Add("Action: Disable and stop service");
                     break;
                 case "services.sysmain":
-                    services.Add("服务名称: SysMain (Superfetch)");
-                    services.Add("操作: 禁用并停止服务");
+                    services.Add("Service name: SysMain (Superfetch)");
+                    services.Add("Action: Disable and stop service");
                     break;
                 case "services.search":
-                    services.Add("服务名称: WSearch (Windows Search)");
-                    services.Add("操作: 禁用并停止服务");
+                    services.Add("Service name: WSearch (Windows Search)");
+                    services.Add("Action: Disable and stop service");
                     break;
             }
 
@@ -303,23 +303,23 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             
             if (actionKey == "explorer.startMenu")
             {
-                details.Add("注册表修改:");
+                details.Add("Registry modification:");
                 details.Add("  HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
                 details.Add("    - Start_NotifyNewApps: 0");
-                details.Add("PowerShell脚本:");
-                details.Add("  使用Get-StartApps和Remove-AppxPackage禁用开始菜单应用");
+                details.Add("PowerShell script:");
+                details.Add("  Disable Start Menu apps using Get-StartApps and Remove-AppxPackage");
             }
             else if (actionKey == "explorer.winKeySearch")
             {
-                details.Add("注册表修改:");
+                details.Add("Registry modification:");
                 details.Add("  HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
-                details.Add("    - Start_SearchFiles: 1 (将Windows键设置为打开搜索)");
+                details.Add("    - Start_SearchFiles: 1 (Set Windows key to open search)");
                 details.Add("");
-                details.Add("系统通知:");
-                details.Add("  发送 WM_SETTINGCHANGE 消息通知系统设置已更改");
+                details.Add("System notification:");
+                details.Add("  Send WM_SETTINGCHANGE message to notify system settings changes");
                 details.Add("");
-                details.Add("资源管理器重启:");
-                details.Add("  重启 Windows 资源管理器以立即应用更改");
+                details.Add("Explorer restart:");
+                details.Add("  Restart Windows Explorer to apply changes immediately");
             }
 
             return details;

@@ -339,6 +339,21 @@ public static class NilesoftShellHelper
             try
             {
                 var currentDir = Directory.GetCurrentDirectory();
+                // Check build/shellIntegration directory first
+                var shellIntegrationDir = Path.Combine(currentDir, "build", "shellIntegration");
+                if (Directory.Exists(shellIntegrationDir))
+                {
+                    var shellIntegrationCandidate = Path.Combine(shellIntegrationDir, "shell.exe");
+                    var shellIntegrationDll = Path.Combine(shellIntegrationDir, "shell.dll");
+                    if (File.Exists(shellIntegrationCandidate) && File.Exists(shellIntegrationDll))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Found shell.exe in build/shellIntegration directory: {shellIntegrationCandidate}");
+                        return shellIntegrationCandidate;
+                    }
+                }
+                
+                // Fallback to build directory (legacy)
                 var buildDir = Path.Combine(currentDir, "build");
                 if (Directory.Exists(buildDir))
                 {
@@ -352,10 +367,24 @@ public static class NilesoftShellHelper
                     }
                 }
                 
-                // Also check parent directory's build folder
+                // Also check parent directory's build/shellIntegration folder
                 var parentDir = Directory.GetParent(currentDir)?.FullName;
                 if (!string.IsNullOrWhiteSpace(parentDir))
                 {
+                    var parentShellIntegrationDir = Path.Combine(parentDir, "build", "shellIntegration");
+                    if (Directory.Exists(parentShellIntegrationDir))
+                    {
+                        var parentShellIntegrationCandidate = Path.Combine(parentShellIntegrationDir, "shell.exe");
+                        var parentShellIntegrationDll = Path.Combine(parentShellIntegrationDir, "shell.dll");
+                        if (File.Exists(parentShellIntegrationCandidate) && File.Exists(parentShellIntegrationDll))
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Found shell.exe in parent build/shellIntegration directory: {parentShellIntegrationCandidate}");
+                            return parentShellIntegrationCandidate;
+                        }
+                    }
+                    
+                    // Also check parent directory's build folder (legacy)
                     var parentBuildDir = Path.Combine(parentDir, "build");
                     if (Directory.Exists(parentBuildDir))
                     {

@@ -1120,6 +1120,12 @@
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>正在扫描可用驱动包，请稍候...</value>
   </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>网络出问题了，正在自动重试...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>正在重新获取驱动包...</value>
+  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>清理信息</value>
   </data>
@@ -3306,6 +3312,21 @@
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>同步区域</value>
   </data>
+  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
+    <value>工具将在工具目录中可用后显示在此处。</value>
+  </data>
+  <data name="ToolsPage_Launch_Button" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="ToolsPage_Details_Version" xml:space="preserve">
+    <value>版本: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Author" xml:space="preserve">
+    <value>作者: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Path" xml:space="preserve">
+    <value>路径: {0}</value>
+  </data>
   <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
     <value>使用 Windows 内置的注册表清理功能</value>
   </data>
@@ -3350,6 +3371,117 @@
   </data>
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>无法卸载</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>插件设置</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>插件名称</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>插件描述</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>此插件没有可配置的设置。</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>未找到插件: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>作者: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>插件配置界面格式不正确。</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>加载插件设置时出错: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>搜索插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>未安装</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>没有可用的插件</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>插件商城目前为空，敬请期待未来的插件更新</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>语言：</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>使用应用默认语言</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>找到 {0} 个插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>插件安装成功</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功安装</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>安装失败</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>无法安装插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>插件卸载成功</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>卸载失败</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>无法卸载插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>打开失败</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>无法打开插件设置: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>请先安装插件</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>插件需要先安装才能使用</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>无法打开插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>最低兼容版本: {0}</value>
   </data>
 
 </root>

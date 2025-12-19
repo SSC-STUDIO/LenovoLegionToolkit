@@ -1,0 +1,38 @@
+<UserControl
+    x:Class="LenovoLegionToolkit.Plugins.NetworkAcceleration.Controls.TrafficChartControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:plugin="clr-namespace:LenovoLegionToolkit.Plugins.NetworkAcceleration"
+    UseLayoutRounding="True"
+    SnapsToDevicePixels="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Chart Title -->
+        <TextBlock
+            Grid.Row="0"
+            FontSize="13"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Margin="0,0,0,8"
+            Text="{x:Static plugin:Resource.NetworkAcceleration_TrafficChart}" />
+        
+        <!-- Chart Canvas -->
+        <Border
+            Grid.Row="1"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="12"
+            MinHeight="140">
+            <Canvas 
+                x:Name="ChartCanvas" 
+                ClipToBounds="True"
+                Width="200"
+                Height="104" />
+        </Border>
+    </Grid>
+</UserControl>

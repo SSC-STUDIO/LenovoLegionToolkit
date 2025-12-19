@@ -32,14 +32,14 @@ public partial class PackageControl : IProgress<float>
     private bool _isRecommended;
     private PackageStatus _status = PackageStatus.NotStarted;
     private Process? _installProcess;
-    private string? _actualDownloadedFilePath; // 存储实际下载的文件路径
+    private string? _actualDownloadedFilePath; // Store the actual downloaded file path
 
     public enum PackageStatus
     {
-        NotStarted,    // 未开始
-        Downloading,   // 下载中
-        Installing,    // 安装中
-        Completed      // 已完成
+        NotStarted,    // Not started
+        Downloading,   // Downloading
+        Installing,    // Installing
+        Completed      // Completed
     }
 
     public bool IsDownloading { get; private set; }
@@ -56,7 +56,7 @@ public partial class PackageControl : IProgress<float>
             OnPropertyChanged(nameof(IsCompleted));
             UpdateStatusDisplay();
             
-            // 如果状态变成已完成，隐藏控件（在主界面中）
+            // If status changes to Completed, hide the control (in the main interface)
             if (value == PackageStatus.Completed)
             {
                 Visibility = Visibility.Collapsed;
@@ -67,17 +67,17 @@ public partial class PackageControl : IProgress<float>
     public bool IsCompleted => Status == PackageStatus.Completed;
 
     /// <summary>
-    /// 获取实际下载的文件名（包含标题前缀）
+    /// Get the actual downloaded file name (including title prefix)
     /// </summary>
     private string GetActualFileName()
     {
-        // 实际下载的文件名格式："{SanitizedTitle} - {FileName}"
+        // Actual downloaded file name format: "{SanitizedTitle} - {FileName}"
         var sanitizedTitle = SanitizeFileName(_package.Title);
         return $"{sanitizedTitle} - {_package.FileName}";
     }
 
     /// <summary>
-    /// 清理文件名中的非法字符
+    /// Clean up invalid characters from file name
     /// </summary>
     private static string SanitizeFileName(string name)
     {
@@ -95,16 +95,16 @@ public partial class PackageControl : IProgress<float>
                 return;
             _isSelected = value;
             
-            // 同步更新UI中的复选框状态（避免触发事件导致循环）
+            // Synchronize checkbox state in UI (avoid event loop)
             if (_selectCheckBox != null && _selectCheckBox.IsChecked != value)
             {
-                // 临时移除事件处理器，避免触发SelectCheckBox_Checked/Unchecked
+                // Temporarily remove event handlers to avoid triggering SelectCheckBox_Checked/Unchecked
                 _selectCheckBox.Checked -= SelectCheckBox_Checked;
                 _selectCheckBox.Unchecked -= SelectCheckBox_Unchecked;
                 
                 _selectCheckBox.IsChecked = value;
                 
-                // 重新添加事件处理器
+                // Re-add event handlers
                 _selectCheckBox.Checked += SelectCheckBox_Checked;
                 _selectCheckBox.Unchecked += SelectCheckBox_Unchecked;
             }
@@ -168,10 +168,10 @@ public partial class PackageControl : IProgress<float>
         var showWarning = package.ReleaseDate < DateTime.UtcNow.AddYears(-1);
         _warningTextBlock.Visibility = showWarning ? Visibility.Visible : Visibility.Collapsed;
         
-        // 如果是可更新项目，标记为推荐
+        // Mark as recommended if it's an update
         IsRecommended = package.IsUpdate;
         
-        // 绑定复选框
+        // Bind checkbox
         if (_selectCheckBox != null)
         {
             _selectCheckBox.IsChecked = IsSelected;
@@ -179,10 +179,10 @@ public partial class PackageControl : IProgress<float>
             _selectCheckBox.Unchecked += SelectCheckBox_Unchecked;
         }
         
-        // 初始化推荐标签和状态显示
+        // Initialize recommended badge and status display
         if (_recommendedBadge != null)
         {
-            // 确保推荐标签有内容
+            // Ensure recommended badge has content
             if (string.IsNullOrEmpty(_recommendedBadge.Content?.ToString()))
             {
                 _recommendedBadge.Content = Resource.PackageControl_Recommended;
@@ -192,10 +192,10 @@ public partial class PackageControl : IProgress<float>
                 : Visibility.Collapsed;
         }
         
-        // 初始化状态显示（必须在推荐标签之后，因为UpdateStatusDisplay可能会修改推荐标签的可见性）
+        // Initialize status display (must be after recommended badge, as UpdateStatusDisplay may modify badge visibility)
         UpdateStatusDisplay();
         
-        // 检查文件是否已下载，如果已下载则将下载按钮切换为安装按钮
+        // Check if file is already downloaded, switch download button to install button if it is
         CheckAndUpdateDownloadButtonState();
     }
     
@@ -209,13 +209,13 @@ public partial class PackageControl : IProgress<float>
             var downloadPath = _getDownloadPath();
             var filePath = _actualDownloadedFilePath;
             
-            // 如果实际路径不存在，尝试构造的路径
+            // If actual path doesn't exist, try constructed path
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
                 filePath = Path.Combine(downloadPath, GetActualFileName());
             }
             
-            // 如果还是找不到，尝试搜索匹配的文件
+            // If still not found, try searching for matching files
             if (!File.Exists(filePath) && Directory.Exists(downloadPath))
             {
                 var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
@@ -275,25 +275,25 @@ public partial class PackageControl : IProgress<float>
     {
         IsSelected = true;
         
-        // 如果已完成，不执行任何操作
+        // If already completed, do nothing
         if (Status == PackageStatus.Completed)
             return;
         
-        // 如果正在下载或安装，不重复执行
+        // If already downloading or installing, don't repeat
         if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
             return;
         
-        // 检查文件是否已下载
+        // Check if file is already downloaded
         var downloadPath = _getDownloadPath();
         var filePath = _actualDownloadedFilePath;
         
-        // 如果实际路径不存在，尝试构造的路径
+        // If actual path doesn't exist, try constructed path
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
             filePath = Path.Combine(downloadPath, GetActualFileName());
         }
         
-        // 如果还是找不到，尝试搜索匹配的文件
+        // If still not found, try searching for matching files
         if (!File.Exists(filePath) && Directory.Exists(downloadPath))
         {
             var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
@@ -306,12 +306,12 @@ public partial class PackageControl : IProgress<float>
         
         if (File.Exists(filePath))
         {
-            // 文件已存在，直接安装
+            // File exists, install directly
             await InstallPackageAsync();
         }
         else
         {
-            // 文件不存在，先下载再安装
+            // File doesn't exist, download first then install
             await DownloadAndInstallPackageAsync();
         }
     }
@@ -320,16 +320,16 @@ public partial class PackageControl : IProgress<float>
     {
         IsSelected = false;
         
-        // 如果已完成，不允许取消
+        // If already completed, cancellation not allowed
         if (Status == PackageStatus.Completed)
         {
-            // 重新选中复选框
+            // Re-select the checkbox
             if (_selectCheckBox != null)
                 _selectCheckBox.IsChecked = true;
             return;
         }
         
-        // 停止下载或安装
+        // Stop download or installation
         if (Status == PackageStatus.Downloading)
         {
             _downloadPackageTokenSource?.Cancel();
@@ -361,8 +361,8 @@ public partial class PackageControl : IProgress<float>
 
             var token = _downloadPackageTokenSource.Token;
 
-            // 保存实际下载的文件路径
-            _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token);
+            // Save the actual downloaded file path
+        _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token);
 
             result = true;
         }
@@ -409,7 +409,7 @@ public partial class PackageControl : IProgress<float>
             await SnackbarHelper.ShowAsync(Resource.PackageControl_DownloadComplete_Title, string.Format(Resource.PackageControl_DownloadComplete_Message, _package.FileName));
             CheckAndUpdateDownloadButtonState();
             
-            // 使用实际下载的文件路径，如果不存在则使用构造的路径
+            // Use actual downloaded file path, if it doesn't exist use constructed path
             var filePath = _actualDownloadedFilePath;
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
@@ -417,26 +417,26 @@ public partial class PackageControl : IProgress<float>
                 filePath = Path.Combine(downloadPath, GetActualFileName());
             }
             
-            // 等待文件完全写入，最多等待3秒
-            var maxRetries = 30; // 最多重试30次
-            var retryDelay = 100; // 每次延迟100ms
+            // Wait for file to be fully written, maximum 3 seconds
+            var maxRetries = 30; // Maximum 30 retries
+            var retryDelay = 100; // 100ms delay between retries
             
             for (int i = 0; i < maxRetries; i++)
             {
                 if (File.Exists(filePath))
                 {
-                    // 检查文件是否可访问（不是正在写入）
+                    // Check if file is accessible (not being written)
                     try
                     {
                         using (var fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                         {
-                            // 文件可访问，可以继续安装
+                            // File is accessible, can proceed with installation
                             break;
                         }
                     }
                     catch
                     {
-                        // 文件正在被写入，继续等待
+                        // File is being written, continue waiting
                     }
                 }
                 
@@ -444,21 +444,21 @@ public partial class PackageControl : IProgress<float>
                     await Task.Delay(retryDelay);
             }
             
-            // 再次确认文件存在后再安装
+            // Confirm file exists before installation
             if (File.Exists(filePath))
             {
                 await InstallPackageAsync();
             }
             else
             {
-                // 如果还是找不到，尝试在下载目录中搜索匹配的文件
+                // If still not found, try searching for matching files in download directory
                 var downloadPath = _getDownloadPath();
                 if (Directory.Exists(downloadPath))
                 {
                     var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
                     if (files.Length > 0)
                     {
-                        // 找到匹配的文件，使用第一个
+                        // Found matching files, use the first one
                         filePath = files[0];
                         _actualDownloadedFilePath = filePath;
                         
@@ -490,46 +490,46 @@ public partial class PackageControl : IProgress<float>
         
         try
         {
-            // 优先使用实际下载的文件路径
-            var filePath = _actualDownloadedFilePath;
-            
-            // 如果实际路径不存在，尝试构造的路径
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            // Prefer actual downloaded file path
+        var filePath = _actualDownloadedFilePath;
+        
+        // If actual path doesn't exist, try constructed path
+        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+        {
+            var downloadPath = _getDownloadPath();
+            filePath = Path.Combine(downloadPath, GetActualFileName());
+        }
+        
+        // Check file existence again, wait and retry if not found
+        if (!File.Exists(filePath))
+        {
+            // Wait up to 2 seconds, checking every 200ms
+            for (int i = 0; i < 10; i++)
             {
-                var downloadPath = _getDownloadPath();
-                filePath = Path.Combine(downloadPath, GetActualFileName());
+                await Task.Delay(200);
+                if (File.Exists(filePath))
+                    break;
             }
-            
-            // 再次检查文件是否存在，如果不存在则等待一段时间后重试
-            if (!File.Exists(filePath))
+        }
+        
+        // If still not found, try searching for matching files in download directory
+        if (!File.Exists(filePath))
+        {
+            var downloadPath = _getDownloadPath();
+            if (Directory.Exists(downloadPath))
             {
-                // 等待最多2秒，每200ms检查一次
-                for (int i = 0; i < 10; i++)
+                var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
+                if (files.Length > 0)
                 {
-                    await Task.Delay(200);
-                    if (File.Exists(filePath))
-                        break;
+                    // Found matching files, use the first one
+                    filePath = files[0];
+                    _actualDownloadedFilePath = filePath;
+                    
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Found file by search in InstallPackageAsync: {filePath}");
                 }
             }
-            
-            // 如果还是找不到，尝试在下载目录中搜索匹配的文件
-            if (!File.Exists(filePath))
-            {
-                var downloadPath = _getDownloadPath();
-                if (Directory.Exists(downloadPath))
-                {
-                    var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                    if (files.Length > 0)
-                    {
-                        // 找到匹配的文件，使用第一个
-                        filePath = files[0];
-                        _actualDownloadedFilePath = filePath;
-                        
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Found file by search in InstallPackageAsync: {filePath}");
-                    }
-                }
-            }
+        }
             
             if (!File.Exists(filePath))
             {

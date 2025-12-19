@@ -657,11 +657,13 @@
                                             Visibility="Collapsed">
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <wpfui:ProgressRing
+                                            x:Name="_driverLoadingProgressRing"
                                             Width="20"
                                                     Height="20"
                                             Margin="0,0,12,0"
                                                     IsIndeterminate="True" />
                                         <TextBlock
+                                                    x:Name="_driverLoadingText"
                                                     VerticalAlignment="Center"
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_ScanningDrivers}" />

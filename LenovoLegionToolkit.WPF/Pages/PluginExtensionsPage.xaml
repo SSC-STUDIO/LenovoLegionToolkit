@@ -63,6 +63,8 @@
     <Grid Margin="0,0,16,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -82,26 +84,87 @@
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
         </StackPanel>
 
+        <!-- Search and Filter -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <wpfui:TextBox
+                x:Name="_searchTextBox"
+                Grid.Column="0"
+                Icon="Search24"
+                PlaceholderText="{x:Static resources:Resource.PluginExtensionsPage_SearchPlaceholder}"
+                TextChanged="SearchTextBox_TextChanged" />
+            
+            <ComboBox
+                x:Name="_filterComboBox"
+                Grid.Column="1"
+                MinWidth="150"
+                Margin="12,0,0,0"
+                SelectionChanged="FilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterAll}" Tag="All" IsSelected="True" />
+                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterInstalled}" Tag="Installed" />
+                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterNotInstalled}" Tag="NotInstalled" />
+            </ComboBox>
+        </Grid>
+
+        <!-- Results Count -->
+        <TextBlock
+            x:Name="_resultsCountTextBlock"
+            Grid.Row="2"
+            Margin="0,0,0,12"
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Visibility="Collapsed" />
+
         <!-- Plugins List -->
-        <ScrollViewer
-            Grid.Row="1"
-            x:Name="_pluginsScrollViewer"
-            VerticalScrollBarVisibility="Auto"
-            HorizontalScrollBarVisibility="Disabled"
-            Padding="0,0,0,24"
-            ClipToBounds="False">
-            <ItemsControl>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" Margin="0,2,0,0" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.Items>
-                    <!-- 工具箱和系统优化现在是默认应用，不再显示在插件市场中 -->
-                    <!-- 未来真正的插件系统将在这里显示第三方插件 -->
-                </ItemsControl.Items>
-            </ItemsControl>
-        </ScrollViewer>
+        <Grid Grid.Row="3">
+            <ScrollViewer
+                x:Name="_pluginsScrollViewer"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                Padding="0,0,0,24"
+                ClipToBounds="False">
+                <ItemsControl x:Name="_pluginsItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" Margin="0,2,0,0" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- No Plugins Message -->
+            <StackPanel
+                x:Name="_noPluginsMessage"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Visibility="Visible"
+                Margin="24">
+                <wpfui:SymbolIcon
+                    Symbol="Box24"
+                    FontSize="48"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,16" />
+                <TextBlock
+                    Text="{x:Static resources:Resource.PluginExtensionsPage_NoPluginsAvailable}"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center" />
+                <TextBlock
+                    Text="{x:Static resources:Resource.PluginExtensionsPage_EmptyStoreMessage}"
+                    FontSize="14"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    Margin="0,8,0,0" />
+            </StackPanel>
+        </Grid>
 
         <!-- Plugin Details Panel -->
         <Border
@@ -140,22 +203,79 @@
                 </Border>
                 
                 <!-- Details -->
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock
-                        x:Name="PluginDetailsName"
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Margin="0,0,0,2" />
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0">
+                        <TextBlock
+                            x:Name="PluginDetailsName"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Margin="0,0,0,2" />
                     <TextBlock
                         x:Name="PluginDetailsDescription"
                         FontSize="12"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         TextWrapping="Wrap"
-                        MaxHeight="60"
+                        MaxHeight="100"
                         TextTrimming="CharacterEllipsis"
-                        Margin="0,0,0,2" />
-                </StackPanel>
+                        Margin="0,0,0,8" />
+                    </StackPanel>
+                    
+                    <!-- Language Selection -->
+                    <StackPanel 
+                        Grid.Row="1"
+                        Orientation="Horizontal"
+                        Margin="0,0,0,8">
+                        <TextBlock
+                            Text="{x:Static resources:Resource.PluginExtensionsPage_Language}"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            VerticalAlignment="Center"
+                            Margin="0,0,8,0" />
+                        <ComboBox
+                            x:Name="PluginLanguageComboBox"
+                            MinWidth="150"
+                            SelectionChanged="PluginLanguageComboBox_SelectionChanged"
+                            Visibility="Collapsed" />
+                    </StackPanel>
+                    
+                    <!-- Action Buttons -->
+                    <StackPanel 
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <wpfui:Button
+                            x:Name="PluginInstallButton"
+                            Content="{x:Static resources:Resource.PluginExtensionsPage_InstallPlugin}"
+                            Click="PluginInstallButton_Click"
+                            Margin="0,0,8,0"
+                            Visibility="Collapsed" />
+                        <wpfui:Button
+                            x:Name="PluginUninstallButton"
+                            Content="{x:Static resources:Resource.PluginExtensionsPage_Uninstall}"
+                            Click="PluginUninstallButton_Click"
+                            Margin="0,0,8,0"
+                            Visibility="Collapsed" />
+                        <wpfui:Button
+                            x:Name="PluginConfigureButton"
+                            Content="{x:Static resources:Resource.PluginExtensionsPage_Configure}"
+                            Click="PluginConfigureButton_Click"
+                            Margin="0,0,8,0"
+                            Visibility="Collapsed" />
+                        <wpfui:Button
+                            x:Name="PluginOpenButton"
+                            Content="{x:Static resources:Resource.PluginExtensionsPage_Open}"
+                            Click="PluginOpenButton_Click"
+                            Visibility="Collapsed" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Border>
     </Grid>
