@@ -73,19 +73,6 @@
                 <custom:CardControl Margin="0,0,0,8">
                     <custom:CardControl.Header>
                         <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Battery}" 
-                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_batteryToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="battery" />
-                </custom:CardControl>
-
-                <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
                             Title="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}" 
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description}" />
                     </custom:CardControl.Header>

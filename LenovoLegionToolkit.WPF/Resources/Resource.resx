@@ -2740,7 +2740,31 @@ Supported formats are: {1}.</value>
     <value>Select Windows Power Mode to apply when Power Mode changes.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occured when reading device information.</value>
+    <value>Error occurred when reading device information.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Compatibility Check Error</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>The application failed to read device information during startup. Please check the error details below and try the troubleshooting steps if needed.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Troubleshooting Steps</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Ensure Windows Management Instrumentation (WMI) service is running: Open Services (services.msc) and check that "Windows Management Instrumentation" is running.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Run the application as Administrator to ensure sufficient permissions to access system registry and WMI.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Check system resources: Close other resource-intensive applications and try again.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Review the log file for detailed error information by clicking "Open Log" below.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Open Log File</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Macro</value>
@@ -3268,30 +3292,14 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
     <value>Install and manage plugins to extend functionality</value>
   </data>
-  <data name="PluginExtensionsPage_SystemOptimization_Title" xml:space="preserve">
-    <value>System Optimization Plugin</value>
-  </data>
-  <data name="PluginExtensionsPage_SystemOptimization_Description" xml:space="preserve">
-    <value>Install the system optimization plugin to access system optimization and cleanup features</value>
-  </data>
-  <data name="PluginExtensionsPage_Tools_Title" xml:space="preserve">
-    <value>Tools Plugin</value>
-  </data>
-  <data name="PluginExtensionsPage_Tools_Description" xml:space="preserve">
-    <value>Install the tools plugin to access various system tools and utilities</value>
-  </data>
+
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
     <value>Install</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Installed</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallBasePlugin" xml:space="preserve">
-    <value>The system optimization plugin is a base plugin and cannot be uninstalled when other plugins are installed</value>
-  </data>
-  <data name="PluginExtensionsPage_CannotUninstallBasePluginMessage" xml:space="preserve">
-    <value>The system optimization plugin is a base plugin. When other plugins are installed, the system optimization plugin cannot be uninstalled. Please uninstall other plugins first before uninstalling the system optimization plugin.</value>
-  </data>
+
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Cannot Uninstall</value>
   </data>

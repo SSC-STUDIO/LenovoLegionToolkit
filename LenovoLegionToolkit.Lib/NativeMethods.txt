@@ -146,6 +146,9 @@ OpenSCManager
 OpenService
 
 SHGetKnownFolderPath
+SHEmptyRecycleBin
+SHFileOperationW
+FOLDERID_RecycleBinFolder
 
 GetKeyState
 
@@ -172,6 +175,25 @@ GetWindowRect
 SetWindowsHookEx
 GetWindowThreadProcessId
 UnhookWindowsHookEx
+EnumWindows
+GetWindowText
+GetWindowTextLength
+IsWindowVisible
+GetWindowPlacement
+GetClassName
+SHGetFileInfoW
+DestroyIcon
+DeleteObject
+GetWindowRect
+GetWindowDC
+ReleaseDC
+CreateCompatibleDC
+CreateCompatibleBitmap
+SelectObject
+BitBlt
+DwmRegisterThumbnail
+DwmUnregisterThumbnail
+DwmUpdateThumbnailProperties
 
 DisplayConfigGetDeviceInfo
 DisplayConfigSetDeviceInfo
@@ -230,6 +252,28 @@ WTS_INFO_CLASS
 WTS_SESSIONSTATE_UNKNOWN
 WTSGetActiveConsoleSessionId
 WTSQuerySessionInformation
+WTS_CURRENT_SERVER_HANDLE
+WTSFreeMemory
+WTS_SESSIONSTATE_LOCK
+WTS_SESSIONSTATE_UNLOCK
+
+SelectObject
+SetWindowPos
+ShowWindow
+UpdateLayeredWindow
+WINDOW_STYLE
+WINDOW_EX_STYLE
+
+WTSINFOEXW
+WTS_INFO_CLASS
+WTS_SESSIONSTATE_UNKNOWN
+WTSGetActiveConsoleSessionId
+WTSQuerySessionInformation
+WTS_CURRENT_SERVER_HANDLE
+WTSFreeMemory
+WTS_SESSIONSTATE_LOCK
+WTS_SESSIONSTATE_UNLOCK
+
 WTS_CURRENT_SERVER_HANDLE
 WTSFreeMemory
 WTS_SESSIONSTATE_LOCK

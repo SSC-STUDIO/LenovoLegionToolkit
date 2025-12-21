@@ -6,33 +6,26 @@
     UseLayoutRounding="True"
     SnapsToDevicePixels="True">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <!-- Chart Title -->
-        <TextBlock
-            Grid.Row="0"
-            FontSize="13"
-            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-            Margin="0,0,0,8"
-            Text="{x:Static plugin:Resource.NetworkAcceleration_TrafficChart}" />
-        
-        <!-- Chart Canvas -->
+        <!-- Chart Canvas - Full Size -->
         <Border
-            Grid.Row="1"
             Background="{DynamicResource ControlFillColorSecondaryBrush}"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="6"
-            Padding="12"
-            MinHeight="140">
+            CornerRadius="12"
+            Padding="20,24">
+            <Border.Effect>
+                <DropShadowEffect
+                    Color="Black"
+                    Direction="270"
+                    ShadowDepth="2"
+                    Opacity="0.08"
+                    BlurRadius="8" />
+            </Border.Effect>
             <Canvas 
                 x:Name="ChartCanvas" 
                 ClipToBounds="True"
-                Width="200"
-                Height="104" />
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
         </Border>
     </Grid>
 </UserControl>

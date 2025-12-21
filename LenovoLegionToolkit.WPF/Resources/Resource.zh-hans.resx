@@ -2258,7 +2258,31 @@
     <value>选择在电源模式改变时应用的 Windows 电源计划。</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>获取硬件信息时遇到错误。</value>
+    <value>读取设备信息时发生错误。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>兼容性检查错误</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>应用程序在启动时无法读取设备信息。请查看下面的错误详情，如需要可尝试故障排除步骤。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>故障排除步骤</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>确保 Windows Management Instrumentation (WMI) 服务正在运行：打开服务 (services.msc) 并检查"Windows Management Instrumentation"是否正在运行。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>以管理员身份运行应用程序，以确保有足够的权限访问系统注册表和 WMI。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>检查系统资源：关闭其他占用资源的应用程序，然后重试。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>通过点击下面的"打开日志文件"按钮查看日志文件以获取详细的错误信息。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>打开日志文件</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>自定义宏</value>
@@ -3345,30 +3369,14 @@
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
     <value>安装和管理插件以扩展功能</value>
   </data>
-  <data name="PluginExtensionsPage_SystemOptimization_Title" xml:space="preserve">
-    <value>系统优化插件</value>
-  </data>
-  <data name="PluginExtensionsPage_SystemOptimization_Description" xml:space="preserve">
-    <value>安装系统优化插件以访问系统优化和清理功能</value>
-  </data>
-  <data name="PluginExtensionsPage_Tools_Title" xml:space="preserve">
-    <value>工具箱插件</value>
-  </data>
-  <data name="PluginExtensionsPage_Tools_Description" xml:space="preserve">
-    <value>安装工具箱插件以访问各种系统工具和实用程序</value>
-  </data>
+
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
     <value>安装</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>已安装</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallBasePlugin" xml:space="preserve">
-    <value>系统优化插件是基础插件，当有其他插件安装时无法卸载</value>
-  </data>
-  <data name="PluginExtensionsPage_CannotUninstallBasePluginMessage" xml:space="preserve">
-    <value>系统优化插件是基础插件。当有其他插件安装时，系统优化插件无法卸载。请先卸载其他插件后再卸载系统优化插件。</value>
-  </data>
+
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>无法卸载</value>
   </data>

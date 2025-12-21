@@ -17,5 +17,7 @@ dotnet publish LenovoLegionToolkit.WPF -c release -o build /p:DebugType=None /p:
 dotnet publish LenovoLegionToolkit.SpectrumTester -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet build LenovoLegionToolkit.Plugins.NetworkAcceleration -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
+dotnet build LenovoLegionToolkit.Plugins.AiAssistant -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
+dotnet build LenovoLegionToolkit.Plugins.DockLauncher -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 
 @REM iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b

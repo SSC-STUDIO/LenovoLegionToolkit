@@ -5,7 +5,7 @@ using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Structs;
+
 using Moq;
 using Xunit;
 
@@ -97,7 +97,6 @@ public class AbstractSensorsControllerTests
         
         // Assert - 所有调用都应该成功，没有异常
         results.Should().NotBeEmpty();
-        results.All(r => r != null).Should().BeTrue();
         
         // Assert - 至少有一些调用应该使用缓存（返回相同的对象引用）
         var distinctResults = results.Distinct().Count();

@@ -33,7 +33,14 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
     private bool _isDnsOptimizationEnabled;
     private bool _isRequestInterceptionEnabled;
     private bool _isGithubAccelerationEnabled;
+    private bool _autoStartService;
+    private bool _isSteamAccelerationEnabled;
+    private bool _isDiscordAccelerationEnabled;
+    private bool _isNpmAccelerationEnabled;
+    private bool _isPypiAccelerationEnabled;
     private string _proxyAddress = string.Empty;
+    private int _proxyPort = 8888;
+    private int _connectionTimeout = 30;
     private string _downloadedTraffic = "0 MB";
     private string _uploadedTraffic = "0 MB";
     private string _downloadSpeed = "0 B/s";
@@ -175,7 +182,14 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
             IsDnsOptimizationEnabled = _settings.IsDnsOptimizationEnabled;
             IsRequestInterceptionEnabled = _settings.IsRequestInterceptionEnabled;
             IsGithubAccelerationEnabled = _settings.IsGithubAccelerationEnabled;
+            AutoStartService = _settings.AutoStartService;
+            IsSteamAccelerationEnabled = _settings.IsSteamAccelerationEnabled;
+            IsDiscordAccelerationEnabled = _settings.IsDiscordAccelerationEnabled;
+            IsNpmAccelerationEnabled = _settings.IsNpmAccelerationEnabled;
+            IsPypiAccelerationEnabled = _settings.IsPypiAccelerationEnabled;
             ProxyAddress = _settings.ProxyAddress;
+            ProxyPort = _settings.ProxyPort;
+            _connectionTimeout = _settings.ConnectionTimeout;
 
             // Apply DNS optimization setting
             _dnsOptimizationService.SetEnabled(IsDnsOptimizationEnabled);
@@ -334,6 +348,23 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
         // Update chart
         var history = _statisticsService.GetSpeedHistory(60);
         _trafficChartControl?.UpdateChart(history);
+    }
+
+    private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _statisticsService.Reset();
+            UpdateTrafficStatistics();
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Network statistics reset successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error resetting statistics: {ex.Message}", ex);
+        }
     }
 
     private void Page_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -596,6 +627,90 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
             
             _totalTraffic = value;
             OnPropertyChanged();
+        }
+    }
+
+    public bool AutoStartService
+    {
+        get => _autoStartService;
+        set
+        {
+            if (_autoStartService == value)
+                return;
+            
+            _autoStartService = value;
+            OnPropertyChanged();
+            _settings.AutoStartService = value;
+        }
+    }
+
+    public bool IsSteamAccelerationEnabled
+    {
+        get => _isSteamAccelerationEnabled;
+        set
+        {
+            if (_isSteamAccelerationEnabled == value)
+                return;
+            
+            _isSteamAccelerationEnabled = value;
+            OnPropertyChanged();
+            _settings.IsSteamAccelerationEnabled = value;
+        }
+    }
+
+    public bool IsDiscordAccelerationEnabled
+    {
+        get => _isDiscordAccelerationEnabled;
+        set
+        {
+            if (_isDiscordAccelerationEnabled == value)
+                return;
+            
+            _isDiscordAccelerationEnabled = value;
+            OnPropertyChanged();
+            _settings.IsDiscordAccelerationEnabled = value;
+        }
+    }
+
+    public bool IsNpmAccelerationEnabled
+    {
+        get => _isNpmAccelerationEnabled;
+        set
+        {
+            if (_isNpmAccelerationEnabled == value)
+                return;
+            
+            _isNpmAccelerationEnabled = value;
+            OnPropertyChanged();
+            _settings.IsNpmAccelerationEnabled = value;
+        }
+    }
+
+    public bool IsPypiAccelerationEnabled
+    {
+        get => _isPypiAccelerationEnabled;
+        set
+        {
+            if (_isPypiAccelerationEnabled == value)
+                return;
+            
+            _isPypiAccelerationEnabled = value;
+            OnPropertyChanged();
+            _settings.IsPypiAccelerationEnabled = value;
+        }
+    }
+
+    public int ProxyPort
+    {
+        get => _proxyPort;
+        set
+        {
+            if (_proxyPort == value)
+                return;
+            
+            _proxyPort = value;
+            OnPropertyChanged();
+            _settings.ProxyPort = value;
         }
     }
 
