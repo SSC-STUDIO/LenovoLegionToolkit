@@ -392,9 +392,11 @@ public partial class MainWindow
     {
         UpdateWindowsOptimizationNavigationVisibility();
         UpdateToolsNavigationVisibility();
-        UpdatePluginExtensionsNavigationVisibility();
         UpdateInstalledPluginsNavigationItems(); // Ensure installed plugins have navigation items on startup
         UpdateNavigationItemsVisibilityFromSettings();
+        // UpdatePluginExtensionsNavigationVisibility must be called AFTER UpdateNavigationItemsVisibilityFromSettings
+        // to ensure it has the latest visibility settings
+        UpdatePluginExtensionsNavigationVisibility();
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()
@@ -406,13 +408,6 @@ public partial class MainWindow
         {
             var shouldShow = GetNavigationItemVisibility("keyboardBacklight", visibilitySettings);
             _keyboardItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update battery navigation item
-        if (_batteryItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("battery", visibilitySettings);
-            _batteryItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // Update automation navigation item
@@ -456,6 +451,10 @@ public partial class MainWindow
             var shouldShow = GetNavigationItemVisibility("about", visibilitySettings);
             _aboutItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        // Update plugin extensions navigation item
+        // Note: This is handled separately in UpdatePluginExtensionsNavigationVisibility() 
+        // to keep the logic consistent with other navigation items
     }
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
@@ -477,10 +476,11 @@ public partial class MainWindow
 
     private void UpdatePluginExtensionsNavigationVisibility()
     {
-        // Control plugin extensions navigation item visibility based on whether extensions are enabled
-        var extensionsEnabled = _applicationSettings.Store.ExtensionsEnabled;
+        // Control plugin extensions navigation item visibility based on navigation items visibility settings
+        // Plugin extensions should be visible by default, just like other navigation items
+        // Only controlled by navigation items visibility settings, not by ExtensionsEnabled
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
-        var shouldShow = extensionsEnabled && GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
+        var shouldShow = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
         
         if (_pluginExtensionsItem != null)
         {
@@ -570,12 +570,10 @@ public partial class MainWindow
             var installedPluginIds = _pluginManager.GetInstalledPluginIds().ToList();
             var registeredPlugins = _pluginManager.GetRegisteredPlugins().ToList();
             
-            // Filter out system plugins and built-in plugins
+            // Filter out system plugins
             var pluginsToShow = registeredPlugins
                 .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase)
-                    && !p.IsSystemPlugin
-                    && p.Id != PluginConstants.Tools
-                    && p.Id != PluginConstants.SystemOptimization)
+                    && !p.IsSystemPlugin)
                 .ToList();
 
             // Remove navigation items for uninstalled plugins

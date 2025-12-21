@@ -5,8 +5,8 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// </summary>
 public static class PluginConstants
 {
-    public const string SystemOptimization = "SystemOptimization";
-    public const string Tools = "Tools";
     public const string NetworkAcceleration = "NetworkAcceleration";
+    public const string AiAssistant = "AiAssistant";
+    public const string DockLauncher = "DockLauncher";
 }
 

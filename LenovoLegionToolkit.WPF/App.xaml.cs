@@ -148,10 +148,36 @@ public partial class App
             }
             catch (Exception ex)
             {
+                // Always log error details, regardless of trace flag
+                // Use Error level to ensure it's always written to log file
+                Log.Instance.Error($"Failed to check device compatibility: {ex.Message}", ex);
+                
+                // Log additional trace details if trace is enabled
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to check device compatibility", ex);
+                {
+                    Log.Instance.Trace($"Compatibility check exception details:", ex);
+                    if (ex.InnerException != null)
+                        Log.Instance.Trace($"Inner exception: {ex.InnerException.Message}", ex.InnerException);
+                    
+                    // Log stack trace for detailed debugging
+                    Log.Instance.Trace($"Stack trace: {ex.StackTrace}");
+                }
+                
+                // Force flush log entries to file immediately before showing error dialog
+                // This ensures error is written even if program exits soon after
+                try
+                {
+                    Log.Instance.Flush();
+                }
+                catch
+                {
+                    // Ignore flush errors - we still want to show the error dialog
+                }
 
-                MessageBox.Show(Resource.CompatibilityCheckError_Message, Resource.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                // Show modern error window with detailed information
+                var errorWindow = new Windows.Utils.CompatibilityCheckErrorWindow(ex);
+                errorWindow.ShowDialog();
+                
                 Shutdown(200);
                 return;
             }

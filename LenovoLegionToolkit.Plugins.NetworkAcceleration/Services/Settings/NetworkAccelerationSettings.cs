@@ -152,6 +152,83 @@ public class NetworkAccelerationSettings
         }
     }
 
+    public bool AutoStartService
+    {
+        get => _data.AutoStartService;
+        set
+        {
+            _data.AutoStartService = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public int ProxyPort
+    {
+        get => _data.ProxyPort;
+        set
+        {
+            _data.ProxyPort = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public int ConnectionTimeout
+    {
+        get => _data.ConnectionTimeout;
+        set
+        {
+            _data.ConnectionTimeout = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public bool IsSteamAccelerationEnabled
+    {
+        get => _data.IsSteamAccelerationEnabled;
+        set
+        {
+            _data.IsSteamAccelerationEnabled = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public bool IsDiscordAccelerationEnabled
+    {
+        get => _data.IsDiscordAccelerationEnabled;
+        set
+        {
+            _data.IsDiscordAccelerationEnabled = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public bool IsNpmAccelerationEnabled
+    {
+        get => _data.IsNpmAccelerationEnabled;
+        set
+        {
+            _data.IsNpmAccelerationEnabled = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
+    public bool IsPypiAccelerationEnabled
+    {
+        get => _data.IsPypiAccelerationEnabled;
+        set
+        {
+            _data.IsPypiAccelerationEnabled = value;
+            if (!_isLoading)
+                _ = SaveAsyncDelayed();
+        }
+    }
+
     private class SettingsData
     {
         public bool IsServiceEnabled { get; set; }
@@ -159,6 +236,13 @@ public class NetworkAccelerationSettings
         public bool IsRequestInterceptionEnabled { get; set; }
         public bool IsGithubAccelerationEnabled { get; set; }
         public string? ProxyAddress { get; set; }
+        public bool AutoStartService { get; set; }
+        public int ProxyPort { get; set; } = 8888;
+        public int ConnectionTimeout { get; set; } = 30;
+        public bool IsSteamAccelerationEnabled { get; set; }
+        public bool IsDiscordAccelerationEnabled { get; set; }
+        public bool IsNpmAccelerationEnabled { get; set; }
+        public bool IsPypiAccelerationEnabled { get; set; }
     }
 }
 

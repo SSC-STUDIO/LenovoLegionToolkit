@@ -14,6 +14,8 @@ public class ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
 
     public async Task DispatchAsync(Func<Task> task)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
         using (await _lock.LockAsync().ConfigureAwait(false))
         {
             var diff = DateTime.UtcNow - _lastEvent;

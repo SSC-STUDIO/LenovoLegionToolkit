@@ -32,6 +32,15 @@ public class NetworkAccelerationPlugin : PluginBase
         // Return Network acceleration page (implements IPluginPage interface)
         return new NetworkAccelerationPluginPage();
     }
+
+    /// <summary>
+    /// Plugin provides settings page
+    /// </summary>
+    public override object? GetSettingsPage()
+    {
+        // Return Network acceleration settings page
+        return new NetworkAccelerationSettingsPluginPage();
+    }
 }
 
 /// <summary>
@@ -47,6 +56,21 @@ public class NetworkAccelerationPluginPage : IPluginPage
     {
         // Return Network acceleration page control
         return new NetworkAccelerationPage();
+    }
+}
+
+/// <summary>
+/// Network acceleration settings plugin page provider
+/// </summary>
+public class NetworkAccelerationSettingsPluginPage : IPluginPage
+{
+    public string PageTitle => string.Empty;
+    public string PageIcon => string.Empty;
+
+    public object CreatePage()
+    {
+        // Return Network acceleration settings page control
+        return new NetworkAccelerationSettingsPage();
     }
 }
 

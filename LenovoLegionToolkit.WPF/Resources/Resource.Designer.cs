@@ -7783,11 +7783,83 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error occured when reading device information..
+        ///   Looks up a localized string similar to Error occurred when reading device information..
         /// </summary>
         public static string CompatibilityCheckError_Message {
             get {
                 return ResourceManager.GetString("CompatibilityCheckError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compatibility Check Error.
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Title {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application failed to read device information during startup. Please check the error details below and try the troubleshooting steps if needed..
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Description {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Troubleshooting Steps.
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_TroubleshootingTitle {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_TroubleshootingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ensure Windows Management Instrumentation (WMI) service is running: Open Services (services.msc) and check that "Windows Management Instrumentation" is running..
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Tip1 {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Tip1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run the application as Administrator to ensure sufficient permissions to access system registry and WMI..
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Tip2 {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Tip2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check system resources: Close other resource-intensive applications and try again..
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Tip3 {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Tip3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review the log file for detailed error information by clicking "Open Log" below..
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_Tip4 {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_Tip4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Log File.
+        /// </summary>
+        public static string CompatibilityCheckErrorWindow_OpenLog {
+            get {
+                return ResourceManager.GetString("CompatibilityCheckErrorWindow_OpenLog", resourceCulture);
             }
         }
         

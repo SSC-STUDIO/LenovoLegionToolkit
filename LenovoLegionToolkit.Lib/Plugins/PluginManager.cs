@@ -483,9 +483,6 @@ public class PluginManager : IPluginManager
                 }
             }
 
-            // Ensure system plugin is installed when other plugins are installed
-            EnsureSystemPluginWhenNeeded();
-
             // Trigger install callback
             if (_registeredPlugins.TryGetValue(pluginId, out var installedPlugin))
             {
@@ -506,19 +503,8 @@ public class PluginManager : IPluginManager
         if (!installedExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
             return false;
 
-        // 检查是否为系统插件，如果是系统插件且还有其他插件依赖它，则不能卸载
-        if (_registeredPlugins.TryGetValue(pluginId, out var plugin) && plugin.IsSystemPlugin)
-        {
-            var hasOtherPlugins = installedExtensions.Any(ext =>
-                !string.Equals(ext, pluginId, StringComparison.OrdinalIgnoreCase));
-
-            if (hasOtherPlugins)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Cannot uninstall system plugin {pluginId} because other plugins are installed.");
-                return false;
-            }
-        }
+        // Get plugin instance
+        _registeredPlugins.TryGetValue(pluginId, out var plugin);
 
         // 检查是否有其他插件依赖此插件
         var dependentPlugins = _registeredPlugins.Values
@@ -549,23 +535,241 @@ public class PluginManager : IPluginManager
         return _applicationSettings.Store.InstalledExtensions;
     }
 
-    /// <summary>
-/// When installing other plugins, ensure the system plugin is also installed if it's a base plugin
-/// </summary>
-    private void EnsureSystemPluginWhenNeeded()
+    public bool PermanentlyDeletePlugin(string pluginId)
     {
-        var systemPlugin = _registeredPlugins.Values.FirstOrDefault(p => p.IsSystemPlugin);
-        if (systemPlugin == null)
-            return;
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
 
-        var installedExtensions = _applicationSettings.Store.InstalledExtensions;
-        var hasOtherPlugins = installedExtensions.Any(ext =>
-            !string.Equals(ext, systemPlugin.Id, StringComparison.OrdinalIgnoreCase));
-
-        if (hasOtherPlugins && !installedExtensions.Contains(systemPlugin.Id, StringComparer.OrdinalIgnoreCase))
+        try
         {
-            installedExtensions.Add(systemPlugin.Id);
-            _applicationSettings.SynchronizeStore();
+            // First uninstall the plugin if it's installed
+            UninstallPlugin(pluginId);
+
+            // Get plugins directory
+            var pluginsDirectory = GetPluginsDirectory();
+            if (!Directory.Exists(pluginsDirectory))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Plugins directory does not exist: {pluginsDirectory}");
+                return false;
+            }
+
+            // Try to find plugin file by scanning all plugin DLLs and matching by ID
+            // We need to check both the expected naming pattern and scan for actual plugin IDs
+            var foundFiles = new List<string>();
+            var pluginDirectoryToDelete = new List<string>();
+
+            // Check subdirectories (plugins are often in their own folder)
+            var subdirectories = Directory.GetDirectories(pluginsDirectory);
+            var cultureFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
+                "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
+                "vi", "zh-hans", "zh-hant", "tools"
+            };
+
+            foreach (var subdir in subdirectories)
+            {
+                var dirName = Path.GetFileName(subdir);
+                if (cultureFolders.Contains(dirName))
+                    continue;
+
+                // Check all DLL files in this subdirectory
+                var dllFiles = Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly)
+                    .Where(f => 
+                    {
+                        var fileName = Path.GetFileName(f);
+                        return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
+                               !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                               !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
+                    });
+
+                foreach (var dllFile in dllFiles)
+                {
+                    try
+                    {
+                        // Try to load the assembly and check if it contains our plugin
+                        var assembly = Assembly.LoadFrom(dllFile);
+                        var pluginTypes = assembly.GetTypes()
+                            .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                        foreach (var pluginType in pluginTypes)
+                        {
+                            if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
+                                testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
+                            {
+                                foundFiles.Add(dllFile);
+                                pluginDirectoryToDelete.Add(subdir);
+                                break;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // If we can't load it, try matching by filename pattern
+                        var fileName = Path.GetFileNameWithoutExtension(dllFile);
+                        if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
+                            fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                        {
+                            foundFiles.Add(dllFile);
+                            pluginDirectoryToDelete.Add(subdir);
+                        }
+                    }
+                }
+            }
+
+            // Also check root plugins directory
+            var rootDllFiles = Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+                .Where(f => 
+                {
+                    var fileName = Path.GetFileName(f);
+                    return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
+                           !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                           !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
+                });
+
+            foreach (var dllFile in rootDllFiles)
+            {
+                try
+                {
+                    var assembly = Assembly.LoadFrom(dllFile);
+                    var pluginTypes = assembly.GetTypes()
+                        .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                    foreach (var pluginType in pluginTypes)
+                    {
+                        if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
+                            testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            foundFiles.Add(dllFile);
+                            break;
+                        }
+                    }
+                }
+                catch
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(dllFile);
+                    if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
+                        fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                    {
+                        foundFiles.Add(dllFile);
+                    }
+                }
+            }
+
+            // Delete plugin directories (if entire directory contains only this plugin)
+            foreach (var dir in pluginDirectoryToDelete.Distinct())
+            {
+                try
+                {
+                    // Check if directory only contains files related to this plugin
+                    var allFiles = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
+                        .Where(f => !f.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    
+                    var pluginBaseName = Path.GetFileNameWithoutExtension(foundFiles.FirstOrDefault(f => f.StartsWith(dir)) ?? "");
+                    if (!string.IsNullOrEmpty(pluginBaseName) && 
+                        allFiles.All(f => Path.GetFileName(f).StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Directory.Delete(dir, true);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Deleted plugin directory: {dir}");
+                        // Remove files from foundFiles list since directory is deleted
+                        foundFiles.RemoveAll(f => f.StartsWith(dir));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to delete plugin directory {dir}: {ex.Message}", ex);
+                }
+            }
+
+            // Delete all found plugin files
+            var deletedAny = false;
+            foreach (var filePath in foundFiles)
+            {
+                try
+                {
+                    File.Delete(filePath);
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Deleted plugin file: {filePath}");
+                    deletedAny = true;
+
+                    // Also delete related files (pdb, deps.json, etc.)
+                    var basePath = Path.ChangeExtension(filePath, null);
+                    var dir = Path.GetDirectoryName(filePath);
+                    if (!string.IsNullOrEmpty(dir))
+                    {
+                        var relatedExtensions = new[] { ".pdb", ".deps.json", ".config" };
+                        foreach (var ext in relatedExtensions)
+                        {
+                            var relatedFile = basePath + ext;
+                            if (File.Exists(relatedFile))
+                            {
+                                try
+                                {
+                                    File.Delete(relatedFile);
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Deleted related file: {relatedFile}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Failed to delete related file {relatedFile}: {ex.Message}", ex);
+                                }
+                            }
+                        }
+
+                        // Also delete satellite assemblies (resource DLLs)
+                        var cultureDirs = Directory.GetDirectories(dir);
+                        foreach (var cultureDir in cultureDirs)
+                        {
+                            var cultureName = Path.GetFileName(cultureDir);
+                            if (cultureFolders.Contains(cultureName))
+                            {
+                                var satelliteFiles = Directory.GetFiles(cultureDir, "*.*.resources.dll");
+                                var pluginBaseName = Path.GetFileNameWithoutExtension(filePath);
+                                foreach (var satelliteFile in satelliteFiles)
+                                {
+                                    var satelliteFileName = Path.GetFileNameWithoutExtension(satelliteFile);
+                                    if (satelliteFileName.StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        try
+                                        {
+                                            File.Delete(satelliteFile);
+                                            if (Log.Instance.IsTraceEnabled)
+                                                Log.Instance.Trace($"Deleted satellite assembly: {satelliteFile}");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            if (Log.Instance.IsTraceEnabled)
+                                                Log.Instance.Trace($"Failed to delete satellite assembly {satelliteFile}: {ex.Message}", ex);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to delete plugin file {filePath}: {ex.Message}", ex);
+                }
+            }
+
+            // Remove from registered plugins
+            _registeredPlugins.Remove(pluginId);
+            _pluginMetadataCache.Remove(pluginId);
+
+            return deletedAny;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error permanently deleting plugin {pluginId}: {ex.Message}", ex);
+            return false;
         }
     }
 
