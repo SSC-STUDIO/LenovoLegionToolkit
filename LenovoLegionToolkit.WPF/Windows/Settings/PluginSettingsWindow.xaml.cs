@@ -59,51 +59,8 @@ public partial class PluginSettingsWindow : BaseWindow
                 _pluginDescriptionTextBlock.Text += $"\n\n{string.Format(Resource.PluginSettingsWindow_Author, metadata.Author)}";
             }
 
-            // Try to get plugin configuration page
-            if (plugin is Plugins.SDK.PluginBase sdkPlugin)
-            {
-                var featureExtension = sdkPlugin.GetFeatureExtension();
-                if (featureExtension is Plugins.SDK.IPluginPage pluginPage)
-                {
-                    // Create and display plugin configuration page
-                    var pageContent = pluginPage.CreatePage();
-                    
-                    // Hide the "no config" message
-                    if (_noConfigTextBlock != null)
-                    {
-                        _noConfigTextBlock.Visibility = Visibility.Collapsed;
-                    }
-                    
-                    if (pageContent is System.Windows.Controls.Page page)
-                    {
-                        // If it's a Page, use Frame to navigate (Page can only have Window or Frame as parent)
-                        if (_pluginConfigFrame != null)
-                        {
-                            _pluginConfigFrame.Visibility = Visibility.Visible;
-                            _pluginConfigFrame.Navigate(page);
-                        }
-                    }
-                    else if (pageContent is UIElement uiElement)
-                    {
-                        // If it's a UIElement, set it as Frame content
-                        if (_pluginConfigFrame != null)
-                        {
-                            _pluginConfigFrame.Visibility = Visibility.Visible;
-                            _pluginConfigFrame.Content = uiElement;
-                        }
-                    }
-                    else if (pageContent != null)
-                    {
-                        // If it's not a UIElement or Page, show error
-                        if (_noConfigTextBlock != null)
-                        {
-                            _noConfigTextBlock.Text = Resource.PluginSettingsWindow_ConfigFormatError;
-                            _noConfigTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                            _noConfigTextBlock.Visibility = Visibility.Visible;
-                        }
-                    }
-                }
-            }
+            // Only show advanced settings for Network Acceleration plugin
+            // Don't show plugin's own configuration page
         }
         catch (Exception ex)
         {

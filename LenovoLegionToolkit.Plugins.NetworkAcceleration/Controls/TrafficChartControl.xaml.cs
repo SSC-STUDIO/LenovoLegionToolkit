@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,8 +15,8 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Controls;
 public partial class TrafficChartControl : UserControl
 {
     private const int MaxDataPoints = 60;
-    private const double ChartPadding = 12.0;
-    private const double LineThickness = 2.5;
+    private const double ChartPadding = 20.0;
+    private const double LineThickness = 3.0;
     
     // Colors matching the UI (red for download, blue for upload) with better opacity
     private static readonly SolidColorBrush DownloadColor = new(Color.FromRgb(0xE7, 0x4C, 0x3C));
@@ -36,29 +37,39 @@ public partial class TrafficChartControl : UserControl
     private void TrafficChartControl_Loaded(object sender, RoutedEventArgs e)
     {
         // Ensure canvas has proper size when loaded
-        var border = ChartCanvas.Parent as Border;
-        if (border != null)
-        {
-            ChartCanvas.Width = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right - ChartPadding * 2);
-            ChartCanvas.Height = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom - ChartPadding * 2);
-        }
+        UpdateCanvasSize();
     }
 
     private void TrafficChartControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         // Update canvas size and redraw if we have data
-        if (e.NewSize.Width > 0 && e.NewSize.Height > 0 && ChartCanvas != null)
+        if (e.NewSize.Width > 0 && e.NewSize.Height > 0)
         {
-            var border = ChartCanvas.Parent as Border;
-            if (border != null)
-            {
-                ChartCanvas.Width = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right);
-                ChartCanvas.Height = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom);
-            }
+            UpdateCanvasSize();
             if (_lastDataPoints.Length > 0)
             {
                 UpdateChart(_lastDataPoints);
             }
+        }
+    }
+
+    private void UpdateCanvasSize()
+    {
+        if (ChartCanvas == null)
+            return;
+
+        var border = ChartCanvas.Parent as Border;
+        if (border != null && border.ActualWidth > 0 && border.ActualHeight > 0)
+        {
+            // Canvas should fill the entire border minus padding
+            ChartCanvas.Width = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right);
+            ChartCanvas.Height = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom);
+        }
+        else if (ActualWidth > 0 && ActualHeight > 0)
+        {
+            // Fallback: use control's actual size
+            ChartCanvas.Width = ActualWidth;
+            ChartCanvas.Height = ActualHeight;
         }
     }
 
@@ -76,15 +87,10 @@ public partial class TrafficChartControl : UserControl
             return;
         
         // Ensure canvas has proper size
-        var border = ChartCanvas.Parent as Border;
-        if (border != null && (ChartCanvas.ActualWidth <= 0 || ChartCanvas.ActualHeight <= 0))
-        {
-            ChartCanvas.Width = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right - ChartPadding * 2);
-            ChartCanvas.Height = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom - ChartPadding * 2);
-        }
+        UpdateCanvasSize();
 
-        var canvasWidth = ChartCanvas.ActualWidth - ChartPadding * 2;
-        var canvasHeight = ChartCanvas.ActualHeight - ChartPadding * 2;
+        var canvasWidth = ChartCanvas.ActualWidth;
+        var canvasHeight = ChartCanvas.ActualHeight;
 
         if (canvasWidth <= 0 || canvasHeight <= 0)
             return;
@@ -148,7 +154,7 @@ public partial class TrafficChartControl : UserControl
     }
 
     /// <summary>
-    /// Draw smooth line using PolyBezier for better visual appearance
+    /// Draw smooth line using Catmull-Rom spline for better visual appearance (similar to SteamTools)
     /// </summary>
     private void DrawSmoothLine((long downloadSpeed, long uploadSpeed)[] dataPoints,
         Func<(long downloadSpeed, long uploadSpeed), long> speedSelector,
@@ -174,32 +180,39 @@ public partial class TrafficChartControl : UserControl
             points[i] = new Point(x, y);
         }
 
+        // Use PathGeometry with smooth curves (similar to SteamTools LineSmoothness = 1)
         var pathFigure = new PathFigure { StartPoint = points[0] };
         var pathSegmentCollection = new PathSegmentCollection();
 
-        // Create smooth curve using PolyBezier (quadratic Bezier for simplicity)
+        // Create smooth curve using cubic Bezier for better smoothness
         for (int i = 1; i < points.Length; i++)
         {
             if (i == 1)
             {
-                // First segment: use LineSegment
+                // First segment: use LineSegment for smooth start
                 pathSegmentCollection.Add(new LineSegment { Point = points[i] });
             }
             else
             {
-                // Use quadratic Bezier for smooth curves
+                // Use cubic Bezier for smoother curves (similar to SteamTools)
                 var prevPoint = points[i - 1];
                 var currentPoint = points[i];
+                var prevPrevPoint = i > 1 ? points[i - 2] : prevPoint;
+                var nextPoint = i < points.Length - 1 ? points[i + 1] : currentPoint;
                 
-                // Control point is midpoint between previous and current point
-                var controlPoint = new Point(
-                    (prevPoint.X + currentPoint.X) / 2,
-                    (prevPoint.Y + currentPoint.Y) / 2);
+                // Calculate control points for smooth curve
+                // Use Catmull-Rom style control points for better smoothness
+                var tension = 0.5; // Smoothness factor (0 = straight, 1 = very smooth)
+                var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
+                var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
+                var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
+                var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
 
-                pathSegmentCollection.Add(new QuadraticBezierSegment
+                pathSegmentCollection.Add(new BezierSegment
                 {
-                    Point1 = controlPoint,
-                    Point2 = currentPoint
+                    Point1 = new Point(cp1X, cp1Y),
+                    Point2 = new Point(cp2X, cp2Y),
+                    Point3 = currentPoint
                 });
             }
         }
@@ -246,71 +259,159 @@ public partial class TrafficChartControl : UserControl
         if (dataPoints.Length < 2)
             return;
 
-        var points = new Point[dataPoints.Length + 2];
         var bottomY = ChartPadding + height;
+        var leftX = ChartPadding;
+        var rightX = ChartPadding + width;
 
-        // Build points along the line
+        // Build curve points (from right to left, matching the line drawing order)
+        // Data points are ordered with most recent on the right (index 0 = rightmost = most recent)
+        var curvePoints = new Point[dataPoints.Length];
         for (int i = 0; i < dataPoints.Length; i++)
         {
             var speed = speedSelector(dataPoints[i]);
             var normalizedSpeed = maxSpeed > 0 ? (double)speed / maxSpeed : 0.0;
 
+            // X: from right to left (most recent on the right, matching DrawSmoothLine)
             var x = ChartPadding + width - (width * i / (dataPoints.Length - 1.0));
+            // Y: from bottom to top (0 at bottom, maxSpeed at top)
             var y = ChartPadding + height - (height * normalizedSpeed);
 
-            points[i + 1] = new Point(x, y);
+            curvePoints[i] = new Point(x, y);
         }
 
-        // Close the path: start from bottom-left, go through curve points, end at bottom-right
-        points[0] = new Point(ChartPadding, bottomY); // Bottom-left
-        points[points.Length - 1] = new Point(ChartPadding + width, bottomY); // Bottom-right
-
-        var pathFigure = new PathFigure { StartPoint = points[0] };
+        // Build path points in clockwise order to ensure fill is always below the curve
+        // Create a PathGeometry with smooth curves
+        var pathFigure = new PathFigure 
+        { 
+            StartPoint = new Point(leftX, bottomY) // Start at bottom-left
+        };
         var pathSegmentCollection = new PathSegmentCollection();
 
-        // Create smooth curve for the top edge
-        for (int i = 1; i < points.Length - 1; i++)
+        // Step 1: Line from bottom-left to the rightmost curve point (index 0, most recent data)
+        pathSegmentCollection.Add(new LineSegment { Point = curvePoints[0] });
+
+        // Step 2: Draw smooth curve from right to left using the same smoothness as the line
+        for (int i = 1; i < curvePoints.Length; i++)
         {
             if (i == 1)
             {
-                pathSegmentCollection.Add(new LineSegment { Point = points[i] });
+                pathSegmentCollection.Add(new LineSegment { Point = curvePoints[i] });
             }
             else
             {
-                var prevPoint = points[i - 1];
-                var currentPoint = points[i];
+                // Use cubic Bezier matching the line smoothness (similar to SteamTools)
+                var prevPoint = curvePoints[i - 1];
+                var currentPoint = curvePoints[i];
+                var prevPrevPoint = i > 1 ? curvePoints[i - 2] : prevPoint;
+                var nextPoint = i < curvePoints.Length - 1 ? curvePoints[i + 1] : currentPoint;
+                
+                var tension = 0.5; // Same smoothness factor as line
+                var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
+                var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
+                var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
+                var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
 
-                var controlPoint = new Point(
-                    (prevPoint.X + currentPoint.X) / 2,
-                    (prevPoint.Y + currentPoint.Y) / 2);
-
-                pathSegmentCollection.Add(new QuadraticBezierSegment
+                pathSegmentCollection.Add(new BezierSegment
                 {
-                    Point1 = controlPoint,
-                    Point2 = currentPoint
+                    Point1 = new Point(cp1X, cp1Y),
+                    Point2 = new Point(cp2X, cp2Y),
+                    Point3 = currentPoint
                 });
             }
         }
 
-        // Close the path back to bottom
-        pathSegmentCollection.Add(new LineSegment { Point = points[points.Length - 1] });
+        // Step 3: Line from leftmost curve point (last in array) to bottom-right
+        pathSegmentCollection.Add(new LineSegment { Point = new Point(rightX, bottomY) });
+        // Step 4: Path will be closed automatically back to StartPoint (bottom-left)
 
         pathFigure.Segments = pathSegmentCollection;
         pathFigure.IsClosed = true;
 
-        var pathGeometry = new PathGeometry();
+        // Create path geometry - use Nonzero fill rule and ensure path is clockwise
+        // To ensure clockwise, we'll use a simple check: if the area is negative, reverse the path
+        var pathGeometry = new PathGeometry
+        {
+            FillRule = FillRule.Nonzero
+        };
         pathGeometry.Figures.Add(pathFigure);
+        
+        // Calculate signed area to check if path is clockwise
+        // For a closed path, positive area = counterclockwise, negative = clockwise
+        // We want clockwise, so if area is positive, we need to reverse
+        double area = 0;
+        var points = new List<Point> { new Point(leftX, bottomY) };
+        foreach (var pt in curvePoints)
+            points.Add(pt);
+        points.Add(new Point(rightX, bottomY));
+        
+        for (int i = 0; i < points.Count; i++)
+        {
+            int j = (i + 1) % points.Count;
+            area += points[i].X * points[j].Y;
+            area -= points[j].X * points[i].Y;
+        }
+        area /= 2.0;
+        
+        // If area is positive (counterclockwise), reverse the path by reversing the curve points
+        if (area > 0)
+        {
+            // Reverse the path by creating a new path with reversed curve points
+            pathGeometry = new PathGeometry { FillRule = FillRule.Nonzero };
+            var reversedPathFigure = new PathFigure { StartPoint = new Point(leftX, bottomY) };
+            var reversedSegments = new PathSegmentCollection();
+            
+            // Reverse curve points
+            var reversedCurvePoints = curvePoints.Reverse().ToArray();
+            
+            reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[0] });
+            
+            for (int i = 1; i < reversedCurvePoints.Length; i++)
+            {
+                if (i == 1)
+                {
+                    reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[i] });
+                }
+                else
+                {
+                    // Use cubic Bezier matching the line smoothness
+                    var prevPoint = reversedCurvePoints[i - 1];
+                    var currentPoint = reversedCurvePoints[i];
+                    var prevPrevPoint = i > 1 ? reversedCurvePoints[i - 2] : prevPoint;
+                    var nextPoint = i < reversedCurvePoints.Length - 1 ? reversedCurvePoints[i + 1] : currentPoint;
+                    
+                    var tension = 0.5;
+                    var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
+                    var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
+                    var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
+                    var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
+                    
+                    reversedSegments.Add(new BezierSegment
+                    {
+                        Point1 = new Point(cp1X, cp1Y),
+                        Point2 = new Point(cp2X, cp2Y),
+                        Point3 = currentPoint
+                    });
+                }
+            }
+            
+            reversedSegments.Add(new LineSegment { Point = new Point(rightX, bottomY) });
+            reversedPathFigure.Segments = reversedSegments;
+            reversedPathFigure.IsClosed = true;
+            pathGeometry.Figures.Add(reversedPathFigure);
+        }
 
-        // Create gradient brush
+        // Create gradient brush - from top (curve) to bottom (fade out)
         var gradientBrush = new LinearGradientBrush
         {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(0, 1),
+            StartPoint = new Point(0, 0), // Top of the gradient (at curve)
+            EndPoint = new Point(0, 1),   // Bottom of the gradient (at bottom)
+            MappingMode = BrushMappingMode.RelativeToBoundingBox,
             GradientStops = new GradientStopCollection
             {
-                new GradientStop(startColor.Color, 0.0),
-                new GradientStop(endColor.Color, 0.5),
-                new GradientStop(Color.FromArgb(0x00, endColor.Color.R, endColor.Color.G, endColor.Color.B), 1.0)
+                new GradientStop(startColor.Color, 0.0), // Start with semi-transparent color at top (curve)
+                new GradientStop(endColor.Color, 0.2),   // Full color slightly below curve
+                new GradientStop(Color.FromArgb(0x80, endColor.Color.R, endColor.Color.G, endColor.Color.B), 0.5), // Semi-transparent in middle
+                new GradientStop(Color.FromArgb(0x00, endColor.Color.R, endColor.Color.G, endColor.Color.B), 1.0) // Fully transparent at bottom
             }
         };
 
@@ -318,7 +419,7 @@ public partial class TrafficChartControl : UserControl
         {
             Data = pathGeometry,
             Fill = gradientBrush,
-            Opacity = 0.3
+            Opacity = 0.35
         };
 
         ChartCanvas.Children.Insert(0, path); // Insert at the beginning so it's behind the lines

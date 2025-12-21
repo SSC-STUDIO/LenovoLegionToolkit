@@ -25,7 +25,6 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         
         _keyboardToggle.IsChecked = GetNavigationItemVisibility("keyboard", visibilitySettings);
-        _batteryToggle.IsChecked = GetNavigationItemVisibility("battery", visibilitySettings);
         _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
         _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
         _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);

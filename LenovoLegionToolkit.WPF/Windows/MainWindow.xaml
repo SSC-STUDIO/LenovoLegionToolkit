@@ -102,12 +102,6 @@
                         PageTag="keyboardBacklight"
                         PageType="{x:Type pages:KeyboardBacklightPage}" />
                     <custom:NavigationItem
-                        x:Name="_batteryItem"
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Battery}"
-                        Icon="BatteryCheckmark24"
-                        PageTag="battery"
-                        PageType="{x:Type pages:BatteryPage}" />
-                    <custom:NavigationItem
                         x:Name="_automationItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
                         Icon="Rocket24"

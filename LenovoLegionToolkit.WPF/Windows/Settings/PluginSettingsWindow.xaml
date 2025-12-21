@@ -68,28 +68,18 @@
                     TextWrapping="Wrap"
                     Text="{x:Static resources:Resource.PluginSettingsWindow_PluginDescription}" />
                 
+                <!-- Plugin Settings Page Container -->
                 <Border
-                    x:Name="_pluginConfigContainer"
+                    x:Name="_pluginSettingsContainer"
                     Margin="0,0,0,16"
-                    Padding="16"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <Grid>
-                        <TextBlock
-                            x:Name="_noConfigTextBlock"
-                            Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            TextAlignment="Center"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <Frame
-                            x:Name="_pluginConfigFrame"
-                            NavigationUIVisibility="Hidden"
-                            BorderThickness="0"
-                            Visibility="Collapsed" />
-                    </Grid>
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Visibility="Collapsed">
+                    <Frame
+                        x:Name="_pluginSettingsFrame"
+                        NavigationUIVisibility="Hidden"
+                        BorderThickness="0" />
                 </Border>
             </StackPanel>
         </ScrollViewer>

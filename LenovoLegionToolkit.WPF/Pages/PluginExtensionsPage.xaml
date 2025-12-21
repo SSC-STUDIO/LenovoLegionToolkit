@@ -209,6 +209,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     
                     <StackPanel Grid.Row="0">
@@ -248,7 +249,7 @@
                     
                     <!-- Action Buttons -->
                     <StackPanel 
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                         <wpfui:Button
@@ -273,6 +274,13 @@
                             x:Name="PluginOpenButton"
                             Content="{x:Static resources:Resource.PluginExtensionsPage_Open}"
                             Click="PluginOpenButton_Click"
+                            Margin="0,0,8,0"
+                            Visibility="Collapsed" />
+                        <wpfui:Button
+                            x:Name="PluginPermanentlyDeleteButton"
+                            Content="永久删除"
+                            Click="PluginPermanentlyDeleteButton_Click"
+                            Appearance="Danger"
                             Visibility="Collapsed" />
                     </StackPanel>
                 </Grid>

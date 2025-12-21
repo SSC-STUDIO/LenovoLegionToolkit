@@ -52,6 +52,11 @@ public interface IPluginManager
     /// Scan and load plugins from the plugins directory
     /// </summary>
     void ScanAndLoadPlugins();
+
+    /// <summary>
+    /// Permanently delete plugin files from disk (cannot be recovered)
+    /// </summary>
+    bool PermanentlyDeletePlugin(string pluginId);
 }
 
 /// <summary>
