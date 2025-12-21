@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AiAssistant_PageTitle" xml:space="preserve">
+    <value>AI 助手</value>
+  </data>
+  <data name="AiAssistant_PageDescription" xml:space="preserve">
+    <value>支持 OpenAI、DeepSeek 和 Ollama 的 AI 助手，提供对话、搜索、文档生成、代码辅助、翻译和摘要功能。</value>
+  </data>
+  <data name="AiAssistant_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="AiAssistant_SettingsDescription" xml:space="preserve">
+    <value>配置 AI 提供商设置、API 密钥和连接选项。</value>
+  </data>
+  <data name="AiAssistant_Provider" xml:space="preserve">
+    <value>AI 服务提供商：</value>
+  </data>
+  <data name="AiAssistant_ProviderOpenAI" xml:space="preserve">
+    <value>OpenAI</value>
+  </data>
+  <data name="AiAssistant_ProviderOllama" xml:space="preserve">
+    <value>Ollama (本地)</value>
+  </data>
+  <data name="AiAssistant_ProviderDeepSeek" xml:space="preserve">
+    <value>DeepSeek</value>
+  </data>
+  <data name="AiAssistant_OpenAiApiKey" xml:space="preserve">
+    <value>OpenAI API 密钥：</value>
+  </data>
+  <data name="AiAssistant_OpenAiApiKeyPlaceholder" xml:space="preserve">
+    <value>输入您的 OpenAI API 密钥</value>
+  </data>
+  <data name="AiAssistant_OpenAiModel" xml:space="preserve">
+    <value>OpenAI 模型：</value>
+  </data>
+  <data name="AiAssistant_DeepSeekApiKey" xml:space="preserve">
+    <value>DeepSeek API 密钥：</value>
+  </data>
+  <data name="AiAssistant_DeepSeekModel" xml:space="preserve">
+    <value>DeepSeek 模型：</value>
+  </data>
+  <data name="AiAssistant_OllamaBaseUrl" xml:space="preserve">
+    <value>Ollama 服务地址：</value>
+  </data>
+  <data name="AiAssistant_OllamaModel" xml:space="preserve">
+    <value>Ollama 模型：</value>
+  </data>
+  <data name="AiAssistant_TestConnection" xml:space="preserve">
+    <value>测试连接</value>
+  </data>
+  <data name="AiAssistant_ConnectionStatus" xml:space="preserve">
+    <value>连接状态：</value>
+  </data>
+  <data name="AiAssistant_ConnectionStatusConnected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="AiAssistant_ConnectionStatusDisconnected" xml:space="preserve">
+    <value>未连接</value>
+  </data>
+  <data name="AiAssistant_TabChat" xml:space="preserve">
+    <value>对话</value>
+  </data>
+  <data name="AiAssistant_TabSearch" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="AiAssistant_TabDocument" xml:space="preserve">
+    <value>文档</value>
+  </data>
+  <data name="AiAssistant_TabCode" xml:space="preserve">
+    <value>代码</value>
+  </data>
+  <data name="AiAssistant_TabTranslate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="AiAssistant_TabSummarize" xml:space="preserve">
+    <value>摘要</value>
+  </data>
+  <data name="AiAssistant_ChatPrompt" xml:space="preserve">
+    <value>输入您的消息：</value>
+  </data>
+  <data name="AiAssistant_SearchQuery" xml:space="preserve">
+    <value>输入您的搜索查询：</value>
+  </data>
+  <data name="AiAssistant_DocumentTopic" xml:space="preserve">
+    <value>文档主题：</value>
+  </data>
+  <data name="AiAssistant_DocumentContext" xml:space="preserve">
+    <value>上下文（可选）：</value>
+  </data>
+  <data name="AiAssistant_CodeDescription" xml:space="preserve">
+    <value>代码描述：</value>
+  </data>
+  <data name="AiAssistant_CodeLanguage" xml:space="preserve">
+    <value>编程语言：</value>
+  </data>
+  <data name="AiAssistant_CodeToExplain" xml:space="preserve">
+    <value>要解释的代码：</value>
+  </data>
+  <data name="AiAssistant_TranslateText" xml:space="preserve">
+    <value>要翻译的文本：</value>
+  </data>
+  <data name="AiAssistant_TranslateTargetLanguage" xml:space="preserve">
+    <value>目标语言：</value>
+  </data>
+  <data name="AiAssistant_SummarizeText" xml:space="preserve">
+    <value>要摘要的文本：</value>
+  </data>
+  <data name="AiAssistant_Send" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="AiAssistant_Generate" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="AiAssistant_Explain" xml:space="preserve">
+    <value>解释</value>
+  </data>
+  <data name="AiAssistant_Translate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="AiAssistant_Summarize" xml:space="preserve">
+    <value>摘要</value>
+  </data>
+  <data name="AiAssistant_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AiAssistant_Response" xml:space="preserve">
+    <value>响应：</value>
+  </data>
+  <data name="AiAssistant_Error_ApiKeyRequired" xml:space="preserve">
+    <value>需要 API 密钥</value>
+  </data>
+  <data name="AiAssistant_Error_ApiKeyRequiredDescription" xml:space="preserve">
+    <value>请在设置中输入您的 OpenAI API 密钥。</value>
+  </data>
+  <data name="AiAssistant_Error_ConnectionFailed" xml:space="preserve">
+    <value>连接失败</value>
+  </data>
+  <data name="AiAssistant_Error_ConnectionFailedDescription" xml:space="preserve">
+    <value>无法连接到 AI 服务。请检查您的设置并重试。</value>
+  </data>
+  <data name="AiAssistant_Error_RequestFailed" xml:space="preserve">
+    <value>请求失败</value>
+  </data>
+  <data name="AiAssistant_Error_RequestFailedDescription" xml:space="preserve">
+    <value>处理您的请求时发生错误：{0}</value>
+  </data>
+  <data name="AiAssistant_Error_OllamaNotRunning" xml:space="preserve">
+    <value>Ollama 未运行</value>
+  </data>
+  <data name="AiAssistant_Error_OllamaNotRunningDescription" xml:space="preserve">
+    <value>请确保 Ollama 已安装并在您的系统上运行。</value>
+  </data>
+  <data name="AiAssistant_Status_Processing" xml:space="preserve">
+    <value>处理中...</value>
+  </data>
+  <data name="AiAssistant_Status_Ready" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="AiAssistant_ClearConversation" xml:space="preserve">
+    <value>清除对话</value>
+  </data>
+  <data name="AiAssistant_Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="AiAssistant_Copied" xml:space="preserve">
+    <value>已复制！</value>
+  </data>
+  <data name="AiAssistant_UserMessage" xml:space="preserve">
+    <value>您</value>
+  </data>
+  <data name="AiAssistant_AssistantMessage" xml:space="preserve">
+    <value>助手</value>
+  </data>
+  <data name="AiAssistant_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="AiAssistant_ExportHistory" xml:space="preserve">
+    <value>导出历史</value>
+  </data>
+  <data name="AiAssistant_ClearConversationConfirm" xml:space="preserve">
+    <value>确定要清除所有对话历史吗？此操作无法撤销。</value>
+  </data>
+  <data name="AiAssistant_ExportSuccess" xml:space="preserve">
+    <value>聊天历史导出成功。</value>
+  </data>
+  <data name="AiAssistant_ExportError" xml:space="preserve">
+    <value>导出聊天历史时出错：{0}</value>
+  </data>
+  <data name="AiAssistant_CopyResponse" xml:space="preserve">
+    <value>复制响应</value>
+  </data>
+  <data name="AiAssistant_Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="AiAssistant_UseBuiltInOllama" xml:space="preserve">
+    <value>使用内置 Ollama</value>
+  </data>
+  <data name="AiAssistant_AutoStartOllama" xml:space="preserve">
+    <value>自动启动 Ollama 服务</value>
+  </data>
+  <data name="AiAssistant_OllamaExecutablePath" xml:space="preserve">
+    <value>Ollama 可执行文件路径：</value>
+  </data>
+  <data name="AiAssistant_Browse" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="AiAssistant_BrowseOllamaExecutable" xml:space="preserve">
+    <value>选择 Ollama 可执行文件</value>
+  </data>
+  <data name="AiAssistant_Status_StartingOllama" xml:space="preserve">
+    <value>正在启动 Ollama...</value>
+  </data>
+  <data name="AiAssistant_Error_OllamaStartFailed" xml:space="preserve">
+    <value>启动 Ollama 失败</value>
+  </data>
+  <data name="AiAssistant_Error_OllamaStartFailedDescription" xml:space="preserve">
+    <value>无法启动 Ollama 服务。请检查 Ollama 是否已安装，以及可执行文件路径是否正确。</value>
+  </data>
+  <data name="AiAssistant_NewConversation" xml:space="preserve">
+    <value>新对话</value>
+  </data>
+  <data name="AiAssistant_NewSession" xml:space="preserve">
+    <value>新建会话</value>
+  </data>
+  <data name="AiAssistant_DeleteSession" xml:space="preserve">
+    <value>删除会话</value>
+  </data>
+  <data name="AiAssistant_DeleteSessionConfirm" xml:space="preserve">
+    <value>确定要删除会话"{0}"吗？此操作无法撤销。</value>
+  </data>
+  <data name="AiAssistant_Regenerate" xml:space="preserve">
+    <value>重新生成</value>
+  </data>
+  <data name="AiAssistant_PromptTemplates" xml:space="preserve">
+    <value>提示词模板</value>
+  </data>
+  <data name="AiAssistant_Sessions" xml:space="preserve">
+    <value>对话列表</value>
+  </data>
+  <data name="AiAssistant_Welcome" xml:space="preserve">
+    <value>欢迎使用AI助手</value>
+  </data>
+  <data name="AiAssistant_WelcomeMessage" xml:space="preserve">
+    <value>输入消息开始对话，或选择下方的快捷功能。</value>
+  </data>
+  <data name="AiAssistant_DeepThinking" xml:space="preserve">
+    <value>深度思考</value>
+  </data>
+  <data name="AiAssistant_QuickWrite" xml:space="preserve">
+    <value>帮我写作</value>
+  </data>
+  <data name="AiAssistant_QuickTranslate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="AiAssistant_QuickCode" xml:space="preserve">
+    <value>编程</value>
+  </data>
+  <data name="AiAssistant_QuickSearch" xml:space="preserve">
+    <value>深入研究</value>
+  </data>
+  <data name="AiAssistant_QuickDocument" xml:space="preserve">
+    <value>文档生成</value>
+  </data>
+  <data name="AiAssistant_QuickSummarize" xml:space="preserve">
+    <value>总结</value>
+  </data>
+  <data name="AiAssistant_QuickMore" xml:space="preserve">
+    <value>更多</value>
+  </data>
+  <data name="AiAssistant_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="AiAssistant_Voice" xml:space="preserve">
+    <value>语音输入</value>
+  </data>
+  <data name="AiAssistant_FeatureComingSoon" xml:space="preserve">
+    <value>功能即将推出</value>
+  </data>
+  <data name="AiAssistant_GoodMorning" xml:space="preserve">
+    <value>早上好</value>
+  </data>
+  <data name="AiAssistant_GoodAfternoon" xml:space="preserve">
+    <value>下午好</value>
+  </data>
+  <data name="AiAssistant_GoodEvening" xml:space="preserve">
+    <value>晚上好</value>
+  </data>
+  <data name="AiAssistant_GoodNight" xml:space="preserve">
+    <value>晚上好</value>
+  </data>
+  <data name="AiAssistant_NewChat" xml:space="preserve">
+    <value>新对话</value>
+  </data>
+  <data name="AiAssistant_HistoryChat" xml:space="preserve">
+    <value>历史对话</value>
+  </data>
+  <data name="AiAssistant_HelpMeWrite" xml:space="preserve">
+    <value>帮我写作</value>
+  </data>
+  <data name="AiAssistant_AICreation" xml:space="preserve">
+    <value>AI创作</value>
+  </data>
+  <data name="AiAssistant_AppGeneration" xml:space="preserve">
+    <value>应用生成</value>
+  </data>
+  <data name="AiAssistant_CloudDrive" xml:space="preserve">
+    <value>云盘</value>
+  </data>
+  <data name="AiAssistant_More" xml:space="preserve">
+    <value>更多</value>
+  </data>
+  <data name="AiAssistant_SendMessageOrSelectSkill" xml:space="preserve">
+    <value>发消息或输入 / 选择技能</value>
+  </data>
+  <data name="AiAssistant_Downloading" xml:space="preserve">
+    <value>下载中...</value>
+  </data>
+  <data name="AiAssistant_DownloadSpeed" xml:space="preserve">
+    <value>下载速度: {0} MB/s</value>
+  </data>
+  <data name="AiAssistant_TimeRemaining" xml:space="preserve">
+    <value>剩余时间: {0}</value>
+  </data>
+  <data name="AiAssistant_CancelDownload" xml:space="preserve">
+    <value>取消下载</value>
+  </data>
+  <data name="AiAssistant_AIThinking" xml:space="preserve">
+    <value>AI正在思考...</value>
+  </data>
+  <data name="AiAssistant_AITyping" xml:space="preserve">
+    <value>正在输入...</value>
+  </data>
+  <data name="AiAssistant_LikeMessage" xml:space="preserve">
+    <value>点赞</value>
+  </data>
+  <data name="AiAssistant_MessageLiked" xml:space="preserve">
+    <value>已点赞</value>
+  </data>
+</root>
+
+

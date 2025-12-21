@@ -32,6 +32,15 @@ public abstract class PluginBase : IPlugin
     {
         return null;
     }
+
+    /// <summary>
+    /// Get settings page provided by this plugin (e.g., IPluginPage for settings)
+    /// </summary>
+    /// <returns>Settings page object, or null if not provided</returns>
+    public virtual object? GetSettingsPage()
+    {
+        return null;
+    }
 }
 
 

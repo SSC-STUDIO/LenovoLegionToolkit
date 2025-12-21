@@ -172,116 +172,10 @@ public partial class ToolsPage : INotifyPropertyChanged
     /// </summary>
     private void UpdatePluginsUI()
     {
-        if (!ExtensionsEnabled)
-            return;
-
-        var hasSystemOptimization = _pluginManager.IsInstalled(PluginConstants.SystemOptimization);
-        var hasOtherPlugins = _pluginManager.GetInstalledPluginIds()
-            .Any(ext => !string.Equals(ext, PluginConstants.SystemOptimization, StringComparison.OrdinalIgnoreCase));
-
-        // 系统优化插件UI元素
-        var systemOptimizationPluginName = this.FindName("_systemOptimizationPluginName") as System.Windows.Controls.TextBlock;
-        var systemOptimizationPluginActions = this.FindName("_systemOptimizationPluginActions") as System.Windows.Controls.StackPanel;
-        var systemOptimizationInstalledStatus = this.FindName("_systemOptimizationInstalledStatus") as System.Windows.Controls.StackPanel;
-        var systemOptimizationInstallButton = this.FindName("_systemOptimizationInstallButton") as Wpf.Ui.Controls.Button;
-        var systemOptimizationUninstallButton = this.FindName("_systemOptimizationUninstallButton") as Wpf.Ui.Controls.Button;
-        var systemOptimizationUninstallButtonInStatus = this.FindName("_systemOptimizationUninstallButtonInStatus") as Wpf.Ui.Controls.Button;
-        var systemOptimizationInstallButtonText = this.FindName("_systemOptimizationInstallButtonText") as System.Windows.Controls.TextBlock;
-        var systemOptimizationInstalledStatusText = this.FindName("_systemOptimizationInstalledStatusText") as System.Windows.Controls.TextBlock;
-
-        if (systemOptimizationPluginName != null)
-        {
-            systemOptimizationPluginName.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Title", Resource.Culture) ?? "系统优化插件";
-        }
-
-        // 设置插件描述（一行说明）
-        var systemOptimizationPluginDescription = this.FindName("_systemOptimizationPluginDescription") as System.Windows.Controls.TextBlock;
-        if (systemOptimizationPluginDescription != null)
-        {
-            systemOptimizationPluginDescription.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Description", Resource.Culture) ?? "安装系统优化插件以访问系统优化和清理功能";
-        }
-
-        if (systemOptimizationPluginActions != null && systemOptimizationInstalledStatus != null)
-        {
-            if (hasSystemOptimization || hasOtherPlugins)
-            {
-                // 已安装状态
-                systemOptimizationPluginActions.Visibility = Visibility.Collapsed;
-                systemOptimizationInstalledStatus.Visibility = Visibility.Visible;
-                
-                if (systemOptimizationInstalledStatusText != null)
-                {
-                    systemOptimizationInstalledStatusText.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_PluginInstalled", Resource.Culture) ?? "已安装";
-                }
-
-                // 如果有其他插件，禁用卸载按钮（因为系统优化插件是基础插件）
-                var uninstallButtons = new List<Wpf.Ui.Controls.Button>();
-                if (systemOptimizationUninstallButton != null)
-                    uninstallButtons.Add(systemOptimizationUninstallButton);
-                if (systemOptimizationUninstallButtonInStatus != null)
-                    uninstallButtons.Add(systemOptimizationUninstallButtonInStatus);
-
-                foreach (var uninstallButton in uninstallButtons)
-                {
-                    if (hasOtherPlugins)
-                    {
-                        // 有其他插件时，系统优化插件无法卸载
-                        uninstallButton.IsEnabled = false;
-                        uninstallButton.ToolTip = Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallBasePlugin", Resource.Culture) ?? "系统优化插件是基础插件，当有其他插件安装时无法卸载";
-                    }
-                    else
-                    {
-                        // 只有系统优化插件时，可以卸载
-                        uninstallButton.IsEnabled = true;
-                        uninstallButton.ToolTip = null;
-                    }
-                }
-            }
-            else
-            {
-                // 未安装状态
-                systemOptimizationPluginActions.Visibility = Visibility.Visible;
-                systemOptimizationInstalledStatus.Visibility = Visibility.Collapsed;
-
-                if (systemOptimizationInstallButtonText != null)
-                {
-                    systemOptimizationInstallButtonText.Text = Resource.ResourceManager.GetString("ToolsPage_Extensions_InstallPlugin", Resource.Culture) ?? "安装";
-                }
-            }
-        }
+        // Tools 和 SystemOptimization 现在是默认应用，不需要特殊处理
+        // 此方法保留用于未来可能的插件UI更新
     }
 
-    private void _systemOptimizationPluginButton_Click(object sender, RoutedEventArgs e)
-    {
-        InstallPlugin(PluginConstants.SystemOptimization);
-        // 刷新UI以更新按钮状态
-        UpdatePluginsUI();
-    }
-
-    private void _systemOptimizationUninstallButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (!_pluginManager.UninstallPlugin(PluginConstants.SystemOptimization))
-        {
-            // 无法卸载（可能因为还有其他插件）
-            System.Windows.MessageBox.Show(
-                Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallBasePluginMessage", Resource.Culture) ?? 
-                "系统优化插件是基础插件。当有其他插件安装时，系统优化插件无法卸载。请先卸载其他插件后再卸载系统优化插件。",
-                Resource.ResourceManager.GetString("ToolsPage_Extensions_CannotUninstallTitle", Resource.Culture) ?? "无法卸载",
-                System.Windows.MessageBoxButton.OK,
-                System.Windows.MessageBoxImage.Information);
-            return;
-        }
-
-        // 刷新UI
-            RefreshExtensionsUI();
-            UpdatePluginsUI();
-
-            // 更新主窗口导航栏
-            if (Application.Current.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.UpdateNavigationVisibility();
-        }
-    }
 
     private async Task LoadToolsAsync()
     {
@@ -1136,58 +1030,14 @@ public partial class ToolsPage : INotifyPropertyChanged
         if (sender is not System.Windows.Controls.Border border)
             return;
 
-        var pluginId = border.Tag?.ToString();
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return;
-
-        // 显示插件详细信息
-        ShowPluginDetails(pluginId);
-        
-        // 阻止事件冒泡
-        e.Handled = true;
-    }
-
-    private void ShowPluginDetails(string pluginId)
-    {
-        if (pluginId == "SystemOptimization")
+        // 在ToolsPage中，卡片的Tag应该是ToolViewModel对象
+        if (border.Tag is ToolViewModel tool)
         {
-            // 显示系统优化插件的详细信息
-            var pluginName = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Title", Resource.Culture) ?? "系统优化插件";
-            var pluginDescription = Resource.ResourceManager.GetString("ToolsPage_Extensions_SystemOptimization_Description", Resource.Culture) ?? 
-                "安装系统优化插件以访问系统优化和清理功能。此插件将在导航菜单中启用‘系统优化’页面。";
-
-            // 更新工具详情面板
-            if (ToolDetailsPanel != null)
-            {
-                ToolDetailsPanel.Visibility = Visibility.Visible;
-
-                // 更新图标
-                if (ToolDetailsIcon != null && ToolDetailsFallbackIcon != null)
-                {
-                    ToolDetailsIcon.Visibility = Visibility.Collapsed;
-                    ToolDetailsFallbackIcon.Symbol = Wpf.Ui.Common.SymbolRegular.Gauge24;
-                    ToolDetailsFallbackIcon.Visibility = Visibility.Visible;
-                }
-
-                // 更新文本信息
-                if (ToolDetailsName != null)
-                {
-                    ToolDetailsName.Text = pluginName;
-                }
-
-                if (ToolDetailsDescription != null)
-                {
-                    ToolDetailsDescription.Text = pluginDescription;
-                }
-
-                // 版本、作者、路径等信息已从UI中移除
-
-                // 隐藏启动按钮（插件不需要启动）
-                if (ToolDetailsLaunchButton != null)
-                {
-                    ToolDetailsLaunchButton.Visibility = Visibility.Collapsed;
-                }
-            }
+            // 设置选中的工具，这将自动更新工具详情面板
+            SelectedTool = tool;
+            
+            // 阻止事件冒泡
+            e.Handled = true;
         }
     }
 

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -150,9 +152,8 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            // 获取所有注册的插件，排除Tools（Tools不是插件）
+            // 获取所有注册的插件
             _allPlugins = _pluginManager.GetRegisteredPlugins()
-                .Where(p => p.Id != PluginConstants.Tools)
                 .ToList();
             
             // 应用当前筛选和搜索
@@ -424,9 +425,19 @@ public partial class PluginExtensionsPage
                 configureButton.Tag = pluginId;
             }
 
+            // Add Permanently Delete button (only for non-system plugins)
+            var permanentlyDeleteButton = this.FindName("PluginPermanentlyDeleteButton") as Wpf.Ui.Controls.Button;
+            if (permanentlyDeleteButton != null)
+            {
+                permanentlyDeleteButton.Visibility = !plugin.IsSystemPlugin ? Visibility.Visible : Visibility.Collapsed;
+                permanentlyDeleteButton.Tag = pluginId;
+            }
+
             // Setup language selection
             _currentSelectedPluginId = pluginId;
             SetupLanguageSelection(pluginId);
+
+            // Setup advanced settings for Network Acceleration plugin
 
             // 显示详情面板
             detailsPanel.Visibility = Visibility.Visible;
@@ -575,6 +586,69 @@ public partial class PluginExtensionsPage
             if (mainWindow != null)
             {
                 mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenPluginFailed, ex.Message));
+            }
+        }
+    }
+
+    private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+            return;
+
+        try
+        {
+            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
+            if (plugin == null)
+                return;
+
+            // 显示确认对话框
+            var result = await MessageBoxHelper.ShowAsync(this, 
+                "永久删除插件", 
+                $"确定要永久删除插件 \"{plugin.Name}\" 吗？\n\n此操作无法撤销，插件文件将被永久删除。",
+                "删除",
+                "取消");
+
+            if (!result)
+                return;
+
+            // 执行永久删除
+            var deleted = _pluginManager.PermanentlyDeletePlugin(pluginId);
+            
+            if (deleted)
+            {
+                // 刷新 UI
+                var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
+                if (detailsPanel != null)
+                {
+                    detailsPanel.Visibility = Visibility.Collapsed;
+                }
+                UpdateAllPluginsUI();
+                
+                // 显示成功消息
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show("插件已删除", "插件文件已永久删除，无法恢复。");
+                }
+            }
+            else
+            {
+                // 显示失败消息
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show("删除失败", "无法删除插件文件，请检查文件是否正在使用中。");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show("删除失败", $"删除插件时发生错误: {ex.Message}");
             }
         }
     }

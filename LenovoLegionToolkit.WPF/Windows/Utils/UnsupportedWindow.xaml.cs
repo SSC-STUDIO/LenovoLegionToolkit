@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
@@ -6,11 +6,12 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using Theme = Wpf.Ui.Appearance.Theme;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
-public partial class UnsupportedWindow
+public partial class UnsupportedWindow : UiWindow
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
 
