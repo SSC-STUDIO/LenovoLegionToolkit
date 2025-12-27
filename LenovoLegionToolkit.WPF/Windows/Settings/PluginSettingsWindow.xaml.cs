@@ -59,8 +59,52 @@ public partial class PluginSettingsWindow : BaseWindow
                 _pluginDescriptionTextBlock.Text += $"\n\n{string.Format(Resource.PluginSettingsWindow_Author, metadata.Author)}";
             }
 
-            // Only show advanced settings for Network Acceleration plugin
-            // Don't show plugin's own configuration page
+            // Try to get plugin's custom settings page
+            bool hasSettingsPage = false;
+            if (plugin is Plugins.SDK.PluginBase sdkPlugin)
+            {
+                var settingsPage = sdkPlugin.GetSettingsPage();
+                if (settingsPage is Plugins.SDK.IPluginPage pluginPage)
+                {
+                    var pageContent = pluginPage.CreatePage();
+                    if (pageContent != null)
+                    {
+                        hasSettingsPage = true;
+                        
+                        // Show plugin settings container
+                        if (_pluginSettingsContainer != null)
+                        {
+                            _pluginSettingsContainer.Visibility = Visibility.Visible;
+                        }
+                        
+                        // Display the plugin's settings page
+                        if (pageContent is System.Windows.Controls.Page page)
+                        {
+                            if (_pluginSettingsFrame != null)
+                            {
+                                _pluginSettingsFrame.Navigate(page);
+                            }
+                        }
+                        else if (pageContent is UIElement uiElement)
+                        {
+                            if (_pluginSettingsFrame != null)
+                            {
+                                _pluginSettingsFrame.Content = uiElement;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // If plugin doesn't have a settings page, hide the container
+            if (!hasSettingsPage)
+            {
+                // Hide plugin settings container
+                if (_pluginSettingsContainer != null)
+                {
+                    _pluginSettingsContainer.Visibility = Visibility.Collapsed;
+                }
+            }
         }
         catch (Exception ex)
         {
