@@ -247,7 +247,7 @@ public partial class PluginExtensionsPage
             {
                 Text = Resource.PluginExtensionsPage_PluginInstalled,
                 FontSize = 8,
-                FontWeight = FontWeights.Bold,
+                FontWeight = FontWeights.Medium,
                 Foreground = Brushes.White
             };
             installedBadge.Child = badgeText;
