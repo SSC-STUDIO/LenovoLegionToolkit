@@ -6559,6 +6559,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Usage time.
+        /// </summary>
+        public static string StatusTrayPopup_UsageTime {
+            get {
+                return ResourceManager.GetString("StatusTrayPopup_UsageTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update available!.
         /// </summary>
         public static string StatusTrayPopup_UpdateAvailable {
@@ -8301,6 +8310,60 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_UpdateCheckFrequency_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_UpdateCheckFrequency_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update repository.
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure the GitHub repository to check for updates. Leave empty to use default..
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repository Owner.
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Owner_Label {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Owner_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g., Crs10259.
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Owner_Placeholder {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Owner_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repository Name.
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Name_Label {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Name_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g., LenovoLegionToolkit.
+        /// </summary>
+        public static string SettingsPage_UpdateRepository_Name_Placeholder {
+            get {
+                return ResourceManager.GetString("SettingsPage_UpdateRepository_Name_Placeholder", resourceCulture);
             }
         }
         
