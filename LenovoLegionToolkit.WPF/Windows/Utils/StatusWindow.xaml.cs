@@ -24,6 +24,7 @@ public partial class StatusWindow
         GPUStatus? gpuStatus,
         BatteryInformation? batteryInformation,
         BatteryState? batteryState,
+        DateTime? onBatterySince,
         bool hasUpdate)
     {
         public PowerModeState? PowerModeState { get; } = powerModeState;
@@ -31,6 +32,7 @@ public partial class StatusWindow
         public GPUStatus? GPUStatus { get; } = gpuStatus;
         public BatteryInformation? BatteryInformation { get; } = batteryInformation;
         public BatteryState? BatteryState { get; } = batteryState;
+        public DateTime? OnBatterySince { get; } = onBatterySince;
         public bool HasUpdate { get; } = hasUpdate;
     }
 
@@ -49,6 +51,7 @@ public partial class StatusWindow
         GPUStatus? gpuStatus = null;
         BatteryInformation? batteryInformation = null;
         BatteryState? batteryState = null;
+        DateTime? onBatterySince = null;
         var hasUpdate = false;
 
         try
@@ -87,11 +90,17 @@ public partial class StatusWindow
 
         try
         {
+            onBatterySince = Battery.GetOnBatterySince();
+        }
+        catch { /* Ignored */ }
+
+        try
+        {
             hasUpdate = await updateChecker.CheckAsync(false) is not null;
         }
         catch { /* Ignored */ }
 
-        return new(state, godModePresetName, gpuStatus, batteryInformation, batteryState, hasUpdate);
+        return new(state, godModePresetName, gpuStatus, batteryInformation, batteryState, onBatterySince, hasUpdate);
     }
 
     private StatusWindow(StatusWindowData data)
@@ -125,7 +134,7 @@ public partial class StatusWindow
 
         RefreshPowerMode(data.PowerModeState, data.GodModePresetName);
         RefreshDiscreteGpu(data.GPUStatus);
-        RefreshBattery(data.BatteryInformation, data.BatteryState);
+        RefreshBattery(data.BatteryInformation, data.BatteryState, data.OnBatterySince);
         RefreshUpdate(data.HasUpdate);
     }
 
@@ -221,7 +230,7 @@ public partial class StatusWindow
         _gpuGrid.Visibility = Visibility.Visible;
     }
 
-    private void RefreshBattery(BatteryInformation? batteryInformation, BatteryState? batteryState)
+    private void RefreshBattery(BatteryInformation? batteryInformation, BatteryState? batteryState, DateTime? onBatterySince)
     {
         if (!batteryInformation.HasValue || !batteryState.HasValue)
         {
@@ -231,6 +240,8 @@ public partial class StatusWindow
             _batteryDischargeValueLabel.Content = "-";
             _batteryMinDischargeValueLabel.Content = "-";
             _batteryMaxDischargeValueLabel.Content = "-";
+            if (_batteryUsageTimeValueLabel != null)
+                _batteryUsageTimeValueLabel.Content = "-";
             return;
         }
 
@@ -256,11 +267,25 @@ public partial class StatusWindow
             _batteryValueLabel.SetResourceReference(ForegroundProperty, "SystemFillColorCautionBrush");
 
         _batteryIcon.Symbol = symbol;
-        _batteryValueLabel.Content = $"{batteryInformation.Value.BatteryPercentage}%";
+        _batteryValueLabel.Content = $"{batteryInformation.Value.BatteryPercentage:N0}%";
         _batteryModeValueLabel.Content = batteryState.GetDisplayName();
         _batteryDischargeValueLabel.Content = $"{batteryInformation.Value.DischargeRate / 1000.0:+0.00;-0.00;0.00} W";
         _batteryMinDischargeValueLabel.Content = $"{batteryInformation.Value.MinDischargeRate / 1000.0:+0.00;-0.00;0.00} W";
         _batteryMaxDischargeValueLabel.Content = $"{batteryInformation.Value.MaxDischargeRate / 1000.0:+0.00;-0.00;0.00} W";
+
+        // Add battery usage time with proper formatting
+        if (!batteryInformation.Value.IsCharging && onBatterySince.HasValue && _batteryUsageTimeValueLabel != null)
+        {
+            var duration = DateTime.Now.Subtract(onBatterySince.Value);
+            var hours = (int)duration.TotalHours;
+            var minutes = duration.Minutes;
+            var seconds = duration.Seconds;
+            _batteryUsageTimeValueLabel.Content = $"{hours:N0}:{minutes:D2}:{seconds:D2}";
+        }
+        else if (_batteryUsageTimeValueLabel != null)
+        {
+            _batteryUsageTimeValueLabel.Content = "-";
+        }
     }
 
     private void RefreshUpdate(bool hasUpdate) => _updateIndicator.Visibility = hasUpdate ? Visibility.Visible : Visibility.Collapsed;

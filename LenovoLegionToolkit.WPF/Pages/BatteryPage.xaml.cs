@@ -101,7 +101,7 @@ public partial class BatteryPage
             _ => SymbolRegular.Battery024,
         };
 
-        _percentRemaining.Text = $"{batteryInfo.BatteryPercentage}%";
+        _percentRemaining.Text = $"{batteryInfo.BatteryPercentage:N0}%";
         _status.Text = GetStatusText(batteryInfo);
         _lowBattery.Visibility = batteryInfo.IsLowBattery ? Visibility.Visible : Visibility.Collapsed;
         _lowWattageCharger.Visibility = powerAdapterStatus == PowerAdapterStatus.ConnectedLowWattage ? Visibility.Visible : Visibility.Collapsed;
@@ -141,7 +141,7 @@ public partial class BatteryPage
         else
             _batteryFirstUseDateCardControl.Visibility = Visibility.Collapsed;
 
-        _batteryCycleCountText.Text = $"{batteryInfo.CycleCount}";
+        _batteryCycleCountText.Text = $"{batteryInfo.CycleCount:N0}";
     }
 
     private static string GetStatusText(BatteryInformation batteryInfo)
