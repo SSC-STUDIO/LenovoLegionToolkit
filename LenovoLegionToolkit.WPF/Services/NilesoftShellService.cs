@@ -27,9 +27,17 @@ public static class NilesoftShellService
 
     public static void Install()
     {
+        // Directly use shell files from shellIntegration directory without copying
+        // GetNilesoftShellExePath() will find files from build\shellIntegration first
         var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
         if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
-            throw new FileNotFoundException("shell.exe not found. Cannot install shell.");
+            throw new FileNotFoundException("shell.exe not found. Cannot install shell. Please rebuild the project to restore shell files.");
+
+        // Get the directory where shell.exe is located (should be build\shellIntegration)
+        // This is important so shell.exe can find imports folder and shell.nss in the same directory
+        var shellExeDir = Path.GetDirectoryName(shellExePath);
+        if (string.IsNullOrWhiteSpace(shellExeDir))
+            throw new InvalidOperationException("Cannot determine shell.exe directory.");
 
         using var process = new Process
         {
@@ -37,6 +45,7 @@ public static class NilesoftShellService
             {
                 FileName = shellExePath,
                 Arguments = "-register -treat -restart",
+                WorkingDirectory = shellExeDir, // Set working directory to shell.exe location so it can find imports and shell.nss
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
@@ -57,7 +66,7 @@ public static class NilesoftShellService
         NilesoftShellHelper.ClearInstallationStatusCache();
         
         // Wait for registration to complete and Explorer to restart
-        // Then actively query installation status to update registry cache
+        // Then actively check installation status using registry check
         // Retry up to 5 times with increasing delays to ensure registration is complete
         const int maxRetries = 5;
         const int initialDelayMs = 2000; // Start with 2 seconds
@@ -68,33 +77,11 @@ public static class NilesoftShellService
             int delayMs = initialDelayMs + (retry * 1000);
             Thread.Sleep(delayMs);
             
-            // Actively query installation status to update the registry cache
-            // This ensures that shell.exe writes the correct status to registry
+            // Check installation status using registry check
+            // This directly checks if the CLSID keys are registered
             try
             {
-                using var statusProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = shellExePath,
-                        Arguments = "-isinstalled",
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                
-                statusProcess.Start();
-                statusProcess.WaitForExit();
-                
-                // Read output to ensure process completes and registry is updated
-                statusProcess.StandardOutput.ReadToEnd();
-                statusProcess.StandardError.ReadToEnd();
-                
-                // Exit code 0 means installed, 1 means not installed
-                // If status check confirms installation, we're done
-                if (statusProcess.ExitCode == 0)
+                if (NilesoftShellHelper.IsInstalledUsingShellExe())
                 {
                     // Installation confirmed, break out of retry loop
                     break;
@@ -102,11 +89,11 @@ public static class NilesoftShellService
             }
             catch
             {
-                // Ignore errors when querying status - continue retrying
+                // Ignore errors when checking status - continue retrying
             }
         }
         
-        // Clear cache again after querying status to force fresh check
+        // Clear cache again after checking status to force fresh check
         NilesoftShellHelper.ClearInstallationStatusCache();
     }
 
@@ -114,17 +101,30 @@ public static class NilesoftShellService
     {
         var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
         if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
-            throw new FileNotFoundException("shell.exe not found. Cannot uninstall shell.");
+        {
+            // If shell.exe is not found, just clear the registry and cache
+            // This handles the case where files were already deleted
+            NilesoftShellHelper.ClearRegistryInstallationStatus();
+            NilesoftShellHelper.ClearInstallationStatusCache();
+            return;
+        }
 
-        // First, unregister if currently registered
+        // Only unregister if currently registered
+        // Do NOT delete files - they should remain for potential reinstallation
         if (NilesoftShellHelper.IsInstalledUsingShellExe())
         {
+            // Get the directory where shell.exe is located (should be build\shellIntegration)
+            var shellExeDir = Path.GetDirectoryName(shellExePath);
+            if (string.IsNullOrWhiteSpace(shellExeDir))
+                throw new InvalidOperationException("Cannot determine shell.exe directory.");
+
             using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = shellExePath,
                     Arguments = "-unregister -treat -restart",
+                    WorkingDirectory = shellExeDir, // Set working directory to shell.exe location so it can find imports and shell.nss
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -142,32 +142,14 @@ public static class NilesoftShellService
             }
         }
 
-        // Then delete the shell.exe and related files
-        var shellDir = Path.GetDirectoryName(shellExePath);
-        if (!string.IsNullOrWhiteSpace(shellDir))
-        {
-            try
-            {
-                var shellDll = Path.Combine(shellDir, "shell.dll");
-                var shellNss = Path.Combine(shellDir, "shell.nss");
-
-                if (File.Exists(shellExePath))
-                    File.Delete(shellExePath);
-                if (File.Exists(shellDll))
-                    File.Delete(shellDll);
-                if (File.Exists(shellNss))
-                    File.Delete(shellNss);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"Failed to delete shell files: {ex.Message}", ex);
-            }
-        }
-
         // Clear registry installation status
         NilesoftShellHelper.ClearRegistryInstallationStatus();
         // Clear cache to ensure fresh check next time
         NilesoftShellHelper.ClearInstallationStatusCache();
+        
+        // Note: We intentionally do NOT delete shell.exe, shell.dll, or shell.nss files
+        // The files should remain in the application directory so they can be used for reinstallation
+        // If files need to be removed, it should be done explicitly by the user or during application uninstallation
     }
 
 }
