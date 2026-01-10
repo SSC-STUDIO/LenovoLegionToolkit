@@ -219,6 +219,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <wpfui:SymbolIcon
@@ -313,6 +314,24 @@
             <Label
                 x:Name="_batteryMaxDischargeValueLabel"
                 Grid.Row="4"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource SecondaryFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalContentAlignment="Center"
+                Content="{x:Static resources:Resource.StatusTrayPopup_UsageTime}"
+                FontSize="{StaticResource SecondaryFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Label
+                x:Name="_batteryUsageTimeValueLabel"
+                Grid.Row="5"
                 Grid.Column="3"
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
