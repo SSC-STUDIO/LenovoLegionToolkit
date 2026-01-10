@@ -2247,6 +2247,24 @@
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
     <value>自動檢查更新</value>
   </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>更新倉庫</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>配置用於檢查更新的 GitHub 倉庫。留空則使用預設值。</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>倉庫擁有者</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>例如：Crs10259</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>倉庫名稱</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>例如：LenovoLegionToolkit</value>
+  </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
     <value>沒有找到更新目錄</value>
   </data>
@@ -2772,6 +2790,9 @@
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
     <value>最大充放電功率</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>使用時間</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>最小充放電功率</value>
