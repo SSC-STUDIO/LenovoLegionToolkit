@@ -3,7 +3,7 @@
     <!-- Base version numbers -->
     <MajorVersion>3</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <PatchVersion>0</PatchVersion>
+    <PatchVersion>1</PatchVersion>
     
     <!-- Default version values -->
     <GitCommitCount>0</GitCommitCount>
