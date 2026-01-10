@@ -37,12 +37,12 @@ public static class NilesoftShellHelper
     public static bool IsInstalledUsingShellExe()
     {
         // For backward compatibility, provide synchronous wrapper that calls async version
-        // Use Task.Run to avoid deadlocks when called from synchronization contexts
-        // This ensures the async method runs on a thread pool thread
-        return Task.Run(async () => await IsInstalledUsingShellExeAsync().ConfigureAwait(false)).GetAwaiter().GetResult();
+        // Since IsInstalledUsingShellExeAsync() now returns Task.FromResult (synchronous operation),
+        // we can directly await it without Task.Run
+        return IsInstalledUsingShellExeAsync().GetAwaiter().GetResult();
     }
 
-    public static async Task<bool> IsInstalledUsingShellExeAsync()
+    public static Task<bool> IsInstalledUsingShellExeAsync()
     {
         // 检查缓存
         lock (_cacheLock)
@@ -52,193 +52,94 @@ public static class NilesoftShellHelper
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Nilesoft Shell installation status (from cache): {_cachedInstallationStatus.Value}");
-                return _cachedInstallationStatus.Value;
+                return Task.FromResult(_cachedInstallationStatus.Value);
             }
         }
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Checking if Nilesoft Shell is installed using shell.exe API...");
+            Log.Instance.Trace($"Checking if Nilesoft Shell is installed by checking CLSID registry...");
 
-        bool result;
+        bool result = false;
         try
         {
-            var shellExePath = GetNilesoftShellExePath();
-            if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
+            // Check registry for CLSID registration (most reliable method)
+            // Check HKEY_CLASSES_ROOT\CLSID\{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}\InprocServer32
+            using var clsidKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"CLSID\{NilesoftShellContextMenuClsid}", false);
+            if (clsidKey != null)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Nilesoft Shell executable not found at path: {shellExePath ?? "null"}");
-                result = false;
-                
-                // 缓存结果
-                lock (_cacheLock)
+                using var inprocKey = clsidKey.OpenSubKey("InprocServer32", false);
+                if (inprocKey != null)
                 {
-                    _cachedInstallationStatus = result;
-                    _cacheTimestamp = DateTime.UtcNow;
-                }
-                return result;
-            }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Querying shell.exe installation status via: {shellExePath} -isinstalled");
-
-            // First, try to read from registry (shell.exe writes status there to avoid console output issues)
-            try
-            {
-                using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\LenovoLegionToolkit", false);
-                if (key != null)
-                {
-                    var value = key.GetValue("ShellInstalled");
-                    if (value != null && value is int intValue)
+                    var dllPath = inprocKey.GetValue("") as string;
+                    if (!string.IsNullOrWhiteSpace(dllPath))
                     {
-                        var isInstalledFromRegistry = intValue != 0;
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Nilesoft Shell installation status (from registry): {isInstalledFromRegistry}");
+                        dllPath = dllPath.Trim('"');
+                        dllPath = Environment.ExpandEnvironmentVariables(dllPath);
                         
-                        result = isInstalledFromRegistry;
-                        
-                        // 缓存结果
-                        lock (_cacheLock)
+                        if (File.Exists(dllPath))
                         {
-                            _cachedInstallationStatus = result;
-                            _cacheTimestamp = DateTime.UtcNow;
+                            result = true;
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Nilesoft Shell installation status (from CLSID registry): {result}, DLL path: {dllPath}");
+                            
+                            // 缓存结果
+                            lock (_cacheLock)
+                            {
+                                _cachedInstallationStatus = result;
+                                _cacheTimestamp = DateTime.UtcNow;
+                            }
+                            return Task.FromResult(result);
                         }
-                        return result;
+                        else if (Log.Instance.IsTraceEnabled)
+                        {
+                            Log.Instance.Trace($"CLSID registered but DLL file not found at path: {dllPath}");
+                        }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to read from registry, falling back to stdout", ex);
-            }
-
-            // Fallback: Use shell.exe's stdout output (for backward compatibility)
-            // Use shell.exe's built-in API to check installation status
-            // This is more accurate as shell.exe can check its own installation state
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = shellExePath,
-                    Arguments = "-isinstalled",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
-
-            process.Start();
-
-            // Read streams asynchronously to prevent deadlock
-            var outputTask = process.StandardOutput.ReadToEndAsync();
-            var errorTask = process.StandardError.ReadToEndAsync();
-
-            // Wait for both read tasks to complete asynchronously before calling WaitForExit
-            // This prevents deadlock when process output exceeds buffer capacity
-            // The process can write to buffers while we're reading from them
-            // Wrap in try-catch to ensure WaitForExitAsync is always called even if tasks throw exceptions
-            try
-            {
-                await Task.WhenAll(outputTask, errorTask).ConfigureAwait(false);
-            }
-            catch
-            {
-                // If either task throws an exception, we still need to wait for the process to exit
-                // to prevent leaving the process handle open and unreleased
-            }
-
-            // Now safe to wait for process exit since all output has been read (or read failed)
-            // This must be called regardless of whether the read tasks succeeded or failed
-            await process.WaitForExitAsync().ConfigureAwait(false);
-
-            // Get the results (already completed or may throw exception)
-            string output;
-            string error;
-            try
-            {
-                output = await outputTask.ConfigureAwait(false);
-            }
-            catch
-            {
-                output = string.Empty;
-            }
-            try
-            {
-                error = await errorTask.ConfigureAwait(false);
-            }
-            catch
-            {
-                error = string.Empty;
-            }
-
-            // Parse output: shell.exe outputs "true" or "false"
-            if (string.IsNullOrWhiteSpace(output))
-            {
-                // If no output, check error output as fallback
-                if (!string.IsNullOrWhiteSpace(error))
-                {
-                    var errorResult = error.Trim().ToLowerInvariant();
-                    if (errorResult == "true" || errorResult == "false")
-                    {
-                        var isInstalledFromError = errorResult == "true";
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Nilesoft Shell installation status (from stderr): {isInstalledFromError}");
-                        
-                        // 缓存结果
-                        lock (_cacheLock)
-                        {
-                            _cachedInstallationStatus = isInstalledFromError;
-                            _cacheTimestamp = DateTime.UtcNow;
-                        }
-                        return isInstalledFromError;
-                    }
-                }
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Nilesoft Shell installation status query returned empty output");
-                
-                result = false;
-                // 缓存结果
-                lock (_cacheLock)
-                {
-                    _cachedInstallationStatus = result;
-                    _cacheTimestamp = DateTime.UtcNow;
-                }
-                return result;
-            }
-
-            var outputResult = output.Trim().ToLowerInvariant();
-            result = outputResult == "true";
             
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Nilesoft Shell installation status (from shell.exe stdout): {result}, output: {output.Trim()}");
-
-            // 缓存结果
-            lock (_cacheLock)
+            // If not found in HKCR, check HKEY_CURRENT_USER\Software\Classes\CLSID (for per-user registration)
+            if (!result)
             {
-                _cachedInstallationStatus = result;
-                _cacheTimestamp = DateTime.UtcNow;
+                using var hkcuClsidKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey($@"Software\Classes\CLSID\{NilesoftShellContextMenuClsid}", false);
+                if (hkcuClsidKey != null)
+                {
+                    using var hkcuInprocKey = hkcuClsidKey.OpenSubKey("InprocServer32", false);
+                    if (hkcuInprocKey != null)
+                    {
+                        var dllPath = hkcuInprocKey.GetValue("") as string;
+                        if (!string.IsNullOrWhiteSpace(dllPath))
+                        {
+                            dllPath = dllPath.Trim('"');
+                            dllPath = Environment.ExpandEnvironmentVariables(dllPath);
+                            if (File.Exists(dllPath))
+                            {
+                                result = true;
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Nilesoft Shell installation status (from HKCU CLSID registry): {result}, DLL path: {dllPath}");
+                            }
+                        }
+                    }
+                }
             }
-            return result;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to query shell.exe installation status, falling back to file/registry check", ex);
-            
-            // Fallback: If we can't query shell.exe, just check if file exists
-            // Note: Without shell.exe API, we can't accurately determine registration status
-            result = IsInstalled();
-            
-            // 缓存结果（即使是fallback结果）
-            lock (_cacheLock)
-            {
-                _cachedInstallationStatus = result;
-                _cacheTimestamp = DateTime.UtcNow;
-            }
-            return result;
+                Log.Instance.Trace($"Failed to check CLSID registry: {ex.Message}", ex);
         }
+        
+        // 缓存结果
+        lock (_cacheLock)
+        {
+            _cachedInstallationStatus = result;
+            _cacheTimestamp = DateTime.UtcNow;
+        }
+        
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Nilesoft Shell installation status (final): {result}");
+        
+        return Task.FromResult(result);
     }
     
     /// <summary>
@@ -281,65 +182,12 @@ public static class NilesoftShellHelper
     {
         try
         {
-            // 1) Prefer current process directory (where our app runs)
-            var baseDir = AppContext.BaseDirectory;
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Searching for shell.exe, AppContext.BaseDirectory: {baseDir ?? "null"}");
-            
-            if (!string.IsNullOrWhiteSpace(baseDir))
-            {
-                // direct file in base dir
-                var directCandidate = Path.Combine(baseDir, "shell.exe");
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Checking direct path: {directCandidate}, exists: {File.Exists(directCandidate)}");
-                
-                if (File.Exists(directCandidate))
-                {
-                    var dllPath = Path.Combine(baseDir, "shell.dll");
-                    if (File.Exists(dllPath))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Found shell.exe at direct path: {directCandidate}");
-                        return directCandidate;
-                    }
-                    else if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"shell.exe found but shell.dll missing at: {dllPath}");
-                }
-
-                // search recursively under base dir (covers ThirdParty/Shell/src/bin/**)
-                try
-                {
-                    var files = Directory.GetFiles(baseDir, "shell.exe", SearchOption.AllDirectories);
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Found {files.Length} shell.exe file(s) in recursive search");
-                    
-                    foreach (var file in files)
-                    {
-                        var dir = Path.GetDirectoryName(file);
-                        if (!string.IsNullOrWhiteSpace(dir))
-                        {
-                            var dllPath = Path.Combine(dir, "shell.dll");
-                            if (File.Exists(dllPath))
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Found shell.exe at recursive path: {file}");
-                                return file;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Recursive search failed: {ex.Message}");
-                }
-            }
-
-            // 2) Check build directory (common location during development)
+            // 1) Check build/shellIntegration directory first (primary location for all shell files)
+            // This is the central location where all shell files should be stored
             try
             {
+                // Try current directory first
                 var currentDir = Directory.GetCurrentDirectory();
-                // Check build/shellIntegration directory first
                 var shellIntegrationDir = Path.Combine(currentDir, "build", "shellIntegration");
                 if (Directory.Exists(shellIntegrationDir))
                 {
@@ -350,20 +198,6 @@ public static class NilesoftShellHelper
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Found shell.exe in build/shellIntegration directory: {shellIntegrationCandidate}");
                         return shellIntegrationCandidate;
-                    }
-                }
-                
-                // Fallback to build directory (legacy)
-                var buildDir = Path.Combine(currentDir, "build");
-                if (Directory.Exists(buildDir))
-                {
-                    var buildCandidate = Path.Combine(buildDir, "shell.exe");
-                    var buildDll = Path.Combine(buildDir, "shell.dll");
-                    if (File.Exists(buildCandidate) && File.Exists(buildDll))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Found shell.exe in build directory: {buildCandidate}");
-                        return buildCandidate;
                     }
                 }
                 
@@ -383,8 +217,136 @@ public static class NilesoftShellHelper
                             return parentShellIntegrationCandidate;
                         }
                     }
+                }
+                
+                // Also check AppContext.BaseDirectory relative to build/shellIntegration
+                var appBaseDir = AppContext.BaseDirectory;
+                if (!string.IsNullOrWhiteSpace(appBaseDir))
+                {
+                    // Check if appBaseDir is in a build subdirectory, then look for sibling build/shellIntegration
+                    var appBaseParent = Directory.GetParent(appBaseDir)?.FullName;
+                    if (!string.IsNullOrWhiteSpace(appBaseParent))
+                    {
+                        var appBaseShellIntegrationDir = Path.Combine(appBaseParent, "build", "shellIntegration");
+                        if (Directory.Exists(appBaseShellIntegrationDir))
+                        {
+                            var appBaseShellIntegrationCandidate = Path.Combine(appBaseShellIntegrationDir, "shell.exe");
+                            var appBaseShellIntegrationDll = Path.Combine(appBaseShellIntegrationDir, "shell.dll");
+                            if (File.Exists(appBaseShellIntegrationCandidate) && File.Exists(appBaseShellIntegrationDll))
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Found shell.exe in AppContext relative build/shellIntegration directory: {appBaseShellIntegrationCandidate}");
+                                return appBaseShellIntegrationCandidate;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Build/shellIntegration directory search failed: {ex.Message}");
+            }
+
+            // 2) Check current process directory (where our app runs) - fallback only
+            var appDir = AppContext.BaseDirectory;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Searching for shell.exe, AppContext.BaseDirectory: {appDir ?? "null"}");
+            
+            if (!string.IsNullOrWhiteSpace(appDir))
+            {
+                // direct file in app dir
+                var directCandidate = Path.Combine(appDir, "shell.exe");
+                if (File.Exists(directCandidate))
+                {
+                    var dllPath = Path.Combine(appDir, "shell.dll");
+                    if (File.Exists(dllPath))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Found shell.exe at app directory path: {directCandidate}");
+                        return directCandidate;
+                    }
+                }
+            }
+
+            // 3) Check ShellIntegration source build directories (development fallback)
+            try
+            {
+                // Try to find the repository root by looking for ShellIntegration directory
+                var currentDir = Directory.GetCurrentDirectory();
+                var repoRoot = currentDir;
+                
+                // Find ShellIntegration directory
+                var shellIntegrationPath = Path.Combine(currentDir, "ShellIntegration");
+                if (!Directory.Exists(shellIntegrationPath))
+                {
+                    // Try parent directory
+                    var parentDir = Directory.GetParent(currentDir)?.FullName;
+                    if (!string.IsNullOrWhiteSpace(parentDir))
+                    {
+                        shellIntegrationPath = Path.Combine(parentDir, "ShellIntegration");
+                        repoRoot = parentDir;
+                    }
+                }
+                
+                if (Directory.Exists(shellIntegrationPath))
+                {
+                    // Check src/bin (expected build output location)
+                    var srcBinDir = Path.Combine(shellIntegrationPath, "src", "bin");
+                    if (Directory.Exists(srcBinDir))
+                    {
+                        var srcBinExe = Path.Combine(srcBinDir, "shell.exe");
+                        var srcBinDll = Path.Combine(srcBinDir, "shell.dll");
+                        if (File.Exists(srcBinExe) && File.Exists(srcBinDll))
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Found shell.exe in ShellIntegration/src/bin: {srcBinExe}");
+                            return srcBinExe;
+                        }
+                    }
                     
-                    // Also check parent directory's build folder (legacy)
+                    // Check src/exe/bin (alternative build output location)
+                    var exeBinDir = Path.Combine(shellIntegrationPath, "src", "exe", "bin");
+                    var srcBinDllCheck = Path.Combine(shellIntegrationPath, "src", "bin");
+                    if (Directory.Exists(exeBinDir))
+                    {
+                        var exeBinExe = Path.Combine(exeBinDir, "shell.exe");
+                        var dllPath = Path.Combine(srcBinDllCheck, "shell.dll");
+                        if (File.Exists(exeBinExe) && File.Exists(dllPath))
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Found shell.exe in ShellIntegration/src/exe/bin: {exeBinExe}");
+                            return exeBinExe;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ShellIntegration source directory search failed: {ex.Message}");
+            }
+
+            // 4) Check build directory (legacy fallback)
+            try
+            {
+                var currentDir = Directory.GetCurrentDirectory();
+                var buildDir = Path.Combine(currentDir, "build");
+                if (Directory.Exists(buildDir))
+                {
+                    var buildCandidate = Path.Combine(buildDir, "shell.exe");
+                    var buildDll = Path.Combine(buildDir, "shell.dll");
+                    if (File.Exists(buildCandidate) && File.Exists(buildDll))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Found shell.exe in build directory (legacy): {buildCandidate}");
+                        return buildCandidate;
+                    }
+                }
+                
+                var parentDir = Directory.GetParent(currentDir)?.FullName;
+                if (!string.IsNullOrWhiteSpace(parentDir))
+                {
                     var parentBuildDir = Path.Combine(parentDir, "build");
                     if (Directory.Exists(parentBuildDir))
                     {
@@ -393,7 +355,7 @@ public static class NilesoftShellHelper
                         if (File.Exists(parentBuildCandidate) && File.Exists(parentBuildDll))
                         {
                             if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Found shell.exe in parent build directory: {parentBuildCandidate}");
+                                Log.Instance.Trace($"Found shell.exe in parent build directory (legacy): {parentBuildCandidate}");
                             return parentBuildCandidate;
                         }
                     }
@@ -405,7 +367,7 @@ public static class NilesoftShellHelper
                     Log.Instance.Trace($"Build directory search failed: {ex.Message}");
             }
 
-            // 3) Fallback to default installation path
+            // 5) Fallback to default installation path
             var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             if (!string.IsNullOrWhiteSpace(programFiles))
             {
