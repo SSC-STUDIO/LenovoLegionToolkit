@@ -142,12 +142,17 @@ public partial class SettingsPage
             _updateTextBlock.Visibility = Visibility.Collapsed;
             _checkUpdatesCard.Visibility = Visibility.Collapsed;
             _updateCheckFrequencyCard.Visibility = Visibility.Collapsed;
+            _updateRepositoryCard.Visibility = Visibility.Collapsed;
         }
         else
         {
             _checkUpdatesButton.Visibility = Visibility.Visible;
             _updateCheckFrequencyComboBox.Visibility = Visibility.Visible;
             _updateCheckFrequencyComboBox.SetItems(Enum.GetValues<UpdateCheckFrequency>(), _updateCheckSettings.Store.UpdateCheckFrequency, t => t.GetDisplayName());
+            
+            // Load update repository settings only when update checking is enabled
+            _updateRepositoryOwnerTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryOwner ?? string.Empty;
+            _updateRepositoryNameTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryName ?? string.Empty;
         }
 
         try
@@ -636,6 +641,32 @@ public partial class SettingsPage
         _updateCheckSettings.Store.UpdateCheckFrequency = frequency;
         _updateCheckSettings.SynchronizeStore();
         _updateChecker.UpdateMinimumTimeSpanForRefresh();
+    }
+
+    private void UpdateRepositoryOwnerTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (sender is not Wpf.Ui.Controls.TextBox textBox)
+            return;
+
+        var text = textBox.Text?.Trim();
+        _updateCheckSettings.Store.UpdateRepositoryOwner = string.IsNullOrWhiteSpace(text) ? null : text;
+        _updateCheckSettings.SynchronizeStore();
+    }
+
+    private void UpdateRepositoryNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (sender is not Wpf.Ui.Controls.TextBox textBox)
+            return;
+
+        var text = textBox.Text?.Trim();
+        _updateCheckSettings.Store.UpdateRepositoryName = string.IsNullOrWhiteSpace(text) ? null : text;
+        _updateCheckSettings.SynchronizeStore();
     }
 
     private async void GodModeFnQSwitchableToggle_Click(object sender, RoutedEventArgs e)
