@@ -5,7 +5,6 @@
 ## 测试结构
 
 ### 单元测试 (xUnit)
-- `LenovoLegionToolkit.Tests/` - 使用 xUnit 框架的单元测试
   - `ApplicationSettingsTests.cs` - 测试设置管理
   - `LogTests.cs` - 测试日志系统
   - `CMDTests.cs` - 测试命令行执行

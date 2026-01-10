@@ -110,23 +110,23 @@
                     <TextBlock
                         Margin="0,0,0,8"
                         TextWrapping="Wrap">
-                        <Run Text="• " FontWeight="Bold" />
+                        <Run Text="• " FontWeight="Medium" />
                         <Run Text="{x:Static resources:Resource.CompatibilityCheckErrorWindow_Tip1}" />
                     </TextBlock>
                     <TextBlock
                         Margin="0,0,0,8"
                         TextWrapping="Wrap">
-                        <Run Text="• " FontWeight="Bold" />
+                        <Run Text="• " FontWeight="Medium" />
                         <Run Text="{x:Static resources:Resource.CompatibilityCheckErrorWindow_Tip2}" />
                     </TextBlock>
                     <TextBlock
                         Margin="0,0,0,8"
                         TextWrapping="Wrap">
-                        <Run Text="• " FontWeight="Bold" />
+                        <Run Text="• " FontWeight="Medium" />
                         <Run Text="{x:Static resources:Resource.CompatibilityCheckErrorWindow_Tip3}" />
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap">
-                        <Run Text="• " FontWeight="Bold" />
+                        <Run Text="• " FontWeight="Medium" />
                         <Run Text="{x:Static resources:Resource.CompatibilityCheckErrorWindow_Tip4}" />
                     </TextBlock>
                 </StackPanel>

@@ -115,7 +115,7 @@
                                     Text="{x:Static plugin:Resource.NetworkAcceleration_TotalTraffic}" />
                                 <TextBlock
                                     FontSize="42"
-                                    FontWeight="Bold"
+                                    FontWeight="Medium"
                                     Foreground="White"
                                     Text="{Binding TotalTraffic, Mode=OneWay}" />
                             </StackPanel>
