@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +7,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
@@ -21,13 +22,39 @@ public partial class DeviceInformationWindow
 
     private async Task RefreshAsync(bool forceRefresh = false)
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
+        MachineInformation mi;
+        
+        try
+        {
+            mi = await Compatibility.GetMachineInformationAsync();
 
-        _manufacturerLabel.Text = mi.Vendor;
-        _modelLabel.Text = mi.Model;
-        _mtmLabel.Text = mi.MachineType;
-        _serialNumberLabel.Text = mi.SerialNumber;
-        _biosLabel.Text = mi.BiosVersionRaw;
+            _manufacturerLabel.Text = mi.Vendor ?? "-";
+            _modelLabel.Text = mi.Model ?? "-";
+            _mtmLabel.Text = mi.MachineType ?? "-";
+            _serialNumberLabel.Text = mi.SerialNumber ?? "-";
+            _biosLabel.Text = mi.BiosVersionRaw ?? "-";
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read device information: {ex.Message}", ex);
+
+            // Display error message to user
+            _manufacturerLabel.Text = Resource.CompatibilityCheckError_Message;
+            _modelLabel.Text = "-";
+            _mtmLabel.Text = "-";
+            _serialNumberLabel.Text = "-";
+            _biosLabel.Text = "-";
+
+            // Show error notification
+            _snackBar.Icon = SymbolRegular.ErrorCircle24;
+            _snackBar.Appearance = ControlAppearance.Danger;
+            await _snackBar.ShowAsync(
+                Resource.CompatibilityCheckErrorWindow_Title,
+                Resource.CompatibilityCheckError_Message);
+
+            return;
+        }
 
         try
         {
@@ -69,7 +96,7 @@ public partial class DeviceInformationWindow
 
         try
         {
-            Clipboard.SetText(str);
+            System.Windows.Clipboard.SetText(str);
             await _snackBar.ShowAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
         }
         catch (Exception ex)

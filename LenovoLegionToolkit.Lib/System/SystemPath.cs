@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32;
@@ -47,8 +47,8 @@ public static class SystemPath
 
     private static unsafe void Notify()
     {
-        const string environment = "Environment";
-        fixed (void* ptr = environment)
+        const string ENVIRONMENT = "Environment";
+        fixed (void* ptr = ENVIRONMENT)
         {
             PInvoke.SendNotifyMessage(HWND.HWND_BROADCAST, PInvoke.WM_SETTINGCHANGE, 0, new IntPtr(ptr));
         }

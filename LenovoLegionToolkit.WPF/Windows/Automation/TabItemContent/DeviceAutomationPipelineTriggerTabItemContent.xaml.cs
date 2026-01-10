@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
@@ -176,7 +177,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Margin = new(0, 0, 0, 2),
             TextTrimming = TextTrimming.CharacterEllipsis,
             FontSize = 12,
-            Text = "Not connected"
+            Text = Resource.DeviceAutomationPipelineTriggerTabItemContent_NotConnected
         };
 
         private readonly TextBlock _name = new()

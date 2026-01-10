@@ -1,0 +1,15 @@
+"CPU Temperature",,$2B," ",$2E
+"Chipset Temperature",,$2A," ",$2E
+"Ambient Temperature",,$29," ",$2E
+TEMP4,,$2C," ",$2E
+TEMP5,,$2D," ",$2E
+TEMP6,,$2E," ",$2E
+"CPU VCore",,$20,"0,012",$2E
+"CPU VCore Miscellaneous",,$25,"0,012",$2E
+"SOC VCore",,$24,"0,012",$2E
+"A_VDD1V8 (VDD18)",,$27,"0,012",$2E
+PM_VCC18,,$26,"0,012",$2E
+PM_VDD1V,,$28,"0,012",$2E
+"VCC3 (+3,3V)",,$21,"0,012*1,649",$2E
+"VCC (+5V)",,$23,"0,012*2,47",$2E
++12V,,$22,"0,012*6",$2E

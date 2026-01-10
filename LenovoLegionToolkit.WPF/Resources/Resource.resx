@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -558,6 +558,9 @@ Thanks in advance!</value>
   <data name="DonatePage_Title" xml:space="preserve">
     <value>Donate</value>
   </data>
+  <data name="DonatePage_CanBeHidden_Message" xml:space="preserve">
+    <value>Note: You can hide this donate button in the navigation menu by disabling "Show donate button" in Settings.</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -753,6 +756,36 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>This device is not compatible with Lenovo Legion Toolkit.</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>Your device may be missing required system components (LenovoGameZoneData).</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>If you click "OK" to continue:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- The software will run in restricted mode</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- Some features will be disabled (Dashboard, Automation, Macros)</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- Other basic features will still be available</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>Device Information:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>Vendor:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>Model:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>Machine Type:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>Click "OK" to continue, or "Cancel" to exit.</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>No compatible keyboards found</value>
   </data>
@@ -786,8 +819,56 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
     <value>Downloads</value>
   </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>System optimization</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>Plugin Extensions</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>Navigation Items Settings</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>Configure which navigation items are displayed in the sidebar. Dashboard and Settings will always be visible.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Keyboard navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Battery navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Automation navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Macro navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the System Optimization navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Tools navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Plugin Extensions navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the Donate navigation item</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>Show or hide the About navigation item</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>Navigation Items</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>Configure which navigation items are displayed in the sidebar</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>Update available!</value>
@@ -1032,6 +1113,21 @@ Performance mode can also be changed with Fn+Q.</value>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
     <value>Windows Power Plans</value>
   </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>Scanning for available driver packages, please wait...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>Network error occurred. Retrying automatically...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>Retrying to fetch driver packages...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>Cleanup Info</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>View cleanup operation progress and estimated size.</value>
+  </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>Adjust keyboard backlight preset.</value>
   </data>
@@ -1170,6 +1266,472 @@ Restart is recommended after changing this option.</value>
 If disabled, this app will handle Fn shortcuts.
 Restart is recommended after changing this option.</value>
   </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>System optimization</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>Apply recommended performance tweaks and clean temporary files.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>Apply performance &amp; service tweaks</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>Performance optimizations applied.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>Couldn't apply performance optimizations.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>Run cleanup</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>Cleanup completed.</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>Cleanup failed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>Apply selected actions</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>Select recommended</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>Run cleanup actions</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} actions selected</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>No actions selected yet.</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>Selected actions</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>Beautification</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>Driver Download</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>Extensions</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>Install and manage extensions to extend functionality</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Coming Soon</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Extension marketplace will be available in a future update.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>Windows optimization</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>Custom cleanup rules</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>Add rule</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>Clear all</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>No custom cleanup rules configured.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>Include subfolders</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX management</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>No apps selected for removal.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>Uninstall selected apps</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>Selected apps scheduled for removal.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>Failed to remove selected apps.</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>Loading apps, please wait...</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>Failed to load: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>Publisher: {0}</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>Registry MRU/history cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>Custom cleanup rule</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>Extensions</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>Include subfolders</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>Please choose a folder.</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>Please enter at least one file extension.</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>Please select at least one action.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>Selected actions completed successfully.</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>Failed to complete selected actions.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>Explorer &amp; interface</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Windows Beautification</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Change right-click menu style.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Switch to modern menu</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Applies the classic style and restarts Explorer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Switch to default right-click menu</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Restores the default style and restarts Explorer.</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>Apply Modern Context Menu</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Completely uninstall shell.exe and related files</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>Select the theme for the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>Enable transparency effects for the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>Customize the appearance of the context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>Failed to enable classic menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>Failed to restore default menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>Failed to install shell.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>Failed to uninstall shell.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>Failed to apply style settings.</value>
+  </data>
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>System beautification</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>Adjust system performance and responsiveness settings.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>Disable background services that consume resources.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>Network Acceleration</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>Optimize network settings to improve network speed and responsiveness.</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>Remove caches, temporary files and other leftovers.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>Cache Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>Clean up cache files from various applications and the system to free up storage space.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>System Files Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>Clean up system files such as temporary files, logs, crash dumps, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>System Components Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>Clean up system component files such as Windows Update cache, component store, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>Performance Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>Clean up files that may affect system performance, such as prefetch files, etc.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>Custom Cleanup</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>Clean up specified files and directories using custom rules.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>Taskbar and start menu layout</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>Disable start menu and open search with Win key</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>Improve Explorer responsiveness</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>File visibility options</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>Show file extensions and hidden files in File Explorer.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>Disable Explorer suggestions</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>Turn off cloud content suggestions and recommendation banners.</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>Change Windows key to open search</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>Optimise multimedia scheduling</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>Remove network throttling and lower system responsiveness latency.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>Improve memory management</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>Disable acrylic and notification centre</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>Reduce telemetry and tips</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>Force high performance plan</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>Activate the high performance power scheme and disable hibernation.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>Disable diagnostic services</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>Disable SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>Disable Windows Search indexing</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>Stop the Windows Search service to prevent index updates.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>Disable Remote Registry</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>Secure the system by disabling remote registry access.</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>Disable error reporting</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>Clear Remote Desktop cache</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>Remove cached files created by the Remote Desktop client.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>Clean Windows Update cache</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>Clean browser cache</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>Clean thumbnail caches</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>Clear .NET native images</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>Remove cached .NET Native images to reclaim disk space.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>Remove logs and diagnostic data</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>Delete crash dumps</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>Remove memory dump files left after system crashes.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>Clean Defender scans</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>Delete Windows Defender scan history and caches.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>Clean temporary files</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>Empty Windows and user temporary directories.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>Remove bundled Windows apps</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>Empty Recycle Bin</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>Remove deleted files stored in the Recycle Bin.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>Clear prefetch data</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>Delete Windows prefetch data to regenerate new traces.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>Clean custom files</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>Delete files matching configured extensions from selected folders.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>Service component store</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+  </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
     <value>Disable Lenovo Hotkeys</value>
   </data>
@@ -1221,6 +1783,24 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>Minimize on close</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>Hide the incompatible device warning that appears on startup.</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>Disable incompatible device warning</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Message" xml:space="preserve">
+    <value>Show or hide the donate button in the navigation menu.</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Title" xml:space="preserve">
+    <value>Show donate button</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
+    <value>Enable Extensions</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
+    <value>Enable the extension system to access the plugin market in the Tools page.</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>Configure which notifications are shown.</value>
@@ -1403,6 +1983,9 @@ Logging will be enabled automatically, if you choose to continue.</value>
   <data name="UnsupportedWindow_Message" xml:space="preserve">
     <value>Lenovo Legion Toolkit has not been tested with your device.</value>
   </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>You can disable this warning at any time in Settings.</value>
+  </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
     <value>Model</value>
   </data>
@@ -1569,6 +2152,54 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
   </data>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
     <value>Restart recommended</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>Installing</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>Action definition not found</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>Technical implementation details are not available for this action</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>Load failed</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>Command execution</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>Registry modification</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>Service management</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>Registry modification + PowerShell script</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>Registry cleanup</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM command</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve">
+    <value>shell.exe not found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve">
+    <value>Configuration file path: Not found</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Save &amp; Close</value>
@@ -2020,6 +2651,21 @@ Supported formats are: {1}.</value>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>Installation failed</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>File not found, please download first</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>Installation started</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>Starting installer: {0}</value>
+  </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
     <value>Open README</value>
   </data>
@@ -2094,7 +2740,31 @@ Supported formats are: {1}.</value>
     <value>Select Windows Power Mode to apply when Power Mode changes.</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>Error occured when reading device information.</value>
+    <value>Error occurred when reading device information.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>Compatibility Check Error</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>The application failed to read device information during startup. Please check the error details below and try the troubleshooting steps if needed.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>Troubleshooting Steps</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>Ensure Windows Management Instrumentation (WMI) service is running: Open Services (services.msc) and check that "Windows Management Instrumentation" is running.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>Run the application as Administrator to ensure sufficient permissions to access system registry and WMI.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>Check system resources: Close other resource-intensive applications and try again.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>Review the log file for detailed error information by clicking "Open Log" below.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>Open Log File</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Macro</value>
@@ -2274,4 +2944,475 @@ Supported formats are: {1}.</value>
     <value>Always put notification at the top.
 It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
   </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>Pause all</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
+    <value>Implementation and Effect Principles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve">
+    <value>Implementation Type:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+    <value>COM Component Registration + Configuration File</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
+    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
+    <value>Configuration File Not Found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
+    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
+    <value>Settings Applied</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
+    <value>Failed to apply settings: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
+    <value>1. COM Component Registration:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
+    <value>   shell.exe -register -treat -restart</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
+    <value>   Path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
+    <value>2. Configuration File (shell.nss):</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
+    <value>   Configuration file path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
+    <value>   Uses CSS-like syntax to define menu styles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
+    <value>3. Configuration File Format Example:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
+    <value>   theme
+   {
+       background-color: #2d2d2d;
+       text-color: #ffffff;
+       corner-radius: 5px;
+       shadow: true;
+       transparency: true;
+   }</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
+    <value>4. Working Principle:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
+    <value>   - Shell.dll is registered as a COM component in the system</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
+    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
+    <value>   - Reads shell.nss configuration file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
+    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
+    <value>   - Renders the beautified context menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
+    <value>5. Effect Description:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
+    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
+    <value>   - Transparency: Enables menu background transparency effect</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
+    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
+    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>Action Details</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>Technical Implementation Details</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>Implementation Type:</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>{0} of {1} actions selected</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>Estimated cleanup size: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>Estimating...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>Running: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>Uninstalling selected apps...</value>
+  </data>
+  <data name="Compact" xml:space="preserve">
+    <value>Compact view</value>
+  </data>
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>System Beautification</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>Right Click Menu</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>Customize the right click menu appearance and behavior.</value>
+  </data>
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>Enable Classic Menu</value>
+  </data>
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>Disable Classic Menu</value>
+  </data>
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>Restore Default</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>Not Installed</value>
+  </data>
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>Installed but not registered</value>
+  </data>
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>Open Style Settings</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows Beautification</value>
+  </data>
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>Customize Windows appearance and behavior.</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>Menu Style Settings</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>Classic</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>Modern</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>Enable transparency</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>Rounded corners</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>Shadows</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>Effects</value>
+  </data>
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>Customize visual effects.</value>
+  </data>
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+
+    <value>Freed {0} in {1}s</value>
+
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>Launch system tools and utilities.</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>Failed to start tool</value>
+  </data>
+  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
+    <value>Tools will appear here once they are available in the tools directory.</value>
+  </data>
+  <data name="ToolsPage_Launch_Button" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="ToolsPage_Details_Version" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Author" xml:space="preserve">
+    <value>Author: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Path" xml:space="preserve">
+    <value>Path: {0}</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPU Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>Display Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>Gaming Tools</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPU Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>Memory Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>Other Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>Peripheral Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>Storage Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>Stress Test Tools</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>System Diagnostic Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
+    <value>Hardware Tools</value>
+  </data>
+  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
+    <value>System Tools</value>
+  </data>
+  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
+    <value>Quick Tools</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_OpenFileLocation" xml:space="preserve">
+    <value>Open File Location</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_CopyPath" xml:space="preserve">
+    <value>Copy Path</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_OpenToolsDirectory" xml:space="preserve">
+    <value>Open Tools Directory</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>Executing {0}%</value>
+  </data>
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>Operation cancelled</value>
+  </data>
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>Error details: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>Show hidden downloads</value>
+  </data>
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>Select language</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>Synchronise zones</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>Using Windows built-in registry cleanup functionality</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (Flush DNS cache)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (Reset Winsock protocol stack)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (Reset TCP/IP protocol stack)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>Plugin Extensions</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>Install and manage plugins to extend functionality</value>
+  </data>
+
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>Cannot Uninstall</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>Plugin Settings</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>Plugin Name</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>Plugin Description</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>This plugin has no configurable settings.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>Plugin not found: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>Author: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>Plugin configuration interface format is incorrect.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>Error loading plugin settings: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>Search plugins...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>Not Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>No plugins available</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>The plugin store is currently empty. Stay tuned for future plugin updates.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>Use Application Default</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>Found {0} plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>Plugin installed successfully</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>Plugin has been successfully installed</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>Installation failed</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>Unable to install plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>Plugin uninstalled successfully</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>Plugin has been successfully uninstalled</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>Uninstall failed</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>Unable to uninstall plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>Open failed</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Unable to open plugin settings: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Please install plugin first</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Plugin must be installed before use</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>Unable to open plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>Minimum compatible version: {0}</value>
+  </data>
+
 </root>

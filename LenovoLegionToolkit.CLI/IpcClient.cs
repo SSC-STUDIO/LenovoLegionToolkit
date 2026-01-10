@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -123,22 +123,95 @@ public static class IpcClient
     }
 
     public static async Task<string> GetRGBPresetAsync()
+
     {
+
         var req = new IpcRequest
+
         {
+
             Operation = IpcRequest.OperationType.GetRGBPreset
+
         };
 
+
+
         return await SendRequestAsync(req).ConfigureAwait(false)
+
                ?? throw new IpcException("Missing return message");
+
     }
 
+
+
     public static Task SetRGBPresetAsync(string value)
+
+    {
+
+        var req = new IpcRequest
+
+        {
+
+            Operation = IpcRequest.OperationType.SetRGBPreset,
+
+            Value = value
+
+        };
+
+
+
+        return SendRequestAsync(req);
+
+    }
+
+
+
+    public static async Task<bool> IsShellRegisteredAsync()
+
+    {
+
+        var req = new IpcRequest
+
+        {
+
+            Operation = IpcRequest.OperationType.IsShellRegistered
+
+        };
+
+
+
+        var result = await SendRequestAsync(req).ConfigureAwait(false);
+
+        return result?.ToLowerInvariant() == "true";
+
+    }
+
+    public static async Task<bool> IsShellInstalledAsync()
     {
         var req = new IpcRequest
         {
-            Operation = IpcRequest.OperationType.SetRGBPreset,
-            Value = value
+            Operation = IpcRequest.OperationType.IsShellInstalled
+        };
+
+        var result = await SendRequestAsync(req).ConfigureAwait(false);
+        return result?.ToLowerInvariant() == "true";
+    }
+
+    public static Task InstallShellAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.InstallShell
+        };
+
+        return SendRequestAsync(req);
+    }
+
+    public static Task UninstallShellAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.UninstallShell
         };
 
         return SendRequestAsync(req);

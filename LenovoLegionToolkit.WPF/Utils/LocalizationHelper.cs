@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,8 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Humanizer;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Windows.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -90,6 +93,19 @@ public static class LocalizationHelper
 
         if (interactive && await GetLanguageFromFile() is null)
         {
+            // 在显示语言选择窗口之前，先应用系统主题
+            try
+            {
+                var isDarkMode = SystemTheme.IsDarkMode();
+                var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+                Wpf.Ui.Appearance.Theme.Apply(themeType, Wpf.Ui.Appearance.BackgroundType.Mica, false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to apply system theme before showing language selector window.", ex);
+            }
+
             var window = new LanguageSelectorWindow(Languages, DefaultLanguage);
             window.Show();
             cultureInfo = await window.ShouldContinue;
@@ -148,9 +164,90 @@ public static class LocalizationHelper
         Resource.Culture = cultureInfo;
         Lib.Resources.Resource.Culture = cultureInfo;
         Lib.Automation.Resources.Resource.Culture = cultureInfo;
+        
+        // Set plugin resource cultures
+        SetPluginResourceCultures(cultureInfo);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Applied culture: {cultureInfo.Name}");
+    }
+
+    /// <summary>
+    /// Set resource cultures for all plugins, using plugin-specific language settings if available
+    /// </summary>
+    public static void SetPluginResourceCultures(CultureInfo? defaultCultureInfo = null)
+    {
+        try
+        {
+            var pluginSettings = new Settings.PluginSettings();
+            defaultCultureInfo ??= Resource.Culture ?? CultureInfo.CurrentUICulture;
+
+            // Iterate through all loaded assemblies to find plugin Resource classes
+            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    var assemblyName = assembly.GetName().Name;
+                    if (assemblyName != null && assemblyName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Find the plugin ID by looking for IPlugin implementation
+                        string? pluginId = null;
+                        try
+                        {
+                            var pluginTypes = assembly.GetTypes()
+                                .Where(t => typeof(Lib.Plugins.IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+                            foreach (var pluginType in pluginTypes)
+                            {
+                                try
+                                {
+                                    var pluginInstance = Activator.CreateInstance(pluginType) as Lib.Plugins.IPlugin;
+                                    pluginId = pluginInstance?.Id;
+                                    if (!string.IsNullOrWhiteSpace(pluginId))
+                                        break;
+                                }
+                                catch
+                                {
+                                    // Continue searching
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Continue without plugin ID
+                        }
+
+                        // Get plugin-specific culture or use default
+                        var pluginCulture = !string.IsNullOrWhiteSpace(pluginId)
+                            ? pluginSettings.GetPluginCulture(pluginId) ?? defaultCultureInfo
+                            : defaultCultureInfo;
+
+                        // Try to find Resource class in the plugin namespace
+                        var resourceType = assembly.GetType($"{assemblyName}.Resource");
+                        if (resourceType != null)
+                        {
+                            var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                            if (cultureProperty != null)
+                            {
+                                cultureProperty.SetValue(null, pluginCulture);
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Set resource culture for plugin: {assemblyName} (ID: {pluginId ?? "unknown"}) = {pluginCulture.Name}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Continue with other assemblies if one fails
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to set resource culture for assembly: {ex.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set plugin resource cultures: {ex.Message}");
+        }
     }
 
     private static unsafe string? GetSystemShortDateFormat()

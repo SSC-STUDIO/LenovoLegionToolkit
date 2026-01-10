@@ -1,0 +1,28 @@
+//ITE IT8686E/AX
+
+"CPU Temperature",,$2B," ",$2E
+"Chipset Temperature",,$2A," ",$2E
+"PCIEX16 Temperature",,$2C," ",$2E
+"PCIEX8 Temperature",,$29," ",$4E
+"VRM Temperature",,$2D," ",$2E
+"SOC MOSFET Temperature",,$2E," ",$2E
+"Ambient Temperature",,$29," ",$2E
+EC_TEMP2,,$2A," ",$4E
+"System 2 Temperature",,$2B," ",$4E
+"CPU VCore",,$20,"0,012",$2E
+"SOC VCore",,$24,"0,012",$2E
+"PM_1V05 (Chipset Core)",,$22,"0,011",$4E
+"CPU A_VDDP",,$25,"0,012",$2E
+"VDDQ (DIMM Voltage)",,$26,"0,012",$2E
+"VCC3 (+3,3V)",,$23,"0,012*1,649",$2E
+"VCC (+5V)",,$21,"0,012*2,47",$2E
++12V,,$22,"0,012*6",$2E
+"3V Standby",,$27,"0,012*2",$2E
+"3V Battery Voltage",,$28,"0,012*2",$2E
+"VCORE_SIO (SIO_18V_A)",,$20,"0,011",$4E
+DDRVTT,,$21,"0,011",$4E
+5VSB,,$23,"0,011*1,649",$4E
+"A_VDD1V8 (VDD18)",,$24,"0,011",$4E
+VPP_MEM,,$25,"0,011",$4E
+SYS_3VSB,,$26,"0,011",$4E
+"3V Battery Voltage",,$27,"0,011*2",$4E

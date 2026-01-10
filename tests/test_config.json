@@ -1,0 +1,29 @@
+{
+  "testConfiguration": {
+    "exePath": "build\\Lenovo Legion Toolkit.exe",
+    "cliPath": "build\\llt.exe",
+    "timeout": {
+      "startup": 5000,
+      "shutdown": 3000,
+      "operation": 10000
+    },
+    "paths": {
+      "settings": "%APPDATA%\\LenovoLegionToolkit\\settings.json",
+      "logs": "%APPDATA%\\LenovoLegionToolkit\\log"
+    },
+    "testOptions": {
+      "skipUIAutomation": false,
+      "skipHardwareTests": true,
+      "skipAdminTests": true,
+      "verbose": false
+    },
+    "performanceThresholds": {
+      "startupTimeMs": 5000,
+      "memoryUsageMB": 200,
+      "logWriteTimeMs": 100,
+      "settingsReadTimeMs": 100
+    }
+  }
+}
+
+

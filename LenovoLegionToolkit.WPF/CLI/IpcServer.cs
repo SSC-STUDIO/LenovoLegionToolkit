@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Security.AccessControl;
@@ -14,8 +15,11 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI.Features;
+using LenovoLegionToolkit.WPF.Services;
+using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.CLI;
 
@@ -162,6 +166,19 @@ public class IpcServer(
             case IpcRequest.OperationType.SetRGBPreset when req is { Value: not null }:
                 await SetRGBPresetAsync(req.Value);
                 return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.IsShellRegistered:
+                message = await IsShellRegisteredAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true, Message = message };
+
+            case IpcRequest.OperationType.IsShellInstalled:
+                message = await IsShellInstalledAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true, Message = message };
+            case IpcRequest.OperationType.InstallShell:
+                await InstallShellAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.UninstallShell:
+                await UninstallShellAsync().ConfigureAwait(false);
+                return new IpcResponse { Success = true };
             default:
                 throw new IpcException("Invalid request");
         }
@@ -281,8 +298,164 @@ public class IpcServer(
             throw new InvalidOperationException("Invalid preset");
 
         await rgbKeyboardBacklightController.SetLightControlOwnerAsync(true).ConfigureAwait(false);
+
         await rgbKeyboardBacklightController.SetPresetAsync(preset).ConfigureAwait(false);
 
+
+
         MessagingCenter.Publish(new RGBKeyboardBacklightChangedMessage());
+
+    }
+
+
+
+    private static async Task<string> IsShellRegisteredAsync()
+    {
+        // Use NilesoftShellHelper.IsInstalledUsingShellExe() which properly checks the registry
+        // using shell.exe's own API, more accurate than checking registry directly
+        var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
+        return isInstalled.ToString().ToLowerInvariant();
+    }
+
+
+
+    private static async Task<string> IsShellInstalledAsync()
+    {
+        try
+        {
+            var isInstalled = await Task.Run(() =>
+            {
+                try
+                {
+                    // Use NilesoftShellHelper to find shell.exe path (supports multiple locations)
+                    var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
+                    if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
+                        return false;
+
+                    // Use shell.exe's built-in API to check installation status
+                    // This is more accurate as shell.exe can check its own installation state
+                    using var process = new System.Diagnostics.Process
+                    {
+                        StartInfo = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = shellExePath,
+                            Arguments = "-isinstalled",
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true
+                        }
+                    };
+
+                    process.Start();
+
+                    // Read streams asynchronously to prevent deadlock
+                    // If we call ReadToEnd() synchronously and then WaitForExit(),
+                    // the process can block waiting for the buffer to be drained
+                    // while the main thread is blocked in ReadToEnd()
+                    var outputTask = process.StandardOutput.ReadToEndAsync();
+                    var errorTask = process.StandardError.ReadToEndAsync();
+
+                    // Wait for both read tasks to complete before calling WaitForExit
+                    // This prevents deadlock when process output exceeds buffer capacity
+                    // Wrap in try-catch to ensure WaitForExit is always called even if tasks throw exceptions
+                    try
+                    {
+                        System.Threading.Tasks.Task.WaitAll(outputTask, errorTask);
+                    }
+                    catch
+                    {
+                        // If either task throws an exception, we still need to wait for the process to exit
+                        // to prevent leaving the process handle open and unreleased
+                    }
+
+                    // Now safe to wait for process exit since all output has been read (or read failed)
+                    // This must be called regardless of whether the read tasks succeeded or failed
+                    process.WaitForExit();
+
+                    // Get the results (already completed)
+                    var output = outputTask.Result;
+
+                    // Parse output: shell.exe outputs "true" or "false"
+                    if (string.IsNullOrWhiteSpace(output))
+                        return false;
+
+                    var result = output.Trim().ToLowerInvariant();
+                    return result == "true";
+                }
+                catch
+                {
+                    // Fallback to NilesoftShellService if shell.exe query fails
+                    try
+                    {
+                        return NilesoftShellService.IsInstalled();
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }).ConfigureAwait(false);
+
+            return isInstalled.ToString().ToLowerInvariant();
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to check shell installation status: {ex.Message}");
+        }
+    }
+
+    private static async Task InstallShellAsync()
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    // 使用NilesoftShellService安装Shell
+                    NilesoftShellService.Install();
+                }
+                catch (Exception ex)
+                {
+                    throw new IpcException($"Shell installation failed: {ex.Message}");
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (IpcException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to install shell: {ex.Message}");
+        }
+    }
+
+    private static async Task UninstallShellAsync()
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    // 使用NilesoftShellService卸载Shell
+                    NilesoftShellService.Uninstall();
+                }
+                catch (Exception ex)
+                {
+                    throw new IpcException($"Shell uninstallation failed: {ex.Message}");
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (IpcException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new IpcException($"Failed to uninstall shell: {ex.Message}");
+        }
     }
 }
