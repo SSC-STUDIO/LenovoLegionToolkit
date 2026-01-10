@@ -2,7 +2,6 @@
 
 ### Other language versions of this contributing guide:
 * [简体中文版开发者指南](CONTRIBUTING_zh-hans.md)
-* [日本語版の貢献ガイド](CONTRIBUTING_ja-JP.md)
 
 Thanks for investing your time in contributing to this project! Giving the growing popularity of LLT, here are a few rules to follow to ensure that your contribution goes smoothly.
 
@@ -14,11 +13,11 @@ _Due to large number of issues created, those that do not meet the criteria will
 
 **1. Before reporting an issue make yourself familiar with the README**
 
-[README](https://github.com/BartoszCichecki/LenovoLegionToolkit/blob/master/README.md) is regularly updated to include answers to frequently asked questions as well as information about most common issues. Take your time to go through what is there before creating an issue or starting a discussion.
+[README](https://github.com/Crs10259/LenovoLegionToolkit/blob/master/README.md) is regularly updated to include answers to frequently asked questions as well as information about most common issues. Take your time to go through what is there before creating an issue or starting a discussion.
 
 **2. Check already reported issues**
 
-Go through [issues](https://github.com/BartoszCichecki/LenovoLegionToolkit/issues?q=is%3Aissue) that were already reported, as well as [discussions](https://github.com/BartoszCichecki/LenovoLegionToolkit/discussions?discussions_q=). Do not create duplicate issues or discussions. Even if the issue is marked as closed, you can still leave a comment there.
+Go through [issues](https://github.com/Crs10259/LenovoLegionToolkit/issues?q=is%3Aissue) that were already reported, as well as [discussions](https://github.com/Crs10259/LenovoLegionToolkit/discussions?discussions_q=). Do not create duplicate issues or discussions. Even if the issue is marked as closed, you can still leave a comment there.
 
 **3. Use English**
 
