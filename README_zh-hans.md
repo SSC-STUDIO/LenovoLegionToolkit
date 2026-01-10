@@ -11,8 +11,6 @@
 
 联想拯救者工具箱 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化工具箱。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
-**本软件仅适配Lenovo笔记本，如果你不是Lenovo笔记本则这个软件不适合你，请不要提出兼容 Issue ，如果提出将被直接关闭不作受理。**
-
 本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
 
 加入 Legion Series Discord 频道: https://discord.com/invite/legionseries!
