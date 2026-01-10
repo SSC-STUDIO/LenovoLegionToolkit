@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -7,8 +7,6 @@
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
 		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
 		<Copyright>© 2024 Bartosz Cichecki</Copyright>
-		<FileVersion>0.0.1</FileVersion>
-		<Version>0.0.1</Version>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -18,9 +16,6 @@
 		<PublishUrl>publish\</PublishUrl>
 		<IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
 		<RollForward>Major</RollForward>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
 	</PropertyGroup>
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -48,12 +43,21 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Automation\LenovoLegionToolkit.Lib.Automation.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
+		<ProjectReference Include="..\LenovoLegionToolkit.Plugins.SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+		<!-- Ensure native Shell build runs whenever WPF builds -->
+		<ProjectReference Include="..\ShellIntegration\Shell.Build.csproj" ReferenceOutputAssembly="false" OutputItemType="None" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\icon.ico" />
 		<None Remove="Assets\default_exe.png" />
 		<None Remove="Assets\Donate\paypal_logo.png" />
 		<None Remove="Assets\Donate\paypal_qr.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="tools\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\tools')">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>tools\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<Resource Include="Assets\default_exe.png" />
@@ -83,4 +87,88 @@
 	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
+	<Target Name="CopyNilesoftShellArtifacts" AfterTargets="Build">
+		<ItemGroup>
+			<!-- Prefer build/shellIntegration directory -->
+			<ShellArtifacts Include="$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.exe" Condition="Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.exe')" />
+			<ShellArtifacts Include="$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.dll" Condition="Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.dll')" />
+			<!-- Fallback to ShellIntegration source directories -->
+			<ShellArtifacts Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.exe" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.exe')" />
+			<ShellArtifacts Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.dll" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.dll')" />
+			<!-- Prefer build/shellIntegration/imports -->
+			<ShellImports Include="$(MSBuildProjectDirectory)\..\build\shellIntegration\imports\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\imports\')" />
+			<!-- Fallback to assets location; then legacy bin -->
+			<ShellImports Include="$(MSBuildProjectDirectory)\..\ShellIntegration\assets\imports\**\*.*" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\imports\') AND Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\imports\')" />
+			<ShellImports Include="$(MSBuildProjectDirectory)\..\ShellIntegration\bin\imports\**\*.*" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\imports\') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\imports\')" />
+			<!-- Prefer build/shellIntegration/shell.nss -->
+			<ShellConfig Include="$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.nss" Condition="Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.nss')" />
+			<!-- Fallback to assets location; then legacy bin -->
+			<ShellConfig Include="$(MSBuildProjectDirectory)\..\ShellIntegration\assets\shell.nss" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.nss') AND Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\shell.nss')" />
+			<ShellConfig Include="$(MSBuildProjectDirectory)\..\ShellIntegration\bin\shell.nss" Condition="!Exists('$(MSBuildProjectDirectory)\..\build\shellIntegration\shell.nss') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\shell.nss')" />
+		</ItemGroup>
+		<!-- Copy into app output -->
+		<Copy SourceFiles="@(ShellArtifacts)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+		<!-- Copy imports folder preserving structure -->
+		<Copy SourceFiles="@(ShellImports)" DestinationFiles="$(TargetDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" />
+		<!-- Copy shell.nss next to shell.exe -->
+		<Copy SourceFiles="@(ShellConfig)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+		<!-- Also copy into repo-level build/shellIntegration folder for convenience; avoid undefined SolutionDir -->
+		<PropertyGroup>
+			<RepoBuildDir>$(MSBuildProjectDirectory)\..\build\</RepoBuildDir>
+			<ShellIntegrationBuildDir>$(RepoBuildDir)shellIntegration\</ShellIntegrationBuildDir>
+		</PropertyGroup>
+		<MakeDir Directories="$(ShellIntegrationBuildDir)" />
+		<!-- Remove old shell files from build root if they exist (they should now be in shellIntegration/) -->
+		<Delete Files="$(RepoBuildDir)shell.exe" ContinueOnError="true" />
+		<Delete Files="$(RepoBuildDir)shell.dll" ContinueOnError="true" />
+		<Delete Files="$(RepoBuildDir)shell.nss" ContinueOnError="true" />
+		<!-- Remove old imports folder from build root if it exists -->
+		<RemoveDir Directories="$(RepoBuildDir)imports" ContinueOnError="true" />
+		<Copy SourceFiles="@(ShellArtifacts)" DestinationFolder="$(ShellIntegrationBuildDir)" SkipUnchangedFiles="true" />
+		<!-- Copy imports to repo-level build/shellIntegration folder preserving structure -->
+		<Copy SourceFiles="@(ShellImports)" DestinationFiles="$(ShellIntegrationBuildDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" />
+		<!-- Copy shell.nss to repo-level build/shellIntegration folder -->
+		<Copy SourceFiles="@(ShellConfig)" DestinationFolder="$(ShellIntegrationBuildDir)" SkipUnchangedFiles="true" />
+	</Target>
+	<Target Name="CopyToolsDirectory" AfterTargets="Build;Publish">
+		<PropertyGroup>
+			<!-- Use root-level tools directory -->
+			<ToolsSourceDir>$(MSBuildProjectDirectory)\..\tools</ToolsSourceDir>
+			<ToolsTargetDir>$(TargetDir)tools</ToolsTargetDir>
+			<RepoBuildDir>$(MSBuildProjectDirectory)\..\build\</RepoBuildDir>
+		</PropertyGroup>
+		
+		<!-- Check if tools directory exists -->
+		<PropertyGroup>
+			<ToolsDirExists>false</ToolsDirExists>
+			<ToolsDirExists Condition="Exists('$(ToolsSourceDir)')">true</ToolsDirExists>
+		</PropertyGroup>
+		
+		<!-- Collect all files from tools directory -->
+		<ItemGroup Condition="'$(ToolsDirExists)' == 'true'">
+			<ToolsFiles Include="$(ToolsSourceDir)\**\*.*" />
+		</ItemGroup>
+		
+		<!-- Copy to output directory -->
+		<Copy SourceFiles="@(ToolsFiles)" 
+		      DestinationFiles="$(ToolsTargetDir)%(RecursiveDir)%(Filename)%(Extension)" 
+		      SkipUnchangedFiles="true" 
+		      Condition="'$(ToolsDirExists)' == 'true'" />
+		
+		<!-- Also copy to repo-level build folder -->
+		<MakeDir Directories="$(RepoBuildDir)" Condition="'$(ToolsDirExists)' == 'true'" />
+		<Copy SourceFiles="@(ToolsFiles)" 
+		      DestinationFiles="$(RepoBuildDir)tools\%(RecursiveDir)%(Filename)%(Extension)" 
+		      SkipUnchangedFiles="true" 
+		      Condition="'$(ToolsDirExists)' == 'true'" />
+		
+		<!-- Log messages for debugging -->
+		<Message Text="[Tools] Source directory: $(ToolsSourceDir)" Importance="normal" />
+		<Message Text="[Tools] Target directory: $(ToolsTargetDir)" Importance="normal" />
+		<Message Text="[Tools] Repo build directory: $(RepoBuildDir)tools" Importance="normal" />
+		<Message Text="[Tools] Tools directory exists: $(ToolsDirExists)" Importance="normal" />
+		<Message Text="[Tools] Found @(ToolsFiles->Count()) files to copy" Importance="normal" Condition="'$(ToolsDirExists)' == 'true'" />
+		<Message Text="[Tools] Successfully copied tools directory from $(ToolsSourceDir) to $(ToolsTargetDir) and $(RepoBuildDir)tools" Importance="high" Condition="'$(ToolsDirExists)' == 'true'" />
+		<Message Text="[Tools] WARNING: Tools directory not found at $(ToolsSourceDir), skipping copy." Importance="high" Condition="'$(ToolsDirExists)' == 'false'" />
+	</Target>
 </Project>

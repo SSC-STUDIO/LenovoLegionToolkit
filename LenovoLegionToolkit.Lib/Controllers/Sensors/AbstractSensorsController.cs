@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -42,6 +42,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
+    // Sensor data cache, cache time is 100ms
+    private readonly object _cacheLock = new();
+    private SensorsData? _cachedSensorsData;
+    private DateTime _lastCacheUpdateTime = DateTime.MinValue;
+    private const int CACHE_EXPIRATION_MS = 100;
+
     public abstract Task<bool> IsSupportedAsync();
 
     public Task PrepareAsync()
@@ -53,10 +59,20 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<SensorsData> GetDataAsync()
     {
-        const int genericMaxUtilization = 100;
-        const int genericMaxTemperature = 100;
+        // Check if cache is valid, return cached data if it is
+        var now = DateTime.UtcNow;
+        lock (_cacheLock)
+        {
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
+            {
+                return _cachedSensorsData.Value;
+            }
+        }
 
-        var cpuUtilization = GetCpuUtilization(genericMaxUtilization);
+        const int GENERIC_MAX_UTILIZATION = 100;
+        const int GENERIC_MAX_TEMPERATURE = 100;
+
+        var cpuUtilization = GetCpuUtilization(GENERIC_MAX_UTILIZATION);
         var cpuMaxCoreClock = _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false);
         var cpuCoreClock = GetCpuCoreClock();
         var cpuCurrentTemperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
@@ -65,22 +81,22 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         var gpuInfo = await GetGPUInfoAsync().ConfigureAwait(false);
         var gpuCurrentTemperature = gpuInfo.Temperature >= 0 ? gpuInfo.Temperature : await GetGpuCurrentTemperatureAsync().ConfigureAwait(false);
-        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : genericMaxTemperature;
+        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
         var gpuCurrentFanSpeed = await GetGpuCurrentFanSpeedAsync().ConfigureAwait(false);
         var gpuMaxFanSpeed = _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false);
 
         var cpu = new SensorData(cpuUtilization,
-            genericMaxUtilization,
+            GENERIC_MAX_UTILIZATION,
             cpuCoreClock,
             cpuMaxCoreClock,
             -1,
             -1,
             cpuCurrentTemperature,
-            genericMaxTemperature,
+            GENERIC_MAX_TEMPERATURE,
             cpuCurrentFanSpeed,
             cpuMaxFanSpeed);
         var gpu = new SensorData(gpuInfo.Utilization,
-            genericMaxUtilization,
+            GENERIC_MAX_UTILIZATION,
             gpuInfo.CoreClock,
             gpuInfo.MaxCoreClock,
             gpuInfo.MemoryClock,
@@ -91,6 +107,13 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             gpuMaxFanSpeed);
         var result = new SensorsData(cpu, gpu);
 
+        // Update cache
+        lock (_cacheLock)
+        {
+            _cachedSensorsData = result;
+            _lastCacheUpdateTime = now;
+        }
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
 
@@ -99,9 +122,19 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()
     {
-        var cpuFanSpeed = await GetCpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        var gpuFanSpeed = await GetGpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        return (cpuFanSpeed, gpuFanSpeed);
+        // Check if cache is valid, get fan speeds from cache if it is
+        var now = DateTime.UtcNow;
+        lock (_cacheLock)
+        {
+            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
+            {
+                return (_cachedSensorsData.Value.CPU.FanSpeed, _cachedSensorsData.Value.GPU.FanSpeed);
+            }
+        }
+
+        // 缓存无效，重新获取数据
+        var data = await GetDataAsync().ConfigureAwait(false);
+        return (data.CPU.FanSpeed, data.GPU.FanSpeed);
     }
 
     protected abstract Task<int> GetCpuCurrentTemperatureAsync();

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 
 namespace LenovoLegionToolkit.Lib;
 
@@ -28,7 +29,13 @@ public class HttpClientFactory
                 handler.DefaultProxyCredentials = new NetworkCredential(_username, _password);
 
             if (_allowAllCerts)
-                handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                {
+                    // Only bypass certificate validation when explicitly allowed for proxy scenarios
+                    // When allowAllCerts is enabled in proxy scenarios, accept certificates despite errors
+                    // to handle self-signed or improperly configured proxy certificates
+                    return true;
+                };
         }
 
         return handler;

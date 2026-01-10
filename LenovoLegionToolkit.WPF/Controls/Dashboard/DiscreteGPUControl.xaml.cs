@@ -31,10 +31,15 @@ public partial class DiscreteGPUControl
     protected override async Task OnRefreshAsync()
     {
         if (!_gpuController.IsSupported())
-            throw new InvalidOperationException("Unsupported operation");
-
-        if (!IsVisible)
+        {
+            Visibility = Visibility.Collapsed;
+            _content.Visibility = Visibility.Hidden;
+            await _gpuController.StopAsync();
             return;
+        }
+
+        Visibility = Visibility.Visible;
+        _content.Visibility = Visibility.Visible;
 
         await _gpuController.StartAsync();
     }

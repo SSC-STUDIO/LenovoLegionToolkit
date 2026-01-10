@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Threading;
@@ -8,7 +8,7 @@ using LenovoLegionToolkit.Lib.Controllers;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
-public class SpectrumScreenCapture : SpectrumKeyboardBacklightController.IScreenCapture
+public class SpectrumScreenCapture : SpectrumKeyboardBacklightController.ISpectrumScreenCapture
 {
     private const PixelFormat PIXEL_FORMAT = PixelFormat.Format32bppRgb;
 

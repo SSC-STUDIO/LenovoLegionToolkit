@@ -172,6 +172,11 @@ GetWindowRect
 SetWindowsHookEx
 GetWindowThreadProcessId
 UnhookWindowsHookEx
+EnumWindows
+GetWindowText
+GetWindowTextLength
+IsWindowVisible
+GetWindowPlacement
 
 DisplayConfigGetDeviceInfo
 DisplayConfigSetDeviceInfo

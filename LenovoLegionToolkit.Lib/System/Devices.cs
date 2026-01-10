@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -229,12 +229,12 @@ public static class Devices
             if (_rgbKeyboard is not null && !forceRefresh)
                 return _rgbKeyboard;
 
-            const ushort vendorId = 0x048D;
-            const ushort productIdMasked = 0xC900;
-            const ushort productIdMask = 0xFF00;
-            const ushort descriptorLength = 0x21;
+            const ushort VENDOR_ID = 0x048D;
+            const ushort PRODUCT_ID_MASKED = 0xC900;
+            const ushort PRODUCT_ID_MASK = 0xFF00;
+            const ushort DESCRIPTOR_LENGTH = 0x21;
 
-            _rgbKeyboard = FindHidDevice(vendorId, productIdMask, productIdMasked, descriptorLength);
+            _rgbKeyboard = FindHidDevice(VENDOR_ID, PRODUCT_ID_MASK, PRODUCT_ID_MASKED, DESCRIPTOR_LENGTH);
         }
 
         return _rgbKeyboard;
@@ -250,12 +250,12 @@ public static class Devices
             if (_spectrumRgbKeyboard is not null && !forceRefresh)
                 return _spectrumRgbKeyboard;
 
-            const ushort vendorId = 0x048D;
-            const ushort productIdMasked = 0xC900;
-            const ushort productIdMask = 0xFF00;
-            const ushort descriptorLength = 0x03C0;
+            const ushort VENDOR_ID = 0x048D;
+            const ushort PRODUCT_ID_MASKED = 0xC900;
+            const ushort PRODUCT_ID_MASK = 0xFF00;
+            const ushort DESCRIPTOR_LENGTH = 0x03C0;
 
-            _spectrumRgbKeyboard = FindHidDevice(vendorId, productIdMask, productIdMasked, descriptorLength);
+            _spectrumRgbKeyboard = FindHidDevice(VENDOR_ID, PRODUCT_ID_MASK, PRODUCT_ID_MASKED, DESCRIPTOR_LENGTH);
         }
 
         return _spectrumRgbKeyboard;

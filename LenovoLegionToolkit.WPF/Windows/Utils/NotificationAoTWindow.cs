@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -43,9 +43,9 @@ public class NotificationAoTWindow : NativeLayeredWindow, INotificationWindow
 
         Size = new(_bitmap.Width, _bitmap.Height);
 
-        const int margin = 16;
-        var marginX = margin * multiplierX;
-        var marginY = margin * multiplierY;
+        const int MARGIN = 16;
+        var marginX = MARGIN * multiplierX;
+        var marginY = MARGIN * multiplierY;
 
         double left = 0;
         double top = 0;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -28,9 +29,40 @@ public class PowerModeFeature(
     public override async Task<PowerModeState[]> GetAllStatesAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        return mi.Properties.SupportsGodMode
-            ? [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.GodMode]
-            : [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance];
+        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+
+        var result = new List<PowerModeState>();
+
+        // Only include power modes for supported Legion machines
+        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
+        // to ensure consistency between advertised states and actually supported states
+        if (!isSupportedLegionMachine)
+            return [.. result];
+
+        // For backward compatibility, when SupportedPowerModes is null, include Quiet, Balance, and Performance
+        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
+        if (mi.SupportedPowerModes is null)
+        {
+            result.Add(PowerModeState.Quiet);
+            result.Add(PowerModeState.Balance);
+            result.Add(PowerModeState.Performance);
+        }
+        else
+        {
+            // When SupportedPowerModes is specified, only include modes that are explicitly supported
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Quiet))
+                result.Add(PowerModeState.Quiet);
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Balance))
+                result.Add(PowerModeState.Balance);
+            if (mi.SupportedPowerModes.Contains(PowerModeState.Performance))
+                result.Add(PowerModeState.Performance);
+        }
+
+        // GodMode requires explicit support check
+        if (mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+            result.Add(PowerModeState.GodMode);
+
+        return [.. result];
     }
 
     public override async Task SetStateAsync(PowerModeState state)

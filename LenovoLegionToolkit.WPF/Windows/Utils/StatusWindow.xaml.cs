@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -100,7 +100,7 @@ public partial class StatusWindow
 
         Loaded += StatusWindow_Loaded;
 
-        WindowStyle = WindowStyle.None;
+        WindowStyle = System.Windows.WindowStyle.None;
         WindowStartupLocation = WindowStartupLocation.Manual;
         WindowBackdropType = BackgroundType.None;
         ResizeMode = ResizeMode.NoResize;
@@ -141,7 +141,7 @@ public partial class StatusWindow
             return;
         }
 
-        const double offset = 8;
+        const double OFFSET = 8;
 
         var mousePoint = Control.MousePosition;
         var screenRectangle = Screen.FromPoint(mousePoint).WorkingArea;
@@ -149,15 +149,15 @@ public partial class StatusWindow
         var mouse = transform.Value.Transform(new Point(mousePoint.X, mousePoint.Y));
         var screen = transform.Value.Transform(new Vector(screenRectangle.Width, screenRectangle.Height));
 
-        if (mouse.X + offset + ActualWidth > screen.X)
-            Left = mouse.X - ActualWidth - offset;
+        if (mouse.X + OFFSET + ActualWidth > screen.X)
+            Left = mouse.X - ActualWidth - OFFSET;
         else
-            Left = mouse.X + offset;
+            Left = mouse.X + OFFSET;
 
-        if (mouse.Y + offset + ActualHeight > screen.Y)
-            Top = mouse.Y - ActualHeight - offset;
+        if (mouse.Y + OFFSET + ActualHeight > screen.Y)
+            Top = mouse.Y - ActualHeight - OFFSET;
         else
-            Top = mouse.Y + offset;
+            Top = mouse.Y + OFFSET;
     }
 
     private void RefreshPowerMode(PowerModeState? powerModeState, string? godModePresetName)

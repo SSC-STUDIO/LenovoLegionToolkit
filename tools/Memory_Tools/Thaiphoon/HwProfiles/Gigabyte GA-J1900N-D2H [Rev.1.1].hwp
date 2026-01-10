@@ -1,0 +1,11 @@
+"System Temperature",,$29,
+"DIMM Temperature",,$2D,
+"CPU VCore",,$20,"0,012"
+"CPU VAXG",,$24,"0,012"
+"DDR1.35VIO (DIMM Voltage)",,$26,"0,012"
+"VCC3 (+3.3V)",,$21,"0,012*1,649"
+"VCC (+5V)",,$23,"0,012*2,7"
++12V,,$22,"0,012*6"
+3VDUAL,,$25,"0,012*1,649"
+"3VSB (3V Standby)",,$27,"0,012*2"
+"3V Battery Voltage",,$28,"0,012*2"
