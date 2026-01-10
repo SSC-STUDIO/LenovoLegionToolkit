@@ -8,7 +8,9 @@ IF "%1"=="" (
 )
 pushd ShellIntegration\src
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-msbuild Shell.sln /p:Configuration=release /p:Platform=x64 /m
+msbuild dll\Shell.vcxproj /p:Configuration=release /p:Platform=x64 /m || exit /b
+msbuild exe\exe.vcxproj /p:Configuration=release /p:Platform=x64 /m || exit /b
+msbuild setup\ca\ca.vcxproj /p:Configuration=release /p:Platform=x64 /m || exit /b
 popd
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
