@@ -8,11 +8,11 @@ IF "%1"=="" (
 )
 pushd ShellIntegration
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-msbuild Shell.sln /p:Configuration=release /p:Platform=x64 /m
+msbuild src\Shell.sln /p:Configuration=release /p:Platform=x64 /m
 popd
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
-dotnet build .\ShellIntegration\Shell.Build.csproj -c Release || exit /b
+@REM Shell.Build.csproj no longer exists - ShellIntegration is now a git submodule with C++ projects
 dotnet publish LenovoLegionToolkit.WPF -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet publish LenovoLegionToolkit.SpectrumTester -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
