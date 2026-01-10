@@ -45,7 +45,8 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.Plugins.SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
 		<!-- Ensure native Shell build runs whenever WPF builds -->
-		<ProjectReference Include="..\ShellIntegration\Shell.Build.csproj" ReferenceOutputAssembly="false" OutputItemType="None" />
+		<!-- ShellIntegration is now a git submodule, Shell.Build.csproj may not exist -->
+		<!-- <ProjectReference Include="..\ShellIntegration\Shell.Build.csproj" ReferenceOutputAssembly="false" OutputItemType="None" Condition="Exists('..\ShellIntegration\Shell.Build.csproj')" /> -->
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\icon.ico" />
