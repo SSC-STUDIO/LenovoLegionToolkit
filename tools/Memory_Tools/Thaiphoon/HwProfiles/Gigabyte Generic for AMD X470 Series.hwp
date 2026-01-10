@@ -1,0 +1,26 @@
+"Ambient Temperature",,$29,,$2E
+"Chipset Temperature",,$2A,,$2E
+"CPU Temperature",,$2B,,$2E
+"PCIEX16 Temperature",,$2C,,$2E
+"SOC MOSFET Temperature",,$2D,,$2E
+TEMP5,,$2E,,$2E
+"CPU VCore",,$20,"0,012",$2E
+"VCC3 (+3,3V)",,$21,"0,012*1,649",$2E
++12V,,$22,"0,012*6",$2E
+"VCC (+5V)",,$23,"0,012*2,47",$2E
+"SOC VCore",,$24,"0,012",$2E
+"CPU A_VDDP",,$25,"0,012",$2E
+"VDDQ (DIMM Voltage)",,$26,"0,012",$2E
+VIN7,,$27,"0,012",$2E
+VIN8,,$28,"0,012",$2E
+"PCIEX8 or PCIEX16_2 Temperature",,$29,,$4E
+TEMP1,,$2A,,$4E
+TEMP2,,$2B,,$4E
+DDRVTT,,$20,"0,011",$4E
+"Chipset Core",,$21,"0,011",$4E
+"VIN2",,$22,"0,011",$4E
+"A_VDD1V8 (VDD18)",,$23,"0,011",$4E
+"Chipset Core 2.5V",,$24,"0,011",$4E
+"VIN5",,$25,"0,011",$4E
+VIN6,,$26,"0,011",$4E
+VIN7,,$27,"0,011",$4E

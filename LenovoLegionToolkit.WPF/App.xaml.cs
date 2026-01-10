@@ -1,4 +1,4 @@
-﻿#if !DEBUG
+#if !DEBUG
 using LenovoLegionToolkit.Lib.System;
 #endif
 using System;
@@ -24,6 +24,8 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Macro;
 using LenovoLegionToolkit.Lib.Services;
+using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI;
@@ -44,9 +46,17 @@ public partial class App
 {
     private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
+    private Task? _backgroundInitializationTask;
+    private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
+    private readonly object _shutdownLock = new();
+    private Task? _shutdownTask;
+    private bool _exitRequested;
+    private bool _shutdownInvoked;
+    private bool _inExitHandler;
 
     public new static App Current => (App)Application.Current;
 
@@ -69,6 +79,9 @@ public partial class App
 
         Log.Instance.IsTraceEnabled = flags.IsTraceEnabled;
 
+        // Ensure native shell logger writes to the same log file
+        Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
+
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 
         if (Log.Instance.IsTraceEnabled)
@@ -78,21 +91,93 @@ public partial class App
 
         await LocalizationHelper.SetLanguageAsync(true);
 
+        // Note: ApplicationSettings is created here before IoC initialization for compatibility check.
+        // This is safe because ApplicationSettings uses a shared storage mechanism, so changes will
+        // be reflected in the IoC-resolved instance later. However, we should use the IoC instance
+        // after initialization for consistency.
+        var applicationSettings = new ApplicationSettings();
+
         if (!flags.SkipCompatibilityCheck)
         {
             try
             {
-                if (!await CheckBasicCompatibilityAsync())
-                    return;
-                if (!await CheckCompatibilityAsync())
-                    return;
+                // Check compatibility - IsCompatibleAsync already includes basic compatibility check
+                var (isCompatible, mi) = await Compatibility.IsCompatibleAsync();
+
+                // If check fails, show the unsupported window only once
+                if (!isCompatible)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Incompatible system detected. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
+
+                    // Use the local instance for reading settings before IoC initialization
+                    var suppressWarning = applicationSettings.Store.DisableUnsupportedHardwareWarning;
+                    var shouldContinue = false;
+
+                    if (suppressWarning)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Compatibility warning suppressed via application settings.");
+
+                        shouldContinue = true;
+                    }
+                    else
+                    {
+                        var unsupportedWindow = new UnsupportedWindow(mi);
+                        unsupportedWindow.Show();
+
+                        shouldContinue = await unsupportedWindow.ShouldContinue;
+                    }
+
+                    if (shouldContinue)
+                    {
+                        Log.Instance.IsTraceEnabled = true;
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Compatibility check OVERRIDE. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString() ?? string.Empty}]");
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Shutting down... [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}]");
+
+                        Shutdown(202);
+                        return;
+                    }
+                }
             }
             catch (Exception ex)
             {
+                // Always log error details, regardless of trace flag
+                // Use Error level to ensure it's always written to log file
+                Log.Instance.Error($"Failed to check device compatibility: {ex.Message}", ex);
+                
+                // Log additional trace details if trace is enabled
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to check device compatibility", ex);
+                {
+                    Log.Instance.Trace($"Compatibility check exception details:", ex);
+                    if (ex.InnerException != null)
+                        Log.Instance.Trace($"Inner exception: {ex.InnerException.Message}", ex.InnerException);
+                    
+                    // Log stack trace for detailed debugging
+                    Log.Instance.Trace($"Stack trace: {ex.StackTrace}");
+                }
+                
+                // Force flush log entries to file immediately before showing error dialog
+                // This ensures error is written even if program exits soon after
+                try
+                {
+                    Log.Instance.Flush();
+                }
+                catch
+                {
+                    // Ignore flush errors - we still want to show the error dialog
+                }
 
-                MessageBox.Show(Resource.CompatibilityCheckError_Message, Resource.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                // Show modern error window with detailed information
+                var errorWindow = new Windows.Utils.CompatibilityCheckErrorWindow(ex);
+                errorWindow.ShowDialog();
+                
                 Shutdown(200);
                 return;
             }
@@ -102,7 +187,7 @@ public partial class App
             Log.Instance.Trace($"Starting... [version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString()}, os={Environment.OSVersion}, dotnet={Environment.Version}]");
 
         WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
-        RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+        RenderOptions.ProcessRenderMode = GetPreferredRenderMode();
 
         IoCContainer.Initialize(
             new Lib.IoCModule(),
@@ -125,24 +210,13 @@ public partial class App
 
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
-        await LogSoftwareStatusAsync();
-        await InitPowerModeFeatureAsync();
-        await InitBatteryFeatureAsync();
-        await InitRgbKeyboardControllerAsync();
-        await InitSpectrumKeyboardControllerAsync();
-        await InitGpuOverclockControllerAsync();
-        await InitHybridModeAsync();
-        await InitAutomationProcessorAsync();
-        InitMacroController();
+        // Initialize plugins
+        InitializePlugins();
+        
+        // Apply plugin-specific language settings after plugins are loaded
+        LocalizationHelper.SetPluginResourceCultures();
 
-        await IoCContainer.Resolve<AIController>().StartIfNeededAsync();
-        await IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync();
-        await IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync();
-        await IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync();
-
-#if !DEBUG
-        Autorun.Validate();
-#endif
+        StartBackgroundInitialization();
 
         var mainWindow = new MainWindow
         {
@@ -175,9 +249,195 @@ public partial class App
             Log.Instance.Trace($"Start up complete");
     }
 
+    private static RenderMode GetPreferredRenderMode()
+    {
+        try
+        {
+            // RenderCapability.Tier stores the rendering tier value in the upper 16 bits
+            // We need to right shift by 16 bits to extract the tier value (0-3)
+            // where 0 = no hardware acceleration, 1 = partial, 2+ = full hardware acceleration
+            var tier = RenderCapability.Tier >> 16;
+            return tier >= 2 ? RenderMode.Default : RenderMode.SoftwareOnly;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Falling back to software rendering.", ex);
+
+            return RenderMode.SoftwareOnly;
+        }
+    }
+
+    private static void InitializePlugins()
+    {
+        try
+        {
+            var pluginManager = IoCContainer.Resolve<IPluginManager>();
+            
+            // System Optimization and Tools are now default interfaces, not plugins
+            // They are registered directly in MainWindow.xaml as NavigationItems
+            // No need to register them as plugins
+
+            // Scan and load plugins from the plugins directory
+            // This will automatically discover and register external plugins
+            pluginManager.ScanAndLoadPlugins();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugins initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to initialize plugins.", ex);
+        }
+    }
+
+    private void StartBackgroundInitialization()
+    {
+        _backgroundInitializationCancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
+
+        var initializationSteps = new Func<Task>[]
+        {
+            LogSoftwareStatusAsync,
+            InitPowerModeFeatureAsync,
+            InitBatteryFeatureAsync,
+            InitRgbKeyboardControllerAsync,
+            InitSpectrumKeyboardControllerAsync,
+            InitGpuOverclockControllerAsync,
+            InitHybridModeAsync,
+            InitAutomationProcessorAsync
+        };
+
+        var serviceStartSteps = new Func<Task>[]
+        {
+            () => IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
+            () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
+            () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
+            () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
+        };
+
+        _backgroundInitializationTask = Task.Run(async () =>
+        {
+            try
+            {
+                // Check for cancellation before starting initialization steps
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Run initialization steps in parallel where possible to improve startup performance
+                var initializationTasks = initializationSteps.Select(step => Task.Run(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await step().ConfigureAwait(false);
+                })).ToArray();
+                await Task.WhenAll(initializationTasks).ConfigureAwait(false);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                InitMacroController();
+
+                // Run service start steps in parallel to improve startup performance
+                // Skip service starts if cancellation was requested to avoid race conditions during shutdown
+                var serviceStartTasks = serviceStartSteps.Select(step => Task.Run(async () =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await step().ConfigureAwait(false);
+                })).ToArray();
+                await Task.WhenAll(serviceStartTasks).ConfigureAwait(false);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+#if !DEBUG
+                Autorun.Validate();
+#endif
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization completed.");
+            }
+            catch (OperationCanceledException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization was cancelled.");
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization failed.", ex);
+
+                throw;
+            }
+        }, cancellationToken);
+    }
+
+    private async Task AwaitBackgroundInitializationAsync()
+    {
+        if (_backgroundInitializationTask is not { } task)
+            return;
+
+        if (!task.IsCompleted)
+        {
+            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS));
+            if (completedTask != task)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization still running, cancelling and proceeding with shutdown.");
+
+                // Cancel the background initialization task to prevent race conditions during shutdown
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+
+                try
+                {
+                    // Give the task a short time to respond to cancellation
+                    await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ignore exceptions during cancellation wait
+                }
+
+                return;
+            }
+        }
+
+        try
+        {
+            await task;
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when cancellation is requested
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization failed before shutdown completed.", ex);
+        }
+    }
+
     private void Application_Exit(object sender, ExitEventArgs e)
     {
-        _singleInstanceMutex?.Close();
+        try
+        {
+            // Mark that we're in the exit handler to prevent double Shutdown() call
+            // The flag is checked inside ShutdownAsync under lock, so we set it here under lock
+            // and ShutdownAsync will see it when it checks
+            lock (_shutdownLock)
+            {
+                _inExitHandler = true;
+            }
+
+            // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
+            ShutdownAsync(true).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutdown sequence encountered an error.", ex);
+        }
+        finally
+        {
+            Log.Instance.Shutdown();
+            _singleInstanceMutex?.Close();
+        }
     }
 
     public void RestartMainWindow()
@@ -196,81 +456,107 @@ public partial class App
         mainWindow.Show();
     }
 
-    public async Task ShutdownAsync()
+    // Optimized shutdown helper that stops services in parallel with unified error handling
+    private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
         {
-            if (IoCContainer.TryResolve<AIController>() is { } aiController)
-                await aiController.StopAsync();
-        }
-        catch {  /* Ignored. */ }
-
-        try
-        {
-            if (IoCContainer.TryResolve<RGBKeyboardBacklightController>() is { } rgbKeyboardBacklightController)
+            if (IoCContainer.TryResolve<T>() is { } service)
             {
-                if (await rgbKeyboardBacklightController.IsSupportedAsync())
-                    await rgbKeyboardBacklightController.SetLightControlOwnerAsync(false);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Stopping {serviceName}...");
+                await stopAction(service);
             }
         }
-        catch {  /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping {serviceName}.", ex);
+        }
+    }
 
+    // Service stop helper that verifies support before attempting to stop
+    private static async Task StopServiceWithSupportCheckAsync<T>(Func<T, Task<bool>> isSupportedAction, Func<T, Task> stopAction, string serviceName) where T : class
+    {
         try
         {
-            if (IoCContainer.TryResolve<SpectrumKeyboardBacklightController>() is { } spectrumKeyboardBacklightController)
+            if (IoCContainer.TryResolve<T>() is { } service)
             {
-                if (await spectrumKeyboardBacklightController.IsSupportedAsync())
-                    await spectrumKeyboardBacklightController.StopAuroraIfNeededAsync();
+                if (await isSupportedAction(service))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Stopping {serviceName}...");
+                    await stopAction(service);
+                }
             }
         }
-        catch {  /* Ignored. */ }
-
-        try
+        catch (Exception ex)
         {
-            if (IoCContainer.TryResolve<NativeWindowsMessageListener>() is { } nativeMessageWindowListener)
-            {
-                await nativeMessageWindowListener.StopAsync();
-            }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping {serviceName}.", ex);
         }
-        catch {  /* Ignored. */ }
+    }
 
-        try
+    public async Task ShutdownAsync(bool exitApplication = false)
+    {
+        Task shutdownTask;
+
+        lock (_shutdownLock)
         {
-            if (IoCContainer.TryResolve<SessionLockUnlockListener>() is { } sessionLockUnlockListener)
-            {
-                await sessionLockUnlockListener.StopAsync();
-            }
-        }
-        catch { /* Ignored. */ }
+            if (_shutdownTask is null)
+                _shutdownTask = PerformShutdownAsync();
 
-        try
+            if (exitApplication)
+                _exitRequested = true;
+
+            shutdownTask = _shutdownTask;
+        }
+
+        await shutdownTask;
+
+        bool shouldInvokeShutdown;
+
+        lock (_shutdownLock)
         {
-            if (IoCContainer.TryResolve<HWiNFOIntegration>() is { } hwinfoIntegration)
-            {
-                await hwinfoIntegration.StopAsync();
-            }
+            // Don't call Shutdown() if we're already in the Application_Exit handler
+            // as that would cause a double shutdown attempt
+            shouldInvokeShutdown = _exitRequested && !_shutdownInvoked && !_inExitHandler;
+            if (shouldInvokeShutdown)
+                _shutdownInvoked = true;
         }
-        catch { /* Ignored. */ }
 
-        try
+        if (shouldInvokeShutdown)
         {
-            if (IoCContainer.TryResolve<IpcServer>() is { } ipcServer)
-            {
-                await ipcServer.StopAsync();
-            }
+            if (Dispatcher.CheckAccess())
+                Shutdown();
+            else
+                await Dispatcher.InvokeAsync(Shutdown);
         }
-        catch { /* Ignored. */ }
+    }
 
-        try
-        {
-            if (IoCContainer.TryResolve<BatteryDischargeRateMonitorService>() is { } batteryDischargeMon)
-            {
-                await batteryDischargeMon.StopAsync();
-            }
-        }
-        catch { /* Ignored. */ }
+    private async Task PerformShutdownAsync()
+    {
+        await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
-        Shutdown();
+        // Stop all services in parallel to speed up shutdown
+        await Task.WhenAll(
+            StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
+            StopServiceWithSupportCheckAsync<RGBKeyboardBacklightController>(
+                controller => controller.IsSupportedAsync(),
+                controller => controller.SetLightControlOwnerAsync(false),
+                "RGB keyboard controller"
+            ),
+            StopServiceWithSupportCheckAsync<SpectrumKeyboardBacklightController>(
+                controller => controller.IsSupportedAsync(),
+                controller => controller.StopAuroraIfNeededAsync(),
+                "Spectrum keyboard controller"
+            ),
+            StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native windows message listener"),
+            StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
+            StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
+            StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
+            StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service")
+        ).ConfigureAwait(false);
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -299,50 +585,6 @@ public partial class App
         Shutdown(101);
     }
 
-    private async Task<bool> CheckBasicCompatibilityAsync()
-    {
-        var isCompatible = await Compatibility.CheckBasicCompatibilityAsync();
-        if (isCompatible)
-            return true;
-
-        MessageBox.Show(Resource.IncompatibleDevice_Message, Resource.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-
-        Shutdown(201);
-        return false;
-    }
-
-    private async Task<bool> CheckCompatibilityAsync()
-    {
-        var (isCompatible, mi) = await Compatibility.IsCompatibleAsync();
-        if (isCompatible)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Compatibility check passed. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
-            return true;
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Incompatible system detected. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, BIOS={mi.BiosVersion}]");
-
-        var unsupportedWindow = new UnsupportedWindow(mi);
-        unsupportedWindow.Show();
-
-        var result = await unsupportedWindow.ShouldContinue;
-        if (result)
-        {
-            Log.Instance.IsTraceEnabled = true;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Compatibility check OVERRIDE. [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}, version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString() ?? string.Empty}]");
-            return true;
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Shutting down... [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}]");
-
-        Shutdown(202);
-        return false;
-    }
 
     private void EnsureSingleInstance()
     {
@@ -380,7 +622,7 @@ public partial class App
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
 
-                        await ShutdownAsync();
+                        await ShutdownAsync(true);
                     }
                 });
             }
@@ -395,201 +637,195 @@ public partial class App
         if (!Log.Instance.IsTraceEnabled)
             return;
 
-        var vantageStatus = await IoCContainer.Resolve<VantageDisabler>().GetStatusAsync();
-        Log.Instance.Trace($"Vantage status: {vantageStatus}");
+        // Gather software statuses in parallel to improve efficiency
+        var statuses = await Task.WhenAll(
+            IoCContainer.Resolve<VantageDisabler>().GetStatusAsync(),
+            IoCContainer.Resolve<LegionZoneDisabler>().GetStatusAsync(),
+            IoCContainer.Resolve<FnKeysDisabler>().GetStatusAsync()
+        );
 
-        var legionZoneStatus = await IoCContainer.Resolve<LegionZoneDisabler>().GetStatusAsync();
-        Log.Instance.Trace($"LegionZone status: {legionZoneStatus}");
+        Log.Instance.Trace($"Vantage status: {statuses[0]}");
+        Log.Instance.Trace($"LegionZone status: {statuses[1]}");
+        Log.Instance.Trace($"FnKeys status: {statuses[2]}");
+    }
 
-        var fnKeysStatus = await IoCContainer.Resolve<FnKeysDisabler>().GetStatusAsync();
-        Log.Instance.Trace($"FnKeys status: {fnKeysStatus}");
+    // Generic async helper with error handling to reduce repetition
+    private static async Task RunWithErrorHandlingAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled && logOnSuccess)
+                Log.Instance.Trace($"Initializing {operationName}...");
+
+            await action();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't initialize {operationName}.", ex);
+        }
     }
 
     private static async Task InitHybridModeAsync()
     {
-        try
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Initializing hybrid mode...");
-
-            var feature = IoCContainer.Resolve<HybridModeFeature>();
-            await feature.EnsureDGPUEjectedIfNeededAsync();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't initialize hybrid mode.", ex);
-        }
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var feature = IoCContainer.Resolve<HybridModeFeature>();
+                await feature.EnsureDGPUEjectedIfNeededAsync();
+            },
+            "hybrid mode"
+        );
     }
 
     private static async Task InitAutomationProcessorAsync()
     {
-        try
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Initializing automation processor...");
-
-            var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
-            await automationProcessor.InitializeAsync();
-            automationProcessor.RunOnStartup();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't initialize automation processor.", ex);
-        }
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
+                await automationProcessor.InitializeAsync();
+                automationProcessor.RunOnStartup();
+            },
+            "automation processor"
+        );
     }
 
     private static async Task InitPowerModeFeatureAsync()
     {
-        try
-        {
-            var feature = IoCContainer.Resolve<PowerModeFeature>();
-            if (await feature.IsSupportedAsync())
+        await RunWithErrorHandlingAsync(
+            async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Ensuring god mode state is applied...");
+                var feature = IoCContainer.Resolve<PowerModeFeature>();
+                if (await feature.IsSupportedAsync())
+                {
+                    // Optimization: cache the support status to avoid multiple IsSupportedAsync calls
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Ensuring god mode state is applied...");
 
-                await feature.EnsureGodModeStateIsAppliedAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't ensure god mode state.", ex);
-        }
+                    await feature.EnsureGodModeStateIsAppliedAsync();
 
-        try
-        {
-            var feature = IoCContainer.Resolve<PowerModeFeature>();
-            if (await feature.IsSupportedAsync())
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Ensuring correct power plan is set...");
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Ensuring correct power plan is set...");
 
-                await feature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't ensure correct power plan.", ex);
-        }
+                    await feature.EnsureCorrectWindowsPowerSettingsAreSetAsync();
+                }
+            },
+            "power mode feature",
+            false // Skip success logging because detailed logs exist inside the helper methods
+        );
     }
 
     private static async Task InitBatteryFeatureAsync()
     {
-        try
-        {
-            var feature = IoCContainer.Resolve<BatteryFeature>();
-            if (await feature.IsSupportedAsync())
+        await RunWithErrorHandlingAsync(
+            async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Ensuring correct battery mode is set...");
+                var feature = IoCContainer.Resolve<BatteryFeature>();
+                if (await feature.IsSupportedAsync())
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Ensuring correct battery mode is set...");
 
-                await feature.EnsureCorrectBatteryModeIsSetAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't ensure correct battery mode.", ex);
-        }
+                    await feature.EnsureCorrectBatteryModeIsSetAsync();
+                }
+            },
+            "battery feature",
+            false
+        );
     }
 
     private static async Task InitRgbKeyboardControllerAsync()
     {
-        try
-        {
-            var controller = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-            if (await controller.IsSupportedAsync())
+        await RunWithErrorHandlingAsync(
+            async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Setting light control owner and restoring preset...");
-
-                await controller.SetLightControlOwnerAsync(true, true);
-            }
-            else
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"RGB keyboard is not supported.");
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't set light control owner or current preset.", ex);
-        }
-    }
-
-    private static async Task InitSpectrumKeyboardControllerAsync()
-    {
-        try
-        {
-            var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-            if (await controller.IsSupportedAsync())
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Starting Aurora if needed...");
-
-                var result = await controller.StartAuroraIfNeededAsync();
-                if (result)
+                var controller = IoCContainer.Resolve<RGBKeyboardBacklightController>();
+                if (await controller.IsSupportedAsync())
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Aurora started.");
+                        Log.Instance.Trace($"Setting light control owner and restoring preset...");
+
+                    await controller.SetLightControlOwnerAsync(true, true);
                 }
                 else
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Aurora not needed.");
+                        Log.Instance.Trace($"RGB keyboard is not supported.");
                 }
-            }
-            else
+            },
+            "RGB keyboard controller",
+            false
+        );
+    }
+
+    // Optimized initialization routine for the Spectrum keyboard controller
+    private static async Task InitSpectrumKeyboardControllerAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Spectrum keyboard is not supported.");
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't start Aurora if needed.", ex);
-        }
+                var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
+                if (await controller.IsSupportedAsync())
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Starting Aurora if needed...");
+
+                    var result = await controller.StartAuroraIfNeededAsync();
+                    if (result)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Aurora started.");
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Aurora not needed.");
+                    }
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Spectrum keyboard is not supported.");
+                }
+            },
+            "Spectrum keyboard controller",
+            false
+        );
     }
 
     private static async Task InitGpuOverclockControllerAsync()
     {
-        try
-        {
-            var controller = IoCContainer.Resolve<GPUOverclockController>();
-            if (await controller.IsSupportedAsync())
+        await RunWithErrorHandlingAsync(
+            async () =>
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Ensuring GPU overclock is applied...");
-
-                var result = await controller.EnsureOverclockIsAppliedAsync();
-                if (result)
+                var controller = IoCContainer.Resolve<GPUOverclockController>();
+                if (await controller.IsSupportedAsync())
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"GPU overclock applied.");
+                        Log.Instance.Trace($"Ensuring GPU overclock is applied...");
+
+                    var result = await controller.EnsureOverclockIsAppliedAsync();
+                    if (result)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"GPU overclock applied.");
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"GPU overclock not needed.");
+                    }
                 }
                 else
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"GPU overclock not needed.");
+                        Log.Instance.Trace($"GPU overclock is not supported.");
                 }
-            }
-            else
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"GPU overclock is not supported.");
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't overclock GPU.", ex);
-        }
+            },
+            "GPU overclock controller",
+            false
+        );
     }
 
     private static void InitMacroController()

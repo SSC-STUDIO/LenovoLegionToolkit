@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using LenovoLegionToolkit.Lib.Resources;
 
@@ -393,7 +393,10 @@ public enum RebootType
     Delayed = 5
 }
 
-public enum RGBKeyboardBacklightChanged;
+public enum RGBKeyboardBacklightChanged
+{
+    None
+};
 
 public enum RGBKeyboardBacklightBrightness
 {
@@ -588,6 +591,14 @@ public enum AccentColorSource
     Custom
 }
 
+public enum WindowBackdropStyle
+{
+    [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_Windows")]
+    Windows,
+    [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_macOS")]
+    macOS
+}
+
 public enum TemperatureUnit
 {
     C,
@@ -662,4 +673,7 @@ public enum WinKeyState
     On
 }
 
-public enum WinKeyChanged;
+public enum WinKeyChanged
+{
+    None
+};

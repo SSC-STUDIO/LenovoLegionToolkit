@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using NeoSmart.AsyncLock;
 
@@ -10,8 +10,12 @@ public class ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
 
     private DateTime _lastEvent = DateTime.MinValue;
 
+    public TimeSpan Interval => interval;
+
     public async Task DispatchAsync(Func<Task> task)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
         using (await _lock.LockAsync().ConfigureAwait(false))
         {
             var diff = DateTime.UtcNow - _lastEvent;
@@ -30,6 +34,14 @@ public class ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
             await task().ConfigureAwait(false);
 
             _lastEvent = DateTime.UtcNow;
+        }
+    }
+
+    public async Task ResetAsync()
+    {
+        using (await _lock.LockAsync().ConfigureAwait(false))
+        {
+            _lastEvent = DateTime.MinValue;
         }
     }
 }

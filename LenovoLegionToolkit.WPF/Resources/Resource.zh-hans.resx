@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -181,7 +181,7 @@
     <value>启用自动化</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>当前没有自动化脚本，请点击 “新建” 来新建一项。</value>
+    <value>当前没有自动化脚本，请点击 "新建" 来新建一项。</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
     <value>启用自动化后，当设备的状态发生改变时，本应用将会按顺序检查各项自动化是否符合条件后，执行相关操作。</value>
@@ -196,7 +196,7 @@
     <value>新建</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>没有快捷操作，请点击 “新建” 来新建快捷操作。</value>
+    <value>没有快捷操作，请点击 "新建" 来新建快捷操作。</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
     <value>你可以在系统托盘中本应用的右键菜单里使用快捷操作。</value>
@@ -543,6 +543,9 @@
   <data name="DonatePage_Title" xml:space="preserve">
     <value>赞助</value>
   </data>
+  <data name="DonatePage_CanBeHidden_Message" xml:space="preserve">
+    <value>提示：您可以在设置中关闭"显示赞助按钮"来隐藏导航菜单中的赞助按钮。</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>编辑</value>
   </data>
@@ -740,6 +743,36 @@
   <data name="IncompatibleDevice_Message" xml:space="preserve">
     <value>此设备可能与拯救者工具箱不兼容。</value>
   </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>您的设备可能缺少必要的系统组件（LenovoGameZoneData）。</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>如果点击"确定"继续：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- 软件将以受限模式运行</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- 部分功能将被禁用（仪表板、自动化、宏）</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- 其他基本功能仍可使用</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>设备信息：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>制造商:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>型号:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>设备类型:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>点击"确定"继续，或"取消"退出。</value>
+  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>未发现兼容的键盘</value>
   </data>
@@ -771,10 +804,58 @@
     <value>键盘</value>
   </data>
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>驱动下载</value>
+    <value>驱动更新</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>系统优化</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>插件扩展</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>导航项设置</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>配置侧边栏中显示哪些导航项。仪表盘和设置将始终显示。</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏键盘导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏电池导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏自动化导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏宏导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏系统优化导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏工具箱导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏插件扩展导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏捐赠导航项</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>显示或隐藏关于导航项</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>导航项</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>配置侧边栏中显示哪些导航项</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
     <value>新版本可用！</value>
@@ -940,6 +1021,21 @@
   <data name="PackageControl_Version" xml:space="preserve">
     <value>版本</value>
   </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>安装失败</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>文件未找到，请先下载</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>安装已启动</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>正在启动安装程序: {0}</value>
+  </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
     <value>下面是根据你的电脑型号获取的软件列表，
 请确保你安装的软件对应型号与版本正确。
@@ -991,7 +1087,7 @@
     <value>来源</value>
   </data>
   <data name="PackagesPage_Title" xml:space="preserve">
-    <value>驱动下载</value>
+    <value>驱动更新</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>粘贴</value>
@@ -1020,6 +1116,21 @@
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
     <value>Windows 电源计划</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>正在扫描可用驱动包，请稍候...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>网络出问题了，正在自动重试...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>正在重新获取驱动包...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>清理信息</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>查看清理操作的进度和估算大小。</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>调节键盘背光预设</value>
@@ -1212,6 +1323,24 @@
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
     <value>关闭时最小化</value>
   </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>隐藏启动时弹出的不兼容设备提示。</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>不再提示不兼容设备</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Message" xml:space="preserve">
+    <value>显示或隐藏导航菜单中的赞助按钮。</value>
+  </data>
+  <data name="SettingsPage_ShowDonateButton_Title" xml:space="preserve">
+    <value>显示赞助按钮</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
+    <value>启用扩展</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
+    <value>启用扩展系统以在工具箱页面中访问插件市场。</value>
+  </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>选择显示哪些通知弹窗。</value>
   </data>
@@ -1393,6 +1522,9 @@
   <data name="UnsupportedWindow_Message" xml:space="preserve">
     <value>Lenovo Legion Toolkit 尚未在您的设备上经过测试。</value>
   </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>您可以随时在"设置"页面关闭此提示。</value>
+  </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
     <value>设备型号</value>
   </data>
@@ -1560,6 +1692,54 @@
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
     <value>需要重启以更新</value>
   </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>推荐</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>下载中</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>安装中</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>未找到操作定义</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>此操作的技术实现细节不可用</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>加载失败</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>命令执行</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>注册表修改</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>服务管理</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>注册表修改 + PowerShell脚本</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>注册表清理</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM命令</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve">
+    <value>shell.exe 未找到</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve">
+    <value>配置文件路径: 未找到</value>
+  </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>保存并关闭</value>
   </data>
@@ -1694,7 +1874,7 @@
     <value>检测到 S0 低功耗空闲模型</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>检测到本设备支持新式待机（Modern Standby）。使用 “平衡” 以外的电源计划可能会导致意外问题。</value>
+    <value>检测到本设备支持新式待机（Modern Standby）。使用 "平衡" 以外的电源计划可能会导致意外问题。</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
     <value>选择在电源模式改变时应用的 Windows 电源计划。</value>
@@ -2078,7 +2258,31 @@
     <value>选择在电源模式改变时应用的 Windows 电源计划。</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
-    <value>获取硬件信息时遇到错误。</value>
+    <value>读取设备信息时发生错误。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>兼容性检查错误</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>应用程序在启动时无法读取设备信息。请查看下面的错误详情，如需要可尝试故障排除步骤。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>故障排除步骤</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>确保 Windows Management Instrumentation (WMI) 服务正在运行：打开服务 (services.msc) 并检查"Windows Management Instrumentation"是否正在运行。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>以管理员身份运行应用程序，以确保有足够的权限访问系统注册表和 WMI。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>检查系统资源：关闭其他占用资源的应用程序，然后重试。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>通过点击下面的"打开日志文件"按钮查看日志文件以获取详细的错误信息。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>打开日志文件</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>自定义宏</value>
@@ -2258,4 +2462,1034 @@
     <value>始终将通知显示在顶部。
 这不会影响其他全屏窗口，但您将无法点击这些通知。</value>
   </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>系统优化</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>应用推荐的性能调优并清理临时文件。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>应用性能与服务优化</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>已完成性能优化。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>无法完成性能优化。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>执行清理</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>清理完成。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>清理失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>这些操作将修改系统服务和文件，可能需要管理员权限。双击子项目可以打开对应的设置窗口或查看技术实现细节。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>应用所选操作</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>选择推荐项</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>清除选择</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>执行清理操作</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} 个项目已选择</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>尚未选择任何项目。</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>已选中的项目</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>垃圾清理</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>系统优美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>系统美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>驱动更新</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>扩展</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>安装和管理扩展以扩展功能</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>即将推出</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>扩展市场将在未来的更新中提供。</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>自定义清理规则</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>选择在清理时需要处理的文件夹以及文件后缀。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>添加规则</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>尚未配置自定义清理规则。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>包含子文件夹</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX 管理</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>选择需要为所有用户卸载的预装微软商店应用。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>未选择任何要卸载的应用。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>卸载所选应用</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>所选应用已安排卸载。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>卸载所选应用失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>操作列表</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>自定义清理规则</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>文件后缀</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>多个后缀请用逗号分隔（示例：tmp, log, bak）</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>包含子文件夹</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>浏览…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>请选择一个文件夹。</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>请至少输入一个文件后缀。</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>请至少选择一个操作。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>所选操作已完成。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>无法完成所选操作。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>系统美化</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>替换部分和更改系统UI样式。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>资源管理器与界面</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>调整任务栏、资源管理器及界面体验。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>性能优化</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>修改系统性能与响应相关设置。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>系统服务</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>禁用占用资源的后台服务。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>网络加速</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>优化网络设置以提升网络速度和响应性能。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>垃圾清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>删除缓存、临时文件与其他残留。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>缓存清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>清理各种应用程序和系统的缓存文件，释放存储空间。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>系统文件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>清理临时文件、日志、崩溃转储等系统文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>系统组件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>清理 Windows 更新缓存、组件存储等系统组件文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>性能清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>清理可能影响系统性能的文件，如预取文件等。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>自定义清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>使用自定义规则清理指定的文件和目录。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>任务栏与开始菜单布局</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>隐藏搜索框和任务视图按钮、禁用任务栏分组并始终显示托盘图标。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>禁用开始菜单并让Win键打开搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>完全禁用开始菜单。当您按下Win键时，将打开搜索而不是开始菜单。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>提升资源管理器响应速度</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>减少菜单延迟、更快关闭无响应程序并默认打开"此电脑"。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>文件可见性设置</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>在资源管理器中显示文件扩展名和隐藏文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>禁用资源管理器推荐内容</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>关闭云端内容推荐与提示横幅。</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>将 Windows 键改为打开搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>修改 Windows 键行为，使其打开搜索而不是开始菜单。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>优化多媒体调度</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>移除网络限速并降低系统响应延迟。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>改进内存管理</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>保持系统缓存驻留内存并避免分页内核驱动。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>禁用 Acrylic 与通知中心</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>移除登录界面的 Acrylic 效果并隐藏通知中心。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>减少遥测与提示</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>禁用广告 ID、聚焦内容和自动建议。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
+    <value>TCP/IP 和 DNS 优化</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
+    <value>优化 TCP/IP 参数和 DNS 缓存设置，提升网络连接速度和响应性能。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
+    <value>重置网络配置</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
+    <value>刷新 DNS 缓存并重置 Winsock 和 TCP/IP 协议栈配置，修复网络连接问题。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>强制使用高性能电源计划</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>启用高性能电源模式并关闭休眠。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>禁用诊断相关服务</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>停止并禁用体验改善、诊断中心与传递优化服务。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>禁用 SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>关闭 Superfetch/SysMain，减少后台磁盘占用。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>禁用 Windows 搜索索引</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>停止 Windows Search 服务以防止更新索引。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>禁用远程注册表</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>通过禁用远程注册表访问来提升安全性。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>禁用错误报告</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>停止 Windows 错误报告，防止收集并上传崩溃数据。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>清理远程桌面缓存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>删除远程桌面客户端生成的缓存文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>清理 Windows 更新缓存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>删除已下载的更新文件和传递优化缓存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>清理浏览器缓存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>移除 IE / Edge 的缓存和 Cookie 文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>清理缩略图缓存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>删除资源管理器缩略图数据库与 D3D 着色器缓存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>清理 .NET 本地镜像</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>删除缓存的 .NET Native 镜像以释放磁盘空间。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>删除日志与诊断数据</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>清理 Windows 日志、错误报告与诊断跟踪。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>删除崩溃转储</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>移除系统崩溃后生成的内存转储文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>清理 Defender 扫描记录</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>删除 Windows Defender 的扫描历史和缓存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>清理临时文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>清空 Windows 及用户临时目录。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>卸载捆绑的 Windows 应用</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+
+    <value>为所有用户卸载部分预装 UWP 应用程序。</value>
+
+  </data>
+
+  <data name="WindowsOptimization_Category_CleanupAppx_Title" xml:space="preserve">
+
+    <value>Appx软件包</value>
+
+  </data>
+
+  <data name="WindowsOptimization_Category_CleanupAppx_Description" xml:space="preserve">
+
+    <value>卸载选中的Appx软件包（预装软件）。</value>
+
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>清空回收站</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>删除回收站中的文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>清理预读取数据</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>删除 Windows 预读取数据以生成新的跟踪。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>清理自定义文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>删除在选定文件夹中符合配置后缀的文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>维护组件存储</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>运行 DISM 清理并删除 WinSxS 临时文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>已选择 {0}/{1} 个操作</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>推荐</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>全部暂停</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
+    <value>实现方式和效果原理</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve">
+    <value>实现类型：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+    <value>COM组件注册 + 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
+    <value>通过注册Nilesoft Shell作为Windows上下文菜单的COM处理程序，拦截系统右键菜单的创建和显示。当用户右键点击文件或文件夹时，Shell会读取shell.nss配置文件并应用自定义的主题、透明度、圆角和阴影等样式设置，实现美化的右键菜单效果。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
+    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
+    <value>Configuration File Not Found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
+    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
+    <value>Settings Applied</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
+    <value>Failed to apply settings: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
+    <value>1. COM Component Registration:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
+    <value>   shell.exe -register -treat -restart</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
+    <value>   Path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
+    <value>2. Configuration File (shell.nss):</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
+    <value>   Configuration file path: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
+    <value>   Uses CSS-like syntax to define menu styles</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
+    <value>3. Configuration File Format Example:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
+    <value>   theme
+   {
+       background-color: #2d2d2d;
+       text-color: #ffffff;
+       corner-radius: 5px;
+       shadow: true;
+       transparency: true;
+   }</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
+    <value>4. Working Principle:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
+    <value>   - Shell.dll is registered as a COM component in the system</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
+    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
+    <value>   - Reads shell.nss configuration file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
+    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
+    <value>   - Renders the beautified context menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
+    <value>5. Effect Description:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
+    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
+    <value>   - Transparency: Enables menu background transparency effect</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
+    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
+    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>操作详情</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>技术实现细节</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>实现类型：</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>预计可清理大小: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>正在估算中…</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>正在执行：{0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>正在卸载所选应用…</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>展开全部</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>折叠全部</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>菜单样式设置</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>自动（跟随系统主题）</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>经典</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>现代</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>启用透明效果</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>圆角</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>阴影</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>选择右键菜单的主题。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>为右键菜单启用透明效果。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>自定义右键菜单的外观。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>未找到 Shell.exe。请确保已安装 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>未找到配置文件。请确保已安装 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>启用经典菜单失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>恢复默认菜单失败。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>应用样式设置失败。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>切换到现代菜单</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>应用经典样式并重启资源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>切换到默认右键菜单</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>恢复默认样式并重启资源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>应用新式右键菜单</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>替换系统自带默认右键菜单，效果更好。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
+    <value>正在删除: {0}</value>
+  </data>
+  <data name="ToolsPage_Title" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="ToolsPage_Description" xml:space="preserve">
+    <value>启动系统工具和实用程序</value>
+  </data>
+  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
+    <value>CPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
+    <value>显示工具</value>
+  </data>
+  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
+    <value>游戏工具</value>
+  </data>
+  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
+    <value>GPU工具</value>
+  </data>
+  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
+    <value>内存工具</value>
+  </data>
+  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
+    <value>其他工具</value>
+  </data>
+  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
+    <value>外设工具</value>
+  </data>
+  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
+    <value>存储工具</value>
+  </data>
+  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
+    <value>压力测试工具</value>
+  </data>
+  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
+    <value>系统诊断工具</value>
+  </data>
+  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
+    <value>硬件工具</value>
+  </data>
+  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
+    <value>系统工具</value>
+  </data>
+  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
+    <value>快捷工具</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_OpenFileLocation" xml:space="preserve">
+    <value>打开文件位置</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_CopyPath" xml:space="preserve">
+    <value>复制路径</value>
+  </data>
+  <data name="ToolsPage_ContextMenu_OpenToolsDirectory" xml:space="preserve">
+    <value>打开工具目录</value>
+  </data>
+  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
+    <value>启动工具失败</value>
+  </data>
+  <data name="ToolsPage_Empty" xml:space="preserve">
+    <value>当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>电池最大充电容量。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>电池健康</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>电池充电（+）或放电（-）的最大速率。</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>最大充放电功率</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>电池充电（+）或放电（-）的最小速率。</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>最小充放电功率</value>
+  </data>
+
+  <data name="Compact" xml:space="preserve">
+    <value>紧凑视图</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>系统美化</value>
+  </data>
+
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>最大充放电功率</value>
+  </data>
+
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>最小充放电功率</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>调整 Windows 透明度效果。</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>视觉效果</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>启用透明度效果</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>禁用经典菜单</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>启用经典菜单</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>安装</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>打开样式设置</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>恢复默认</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>状态：经典菜单已安装并启用</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>状态：已安装但未启用</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>状态：经典菜单未安装</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>在默认和经典右键菜单样式之间切换。</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>右键菜单样式</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>自定义 Windows 外观，包括右键菜单样式。</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows 美化</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>加载失败：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>正在加载应用，请稍候...</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>发布者：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>安装 shell 失败。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>卸载 shell 失败。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>已释放 {0}，用时 {1} 秒</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>清理常见的用户注册表历史记录（运行 MRU、最近文档、打开/保存对话框、已输入路径）。这不会删除系统关键条目。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>注册表 MRU/历史记录清理</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>系统美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>正在执行 {0}%</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>操作已取消</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>错误详情: {0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>显示隐藏的下载</value>
+  </data>
+
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>显示隐藏的下载</value>
+  </data>
+
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>选择语言</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>未连接</value>
+  </data>
+
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>同步区域</value>
+  </data>
+  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
+    <value>工具将在工具目录中可用后显示在此处。</value>
+  </data>
+  <data name="ToolsPage_Launch_Button" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="ToolsPage_Details_Version" xml:space="preserve">
+    <value>版本: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Author" xml:space="preserve">
+    <value>作者: {0}</value>
+  </data>
+  <data name="ToolsPage_Details_Path" xml:space="preserve">
+    <value>路径: {0}</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>使用 Windows 内置的注册表清理功能</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (刷新DNS缓存)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (重置Winsock协议栈)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (重置TCP/IP协议栈)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>插件扩展</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>安装和管理插件以扩展功能</value>
+  </data>
+
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>无法卸载</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>插件设置</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>插件名称</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>插件描述</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>此插件没有可配置的设置。</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>未找到插件: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>作者: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>插件配置界面格式不正确。</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>加载插件设置时出错: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>搜索插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>未安装</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>没有可用的插件</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>插件商城目前为空，敬请期待未来的插件更新</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>语言：</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>使用应用默认语言</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>找到 {0} 个插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>插件安装成功</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功安装</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>安装失败</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>无法安装插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>插件卸载成功</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>卸载失败</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>无法卸载插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>打开失败</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>无法打开插件设置: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>请先安装插件</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>插件需要先安装才能使用</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>无法打开插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>最低兼容版本: {0}</value>
+  </data>
+
 </root>

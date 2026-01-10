@@ -1,4 +1,4 @@
-﻿<wpfui:UiPage
+<wpfui:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,7 +12,6 @@
     Scrollable="True">
 
     <StackPanel Margin="0,0,16,12">
-
         <TextBlock
             Margin="0,16,0,24"
             AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
@@ -108,7 +107,7 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
-        <custom:CardControl Margin="0,0,0,24">
+        <custom:CardControl Margin="0,0,0,8">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Message}" />
             </custom:CardControl.Header>
@@ -117,6 +116,21 @@
                 Margin="0,0,0,8"
                 AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Title}"
                 Click="MinimizeOnCloseToggle_Click"
+                Visibility="Hidden" />
+        </custom:CardControl>
+
+        <custom:CardControl
+            x:Name="_disableCompatibilityWarningCard"
+            Margin="0,0,0,8"
+            Visibility="Collapsed">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Message}" />
+            </custom:CardControl.Header>
+            <wpfui:ToggleSwitch
+                x:Name="_disableCompatibilityWarningToggle"
+                Margin="0,0,0,8"
+                AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}"
+                Click="DisableCompatibilityWarningToggle_Click"
                 Visibility="Hidden" />
         </custom:CardControl>
 
@@ -144,7 +158,7 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
-        <custom:CardControl x:Name="_fnKeysCard" Margin="0,0,0,24">
+        <custom:CardControl x:Name="_fnKeysCard" Margin="0,0,0,8">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Message}" />
             </custom:CardControl.Header>
@@ -155,6 +169,17 @@
                 Click="FnKeysToggle_Click"
                 Visibility="Hidden" />
         </custom:CardControl>
+
+        <custom:CardAction
+            x:Name="_navigationItemsSettingsCard"
+            Margin="0,0,0,24"
+            Click="NavigationItemsSettingsCard_Click">
+            <custom:CardAction.Content>
+                <controls:CardHeaderControl 
+                    Title="{x:Static resources:Resource.SettingsPage_NavigationItems_Title}" 
+                    Subtitle="{x:Static resources:Resource.SettingsPage_NavigationItems_Message}" />
+            </custom:CardAction.Content>
+        </custom:CardAction>
 
         <custom:CardControl Margin="0,0,0,8">
             <custom:CardControl.Header>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -16,6 +16,8 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI;
+using LenovoLegionToolkit.WPF.Controls;
+using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
@@ -95,6 +97,19 @@ public partial class SettingsPage
         _autorunComboBox.SetItems(Enum.GetValues<AutorunState>(), Autorun.State, t => t.GetDisplayName());
         _minimizeToTrayToggle.IsChecked = _settings.Store.MinimizeToTray;
         _minimizeOnCloseToggle.IsChecked = _settings.Store.MinimizeOnClose;
+        
+        // Only show compatibility warning setting on incompatible devices
+        var (isCompatible, _) = await Compatibility.IsCompatibleAsync();
+        if (!isCompatible)
+        {
+            _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
+        _disableCompatibilityWarningToggle.IsChecked = _settings.Store.DisableUnsupportedHardwareWarning;
+        }
+        else
+        {
+            _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
+        }
+        
 
         var vantageStatus = await _vantageDisabler.GetStatusAsync();
         _vantageCard.Visibility = vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
@@ -177,6 +192,10 @@ public partial class SettingsPage
         _autorunComboBox.Visibility = Visibility.Visible;
         _minimizeToTrayToggle.Visibility = Visibility.Visible;
         _minimizeOnCloseToggle.Visibility = Visibility.Visible;
+        if (_disableCompatibilityWarningCard.Visibility == Visibility.Visible)
+        {
+        _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
+        }
         _vantageToggle.Visibility = Visibility.Visible;
         _legionZoneToggle.Visibility = Visibility.Visible;
         _fnKeysToggle.Visibility = Visibility.Visible;
@@ -229,6 +248,7 @@ public partial class SettingsPage
 
         _themeManager.Apply();
     }
+
 
     private void AccentColorPicker_Changed(object sender, EventArgs e)
     {
@@ -330,6 +350,19 @@ public partial class SettingsPage
             return;
 
         _settings.Store.MinimizeOnClose = state.Value;
+        _settings.SynchronizeStore();
+    }
+
+    private void DisableCompatibilityWarningToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var state = _disableCompatibilityWarningToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _settings.Store.DisableUnsupportedHardwareWarning = state.Value;
         _settings.SynchronizeStore();
     }
 
@@ -549,6 +582,15 @@ public partial class SettingsPage
         window.ShowDialog();
     }
 
+    private void NavigationItemsSettingsCard_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var window = new NavigationItemsSettingsWindow { Owner = Window.GetWindow(this) };
+        window.ShowDialog();
+    }
+
     private void SynchronizeBrightnessToAllPowerPlansToggle_Click(object sender, RoutedEventArgs e)
     {
         if (_isRefreshing)
@@ -694,4 +736,5 @@ public partial class SettingsPage
 
         SystemPath.SetCLI(_cliPathToggle.IsChecked ?? false);
     }
+
 }

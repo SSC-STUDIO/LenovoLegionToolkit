@@ -1,0 +1,88 @@
+<wpfui:UiPage
+    x:Class="LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Scrollable="False">
+    <StackPanel Margin="0,0,0,16">
+        <!-- Connection Timeout -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="连接超时（秒）"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:NumberBox
+                Grid.Column="1"
+                x:Name="_connectionTimeoutNumberBox"
+                Minimum="5"
+                Maximum="300"
+                ValueChanged="ConnectionTimeoutNumberBox_ValueChanged" />
+        </Grid>
+        <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            TextWrapping="Wrap"
+            LineHeight="18"
+            Margin="0,0,0,20"
+            Text="设置网络请求的超时时间，单位为秒" />
+        
+        <!-- Proxy Address -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="代理地址"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:TextBox
+                Grid.Column="1"
+                x:Name="_proxyAddressTextBox"
+                PlaceholderText="例如: 127.0.0.1"
+                TextChanged="ProxyAddressTextBox_TextChanged" />
+        </Grid>
+        
+        <!-- Proxy Port -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="代理端口"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:NumberBox
+                Grid.Column="1"
+                x:Name="_proxyPortNumberBox"
+                Minimum="1024"
+                Maximum="65535"
+                ValueChanged="ProxyPortNumberBox_ValueChanged" />
+        </Grid>
+        <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            TextWrapping="Wrap"
+            LineHeight="18"
+            Text="配置代理服务器地址和端口，用于网络加速服务" />
+    </StackPanel>
+</wpfui:UiPage>
+
+
+
+
+

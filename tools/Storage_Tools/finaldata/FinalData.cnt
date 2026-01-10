@@ -1,0 +1,46 @@
+:Base FinalData.hlp
+:Title FinalData Enterprise 2.0
+1 Preface
+2 Preface=HID_PREFACE
+2 User Registration and Support=HID_REGISTER
+2 Introduction to FinalData=HID_INTRO
+1 Install / Uninstall
+2 Before Installing FinalData=HID_BEFOREINSTALL
+2 System Environments=HID_REQUIREMENTS
+2 Installaing FinalData=HID_INSTALL
+2 Uninstalling FinalData=HID_UNINSTALL
+1 General Data Recovery Procedure
+2 Launching FinalData=HID_LAUNCH
+2 Open=HID_OPEN
+2 Directory Scan=HID_DIRSCAN
+2 Cluster Scanning=HID_CLUSCAN
+2 Finding Data to Recover=HID_FIND
+2 Recovery=HID_RECOVER
+1 Other Useful Function
+2 Preferenc Settings=HID_PREFERENCE
+2 File Preview=HID_PREVIEW
+2 File Viewer=HID_FILEVIEWER
+2 Save File System Information=HID_FSINFO
+1 Professional Data Recovery Procedure
+2 Damaged Office File Repair=HID_OFFICE
+2 E-mail Recovery
+3 What is E-mail Recovery=HID_WHATEMAIL
+3 How To Recover E-mail
+4 E-mail Scan=HID_EMAILSCAN
+4 Choose E-mail to be recovered.=HID_CHOOSEEMAIL
+4 Recover E-mail=HID_RECOVEREMAIL
+4 Importing a recovered E-mail to E-mail Client Program=HID_IMPORTEMAIL
+1 Final Start Cluster of a File=HID_STARTCLUSTER
+1 Damaged MPEG File Repair=HID_MPEG
+1 Damaged Oracle Export File Repair=HID_ORACLE
+1 How to Recover Data in Various Cases
+2 Emptied Recycle Bin (Windwos 95/98/ME)=HID_CASE1
+2 Formatted Hard Disk or Emptied Recycle Bin (Windwos NT/2000/XP)=HID_CASE2
+2 Altered File Size due to Virus=HID_CASE3
+2 Hard Disk Formatted with Another File System=HID_CASE4
+2 Unrecognized Drive=HID_CASE5
+2 System Not Bootable=HID_CASE6
+1 Etc...
+2 FAQ=HID_FAQ
+2 FinalData Error Messages=HID_ERROR
+2 Glossary=HID_GLOSSARY

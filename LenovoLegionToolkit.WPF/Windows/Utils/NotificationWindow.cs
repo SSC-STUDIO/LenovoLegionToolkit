@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -80,7 +80,7 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
     public void Close(bool immediate)
     {
-        WindowStyle = WindowStyle.None;
+        WindowStyle = System.Windows.WindowStyle.None;
         Close();
     }
 
@@ -161,9 +161,9 @@ public class NotificationWindow : UiWindow, INotificationWindow
             var nativeWidth = Width * multiplierX;
             var nativeHeight = Height * multiplierY;
 
-            const int margin = 16;
-            var nativeMarginX = margin * multiplierX;
-            var nativeMarginY = margin * multiplierY;
+            const int MARGIN = 16;
+            var nativeMarginX = MARGIN * multiplierX;
+            var nativeMarginY = MARGIN * multiplierY;
 
             switch (position)
             {

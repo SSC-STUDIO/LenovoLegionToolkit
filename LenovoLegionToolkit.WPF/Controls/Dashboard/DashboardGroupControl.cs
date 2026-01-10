@@ -13,6 +13,9 @@ public class DashboardGroupControl : UserControl
 
     private readonly DashboardGroup _dashboardGroup;
 
+    private StackPanel? _stackPanel;
+    private TextBlock? _headerTextBlock;
+
     public Task InitializedTask => _initializedTaskCompletionSource.Task;
 
     public DashboardGroupControl(DashboardGroup dashboardGroup)
@@ -24,9 +27,9 @@ public class DashboardGroupControl : UserControl
 
     private async void DashboardGroupControl_Initialized(object? sender, System.EventArgs e)
     {
-        var stackPanel = new StackPanel { Margin = new(0, 0, 16, 0) };
+        _stackPanel = new StackPanel { Margin = new(0, 0, 16, 0) };
 
-        var textBlock = new TextBlock
+        _headerTextBlock = new TextBlock
         {
             Text = _dashboardGroup.GetName(),
             Focusable = true,
@@ -34,19 +37,37 @@ public class DashboardGroupControl : UserControl
             FontWeight = FontWeights.Medium,
             Margin = new(0, 16, 0, 24)
         };
-        AutomationProperties.SetName(textBlock, textBlock.Text);
-        stackPanel.Children.Add(textBlock);
+        AutomationProperties.SetName(_headerTextBlock, _headerTextBlock.Text);
+        _stackPanel.Children.Add(_headerTextBlock);
 
         var controlsTasks = _dashboardGroup.Items.Select(i => i.GetControlAsync());
         var controls = await Task.WhenAll(controlsTasks);
 
         foreach (var control in controls.SelectMany(c => c))
         {
-            stackPanel.Children.Add(control);
+            control.IsVisibleChanged += Control_IsVisibleChanged;
+            _stackPanel.Children.Add(control);
         }
 
-        Content = stackPanel;
+        Content = _stackPanel;
+
+        UpdateGroupVisibility();
 
         _initializedTaskCompletionSource.TrySetResult();
+    }
+
+    private void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) => UpdateGroupVisibility();
+
+    private void UpdateGroupVisibility()
+    {
+        if (_stackPanel is null || _headerTextBlock is null)
+            return;
+
+        var hasVisibleChild = _stackPanel.Children
+            .OfType<UIElement>()
+            .Where(child => !ReferenceEquals(child, _headerTextBlock))
+            .Any(child => child.Visibility == Visibility.Visible);
+
+        Visibility = hasVisibleChild ? Visibility.Visible : Visibility.Collapsed;
     }
 }

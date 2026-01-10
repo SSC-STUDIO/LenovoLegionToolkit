@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
-public partial class TurnOffMonitorsControl
+public partial class TurnOffMonitorsControl : AbstractRefreshingControl
 {
     private readonly NativeWindowsMessageListener _nativeWindowsMessageListener = IoCContainer.Resolve<NativeWindowsMessageListener>();
 

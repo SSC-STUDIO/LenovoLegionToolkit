@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
@@ -27,6 +27,7 @@ public class Program
         root.AddCommand(BuildFeatureCommand());
         root.AddCommand(BuildSpectrumCommand());
         root.AddCommand(BuildRGBCommand());
+        root.AddCommand(BuildShellCommand()); // Add shell management command
 
         return builder.Build();
     }
@@ -294,33 +295,180 @@ public class Program
         return cmd;
     }
 
-    private static void OnException(Exception ex, InvocationContext context)
+    private static Command BuildShellCommand()
     {
+        var registerOption = new Option<bool>("--register", "Register shell context menu extension") { Arity = ArgumentArity.ZeroOrOne };
+        registerOption.AddAlias("-r");
+
+        var unregisterOption = new Option<bool>("--unregister", "Unregister shell context menu extension") { Arity = ArgumentArity.ZeroOrOne };
+        unregisterOption.AddAlias("-u");
+
+        var restartOption = new Option<bool>("--restart", "Restart explorer after changes") { Arity = ArgumentArity.ZeroOrOne };
+        restartOption.AddAlias("-e");
+
+        var treatOption = new Option<bool>("--treat", "Apply theme treatment") { Arity = ArgumentArity.ZeroOrOne };
+        treatOption.AddAlias("-t");
+
+        var statusOption = new Option<bool>("--status", "Check current registration status") { Arity = ArgumentArity.ZeroOrOne };
+        statusOption.AddAlias("-s");
+
+        var installOption = new Option<bool>("--install", "Install Nilesoft Shell") { Arity = ArgumentArity.ZeroOrOne };
+        installOption.AddAlias("-i");
+
+        var uninstallOption = new Option<bool>("--uninstall", "Uninstall Nilesoft Shell") { Arity = ArgumentArity.ZeroOrOne };
+        uninstallOption.AddAlias("-x");
+
+        var installStatusOption = new Option<bool>("--install-status", "Check current installation status") { Arity = ArgumentArity.ZeroOrOne };
+        installStatusOption.AddAlias("-is");
+
+        var cmd = new Command("shell", "Manage shell context menu extension (Nilesoft Shell)");
+        cmd.AddAlias("sh");
+        cmd.AddOption(registerOption);
+        cmd.AddOption(unregisterOption);
+        cmd.AddOption(restartOption);
+        cmd.AddOption(treatOption);
+        cmd.AddOption(statusOption);
+        cmd.AddOption(installOption);
+        cmd.AddOption(uninstallOption);
+        cmd.AddOption(installStatusOption);
+        cmd.SetHandler(async (register, unregister, restart, treat, status, install, uninstall, installStatus) =>
+        {
+            // 处理状态查询
+            if (status)
+            {
+                var isRegistered = await IpcClient.IsShellRegisteredAsync();
+                Console.WriteLine(isRegistered ? "Shell is registered" : "Shell is not registered");
+                return;
+            }
+
+            if (installStatus)
+            {
+                var isInstalled = await IpcClient.IsShellInstalledAsync();
+                Console.WriteLine(isInstalled ? "Shell is installed" : "Shell is not installed");
+                return;
+            }
+
+            // 处理安装/卸载
+            if (install)
+            {
+                await IpcClient.InstallShellAsync();
+                Console.WriteLine("Shell installation initiated");
+                return;
+            }
+
+            if (uninstall)
+            {
+                await IpcClient.UninstallShellAsync();
+                Console.WriteLine("Shell uninstallation initiated");
+                return;
+            }
+
+            // Shell command execution removed - use install/uninstall instead
+            if (register || unregister || restart || treat)
+            {
+                Console.WriteLine("Shell command execution has been removed. Please use:");
+                Console.WriteLine("  --install (-i): Install Nilesoft Shell (includes registration)");
+                Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell (includes unregistration)");
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Please specify an action:");
+                Console.WriteLine("  --status (-s): Check current registration status");
+                Console.WriteLine("  --install (-i): Install Nilesoft Shell");
+                Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell");
+                Console.WriteLine("  --install-status (-is): Check current installation status");
+            }
+        }, registerOption, unregisterOption, restartOption, treatOption, statusOption, installOption, uninstallOption, installStatusOption);
+        cmd.AddValidator(result =>
+        {
+            // 确保只指定了一个操作
+            int optionCount = 0;
+            if (result.FindResultFor(statusOption) is not null) optionCount++;
+            if (result.FindResultFor(installStatusOption) is not null) optionCount++;
+            if (result.FindResultFor(installOption) is not null) optionCount++;
+            if (result.FindResultFor(uninstallOption) is not null) optionCount++;
+            if (result.FindResultFor(registerOption) is not null) optionCount++;
+            if (result.FindResultFor(unregisterOption) is not null) optionCount++;
+            if (result.FindResultFor(restartOption) is not null) optionCount++;
+            if (result.FindResultFor(treatOption) is not null) optionCount++;
+
+            if (optionCount > 1)
+            {
+                result.ErrorMessage = "Please specify only one action at a time";
+                return;
+            }
+
+            if (optionCount == 0)
+            {
+                result.ErrorMessage = "At least one action option should be specified";
+                return;
+            }
+        });
+
+
+
+        return cmd;
+
+    }
+
+
+
+    private static void OnException(Exception ex, InvocationContext context)
+
+    {
+
         var message = ex switch
+
         {
+
             IpcConnectException => "Failed to connect. " +
+
                                    "Make sure that Lenovo Legion Toolkit is running " +
+
                                    "in background and CLI is enabled in Settings.",
+
             IpcException => ex.Message,
+
             _ => ex.ToString()
-        };
-        var exitCode = ex switch
-        {
-            IpcConnectException => -1,
-            IpcException => -2,
-            _ => -99
+
         };
 
-        if (!Console.IsOutputRedirected)
+        var exitCode = ex switch
+
         {
+
+            IpcConnectException => -1,
+
+            IpcException => -2,
+
+            _ => -99
+
+        };
+
+
+
+        if (!Console.IsOutputRedirected)
+
+        {
+
             Console.ResetColor();
+
             Console.ForegroundColor = ConsoleColor.Red;
+
         }
 
+
+
         context.Console.Error.WriteLine(message);
+
         context.ExitCode = exitCode;
 
+
+
         if (!Console.IsOutputRedirected)
+
             Console.ResetColor();
+
     }
 }
