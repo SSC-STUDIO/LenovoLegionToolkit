@@ -146,6 +146,7 @@ var
   retry, abort: Boolean;
   resultCode: Integer;
 begin
+  Result := '';
   if NeedsInstall then begin
     prettyName := '{#DotNetPrettyName} {#DotNetVersion}'
 
@@ -188,13 +189,16 @@ begin
             end;
           end;
 
-          case SuppressibleMsgBox(FmtMessage(SetupMessage(msgErrorFunctionFailed), [prettyName, IntToStr(ResultCode)]), mbError, MB_RETRYCANCEL, IDRETRY) of
+          case SuppressibleMsgBox(FmtMessage(SetupMessage(msgErrorFunctionFailed), [prettyName, IntToStr(resultCode)]), mbError, MB_RETRYCANCEL, IDRETRY) of
             IDCANCEL: begin
               abort := True;
+              Result := FmtMessage(SetupMessage(msgErrorFunctionFailed), [prettyName, IntToStr(resultCode)]);
               break;
             end;
           end;
         end;
+    end else begin
+      Result := 'Installation was aborted by user.';
     end;
 
     Dependency_DownloadPage.Hide;
