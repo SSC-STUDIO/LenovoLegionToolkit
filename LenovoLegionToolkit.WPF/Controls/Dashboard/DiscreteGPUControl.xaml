@@ -87,7 +87,7 @@
                         <wpfui:SymbolIcon
                             x:Name="_deactivateGPUButtonIcon"
                             Grid.Column="0"
-                            FontWeight="Bold"
+                            FontWeight="Medium"
                             Symbol="ChevronDown24" />
                     </Grid>
                 </wpfui:Button.Content>
