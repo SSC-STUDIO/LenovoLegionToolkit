@@ -218,7 +218,7 @@ public partial class DashboardPage
         _batteryPercentageBar.Value = batteryInfo.BatteryPercentage;
         if (_percentRemaining is TextBlock percentText)
         {
-            percentText.Text = $"{batteryInfo.BatteryPercentage}%";
+            percentText.Text = $"{batteryInfo.BatteryPercentage:N0}%";
             if (batteryInfo.IsLowBattery)
                 percentText.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 196, 0));
             else
@@ -447,7 +447,7 @@ public partial class DashboardPage
         // Cycle count - hide if invalid (0 or negative)
         if (batteryInfo.CycleCount > 0)
         {
-            _batteryCycleCountText.Text = $"{batteryInfo.CycleCount}";
+            _batteryCycleCountText.Text = $"{batteryInfo.CycleCount:N0}";
             if (FindName("_batteryCycleCountCard") is System.Windows.FrameworkElement cycleCountCard)
             {
                 cycleCountCard.Visibility = Visibility.Visible;

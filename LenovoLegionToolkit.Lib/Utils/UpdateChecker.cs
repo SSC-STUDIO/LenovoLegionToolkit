@@ -59,7 +59,21 @@ public class UpdateChecker
                 var productInformation = new ProductHeaderValue("LenovoLegionToolkit-UpdateChecker");
                 var connection = new Connection(productInformation, adapter);
                 var githubClient = new GitHubClient(connection);
-                var releases = await githubClient.Repository.Release.GetAll("BartoszCichecki", "LenovoLegionToolkit", new ApiOptions { PageSize = 5 }).ConfigureAwait(false);
+                
+                // Get update repository from settings, fallback to default if not configured
+                const string DefaultUpdateRepositoryOwner = "Crs10259";
+                const string DefaultUpdateRepositoryName = "LenovoLegionToolkit";
+                var repositoryOwner = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) 
+                    ? _updateCheckSettings.Store.UpdateRepositoryOwner 
+                    : DefaultUpdateRepositoryOwner;
+                var repositoryName = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryName) 
+                    ? _updateCheckSettings.Store.UpdateRepositoryName 
+                    : DefaultUpdateRepositoryName;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Checking updates from repository: {repositoryOwner}/{repositoryName}");
+                
+                var releases = await githubClient.Repository.Release.GetAll(repositoryOwner, repositoryName, new ApiOptions { PageSize = 5 }).ConfigureAwait(false);
 
                 var thisReleaseVersion = Assembly.GetEntryAssembly()?.GetName().Version;
                 var thisBuildDate = Assembly.GetEntryAssembly()?.GetBuildDateTime() ?? new DateTime(2000, 1, 1);
