@@ -1,0 +1,3 @@
+[submodule "ShellIntegration"]
+	path = ShellIntegration
+	url = https://github.com/Crs10259/ShellIntegration.git
