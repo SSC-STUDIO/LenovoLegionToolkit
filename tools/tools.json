@@ -11,14 +11,6 @@
         "description_en": "CPU-related detection, monitoring, and optimization tools",
         "tools": [
           {
-            "name": "CoreTemp",
-            "displayName": "Core Temp",
-            "description": "Core Temp 是一款轻量级的 CPU 温度监控工具，可以实时显示每个 CPU 核心的温度。",
-            "description_en": "Core Temp is a lightweight CPU temperature monitoring tool that displays real-time temperature for each CPU core.",
-            "version": "1.18",
-            "author": "Arthur Liberman"
-          },
-          {
             "name": "CPUZ",
             "displayName": "CPU-Z",
             "description": "CPU-Z 是一款免费的硬件信息检测工具，可以显示 CPU、主板、内存等硬件详细信息。",
@@ -538,14 +530,6 @@
             "version": "1.0",
             "author": "REALiX",
             "command": "start HWiNFO64.exe"
-          },
-          {
-            "name": "HWMonitor",
-            "displayName": "HWMonitor",
-            "description": "HWMonitor - 硬件监控工具，实时显示温度、电压和风扇转速。",
-            "description_en": "HWMonitor - Hardware monitoring tool that displays temperature, voltage, and fan speed in real-time.",
-            "version": "1.0",
-            "author": "CPUID"
           },
           {
             "name": "RWEverything",

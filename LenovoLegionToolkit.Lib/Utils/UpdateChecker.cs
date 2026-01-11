@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,9 +21,36 @@ public class UpdateChecker
     private DateTime _lastUpdate;
     private TimeSpan _minimumTimeSpanForRefresh;
     private Update[] _updates = [];
+    private bool _disable;
+    private UpdateCheckStatus _status;
 
-    public bool Disable { get; set; }
-    public UpdateCheckStatus Status { get; set; }
+    public bool Disable
+    {
+        get
+        {
+            using (_updateSemaphore.Lock())
+                return _disable;
+        }
+        set
+        {
+            using (_updateSemaphore.Lock())
+                _disable = value;
+        }
+    }
+
+    public UpdateCheckStatus Status
+    {
+        get
+        {
+            using (_updateSemaphore.Lock())
+                return _status;
+        }
+        private set
+        {
+            using (_updateSemaphore.Lock())
+                _status = value;
+        }
+    }
 
     public UpdateChecker(HttpClientFactory httpClientFactory)
     {
@@ -37,7 +64,7 @@ public class UpdateChecker
     {
         using (await _updateSemaphore.LockAsync().ConfigureAwait(false))
         {
-            if (Disable)
+            if (_disable)
             {
                 _lastUpdate = DateTime.UtcNow;
                 _updates = [];
@@ -77,25 +104,44 @@ public class UpdateChecker
 
                 var thisReleaseVersion = Assembly.GetEntryAssembly()?.GetName().Version;
 
-                var updates = releases
-                    .Where(r => !r.Draft)
-                    .Where(r => !r.Prerelease)
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Current version: {thisReleaseVersion}, Found releases: {releases.Count}");
+
+                // If we can't determine the current version, we can't check for updates
+                if (thisReleaseVersion == null)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Cannot determine current version, skipping update check.");
+                    _status = UpdateCheckStatus.Error;
+                    return null;
+                }
+
+                var publicReleases = releases.Where(r => !r.Draft && !r.Prerelease).ToArray();
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Public releases (non-draft, non-prerelease): {publicReleases.Length}");
+
+                var updates = publicReleases
                     .Select(r =>
                     {
                         try
                         {
-                            return new Update(r);
+                            var update = new Update(r);
+                            // thisReleaseVersion is guaranteed to be non-null here due to check above
+                            var isNewer = update.Version > thisReleaseVersion;
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Release {update.Version} (tag: {r.TagName}) is {(isNewer ? "newer" : "not newer")} than current version {thisReleaseVersion}");
+                            return (Update: (Update?)update, IsNewer: isNewer);
                         }
                         catch (Exception ex)
                         {
                             // Skip releases with invalid version tags (e.g., "v3" without minor/patch)
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Skipping release with invalid version tag: {r.TagName}", ex);
-                            return (Update?)null;
+                            return (Update: (Update?)null, IsNewer: false);
                         }
                     })
-                    .Where(r => r.HasValue && r.Value.Version > thisReleaseVersion)
-                    .Select(r => r!.Value)
+                    .Where(r => r.Update.HasValue && r.IsNewer)
+                    .Select(r => r.Update!.Value)
                     .OrderByDescending(r => r.Version)
                     .ToArray();
 
@@ -103,7 +149,7 @@ public class UpdateChecker
                     Log.Instance.Trace($"Checked [updates.Length={updates.Length}]");
 
                 _updates = updates;
-                Status = UpdateCheckStatus.Success;
+                _status = UpdateCheckStatus.Success;
 
                 return _updates.Length != 0 ? _updates.First().Version : null;
             }
@@ -112,7 +158,7 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Reached API Rate Limitation.", ex);
 
-                Status = UpdateCheckStatus.RateLimitReached;
+                _status = UpdateCheckStatus.RateLimitReached;
                 return null;
             }
             catch (Exception ex)
@@ -120,7 +166,7 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Error checking for updates.", ex);
 
-                Status = UpdateCheckStatus.Error;
+                _status = UpdateCheckStatus.Error;
                 return null;
             }
             finally

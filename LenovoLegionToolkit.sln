@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{F8070067-370
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenovoLegionToolkit.Plugins.NetworkAcceleration", "LenovoLegionToolkit.Plugins.NetworkAcceleration\LenovoLegionToolkit.Plugins.NetworkAcceleration.csproj", "{08B01DCC-C142-45FF-89B2-691E2B43D248}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LenovoLegionToolkit.Plugins.ViveTool", "LenovoLegionToolkit.Plugins.ViveTool\LenovoLegionToolkit.Plugins.ViveTool.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.SDK", "LenovoLegionToolkit.Plugins.SDK\LenovoLegionToolkit.Plugins.SDK.csproj", "{E981E29B-5D80-46C4-8F32-BD403494458A}"
 EndProject
 Global

@@ -3,11 +3,11 @@
     <!-- 
       Base version numbers - MUST match the version in make.bat (SET VERSION=...)
       This is used for development builds. Release builds use the version from make.bat via /p:Version parameter.
-      Current version in make.bat: 3.0.5
+      Current version in make.bat: 3.1.0
     -->
     <MajorVersion>3</MajorVersion>
-    <MinorVersion>0</MinorVersion>
-    <PatchVersion>5</PatchVersion>
+    <MinorVersion>1</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     
     <!-- Default version values -->
     <GitCommitCount>0</GitCommitCount>

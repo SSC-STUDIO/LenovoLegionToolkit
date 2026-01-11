@@ -8,6 +8,7 @@ using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Certificate;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Hosts;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Statistics;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.SystemProxy;
+using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Services;
 
@@ -22,6 +23,7 @@ public class NetworkAccelerationService : INetworkAccelerationService
     private readonly IHostsFileService _hostsFileService;
     private readonly INetworkStatisticsService _statisticsService;
     private readonly SystemProxyService _systemProxyService;
+    private readonly AsyncLock _stateLock = new();
 
     private bool _isRunning;
     private string _status = string.Empty;
@@ -46,17 +48,29 @@ public class NetworkAccelerationService : INetworkAccelerationService
         _statusDescription = Resource.NetworkAcceleration_ServiceStatusStoppedDescription;
     }
 
-    public bool IsRunning => _isRunning;
+    public bool IsRunning
+    {
+        get
+        {
+            using (_stateLock.Lock())
+                return _isRunning;
+        }
+    }
 
     public async Task<bool> StartAsync()
     {
-        if (_isRunning)
+        // Check if already running and acquire lock
+        using (await _stateLock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Network acceleration service is already running.");
-            return true;
+            if (_isRunning)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network acceleration service is already running.");
+                return true;
+            }
         }
 
+        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -66,8 +80,11 @@ public class NetworkAccelerationService : INetworkAccelerationService
             var certResult = await _certificateManagerService.SetupRootCertificateAsync();
             if (!certResult)
             {
-                _status = Resource.NetworkAcceleration_Error_CertificateSetupFailed;
-                _statusDescription = Resource.NetworkAcceleration_Error_CertificateSetupFailedDescription;
+                using (await _stateLock.LockAsync().ConfigureAwait(false))
+                {
+                    _status = Resource.NetworkAcceleration_Error_CertificateSetupFailed;
+                    _statusDescription = Resource.NetworkAcceleration_Error_CertificateSetupFailedDescription;
+                }
                 return false;
             }
 
@@ -78,8 +95,11 @@ public class NetworkAccelerationService : INetworkAccelerationService
             var proxyResult = await _reverseProxyService.StartAsync();
             if (!proxyResult)
             {
-                _status = Resource.NetworkAcceleration_Error_ProxyServiceStartupFailed;
-                _statusDescription = Resource.NetworkAcceleration_Error_ProxyServiceStartupFailedDescription;
+                using (await _stateLock.LockAsync().ConfigureAwait(false))
+                {
+                    _status = Resource.NetworkAcceleration_Error_ProxyServiceStartupFailed;
+                    _statusDescription = Resource.NetworkAcceleration_Error_ProxyServiceStartupFailedDescription;
+                }
                 await _dnsOptimizationService.StopAsync();
                 return false;
             }
@@ -101,9 +121,13 @@ public class NetworkAccelerationService : INetworkAccelerationService
             // 6. Start statistics tracking
             _statisticsService.Start();
 
-            _isRunning = true;
-            _status = Resource.NetworkAcceleration_ServiceStatusRunning;
-            _statusDescription = Resource.NetworkAcceleration_ServiceStatusRunningDescription;
+            // Update state under lock
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                _isRunning = true;
+                _status = Resource.NetworkAcceleration_ServiceStatusRunning;
+                _statusDescription = Resource.NetworkAcceleration_ServiceStatusRunningDescription;
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Network acceleration service started successfully.");
@@ -115,8 +139,11 @@ public class NetworkAccelerationService : INetworkAccelerationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error starting network acceleration service: {ex.Message}", ex);
 
-            _status = Resource.NetworkAcceleration_Error_StartupFailed;
-            _statusDescription = string.Format(Resource.NetworkAcceleration_Error_StartupFailedDescription, ex.Message);
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                _status = Resource.NetworkAcceleration_Error_StartupFailed;
+                _statusDescription = string.Format(Resource.NetworkAcceleration_Error_StartupFailedDescription, ex.Message);
+            }
             await StopAsync(); // Cleanup on error
             return false;
         }
@@ -124,13 +151,18 @@ public class NetworkAccelerationService : INetworkAccelerationService
 
     public async Task<bool> StopAsync()
     {
-        if (!_isRunning)
+        // Check if running and acquire lock
+        using (await _stateLock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Network acceleration service is not running.");
-            return true;
+            if (!_isRunning)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network acceleration service is not running.");
+                return true;
+            }
         }
 
+        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -143,9 +175,13 @@ public class NetworkAccelerationService : INetworkAccelerationService
             await _reverseProxyService.StopAsync();
             await _dnsOptimizationService.StopAsync();
 
-            _isRunning = false;
-            _status = Resource.NetworkAcceleration_ServiceStatusStopped;
-            _statusDescription = Resource.NetworkAcceleration_ServiceStatusStoppedDescription;
+            // Update state under lock
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                _isRunning = false;
+                _status = Resource.NetworkAcceleration_ServiceStatusStopped;
+                _statusDescription = Resource.NetworkAcceleration_ServiceStatusStoppedDescription;
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Network acceleration service stopped successfully.");
@@ -157,8 +193,11 @@ public class NetworkAccelerationService : INetworkAccelerationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error stopping network acceleration service: {ex.Message}", ex);
 
-            _status = Resource.NetworkAcceleration_Error_StopFailed;
-            _statusDescription = string.Format(Resource.NetworkAcceleration_Error_StopFailedDescription, ex.Message);
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                _status = Resource.NetworkAcceleration_Error_StopFailed;
+                _statusDescription = string.Format(Resource.NetworkAcceleration_Error_StopFailedDescription, ex.Message);
+            }
             
             // Even if stop failed, try to restore proxy to prevent browser connectivity issues
             try
@@ -182,16 +221,31 @@ public class NetworkAccelerationService : INetworkAccelerationService
         }
     }
 
-    public string GetStatus() => _status;
+    public string GetStatus()
+    {
+        using (_stateLock.Lock())
+            return _status;
+    }
 
-    public string GetStatusDescription() => _statusDescription;
+    public string GetStatusDescription()
+    {
+        using (_stateLock.Lock())
+            return _statusDescription;
+    }
 
     public void Dispose()
     {
         try
         {
             // Force stop service and restore proxy when disposing
-            if (_isRunning)
+            // Use lock to safely check _isRunning state
+            bool isRunning;
+            using (_stateLock.Lock())
+            {
+                isRunning = _isRunning;
+            }
+            
+            if (isRunning)
             {
                 StopAsync().GetAwaiter().GetResult();
             }

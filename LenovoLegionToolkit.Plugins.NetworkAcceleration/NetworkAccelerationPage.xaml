@@ -58,38 +58,28 @@
                         </StackPanel>
                 </StackPanel>
                 
-                <!-- Traffic Stats - Enhanced Design with Modern Card Style (only visible when service is running) -->
+                <!-- Traffic Stats - Card Style (only visible when service is running) -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="16"
-                    Padding="28"
+                    CornerRadius="8"
+                    Padding="24"
                     Margin="0,0,0,24"
                     Visibility="{Binding IsServiceEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            Color="Black"
-                            Direction="270"
-                            ShadowDepth="3"
-                            Opacity="0.1"
-                            BlurRadius="12" />
-                    </Border.Effect>
                     <StackPanel>
                         <!-- Header with Title -->
-                        <StackPanel Margin="0,0,0,28">
-                            <StackPanel VerticalAlignment="Center">
-                        <TextBlock
-                                    FontSize="22"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static plugin:Resource.NetworkAcceleration_AcceleratedTraffic}" />
-                                <TextBlock
-                                    FontSize="13"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Margin="0,6,0,0"
-                                    Text="实时流量统计与趋势分析" />
-                            </StackPanel>
+                        <StackPanel Margin="0,0,0,20">
+                            <TextBlock
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_AcceleratedTraffic}" />
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Margin="0,4,0,0"
+                                Text="实时流量统计与趋势分析" />
                         </StackPanel>
                         
                         <!-- Total Traffic - Prominent Display with Gradient Background -->
@@ -129,32 +119,29 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             
-                            <!-- Download Section with Icon -->
+                            <!-- Download Section -->
                             <Border
                                 Grid.Column="0"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                CornerRadius="12"
-                                Padding="20,18"
+                                CornerRadius="6"
+                                Padding="16,14"
                                 BorderThickness="0">
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Margin="0,0,0,10"
-                                        VerticalAlignment="Center"
+                                        Margin="0,0,0,8"
                                         Text="{x:Static plugin:Resource.NetworkAcceleration_Downloaded}" />
                                     <TextBlock
-                                        FontSize="32"
-                                        FontWeight="SemiBold"
-                                        Foreground="#E74C3C"
-                                        Margin="0,0,0,10"
-                                        Text="{Binding DownloadedTraffic, Mode=OneWay}" />
-                                    <TextBlock
-                                        FontSize="14"
+                                        FontSize="24"
                                         FontWeight="Medium"
                                         Foreground="#E74C3C"
-                                        Margin="0,4,0,0"
-                                        VerticalAlignment="Center"
+                                        Margin="0,0,0,8"
+                                        Text="{Binding DownloadedTraffic, Mode=OneWay}" />
+                                    <TextBlock
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Foreground="#E74C3C"
                                         Text="{Binding DownloadSpeed, Mode=OneWay}" />
                                 </StackPanel>
                             </Border>
@@ -199,14 +186,14 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                     <TextBlock
-                                        FontSize="18"
+                                        FontSize="15"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Text="流量趋势图" />
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Margin="0,4,0,0"
+                                        Margin="0,2,0,0"
                                         Text="实时显示下载和上传速度变化" />
                                 </StackPanel>
                                 <wpfui:Button
@@ -225,22 +212,14 @@
                     </StackPanel>
                 </Border>
                 
-                <!-- Service Status - Enhanced with Status Indicator -->
+                <!-- Service Status -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="24"
+                    CornerRadius="8"
+                    Padding="20"
                     Margin="0,0,0,20">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            Color="Black"
-                            Direction="270"
-                            ShadowDepth="2"
-                            Opacity="0.08"
-                            BlurRadius="8" />
-                    </Border.Effect>
                     <StackPanel>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -251,25 +230,15 @@
                             
                             <!-- Status Text -->
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                    <TextBlock
-                                        FontSize="17"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                        Text="{x:Static plugin:Resource.NetworkAcceleration_ServiceStatus}" />
                                 <TextBlock
-                                        FontSize="17"
+                                    FontSize="15"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                        Margin="8,0,0,0"
-                                        Text=":" />
-                                    <TextBlock
-                                        FontSize="17"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SystemAccentColorBrush}"
-                                        Margin="8,0,0,0"
-                                        Text="{Binding ServiceStatus, Mode=OneWay}" />
-                                </StackPanel>
+                                    Margin="0,0,0,4">
+                                    <Run Text="{x:Static plugin:Resource.NetworkAcceleration_ServiceStatus}" />
+                                    <Run Text=": " />
+                                    <Run Text="{Binding ServiceStatus, Mode=OneWay}" Foreground="{DynamicResource SystemAccentColorBrush}" />
+                                </TextBlock>
                                 <TextBlock
                                     FontSize="13"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -307,20 +276,18 @@
                     </Border.Effect>
                     <StackPanel>
                         <StackPanel Margin="0,0,0,12">
-                            <StackPanel VerticalAlignment="Center">
-                        <TextBlock
-                                    FontSize="17"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimization}" />
-                        <TextBlock
-                            FontSize="13"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Margin="0,4,0,0"
-                                    TextWrapping="Wrap"
-                                    LineHeight="18"
-                                    Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimizationDescription}" />
-                            </StackPanel>
+                            <TextBlock
+                                FontSize="15"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimization}" />
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Margin="0,4,0,0"
+                                TextWrapping="Wrap"
+                                LineHeight="18"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimizationDescription}" />
                         </StackPanel>
                         <wpfui:ToggleSwitch
                             x:Name="_dnsOptimizationToggle"
@@ -335,38 +302,28 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Request Interception - Enhanced with Icon -->
+                <!-- Request Interception -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="24"
+                    CornerRadius="8"
+                    Padding="20"
                     Margin="0,0,0,20">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            Color="Black"
-                            Direction="270"
-                            ShadowDepth="2"
-                            Opacity="0.08"
-                            BlurRadius="8" />
-                    </Border.Effect>
                     <StackPanel>
                         <StackPanel Margin="0,0,0,12">
-                            <StackPanel VerticalAlignment="Center">
-                        <TextBlock
-                                    FontSize="17"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterception}" />
-                        <TextBlock
-                            FontSize="13"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Margin="0,4,0,0"
-                                    TextWrapping="Wrap"
-                                    LineHeight="18"
-                                    Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterceptionDescription}" />
-                            </StackPanel>
+                            <TextBlock
+                                FontSize="15"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterception}" />
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Margin="0,4,0,0"
+                                TextWrapping="Wrap"
+                                LineHeight="18"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterceptionDescription}" />
                         </StackPanel>
                         <wpfui:ToggleSwitch
                             x:Name="_requestInterceptionToggle"
@@ -399,20 +356,18 @@
                     </Border.Effect>
                     <StackPanel>
                         <StackPanel Margin="0,0,0,12">
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock
-                                    FontSize="17"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="自动启动服务" />
-                                <TextBlock
-                                    FontSize="13"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Margin="0,4,0,0"
-                                    TextWrapping="Wrap"
-                                    LineHeight="18"
-                                    Text="应用启动时自动启动网络加速服务" />
-                            </StackPanel>
+                            <TextBlock
+                                FontSize="15"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="自动启动服务" />
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Margin="0,4,0,0"
+                                TextWrapping="Wrap"
+                                LineHeight="18"
+                                Text="应用启动时自动启动网络加速服务" />
                         </StackPanel>
                         <wpfui:ToggleSwitch
                             x:Name="_autoStartServiceToggle"
@@ -421,33 +376,25 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Platform Acceleration - Grouped -->
+                <!-- Platform Acceleration -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="24"
+                    CornerRadius="8"
+                    Padding="20"
                     Margin="0,0,0,20">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            Color="Black"
-                            Direction="270"
-                            ShadowDepth="2"
-                            Opacity="0.08"
-                            BlurRadius="8" />
-                    </Border.Effect>
                     <StackPanel>
                         <TextBlock
-                            FontSize="17"
+                            FontSize="15"
                             FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Margin="0,0,0,16"
+                            Margin="0,0,0,12"
                             Text="平台加速" />
                         <TextBlock
                             FontSize="13"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Margin="0,0,0,16"
+                            Margin="0,0,0,12"
                             TextWrapping="Wrap"
                             LineHeight="18"
                             Text="为以下平台启用网络加速，提升访问速度和稳定性" />
