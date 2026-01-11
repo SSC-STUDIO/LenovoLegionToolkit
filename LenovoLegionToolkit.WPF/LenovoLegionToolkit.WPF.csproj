@@ -91,23 +91,10 @@
 	<Target Name="CopyNilesoftShellArtifacts" AfterTargets="Build;Publish">
 		<PropertyGroup>
 			<RepoBuildDir>$(MSBuildProjectDirectory)\..\build\</RepoBuildDir>
-			<ShellIntegrationBuildDir>$(RepoBuildDir)shellIntegration\</ShellIntegrationBuildDir>
 		</PropertyGroup>
-		<MakeDir Directories="$(ShellIntegrationBuildDir)" />
-		<!-- Initial cleanup: remove old shell files from build root if they exist (they should only be in shellIntegration/) -->
-		<Delete Files="$(RepoBuildDir)shell.exe" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.dll" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.nss" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.log" ContinueOnError="true" />
-		<RemoveDir Directories="$(RepoBuildDir)imports" ContinueOnError="true" />
-		<!-- First, try to find shell files from build/shellIntegration (primary location) -->
+		<!-- Find shell.exe and shell.dll from ShellIntegration src/bin directory -->
 		<ItemGroup>
-			<ShellArtifactsSource Include="$(ShellIntegrationBuildDir)shell.exe" Condition="Exists('$(ShellIntegrationBuildDir)shell.exe')" />
-			<ShellArtifactsSource Include="$(ShellIntegrationBuildDir)shell.dll" Condition="Exists('$(ShellIntegrationBuildDir)shell.dll')" />
-		</ItemGroup>
-		<!-- If not found in build/shellIntegration, search from other locations and copy to build/shellIntegration -->
-		<ItemGroup Condition="!Exists('$(ShellIntegrationBuildDir)shell.exe')">
-			<!-- Try ShellIntegration src/bin directory -->
+			<!-- Try ShellIntegration src/bin directory (primary location) -->
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.exe" Condition="Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.exe')" />
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.dll" Condition="Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.dll')" />
 			<!-- Try ShellIntegration root bin directory (legacy) -->
@@ -117,15 +104,10 @@
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.exe" Condition="!Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.exe') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\bin\shell.exe')" />
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.dll" Condition="!Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.dll') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\bin\shell.dll')" />
 		</ItemGroup>
-		<!-- Copy shell artifacts to build/shellIntegration (central location) -->
-		<Copy SourceFiles="@(ShellArtifactsSource)" DestinationFolder="$(ShellIntegrationBuildDir)" SkipUnchangedFiles="true" Condition="'@(ShellArtifactsSource)' != ''" />
-		<!-- Also copy shell artifacts to app output directory (TargetDir) for distribution -->
+		<!-- Copy shell artifacts to app output directory (TargetDir) for distribution -->
 		<Copy SourceFiles="@(ShellArtifactsSource)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="'@(ShellArtifactsSource)' != ''" />
-		<!-- Find imports from build/shellIntegration first, then other locations -->
+		<!-- Find imports from ShellIntegration src/bin/imports -->
 		<ItemGroup>
-			<ShellImportsSource Include="$(ShellIntegrationBuildDir)imports\**\*.*" Condition="Exists('$(ShellIntegrationBuildDir)imports\')" />
-		</ItemGroup>
-		<ItemGroup Condition="!Exists('$(ShellIntegrationBuildDir)imports\')">
 			<!-- Try ShellIntegration src/bin/imports -->
 			<ShellImportsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\imports\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\imports\')" />
 			<!-- Try assets location -->
@@ -133,15 +115,10 @@
 			<!-- Try legacy bin -->
 			<ShellImportsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\bin\imports\**\*.*" Condition="!Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\imports\') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\imports\')" />
 		</ItemGroup>
-		<!-- Copy imports to build/shellIntegration preserving structure -->
-		<Copy SourceFiles="@(ShellImportsSource)" DestinationFiles="$(ShellIntegrationBuildDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" Condition="'@(ShellImportsSource)' != ''" />
-		<!-- Also copy imports to app output directory preserving structure -->
+		<!-- Copy imports to app output directory preserving structure -->
 		<Copy SourceFiles="@(ShellImportsSource)" DestinationFiles="$(TargetDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" Condition="'@(ShellImportsSource)' != ''" />
-		<!-- Find shell.nss from build/shellIntegration first, then other locations -->
+		<!-- Find shell.nss from ShellIntegration src/bin -->
 		<ItemGroup>
-			<ShellConfigSource Include="$(ShellIntegrationBuildDir)shell.nss" Condition="Exists('$(ShellIntegrationBuildDir)shell.nss')" />
-		</ItemGroup>
-		<ItemGroup Condition="!Exists('$(ShellIntegrationBuildDir)shell.nss')">
 			<!-- Try ShellIntegration src/bin/shell.nss -->
 			<ShellConfigSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.nss" Condition="Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.nss')" />
 			<!-- Try assets location -->
@@ -149,16 +126,8 @@
 			<!-- Try legacy bin -->
 			<ShellConfigSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\bin\shell.nss" Condition="!Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin\shell.nss') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\shell.nss')" />
 		</ItemGroup>
-		<!-- Copy shell.nss to build/shellIntegration -->
-		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(ShellIntegrationBuildDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
-		<!-- Also copy shell.nss to app output directory -->
+		<!-- Copy shell.nss to app output directory -->
 		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
-		<!-- Final cleanup: ensure no shell files exist in build root (they should only be in shellIntegration/) -->
-		<Delete Files="$(RepoBuildDir)shell.exe" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.dll" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.nss" ContinueOnError="true" />
-		<Delete Files="$(RepoBuildDir)shell.log" ContinueOnError="true" />
-		<RemoveDir Directories="$(RepoBuildDir)imports" ContinueOnError="true" />
 	</Target>
 	<Target Name="CopyToolsDirectory" AfterTargets="Build;Publish">
 		<PropertyGroup>
