@@ -235,9 +235,9 @@ public class WindowsOptimizationService
     {
         var list = new List<WindowsOptimizationCategoryDefinition>(StaticBaseCategories);
         // Append beautification (right-click menu style) as a regular category
+        // Always include the category, even if actions list is empty, so users can see the option
         var beautifyCategory = CreateBeautificationCategoryDynamic();
-        if (beautifyCategory.Actions.Count > 0)
-            list.Add(beautifyCategory);
+        list.Add(beautifyCategory);
         return list;
     }
 
@@ -956,7 +956,8 @@ public class WindowsOptimizationService
         var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
 
         // Dynamic action based on registration status (not just file existence)
-        // If installed and registered (using shell.exe API), show "Uninstall" action; if not, show "Install/Enable" action
+        // Always show the category and action, even if files don't exist, so users can see the option
+        // The action will handle the case when files are missing
         if (isInstalledUsingShellExe)
         {
             // Shell is installed and registered - show "Uninstall" action
@@ -997,9 +998,11 @@ public class WindowsOptimizationService
                     return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
                 }));
         }
-        else if (isInstalled)
+        else
         {
-            // Shell.exe exists but not registered - show "Install/Enable" action
+            // Shell.exe exists but not registered, OR shell.exe doesn't exist
+            // Always show "Install/Enable" action so users can see the option
+            // The action will handle file existence check internally
             actions.Add(new WindowsOptimizationActionDefinition(
                 "beautify.contextMenu.enableClassic",
                 "WindowsOptimization_Action_NilesoftShell_Enable_Title",
@@ -1016,7 +1019,7 @@ public class WindowsOptimizationService
                     // Register and enable the shell
                     return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
                 },
-                Recommended: true,  // Set as recommended option
+                Recommended: isInstalled,  // Only recommend if files exist
                 IsAppliedAsync: async ct => 
                 {
                     // Use shell.exe's API for more accurate installation status check
@@ -1025,7 +1028,6 @@ public class WindowsOptimizationService
                     return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
                 }));
         }
-        // If shell.exe doesn't exist, don't show any action (can't install without the file)
 
         return new WindowsOptimizationCategoryDefinition(
             "beautify.contextMenu",

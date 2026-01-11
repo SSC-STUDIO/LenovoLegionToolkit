@@ -323,80 +323,9 @@ public class IpcServer(
     {
         try
         {
-            var isInstalled = await Task.Run(() =>
-            {
-                try
-                {
-                    // Use NilesoftShellHelper to find shell.exe path (supports multiple locations)
-                    var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
-                    if (string.IsNullOrWhiteSpace(shellExePath) || !File.Exists(shellExePath))
-                        return false;
-
-                    // Use shell.exe's built-in API to check installation status
-                    // This is more accurate as shell.exe can check its own installation state
-                    using var process = new System.Diagnostics.Process
-                    {
-                        StartInfo = new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = shellExePath,
-                            Arguments = "-isinstalled",
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true
-                        }
-                    };
-
-                    process.Start();
-
-                    // Read streams asynchronously to prevent deadlock
-                    // If we call ReadToEnd() synchronously and then WaitForExit(),
-                    // the process can block waiting for the buffer to be drained
-                    // while the main thread is blocked in ReadToEnd()
-                    var outputTask = process.StandardOutput.ReadToEndAsync();
-                    var errorTask = process.StandardError.ReadToEndAsync();
-
-                    // Wait for both read tasks to complete before calling WaitForExit
-                    // This prevents deadlock when process output exceeds buffer capacity
-                    // Wrap in try-catch to ensure WaitForExit is always called even if tasks throw exceptions
-                    try
-                    {
-                        System.Threading.Tasks.Task.WaitAll(outputTask, errorTask);
-                    }
-                    catch
-                    {
-                        // If either task throws an exception, we still need to wait for the process to exit
-                        // to prevent leaving the process handle open and unreleased
-                    }
-
-                    // Now safe to wait for process exit since all output has been read (or read failed)
-                    // This must be called regardless of whether the read tasks succeeded or failed
-                    process.WaitForExit();
-
-                    // Get the results (already completed)
-                    var output = outputTask.Result;
-
-                    // Parse output: shell.exe outputs "true" or "false"
-                    if (string.IsNullOrWhiteSpace(output))
-                        return false;
-
-                    var result = output.Trim().ToLowerInvariant();
-                    return result == "true";
-                }
-                catch
-                {
-                    // Fallback to NilesoftShellService if shell.exe query fails
-                    try
-                    {
-                        return NilesoftShellService.IsInstalled();
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
-            }).ConfigureAwait(false);
-
+            // Use NilesoftShellHelper.IsInstalled() to check if shell.exe and shell.dll exist
+            // This checks if the files are present (not registry registration status)
+            var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalled()).ConfigureAwait(false);
             return isInstalled.ToString().ToLowerInvariant();
         }
         catch (Exception ex)
