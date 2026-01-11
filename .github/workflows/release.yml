@@ -7,6 +7,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write
 
     runs-on: windows-2022
 
@@ -31,7 +33,7 @@ jobs:
     - name: Build
       run: .\make.bat ${{ github.ref_name }}
     - name: Release
-      uses: softprops/action-gh-release@v0.1.13
+      uses: softprops/action-gh-release@v2
       with:
         draft: true
         files: build_installer/LenovoLegionToolkitSetup.exe
