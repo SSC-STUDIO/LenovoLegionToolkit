@@ -26,6 +26,8 @@ jobs:
       run: choco install innosetup -y
     - name: Restore
       run: dotnet restore
+    - name: Update submodules to latest
+      run: git submodule update --init --recursive --depth=0
     - name: Build
       run: .\make.bat ${{ github.ref_name }}
     - name: Release
