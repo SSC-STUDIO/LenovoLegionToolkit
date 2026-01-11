@@ -2,7 +2,7 @@
 setlocal
 
 IF "%1"=="" (
-	SET VERSION=1.0
+	SET VERSION=3.0.2
 ) ELSE (
 	SET VERSION=%1
 )
@@ -19,4 +19,4 @@ dotnet publish LenovoLegionToolkit.SpectrumTester -c release -o build /p:DebugTy
 dotnet publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet build LenovoLegionToolkit.Plugins.NetworkAcceleration -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 
-@REM iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b
+iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b
