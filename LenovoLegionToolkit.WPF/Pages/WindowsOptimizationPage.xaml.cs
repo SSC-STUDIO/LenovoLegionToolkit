@@ -1976,7 +1976,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                                     StartInfo = new System.Diagnostics.ProcessStartInfo
                                     {
                                         FileName = "cmd.exe",
-                                        Arguments = $"/c \"\"{shellExe}\"\" -register -treat -restart",
+                                        Arguments = $"/c \"\"{shellExe}\"\" -register -treat -restart -silent",
                                         UseShellExecute = false,
                                         CreateNoWindow = true
                                     }
@@ -2980,7 +2980,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             StartInfo = new System.Diagnostics.ProcessStartInfo
                             {
                                 FileName = "cmd.exe",
-                                Arguments = $"/c \"\"{exe}\"\" -register -treat -restart",
+                                Arguments = $"/c \"\"{exe}\"\" -register -treat -restart -silent",
                                 UseShellExecute = false,
                                 CreateNoWindow = true
                             }
@@ -3025,7 +3025,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             StartInfo = new System.Diagnostics.ProcessStartInfo
                             {
                                 FileName = "cmd.exe",
-                                Arguments = $"/c \"\"{exe}\"\" -unregister -treat -restart",
+                                Arguments = $"/c \"\"{exe}\"\" -unregister -treat -restart -silent",
                                 UseShellExecute = false,
                                 CreateNoWindow = true
                             }
