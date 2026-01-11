@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+    - name: Install Inno Setup
+      run: choco install innosetup -y
     - name: Restore
       run: dotnet restore
     - name: Build
