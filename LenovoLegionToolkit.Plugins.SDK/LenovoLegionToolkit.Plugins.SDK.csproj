@@ -5,7 +5,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Copyright>© 2024 ChenRunsen</Copyright>
+    <Copyright>© 2025 ChenRunsen</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
