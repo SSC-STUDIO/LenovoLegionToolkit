@@ -44,7 +44,7 @@ public static class NilesoftShellService
             StartInfo = new ProcessStartInfo
             {
                 FileName = shellExePath,
-                Arguments = "-register -treat -restart",
+                Arguments = "-register -treat -restart -silent",
                 WorkingDirectory = shellExeDir, // Set working directory to shell.exe location so it can find imports and shell.nss
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -123,7 +123,7 @@ public static class NilesoftShellService
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = shellExePath,
-                    Arguments = "-unregister -treat -restart",
+                    Arguments = "-unregister -treat -restart -silent",
                     WorkingDirectory = shellExeDir, // Set working directory to shell.exe location so it can find imports and shell.nss
                     UseShellExecute = false,
                     CreateNoWindow = true,
