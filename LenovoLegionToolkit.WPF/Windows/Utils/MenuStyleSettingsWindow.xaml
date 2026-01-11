@@ -13,157 +13,167 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" Margin="20,20,20,0" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <wpfui:CardControl Margin="0,0,0,16">
-                    <wpfui:CardControl.Header>
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Title}" />
-                    </wpfui:CardControl.Header>
-                    <StackPanel Margin="0,8,0,0">
-                        <RadioButton
-                            x:Name="_themeAutoRadio"
-                            GroupName="ThemeSelection"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Auto}"
-                            Margin="0,0,0,8"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <RadioButton
-                            x:Name="_themeLightRadio"
-                            GroupName="ThemeSelection"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Light}"
-                            Margin="0,0,0,8"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <RadioButton
-                            x:Name="_themeDarkRadio"
-                            GroupName="ThemeSelection"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Dark}"
-                            Margin="0,0,0,8"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <RadioButton
-                            x:Name="_themeClassicRadio"
-                            GroupName="ThemeSelection"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Classic}"
-                            Margin="0,0,0,8"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <RadioButton
-                            x:Name="_themeModernRadio"
-                            GroupName="ThemeSelection"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Modern}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    </StackPanel>
-                </wpfui:CardControl>
+        <!-- Instructions -->
+        <wpfui:CardControl Grid.Row="0" Margin="20,20,20,12">
+            <wpfui:CardControl.Header>
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="使用说明" />
+            </wpfui:CardControl.Header>
+            <StackPanel Margin="0,8,0,0">
+                <TextBlock
+                    FontSize="13"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap"
+                    LineHeight="20"
+                    Margin="0,0,0,8">
+                    <Run Text="此编辑器用于直接编辑 shell.nss 配置文件。修改后点击" />
+                    <Run Text="保存" FontWeight="Bold" />
+                    <Run Text="按钮将更改写入文件。" />
+                </TextBlock>
+                <TextBlock
+                    FontSize="13"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap"
+                    LineHeight="20"
+                    Margin="0,0,0,8">
+                    <Run Text="• 配置文件路径：" FontWeight="Bold" />
+                    <Run x:Name="_configPathTextBlock" />
+                </TextBlock>
+                <TextBlock
+                    FontSize="13"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap"
+                    LineHeight="20">
+                    <Run Text="• 修改配置后，需要重启资源管理器（Explorer）才能生效。" />
+                </TextBlock>
+            </StackPanel>
+        </wpfui:CardControl>
 
-                <wpfui:CardControl Margin="0,0,0,16">
-                    <wpfui:CardControl.Header>
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Title}" />
-                    </wpfui:CardControl.Header>
-                    <StackPanel Margin="0,8,0,0">
-                        <wpfui:ToggleSwitch
-                            x:Name="_transparencyToggle"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Enable}" />
-                    </StackPanel>
-                </wpfui:CardControl>
-
-                <wpfui:CardControl>
-                    <wpfui:CardControl.Header>
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Title}" />
-                    </wpfui:CardControl.Header>
-                    <StackPanel Margin="0,8,0,0">
-                        <wpfui:ToggleSwitch
-                            x:Name="_roundedCornersToggle"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners}"
-                            Margin="0,0,0,8" />
-                        <wpfui:ToggleSwitch
-                            x:Name="_shadowsToggle"
-                            Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Shadows}" />
-                    </StackPanel>
-                </wpfui:CardControl>
-
-                <!-- Implementation method and effect principles -->
-                <wpfui:CardControl Margin="0,0,0,16">
-                    <wpfui:CardControl.Header>
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Title}" />
-                    </wpfui:CardControl.Header>
-                    <StackPanel Margin="0,8,0,0">
-                        <!-- Implementation type -->
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Type}" />
-                            <TextBlock
-                                x:Name="_implementationTypeTextBlock"
-                                Grid.Column="1"
-                                Margin="8,0,0,0"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                TextWrapping="Wrap"
-                                Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Type_Value}" />
-                        </Grid>
-
-                        <!-- Working principle explanation -->
-                        <TextBlock
-                            x:Name="_principleTextBlock"
-                            FontSize="13"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Margin="0,0,0,12"
-                            TextWrapping="Wrap"
-                            LineHeight="20"
-                            Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Implementation_Principle}" />
-
-                        <!-- Technical implementation details -->
-                        <Border
-                            x:Name="_detailsBorder"
-                            Padding="12"
+        <!-- Text Editor with Tabs -->
+        <wpfui:CardControl Grid.Row="1" Margin="20,0,20,12">
+            <wpfui:CardControl.Header>
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="配置文件编辑器" />
+            </wpfui:CardControl.Header>
+            <TabControl
+                x:Name="_configTabControl"
+                Margin="0,8,0,0"
+                SelectionChanged="ConfigTabControl_SelectionChanged">
+                <TabItem Header="shell.nss">
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto">
+                        <TextBox
+                            x:Name="_shellNssTextBox"
+                            FontFamily="Consolas, Courier New"
+                            FontSize="12"
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            TextWrapping="NoWrap"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            MinHeight="400"
                             Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            CornerRadius="4">
-                            <ScrollViewer
-                                MaxHeight="300"
-                                VerticalScrollBarVisibility="Auto">
-                                <StackPanel x:Name="_detailsStackPanel" />
-                            </ScrollViewer>
-                        </Border>
-                    </StackPanel>
-                </wpfui:CardControl>
-            </StackPanel>
-        </ScrollViewer>
+                            Padding="8" />
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="theme.nss">
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto">
+                        <TextBox
+                            x:Name="_themeNssTextBox"
+                            FontFamily="Consolas, Courier New"
+                            FontSize="12"
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            TextWrapping="NoWrap"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            MinHeight="400"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            Padding="8" />
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="images.nss">
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto">
+                        <TextBox
+                            x:Name="_imagesNssTextBox"
+                            FontFamily="Consolas, Courier New"
+                            FontSize="12"
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            TextWrapping="NoWrap"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            MinHeight="400"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            Padding="8" />
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="modify.nss">
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto">
+                        <TextBox
+                            x:Name="_modifyNssTextBox"
+                            FontFamily="Consolas, Courier New"
+                            FontSize="12"
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            TextWrapping="NoWrap"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Auto"
+                            MinHeight="400"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            Padding="8" />
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </wpfui:CardControl>
 
         <StackPanel
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="20"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <wpfui:Button
-                x:Name="_applyButton"
+                x:Name="_saveButton"
                 MinWidth="120"
                 Margin="0,0,8,0"
-                Click="ApplyButton_Click"
-                Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Apply}" />
+                Click="SaveButton_Click"
+                Content="保存" />
+            <wpfui:Button
+                x:Name="_restartExplorerButton"
+                MinWidth="140"
+                Margin="0,0,8,0"
+                Click="RestartExplorerButton_Click"
+                Content="重启资源管理器" />
             <wpfui:Button
                 x:Name="_closeButton"
                 MinWidth="120"

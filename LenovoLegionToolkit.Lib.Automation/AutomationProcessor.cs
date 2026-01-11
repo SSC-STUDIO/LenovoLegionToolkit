@@ -309,11 +309,7 @@ public class AutomationProcessor(
 
     private async Task ProcessEvent(IAutomationEvent e)
     {
-        var potentialMatch = _pipelines.SelectMany(p => p.AllTriggers)
-            .Select(async t => await t.IsMatchingEvent(e).ConfigureAwait(false))
-            .Select(t => t.Result)
-            .Where(t => t)
-            .Any();
+        var potentialMatch = await HasMatchingTriggerAsync(e).ConfigureAwait(false);
 
         if (!potentialMatch)
             return;
@@ -322,6 +318,14 @@ public class AutomationProcessor(
             Log.Instance.Trace($"Processing event {e}... [type={e.GetType().Name}]");
 
         await RunAsync(e).ConfigureAwait(false);
+    }
+
+    private async Task<bool> HasMatchingTriggerAsync(IAutomationEvent e)
+    {
+        var triggers = _pipelines.SelectMany(p => p.AllTriggers).ToList();
+        var tasks = triggers.Select(t => t.IsMatchingEvent(e));
+        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+        return results.Any(r => r);
     }
 
     #endregion

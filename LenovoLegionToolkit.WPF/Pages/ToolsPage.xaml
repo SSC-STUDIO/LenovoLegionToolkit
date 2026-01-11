@@ -89,7 +89,7 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Margin" Value="0,0,16,16" />
+            <Setter Property="Margin" Value="8,0,16,16" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -660,39 +660,39 @@
                                                     </Grid>
                                                     <!-- Fixed height container to prevent layout shift -->
                                                     <Border Height="20" Margin="0,6,0,0" Background="Transparent">
-                                                        <TextBlock
+                                                    <TextBlock
                                                             x:Name="ToolNameTextBlock"
-                                                            HorizontalAlignment="Center"
+                                                        HorizontalAlignment="Center"
                                                             FontSize="11"
                                                             FontWeight="Regular"
-                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                            Text="{Binding Name}"
-                                                            TextTrimming="CharacterEllipsis"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding Name}"
+                                                        TextTrimming="CharacterEllipsis"
                                                             TextWrapping="NoWrap"
-                                                            TextAlignment="Center"
+                                                        TextAlignment="Center"
                                                             LineHeight="16"
                                                             MaxWidth="80"
                                                             VerticalAlignment="Top">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
                                                                     <Setter Property="Opacity" Value="1" />
                                                                     <Setter Property="Visibility" Value="Visible" />
                                                                     <Setter Property="UseLayoutRounding" Value="True" />
                                                                     <Setter Property="SnapsToDevicePixels" Value="True" />
                                                                     <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
                                                                     <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                                            <Setter Property="HorizontalAlignment" Value="Left" />
-                                                                            <Setter Property="TextAlignment" Value="Left" />
-                                                                            <Setter Property="TextTrimming" Value="None" />
-                                                                            <Setter Property="FontSize" Value="13" />
-                                                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                        <Setter Property="TextAlignment" Value="Left" />
+                                                                        <Setter Property="TextTrimming" Value="None" />
+                                                                        <Setter Property="FontSize" Value="13" />
+                                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                     </Border>
                                                 </StackPanel>
                                             </Border>
@@ -1141,15 +1141,15 @@
                                     </Grid>
                                     <!-- Fixed height container to prevent layout shift -->
                                     <Border Height="20" Margin="0,6,0,0" Background="Transparent">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
                                             FontSize="11"
                                             FontWeight="Regular"
-                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                            Text="{Binding Name}"
-                                            TextTrimming="CharacterEllipsis"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding Name}"
+                                        TextTrimming="CharacterEllipsis"
                                             TextWrapping="NoWrap"
-                                            TextAlignment="Center"
+                                        TextAlignment="Center"
                                             MaxWidth="80"
                                             LineHeight="16"
                                             VerticalAlignment="Top"

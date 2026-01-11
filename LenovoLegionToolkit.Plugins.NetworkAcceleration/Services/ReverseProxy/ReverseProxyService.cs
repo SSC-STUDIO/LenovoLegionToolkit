@@ -13,6 +13,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Script;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Statistics;
+using NeoSmart.AsyncLock;
 using IDnsOptimizationService = LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Dns.IDnsOptimizationService;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.ReverseProxy;
@@ -26,9 +27,12 @@ public class ReverseProxyService : IReverseProxyService
     private const string DefaultProxyIp = "127.0.0.1";
     private const int BufferSize = 8192;
 
+    private readonly AsyncLock _stateLock = new();
     private bool _isRunning;
     private TcpListener? _tcpListener;
     private Task? _listenerTask;
+    private ushort _proxyPort = DefaultProxyPort;
+    private string _proxyIp = DefaultProxyIp;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly HttpClient _httpClient;
     private readonly IScriptManagerService? _scriptManagerService;
@@ -45,9 +49,42 @@ public class ReverseProxyService : IReverseProxyService
         "githubstatus.com"
     };
 
-    public bool IsRunning => _isRunning;
-    public ushort ProxyPort { get; private set; } = DefaultProxyPort;
-    public string ProxyIp { get; private set; } = DefaultProxyIp;
+    public bool IsRunning
+    {
+        get
+        {
+            using (_stateLock.Lock())
+                return _isRunning;
+        }
+    }
+
+    public ushort ProxyPort
+    {
+        get
+        {
+            using (_stateLock.Lock())
+                return _proxyPort;
+        }
+        private set
+        {
+            using (_stateLock.Lock())
+                _proxyPort = value;
+        }
+    }
+
+    public string ProxyIp
+    {
+        get
+        {
+            using (_stateLock.Lock())
+                return _proxyIp;
+        }
+        private set
+        {
+            using (_stateLock.Lock())
+                _proxyIp = value;
+        }
+    }
 
     public ReverseProxyService(
         IScriptManagerService? scriptManagerService = null,
@@ -74,68 +111,106 @@ public class ReverseProxyService : IReverseProxyService
 
     public async Task<bool> StartAsync()
     {
-        if (_isRunning)
+        // Check if already running and acquire lock
+        string ipToUse;
+        ushort portToUse;
+        using (await _stateLock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Reverse proxy service is already running.");
-            return await Task.FromResult(true);
+            if (_isRunning)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Reverse proxy service is already running.");
+                return true;
+            }
+            ipToUse = _proxyIp;
+            portToUse = _proxyPort;
         }
 
+        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Starting reverse proxy service on {ProxyIp}:{ProxyPort}...");
+                Log.Instance.Trace($"Starting reverse proxy service on {ipToUse}:{portToUse}...");
 
             // Find an available port
-            ProxyPort = FindAvailablePort(IPAddress.Parse(ProxyIp), DefaultProxyPort);
+            var availablePort = FindAvailablePort(IPAddress.Parse(ipToUse), portToUse);
 
-            _tcpListener = new TcpListener(IPAddress.Parse(ProxyIp), ProxyPort);
-            _tcpListener.Start();
+            var tcpListener = new TcpListener(IPAddress.Parse(ipToUse), availablePort);
+            tcpListener.Start();
 
-            _listenerTask = Task.Run(() => ListenForConnections(_cancellationTokenSource.Token));
+            var listenerTask = Task.Run(() => ListenForConnections(_cancellationTokenSource.Token));
 
-            _isRunning = true;
+            // Update state under lock
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                if (_isRunning)
+                {
+                    // Another thread started it while we were setting up
+                    tcpListener.Stop();
+                    return true;
+                }
+                _proxyPort = availablePort;
+                _tcpListener = tcpListener;
+                _listenerTask = listenerTask;
+                _isRunning = true;
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Reverse proxy service started on {ProxyIp}:{ProxyPort}.");
 
-            return await Task.FromResult(true);
+            return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error starting reverse proxy service: {ex.Message}", ex);
-            return await Task.FromResult(false);
+            return false;
         }
     }
 
     public async Task<bool> StopAsync()
     {
-        if (!_isRunning)
+        // Check if running and acquire lock
+        TcpListener? tcpListenerToStop = null;
+        Task? listenerTaskToWait = null;
+        using (await _stateLock.LockAsync().ConfigureAwait(false))
         {
-            return true;
+            if (!_isRunning)
+            {
+                return true;
+            }
+            tcpListenerToStop = _tcpListener;
+            listenerTaskToWait = _listenerTask;
+            _isRunning = false;
         }
 
+        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping reverse proxy service...");
 
-            _isRunning = false;
             _cancellationTokenSource.Cancel();
 
-            _tcpListener?.Stop();
+            tcpListenerToStop?.Stop();
 
-            if (_listenerTask != null)
+            if (listenerTaskToWait != null)
             {
                 try
                 {
-                    await Task.WhenAny(_listenerTask, Task.Delay(5000));
+                    await Task.WhenAny(listenerTaskToWait, Task.Delay(5000));
                 }
                 catch
                 {
                     // Ignore cancellation exceptions
                 }
+            }
+
+            // Clear references under lock
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                _tcpListener = null;
+                _listenerTask = null;
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -153,11 +228,27 @@ public class ReverseProxyService : IReverseProxyService
 
     private async Task ListenForConnections(CancellationToken cancellationToken)
     {
-        while (_isRunning && _tcpListener != null && !cancellationToken.IsCancellationRequested)
+        TcpListener? listener;
+        using (await _stateLock.LockAsync().ConfigureAwait(false))
         {
+            listener = _tcpListener;
+        }
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            bool isRunning;
+            using (await _stateLock.LockAsync().ConfigureAwait(false))
+            {
+                isRunning = _isRunning;
+                listener = _tcpListener;
+            }
+
+            if (!isRunning || listener == null)
+                break;
+
             try
             {
-                var client = await _tcpListener.AcceptTcpClientAsync();
+                var client = await listener.AcceptTcpClientAsync();
                 if (client != null)
                 {
                     // Handle client connection asynchronously
@@ -577,7 +668,13 @@ public class ReverseProxyService : IReverseProxyService
 
     public void Dispose()
     {
-        if (_isRunning)
+        bool isRunning;
+        using (_stateLock.Lock())
+        {
+            isRunning = _isRunning;
+        }
+
+        if (isRunning)
         {
             StopAsync().GetAwaiter().GetResult();
         }
