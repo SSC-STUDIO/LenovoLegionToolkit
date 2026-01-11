@@ -166,5 +166,46 @@ public class WindowsOptimizationServiceTests
             allActionKeys.Should().Contain(key);
         }
     }
+
+    [Fact]
+    public void GetCategories_ShouldAlwaysIncludeBeautificationCategory()
+    {
+        // Arrange & Act
+        var categories = WindowsOptimizationService.GetCategories();
+        var categoryKeys = categories.Select(c => c.Key).ToList();
+        
+        // Assert - beautify.contextMenu category should always be present, even if shell.exe is missing
+        categoryKeys.Should().Contain("beautify.contextMenu");
+        
+        var beautifyCategory = categories.FirstOrDefault(c => c.Key == "beautify.contextMenu");
+        beautifyCategory.Should().NotBeNull();
+        beautifyCategory!.Actions.Should().NotBeEmpty("Beautification category should always have at least one action");
+        
+        // Verify the action key is one of the expected values
+        var actionKeys = beautifyCategory.Actions.Select(a => a.Key).ToList();
+        actionKeys.Should().Contain(
+            a => a == "beautify.contextMenu.enableClassic" || a == "beautify.contextMenu.uninstallShell",
+            "Should contain either enableClassic or uninstallShell action");
+    }
+
+    [Fact]
+    public void BeautificationCategory_ShouldHaveActionsRegardlessOfShellExeExistence()
+    {
+        // Arrange & Act
+        // This test verifies that the category is always shown, even when shell.exe might not exist
+        // The actual file existence check happens at runtime, but the category should always be present
+        var categories = WindowsOptimizationService.GetCategories();
+        var beautifyCategory = categories.FirstOrDefault(c => c.Key == "beautify.contextMenu");
+        
+        // Assert
+        beautifyCategory.Should().NotBeNull("Beautification category should always be included");
+        
+        if (beautifyCategory != null)
+        {
+            beautifyCategory.Actions.Should().NotBeEmpty(
+                "Beautification category should always have at least one action, " +
+                "even if shell.exe doesn't exist (the action will handle missing files gracefully)");
+        }
+    }
 }
 
