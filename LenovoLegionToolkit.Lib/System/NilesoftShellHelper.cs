@@ -77,19 +77,19 @@ public static class NilesoftShellHelper
                         dllPath = Environment.ExpandEnvironmentVariables(dllPath);
                         
                         if (File.Exists(dllPath))
-                        {
+            {
                             result = true;
-                            if (Log.Instance.IsTraceEnabled)
+                if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Nilesoft Shell installation status (from CLSID registry): {result}, DLL path: {dllPath}");
-                            
-                            // 缓存结果
-                            lock (_cacheLock)
-                            {
-                                _cachedInstallationStatus = result;
-                                _cacheTimestamp = DateTime.UtcNow;
-                            }
+                
+                // 缓存结果
+                lock (_cacheLock)
+                {
+                    _cachedInstallationStatus = result;
+                    _cacheTimestamp = DateTime.UtcNow;
+                }
                             return Task.FromResult(result);
-                        }
+            }
                         else if (Log.Instance.IsTraceEnabled)
                         {
                             Log.Instance.Trace($"CLSID registered but DLL file not found at path: {dllPath}");
@@ -109,34 +109,34 @@ public static class NilesoftShellHelper
                     {
                         var dllPath = hkcuInprocKey.GetValue("") as string;
                         if (!string.IsNullOrWhiteSpace(dllPath))
-                        {
+                    {
                             dllPath = dllPath.Trim('"');
                             dllPath = Environment.ExpandEnvironmentVariables(dllPath);
                             if (File.Exists(dllPath))
                             {
                                 result = true;
-                                if (Log.Instance.IsTraceEnabled)
+                        if (Log.Instance.IsTraceEnabled)
                                     Log.Instance.Trace($"Nilesoft Shell installation status (from HKCU CLSID registry): {result}, DLL path: {dllPath}");
-                            }
                         }
+                        }
+                    }
                     }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to check CLSID registry: {ex.Message}", ex);
         }
         
-        // 缓存结果
-        lock (_cacheLock)
-        {
-            _cachedInstallationStatus = result;
-            _cacheTimestamp = DateTime.UtcNow;
-        }
-        
-        if (Log.Instance.IsTraceEnabled)
+                // 缓存结果
+                lock (_cacheLock)
+                {
+                    _cachedInstallationStatus = result;
+                    _cacheTimestamp = DateTime.UtcNow;
+                }
+            
+            if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Nilesoft Shell installation status (final): {result}");
         
         return Task.FromResult(result);
@@ -217,8 +217,8 @@ public static class NilesoftShellHelper
                             return parentShellIntegrationCandidate;
                         }
                     }
-                }
-                
+                    }
+                    
                 // Also check AppContext.BaseDirectory relative to build/shellIntegration
                 var appBaseDir = AppContext.BaseDirectory;
                 if (!string.IsNullOrWhiteSpace(appBaseDir))
