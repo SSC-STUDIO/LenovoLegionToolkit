@@ -874,23 +874,20 @@ public readonly struct Update(Release release)
         if (string.IsNullOrWhiteSpace(tagName))
             throw new ArgumentException("Tag name cannot be null or empty", nameof(tagName));
 
-        // Remove 'v' prefix if present (e.g., "v3.0.1" -> "3.0.1")
-        var versionString = tagName.TrimStart('v', 'V');
-        
-        // Try to parse the version
-        if (Version.TryParse(versionString, out var version))
+        // Try to parse the version directly
+        if (Version.TryParse(tagName, out var version))
             return version;
 
         // If parsing fails, try to extract version from tag name
-        // Handle cases like "v3" -> "3.0.0", "v3.0" -> "3.0.0"
-        var parts = versionString.Split('.');
+        // Handle cases like "3" -> "3.0.0", "3.0" -> "3.0.0"
+        var parts = tagName.Split('.');
         if (parts.Length == 1 && int.TryParse(parts[0], out var major))
             return new Version(major, 0);
         if (parts.Length == 2 && int.TryParse(parts[0], out var major2) && int.TryParse(parts[1], out var minor))
             return new Version(major2, minor);
 
         // If all else fails, throw a more descriptive error
-        throw new FormatException($"Unable to parse version from tag name: '{tagName}'. Expected format: 'v3.0.1' or '3.0.1'");
+        throw new FormatException($"Unable to parse version from tag name: '{tagName}'. Expected format: '3.0.1'");
     }
 
     #region Equality
