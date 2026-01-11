@@ -38,6 +38,41 @@ begin
   Result := True;
 end;
 
+function InitializeUninstall(): Boolean;
+var
+  ShellExePath: String;
+  ResultCode: Integer;
+begin
+  Result := True;
+  
+  // Uninstall Nilesoft Shell before uninstalling the main application
+  // This releases file locks so files can be deleted
+  ShellExePath := ExpandConstant('{app}\shell.exe');
+  if FileExists(ShellExePath) then
+  begin
+    try
+      // Unregister Nilesoft Shell (this will restart Explorer)
+      // Use -silent flag to avoid showing any message boxes
+      if Exec(ShellExePath, '-unregister -treat -restart -silent', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+      begin
+        // Wait for Explorer to restart and release file locks
+        // Explorer restart can take a few seconds
+        Sleep(2000); // Initial wait for Explorer to start restarting
+        Sleep(5000); // Additional wait to ensure Explorer has fully restarted and released locks
+        // Total wait time: ~7 seconds, which should be enough for Explorer restart
+      end
+      else
+      begin
+        // If execution failed, still wait a bit in case Explorer is restarting
+        Sleep(3000);
+      end;
+    except
+      // If uninstall fails, wait a bit anyway - files may still be locked
+      Sleep(3000);
+    end;
+  end;
+end;
+
 [Languages]
 Name: "en";      MessagesFile: "compiler:Default.isl"
 Name: "ptbr";    MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
@@ -88,4 +123,5 @@ Type: files; Name: "{app}\shell.nss"
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 
 [UninstallRun]
+; Delete scheduled task
 RunOnceId: "DelAutorun"; Filename: "schtasks"; Parameters: "/Delete /TN ""LenovoLegionToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden 
