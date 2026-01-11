@@ -6,7 +6,7 @@
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
 		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
-		<Copyright>© 2024 ChenRunsen</Copyright>
+		<Copyright>© 2025 ChenRunsen</Copyright>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
