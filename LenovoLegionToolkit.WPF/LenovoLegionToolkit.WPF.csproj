@@ -99,11 +99,14 @@
 			<!-- Try ShellIntegration src/bin directory (primary location) -->
 			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.exe" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.exe')" />
 			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.dll" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.dll')" />
+			<!-- Try ShellIntegration src/exe/bin directory (fallback when SolutionDir not set) -->
+			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\src\exe\bin\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\exe\bin\shell.exe')" />
+			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.dll" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.dll') AND Exists('$(ShellIntegrationSrcBinDir)\shell.dll')" />
 			<!-- Try ShellIntegration root bin directory (legacy) -->
-			<ShellArtifactsSource Include="$(ShellIntegrationBinDir)\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND Exists('$(ShellIntegrationBinDir)\shell.exe')" />
+			<ShellArtifactsSource Include="$(ShellIntegrationBinDir)\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\exe\bin\shell.exe') AND Exists('$(ShellIntegrationBinDir)\shell.exe')" />
 			<ShellArtifactsSource Include="$(ShellIntegrationBinDir)\shell.dll" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.dll') AND Exists('$(ShellIntegrationBinDir)\shell.dll')" />
 			<!-- Last resort: search anywhere in ShellIntegration -->
-			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND !Exists('$(ShellIntegrationBinDir)\shell.exe')" />
+			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\exe\bin\shell.exe') AND !Exists('$(ShellIntegrationBinDir)\shell.exe')" />
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.dll" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.dll') AND !Exists('$(ShellIntegrationBinDir)\shell.dll')" />
 		</ItemGroup>
 		<!-- Copy shell artifacts to app output directory (TargetDir) for distribution -->
