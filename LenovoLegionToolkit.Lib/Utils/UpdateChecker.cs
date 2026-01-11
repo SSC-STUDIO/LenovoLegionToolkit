@@ -73,17 +73,29 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking updates from repository: {repositoryOwner}/{repositoryName}");
                 
-                var releases = await githubClient.Repository.Release.GetAll(repositoryOwner, repositoryName, new ApiOptions { PageSize = 5 }).ConfigureAwait(false);
+                var releases = await githubClient.Repository.Release.GetAll(repositoryOwner, repositoryName, new ApiOptions { PageSize = 10 }).ConfigureAwait(false);
 
                 var thisReleaseVersion = Assembly.GetEntryAssembly()?.GetName().Version;
-                var thisBuildDate = Assembly.GetEntryAssembly()?.GetBuildDateTime() ?? new DateTime(2000, 1, 1);
 
                 var updates = releases
                     .Where(r => !r.Draft)
                     .Where(r => !r.Prerelease)
-                    .Where(r => (r.PublishedAt ?? r.CreatedAt).UtcDateTime >= thisBuildDate)
-                    .Select(r => new Update(r))
-                    .Where(r => r.Version > thisReleaseVersion)
+                    .Select(r =>
+                    {
+                        try
+                        {
+                            return new Update(r);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Skip releases with invalid version tags (e.g., "v3" without minor/patch)
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Skipping release with invalid version tag: {r.TagName}", ex);
+                            return (Update?)null;
+                        }
+                    })
+                    .Where(r => r.HasValue && r.Value.Version > thisReleaseVersion)
+                    .Select(r => r!.Value)
                     .OrderByDescending(r => r.Version)
                     .ToArray();
 
