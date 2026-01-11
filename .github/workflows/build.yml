@@ -23,6 +23,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore
       run: dotnet restore
+    - name: Update submodules to latest
+      run: git submodule update --init --recursive --depth=0
     - name: Build
       run: .\make.bat
     - name: Upload artifact
