@@ -93,6 +93,9 @@
 			<RepoBuildDir>$(MSBuildProjectDirectory)\..\build\</RepoBuildDir>
 			<ShellIntegrationSrcBinDir>$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin</ShellIntegrationSrcBinDir>
 			<ShellIntegrationBinDir>$(MSBuildProjectDirectory)\..\ShellIntegration\bin</ShellIntegrationBinDir>
+			<!-- Use PublishDir if available (during publish), otherwise use TargetDir -->
+			<ShellOutputDir Condition="'$(PublishDir)' != ''">$(PublishDir)</ShellOutputDir>
+			<ShellOutputDir Condition="'$(PublishDir)' == ''">$(TargetDir)</ShellOutputDir>
 		</PropertyGroup>
 		<!-- Find shell.exe and shell.dll from ShellIntegration src/bin directory -->
 		<ItemGroup>
@@ -109,11 +112,11 @@
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.exe" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.exe') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\src\exe\bin\shell.exe') AND !Exists('$(ShellIntegrationBinDir)\shell.exe')" />
 			<ShellArtifactsSource Include="$(MSBuildProjectDirectory)\..\ShellIntegration\**\shell.dll" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.dll') AND !Exists('$(ShellIntegrationBinDir)\shell.dll')" />
 		</ItemGroup>
-		<!-- Copy shell artifacts to app output directory (TargetDir) for distribution -->
-		<Message Text="[Shell] Copying shell artifacts to $(TargetDir)..." Importance="normal" />
+		<!-- Copy shell artifacts to app output directory for distribution -->
+		<Message Text="[Shell] Copying shell artifacts to $(ShellOutputDir)..." Importance="normal" />
 		<Message Text="[Shell] Found @(ShellArtifactsSource->Count()) shell artifact(s) to copy" Importance="normal" Condition="'@(ShellArtifactsSource)' != ''" />
 		<Message Text="[Shell] WARNING: No shell artifacts found to copy. Checked: $(ShellIntegrationSrcBinDir), $(ShellIntegrationBinDir)" Importance="high" Condition="'@(ShellArtifactsSource)' == ''" />
-		<Copy SourceFiles="@(ShellArtifactsSource)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="'@(ShellArtifactsSource)' != ''" />
+		<Copy SourceFiles="@(ShellArtifactsSource)" DestinationFolder="$(ShellOutputDir)" SkipUnchangedFiles="true" Condition="'@(ShellArtifactsSource)' != ''" />
 		<!-- Find imports from ShellIntegration src/bin/imports -->
 		<ItemGroup>
 			<!-- Try ShellIntegration src/bin/imports -->
@@ -124,8 +127,8 @@
 			<ShellImportsSource Include="$(ShellIntegrationBinDir)\imports\**\*.*" Condition="!Exists('$(ShellIntegrationSrcBinDir)\imports\') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\imports\')" />
 		</ItemGroup>
 		<!-- Copy imports to app output directory preserving structure -->
-		<Message Text="[Shell] Copying imports to $(TargetDir)imports..." Importance="normal" Condition="'@(ShellImportsSource)' != ''" />
-		<Copy SourceFiles="@(ShellImportsSource)" DestinationFiles="$(TargetDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" Condition="'@(ShellImportsSource)' != ''" />
+		<Message Text="[Shell] Copying imports to $(ShellOutputDir)imports..." Importance="normal" Condition="'@(ShellImportsSource)' != ''" />
+		<Copy SourceFiles="@(ShellImportsSource)" DestinationFiles="$(ShellOutputDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" Condition="'@(ShellImportsSource)' != ''" />
 		<!-- Find shell.nss from ShellIntegration src/bin -->
 		<ItemGroup>
 			<!-- Try ShellIntegration src/bin/shell.nss -->
@@ -136,8 +139,8 @@
 			<ShellConfigSource Include="$(ShellIntegrationBinDir)\shell.nss" Condition="!Exists('$(ShellIntegrationSrcBinDir)\shell.nss') AND !Exists('$(MSBuildProjectDirectory)\..\ShellIntegration\assets\shell.nss')" />
 		</ItemGroup>
 		<!-- Copy shell.nss to app output directory -->
-		<Message Text="[Shell] Copying shell.nss to $(TargetDir)..." Importance="normal" Condition="'@(ShellConfigSource)' != ''" />
-		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
+		<Message Text="[Shell] Copying shell.nss to $(ShellOutputDir)..." Importance="normal" Condition="'@(ShellConfigSource)' != ''" />
+		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(ShellOutputDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
 	</Target>
 	<Target Name="CopyToolsDirectory" AfterTargets="Build;Publish">
 		<PropertyGroup>
