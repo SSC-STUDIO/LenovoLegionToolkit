@@ -2,6 +2,7 @@
 using LenovoLegionToolkit.Lib.System;
 #endif
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -538,6 +539,9 @@ public partial class App
     {
         await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
+        // Stop all plugins first (they may depend on services)
+        await StopPluginsAsync().ConfigureAwait(false);
+
         // Stop all services in parallel to speed up shutdown
         await Task.WhenAll(
             StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
@@ -557,6 +561,56 @@ public partial class App
             StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
             StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service")
         ).ConfigureAwait(false);
+    }
+
+    private async Task StopPluginsAsync()
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<IPluginManager>() is not { } pluginManager)
+                return;
+
+            // Get all registered plugins and call their OnShutdown method
+            var registeredPlugins = pluginManager.GetRegisteredPlugins().ToList();
+            if (registeredPlugins.Count == 0)
+                return;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutting down {registeredPlugins.Count} plugin(s)...");
+
+            var shutdownTasks = new List<Task>();
+
+            foreach (var plugin in registeredPlugins)
+            {
+                shutdownTasks.Add(Task.Run(() =>
+                {
+                    try
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Calling OnShutdown for plugin: {plugin.Id}");
+                        plugin.OnShutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Error calling OnShutdown for plugin {plugin.Id}: {ex.Message}", ex);
+                    }
+                }));
+            }
+
+            if (shutdownTasks.Count > 0)
+            {
+                await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugin shutdown completed.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during plugin shutdown: {ex.Message}", ex);
+        }
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

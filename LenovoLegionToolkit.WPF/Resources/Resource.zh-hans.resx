@@ -3009,6 +3009,21 @@
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
     <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
   </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
+    <value>配置文件编辑器</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
+    <value>shell.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
+    <value>theme.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve">
+    <value>images.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve">
+    <value>modify.nss</value>
+  </data>
   <data name="ActionDetailsWindow_Title" xml:space="preserve">
     <value>操作详情</value>
   </data>

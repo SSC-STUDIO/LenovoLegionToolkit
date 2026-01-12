@@ -132,7 +132,6 @@ public partial class MainWindow
 
         LoadDeviceInfo();
         UpdateIndicators();
-        UpdateDonateButtonVisibility();
         CheckForUpdates();
 
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
@@ -284,54 +283,41 @@ public partial class MainWindow
     public void CheckForUpdates(bool manualCheck = false)
     {
         Task.Run(() => _updateChecker.CheckAsync(manualCheck))
-            .ContinueWith(updatesAvailable =>
+            .ContinueWith(async updatesAvailable =>
             {
                 var result = updatesAvailable.Result;
                 if (result is null)
                 {
-                    HandleNoUpdateAvailable(manualCheck);
+                    _updateIndicator.Visibility = Visibility.Collapsed;
+
+                    if (manualCheck && WindowState != WindowState.Minimized)
+                    {
+                        switch (_updateChecker.Status)
+                        {
+                            case UpdateCheckStatus.Success:
+                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
+                                break;
+                            case UpdateCheckStatus.RateLimitReached:
+                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
+                                break;
+                            case UpdateCheckStatus.Error:
+                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
+                                break;
+                        }
+                    }
                 }
                 else
                 {
-                    HandleUpdateAvailable(result);
+                    var versionNumber = result.ToString(3);
+
+                    _updateIndicatorText.Text =
+                        string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
+                    _updateIndicator.Visibility = Visibility.Visible;
+
+                    if (WindowState == WindowState.Minimized)
+                        MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
-    }
-
-    private void HandleNoUpdateAvailable(bool manualCheck)
-    {
-        _updateIndicator.Visibility = Visibility.Collapsed;
-
-        if (!manualCheck || WindowState == WindowState.Minimized)
-            return;
-
-        ShowUpdateCheckStatusMessage();
-    }
-
-    private async void ShowUpdateCheckStatusMessage()
-    {
-        switch (_updateChecker.Status)
-        {
-            case UpdateCheckStatus.Success:
-                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
-                break;
-            case UpdateCheckStatus.RateLimitReached:
-                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
-                break;
-            case UpdateCheckStatus.Error:
-                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
-                break;
-        }
-    }
-
-    private void HandleUpdateAvailable(Version version)
-    {
-        var versionNumber = version.ToString(3);
-        _updateIndicatorText.Text = string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
-        _updateIndicator.Visibility = Visibility.Visible;
-
-        if (WindowState == WindowState.Minimized)
-            MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
     }
 
     private void RestoreSize()
@@ -416,26 +402,58 @@ public partial class MainWindow
     {
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-        UpdateNavigationItemVisibility(_keyboardItem, "keyboardBacklight", visibilitySettings);
-        UpdateNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
-        UpdateNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
-        UpdateNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
-        UpdateNavigationItemVisibility(_toolsItem, "tools", visibilitySettings);
-        UpdateNavigationItemVisibility(_donateNavigationItem, "donate", visibilitySettings);
-        UpdateNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
+        // Update keyboard navigation item
+        if (_keyboardItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("keyboardBacklight", visibilitySettings);
+            _keyboardItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update automation navigation item
+        if (_automationItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("automation", visibilitySettings);
+            _automationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update macro navigation item
+        if (_macroItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("macro", visibilitySettings);
+            _macroItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update Windows optimization navigation item
+        if (_windowsOptimizationItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
+            _windowsOptimizationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update tools navigation item (now the default interface, no need to check plugin status)
+        if (_toolsItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("tools", visibilitySettings);
+            _toolsItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update donate navigation item
+        if (_donateNavigationItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("donate", visibilitySettings);
+            _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // Update about navigation item
+        if (_aboutItem != null)
+        {
+            var shouldShow = GetNavigationItemVisibility("about", visibilitySettings);
+            _aboutItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         // Update plugin extensions navigation item
         // Note: This is handled separately in UpdatePluginExtensionsNavigationVisibility() 
         // to keep the logic consistent with other navigation items
-    }
-
-    private void UpdateNavigationItemVisibility(NavigationItem? item, string pageTag, Dictionary<string, bool> visibilitySettings)
-    {
-        if (item == null)
-            return;
-
-        var shouldShow = GetNavigationItemVisibility(pageTag, visibilitySettings);
-        item.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)
@@ -547,99 +565,100 @@ public partial class MainWindow
     {
         try
         {
-            var pluginsToShow = GetPluginsToShow();
-            RemoveUninstalledPluginNavigationItems(pluginsToShow);
-            AddOrUpdatePluginNavigationItems(pluginsToShow);
+            // Get all installed plugins (excluding system plugins like Tools and SystemOptimization)
+            var installedPluginIds = _pluginManager.GetInstalledPluginIds().ToList();
+            var registeredPlugins = _pluginManager.GetRegisteredPlugins().ToList();
+            
+            // Filter out system plugins
+            var pluginsToShow = registeredPlugins
+                .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase)
+                    && !p.IsSystemPlugin)
+                .ToList();
+
+            // Remove navigation items for uninstalled plugins
+            var pluginIdsToRemove = _pluginNavigationItems.Keys
+                .Where(id => !pluginsToShow.Any(p => p.Id == id))
+                .ToList();
+
+            foreach (var pluginId in pluginIdsToRemove)
+            {
+                if (_pluginNavigationItems.TryGetValue(pluginId, out var navItem))
+                {
+                    _navigationStore.Items.Remove(navItem);
+                    _pluginNavigationItems.Remove(pluginId);
+                }
+            }
+
+            // Add or update navigation items for installed plugins
+            foreach (var plugin in pluginsToShow)
+            {
+                if (!_pluginNavigationItems.ContainsKey(plugin.Id))
+                {
+                    // Get plugin metadata for version info
+                    var pluginMetadata = _pluginManager.GetPluginMetadata(plugin.Id);
+                    var pluginDisplayName = plugin.Name;
+                    
+                    // Create new navigation item for this plugin with icon
+                    var navItem = new NavigationItem
+                    {
+                        Content = pluginDisplayName,
+                        PageTag = $"plugin:{plugin.Id}",
+                        PageType = typeof(PluginPageWrapper),
+                        Tag = pluginMetadata // Store metadata in Tag for later use
+                    };
+                    
+                    // Set icon from plugin's Icon property
+                    if (!string.IsNullOrWhiteSpace(plugin.Icon))
+                    {
+                        navItem.Icon = GetSymbolFromString(plugin.Icon);
+                    }
+                    else
+                    {
+                        // Default icon if plugin doesn't specify one
+                        navItem.Icon = SymbolRegular.Apps24;
+                    }
+
+                    // Register the page tag mapping
+                    PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
+
+                    // Find the position to insert (after tools item, before plugin extensions item)
+                    var insertIndex = -1;
+                    if (_toolsItem != null && _navigationStore.Items.Contains(_toolsItem))
+                    {
+                        insertIndex = _navigationStore.Items.IndexOf(_toolsItem);
+                    }
+                    else if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
+                    {
+                        insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
+                    }
+                    else
+                    {
+                        var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
+                        if (macroItem != null)
+                        {
+                            insertIndex = _navigationStore.Items.IndexOf(macroItem);
+                        }
+                    }
+
+                    // Insert the navigation item
+                    if (insertIndex >= 0)
+                    {
+                        _navigationStore.Items.Insert(insertIndex + 1, navItem);
+                    }
+                    else
+                    {
+                        _navigationStore.Items.Add(navItem);
+                    }
+
+                    _pluginNavigationItems[plugin.Id] = navItem;
+                }
+            }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error updating plugin navigation items: {ex.Message}", ex);
         }
-    }
-
-    private List<IPlugin> GetPluginsToShow()
-    {
-        var installedPluginIds = _pluginManager.GetInstalledPluginIds().ToList();
-        var registeredPlugins = _pluginManager.GetRegisteredPlugins().ToList();
-        
-        return registeredPlugins
-            .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase) && !p.IsSystemPlugin)
-            .ToList();
-    }
-
-    private void RemoveUninstalledPluginNavigationItems(List<IPlugin> pluginsToShow)
-    {
-        var pluginIdsToRemove = _pluginNavigationItems.Keys
-            .Where(id => !pluginsToShow.Any(p => p.Id == id))
-            .ToList();
-
-        foreach (var pluginId in pluginIdsToRemove)
-        {
-            if (_pluginNavigationItems.TryGetValue(pluginId, out var navItem))
-            {
-                _navigationStore.Items.Remove(navItem);
-                _pluginNavigationItems.Remove(pluginId);
-            }
-        }
-    }
-
-    private void AddOrUpdatePluginNavigationItems(List<IPlugin> pluginsToShow)
-    {
-        foreach (var plugin in pluginsToShow)
-        {
-            if (!_pluginNavigationItems.ContainsKey(plugin.Id))
-            {
-                var navItem = CreatePluginNavigationItem(plugin);
-                InsertPluginNavigationItem(navItem);
-                _pluginNavigationItems[plugin.Id] = navItem;
-            }
-        }
-    }
-
-    private NavigationItem CreatePluginNavigationItem(IPlugin plugin)
-    {
-        var pluginMetadata = _pluginManager.GetPluginMetadata(plugin.Id);
-        var navItem = new NavigationItem
-        {
-            Content = plugin.Name,
-            PageTag = $"plugin:{plugin.Id}",
-            PageType = typeof(PluginPageWrapper),
-            Tag = pluginMetadata,
-            Icon = GetPluginIcon(plugin)
-        };
-
-        PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
-        return navItem;
-    }
-
-    private SymbolRegular GetPluginIcon(IPlugin plugin)
-    {
-        return !string.IsNullOrWhiteSpace(plugin.Icon) 
-            ? GetSymbolFromString(plugin.Icon) 
-            : SymbolRegular.Apps24;
-    }
-
-    private void InsertPluginNavigationItem(NavigationItem navItem)
-    {
-        var insertIndex = FindPluginInsertIndex();
-        
-        if (insertIndex >= 0)
-            _navigationStore.Items.Insert(insertIndex + 1, navItem);
-        else
-            _navigationStore.Items.Add(navItem);
-    }
-
-    private int FindPluginInsertIndex()
-    {
-        if (_toolsItem != null && _navigationStore.Items.Contains(_toolsItem))
-            return _navigationStore.Items.IndexOf(_toolsItem);
-        
-        if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
-            return _navigationStore.Items.IndexOf(_windowsOptimizationItem);
-        
-        var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
-        return macroItem != null ? _navigationStore.Items.IndexOf(macroItem) : -1;
     }
 
     /// <summary>
@@ -656,12 +675,12 @@ public partial class MainWindow
 
     public void UpdateDonateButtonVisibility()
     {
-        // Donate button visibility requires both ShowDonateButton setting AND navigation visibility setting
+        // Use the same logic as UpdateNavigationItemsVisibilityFromSettings
+        // to ensure consistency with navigation items visibility settings
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         if (_donateNavigationItem != null)
         {
-            var shouldShow = _applicationSettings.Store.ShowDonateButton 
-                && GetNavigationItemVisibility("donate", visibilitySettings);
+            var shouldShow = GetNavigationItemVisibility("donate", visibilitySettings);
             _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
     }

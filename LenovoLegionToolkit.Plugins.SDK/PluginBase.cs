@@ -24,6 +24,11 @@ public abstract class PluginBase : IPlugin
         // Default implementation: do nothing
     }
 
+    public virtual void OnShutdown()
+    {
+        // Default implementation: do nothing
+    }
+
     /// <summary>
     /// Get feature extension provided by this plugin (e.g., IPluginPage)
     /// </summary>

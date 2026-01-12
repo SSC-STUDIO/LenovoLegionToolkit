@@ -324,15 +324,6 @@
                                                                     </DoubleAnimation.EasingFunction>
                                                                 </DoubleAnimation>
                                                                 <DoubleAnimation
-                                                                    Storyboard.TargetName="IconBackgroundBrush"
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="1.0"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
                                                                     Storyboard.TargetName="IconShadowEffect"
                                                                     Storyboard.TargetProperty="BlurRadius"
                                                                     To="12"
@@ -378,15 +369,6 @@
                                                                     Storyboard.TargetName="IconScaleTransform"
                                                                     Storyboard.TargetProperty="ScaleY"
                                                                     To="1"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconBackgroundBrush"
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="0.8"
                                                                     Duration="0:0:0.2">
                                                                     <DoubleAnimation.EasingFunction>
                                                                         <CubicEase EasingMode="EaseOut" />
@@ -590,7 +572,7 @@
                                                             BorderThickness="0.5"
                                                             RenderTransformOrigin="0.5,0.5">
                                                             <Border.Background>
-                                                                <SolidColorBrush x:Name="IconBackgroundBrush" Color="White" Opacity="0.8" />
+                                                                <SolidColorBrush x:Name="IconBackgroundBrush" Color="Transparent" Opacity="0" />
                                                             </Border.Background>
                                                             <Border.RenderTransform>
                                                                 <ScaleTransform x:Name="IconScaleTransform" ScaleX="1" ScaleY="1" />
@@ -759,15 +741,6 @@
                                                     </DoubleAnimation.EasingFunction>
                                                 </DoubleAnimation>
                                                 <DoubleAnimation
-                                                    Storyboard.TargetName="IconBackgroundBrush2"
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="1.0"
-                                                    Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                                <DoubleAnimation
                                                     Storyboard.TargetName="IconShadowEffect2"
                                                     Storyboard.TargetProperty="BlurRadius"
                                                     To="12"
@@ -813,15 +786,6 @@
                                                     Storyboard.TargetName="IconScaleTransform2"
                                                     Storyboard.TargetProperty="ScaleY"
                                                     To="1"
-                                                    Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut" />
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetName="IconBackgroundBrush2"
-                                                    Storyboard.TargetProperty="Opacity"
-                                                    To="0.8"
                                                     Duration="0:0:0.2">
                                                     <DoubleAnimation.EasingFunction>
                                                         <CubicEase EasingMode="EaseOut" />
@@ -1025,7 +989,7 @@
                                             BorderThickness="0.5"
                                             RenderTransformOrigin="0.5,0.5">
                                             <Border.Background>
-                                                <SolidColorBrush x:Name="IconBackgroundBrush2" Color="White" Opacity="0.8" />
+                                                <SolidColorBrush x:Name="IconBackgroundBrush2" Color="Transparent" Opacity="0" />
                                             </Border.Background>
                                             <Border.RenderTransform>
                                                 <ScaleTransform x:Name="IconScaleTransform2" ScaleX="1" ScaleY="1" />
@@ -1042,7 +1006,7 @@
                                                 <Style TargetType="Border">
                                                     <Setter Property="Background">
                                                         <Setter.Value>
-                                                            <SolidColorBrush Color="White" Opacity="0.8" />
+                                                            <SolidColorBrush Color="Transparent" Opacity="0" />
                                                         </Setter.Value>
                                                     </Setter>
                                                     <Setter Property="RenderTransform">
@@ -1063,7 +1027,7 @@
                                                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Path=IsMouseOver}" Value="True">
                                                             <Setter Property="Background">
                                                                 <Setter.Value>
-                                                                    <SolidColorBrush Color="White" Opacity="1.0" />
+                                                                    <SolidColorBrush Color="Transparent" Opacity="0" />
                                                                 </Setter.Value>
                                                             </Setter>
                                                             <Setter Property="RenderTransform">
