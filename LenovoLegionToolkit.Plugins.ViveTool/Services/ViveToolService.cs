@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -18,7 +19,9 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 /// </summary>
 public class ViveToolService : IViveToolService
 {
-    private const string ViveToolExeName = "vivetool.exe";
+    public const string ViveToolExeName = "ViVeTool.exe";
+    // Official ViVeTool release asset (ZIP file containing ViVeTool.exe)
+    private const string DefaultViveToolDownloadUrl = "https://github.com/thebookisclosed/ViVe/releases/latest/download/ViVeTool-v0.3.4-IntelAmd.zip";
     private string? _cachedViveToolPath;
     private readonly Settings.ViveToolSettings _settings;
 
@@ -37,7 +40,7 @@ public class ViveToolService : IViveToolService
     public async Task<string?> GetViveToolPathAsync()
     {
         if (!string.IsNullOrEmpty(_cachedViveToolPath) && File.Exists(_cachedViveToolPath))
-            return Task.FromResult<string?>(_cachedViveToolPath);
+            return _cachedViveToolPath;
 
         // First check user-specified path from settings
         await _settings.LoadAsync().ConfigureAwait(false);
@@ -45,7 +48,16 @@ public class ViveToolService : IViveToolService
         if (!string.IsNullOrEmpty(userSpecifiedPath) && File.Exists(userSpecifiedPath))
         {
             _cachedViveToolPath = userSpecifiedPath;
-            return Task.FromResult<string?>(_cachedViveToolPath);
+            return _cachedViveToolPath;
+        }
+
+        // Try built-in (download to AppData if missing)
+        var builtInPath = GetBuiltInViveToolPath();
+        var builtInAvailable = await EnsureBuiltInViveToolAsync().ConfigureAwait(false);
+        if (builtInAvailable && File.Exists(builtInPath))
+        {
+            _cachedViveToolPath = builtInPath;
+            return _cachedViveToolPath;
         }
 
         // Check in plugin directory first
@@ -56,7 +68,7 @@ public class ViveToolService : IViveToolService
             if (File.Exists(pluginPath))
             {
                 _cachedViveToolPath = pluginPath;
-                return Task.FromResult<string?>(_cachedViveToolPath);
+                return _cachedViveToolPath;
             }
         }
 
@@ -66,7 +78,7 @@ public class ViveToolService : IViveToolService
         if (File.Exists(toolsPath))
         {
             _cachedViveToolPath = toolsPath;
-            return Task.FromResult<string?>(_cachedViveToolPath);
+            return _cachedViveToolPath;
         }
 
         // Check in PATH
@@ -80,7 +92,7 @@ public class ViveToolService : IViveToolService
                 if (File.Exists(fullPath))
                 {
                     _cachedViveToolPath = fullPath;
-                    return Task.FromResult<string?>(_cachedViveToolPath);
+                    return _cachedViveToolPath;
                 }
             }
         }
@@ -90,10 +102,94 @@ public class ViveToolService : IViveToolService
         if (File.Exists(currentPath))
         {
             _cachedViveToolPath = currentPath;
-            return Task.FromResult<string?>(_cachedViveToolPath);
+            return _cachedViveToolPath;
         }
 
-        return Task.FromResult<string?>(null);
+        return null;
+    }
+
+    private string GetBuiltInViveToolPath()
+    {
+        return Path.Combine(Folders.AppData, "ViveTool", ViveToolExeName);
+    }
+
+    private async Task<bool> EnsureBuiltInViveToolAsync()
+    {
+        try
+        {
+            var builtInPath = GetBuiltInViveToolPath();
+            if (File.Exists(builtInPath))
+                return true;
+
+            var builtInDir = Path.GetDirectoryName(builtInPath);
+            if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
+                Directory.CreateDirectory(builtInDir);
+
+            // Download ZIP file to temporary location
+            var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(60);
+                var zipBytes = await httpClient.GetByteArrayAsync(DefaultViveToolDownloadUrl).ConfigureAwait(false);
+                await File.WriteAllBytesAsync(tempZipPath, zipBytes).ConfigureAwait(false);
+
+                // Extract all files from ZIP to the built-in directory
+                // ViVeTool.exe needs its dependencies (DLLs) in the same directory
+                using var archive = ZipFile.OpenRead(tempZipPath);
+                
+                // Verify ViVeTool.exe exists in the archive
+                var exeEntry = archive.GetEntry(ViveToolExeName);
+                if (exeEntry == null)
+                {
+                    // Try case-insensitive search
+                    exeEntry = archive.Entries.FirstOrDefault(e => 
+                        e.Name.Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (exeEntry == null)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"ViveTool: {ViveToolExeName} not found in ZIP archive");
+                    return false;
+                }
+
+                // Extract all entries to the built-in directory
+                foreach (var entry in archive.Entries)
+                {
+                    // Skip directories
+                    if (string.IsNullOrEmpty(entry.Name))
+                        continue;
+
+                    var destinationPath = Path.Combine(builtInDir!, entry.Name);
+                    entry.ExtractToFile(destinationPath, overwrite: true);
+                }
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
+
+                return true;
+            }
+            finally
+            {
+                // Clean up temporary ZIP file
+                try
+                {
+                    if (File.Exists(tempZipPath))
+                        File.Delete(tempZipPath);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
+            return false;
+        }
     }
 
     public async Task<bool> EnableFeatureAsync(int featureId)
@@ -181,11 +277,31 @@ public class ViveToolService : IViveToolService
 
         try
         {
-            var result = await ExecuteViveToolCommandAsync(viveToolPath, "/list").ConfigureAwait(false);
-            if (!result.Success)
-                return new List<FeatureFlagInfo>();
+            // For ViVeTool v0.3.4, we need to use specific commands to get features
+            // The /list command is deprecated, and /query without parameters only shows modified features
+            // For now, we'll handle the new format but return an empty list since we don't have a way to discover all feature IDs
+            // We'll update this when we add search functionality
+            return new List<FeatureFlagInfo>();
+            
+            /*
+            // Try /query command (only shows modified features in v0.3.4)
+            var result = await ExecuteViveToolCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
+            
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"ViveTool: /query command result - Success: {result.Success}");
+                Log.Instance.Trace($"ViveTool: /query command output: {result.Output ?? "(null)"}");
+            }
 
-            return ParseFeatureList(result.Output ?? string.Empty);
+            if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: No output from query command, returning empty list");
+                return new List<FeatureFlagInfo>();
+            }
+
+            return ParseFeatureList(result.Output);
+            */
         }
         catch (Exception ex)
         {
@@ -213,10 +329,15 @@ public class ViveToolService : IViveToolService
     {
         try
         {
+            // Set working directory to the directory containing ViVeTool.exe
+            // This ensures that DLL dependencies can be found
+            var workingDirectory = Path.GetDirectoryName(viveToolPath);
+            
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = viveToolPath,
                 Arguments = arguments,
+                WorkingDirectory = workingDirectory,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -252,44 +373,146 @@ public class ViveToolService : IViveToolService
         if (string.IsNullOrWhiteSpace(output))
             return features;
 
-        // Parse vivetool output format
-        // Example: "ID: 12345, Name: FeatureName, State: Enabled"
-        var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"ViveTool: Parsing feature list output (length: {output.Length} chars)");
+
+        // Parse vivetool output formats
+        // ViVeTool output formats can vary:
+        // Format 1 (v0.3.4+): "[56005157]\nPriority        : Service (4)\nState           : Disabled (1)..."
+        // Format 2 (older versions): "ID: 12345, Name: FeatureName, State: Enabled"
+        // Format 3 (older versions): "12345: FeatureName (Enabled)"
+        // Format 4 (older versions): Just feature IDs, one per line
         
-        foreach (var line in lines)
+        // Check for v0.3.4+ format (starts with [ID])
+        var featureSections = Regex.Split(output, @"\[(\d+)\]", RegexOptions.Multiline);
+        
+        if (featureSections.Length > 1)
         {
-            if (string.IsNullOrWhiteSpace(line))
-                continue;
-
-            // Try to extract feature ID
-            var idMatch = Regex.Match(line, @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase);
-            if (!idMatch.Success)
-                continue;
-
-            if (!int.TryParse(idMatch.Groups[1].Value, out var id))
-                continue;
-
-            // Extract name
-            var nameMatch = Regex.Match(line, @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase);
-            var name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
-
-            // Extract status
-            var status = FeatureFlagStatus.Unknown;
-            if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
-                status = FeatureFlagStatus.Enabled;
-            else if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
-                status = FeatureFlagStatus.Disabled;
-            else if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
-                status = FeatureFlagStatus.Default;
-
-            features.Add(new FeatureFlagInfo
+            // Handle v0.3.4+ format
+            for (int i = 1; i < featureSections.Length; i += 2)
             {
-                Id = id,
-                Name = name,
-                Status = status,
-                Description = string.Empty
-            });
+                if (int.TryParse(featureSections[i], out int id))
+                {
+                    string section = featureSections[i + 1];
+                    string name = $"Feature {id}";
+                    FeatureFlagStatus status = FeatureFlagStatus.Unknown;
+                    
+                    // Extract state from section
+                    var stateMatch = Regex.Match(section, @"State\s*:\s*(\w+)\s*\(\d+\)", RegexOptions.IgnoreCase);
+                    if (stateMatch.Success)
+                    {
+                        string stateStr = stateMatch.Groups[1].Value.Trim();
+                        if (stateStr.Equals("Enabled", StringComparison.OrdinalIgnoreCase))
+                            status = FeatureFlagStatus.Enabled;
+                        else if (stateStr.Equals("Disabled", StringComparison.OrdinalIgnoreCase))
+                            status = FeatureFlagStatus.Disabled;
+                        else if (stateStr.Equals("Default", StringComparison.OrdinalIgnoreCase))
+                            status = FeatureFlagStatus.Default;
+                    }
+                    
+                    features.Add(new FeatureFlagInfo
+                    {
+                        Id = id,
+                        Name = name,
+                        Status = status,
+                        Description = string.Empty
+                    });
+                }
+            }
         }
+        else
+        {
+            // Handle older formats
+            var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Found {lines.Length} lines to parse");
+
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                // Skip header lines or help text
+                if (line.Contains("Usage:", StringComparison.OrdinalIgnoreCase) ||
+                    line.Contains("Options:", StringComparison.OrdinalIgnoreCase) ||
+                    line.StartsWith("-", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                int id = 0;
+                string name = string.Empty;
+                FeatureFlagStatus status = FeatureFlagStatus.Unknown;
+
+                // Try Format 2: "ID: 12345, Name: FeatureName, State: Enabled"
+                var idMatch = Regex.Match(line, @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase);
+                if (idMatch.Success && int.TryParse(idMatch.Groups[1].Value, out id))
+                {
+                    var nameMatch = Regex.Match(line, @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase);
+                    name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
+
+                    if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
+                        status = FeatureFlagStatus.Enabled;
+                    else if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
+                        status = FeatureFlagStatus.Disabled;
+                    else if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
+                        status = FeatureFlagStatus.Default;
+                }
+                else
+                {
+                    // Try Format 3: "12345: FeatureName (Enabled)" or just "12345"
+                    var colonMatch = Regex.Match(line, @"^(\d+)[:\s]*(.*)$", RegexOptions.IgnoreCase);
+                    if (colonMatch.Success && int.TryParse(colonMatch.Groups[1].Value, out id))
+                    {
+                        var rest = colonMatch.Groups[2].Value.Trim();
+                        if (!string.IsNullOrWhiteSpace(rest))
+                        {
+                            // Extract name and status from rest
+                            var parenMatch = Regex.Match(rest, @"^(.+?)\s*\(([^)]+)\)\s*$");
+                            if (parenMatch.Success)
+                            {
+                                name = parenMatch.Groups[1].Value.Trim();
+                                var statusStr = parenMatch.Groups[2].Value.Trim();
+                                if (statusStr.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
+                                    status = FeatureFlagStatus.Enabled;
+                                else if (statusStr.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
+                                    status = FeatureFlagStatus.Disabled;
+                                else if (statusStr.Contains("Default", StringComparison.OrdinalIgnoreCase))
+                                    status = FeatureFlagStatus.Default;
+                            }
+                            else
+                            {
+                                name = rest;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Try Format 4: Just a number
+                        if (int.TryParse(line.Trim(), out id))
+                        {
+                            name = $"Feature {id}";
+                        }
+                    }
+                }
+
+                if (id > 0)
+                {
+                    if (string.IsNullOrEmpty(name))
+                        name = $"Feature {id}";
+
+                    features.Add(new FeatureFlagInfo
+                    {
+                        Id = id,
+                        Name = name,
+                        Status = status,
+                        Description = string.Empty
+                    });
+                }
+            }
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"ViveTool: Parsed {features.Count} features from output");
 
         return features;
     }
@@ -510,6 +733,102 @@ public class ViveToolService : IViveToolService
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ViveTool: Error setting path: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    public async Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null)
+    {
+        try
+        {
+            var builtInPath = GetBuiltInViveToolPath();
+            if (File.Exists(builtInPath))
+                return true;
+
+            var builtInDir = Path.GetDirectoryName(builtInPath);
+            if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
+                Directory.CreateDirectory(builtInDir);
+
+            // Download ZIP file to temporary location
+            var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(60);
+
+                // Get the response as a stream to track progress
+                var response = await httpClient.GetAsync(DefaultViveToolDownloadUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+
+                long downloadedBytes = 0;
+
+                using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                using var fileStream = new FileStream(tempZipPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                var buffer = new byte[8192];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                    downloadedBytes += bytesRead;
+                    progress?.Report(downloadedBytes);
+                }
+
+                // Extract all files from ZIP to the built-in directory
+                using var archive = ZipFile.OpenRead(tempZipPath);
+                
+                // Verify ViVeTool.exe exists in the archive
+                var exeEntry = archive.GetEntry(ViveToolExeName);
+                if (exeEntry == null)
+                {
+                    // Try case-insensitive search
+                    exeEntry = archive.Entries.FirstOrDefault(e => 
+                        e.Name.Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (exeEntry == null)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"ViveTool: {ViveToolExeName} not found in ZIP archive");
+                    return false;
+                }
+
+                // Extract all entries to the built-in directory
+                foreach (var entry in archive.Entries)
+                {
+                    // Skip directories
+                    if (string.IsNullOrEmpty(entry.Name))
+                        continue;
+
+                    var destinationPath = Path.Combine(builtInDir!, entry.Name);
+                    entry.ExtractToFile(destinationPath, overwrite: true);
+                }
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
+
+                _cachedViveToolPath = builtInPath;
+                return true;
+            }
+            finally
+            {
+                // Clean up temporary ZIP file
+                try
+                {
+                    if (File.Exists(tempZipPath))
+                        File.Delete(tempZipPath);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
             return false;
         }
     }

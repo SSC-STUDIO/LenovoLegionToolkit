@@ -13,7 +13,6 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Script;
 using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Statistics;
-using NeoSmart.AsyncLock;
 using IDnsOptimizationService = LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.Dns.IDnsOptimizationService;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Services.ReverseProxy;
@@ -27,12 +26,9 @@ public class ReverseProxyService : IReverseProxyService
     private const string DefaultProxyIp = "127.0.0.1";
     private const int BufferSize = 8192;
 
-    private readonly AsyncLock _stateLock = new();
     private bool _isRunning;
     private TcpListener? _tcpListener;
     private Task? _listenerTask;
-    private ushort _proxyPort = DefaultProxyPort;
-    private string _proxyIp = DefaultProxyIp;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly HttpClient _httpClient;
     private readonly IScriptManagerService? _scriptManagerService;
@@ -49,42 +45,9 @@ public class ReverseProxyService : IReverseProxyService
         "githubstatus.com"
     };
 
-    public bool IsRunning
-    {
-        get
-        {
-            using (_stateLock.Lock())
-                return _isRunning;
-        }
-    }
-
-    public ushort ProxyPort
-    {
-        get
-        {
-            using (_stateLock.Lock())
-                return _proxyPort;
-        }
-        private set
-        {
-            using (_stateLock.Lock())
-                _proxyPort = value;
-        }
-    }
-
-    public string ProxyIp
-    {
-        get
-        {
-            using (_stateLock.Lock())
-                return _proxyIp;
-        }
-        private set
-        {
-            using (_stateLock.Lock())
-                _proxyIp = value;
-        }
-    }
+    public bool IsRunning => _isRunning;
+    public ushort ProxyPort { get; private set; } = DefaultProxyPort;
+    public string ProxyIp { get; private set; } = DefaultProxyIp;
 
     public ReverseProxyService(
         IScriptManagerService? scriptManagerService = null,
@@ -111,106 +74,68 @@ public class ReverseProxyService : IReverseProxyService
 
     public async Task<bool> StartAsync()
     {
-        // Check if already running and acquire lock
-        string ipToUse;
-        ushort portToUse;
-        using (await _stateLock.LockAsync().ConfigureAwait(false))
+        if (_isRunning)
         {
-            if (_isRunning)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Reverse proxy service is already running.");
-                return true;
-            }
-            ipToUse = _proxyIp;
-            portToUse = _proxyPort;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Reverse proxy service is already running.");
+            return await Task.FromResult(true);
         }
 
-        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Starting reverse proxy service on {ipToUse}:{portToUse}...");
+                Log.Instance.Trace($"Starting reverse proxy service on {ProxyIp}:{ProxyPort}...");
 
             // Find an available port
-            var availablePort = FindAvailablePort(IPAddress.Parse(ipToUse), portToUse);
+            ProxyPort = FindAvailablePort(IPAddress.Parse(ProxyIp), DefaultProxyPort);
 
-            var tcpListener = new TcpListener(IPAddress.Parse(ipToUse), availablePort);
-            tcpListener.Start();
+            _tcpListener = new TcpListener(IPAddress.Parse(ProxyIp), ProxyPort);
+            _tcpListener.Start();
 
-            var listenerTask = Task.Run(() => ListenForConnections(_cancellationTokenSource.Token));
+            _listenerTask = Task.Run(() => ListenForConnections(_cancellationTokenSource.Token));
 
-            // Update state under lock
-            using (await _stateLock.LockAsync().ConfigureAwait(false))
-            {
-                if (_isRunning)
-                {
-                    // Another thread started it while we were setting up
-                    tcpListener.Stop();
-                    return true;
-                }
-                _proxyPort = availablePort;
-                _tcpListener = tcpListener;
-                _listenerTask = listenerTask;
-                _isRunning = true;
-            }
+            _isRunning = true;
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Reverse proxy service started on {ProxyIp}:{ProxyPort}.");
 
-            return true;
+            return await Task.FromResult(true);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error starting reverse proxy service: {ex.Message}", ex);
-            return false;
+            return await Task.FromResult(false);
         }
     }
 
     public async Task<bool> StopAsync()
     {
-        // Check if running and acquire lock
-        TcpListener? tcpListenerToStop = null;
-        Task? listenerTaskToWait = null;
-        using (await _stateLock.LockAsync().ConfigureAwait(false))
+        if (!_isRunning)
         {
-            if (!_isRunning)
-            {
-                return true;
-            }
-            tcpListenerToStop = _tcpListener;
-            listenerTaskToWait = _listenerTask;
-            _isRunning = false;
+            return true;
         }
 
-        // Perform async operations outside the lock
         try
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping reverse proxy service...");
 
+            _isRunning = false;
             _cancellationTokenSource.Cancel();
 
-            tcpListenerToStop?.Stop();
+            _tcpListener?.Stop();
 
-            if (listenerTaskToWait != null)
+            if (_listenerTask != null)
             {
                 try
                 {
-                    await Task.WhenAny(listenerTaskToWait, Task.Delay(5000));
+                    await Task.WhenAny(_listenerTask, Task.Delay(5000));
                 }
                 catch
                 {
                     // Ignore cancellation exceptions
                 }
-            }
-
-            // Clear references under lock
-            using (await _stateLock.LockAsync().ConfigureAwait(false))
-            {
-                _tcpListener = null;
-                _listenerTask = null;
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -228,27 +153,11 @@ public class ReverseProxyService : IReverseProxyService
 
     private async Task ListenForConnections(CancellationToken cancellationToken)
     {
-        TcpListener? listener;
-        using (await _stateLock.LockAsync().ConfigureAwait(false))
+        while (_isRunning && _tcpListener != null && !cancellationToken.IsCancellationRequested)
         {
-            listener = _tcpListener;
-        }
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            bool isRunning;
-            using (await _stateLock.LockAsync().ConfigureAwait(false))
-            {
-                isRunning = _isRunning;
-                listener = _tcpListener;
-            }
-
-            if (!isRunning || listener == null)
-                break;
-
             try
             {
-                var client = await listener.AcceptTcpClientAsync();
+                var client = await _tcpListener.AcceptTcpClientAsync();
                 if (client != null)
                 {
                     // Handle client connection asynchronously
@@ -378,14 +287,22 @@ public class ReverseProxyService : IReverseProxyService
                     throw new Exception($"Could not resolve host: {host}");
                 }
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (TaskCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"DNS resolution canceled for {host}: {ex.Message}", ex);
+            // Don't send response when canceled
+            return;
+        } catch (OperationCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"DNS resolution canceled for {host}: {ex.Message}", ex);
+            // Don't send response when canceled
+            return;
+        } catch (Exception ex) {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error resolving host {host}: {ex.Message}", ex);
 
             var errorResponse = Encoding.UTF8.GetBytes("HTTP/1.1 502 Bad Gateway\r\n\r\n");
-            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, cancellationToken);
+            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, CancellationToken.None);
             return;
         }
 
@@ -406,14 +323,20 @@ public class ReverseProxyService : IReverseProxyService
             var uploadTask = TunnelStreamAsync(clientStream, targetStream, cancellationToken, trackUpload: true);
             var downloadTask = TunnelStreamAsync(targetStream, clientStream, cancellationToken, trackUpload: false);
             await Task.WhenAny(uploadTask, downloadTask);
-        }
-        catch (Exception ex)
-        {
+        } catch (TaskCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"HTTPS CONNECT canceled: {ex.Message}", ex);
+            // Don't send response when canceled
+        } catch (OperationCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"HTTPS CONNECT canceled: {ex.Message}", ex);
+            // Don't send response when canceled
+        } catch (Exception ex) {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error handling HTTPS CONNECT: {ex.Message}", ex);
 
             var errorResponse = Encoding.UTF8.GetBytes("HTTP/1.1 502 Bad Gateway\r\n\r\n");
-            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, cancellationToken);
+            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, CancellationToken.None);
         }
     }
 
@@ -570,14 +493,20 @@ public class ReverseProxyService : IReverseProxyService
             var responseHeaderBytes = Encoding.UTF8.GetBytes(responseBuilder.ToString());
             await clientStream.WriteAsync(responseHeaderBytes, 0, responseHeaderBytes.Length, cancellationToken);
             await clientStream.WriteAsync(responseBody, 0, responseBody.Length, cancellationToken);
-        }
-        catch (Exception ex)
-        {
+        } catch (TaskCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"HTTP request canceled: {ex.Message}", ex);
+            // Don't send response when canceled
+        } catch (OperationCanceledException ex) {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"HTTP request canceled: {ex.Message}", ex);
+            // Don't send response when canceled
+        } catch (Exception ex) {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error handling HTTP request: {ex.Message}", ex);
 
             var errorResponse = Encoding.UTF8.GetBytes("HTTP/1.1 502 Bad Gateway\r\n\r\n");
-            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, cancellationToken);
+            await clientStream.WriteAsync(errorResponse, 0, errorResponse.Length, CancellationToken.None);
         }
     }
 
@@ -668,13 +597,7 @@ public class ReverseProxyService : IReverseProxyService
 
     public void Dispose()
     {
-        bool isRunning;
-        using (_stateLock.Lock())
-        {
-            isRunning = _isRunning;
-        }
-
-        if (isRunning)
+        if (_isRunning)
         {
             StopAsync().GetAwaiter().GetResult();
         }

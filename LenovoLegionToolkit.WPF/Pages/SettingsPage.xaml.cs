@@ -64,7 +64,7 @@ public partial class SettingsPage
 
     private async Task RefreshAsync()
     {
-        // Initialize all controls
+        // Initialize all controls first
         _appearanceControl = new SettingsAppearanceControl();
         _applicationBehaviorControl = new SettingsApplicationBehaviorControl();
         _smartKeysControl = new SettingsSmartKeysControl();
@@ -72,20 +72,6 @@ public partial class SettingsPage
         _updateControl = new SettingsUpdateControl();
         _powerControl = new SettingsPowerControl();
         _integrationsControl = new SettingsIntegrationsControl();
-
-        // Refresh all controls
-        await _appearanceControl.RefreshAsync();
-        await _applicationBehaviorControl.RefreshAsync();
-        await _smartKeysControl.RefreshAsync();
-        await _displayControl.RefreshAsync();
-        _updateControl.Refresh();
-        await _powerControl.RefreshAsync();
-        await _integrationsControl.RefreshAsync();
-
-        // Update visibility based on FnKeys status
-        var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
-        _smartKeysControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
-        _displayControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
 
         // Wire up FnKeys toggle change event
         _applicationBehaviorControl.FnKeysStatusChanged += (sender, status) =>
@@ -96,8 +82,43 @@ public partial class SettingsPage
                 _displayControl.UpdateVisibilityBasedOnFnKeys(status);
         };
 
-        // Show first item
-        NavigationListBox_SelectionChanged(_navigationListBox, null);
+        // Show first item immediately (Appearance control) - don't wait for loading
+        _contentControl.Content = _appearanceControl;
+
+        // Priority load: refresh the first visible control (Appearance) immediately
+        await _appearanceControl.RefreshAsync();
+
+        // Load other controls in parallel in the background (fire and forget)
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.WhenAll(
+                    _applicationBehaviorControl.RefreshAsync(),
+                    _smartKeysControl.RefreshAsync(),
+                    _displayControl.RefreshAsync(),
+                    _powerControl.RefreshAsync(),
+                    _integrationsControl.RefreshAsync()
+                ).ConfigureAwait(false);
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    _updateControl.Refresh();
+                });
+
+                // Update visibility based on FnKeys status
+                var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+                    _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+                });
+            }
+            catch
+            {
+                // Ignore errors in background loading
+            }
+        });
     }
 
     private void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)

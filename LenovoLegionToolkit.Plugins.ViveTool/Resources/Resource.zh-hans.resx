@@ -160,4 +160,7 @@
   <data name="ViveTool_SetPathFailed" xml:space="preserve">
     <value>设置 ViVeTool 路径失败：{0}</value>
   </data>
+  <data name="ViveTool_Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
 </root>

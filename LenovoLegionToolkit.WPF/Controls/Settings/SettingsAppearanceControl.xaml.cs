@@ -30,7 +30,8 @@ public partial class SettingsAppearanceControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
+        // Reduced delay for faster initial display
+        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(100));
 
         var languages = LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray();
         var language = await LocalizationHelper.GetLanguageAsync();
@@ -55,10 +56,11 @@ public partial class SettingsAppearanceControl
         UpdateAccentColorPicker();
         _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
 
-        await loadingTask;
-
+        // Show controls immediately
         _temperatureComboBox.Visibility = Visibility.Visible;
         _themeComboBox.Visibility = Visibility.Visible;
+
+        await loadingTask;
 
         _isRefreshing = false;
     }

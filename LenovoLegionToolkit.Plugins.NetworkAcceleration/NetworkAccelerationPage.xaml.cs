@@ -33,7 +33,6 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
     private bool _isDnsOptimizationEnabled;
     private bool _isRequestInterceptionEnabled;
     private bool _isGithubAccelerationEnabled;
-    private bool _autoStartService;
     private bool _isSteamAccelerationEnabled;
     private bool _isDiscordAccelerationEnabled;
     private bool _isNpmAccelerationEnabled;
@@ -53,7 +52,6 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
     private readonly INetworkStatisticsService _statisticsService;
     private readonly NetworkAccelerationSettings _settings;
     private readonly DispatcherTimer _statisticsUpdateTimer;
-    private bool _isLoadingSettings;
 
     public NetworkAccelerationPage()
     {
@@ -85,75 +83,19 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
         _statisticsUpdateTimer.Tick += StatisticsUpdateTimer_Tick;
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            // Ensure plugin Resource.Culture is set before loading
-            ApplyPluginResourceCulture();
-            
-            // Load settings asynchronously without blocking UI
-            // Use fire-and-forget to prevent blocking UI thread
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    await LoadSettingsAsync().ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error in Page_Loaded: {ex.Message}", ex);
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error in Page_Loaded: {ex.Message}", ex);
-        }
+        // Ensure plugin Resource.Culture is set before loading
+        ApplyPluginResourceCulture();
+        await LoadSettingsAsync();
     }
     
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
-        // Stop network acceleration service when page is unloaded (e.g., application closing)
-        // Use fire-and-forget to prevent blocking UI thread
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                // Check service state on background thread to avoid blocking UI
-                var isRunning = await Task.Run(() => _networkAccelerationService.IsRunning).ConfigureAwait(false);
-                
-                if (isRunning)
-                {
-                    await StopServiceAsync().ConfigureAwait(false);
-                }
-                
-                // Stop timer on UI thread (non-blocking)
-                Dispatcher.BeginInvoke(new Action(() => _statisticsUpdateTimer?.Stop()), DispatcherPriority.Normal);
-                
-                // Force restore proxy settings to ensure browser can access network
-                // Even if service was already stopped, make sure proxy is restored
-                // Fire-and-forget: we don't need to wait for this
-                _ = ForceRestoreProxyAsync();
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error stopping network acceleration service on page unload: {ex.Message}", ex);
-                
-                // Last resort: force disable proxy if restore fails
-                try
-                {
-                    await ForceDisableProxyAsync().ConfigureAwait(false);
-                }
-                catch
-                {
-                    // Ignore errors in force disable
-                }
-            }
-        });
+        // Do NOT stop the acceleration service when navigating away.
+        // Users expect the service to keep running while they browse other pages.
+        // Only pause the statistics timer to avoid unnecessary UI work.
+        _statisticsUpdateTimer?.Stop();
     }
     
     private Task ForceRestoreProxyAsync()
@@ -208,93 +150,46 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
     {
         try
         {
-            // Load settings file on background thread
-            await _settings.LoadAsync().ConfigureAwait(false);
+            await _settings.LoadAsync();
 
-            // Read all settings values on background thread to avoid blocking UI
-            // All settings properties use locks, so we must read them off UI thread
-            var settingsData = await Task.Run(() =>
+            IsServiceEnabled = _settings.IsServiceEnabled;
+            IsDnsOptimizationEnabled = _settings.IsDnsOptimizationEnabled;
+            IsRequestInterceptionEnabled = _settings.IsRequestInterceptionEnabled;
+            IsGithubAccelerationEnabled = _settings.IsGithubAccelerationEnabled;
+
+            IsSteamAccelerationEnabled = _settings.IsSteamAccelerationEnabled;
+            IsDiscordAccelerationEnabled = _settings.IsDiscordAccelerationEnabled;
+            IsNpmAccelerationEnabled = _settings.IsNpmAccelerationEnabled;
+            IsPypiAccelerationEnabled = _settings.IsPypiAccelerationEnabled;
+            ProxyAddress = _settings.ProxyAddress;
+            ProxyPort = _settings.ProxyPort;
+            _connectionTimeout = _settings.ConnectionTimeout;
+
+            // Apply DNS optimization setting
+            _dnsOptimizationService.SetEnabled(IsDnsOptimizationEnabled);
+
+            // If service was enabled, start it
+            if (IsServiceEnabled && !_networkAccelerationService.IsRunning)
             {
-                return new
-                {
-                    IsServiceEnabled = _settings.IsServiceEnabled,
-                    IsDnsOptimizationEnabled = _settings.IsDnsOptimizationEnabled,
-                    IsRequestInterceptionEnabled = _settings.IsRequestInterceptionEnabled,
-                    IsGithubAccelerationEnabled = _settings.IsGithubAccelerationEnabled,
-                    AutoStartService = _settings.AutoStartService,
-                    IsSteamAccelerationEnabled = _settings.IsSteamAccelerationEnabled,
-                    IsDiscordAccelerationEnabled = _settings.IsDiscordAccelerationEnabled,
-                    IsNpmAccelerationEnabled = _settings.IsNpmAccelerationEnabled,
-                    IsPypiAccelerationEnabled = _settings.IsPypiAccelerationEnabled,
-                    ProxyAddress = _settings.ProxyAddress,
-                    ProxyPort = _settings.ProxyPort,
-                    ConnectionTimeout = _settings.ConnectionTimeout
-                };
-            }).ConfigureAwait(false);
-
-            // Update UI properties on UI thread using BeginInvoke (non-blocking)
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                try
-                {
-                    _isLoadingSettings = true;
-                    IsServiceEnabled = settingsData.IsServiceEnabled;
-                    IsDnsOptimizationEnabled = settingsData.IsDnsOptimizationEnabled;
-                    IsRequestInterceptionEnabled = settingsData.IsRequestInterceptionEnabled;
-                    IsGithubAccelerationEnabled = settingsData.IsGithubAccelerationEnabled;
-                    AutoStartService = settingsData.AutoStartService;
-                    IsSteamAccelerationEnabled = settingsData.IsSteamAccelerationEnabled;
-                    IsDiscordAccelerationEnabled = settingsData.IsDiscordAccelerationEnabled;
-                    IsNpmAccelerationEnabled = settingsData.IsNpmAccelerationEnabled;
-                    IsPypiAccelerationEnabled = settingsData.IsPypiAccelerationEnabled;
-                    ProxyAddress = settingsData.ProxyAddress;
-                    ProxyPort = settingsData.ProxyPort;
-                    _connectionTimeout = settingsData.ConnectionTimeout;
-                    _isLoadingSettings = false;
-
-                    // Delay status update to avoid blocking UI during page load
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        UpdateServiceStatus();
-                        UpdateTrafficStatistics();
-                    }), DispatcherPriority.Loaded);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error updating UI in LoadSettingsAsync: {ex.Message}", ex);
-                    _isLoadingSettings = false;
-                }
-            }), DispatcherPriority.Normal);
-
-            // Apply DNS optimization setting on background thread
-            _dnsOptimizationService.SetEnabled(settingsData.IsDnsOptimizationEnabled);
-
-            // Check service state on background thread to avoid blocking UI
-            var (shouldStart, isCurrentlyRunning) = await Task.Run(() =>
-            {
-                return (settingsData.IsServiceEnabled, _networkAccelerationService.IsRunning);
-            }).ConfigureAwait(false);
-            
-            if (shouldStart && !isCurrentlyRunning)
-            {
-                // Start service asynchronously without blocking UI
-                _ = StartServiceAsync();
+                await StartServiceAsync();
             }
-            else if (!shouldStart && isCurrentlyRunning)
+            // If service is already running (e.g., user enabled it before navigation), ensure timer is running
+            else if (IsServiceEnabled && _networkAccelerationService.IsRunning)
             {
-                // Stop service asynchronously without blocking UI
-                _ = StopServiceAsync();
+                _statisticsUpdateTimer.Start();
             }
+            else if (!IsServiceEnabled && _networkAccelerationService.IsRunning)
+            {
+                await StopServiceAsync();
+            }
+
+            UpdateServiceStatus();
+            UpdateTrafficStatistics();
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error loading settings: {ex.Message}", ex);
-        }
-        finally
-        {
-            _isLoadingSettings = false;
         }
     }
 
@@ -334,42 +229,34 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
             // Apply DNS optimization setting
             _dnsOptimizationService.SetEnabled(IsDnsOptimizationEnabled);
 
-            // Start the service (this may take time, so we don't await on UI thread)
-            var result = await _networkAccelerationService.StartAsync().ConfigureAwait(false);
+            // Start the service
+            var result = await _networkAccelerationService.StartAsync();
             
-            // Update UI on UI thread
-            await Dispatcher.InvokeAsync(() =>
+            if (result)
             {
-                if (result)
-                {
-                    IsServiceEnabled = true;
-                    _settings.IsServiceEnabled = true;
-                    _statisticsUpdateTimer.Start();
-                    
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Network acceleration service started successfully.");
-                }
-                else
-                {
-                    IsServiceEnabled = false;
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to start network acceleration service.");
-                }
+                IsServiceEnabled = true;
+                _settings.IsServiceEnabled = true;
+                _statisticsUpdateTimer.Start();
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network acceleration service started successfully.");
+            }
+            else
+            {
+                IsServiceEnabled = false;
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to start network acceleration service.");
+            }
 
-                UpdateServiceStatus();
-            });
+            UpdateServiceStatus();
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error starting network acceleration service: {ex.Message}", ex);
             
-            // Update UI on UI thread
-            await Dispatcher.InvokeAsync(() =>
-            {
-                IsServiceEnabled = false;
-                UpdateServiceStatus();
-            });
+            IsServiceEnabled = false;
+            UpdateServiceStatus();
         }
     }
 
@@ -380,95 +267,40 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping network acceleration service...");
 
-            // Stop timer on UI thread
-            await Dispatcher.InvokeAsync(() => _statisticsUpdateTimer.Stop());
+            _statisticsUpdateTimer.Stop();
 
-            // Stop the service (this may take time, so we don't await on UI thread)
-            var result = await _networkAccelerationService.StopAsync().ConfigureAwait(false);
+            // Stop the service
+            var result = await _networkAccelerationService.StopAsync();
             
-            // Update UI on UI thread
-            await Dispatcher.InvokeAsync(() =>
+            if (result)
             {
-                if (result)
-                {
-                    IsServiceEnabled = false;
-                    _settings.IsServiceEnabled = false;
-                    
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Network acceleration service stopped successfully.");
-                }
+                IsServiceEnabled = false;
+                _settings.IsServiceEnabled = false;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network acceleration service stopped successfully.");
+            }
 
-                UpdateServiceStatus();
-            });
+            UpdateServiceStatus();
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error stopping network acceleration service: {ex.Message}", ex);
-            
-            // Update UI on UI thread even on error
-            await Dispatcher.InvokeAsync(UpdateServiceStatus);
         }
     }
 
     private void UpdateServiceStatus()
     {
-        try
+        if (_networkAccelerationService.IsRunning)
         {
-            // Ensure we're on UI thread
-            if (!Dispatcher.CheckAccess())
-            {
-                Dispatcher.BeginInvoke(new Action(UpdateServiceStatus), DispatcherPriority.Normal);
-                return;
-            }
-
-            // Get service state on background thread to avoid blocking UI
-            // Use fire-and-forget pattern to prevent blocking
-            _ = Task.Run(() =>
-            {
-                try
-                {
-                    var running = _networkAccelerationService.IsRunning;
-                    string status;
-                    string statusDescription;
-                    
-                    if (running)
-                    {
-                        status = _networkAccelerationService.GetStatus();
-                        statusDescription = _networkAccelerationService.GetStatusDescription();
-                    }
-                    else
-                    {
-                        status = Resource.NetworkAcceleration_ServiceStatusStopped;
-                        statusDescription = Resource.NetworkAcceleration_ServiceStatusStoppedDescription;
-                    }
-                    
-                    // Update UI on UI thread using BeginInvoke (non-blocking)
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        try
-                        {
-                            ServiceStatus = status;
-                            ServiceStatusDescription = statusDescription;
-                        }
-                        catch (Exception ex)
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Error updating UI in UpdateServiceStatus: {ex.Message}", ex);
-                        }
-                    }), DispatcherPriority.Normal);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error updating service status: {ex.Message}", ex);
-                }
-            });
+            ServiceStatus = _networkAccelerationService.GetStatus();
+            ServiceStatusDescription = _networkAccelerationService.GetStatusDescription();
         }
-        catch (Exception ex)
+        else
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error updating service status: {ex.Message}", ex);
+            ServiceStatus = Resource.NetworkAcceleration_ServiceStatusStopped;
+            ServiceStatusDescription = Resource.NetworkAcceleration_ServiceStatusStoppedDescription;
         }
     }
 
@@ -479,40 +311,31 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
 
     private void UpdateTrafficStatistics()
     {
-        try
+        // Update total traffic first
+        TotalTraffic = _statisticsService.GetFormattedTotal();
+        
+        // Update download and upload totals
+        DownloadedTraffic = _statisticsService.GetFormattedDownloaded();
+        UploadedTraffic = _statisticsService.GetFormattedUploaded();
+        
+        // Update speeds (GetDownloadSpeed will update the history)
+        var (_, downloadSpeedFormatted) = _statisticsService.GetDownloadSpeed();
+        var (_, uploadSpeedFormatted) = _statisticsService.GetUploadSpeed();
+        DownloadSpeed = downloadSpeedFormatted;
+        UploadSpeed = uploadSpeedFormatted;
+        
+        // Update chart (ensure UI thread)
+        var history = _statisticsService.GetSpeedHistory(60);
+        if (_trafficChartControl != null)
         {
-            // Ensure we're on UI thread
-            if (!Dispatcher.CheckAccess())
+            if (Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(UpdateTrafficStatistics);
-                return;
+                _trafficChartControl.UpdateChart(history);
             }
-
-            // Update total traffic first
-            TotalTraffic = _statisticsService.GetFormattedTotal();
-            
-            // Update download and upload totals
-            DownloadedTraffic = _statisticsService.GetFormattedDownloaded();
-            UploadedTraffic = _statisticsService.GetFormattedUploaded();
-            
-            // Update speeds (GetDownloadSpeed will update the history)
-            var (_, downloadSpeedFormatted) = _statisticsService.GetDownloadSpeed();
-            var (_, uploadSpeedFormatted) = _statisticsService.GetUploadSpeed();
-            DownloadSpeed = downloadSpeedFormatted;
-            UploadSpeed = uploadSpeedFormatted;
-            
-            // Update chart asynchronously to avoid blocking UI
-            var history = _statisticsService.GetSpeedHistory(60);
-            if (_trafficChartControl != null)
+            else
             {
-                // Use BeginInvoke with lower priority to avoid blocking UI
-                Dispatcher.BeginInvoke(new Action(() => _trafficChartControl.UpdateChart(history)), DispatcherPriority.Background);
+                Dispatcher.Invoke(() => _trafficChartControl.UpdateChart(history));
             }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error updating traffic statistics: {ex.Message}", ex);
         }
     }
 
@@ -637,12 +460,7 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
             
             _isServiceEnabled = value;
             OnPropertyChanged();
-            
-            // Only update service status if not loading settings (to avoid blocking during page load)
-            if (!_isLoadingSettings)
-            {
-                UpdateServiceStatus();
-            }
+            UpdateServiceStatus();
         }
     }
 
@@ -801,19 +619,7 @@ public partial class NetworkAccelerationPage : INotifyPropertyChanged
         }
     }
 
-    public bool AutoStartService
-    {
-        get => _autoStartService;
-        set
-        {
-            if (_autoStartService == value)
-                return;
-            
-            _autoStartService = value;
-            OnPropertyChanged();
-            _settings.AutoStartService = value;
-        }
-    }
+
 
     public bool IsSteamAccelerationEnabled
     {

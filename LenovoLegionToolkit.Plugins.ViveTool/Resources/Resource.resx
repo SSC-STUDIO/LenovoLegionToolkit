@@ -49,6 +49,18 @@
   <data name="ViveTool_ViveToolError" xml:space="preserve">
     <value>Error checking ViVeTool status</value>
   </data>
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+    <value>Downloading: {0} / {1} ({2}%)</value>
+  </data>
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+    <value>Download Complete</value>
+  </data>
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+    <value>ViVeTool has been downloaded to {0}</value>
+  </data>
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+    <value>Download Failed</value>
+  </data>
   <data name="ViveTool_Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
@@ -159,5 +171,8 @@
   </data>
   <data name="ViveTool_SetPathFailed" xml:space="preserve">
     <value>Failed to set ViVeTool path: {0}</value>
+  </data>
+  <data name="ViveTool_Download" xml:space="preserve">
+    <value>Download</value>
   </data>
 </root>
