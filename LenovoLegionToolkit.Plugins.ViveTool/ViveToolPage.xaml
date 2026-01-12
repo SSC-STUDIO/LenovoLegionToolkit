@@ -115,9 +115,37 @@
                                     TextWrapping="Wrap"
                                     Text="{Binding ViveToolStatusDescription, Mode=OneWay}"
                                     LineHeight="18" />
+                                    
+                                <!-- Download Progress -->
+                                <Grid Margin="0,8,0,0" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <ProgressBar
+                                        x:Name="_downloadProgressBar"
+                                        Height="8"
+                                        Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+                                        Value="{Binding DownloadProgress, Mode=OneWay}"
+                                        Maximum="100"
+                                        HorizontalAlignment="Stretch" />
+                                    <TextBlock
+                                        x:Name="_downloadProgressText"
+                                        FontSize="12"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Margin="0,12,0,0"
+                                        Text="{Binding DownloadProgressText, Mode=OneWay}" />
+                                </Grid>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <wpfui:Button
+                                    x:Name="_downloadViveToolButton"
+                                    Content="{x:Static plugin:Resource.ViveTool_Download}"
+                                    Click="DownloadViveToolButton_Click"
+                                    Padding="12,6"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{Binding IsNotDownloading}" />
                                 <wpfui:Button
                                     x:Name="_browseViveToolButton"
                                     Content="{x:Static plugin:Resource.ViveTool_Browse}"
@@ -143,7 +171,8 @@
                     BorderThickness="1"
                     CornerRadius="12"
                     Padding="24"
-                    Margin="0,0,0,20">
+                    Margin="0,0,0,20"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Border.Effect>
                         <DropShadowEffect
                             Color="Black"
@@ -180,7 +209,8 @@
                     BorderThickness="1"
                     CornerRadius="12"
                     Padding="24"
-                    Margin="0,0,0,20">
+                    Margin="0,0,0,20"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Border.Effect>
                         <DropShadowEffect
                             Color="Black"

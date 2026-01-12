@@ -44,5 +44,10 @@ public interface IPlugin
     /// Called when the plugin is uninstalled
     /// </summary>
     void OnUninstalled();
+
+    /// <summary>
+    /// Called when the application is shutting down
+    /// </summary>
+    void OnShutdown();
 }
 

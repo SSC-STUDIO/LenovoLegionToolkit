@@ -1,4 +1,7 @@
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.NetworkAcceleration.Services;
 using LenovoLegionToolkit.Plugins.SDK;
 using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 
@@ -40,6 +43,37 @@ public class NetworkAccelerationPlugin : PluginBase
     {
         // Return Network acceleration settings page
         return new NetworkAccelerationSettingsPluginPage();
+    }
+
+    /// <summary>
+    /// Called when the application is shutting down
+    /// </summary>
+    public override void OnShutdown()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutting down network acceleration plugin...");
+
+            // Get the current service instance and stop it
+            var service = NetworkAccelerationService.CurrentInstance;
+            if (service != null && service.IsRunning)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Stopping network acceleration service on shutdown...");
+
+                // Stop the service synchronously (we're in shutdown, so async is not ideal)
+                service.StopAsync().GetAwaiter().GetResult();
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Network acceleration service stopped successfully.");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping network acceleration service on shutdown: {ex.Message}", ex);
+        }
     }
 }
 
