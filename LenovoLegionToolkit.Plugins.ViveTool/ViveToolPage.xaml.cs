@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +31,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private ObservableCollection<FeatureFlagInfo> _features = new();
     private string _viveToolStatusDescription = string.Empty;
     private bool _isLoading;
+    private CancellationTokenSource? _searchDebounceCts;
 
     public ObservableCollection<FeatureFlagInfo> Features
     {
@@ -62,6 +64,57 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
+    private bool _isViveToolAvailable;
+
+    public bool IsViveToolAvailable
+    {
+        get => _isViveToolAvailable;
+        set
+        {
+            _isViveToolAvailable = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private bool _isDownloading;
+
+    public bool IsDownloading
+    {
+        get => _isDownloading;
+        set
+        {
+            _isDownloading = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsNotDownloading));
+        }
+    }
+
+    public bool IsNotDownloading => !IsDownloading;
+
+    private double _downloadProgress;
+
+    public double DownloadProgress
+    {
+        get => _downloadProgress;
+        set
+        {
+            _downloadProgress = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private string _downloadProgressTextValue = string.Empty;
+
+    public string DownloadProgressText
+    {
+        get => _downloadProgressTextValue;
+        set
+        {
+            _downloadProgressTextValue = value;
+            OnPropertyChanged();
+        }
+    }
+
     private readonly Services.Settings.ViveToolSettings _settings;
 
     public ViveToolPage()
@@ -90,7 +143,10 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
-        // Cleanup if needed
+        // Cancel any pending search debounce
+        _searchDebounceCts?.Cancel();
+        _searchDebounceCts?.Dispose();
+        _searchDebounceCts = null;
     }
 
     private void ApplyPluginResourceCulture()
@@ -115,7 +171,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
             await Dispatcher.InvokeAsync(() =>
             {
-                if (isAvailable && !string.IsNullOrEmpty(path))
+                IsViveToolAvailable = isAvailable && !string.IsNullOrEmpty(path);
+                if (IsViveToolAvailable)
                 {
                     ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path);
                 }
@@ -132,6 +189,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             
             await Dispatcher.InvokeAsync(() =>
             {
+                IsViveToolAvailable = false;
                 ViveToolStatusDescription = Resource.ViveTool_ViveToolError;
             });
         }
@@ -141,6 +199,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
+            if (!IsViveToolAvailable)
+                return;
+
             IsLoading = true;
             _emptyStatePanel.Visibility = Visibility.Collapsed;
 
@@ -203,8 +264,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 var selectedPath = openFileDialog.FileName;
                 var fileName = Path.GetFileName(selectedPath);
                 
-                // Verify it's vivetool.exe
-                if (!fileName.Equals("vivetool.exe", StringComparison.OrdinalIgnoreCase))
+                // Verify it's ViVeTool.exe
+                if (!fileName.Equals(ViveToolService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
                 {
                     SnackbarHelper.Show(
                         Resource.ViveTool_Error,
@@ -248,6 +309,91 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     SnackbarType.Error);
             });
         }
+    }
+
+    private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            IsLoading = true;
+            IsDownloading = true;
+            DownloadProgress = 0;
+            DownloadProgressText = "Downloading ViVeTool...";
+            _emptyStatePanel.Visibility = Visibility.Collapsed;
+
+            // Create progress reporter
+            var progress = new Progress<long>(bytesDownloaded =>
+            {
+                // Calculate progress percentage (we don't have total size, so we'll use a heuristic)
+                // ViVeTool is around 2-3 MB, so we'll assume 3 MB for estimation
+                const long estimatedTotalBytes = 3 * 1024 * 1024;
+                double percent = Math.Min(100, (bytesDownloaded * 100.0) / estimatedTotalBytes);
+                
+                DownloadProgress = percent;
+                DownloadProgressText = string.Format(Resource.ViveTool_DownloadProgress, 
+                    FormatBytes(bytesDownloaded), FormatBytes(estimatedTotalBytes), (int)percent);
+            });
+
+            // Download ViVeTool
+            var success = await _viveToolService.DownloadViveToolAsync(progress).ConfigureAwait(false);
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                IsLoading = false;
+                IsDownloading = false;
+                DownloadProgress = 0;
+                DownloadProgressText = string.Empty;
+
+                if (success)
+                {
+                    // Refresh status and load features
+                    _ = RefreshViveToolStatusAsync();
+                    _ = LoadFeaturesAsync();
+                    
+                    var path = _viveToolService.GetViveToolPathAsync().Result;
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        SnackbarHelper.Show(Resource.ViveTool_DownloadComplete, string.Format(Resource.ViveTool_DownloadCompleteMessage, path));
+                    }
+                }
+                else
+                {
+                    SnackbarHelper.Show(Resource.ViveTool_Error, Resource.ViveTool_DownloadFailed, SnackbarType.Error);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error downloading vivetool.exe: {ex.Message}", ex);
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                IsLoading = false;
+                IsDownloading = false;
+                DownloadProgress = 0;
+                DownloadProgressText = string.Empty;
+                
+                SnackbarHelper.Show(
+                    Resource.ViveTool_Error,
+                    string.Format(Resource.ViveTool_DownloadFailed, ex.Message),
+                    SnackbarType.Error);
+            });
+        }
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        string[] suffix = { "B", "KB", "MB", "GB" };
+        int i;
+        double dblBytes = bytes;
+
+        for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+        {
+            dblBytes = bytes / 1024.0;
+        }
+
+        return string.Format("{0:0.##} {1}", dblBytes, suffix[i]);
     }
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
@@ -403,11 +549,39 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        // Debounce search - wait a bit before searching
-        await Task.Delay(500);
-        if (_searchTextBox.IsFocused)
+        // Cancel previous debounce
+        _searchDebounceCts?.Cancel();
+        _searchDebounceCts?.Dispose();
+        _searchDebounceCts = new CancellationTokenSource();
+
+        var cancellationToken = _searchDebounceCts.Token;
+
+        try
         {
-            await SearchFeaturesAsync();
+            // Debounce search - wait a bit before searching
+            await Task.Delay(500, cancellationToken).ConfigureAwait(false);
+
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            // Check if textbox is still focused before searching
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                if (_searchTextBox.IsFocused && !cancellationToken.IsCancellationRequested)
+                {
+                    await SearchFeaturesAsync().ConfigureAwait(false);
+                }
+            });
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when debounce is cancelled - ignore
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected exceptions but don't crash the app
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in SearchTextBox_TextChanged debounce: {ex.Message}", ex);
         }
     }
 

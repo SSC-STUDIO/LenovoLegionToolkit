@@ -20,6 +20,10 @@
     
     <wpfui:UiPage.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <!-- Normalize typography: remove all bold weights for a cleaner, lighter look -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
     </wpfui:UiPage.Resources>
 
     <Grid Margin="0,0,16,0" MouseWheel="Grid_MouseWheel" ClipToBounds="False">
@@ -40,82 +44,85 @@
             <StackPanel Margin="0,0,0,0" PreviewMouseWheel="StackPanel_PreviewMouseWheel">
                 
                 <!-- Header with Description -->
-                <StackPanel Margin="0,16,0,28">
-                        <StackPanel VerticalAlignment="Center">
-                    <TextBlock
-                        AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                        Focusable="True"
-                                FontSize="28"
-                        FontWeight="Medium"
-                        Text="{x:Static plugin:Resource.NetworkAcceleration_PageTitle}" />
-                    <TextBlock
-                                Margin="0,6,0,0"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap"
-                        Text="{x:Static plugin:Resource.NetworkAcceleration_PageDescription}"
-                        LineHeight="20" />
-                        </StackPanel>
+                <StackPanel Margin="0,12,0,20">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock
+                            AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                            Focusable="True"
+                            FontSize="24"
+                            Text="{x:Static plugin:Resource.NetworkAcceleration_PageTitle}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="13"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap"
+                            Text="{x:Static plugin:Resource.NetworkAcceleration_PageDescription}"
+                            LineHeight="18" />
+                    </StackPanel>
                 </StackPanel>
                 
-                <!-- Traffic Stats - Card Style (only visible when service is running) -->
+                <!-- Traffic Stats - Compact Modern Design -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="24"
-                    Margin="0,0,0,24"
+                    CornerRadius="12"
+                    Padding="20"
+                    Margin="0,0,0,16"
                     Visibility="{Binding IsServiceEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            Color="Black"
+                            Direction="270"
+                            ShadowDepth="2"
+                            Opacity="0.08"
+                            BlurRadius="8" />
+                    </Border.Effect>
                     <StackPanel>
                         <!-- Header with Title -->
-                        <StackPanel Margin="0,0,0,20">
+                        <StackPanel Margin="0,0,0,16">
                             <TextBlock
                                 FontSize="18"
-                                FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="{x:Static plugin:Resource.NetworkAcceleration_AcceleratedTraffic}" />
                             <TextBlock
-                                FontSize="13"
+                                FontSize="12"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Margin="0,4,0,0"
+                                Margin="0,3,0,0"
                                 Text="实时流量统计与趋势分析" />
                         </StackPanel>
                         
-                        <!-- Total Traffic - Prominent Display with Gradient Background -->
+                        <!-- Total Traffic - Compact Display -->
                         <Border
                             Background="{DynamicResource SystemAccentColorBrush}"
-                            CornerRadius="12"
-                            Padding="24,20"
-                            Margin="0,0,0,20">
-                            <Border.Effect>
-                                <DropShadowEffect
-                                    Color="Black"
-                                    Direction="270"
-                                    ShadowDepth="2"
-                                    Opacity="0.15"
-                                    BlurRadius="8" />
-                            </Border.Effect>
-                            <StackPanel>
-                                <TextBlock
-                                    FontSize="14"
-                                    Foreground="White"
-                                    Opacity="0.95"
-                                    Margin="0,0,0,10"
-                                    Text="{x:Static plugin:Resource.NetworkAcceleration_TotalTraffic}" />
-                                <TextBlock
-                                    FontSize="42"
-                                    FontWeight="Medium"
-                                    Foreground="White"
-                                    Text="{Binding TotalTraffic, Mode=OneWay}" />
-                            </StackPanel>
+                            CornerRadius="10"
+                            Padding="18,14"
+                            Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="White"
+                                        Opacity="0.9"
+                                        Margin="0,0,0,6"
+                                        Text="{x:Static plugin:Resource.NetworkAcceleration_TotalTraffic}" />
+                                    <TextBlock
+                                        FontSize="32"
+                                        Foreground="White"
+                                        Text="{Binding TotalTraffic, Mode=OneWay}" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
                         
-                        <!-- Download/Upload Stats - Side by Side with Enhanced Design -->
-                        <Grid Margin="0,0,0,24">
+                        <!-- Download/Upload Stats - Compact Side by Side -->
+                        <Grid Margin="0,0,0,16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="12" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             
@@ -123,75 +130,65 @@
                             <Border
                                 Grid.Column="0"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                CornerRadius="6"
-                                Padding="16,14"
-                                BorderThickness="0">
+                                CornerRadius="10"
+                                Padding="16,14">
                                 <StackPanel>
                                     <TextBlock
-                                        FontSize="12"
+                                        FontSize="11"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                         Margin="0,0,0,8"
                                         Text="{x:Static plugin:Resource.NetworkAcceleration_Downloaded}" />
                                     <TextBlock
-                                        FontSize="24"
-                                        FontWeight="Medium"
+                                        FontSize="26"
                                         Foreground="#E74C3C"
-                                        Margin="0,0,0,8"
+                                        Margin="0,0,0,6"
                                         Text="{Binding DownloadedTraffic, Mode=OneWay}" />
                                     <TextBlock
                                         FontSize="13"
-                                        FontWeight="Medium"
                                         Foreground="#E74C3C"
                                         Text="{Binding DownloadSpeed, Mode=OneWay}" />
                                 </StackPanel>
                             </Border>
                             
-                            <!-- Upload Section with Icon -->
+                            <!-- Upload Section -->
                             <Border
                                 Grid.Column="2"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                CornerRadius="12"
-                                Padding="20,18"
-                                BorderThickness="0">
+                                CornerRadius="10"
+                                Padding="16,14">
                                 <StackPanel>
                                     <TextBlock
-                                        FontSize="12"
+                                        FontSize="11"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Margin="0,0,0,10"
-                                        VerticalAlignment="Center"
+                                        Margin="0,0,0,8"
                                         Text="{x:Static plugin:Resource.NetworkAcceleration_Uploaded}" />
                                     <TextBlock
-                                        FontSize="32"
-                                        FontWeight="SemiBold"
+                                        FontSize="26"
                                         Foreground="#1E90FF"
-                                        Margin="0,0,0,10"
+                                        Margin="0,0,0,6"
                                         Text="{Binding UploadedTraffic, Mode=OneWay}" />
                                     <TextBlock
-                                        FontSize="14"
-                                        FontWeight="Medium"
+                                        FontSize="13"
                                         Foreground="#1E90FF"
-                                        Margin="0,4,0,0"
-                                        VerticalAlignment="Center"
                                         Text="{Binding UploadSpeed, Mode=OneWay}" />
                                 </StackPanel>
                             </Border>
                         </Grid>
                         
-                        <!-- Traffic Chart - Enhanced with Title and Reset Button -->
-                        <StackPanel Margin="0,4,0,0">
-                            <Grid Margin="0,0,0,16">
+                        <!-- Traffic Chart - Compact Header -->
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                     <TextBlock
-                                        FontSize="15"
-                                        FontWeight="Medium"
+                                        FontSize="16"
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Text="流量趋势图" />
                                     <TextBlock
-                                        FontSize="12"
+                                        FontSize="11"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                         Margin="0,2,0,0"
                                         Text="实时显示下载和上传速度变化" />
@@ -201,71 +198,26 @@
                                     x:Name="_resetStatisticsButtonInline"
                                     Content="重置统计"
                                     Click="ResetStatisticsButton_Click"
-                                    Padding="12,6"
+                                    Padding="10,5"
+                                    FontSize="12"
                                     VerticalAlignment="Center" />
                             </Grid>
-                        <controls:TrafficChartControl
-                            x:Name="_trafficChartControl"
-                                Height="380"
-                            Visibility="{Binding IsServiceEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <controls:TrafficChartControl
+                                x:Name="_trafficChartControl"
+                                Height="320"
+                                Visibility="{Binding IsServiceEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
                 
-                <!-- Service Status -->
-                <Border
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,20">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            
-                            <!-- Status Text -->
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Margin="0,0,0,4">
-                                    <Run Text="{x:Static plugin:Resource.NetworkAcceleration_ServiceStatus}" />
-                                    <Run Text=": " />
-                                    <Run Text="{Binding ServiceStatus, Mode=OneWay}" Foreground="{DynamicResource SystemAccentColorBrush}" />
-                                </TextBlock>
-                                <TextBlock
-                                    FontSize="13"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="{Binding ServiceStatusDescription, Mode=OneWay}"
-                                    TextWrapping="Wrap"
-                                    LineHeight="18" />
-                            </StackPanel>
-                            
-                            <!-- Toggle Switch -->
-                            <wpfui:ToggleSwitch
-                                Grid.Column="2"
-                                x:Name="_serviceToggleSwitch"
-                                IsChecked="{Binding IsServiceEnabled, Mode=TwoWay}"
-                                Click="ServiceToggleSwitch_Click"
-                                VerticalAlignment="Center" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <!-- DNS Optimization - Enhanced with Icon -->
+                <!-- Service Status - Compact Design -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="12"
-                    Padding="24"
-                    Margin="0,0,0,20">
+                    Padding="20"
+                    Margin="0,0,0,16">
                     <Border.Effect>
                         <DropShadowEffect
                             Color="Black"
@@ -274,78 +226,142 @@
                             Opacity="0.08"
                             BlurRadius="8" />
                     </Border.Effect>
-                    <StackPanel>
-                        <StackPanel Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Status Text -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock
+                                    FontSize="16"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_ServiceStatus}" />
+                                <TextBlock
+                                    FontSize="16"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Margin="6,0,0,0"
+                                    Text=":" />
+                                <TextBlock
+                                    FontSize="16"
+                                    Foreground="{DynamicResource SystemAccentColorBrush}"
+                                    Margin="6,0,0,0"
+                                    Text="{Binding ServiceStatus, Mode=OneWay}" />
+                            </StackPanel>
                             <TextBlock
-                                FontSize="15"
-                                FontWeight="Medium"
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding ServiceStatusDescription, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                LineHeight="16" />
+                        </StackPanel>
+                        
+                        <!-- Toggle Switch -->
+                        <wpfui:ToggleSwitch
+                            Grid.Column="1"
+                            x:Name="_serviceToggleSwitch"
+                            IsChecked="{Binding IsServiceEnabled, Mode=TwoWay}"
+                            Click="ServiceToggleSwitch_Click"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- DNS Optimization - Compact Design -->
+                <Border
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20"
+                    Margin="0,0,0,16">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            Color="Black"
+                            Direction="270"
+                            ShadowDepth="2"
+                            Opacity="0.08"
+                            BlurRadius="8" />
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock
+                                FontSize="16"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimization}" />
                             <TextBlock
-                                FontSize="13"
+                                FontSize="12"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Margin="0,4,0,0"
+                                Margin="0,3,0,0"
                                 TextWrapping="Wrap"
-                                LineHeight="18"
+                                LineHeight="16"
                                 Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimizationDescription}" />
                         </StackPanel>
                         <wpfui:ToggleSwitch
+                            Grid.Column="1"
                             x:Name="_dnsOptimizationToggle"
                             IsChecked="{Binding IsDnsOptimizationEnabled, Mode=TwoWay}"
-                            Margin="0,0,0,12" />
-                        <TextBlock
-                            FontSize="13"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            TextWrapping="Wrap"
-                            LineHeight="18"
-                            Text="{x:Static plugin:Resource.NetworkAcceleration_DnsOptimizationEnabledDescription}" />
-                    </StackPanel>
+                            VerticalAlignment="Center" />
+                    </Grid>
                 </Border>
 
-                <!-- Request Interception -->
-                <Border
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,20">
-                    <StackPanel>
-                        <StackPanel Margin="0,0,0,12">
-                            <TextBlock
-                                FontSize="15"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterception}" />
-                            <TextBlock
-                                FontSize="13"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Margin="0,4,0,0"
-                                TextWrapping="Wrap"
-                                LineHeight="18"
-                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterceptionDescription}" />
-                        </StackPanel>
-                        <wpfui:ToggleSwitch
-                            x:Name="_requestInterceptionToggle"
-                            IsChecked="{Binding IsRequestInterceptionEnabled, Mode=TwoWay}"
-                            Margin="0,0,0,12" />
-                        <TextBlock
-                            FontSize="13"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            TextWrapping="Wrap"
-                            LineHeight="18"
-                            Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterceptionEnabledDescription}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Auto Start Service -->
+                <!-- Request Interception - Compact Design -->
                 <Border
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="12"
-                    Padding="24"
-                    Margin="0,0,0,20">
+                    Padding="20"
+                    Margin="0,0,0,16">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            Color="Black"
+                            Direction="270"
+                            ShadowDepth="2"
+                            Opacity="0.08"
+                            BlurRadius="8" />
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock
+                                FontSize="16"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterception}" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Margin="0,3,0,0"
+                                TextWrapping="Wrap"
+                                LineHeight="16"
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_RequestInterceptionDescription}" />
+                        </StackPanel>
+                        <wpfui:ToggleSwitch
+                            Grid.Column="1"
+                            x:Name="_requestInterceptionToggle"
+                            IsChecked="{Binding IsRequestInterceptionEnabled, Mode=TwoWay}"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+
+
+                <!-- Platform Acceleration - Compact Grouped Design -->
+                <Border
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20"
+                    Margin="0,0,0,16">
                     <Border.Effect>
                         <DropShadowEffect
                             Color="Black"
@@ -355,89 +371,56 @@
                             BlurRadius="8" />
                     </Border.Effect>
                     <StackPanel>
-                        <StackPanel Margin="0,0,0,12">
-                            <TextBlock
-                                FontSize="15"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="自动启动服务" />
-                            <TextBlock
-                                FontSize="13"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Margin="0,4,0,0"
-                                TextWrapping="Wrap"
-                                LineHeight="18"
-                                Text="应用启动时自动启动网络加速服务" />
-                        </StackPanel>
-                        <wpfui:ToggleSwitch
-                            x:Name="_autoStartServiceToggle"
-                            IsChecked="{Binding AutoStartService, Mode=TwoWay}"
-                            Margin="0,0,0,12" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Platform Acceleration -->
-                <Border
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="20"
-                    Margin="0,0,0,20">
-                    <StackPanel>
                         <TextBlock
-                            FontSize="15"
-                            FontWeight="Medium"
+                            FontSize="16"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Margin="0,0,0,12"
+                            Margin="0,0,0,8"
                             Text="平台加速" />
                         <TextBlock
-                            FontSize="13"
+                            FontSize="12"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Margin="0,0,0,12"
                             TextWrapping="Wrap"
-                            LineHeight="18"
+                            LineHeight="16"
                             Text="为以下平台启用网络加速，提升访问速度和稳定性" />
                         
                         <!-- GitHub Acceleration -->
-                        <Grid Margin="0,0,0,12">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
+                                    FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="GitHub" />
                                 <TextBlock
-                                    FontSize="12"
+                                    FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
                                     Text="加速 GitHub 代码仓库和资源下载" />
                             </StackPanel>
-                        <wpfui:ToggleSwitch
+                            <wpfui:ToggleSwitch
                                 Grid.Column="1"
-                            x:Name="_githubAccelerationToggle"
-                            IsChecked="{Binding IsGithubAccelerationEnabled, Mode=TwoWay}"
+                                x:Name="_githubAccelerationToggle"
+                                IsChecked="{Binding IsGithubAccelerationEnabled, Mode=TwoWay}"
                                 VerticalAlignment="Center" />
                         </Grid>
 
                         <!-- Steam Acceleration -->
-                        <Grid Margin="0,0,0,12">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
+                                    FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="Steam" />
                                 <TextBlock
-                                    FontSize="12"
+                                    FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
                                     Text="加速 Steam 商店、社区和下载" />
@@ -450,19 +433,18 @@
                         </Grid>
 
                         <!-- Discord Acceleration -->
-                        <Grid Margin="0,0,0,12">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
+                                    FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="Discord" />
                                 <TextBlock
-                                    FontSize="12"
+                                    FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
                                     Text="加速 Discord 应用和 CDN 资源" />
@@ -475,19 +457,18 @@
                         </Grid>
 
                         <!-- npm Acceleration -->
-                        <Grid Margin="0,0,0,12">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
+                                    FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="npm" />
                                 <TextBlock
-                                    FontSize="12"
+                                    FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
                                     Text="加速 npm 包管理器下载" />
@@ -507,13 +488,12 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock
-                                    FontSize="15"
-                                    FontWeight="Medium"
+                                    FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="PyPI" />
-                        <TextBlock
-                                    FontSize="12"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                <TextBlock
+                                    FontSize="11"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
                                     Text="加速 Python 包索引下载" />
                             </StackPanel>

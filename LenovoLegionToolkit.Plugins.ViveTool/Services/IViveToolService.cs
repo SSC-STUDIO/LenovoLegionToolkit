@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 
@@ -57,6 +58,11 @@ public interface IViveToolService
     /// Set the path to vivetool.exe manually
     /// </summary>
     Task<bool> SetViveToolPathAsync(string filePath);
+
+    /// <summary>
+    /// Download and install ViVeTool with progress reporting
+    /// </summary>
+    Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null);
 }
 
 /// <summary>

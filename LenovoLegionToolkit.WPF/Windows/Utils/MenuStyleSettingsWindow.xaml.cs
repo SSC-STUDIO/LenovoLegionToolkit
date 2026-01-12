@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-    public partial class MenuStyleSettingsWindow : UiWindow
+    public partial class MenuStyleSettingsWindow : BaseWindow
     {
         private string? _shellConfigPath;
         private string? _baseDirectory;
@@ -21,6 +22,31 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             InitializeComponent();
             LoadAllConfigFiles();
+            LoadLocalizedStrings();
+        }
+
+        private void LoadLocalizedStrings()
+        {
+            // Load localized strings for UI elements
+            if (_shellNssTab != null)
+            {
+                _shellNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ShellNss", Resource.Culture) ?? "shell.nss";
+            }
+
+            if (_themeNssTab != null)
+            {
+                _themeNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ThemeNss", Resource.Culture) ?? "theme.nss";
+            }
+
+            if (_imagesNssTab != null)
+            {
+                _imagesNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ImagesNss", Resource.Culture) ?? "images.nss";
+            }
+
+            if (_modifyNssTab != null)
+            {
+                _modifyNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ModifyNss", Resource.Culture) ?? "modify.nss";
+            }
         }
 
         private void LoadAllConfigFiles()
@@ -249,87 +275,66 @@ theme
             return null;
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+
+        private void ShellNssTab_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tab visibility is handled by XAML binding
+        }
+
+        private void ThemeNssTab_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tab visibility is handled by XAML binding
+        }
+
+        private void ImagesNssTab_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tab visibility is handled by XAML binding
+        }
+
+        private void ModifyNssTab_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tab visibility is handled by XAML binding
+        }
+
+        private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                // Confirm with user
+                var result = MessageBox.Show(
+                    "确定要应用配置吗？\n\n这将：\n1. 保存所有配置文件\n2. 重启资源管理器（Explorer）使配置生效\n\n注意：重启将关闭所有打开的文件夹窗口和任务栏，然后自动重新启动。",
+                    "确认应用配置",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+
+                // Disable button to prevent multiple clicks
+                if (_applyButton != null)
+                    _applyButton.IsEnabled = false;
+
+                // Step 1: Save all configuration files
                 var savedFiles = new List<string>();
                 var failedFiles = new List<string>();
 
-                // Save shell.nss
-                if (!string.IsNullOrEmpty(_shellConfigPath) && _shellNssTextBox != null)
-                {
-                    try
-                    {
-                        // Ensure directory exists
-                        var dir = Path.GetDirectoryName(_shellConfigPath);
-                        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
+                SaveAllFiles(savedFiles, failedFiles);
 
-                        File.WriteAllText(_shellConfigPath, _shellNssTextBox.Text, System.Text.Encoding.UTF8);
-                        savedFiles.Add("shell.nss");
-                    }
-                    catch (Exception ex)
-                    {
-                        failedFiles.Add($"shell.nss: {ex.Message}");
-                    }
+                // Check if save was successful
+                if (failedFiles.Count > 0 && savedFiles.Count == 0)
+                {
+                    MessageBox.Show(
+                        $"无法保存配置文件：\n{string.Join("\n", failedFiles)}\n\n请检查文件权限后重试。",
+                        "保存失败",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
                 }
 
-                // Save theme.nss
-                if (!string.IsNullOrEmpty(_themeNssPath) && _themeNssTextBox != null)
-                {
-                    try
-                    {
-                        var dir = Path.GetDirectoryName(_themeNssPath);
-                        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
+                // Step 2: Restart Explorer
+                RestartExplorer();
 
-                        File.WriteAllText(_themeNssPath, _themeNssTextBox.Text, System.Text.Encoding.UTF8);
-                        savedFiles.Add("theme.nss");
-                    }
-                    catch (Exception ex)
-                    {
-                        failedFiles.Add($"theme.nss: {ex.Message}");
-                    }
-                }
-
-                // Save images.nss
-                if (!string.IsNullOrEmpty(_imagesNssPath) && _imagesNssTextBox != null)
-                {
-                    try
-                    {
-                        var dir = Path.GetDirectoryName(_imagesNssPath);
-                        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
-
-                        File.WriteAllText(_imagesNssPath, _imagesNssTextBox.Text, System.Text.Encoding.UTF8);
-                        savedFiles.Add("images.nss");
-                    }
-                    catch (Exception ex)
-                    {
-                        failedFiles.Add($"images.nss: {ex.Message}");
-                    }
-                }
-
-                // Save modify.nss
-                if (!string.IsNullOrEmpty(_modifyNssPath) && _modifyNssTextBox != null)
-                {
-                    try
-                    {
-                        var dir = Path.GetDirectoryName(_modifyNssPath);
-                        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
-
-                        File.WriteAllText(_modifyNssPath, _modifyNssTextBox.Text, System.Text.Encoding.UTF8);
-                        savedFiles.Add("modify.nss");
-                    }
-                    catch (Exception ex)
-                    {
-                        failedFiles.Add($"modify.nss: {ex.Message}");
-                    }
-                }
-
-                // Show result message
+                // Show success message
                 var message = "";
                 if (savedFiles.Count > 0)
                 {
@@ -341,79 +346,102 @@ theme
                     message += $"保存失败的文件：\n{string.Join("\n", failedFiles)}\n\n";
                 }
 
-                if (savedFiles.Count > 0)
-                {
-                    message += "注意：修改配置后需要重启资源管理器（Explorer）才能生效。\n您可以在任务管理器中结束 Explorer 进程，然后重新启动它。";
-                    MessageBox.Show(
-                        message,
-                        failedFiles.Count > 0 ? "部分保存成功" : "保存成功",
-                        MessageBoxButton.OK,
-                        failedFiles.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "所有文件保存失败。\n请确保 Nilesoft Shell 已正确安装，并且有写入权限。",
-                        "保存失败",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+                message += "资源管理器已重启，配置已生效！";
+
+                MessageBox.Show(
+                    message,
+                    failedFiles.Count > 0 ? "部分应用成功" : "应用成功",
+                    MessageBoxButton.OK,
+                    failedFiles.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"保存配置文件时出错：\n{ex.Message}",
-                    "保存失败",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-        }
-
-        private void ConfigTabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // This method can be used to track which tab is selected if needed
-        }
-
-        private void RestartExplorerButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                // Confirm with user
-                var result = MessageBox.Show(
-                    "确定要重启资源管理器（Explorer）吗？\n\n这将关闭所有打开的文件夹窗口和任务栏，然后自动重新启动。",
-                    "确认重启资源管理器",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
-
-                if (result != MessageBoxResult.Yes)
-                    return;
-
-                // Disable button to prevent multiple clicks
-                if (_restartExplorerButton != null)
-                    _restartExplorerButton.IsEnabled = false;
-
-                // Restart Explorer
-                RestartExplorer();
-
-                MessageBox.Show(
-                    "资源管理器已重启！\n\n如果配置已保存，新的配置应该已经生效。",
-                    "重启成功",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"重启资源管理器时出错：\n{ex.Message}\n\n您可以手动在任务管理器中结束 Explorer 进程，然后重新启动它。",
-                    "重启失败",
+                    $"应用配置时出错：\n{ex.Message}\n\n您可以手动保存文件并在任务管理器中重启 Explorer 进程。",
+                    "应用失败",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             finally
             {
                 // Re-enable button
-                if (_restartExplorerButton != null)
-                    _restartExplorerButton.IsEnabled = true;
+                if (_applyButton != null)
+                    _applyButton.IsEnabled = true;
+            }
+        }
+
+        private void SaveAllFiles(List<string> savedFiles, List<string> failedFiles)
+        {
+            // Save shell.nss
+            if (!string.IsNullOrEmpty(_shellConfigPath) && _shellNssTextBox != null)
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(_shellConfigPath);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    File.WriteAllText(_shellConfigPath, _shellNssTextBox.Text, System.Text.Encoding.UTF8);
+                    savedFiles.Add("shell.nss");
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"shell.nss: {ex.Message}");
+                }
+            }
+
+            // Save theme.nss
+            if (!string.IsNullOrEmpty(_themeNssPath) && _themeNssTextBox != null)
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(_themeNssPath);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    File.WriteAllText(_themeNssPath, _themeNssTextBox.Text, System.Text.Encoding.UTF8);
+                    savedFiles.Add("theme.nss");
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"theme.nss: {ex.Message}");
+                }
+            }
+
+            // Save images.nss
+            if (!string.IsNullOrEmpty(_imagesNssPath) && _imagesNssTextBox != null)
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(_imagesNssPath);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    File.WriteAllText(_imagesNssPath, _imagesNssTextBox.Text, System.Text.Encoding.UTF8);
+                    savedFiles.Add("images.nss");
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"images.nss: {ex.Message}");
+                }
+            }
+
+            // Save modify.nss
+            if (!string.IsNullOrEmpty(_modifyNssPath) && _modifyNssTextBox != null)
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(_modifyNssPath);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    File.WriteAllText(_modifyNssPath, _modifyNssTextBox.Text, System.Text.Encoding.UTF8);
+                    savedFiles.Add("modify.nss");
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"modify.nss: {ex.Message}");
+                }
             }
         }
 

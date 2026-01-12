@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Controls;
 
@@ -26,7 +26,6 @@ public partial class TrafficChartControl : UserControl
     private static readonly SolidColorBrush UploadGradientStart = new(Color.FromArgb(0x80, 0x1E, 0x90, 0xFF));
     private static readonly SolidColorBrush GridLineColor = new(Color.FromArgb(0x30, 0xFF, 0xFF, 0xFF));
     
-    private readonly object _dataLock = new();
     private (long downloadSpeed, long uploadSpeed)[] _lastDataPoints = Array.Empty<(long, long)>();
 
     public TrafficChartControl()
@@ -48,14 +47,9 @@ public partial class TrafficChartControl : UserControl
         if (e.NewSize.Width > 0 && e.NewSize.Height > 0)
         {
             UpdateCanvasSize();
-            (long, long)[] dataPoints;
-            lock (_dataLock)
+            if (_lastDataPoints.Length > 0)
             {
-                dataPoints = _lastDataPoints;
-            }
-            if (dataPoints.Length > 0)
-            {
-                UpdateChart(dataPoints);
+                UpdateChart(_lastDataPoints);
             }
         }
     }
@@ -65,38 +59,18 @@ public partial class TrafficChartControl : UserControl
         if (ChartCanvas == null)
             return;
 
-        // Use Dispatcher to ensure we're on UI thread
-        if (!Dispatcher.CheckAccess())
-        {
-            Dispatcher.Invoke(UpdateCanvasSize);
-            return;
-        }
-
         var border = ChartCanvas.Parent as Border;
         if (border != null && border.ActualWidth > 0 && border.ActualHeight > 0)
         {
             // Canvas should fill the entire border minus padding
-            var newWidth = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right);
-            var newHeight = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom);
-            
-            // Only update if size actually changed to avoid unnecessary redraws
-            if (Math.Abs(ChartCanvas.Width - newWidth) > 0.1 || Math.Abs(ChartCanvas.Height - newHeight) > 0.1)
-            {
-                ChartCanvas.Width = newWidth;
-                ChartCanvas.Height = newHeight;
-            }
+            ChartCanvas.Width = Math.Max(0, border.ActualWidth - border.Padding.Left - border.Padding.Right);
+            ChartCanvas.Height = Math.Max(0, border.ActualHeight - border.Padding.Top - border.Padding.Bottom);
         }
         else if (ActualWidth > 0 && ActualHeight > 0)
         {
             // Fallback: use control's actual size
-            var newWidth = ActualWidth;
-            var newHeight = ActualHeight;
-            
-            if (Math.Abs(ChartCanvas.Width - newWidth) > 0.1 || Math.Abs(ChartCanvas.Height - newHeight) > 0.1)
-            {
-                ChartCanvas.Width = newWidth;
-                ChartCanvas.Height = newHeight;
-            }
+            ChartCanvas.Width = ActualWidth;
+            ChartCanvas.Height = ActualHeight;
         }
     }
 
@@ -105,118 +79,91 @@ public partial class TrafficChartControl : UserControl
     /// </summary>
     public void UpdateChart((long downloadSpeed, long uploadSpeed)[] dataPoints)
     {
-        // Ensure we're on UI thread
+        // Ensure we're on the UI thread
         if (!Dispatcher.CheckAccess())
         {
             Dispatcher.Invoke(() => UpdateChart(dataPoints));
             return;
         }
 
-        // Store data for redraw on size change (thread-safe)
-        var dataToStore = dataPoints ?? Array.Empty<(long, long)>();
-        lock (_dataLock)
-        {
-            _lastDataPoints = dataToStore;
-        }
-        
-        if (ChartCanvas == null)
-            return;
-
-        ChartCanvas.Children.Clear();
-
-        if (dataPoints == null || dataPoints.Length == 0)
-            return;
-        
-        // Ensure canvas has proper size
-        UpdateCanvasSize();
-
-        var canvasWidth = ChartCanvas.ActualWidth;
-        var canvasHeight = ChartCanvas.ActualHeight;
-
-        // Wait for layout if size is not yet available
-        if (canvasWidth <= 0 || canvasHeight <= 0)
-        {
-            // Schedule update after layout
-            Dispatcher.BeginInvoke(new Action(() => UpdateChart(dataPoints)), System.Windows.Threading.DispatcherPriority.Loaded);
-            return;
-        }
-
-        // Find max speed for scaling
-        var maxDownload = dataPoints.Length > 0 ? dataPoints.Max(d => d.downloadSpeed) : 0;
-        var maxUpload = dataPoints.Length > 0 ? dataPoints.Max(d => d.uploadSpeed) : 0;
-        var maxSpeed = Math.Max(maxDownload, maxUpload);
-        
-        // Ensure minimum scale for better visualization
-        if (maxSpeed == 0)
-            maxSpeed = 1;
-
         try
         {
+            // Store data for redraw on size change
+            _lastDataPoints = dataPoints ?? Array.Empty<(long, long)>();
+            
+            if (ChartCanvas == null)
+                return;
+
+            ChartCanvas.Children.Clear();
+
+            if (dataPoints == null || dataPoints.Length == 0)
+                return;
+            
+            // Ensure canvas has proper size
+            UpdateCanvasSize();
+
+            var canvasWidth = ChartCanvas.ActualWidth;
+            var canvasHeight = ChartCanvas.ActualHeight;
+
+            // Wait a bit if canvas size is not ready yet
+            if (canvasWidth <= 0 || canvasHeight <= 0)
+            {
+                // Use DispatcherTimer to retry after layout
+                var timer = new System.Windows.Threading.DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(50)
+                };
+                timer.Tick += (s, e) =>
+                {
+                    timer.Stop();
+                    UpdateCanvasSize();
+                    var retryWidth = ChartCanvas.ActualWidth;
+                    var retryHeight = ChartCanvas.ActualHeight;
+                    if (retryWidth > 0 && retryHeight > 0)
+                    {
+                        UpdateChart(_lastDataPoints);
+                    }
+                };
+                timer.Start();
+                return;
+            }
+
+            // Filter out invalid data points
+            var validDataPoints = dataPoints.Where(d => d.downloadSpeed >= 0 && d.uploadSpeed >= 0).ToArray();
+            if (validDataPoints.Length == 0)
+                return;
+
+            // Find max speed for scaling
+            var maxDownload = validDataPoints.Length > 0 ? validDataPoints.Max(d => d.downloadSpeed) : 0;
+            var maxUpload = validDataPoints.Length > 0 ? validDataPoints.Max(d => d.uploadSpeed) : 0;
+            var maxSpeed = Math.Max(maxDownload, maxUpload);
+            
+            // Ensure minimum scale for better visualization
+            if (maxSpeed == 0)
+                maxSpeed = 1;
+
             // Draw grid lines
             DrawGridLines(canvasWidth, canvasHeight);
 
-            // Draw area fills first (behind the lines)
-            if (dataPoints.Length >= 2)
+            // Draw lines only (no area fill for cleaner look)
+            if (validDataPoints.Length >= 2)
             {
-                DrawAreaFill(dataPoints, d => d.downloadSpeed, maxSpeed, canvasWidth, canvasHeight, DownloadGradientStart, DownloadColor);
-                DrawAreaFill(dataPoints, d => d.uploadSpeed, maxSpeed, canvasWidth, canvasHeight, UploadGradientStart, UploadColor);
+                DrawSmoothLine(validDataPoints, d => d.downloadSpeed, maxSpeed, canvasWidth, canvasHeight, DownloadColor);
+                DrawSmoothLine(validDataPoints, d => d.uploadSpeed, maxSpeed, canvasWidth, canvasHeight, UploadColor);
             }
-
-            // Draw lines on top
-            if (dataPoints.Length >= 2)
-            {
-                DrawSmoothLine(dataPoints, d => d.downloadSpeed, maxSpeed, canvasWidth, canvasHeight, DownloadColor);
-                DrawSmoothLine(dataPoints, d => d.uploadSpeed, maxSpeed, canvasWidth, canvasHeight, UploadColor);
-            }
-            else if (dataPoints.Length == 1)
+            else if (validDataPoints.Length == 1)
             {
                 // Draw single point as a dot
-                DrawSinglePoint(dataPoints[0].downloadSpeed, dataPoints[0].uploadSpeed, maxSpeed, canvasWidth, canvasHeight);
+                DrawSinglePoint(validDataPoints[0], d => d.downloadSpeed, maxSpeed, canvasWidth, canvasHeight, DownloadColor);
+                DrawSinglePoint(validDataPoints[0], d => d.uploadSpeed, maxSpeed, canvasWidth, canvasHeight, UploadColor);
             }
         }
         catch (Exception ex)
         {
             // Log error but don't crash
-            System.Diagnostics.Debug.WriteLine($"Error updating chart: {ex.Message}");
+            if (System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debug.WriteLine($"Error updating chart: {ex.Message}");
         }
-    }
-
-    private void DrawSinglePoint(long downloadSpeed, long uploadSpeed, long maxSpeed, double width, double height)
-    {
-        if (ChartCanvas == null)
-            return;
-
-        // Draw download point
-        var downloadY = ChartPadding + height - (height * downloadSpeed / (double)maxSpeed);
-        var downloadX = ChartPadding + width; // Rightmost position (most recent)
-        
-        var downloadEllipse = new Ellipse
-        {
-            Width = 6,
-            Height = 6,
-            Fill = DownloadColor,
-            Stroke = DownloadColor,
-            StrokeThickness = 2
-        };
-        Canvas.SetLeft(downloadEllipse, downloadX - 3);
-        Canvas.SetTop(downloadEllipse, downloadY - 3);
-        ChartCanvas.Children.Add(downloadEllipse);
-
-        // Draw upload point
-        var uploadY = ChartPadding + height - (height * uploadSpeed / (double)maxSpeed);
-        var uploadX = ChartPadding + width; // Rightmost position (most recent)
-        
-        var uploadEllipse = new Ellipse
-        {
-            Width = 6,
-            Height = 6,
-            Fill = UploadColor,
-            Stroke = UploadColor,
-            StrokeThickness = 2
-        };
-        Canvas.SetLeft(uploadEllipse, uploadX - 3);
-        Canvas.SetTop(uploadEllipse, uploadY - 3);
-        ChartCanvas.Children.Add(uploadEllipse);
     }
 
     private void DrawGridLines(double width, double height)
@@ -276,12 +223,9 @@ public partial class TrafficChartControl : UserControl
             var normalizedSpeed = maxSpeed > 0 ? (double)speed / maxSpeed : 0.0;
 
             // X: from right to left (most recent on the right)
-            // Ensure we don't divide by zero
-            var xRatio = dataPoints.Length > 1 ? (double)i / (dataPoints.Length - 1.0) : 0.0;
-            var x = ChartPadding + width - (width * xRatio);
+            var x = ChartPadding + width - (width * i / (dataPoints.Length - 1.0));
             // Y: from bottom to top (0 at bottom, maxSpeed at top)
-            // Clamp Y to valid range
-            var y = ChartPadding + height - (height * Math.Max(0, Math.Min(1, normalizedSpeed)));
+            var y = ChartPadding + height - (height * normalizedSpeed);
 
             points[i] = new Point(x, y);
         }
@@ -365,70 +309,43 @@ public partial class TrafficChartControl : UserControl
         if (dataPoints.Length < 2)
             return;
 
-        var curvePoints = CalculateCurvePoints(dataPoints, speedSelector, maxSpeed, width, height);
-        var pathGeometry = CreatePathGeometry(curvePoints, width, height);
-        var gradientBrush = CreateGradientBrush(startColor, endColor);
+        var bottomY = ChartPadding + height;
+        var leftX = ChartPadding;
+        var rightX = ChartPadding + width;
 
-        if (pathGeometry.Figures.Count > 0)
-        {
-            var path = new Path
-            {
-                Data = pathGeometry,
-                Fill = gradientBrush,
-                Opacity = 0.35
-            };
-
-            ChartCanvas.Children.Insert(0, path);
-        }
-    }
-
-    private Point[] CalculateCurvePoints((long downloadSpeed, long uploadSpeed)[] dataPoints,
-        Func<(long downloadSpeed, long uploadSpeed), long> speedSelector,
-        long maxSpeed,
-        double width,
-        double height)
-    {
+        // Build curve points (from right to left, matching the line drawing order)
+        // Data points are ordered with most recent on the right (index 0 = rightmost = most recent)
         var curvePoints = new Point[dataPoints.Length];
         for (int i = 0; i < dataPoints.Length; i++)
         {
             var speed = speedSelector(dataPoints[i]);
             var normalizedSpeed = maxSpeed > 0 ? (double)speed / maxSpeed : 0.0;
 
-            var xRatio = dataPoints.Length > 1 ? (double)i / (dataPoints.Length - 1.0) : 0.0;
-            var x = ChartPadding + width - (width * xRatio);
-            var y = ChartPadding + height - (height * Math.Max(0, Math.Min(1, normalizedSpeed)));
+            // X: from right to left (most recent on the right, matching DrawSmoothLine)
+            // Avoid division by zero when there's only one data point
+            var x = dataPoints.Length > 1
+                ? ChartPadding + width - (width * i / (dataPoints.Length - 1.0))
+                : ChartPadding + width / 2.0; // Center for single point
+            // Y: from bottom to top (0 at bottom, maxSpeed at top)
+            var y = ChartPadding + height - (height * normalizedSpeed);
 
+            // Clamp Y to valid range
+            y = Math.Max(ChartPadding, Math.Min(ChartPadding + height, y));
             curvePoints[i] = new Point(x, y);
         }
-        return curvePoints;
-    }
 
-    private PathGeometry CreatePathGeometry(Point[] curvePoints, double width, double height)
-    {
-        var bottomY = ChartPadding + height;
-        var leftX = ChartPadding;
-        var rightX = ChartPadding + width;
-
-        var pathFigure = CreatePathFigure(curvePoints, leftX, bottomY, rightX);
-        var area = CalculateSignedArea(curvePoints, leftX, bottomY, rightX);
-
-        if (area > 0 && curvePoints.Length >= 2)
-        {
-            return CreateReversedPathGeometry(curvePoints, leftX, bottomY, rightX);
-        }
-
-        var pathGeometry = new PathGeometry { FillRule = FillRule.Nonzero };
-        pathGeometry.Figures.Add(pathFigure);
-        return pathGeometry;
-    }
-
-    private PathFigure CreatePathFigure(Point[] curvePoints, double leftX, double bottomY, double rightX)
-    {
-        var pathFigure = new PathFigure { StartPoint = new Point(leftX, bottomY) };
+        // Build path points in clockwise order to ensure fill is always below the curve
+        // Create a PathGeometry with smooth curves
+        var pathFigure = new PathFigure 
+        { 
+            StartPoint = new Point(leftX, bottomY) // Start at bottom-left
+        };
         var pathSegmentCollection = new PathSegmentCollection();
 
+        // Step 1: Line from bottom-left to the rightmost curve point (index 0, most recent data)
         pathSegmentCollection.Add(new LineSegment { Point = curvePoints[0] });
 
+        // Step 2: Draw smooth curve from right to left using the same smoothness as the line
         for (int i = 1; i < curvePoints.Length; i++)
         {
             if (i == 1)
@@ -437,103 +354,162 @@ public partial class TrafficChartControl : UserControl
             }
             else
             {
-                var bezierSegment = CreateBezierSegment(curvePoints, i);
-                pathSegmentCollection.Add(bezierSegment);
+                // Use cubic Bezier matching the line smoothness (similar to SteamTools)
+                var prevPoint = curvePoints[i - 1];
+                var currentPoint = curvePoints[i];
+                var prevPrevPoint = i > 1 ? curvePoints[i - 2] : prevPoint;
+                var nextPoint = i < curvePoints.Length - 1 ? curvePoints[i + 1] : currentPoint;
+                
+                var tension = 0.5; // Same smoothness factor as line
+                var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
+                var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
+                var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
+                var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
+
+                pathSegmentCollection.Add(new BezierSegment
+                {
+                    Point1 = new Point(cp1X, cp1Y),
+                    Point2 = new Point(cp2X, cp2Y),
+                    Point3 = currentPoint
+                });
             }
         }
 
+        // Step 3: Line from leftmost curve point (last in array) to bottom-right
         pathSegmentCollection.Add(new LineSegment { Point = new Point(rightX, bottomY) });
+        // Step 4: Path will be closed automatically back to StartPoint (bottom-left)
+
         pathFigure.Segments = pathSegmentCollection;
         pathFigure.IsClosed = true;
 
-        return pathFigure;
-    }
-
-    private BezierSegment CreateBezierSegment(Point[] points, int index)
-    {
-        const double tension = 0.5;
-        var prevPoint = points[index - 1];
-        var currentPoint = points[index];
-        var prevPrevPoint = index > 1 ? points[index - 2] : prevPoint;
-        var nextPoint = index < points.Length - 1 ? points[index + 1] : currentPoint;
-
-        var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
-        var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
-        var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
-        var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
-
-        return new BezierSegment
+        // Create path geometry - use Nonzero fill rule and ensure path is clockwise
+        // To ensure clockwise, we'll use a simple check: if the area is negative, reverse the path
+        var pathGeometry = new PathGeometry
         {
-            Point1 = new Point(cp1X, cp1Y),
-            Point2 = new Point(cp2X, cp2Y),
-            Point3 = currentPoint
+            FillRule = FillRule.Nonzero
         };
-    }
-
-    private double CalculateSignedArea(Point[] curvePoints, double leftX, double bottomY, double rightX)
-    {
-        var points = new List<Point> { new Point(leftX, bottomY) };
-        points.AddRange(curvePoints);
-        points.Add(new Point(rightX, bottomY));
-
-        if (points.Count < 3)
-            return 0;
-
+        pathGeometry.Figures.Add(pathFigure);
+        
+        // Calculate signed area to check if path is clockwise
+        // For a closed path, positive area = counterclockwise, negative = clockwise
+        // We want clockwise, so if area is positive, we need to reverse
         double area = 0;
+        var points = new List<Point> { new Point(leftX, bottomY) };
+        foreach (var pt in curvePoints)
+            points.Add(pt);
+        points.Add(new Point(rightX, bottomY));
+        
         for (int i = 0; i < points.Count; i++)
         {
             int j = (i + 1) % points.Count;
             area += points[i].X * points[j].Y;
             area -= points[j].X * points[i].Y;
         }
-        return area / 2.0;
-    }
-
-    private PathGeometry CreateReversedPathGeometry(Point[] curvePoints, double leftX, double bottomY, double rightX)
-    {
-        var pathGeometry = new PathGeometry { FillRule = FillRule.Nonzero };
-        var reversedPathFigure = new PathFigure { StartPoint = new Point(leftX, bottomY) };
-        var reversedSegments = new PathSegmentCollection();
-        var reversedCurvePoints = curvePoints.Reverse().ToArray();
-
-        reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[0] });
-
-        for (int i = 1; i < reversedCurvePoints.Length; i++)
+        area /= 2.0;
+        
+        // If area is positive (counterclockwise), reverse the path by reversing the curve points
+        if (area > 0)
         {
-            if (i == 1)
+            // Reverse the path by creating a new path with reversed curve points
+            pathGeometry = new PathGeometry { FillRule = FillRule.Nonzero };
+            var reversedPathFigure = new PathFigure { StartPoint = new Point(leftX, bottomY) };
+            var reversedSegments = new PathSegmentCollection();
+            
+            // Reverse curve points
+            var reversedCurvePoints = curvePoints.Reverse().ToArray();
+            
+            reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[0] });
+            
+            for (int i = 1; i < reversedCurvePoints.Length; i++)
             {
-                reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[i] });
+                if (i == 1)
+                {
+                    reversedSegments.Add(new LineSegment { Point = reversedCurvePoints[i] });
+                }
+                else
+                {
+                    // Use cubic Bezier matching the line smoothness
+                    var prevPoint = reversedCurvePoints[i - 1];
+                    var currentPoint = reversedCurvePoints[i];
+                    var prevPrevPoint = i > 1 ? reversedCurvePoints[i - 2] : prevPoint;
+                    var nextPoint = i < reversedCurvePoints.Length - 1 ? reversedCurvePoints[i + 1] : currentPoint;
+                    
+                    var tension = 0.5;
+                    var cp1X = prevPoint.X + (currentPoint.X - prevPrevPoint.X) * tension / 3.0;
+                    var cp1Y = prevPoint.Y + (currentPoint.Y - prevPrevPoint.Y) * tension / 3.0;
+                    var cp2X = currentPoint.X - (nextPoint.X - prevPoint.X) * tension / 3.0;
+                    var cp2Y = currentPoint.Y - (nextPoint.Y - prevPoint.Y) * tension / 3.0;
+                    
+                    reversedSegments.Add(new BezierSegment
+                    {
+                        Point1 = new Point(cp1X, cp1Y),
+                        Point2 = new Point(cp2X, cp2Y),
+                        Point3 = currentPoint
+                    });
+                }
             }
-            else
-            {
-                var bezierSegment = CreateBezierSegment(reversedCurvePoints, i);
-                reversedSegments.Add(bezierSegment);
-            }
+            
+            reversedSegments.Add(new LineSegment { Point = new Point(rightX, bottomY) });
+            reversedPathFigure.Segments = reversedSegments;
+            reversedPathFigure.IsClosed = true;
+            pathGeometry.Figures.Add(reversedPathFigure);
         }
 
-        reversedSegments.Add(new LineSegment { Point = new Point(rightX, bottomY) });
-        reversedPathFigure.Segments = reversedSegments;
-        reversedPathFigure.IsClosed = true;
-        pathGeometry.Figures.Add(reversedPathFigure);
-
-        return pathGeometry;
-    }
-
-    private LinearGradientBrush CreateGradientBrush(SolidColorBrush startColor, SolidColorBrush endColor)
-    {
-        return new LinearGradientBrush
+        // Create gradient brush - from top (curve) to bottom (fade out)
+        var gradientBrush = new LinearGradientBrush
         {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(0, 1),
+            StartPoint = new Point(0, 0), // Top of the gradient (at curve)
+            EndPoint = new Point(0, 1),   // Bottom of the gradient (at bottom)
             MappingMode = BrushMappingMode.RelativeToBoundingBox,
             GradientStops = new GradientStopCollection
             {
-                new GradientStop(startColor.Color, 0.0),
-                new GradientStop(endColor.Color, 0.2),
-                new GradientStop(Color.FromArgb(0x80, endColor.Color.R, endColor.Color.G, endColor.Color.B), 0.5),
-                new GradientStop(Color.FromArgb(0x00, endColor.Color.R, endColor.Color.G, endColor.Color.B), 1.0)
+                new GradientStop(startColor.Color, 0.0), // Start with semi-transparent color at top (curve)
+                new GradientStop(endColor.Color, 0.2),   // Full color slightly below curve
+                new GradientStop(Color.FromArgb(0x80, endColor.Color.R, endColor.Color.G, endColor.Color.B), 0.5), // Semi-transparent in middle
+                new GradientStop(Color.FromArgb(0x00, endColor.Color.R, endColor.Color.G, endColor.Color.B), 1.0) // Fully transparent at bottom
             }
         };
+
+        var path = new Path
+        {
+            Data = pathGeometry,
+            Fill = gradientBrush,
+            Opacity = 0.35
+        };
+
+        ChartCanvas.Children.Insert(0, path); // Insert at the beginning so it's behind the lines
+    }
+
+    /// <summary>
+    /// Draw a single point as a small circle (for when there's only one data point)
+    /// </summary>
+    private void DrawSinglePoint((long downloadSpeed, long uploadSpeed) dataPoint,
+        Func<(long downloadSpeed, long uploadSpeed), long> speedSelector,
+        long maxSpeed,
+        double width,
+        double height,
+        SolidColorBrush color)
+    {
+        var speed = speedSelector(dataPoint);
+        var normalizedSpeed = maxSpeed > 0 ? (double)speed / maxSpeed : 0.0;
+        
+        var x = ChartPadding + width / 2.0;
+        var y = ChartPadding + height - (height * normalizedSpeed);
+        y = Math.Max(ChartPadding, Math.Min(ChartPadding + height, y));
+
+        var ellipse = new System.Windows.Shapes.Ellipse
+        {
+            Width = 8,
+            Height = 8,
+            Fill = color,
+            Stroke = color,
+            StrokeThickness = 2
+        };
+
+        Canvas.SetLeft(ellipse, x - 4);
+        Canvas.SetTop(ellipse, y - 4);
+
+        ChartCanvas.Children.Add(ellipse);
     }
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)

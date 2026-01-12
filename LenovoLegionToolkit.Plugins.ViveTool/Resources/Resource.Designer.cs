@@ -418,6 +418,52 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
             }
         }
         
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string ViveTool_Download {
+            get {
+                return ResourceManager.GetString("ViveTool_Download", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download Progress: {0}%
+        /// </summary>
+        public static string ViveTool_DownloadProgress {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadProgress", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download Complete
+        /// </summary>
+        public static string ViveTool_DownloadComplete {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadComplete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool has been successfully downloaded and installed.
+        /// </summary>
+        public static string ViveTool_DownloadCompleteMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadCompleteMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download Failed
+        /// </summary>
+        public static string ViveTool_DownloadFailed {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadFailed", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Browse.
         /// </summary>
