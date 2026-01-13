@@ -22,7 +22,13 @@ public class ViveToolService : IViveToolService
     public const string ViveToolExeName = "ViVeTool.exe";
     // Official ViVeTool release asset (ZIP file containing ViVeTool.exe)
     private const string DefaultViveToolDownloadUrl = "https://github.com/thebookisclosed/ViVe/releases/latest/download/ViVeTool-v0.3.4-IntelAmd.zip";
+    private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
+    
     private string? _cachedViveToolPath;
+    private string? _cachedViveToolVersion;
+    private List<FeatureFlagInfo>? _cachedFeatures;
+    private DateTime _cachedFeaturesTimestamp = DateTime.MinValue;
+    private readonly TimeSpan _cacheDuration = DefaultCacheDuration;
     private readonly Settings.ViveToolSettings _settings;
 
     public ViveToolService()
@@ -205,6 +211,8 @@ public class ViveToolService : IViveToolService
         try
         {
             var result = await ExecuteViveToolCommandAsync(viveToolPath, $"/enable /id:{featureId}").ConfigureAwait(false);
+            if (result.Success)
+                ClearFeatureCache();
             return result.Success;
         }
         catch (Exception ex)
@@ -228,6 +236,8 @@ public class ViveToolService : IViveToolService
         try
         {
             var result = await ExecuteViveToolCommandAsync(viveToolPath, $"/disable /id:{featureId}").ConfigureAwait(false);
+            if (result.Success)
+                ClearFeatureCache();
             return result.Success;
         }
         catch (Exception ex)
@@ -271,6 +281,15 @@ public class ViveToolService : IViveToolService
 
     public async Task<List<FeatureFlagInfo>> ListFeaturesAsync()
     {
+        // Check cache first
+        var now = DateTime.Now;
+        if (_cachedFeatures != null && (now - _cachedFeaturesTimestamp) < _cacheDuration)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Returning {_cachedFeatures.Count} features from cache");
+            return new List<FeatureFlagInfo>(_cachedFeatures);
+        }
+
         var viveToolPath = await GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
             return new List<FeatureFlagInfo>();
@@ -279,11 +298,7 @@ public class ViveToolService : IViveToolService
         {
             // For ViVeTool v0.3.4, we need to use specific commands to get features
             // The /list command is deprecated, and /query without parameters only shows modified features
-            // For now, we'll handle the new format but return an empty list since we don't have a way to discover all feature IDs
-            // We'll update this when we add search functionality
-            return new List<FeatureFlagInfo>();
             
-            /*
             // Try /query command (only shows modified features in v0.3.4)
             var result = await ExecuteViveToolCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
             
@@ -293,15 +308,26 @@ public class ViveToolService : IViveToolService
                 Log.Instance.Trace($"ViveTool: /query command output: {result.Output ?? "(null)"}");
             }
 
+            List<FeatureFlagInfo> features;
             if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"ViveTool: No output from query command, returning empty list");
-                return new List<FeatureFlagInfo>();
+                features = new List<FeatureFlagInfo>();
+            }
+            else
+            {
+                features = ParseFeatureList(result.Output);
             }
 
-            return ParseFeatureList(result.Output);
-            */
+            // Update cache
+            _cachedFeatures = features;
+            _cachedFeaturesTimestamp = now;
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Caching {features.Count} features for {_cacheDuration.TotalMinutes} minutes");
+
+            return new List<FeatureFlagInfo>(_cachedFeatures);
         }
         catch (Exception ex)
         {
@@ -309,6 +335,98 @@ public class ViveToolService : IViveToolService
                 Log.Instance.Trace($"ViveTool: Error listing features: {ex.Message}", ex);
             return new List<FeatureFlagInfo>();
         }
+    }
+    
+    /// <summary>
+    /// Clear the feature cache to force reload on next request
+    /// </summary>
+    public void ClearFeatureCache()
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace("ViveTool: Clearing feature cache");
+        
+        _cachedFeatures = null;
+        _cachedFeaturesTimestamp = DateTime.MinValue;
+    }
+    
+    /// <summary>
+    /// Get the ViVeTool version
+    /// </summary>
+    public async Task<string?> GetViveToolVersionAsync()
+    {
+        // Return cached version if available
+        if (!string.IsNullOrEmpty(_cachedViveToolVersion))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Returning cached version: {_cachedViveToolVersion}");
+            return _cachedViveToolVersion;
+        }
+        
+        var viveToolPath = await GetViveToolPathAsync().ConfigureAwait(false);
+        if (string.IsNullOrEmpty(viveToolPath))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("ViveTool: vivetool.exe not found, cannot get version");
+            return null;
+        }
+        
+        try
+        {
+            // Try /help command to get version info (most CLI tools show version in help)
+            var result = await ExecuteViveToolCommandAsync(viveToolPath, "/help").ConfigureAwait(false);
+            
+            if (result.Success && !string.IsNullOrWhiteSpace(result.Output))
+            {
+                // Parse version from output
+                var version = ParseVersionFromOutput(result.Output);
+                
+                // Cache the version
+                _cachedViveToolVersion = version;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Detected version: {version}");
+                
+                return version;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Error getting version: {ex.Message}", ex);
+        }
+        
+        return null;
+    }
+    
+    /// <summary>
+    /// Parse version from ViVeTool output
+    /// </summary>
+    private string? ParseVersionFromOutput(string output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+            return null;
+        
+        // Try to find version patterns like "v0.3.4", "0.3.4", "Version: 0.3.4", etc.
+        var versionRegexes = new[]
+        {
+            @"v([0-9]+\.[0-9]+\.[0-9]+)",  // v0.3.4
+            @"Version: ([0-9]+\.[0-9]+\.[0-9]+)",  // Version: 0.3.4
+            @"([0-9]+\.[0-9]+\.[0-9]+)",  // 0.3.4
+            @"v([0-9]+\.[0-9]+)",  // v0.3
+            @"Version: ([0-9]+\.[0-9]+)",  // Version: 0.3
+            @"([0-9]+\.[0-9]+)"  // 0.3
+        };
+        
+        foreach (var regex in versionRegexes)
+        {
+            var match = Regex.Match(output, regex, RegexOptions.IgnoreCase);
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value;
+            }
+        }
+        
+        return null;
     }
 
     public async Task<List<FeatureFlagInfo>> SearchFeaturesAsync(string keyword)

@@ -33,4 +33,4 @@ dotnet publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:
 dotnet build LenovoLegionToolkit.Plugins.NetworkAcceleration -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet build LenovoLegionToolkit.Plugins.ViveTool -c Release /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 
-@REM iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b
+iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b

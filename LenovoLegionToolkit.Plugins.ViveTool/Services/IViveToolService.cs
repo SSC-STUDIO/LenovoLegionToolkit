@@ -63,6 +63,16 @@ public interface IViveToolService
     /// Download and install ViVeTool with progress reporting
     /// </summary>
     Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null);
+    
+    /// <summary>
+    /// Clear the feature cache to force reload on next request
+    /// </summary>
+    void ClearFeatureCache();
+    
+    /// <summary>
+    /// Get the ViVeTool version
+    /// </summary>
+    Task<string?> GetViveToolVersionAsync();
 }
 
 /// <summary>

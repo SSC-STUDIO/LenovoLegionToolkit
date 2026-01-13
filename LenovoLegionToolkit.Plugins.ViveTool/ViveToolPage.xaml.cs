@@ -29,7 +29,9 @@ public partial class ViveToolPage : INotifyPropertyChanged
 {
     private readonly IViveToolService _viveToolService;
     private ObservableCollection<FeatureFlagInfo> _features = new();
+    private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
+    private string? _viveToolVersion;
     private bool _isLoading;
     private CancellationTokenSource? _searchDebounceCts;
 
@@ -72,6 +74,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
         set
         {
             _isViveToolAvailable = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public string? ViveToolVersion
+    {
+        get => _viveToolVersion;
+        set
+        {
+            _viveToolVersion = value;
             OnPropertyChanged();
         }
     }
@@ -168,17 +180,32 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             var isAvailable = await _viveToolService.IsViveToolAvailableAsync().ConfigureAwait(false);
             var path = await _viveToolService.GetViveToolPathAsync().ConfigureAwait(false);
+            string? version = null;
+            
+            if (isAvailable && !string.IsNullOrEmpty(path))
+            {
+                version = await _viveToolService.GetViveToolVersionAsync().ConfigureAwait(false);
+            }
 
             await Dispatcher.InvokeAsync(() =>
             {
                 IsViveToolAvailable = isAvailable && !string.IsNullOrEmpty(path);
+                ViveToolVersion = version;
                 if (IsViveToolAvailable)
                 {
-                    ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path);
+                    if (!string.IsNullOrEmpty(version))
+                    {
+                        ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path) + $" (v{version})";
+                    }
+                    else
+                    {
+                        ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path);
+                    }
                 }
                 else
                 {
                     ViveToolStatusDescription = Resource.ViveTool_ViveToolNotFound;
+                    ViveToolVersion = null;
                 }
             });
         }
@@ -190,6 +217,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsViveToolAvailable = false;
+                ViveToolVersion = null;
                 ViveToolStatusDescription = Resource.ViveTool_ViveToolError;
             });
         }
@@ -209,10 +237,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
             await Dispatcher.InvokeAsync(() =>
             {
+                // Update both the visible collection and the local cache
                 Features.Clear();
+                _allFeatures.Clear();
+                
                 foreach (var feature in features)
                 {
                     Features.Add(feature);
+                    _allFeatures.Add(feature);
                 }
 
                 UpdateFeaturesVisibility();
@@ -398,6 +430,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
     {
+        // Clear cache to get fresh data
+        _viveToolService.ClearFeatureCache();
         await LoadFeaturesAsync();
     }
 
@@ -589,22 +623,29 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            IsLoading = true;
             _emptyStatePanel.Visibility = Visibility.Collapsed;
 
-            var searchText = _searchTextBox.Text ?? string.Empty;
-            var features = await _viveToolService.SearchFeaturesAsync(searchText).ConfigureAwait(false);
-
+            // Use local cache for fast searching instead of service calls
             await Dispatcher.InvokeAsync(() =>
             {
+                var searchText = _searchTextBox.Text ?? string.Empty;
+                var lowerKeyword = searchText.ToLowerInvariant();
+                
                 Features.Clear();
-                foreach (var feature in features)
+                
+                // Fast in-memory filtering
+                foreach (var feature in _allFeatures)
                 {
-                    Features.Add(feature);
+                    if (string.IsNullOrWhiteSpace(lowerKeyword) ||
+                        feature.Id.ToString().Contains(lowerKeyword) ||
+                        feature.Name.ToLowerInvariant().Contains(lowerKeyword) ||
+                        feature.Description.ToLowerInvariant().Contains(lowerKeyword))
+                    {
+                        Features.Add(feature);
+                    }
                 }
 
                 UpdateFeaturesVisibility();
-                IsLoading = false;
             });
         }
         catch (Exception ex)
@@ -614,7 +655,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
             
             await Dispatcher.InvokeAsync(() =>
             {
-                IsLoading = false;
                 UpdateFeaturesVisibility();
             });
         }
