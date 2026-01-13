@@ -63,7 +63,8 @@ public class ReverseProxyService : IReverseProxyService
         {
             AllowAutoRedirect = true,
             MaxAutomaticRedirections = 10,
-            UseCookies = false // We'll handle cookies manually
+            UseCookies = false, // We'll handle cookies manually
+            UseProxy = false // Prevent self-request loop by not using the system proxy settings
         };
 
         _httpClient = new HttpClient(handler)

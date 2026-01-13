@@ -275,7 +275,9 @@
                             GridLinesVisibility="Horizontal"
                             RowHeight="40"
                             MaxHeight="600"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            CanUserReorderColumns="False"
+                            ItemsSource="{Binding Features}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     Header="{x:Static plugin:Resource.ViveTool_FeatureId}"
