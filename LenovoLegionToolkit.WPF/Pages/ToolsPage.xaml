@@ -227,12 +227,16 @@
                         <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenToolsDirectory}" Click="ToolsContentContextMenu_OpenToolsDirectory_Click" />
                     </ContextMenu>
                 </Grid.ContextMenu>
-                <ItemsControl
-                    ItemsSource="{Binding SelectedCategory.SubCategories}"
-                    BorderThickness="0"
-                    Background="Transparent">
-                    <ItemsControl.Style>
-                        <Style TargetType="ItemsControl">
+                <!-- Responsive Two-Column Layout -->
+                <Grid Margin="0,0,0,20">
+                    <!-- Fixed two-column grid -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.Style>
+                        <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.HasTools}" Value="False">
@@ -246,445 +250,953 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </ItemsControl.Style>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="0,0,0,20">
-                                <!-- SubCategory Title with decorative element -->
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
-                                    <Border
-                                        Width="3"
-                                        Height="16"
-                                        Background="{DynamicResource AccentFillColorDefaultBrush}"
-                                        CornerRadius="1.5"
-                                        Margin="0,0,10,0"
-                                        VerticalAlignment="Center" />
-                                    <TextBlock
-                                        FontSize="16"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding SubCategoryName}" />
-                                </StackPanel>
-                                <!-- Tools in this subcategory -->
-                                <ItemsControl ItemsSource="{Binding Tools}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.Style>
-                                        <Style TargetType="ItemsControl">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                    <Setter Property="ItemsPanel">
-                                                        <Setter.Value>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Orientation="Vertical" />
-                                                            </ItemsPanelTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ItemsControl.Style>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <!-- Regular Tool Card Style -->
-                                            <Border
-                                                x:Name="ToolCardBorder"
-                                                Tag="{Binding}"
-                                                MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
-                                                <Border.ContextMenu>
-                                                    <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenFileLocation}" Click="ToolCardContextMenu_OpenFileLocation_Click" />
-                                                        <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_CopyPath}" Click="ToolCardContextMenu_CopyPath_Click" />
-                                                    </ContextMenu>
-                                                </Border.ContextMenu>
-                                                <Border.Triggers>
-                                                    <EventTrigger RoutedEvent="MouseEnter">
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconScaleTransform"
-                                                                    Storyboard.TargetProperty="ScaleX"
-                                                                    To="1.1"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconScaleTransform"
-                                                                    Storyboard.TargetProperty="ScaleY"
-                                                                    To="1.1"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="BlurRadius"
-                                                                    To="12"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="ShadowDepth"
-                                                                    To="4"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="0.4"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </EventTrigger>
-                                                    <EventTrigger RoutedEvent="MouseLeave">
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconScaleTransform"
-                                                                    Storyboard.TargetProperty="ScaleX"
-                                                                    To="1"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconScaleTransform"
-                                                                    Storyboard.TargetProperty="ScaleY"
-                                                                    To="1"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="BlurRadius"
-                                                                    To="8"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="ShadowDepth"
-                                                                    To="2"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                                <DoubleAnimation
-                                                                    Storyboard.TargetName="IconShadowEffect"
-                                                                    Storyboard.TargetProperty="Opacity"
-                                                                    To="0.3"
-                                                                    Duration="0:0:0.2">
-                                                                    <DoubleAnimation.EasingFunction>
-                                                                        <CubicEase EasingMode="EaseOut" />
-                                                                    </DoubleAnimation.EasingFunction>
-                                                                </DoubleAnimation>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </EventTrigger>
-                                                </Border.Triggers>
-                                                <Border.Style>
-                                                    <Style TargetType="Border" BasedOn="{StaticResource ToolCardButtonStyle}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                                                                <Setter Property="BorderThickness" Value="1" />
-                                                                <Setter Property="CornerRadius" Value="6" />
-                                                                <Setter Property="Padding" Value="12,8" />
-                                                                <Setter Property="Margin" Value="0,0,0,12" />
-                                                                <Setter Property="Width" Value="NaN" />
-                                                                <Setter Property="MinHeight" Value="0" />
-                                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-                                                                <Setter Property="RenderTransform">
-                                                                    <Setter.Value>
-                                                                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                                <Setter Property="Effect">
-                                                                    <Setter.Value>
-                                                                        <DropShadowEffect
-                                                                            BlurRadius="4"
-                                                                            ShadowDepth="1"
-                                                                            Opacity="0.05"
-                                                                            Color="Black" />
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </DataTrigger>
-                                                            <MultiDataTrigger>
-                                                                <MultiDataTrigger.Conditions>
-                                                                    <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True" />
-                                                                    <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True" />
-                                                                </MultiDataTrigger.Conditions>
-                                                                <MultiDataTrigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
-                                                                                To="1.02"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
-                                                                                To="1.02"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
-                                                                                To="8"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
-                                                                                To="3"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
-                                                                                To="0.15"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </MultiDataTrigger.EnterActions>
-                                                                <MultiDataTrigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
-                                                                                To="1"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
-                                                                                To="1"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
-                                                                                To="4"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
-                                                                                To="1"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                            <DoubleAnimation
-                                                                                Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
-                                                                                To="0.05"
-                                                                                Duration="0:0:0.2">
-                                                                                <DoubleAnimation.EasingFunction>
-                                                                                    <CubicEase EasingMode="EaseOut" />
-                                                                                </DoubleAnimation.EasingFunction>
-                                                                            </DoubleAnimation>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </MultiDataTrigger.ExitActions>
-                                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
-                                                            </MultiDataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                                                    <StackPanel.Style>
-                                                        <Style TargetType="StackPanel">
+                    </Grid.Style>
+                    
+                    <!-- Left Column - Shows all subcategories in single column mode, first half in two-column mode -->
+                    <ItemsControl
+                        Grid.Column="0"
+                        BorderThickness="0"
+                        Background="Transparent">
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <!-- Default: show all subcategories in left column (narrow screen) and span both columns -->
+                                <Setter Property="ItemsSource" Value="{Binding SelectedCategory.SubCategories}" />
+                                <Setter Property="Grid.ColumnSpan" Value="2" />
+                                <!-- When wide enough for two columns, show only first half and span one column -->
+                                <Style.Triggers>
+                                    <DataTrigger>
+                                        <DataTrigger.Binding>
+                                            <Binding RelativeSource="{RelativeSource AncestorType=ScrollViewer}" Path="ActualWidth">
+                                                <Binding.Converter>
+                                                    <utils:MinimumWidthConverter MinimumWidth="1200" />
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </DataTrigger.Binding>
+                                        <DataTrigger.Value>True</DataTrigger.Value>
+                                        <Setter Property="ItemsSource">
+                                            <Setter.Value>
+                                                <Binding Path="SelectedCategory.SubCategories">
+                                                    <Binding.Converter>
+                                                        <utils:TakeHalfConverter />
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Grid.ColumnSpan" Value="1" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,20,20">
+                                    <!-- SubCategory Title with decorative element -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
+                                        <Border
+                                            Width="3"
+                                            Height="16"
+                                            Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                            CornerRadius="1.5"
+                                            Margin="0,0,10,0"
+                                            VerticalAlignment="Center" />
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SubCategoryName}" />
+                                    </StackPanel>
+                                    <!-- Tools in this subcategory -->
+                                    <ItemsControl ItemsSource="{Binding Tools}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.Style>
+                                            <Style TargetType="ItemsControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                        <Setter Property="ItemsPanel">
+                                                            <Setter.Value>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Vertical" />
+                                                                </ItemsPanelTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ItemsControl.Style>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <!-- Regular Tool Card Style -->
+                                                <Border
+                                                    x:Name="ToolCardBorder"
+                                                    Tag="{Binding}"
+                                                    MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                                    <Border.ContextMenu>
+                                                        <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                            <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenFileLocation}" Click="ToolCardContextMenu_OpenFileLocation_Click" />
+                                                            <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_CopyPath}" Click="ToolCardContextMenu_CopyPath_Click" />
+                                                        </ContextMenu>
+                                                    </Border.ContextMenu>
+                                                    <Border.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform"
+                                                                        Storyboard.TargetProperty="ScaleX"
+                                                                        To="1.1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform"
+                                                                        Storyboard.TargetProperty="ScaleY"
+                                                                        To="1.1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="BlurRadius"
+                                                                        To="12"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="ShadowDepth"
+                                                                        To="4"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0.4"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform"
+                                                                        Storyboard.TargetProperty="ScaleX"
+                                                                        To="1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform"
+                                                                        Storyboard.TargetProperty="ScaleY"
+                                                                        To="1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="BlurRadius"
+                                                                        To="8"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="ShadowDepth"
+                                                                        To="2"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0.3"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Border.Triggers>
+                                                    <Border.Style>
+                                                        <Style TargetType="Border" BasedOn="{StaticResource ToolCardButtonStyle}">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                                    <Setter Property="Orientation" Value="Horizontal" />
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                    <Setter Property="BorderThickness" Value="1" />
+                                                                    <Setter Property="CornerRadius" Value="6" />
+                                                                    <Setter Property="Padding" Value="12,8" />
+                                                                    <Setter Property="Margin" Value="0,0,0,12" />
+                                                                    <Setter Property="Width" Value="NaN" />
+                                                                    <Setter Property="MinHeight" Value="0" />
                                                                     <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                                    <Setter Property="RenderTransform">
+                                                                        <Setter.Value>
+                                                                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect
+                                                                                BlurRadius="4"
+                                                                                ShadowDepth="1"
+                                                                                Opacity="0.05"
+                                                                                Color="Black" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
                                                                 </DataTrigger>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True" />
+                                                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <MultiDataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                    To="1.02"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                    To="1.02"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
+                                                                                    To="8"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
+                                                                                    To="3"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
+                                                                                    To="0.15"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </MultiDataTrigger.EnterActions>
+                                                                    <MultiDataTrigger.ExitActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
+                                                                                    To="4"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
+                                                                                    To="0.05"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </MultiDataTrigger.ExitActions>
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                                                                </MultiDataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </StackPanel.Style>
-                                                    <!-- Icon Area - macOS style with overlay mask -->
-                                                    <Grid Width="64" Height="64" Margin="0,0,0,8" HorizontalAlignment="Center">
-                                                        <Grid.Style>
-                                                            <Style TargetType="Grid">
-                                                                <Setter Property="Visibility" Value="Visible" />
+                                                    </Border.Style>
+                                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsBatchFile}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                    </DataTrigger>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Setter Property="Orientation" Value="Horizontal" />
+                                                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
-                                                        </Grid.Style>
-                                                        <!-- macOS style overlay mask -->
-                                                        <Border
-                                                            Width="64"
-                                                            Height="64"
-                                                            CornerRadius="14"
-                                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                            BorderThickness="0.5"
-                                                            RenderTransformOrigin="0.5,0.5">
-                                                            <Border.Background>
-                                                                <SolidColorBrush x:Name="IconBackgroundBrush" Color="Transparent" Opacity="0" />
-                                                            </Border.Background>
-                                                            <Border.RenderTransform>
-                                                                <ScaleTransform x:Name="IconScaleTransform" ScaleX="1" ScaleY="1" />
-                                                            </Border.RenderTransform>
-                                                            <Border.Effect>
-                                                                <DropShadowEffect
-                                                                    x:Name="IconShadowEffect"
-                                                                    BlurRadius="8"
-                                                                    ShadowDepth="2"
-                                                                    Opacity="0.3"
-                                                                    Color="Black" />
-                                                            </Border.Effect>
-                                                            <Grid>
-                                                                <Image
-                                                                    Stretch="Uniform"
-                                                                    Width="52"
-                                                                    Height="52"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    RenderOptions.BitmapScalingMode="HighQuality"
-                                                                    RenderOptions.CachingHint="Cache"
-                                                                    RenderOptions.ClearTypeHint="Enabled"
-                                                                    SnapsToDevicePixels="True"
-                                                                    UseLayoutRounding="True">
-                                                                    <Image.Source>
-                                                                        <Binding Path="IconSource">
-                                                                            <Binding.FallbackValue>
-                                                                                <x:Null />
-                                                                            </Binding.FallbackValue>
-                                                                        </Binding>
-                                                                    </Image.Source>
-                                                                    <Image.Style>
-                                                                        <Style TargetType="Image">
-                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
-                                                                            <Setter Property="RenderOptions.CachingHint" Value="Cache" />
-                                                                            <Setter Property="RenderOptions.ClearTypeHint" Value="Enabled" />
-                                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
-                                                                            <Setter Property="UseLayoutRounding" Value="True" />
-                                                                            <Style.Triggers>
-                                                                                <Trigger Property="Source" Value="{x:Null}">
-                                                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                                                </Trigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Image.Style>
-                                                                </Image>
-                                                                <wpfui:SymbolIcon
-                                                                    Symbol="Desktop24"
-                                                                    FontSize="32"
-                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center">
-                                                                    <wpfui:SymbolIcon.Style>
-                                                                        <Style TargetType="wpfui:SymbolIcon">
-                                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
-                                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </wpfui:SymbolIcon.Style>
-                                                                </wpfui:SymbolIcon>
-                                                            </Grid>
-                                                        </Border>
-                                                    </Grid>
-                                                    <!-- Fixed height container to prevent layout shift -->
-                                                    <Border Height="20" Margin="0,6,0,0" Background="Transparent">
-                                                    <TextBlock
-                                                            x:Name="ToolNameTextBlock"
-                                                        HorizontalAlignment="Center"
-                                                            FontSize="11"
-                                                            FontWeight="Regular"
-                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                        Text="{Binding Name}"
-                                                        TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="NoWrap"
-                                                        TextAlignment="Center"
-                                                            LineHeight="16"
-                                                            MaxWidth="80"
-                                                            VerticalAlignment="Top">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                    <Setter Property="Opacity" Value="1" />
+                                                        </StackPanel.Style>
+                                                        <!-- Icon Area - macOS style with overlay mask -->
+                                                        <Grid Width="64" Height="64" Margin="0,0,0,8" HorizontalAlignment="Center">
+                                                            <Grid.Style>
+                                                                <Style TargetType="Grid">
                                                                     <Setter Property="Visibility" Value="Visible" />
-                                                                    <Setter Property="UseLayoutRounding" Value="True" />
-                                                                    <Setter Property="SnapsToDevicePixels" Value="True" />
-                                                                    <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
-                                                                    <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsBatchFile}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Grid.Style>
+                                                            <!-- macOS style overlay mask -->
+                                                            <Border
+                                                                Width="64"
+                                                                Height="64"
+                                                                CornerRadius="14"
+                                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                                BorderThickness="0.5"
+                                                                RenderTransformOrigin="0.5,0.5">
+                                                                <Border.Background>
+                                                                    <SolidColorBrush x:Name="IconBackgroundBrush" Color="Transparent" Opacity="0" />
+                                                                </Border.Background>
+                                                                <Border.RenderTransform>
+                                                                    <ScaleTransform x:Name="IconScaleTransform" ScaleX="1" ScaleY="1" />
+                                                                </Border.RenderTransform>
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect
+                                                                        x:Name="IconShadowEffect"
+                                                                        BlurRadius="8"
+                                                                        ShadowDepth="2"
+                                                                        Opacity="0.3"
+                                                                        Color="Black" />
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Image
+                                                                        Stretch="Uniform"
+                                                                        Width="52"
+                                                                        Height="52"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                                                        RenderOptions.CachingHint="Cache"
+                                                                        RenderOptions.ClearTypeHint="Enabled"
+                                                                        SnapsToDevicePixels="True"
+                                                                        UseLayoutRounding="True">
+                                                                        <Image.Source>
+                                                                            <Binding Path="IconSource">
+                                                                                <Binding.FallbackValue>
+                                                                                    <x:Null />
+                                                                                </Binding.FallbackValue>
+                                                                            </Binding>
+                                                                        </Image.Source>
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                                                <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                                                <Setter Property="RenderOptions.ClearTypeHint" Value="Enabled" />
+                                                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                                <Setter Property="UseLayoutRounding" Value="True" />
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="Source" Value="{x:Null}">
+                                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <wpfui:SymbolIcon
+                                                                        Symbol="Desktop24"
+                                                                        FontSize="32"
+                                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center">
+                                                                        <wpfui:SymbolIcon.Style>
+                                                                            <Style TargetType="wpfui:SymbolIcon">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </wpfui:SymbolIcon.Style>
+                                                                    </wpfui:SymbolIcon>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Grid>
+                                                        <!-- Fixed height container to prevent layout shift -->
+                                                        <Border Height="20" Margin="0,6,0,0" Background="Transparent">
+                                                        <TextBlock
+                                                                x:Name="ToolNameTextBlock"
+                                                            HorizontalAlignment="Center"
+                                                                FontSize="11"
+                                                                FontWeight="Regular"
+                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                            Text="{Binding Name}"
+                                                            TextTrimming="CharacterEllipsis"
+                                                                TextWrapping="NoWrap"
+                                                            TextAlignment="Center"
+                                                                LineHeight="16"
+                                                                MaxWidth="80"
+                                                                VerticalAlignment="Top">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                        <Setter Property="Opacity" Value="1" />
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Setter Property="UseLayoutRounding" Value="True" />
+                                                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                                                                        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                            <Setter Property="TextAlignment" Value="Left" />
+                                                                            <Setter Property="TextTrimming" Value="None" />
+                                                                            <Setter Property="FontSize" Value="13" />
+                                                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                    <!-- Right Column - Only visible when screen is wide enough -->
+                    <ItemsControl
+                        Grid.Column="1"
+                        BorderThickness="0"
+                        Background="Transparent">
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Setter Property="ItemsSource">
+                                    <Setter.Value>
+                                        <Binding Path="SelectedCategory.SubCategories">
+                                            <Binding.Converter>
+                                                <utils:SkipHalfConverter />
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger>
+                                        <DataTrigger.Binding>
+                                            <Binding RelativeSource="{RelativeSource AncestorType=ScrollViewer}" Path="ActualWidth">
+                                                <Binding.Converter>
+                                                    <utils:MinimumWidthConverter MinimumWidth="1200" />
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </DataTrigger.Binding>
+                                        <DataTrigger.Value>True</DataTrigger.Value>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,20">
+                                    <!-- SubCategory Title with decorative element -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
+                                        <Border
+                                            Width="3"
+                                            Height="16"
+                                            Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                            CornerRadius="1.5"
+                                            Margin="0,0,10,0"
+                                            VerticalAlignment="Center" />
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SubCategoryName}" />
+                                    </StackPanel>
+                                    <!-- Tools in this subcategory -->
+                                    <ItemsControl ItemsSource="{Binding Tools}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.Style>
+                                            <Style TargetType="ItemsControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                        <Setter Property="ItemsPanel">
+                                                            <Setter.Value>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Vertical" />
+                                                                </ItemsPanelTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ItemsControl.Style>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <!-- Regular Tool Card Style -->
+                                                <Border
+                                                    x:Name="ToolCardBorder2"
+                                                    Tag="{Binding}"
+                                                    MouseLeftButtonDown="ToolCard_MouseLeftButtonDown">
+                                                    <Border.ContextMenu>
+                                                        <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                            <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_OpenFileLocation}" Click="ToolCardContextMenu_OpenFileLocation_Click" />
+                                                            <MenuItem Header="{x:Static resources:Resource.ToolsPage_ContextMenu_CopyPath}" Click="ToolCardContextMenu_CopyPath_Click" />
+                                                        </ContextMenu>
+                                                    </Border.ContextMenu>
+                                                    <Border.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform2"
+                                                                        Storyboard.TargetProperty="ScaleX"
+                                                                        To="1.1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform2"
+                                                                        Storyboard.TargetProperty="ScaleY"
+                                                                        To="1.1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="BlurRadius"
+                                                                        To="12"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="ShadowDepth"
+                                                                        To="4"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0.4"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform2"
+                                                                        Storyboard.TargetProperty="ScaleX"
+                                                                        To="1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconScaleTransform2"
+                                                                        Storyboard.TargetProperty="ScaleY"
+                                                                        To="1"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="BlurRadius"
+                                                                        To="8"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="ShadowDepth"
+                                                                        To="2"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="IconShadowEffect2"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0.3"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Border.Triggers>
+                                                    <Border.Style>
+                                                        <Style TargetType="Border" BasedOn="{StaticResource ToolCardButtonStyle}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                                                    <Setter Property="BorderThickness" Value="1" />
+                                                                    <Setter Property="CornerRadius" Value="6" />
+                                                                    <Setter Property="Padding" Value="12,8" />
+                                                                    <Setter Property="Margin" Value="0,0,0,12" />
+                                                                    <Setter Property="Width" Value="NaN" />
+                                                                    <Setter Property="MinHeight" Value="0" />
+                                                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                                                                    <Setter Property="RenderTransform">
+                                                                        <Setter.Value>
+                                                                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect
+                                                                                BlurRadius="4"
+                                                                                ShadowDepth="1"
+                                                                                Opacity="0.05"
+                                                                                Color="Black" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </DataTrigger>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True" />
+                                                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <MultiDataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                    To="1.02"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                    To="1.02"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
+                                                                                    To="8"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
+                                                                                    To="3"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
+                                                                                    To="0.15"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </MultiDataTrigger.EnterActions>
+                                                                    <MultiDataTrigger.ExitActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)"
+                                                                                    To="4"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)"
+                                                                                    To="1"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation
+                                                                                    Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.Opacity)"
+                                                                                    To="0.05"
+                                                                                    Duration="0:0:0.2">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <CubicEase EasingMode="EaseOut" />
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </MultiDataTrigger.ExitActions>
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                                                                </MultiDataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
-                                                                        <Setter Property="HorizontalAlignment" Value="Left" />
-                                                                        <Setter Property="TextAlignment" Value="Left" />
-                                                                        <Setter Property="TextTrimming" Value="None" />
-                                                                        <Setter Property="FontSize" Value="13" />
-                                                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                                                        <Setter Property="Orientation" Value="Horizontal" />
+                                                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                    </Border>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                                        </StackPanel.Style>
+                                                        <!-- Icon Area - macOS style with overlay mask -->
+                                                        <Grid Width="64" Height="64" Margin="0,0,0,8" HorizontalAlignment="Center">
+                                                            <Grid.Style>
+                                                                <Style TargetType="Grid">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsBatchFile}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Grid.Style>
+                                                            <!-- macOS style overlay mask -->
+                                                            <Border
+                                                                Width="64"
+                                                                Height="64"
+                                                                CornerRadius="14"
+                                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                                BorderThickness="0.5"
+                                                                RenderTransformOrigin="0.5,0.5">
+                                                                <Border.Background>
+                                                                    <SolidColorBrush x:Name="IconBackgroundBrush2" Color="Transparent" Opacity="0" />
+                                                                </Border.Background>
+                                                                <Border.RenderTransform>
+                                                                    <ScaleTransform x:Name="IconScaleTransform2" ScaleX="1" ScaleY="1" />
+                                                                </Border.RenderTransform>
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect
+                                                                        x:Name="IconShadowEffect2"
+                                                                        BlurRadius="8"
+                                                                        ShadowDepth="2"
+                                                                        Opacity="0.3"
+                                                                        Color="Black" />
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Image
+                                                                        Stretch="Uniform"
+                                                                        Width="52"
+                                                                        Height="52"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                                                        RenderOptions.CachingHint="Cache"
+                                                                        RenderOptions.ClearTypeHint="Enabled"
+                                                                        SnapsToDevicePixels="True"
+                                                                        UseLayoutRounding="True">
+                                                                        <Image.Source>
+                                                                            <Binding Path="IconSource">
+                                                                                <Binding.FallbackValue>
+                                                                                    <x:Null />
+                                                                                </Binding.FallbackValue>
+                                                                            </Binding>
+                                                                        </Image.Source>
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                                                                                <Setter Property="RenderOptions.CachingHint" Value="Cache" />
+                                                                                <Setter Property="RenderOptions.ClearTypeHint" Value="Enabled" />
+                                                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                                <Setter Property="UseLayoutRounding" Value="True" />
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="Source" Value="{x:Null}">
+                                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <wpfui:SymbolIcon
+                                                                        Symbol="Desktop24"
+                                                                        FontSize="32"
+                                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center">
+                                                                        <wpfui:SymbolIcon.Style>
+                                                                            <Style TargetType="wpfui:SymbolIcon">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </wpfui:SymbolIcon.Style>
+                                                                    </wpfui:SymbolIcon>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Grid>
+                                                        <!-- Fixed height container to prevent layout shift -->
+                                                        <Border Height="20" Margin="0,6,0,0" Background="Transparent">
+                                                        <TextBlock
+                                                                x:Name="ToolNameTextBlock2"
+                                                            HorizontalAlignment="Center"
+                                                                FontSize="11"
+                                                                FontWeight="Regular"
+                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                            Text="{Binding Name}"
+                                                            TextTrimming="CharacterEllipsis"
+                                                                TextWrapping="NoWrap"
+                                                            TextAlignment="Center"
+                                                                LineHeight="16"
+                                                                MaxWidth="80"
+                                                                VerticalAlignment="Top">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                        <Setter Property="Opacity" Value="1" />
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Setter Property="UseLayoutRounding" Value="True" />
+                                                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                                                                        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Path=DataContext.SelectedCategory.IsBatchToolsCategory}" Value="True">
+                                                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                            <Setter Property="TextAlignment" Value="Left" />
+                                                                            <Setter Property="TextTrimming" Value="None" />
+                                                                            <Setter Property="FontSize" Value="13" />
+                                                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
                 
                 <!-- Fallback: Show tools directly if no subcategories -->
                 <ItemsControl
