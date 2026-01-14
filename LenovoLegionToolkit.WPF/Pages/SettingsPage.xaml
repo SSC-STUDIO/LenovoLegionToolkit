@@ -44,22 +44,25 @@
         <Border
             Grid.Row="1"
             Grid.Column="0"
-            Background="{DynamicResource ControlFillColorDefaultBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="0,0,1,0">
+            Background="{DynamicResource PageBackgroundFillColorDefaultBrush}"
+            BorderBrush="Transparent"
+            BorderThickness="0">
+       
             <ListBox
                 x:Name="_navigationListBox"
                 BorderThickness="0"
                 Background="Transparent"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                 SelectionChanged="NavigationListBox_SelectionChanged"
                 SelectedIndex="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="12,8">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                             <wpfui:SymbolIcon
-                                FontSize="20"
+                                FontSize="18"
                                 Symbol="{Binding Icon}"
-                                Margin="0,0,12,0" />
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="14"
@@ -71,26 +74,53 @@
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="Margin" Value="0,0,0,2" />
+                        <Setter Property="Cursor" Value="Hand" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
                                     <Border
                                         x:Name="Bd"
                                         Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        BorderThickness="0"
+                                        Padding="16,12,12,12"
+                                        CornerRadius="8">
+                                        <Grid>
+                                            <!-- Blue indicator rectangle - matches main navigation bar style -->
+                                            <Rectangle
+                                                x:Name="ActiveRectangle"
+                                                Width="4"
+                                                Height="24"
+                                                Margin="-16,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Opacity="0.0"
+                                                RadiusX="2"
+                                                RadiusY="2">
+                                                <Rectangle.Fill>
+                                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                            <ContentPresenter
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        </Grid>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                            <Setter TargetName="ActiveRectangle" Property="Opacity" Value="1.0" />
+                                            <Setter TargetName="Bd" Property="Background" Value="#26000000" />
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                            <Setter TargetName="Bd" Property="Background" Value="#26000000" />
                                         </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="True" />
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="ActiveRectangle" Property="Opacity" Value="1.0" />
+                                            <Setter TargetName="Bd" Property="Background" Value="#26000000" />
+                                        </MultiTrigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
