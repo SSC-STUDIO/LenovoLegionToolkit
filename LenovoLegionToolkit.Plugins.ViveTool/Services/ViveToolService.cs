@@ -343,7 +343,7 @@ public class ViveToolService : IViveToolService
     public void ClearFeatureCache()
     {
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace("ViveTool: Clearing feature cache");
+            Log.Instance.Trace($"ViveTool: Clearing feature cache");
         
         _cachedFeatures = null;
         _cachedFeaturesTimestamp = DateTime.MinValue;
@@ -366,7 +366,7 @@ public class ViveToolService : IViveToolService
         if (string.IsNullOrEmpty(viveToolPath))
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("ViveTool: vivetool.exe not found, cannot get version");
+                Log.Instance.Trace($"ViveTool: vivetool.exe not found, cannot get version");
             return null;
         }
         
@@ -495,48 +495,13 @@ public class ViveToolService : IViveToolService
             Log.Instance.Trace($"ViveTool: Parsing feature list output (length: {output.Length} chars)");
 
         // Parse vivetool output formats
-        // ViVeTool output formats can vary:
-        // Format 1 (v0.3.4+): "[56005157]\nPriority        : Service (4)\nState           : Disabled (1)..."
-        // Format 2 (older versions): "ID: 12345, Name: FeatureName, State: Enabled"
-        // Format 3 (older versions): "12345: FeatureName (Enabled)"
-        // Format 4 (older versions): Just feature IDs, one per line
-        
         // Check for v0.3.4+ format (starts with [ID])
         var featureSections = Regex.Split(output, @"\[(\d+)\]", RegexOptions.Multiline);
         
         if (featureSections.Length > 1)
         {
             // Handle v0.3.4+ format
-            for (int i = 1; i < featureSections.Length; i += 2)
-            {
-                if (int.TryParse(featureSections[i], out int id))
-                {
-                    string section = featureSections[i + 1];
-                    string name = $"Feature {id}";
-                    FeatureFlagStatus status = FeatureFlagStatus.Unknown;
-                    
-                    // Extract state from section
-                    var stateMatch = Regex.Match(section, @"State\s*:\s*(\w+)\s*\(\d+\)", RegexOptions.IgnoreCase);
-                    if (stateMatch.Success)
-                    {
-                        string stateStr = stateMatch.Groups[1].Value.Trim();
-                        if (stateStr.Equals("Enabled", StringComparison.OrdinalIgnoreCase))
-                            status = FeatureFlagStatus.Enabled;
-                        else if (stateStr.Equals("Disabled", StringComparison.OrdinalIgnoreCase))
-                            status = FeatureFlagStatus.Disabled;
-                        else if (stateStr.Equals("Default", StringComparison.OrdinalIgnoreCase))
-                            status = FeatureFlagStatus.Default;
-                    }
-                    
-                    features.Add(new FeatureFlagInfo
-                    {
-                        Id = id,
-                        Name = name,
-                        Status = status,
-                        Description = string.Empty
-                    });
-                }
-            }
+            features.AddRange(ParseViveTool34Format(featureSections));
         }
         else
         {
@@ -546,93 +511,177 @@ public class ViveToolService : IViveToolService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ViveTool: Found {lines.Length} lines to parse");
 
-            foreach (var line in lines)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                // Skip header lines or help text
-                if (line.Contains("Usage:", StringComparison.OrdinalIgnoreCase) ||
-                    line.Contains("Options:", StringComparison.OrdinalIgnoreCase) ||
-                    line.StartsWith("-", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                int id = 0;
-                string name = string.Empty;
-                FeatureFlagStatus status = FeatureFlagStatus.Unknown;
-
-                // Try Format 2: "ID: 12345, Name: FeatureName, State: Enabled"
-                var idMatch = Regex.Match(line, @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase);
-                if (idMatch.Success && int.TryParse(idMatch.Groups[1].Value, out id))
-                {
-                    var nameMatch = Regex.Match(line, @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase);
-                    name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
-
-                    if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
-                        status = FeatureFlagStatus.Enabled;
-                    else if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
-                        status = FeatureFlagStatus.Disabled;
-                    else if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
-                        status = FeatureFlagStatus.Default;
-                }
-                else
-                {
-                    // Try Format 3: "12345: FeatureName (Enabled)" or just "12345"
-                    var colonMatch = Regex.Match(line, @"^(\d+)[:\s]*(.*)$", RegexOptions.IgnoreCase);
-                    if (colonMatch.Success && int.TryParse(colonMatch.Groups[1].Value, out id))
-                    {
-                        var rest = colonMatch.Groups[2].Value.Trim();
-                        if (!string.IsNullOrWhiteSpace(rest))
-                        {
-                            // Extract name and status from rest
-                            var parenMatch = Regex.Match(rest, @"^(.+?)\s*\(([^)]+)\)\s*$");
-                            if (parenMatch.Success)
-                            {
-                                name = parenMatch.Groups[1].Value.Trim();
-                                var statusStr = parenMatch.Groups[2].Value.Trim();
-                                if (statusStr.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
-                                    status = FeatureFlagStatus.Enabled;
-                                else if (statusStr.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
-                                    status = FeatureFlagStatus.Disabled;
-                                else if (statusStr.Contains("Default", StringComparison.OrdinalIgnoreCase))
-                                    status = FeatureFlagStatus.Default;
-                            }
-                            else
-                            {
-                                name = rest;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Try Format 4: Just a number
-                        if (int.TryParse(line.Trim(), out id))
-                        {
-                            name = $"Feature {id}";
-                        }
-                    }
-                }
-
-                if (id > 0)
-                {
-                    if (string.IsNullOrEmpty(name))
-                        name = $"Feature {id}";
-
-                    features.Add(new FeatureFlagInfo
-                    {
-                        Id = id,
-                        Name = name,
-                        Status = status,
-                        Description = string.Empty
-                    });
-                }
-            }
+            features.AddRange(ParseLegacyFormats(lines));
         }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"ViveTool: Parsed {features.Count} features from output");
 
         return features;
+    }
+
+    private IEnumerable<FeatureFlagInfo> ParseViveTool34Format(string[] featureSections)
+    {
+        for (int i = 1; i < featureSections.Length; i += 2)
+        {
+            if (int.TryParse(featureSections[i], out int id))
+            {
+                string section = featureSections[i + 1];
+                string name = $"Feature {id}";
+                FeatureFlagStatus status = ParseStateFromSection(section);
+                
+                yield return new FeatureFlagInfo
+                {
+                    Id = id,
+                    Name = name,
+                    Status = status,
+                    Description = string.Empty
+                };
+            }
+        }
+    }
+
+    private IEnumerable<FeatureFlagInfo> ParseLegacyFormats(string[] lines)
+    {
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            // Skip header lines or help text
+            if (line.Contains("Usage:", StringComparison.OrdinalIgnoreCase) ||
+                line.Contains("Options:", StringComparison.OrdinalIgnoreCase) ||
+                line.StartsWith("-", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (TryParseLegacyFeatureLine(line, out var feature))
+                yield return feature;
+        }
+    }
+
+    private bool TryParseLegacyFeatureLine(string line, out FeatureFlagInfo feature)
+    {
+        int id = 0;
+        string name = string.Empty;
+        FeatureFlagStatus status = FeatureFlagStatus.Unknown;
+
+        // Try Format 2: "ID: 12345, Name: FeatureName, State: Enabled"
+        if (TryParseFormat2(line, ref id, ref name, ref status))
+        {
+            feature = CreateFeatureFlagInfo(id, name, status);
+            return true;
+        }
+
+        // Try Format 3: "12345: FeatureName (Enabled)" or just "12345"
+        if (TryParseFormat3(line, ref id, ref name, ref status))
+        {
+            feature = CreateFeatureFlagInfo(id, name, status);
+            return true;
+        }
+
+        // Try Format 4: Just a number
+        if (TryParseFormat4(line, ref id, ref name))
+        {
+            feature = CreateFeatureFlagInfo(id, name, status);
+            return true;
+        }
+
+        feature = CreateFeatureFlagInfo(0, string.Empty, FeatureFlagStatus.Unknown);
+        return false;
+    }
+
+    private bool TryParseFormat2(string line, ref int id, ref string name, ref FeatureFlagStatus status)
+    {
+        var idMatch = Regex.Match(line, @"ID[:\s]+(\d+)", RegexOptions.IgnoreCase);
+        if (idMatch.Success && int.TryParse(idMatch.Groups[1].Value, out id))
+        {
+            var nameMatch = Regex.Match(line, @"Name[:\s]+([^,]+)", RegexOptions.IgnoreCase);
+            name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
+
+            status = ParseStatusFromLine(line);
+            return true;
+        }
+        return false;
+    }
+
+    private bool TryParseFormat3(string line, ref int id, ref string name, ref FeatureFlagStatus status)
+    {
+        var colonMatch = Regex.Match(line, @"^(\d+)[:\s]*(.*)$", RegexOptions.IgnoreCase);
+        if (colonMatch.Success && int.TryParse(colonMatch.Groups[1].Value, out id))
+        {
+            var rest = colonMatch.Groups[2].Value.Trim();
+            if (!string.IsNullOrWhiteSpace(rest))
+            {
+                // Extract name and status from rest
+                var parenMatch = Regex.Match(rest, @"^(.+?)\s*\(([^)]+)\)\s*$");
+                if (parenMatch.Success)
+                {
+                    name = parenMatch.Groups[1].Value.Trim();
+                    var statusStr = parenMatch.Groups[2].Value.Trim();
+                    status = ParseStatusFromString(statusStr);
+                }
+                else
+                {
+                    name = rest;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private bool TryParseFormat4(string line, ref int id, ref string name)
+    {
+        if (int.TryParse(line.Trim(), out id))
+        {
+            name = $"Feature {id}";
+            return true;
+        }
+        return false;
+    }
+
+    private FeatureFlagStatus ParseStateFromSection(string section)
+    {
+        var stateMatch = Regex.Match(section, @"State\s*:\s*(\w+)\s*\(\d+\)", RegexOptions.IgnoreCase);
+        if (stateMatch.Success)
+        {
+            string stateStr = stateMatch.Groups[1].Value.Trim();
+            return ParseStatusFromString(stateStr);
+        }
+        return FeatureFlagStatus.Unknown;
+    }
+
+    private FeatureFlagStatus ParseStatusFromLine(string line)
+    {
+        if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Enabled;
+        if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Disabled;
+        if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Default;
+        return FeatureFlagStatus.Unknown;
+    }
+
+    private FeatureFlagStatus ParseStatusFromString(string statusStr)
+    {
+        if (statusStr.Equals("Enabled", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Enabled;
+        if (statusStr.Equals("Disabled", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Disabled;
+        if (statusStr.Equals("Default", StringComparison.OrdinalIgnoreCase))
+            return FeatureFlagStatus.Default;
+        return FeatureFlagStatus.Unknown;
+    }
+
+    private FeatureFlagInfo CreateFeatureFlagInfo(int id, string name, FeatureFlagStatus status)
+    {
+        return new FeatureFlagInfo
+        {
+            Id = id,
+            Name = string.IsNullOrEmpty(name) ? $"Feature {id}" : name,
+            Status = status,
+            Description = string.Empty
+        };
     }
 
     public async Task<List<FeatureFlagInfo>> ImportFeaturesFromFileAsync(string filePath)
