@@ -19,8 +19,7 @@
                     x:Name="_godModeFnQSwitchableToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}"
-                    Click="GodModeFnQSwitchableToggle_Click"
-                    Visibility="Hidden" />
+                    Click="GodModeFnQSwitchableToggle_Click" />
             </custom:CardControl>
 
             <custom:CardControl x:Name="_powerModeMappingCard" Margin="0,0,0,8">
@@ -33,8 +32,7 @@
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_PowerModeMapping_Title}"
                     MaxDropDownHeight="Auto"
-                    SelectionChanged="PowerModeMappingComboBox_SelectionChanged"
-                    Visibility="Hidden" />
+                    SelectionChanged="PowerModeMappingComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardAction
@@ -76,8 +74,7 @@
                     x:Name="_onBatterySinceResetToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}"
-                    Click="OnBatterySinceResetToggle_Click"
-                    Visibility="Hidden" />
+                    Click="OnBatterySinceResetToggle_Click" />
             </custom:CardControl>
         </StackPanel>
     </ScrollViewer>

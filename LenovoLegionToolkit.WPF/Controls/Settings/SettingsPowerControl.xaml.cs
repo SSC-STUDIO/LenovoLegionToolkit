@@ -64,10 +64,6 @@ public partial class SettingsPowerControl
 
         await loadingTask;
 
-        _godModeFnQSwitchableToggle.Visibility = Visibility.Visible;
-        _powerModeMappingComboBox.Visibility = Visibility.Visible;
-        _onBatterySinceResetToggle.Visibility = Visibility.Visible;
-
         _isRefreshing = false;
     }
 
