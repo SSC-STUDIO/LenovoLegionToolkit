@@ -36,8 +36,6 @@ public partial class SettingsDisplayControl
 
         await loadingTask;
 
-        _synchronizeBrightnessToAllPowerPlansToggle.Visibility = Visibility.Visible;
-
         _isRefreshing = false;
     }
 

@@ -38,8 +38,6 @@ public partial class SettingsSmartKeysControl
 
         await loadingTask;
 
-        _smartFnLockComboBox.Visibility = Visibility.Visible;
-
         _isRefreshing = false;
     }
 

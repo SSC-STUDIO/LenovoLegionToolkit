@@ -35,8 +35,6 @@ public partial class SettingsUpdateControl
 
         _isRefreshing = true;
 
-        _checkUpdatesButton.Visibility = Visibility.Visible;
-        _updateCheckFrequencyComboBox.Visibility = Visibility.Visible;
         _updateCheckFrequencyComboBox.SetItems(Enum.GetValues<UpdateCheckFrequency>(), _updateCheckSettings.Store.UpdateCheckFrequency, t => t.GetDisplayName());
 
         // Load update repository settings only when update checking is enabled

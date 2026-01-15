@@ -24,8 +24,7 @@
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Language_Title}"
                     MaxDropDownHeight="Auto"
-                    SelectionChanged="LangComboBox_SelectionChanged"
-                    Visibility="Hidden" />
+                    SelectionChanged="LangComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="Temperature24">
@@ -38,8 +37,7 @@
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Temperature_Title}"
                     MaxDropDownHeight="Auto"
-                    SelectionChanged="TemperatureComboBox_SelectionChanged"
-                    Visibility="Hidden" />
+                    SelectionChanged="TemperatureComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="DarkTheme24">
@@ -52,8 +50,7 @@
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Theme_Title}"
                     MaxDropDownHeight="Auto"
-                    SelectionChanged="ThemeComboBox_SelectionChanged"
-                    Visibility="Hidden" />
+                    SelectionChanged="ThemeComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="Color24">
