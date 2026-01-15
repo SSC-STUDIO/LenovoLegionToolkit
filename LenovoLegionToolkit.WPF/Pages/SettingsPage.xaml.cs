@@ -121,7 +121,7 @@ public partial class SettingsPage
         });
     }
 
-    private void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)
+    private async void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)
     {
         if (_navigationListBox.SelectedItem is not NavigationItem selectedItem)
             return;
@@ -140,6 +140,38 @@ public partial class SettingsPage
 
         if (controlToShow != null)
             _contentControl.Content = controlToShow;
+
+        // Refresh the selected control immediately if it's not the first one (Appearance)
+        if (selectedItem.Key != "Appearance")
+        {
+            switch (selectedItem.Key)
+            {
+                case "Application":
+                    if (_applicationBehaviorControl != null)
+                        await _applicationBehaviorControl.RefreshAsync();
+                    break;
+                case "SmartKeys":
+                    if (_smartKeysControl != null)
+                        await _smartKeysControl.RefreshAsync();
+                    break;
+                case "Display":
+                    if (_displayControl != null)
+                        await _displayControl.RefreshAsync();
+                    break;
+                case "Update":
+                    if (_updateControl != null)
+                        _updateControl.Refresh();
+                    break;
+                case "Power":
+                    if (_powerControl != null)
+                        await _powerControl.RefreshAsync();
+                    break;
+                case "Integrations":
+                    if (_integrationsControl != null)
+                        await _integrationsControl.RefreshAsync();
+                    break;
+            }
+        }
     }
 
     private class NavigationItem

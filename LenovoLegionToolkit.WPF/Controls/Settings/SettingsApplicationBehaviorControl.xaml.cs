@@ -65,17 +65,6 @@ public partial class SettingsApplicationBehaviorControl
 
         await loadingTask;
 
-        _autorunComboBox.Visibility = Visibility.Visible;
-        _minimizeToTrayToggle.Visibility = Visibility.Visible;
-        _minimizeOnCloseToggle.Visibility = Visibility.Visible;
-        if (_disableCompatibilityWarningCard.Visibility == Visibility.Visible)
-        {
-            _disableCompatibilityWarningToggle.Visibility = Visibility.Visible;
-        }
-        _vantageToggle.Visibility = Visibility.Visible;
-        _legionZoneToggle.Visibility = Visibility.Visible;
-        _fnKeysToggle.Visibility = Visibility.Visible;
-
         _isRefreshing = false;
     }
 

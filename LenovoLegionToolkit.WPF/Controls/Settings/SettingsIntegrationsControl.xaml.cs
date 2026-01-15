@@ -33,10 +33,6 @@ public partial class SettingsIntegrationsControl
 
         await loadingTask;
 
-        _hwinfoIntegrationToggle.Visibility = Visibility.Visible;
-        _cliInterfaceToggle.Visibility = Visibility.Visible;
-        _cliPathToggle.Visibility = Visibility.Visible;
-
         _isRefreshing = false;
     }
 

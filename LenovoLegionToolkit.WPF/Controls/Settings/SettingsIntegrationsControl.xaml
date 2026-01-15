@@ -19,8 +19,7 @@
                     x:Name="_hwinfoIntegrationToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_HWiNFO_Title}"
-                    Click="HWiNFOIntegrationToggle_Click"
-                    Visibility="Hidden" />
+                    Click="HWiNFOIntegrationToggle_Click" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8">
@@ -31,8 +30,7 @@
                     x:Name="_cliInterfaceToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLI_Title}"
-                    Click="CLIInterfaceToggle_Click"
-                    Visibility="Hidden" />
+                    Click="CLIInterfaceToggle_Click" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8">
@@ -43,8 +41,7 @@
                     x:Name="_cliPathToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}"
-                    Click="CLIPathToggle_Click"
-                    Visibility="Hidden" />
+                    Click="CLIPathToggle_Click" />
             </custom:CardControl>
         </StackPanel>
     </ScrollViewer>
