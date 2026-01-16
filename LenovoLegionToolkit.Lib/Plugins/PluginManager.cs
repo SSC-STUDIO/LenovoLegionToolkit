@@ -16,6 +16,7 @@ public class PluginManager : IPluginManager
     private readonly ApplicationSettings _applicationSettings;
     private readonly Dictionary<string, IPlugin> _registeredPlugins = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, PluginMetadata> _pluginMetadataCache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
 
     public event EventHandler<PluginEventArgs>? PluginStateChanged;
 
@@ -183,6 +184,19 @@ public class PluginManager : IPluginManager
                 .Where(f => 
                 {
                     var fileName = Path.GetFileName(f);
+                    var fileInfo = new FileInfo(f);
+                    
+                    // Check cache to avoid reloading unchanged files
+                    if (_pluginFileCache.TryGetValue(fileName, out var cachedTime))
+                    {
+                        if (fileInfo.LastWriteTime <= cachedTime)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Skipping unchanged plugin: {fileName}");
+                            return false;
+                        }
+                    }
+                    
                     // Only include plugin DLLs (must start with "LenovoLegionToolkit.Plugins.")
                     // Exclude SDK DLL itself (it's a dependency, not a plugin)
                     // Exclude resource DLLs

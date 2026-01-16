@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -23,6 +23,11 @@ public class GPUController
     private List<Process> _processes = [];
     private string? _gpuInstanceId;
     private string? _performanceState;
+    private int _currentInterval;
+    private DateTime _lastStateChangeTime = DateTime.MinValue;
+    private const int ActiveInterval = 2000;
+    private const int InactiveInterval = 10000;
+    private const int StabilizationDelay = 5000;
 
     public event EventHandler<GPUStatus>? Refreshed;
     public bool IsStarted { get => _refreshTask != null; }
@@ -71,6 +76,7 @@ public class GPUController
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Starting... [delay={delay}, interval={interval}]");
 
+        _currentInterval = interval;
         _refreshCancellationTokenSource = new CancellationTokenSource();
         var token = _refreshCancellationTokenSource.Token;
         _refreshTask = Task.Run(() => RefreshLoopAsync(delay, interval, token), token);
@@ -194,8 +200,9 @@ public class GPUController
                     Refreshed?.Invoke(this, new GPUStatus(_state, _performanceState, _processes));
                 }
 
-                if (interval > 0)
-                    await Task.Delay(interval, token).ConfigureAwait(false);
+                var adjustedInterval = AdjustRefreshInterval();
+                if (adjustedInterval > 0)
+                    await Task.Delay(adjustedInterval, token).ConfigureAwait(false);
                 else
                     break;
             }
@@ -219,27 +226,88 @@ public class GPUController
         }
     }
 
+    private int AdjustRefreshInterval()
+    {
+        var now = DateTime.UtcNow;
+        var timeSinceStateChange = (now - _lastStateChangeTime).TotalMilliseconds;
+
+        if (_state == GPUState.Active)
+        {
+            if (timeSinceStateChange > StabilizationDelay)
+            {
+                if (_currentInterval != ActiveInterval)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Adjusting interval to active mode: {ActiveInterval}ms");
+                    _currentInterval = ActiveInterval;
+                }
+                return ActiveInterval;
+            }
+        }
+        else if (_state == GPUState.Inactive || _state == GPUState.MonitorConnected)
+        {
+            if (timeSinceStateChange > StabilizationDelay)
+            {
+                if (_currentInterval != InactiveInterval)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Adjusting interval to inactive mode: {InactiveInterval}ms");
+                    _currentInterval = InactiveInterval;
+                }
+                return InactiveInterval;
+            }
+        }
+
+        return _currentInterval;
+    }
+
     private async Task RefreshStateAsync()
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Refresh in progress...");
 
-        _state = GPUState.Unknown;
-        _processes = [];
-        _gpuInstanceId = null;
-        _performanceState = null;
+        var previousState = _state;
+        ResetState();
 
         var gpu = NVAPI.GetGPU();
         if (gpu is null)
         {
-            _state = GPUState.NvidiaGpuNotFound;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"GPU present [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
-
+            HandleGpuNotFound(previousState);
             return;
         }
 
+        TryGetPerformanceState(gpu);
+
+        var pnpDeviceIdPart = NVAPI.GetGPUId(gpu);
+        if (string.IsNullOrEmpty(pnpDeviceIdPart))
+            throw new InvalidOperationException("pnpDeviceIdPart is null or empty");
+
+        var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
+        var processNames = NVAPIExtensions.GetActiveProcesses(gpu);
+
+        DetermineGpuState(gpu, gpuInstanceId, processNames, pnpDeviceIdPart, previousState);
+    }
+
+    private void ResetState()
+    {
+        _state = GPUState.Unknown;
+        _processes = [];
+        _gpuInstanceId = null;
+        _performanceState = null;
+    }
+
+    private void HandleGpuNotFound(GPUState previousState)
+    {
+        _state = GPUState.NvidiaGpuNotFound;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"GPU present [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+
+        CheckStateChange(previousState);
+    }
+
+    private void TryGetPerformanceState(NvAPIWrapper.GPU.PhysicalGPU gpu)
+    {
         try
         {
             var stateId = gpu.PerformanceStatesInfo.CurrentPerformanceState.StateId.ToString().GetUntilOrEmpty("_");
@@ -255,7 +323,7 @@ public class GPUController
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Powered off [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
 
-            return;
+            CheckStateChange(_state);
         }
         catch (Exception ex)
         {
@@ -264,40 +332,65 @@ public class GPUController
 
             _performanceState = "Unknown";
         }
+    }
 
-        var pnpDeviceIdPart = NVAPI.GetGPUId(gpu);
-
-        if (string.IsNullOrEmpty(pnpDeviceIdPart))
-            throw new InvalidOperationException("pnpDeviceIdPart is null or empty");
-
-        var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
-        var processNames = NVAPIExtensions.GetActiveProcesses(gpu);
-
+    private void DetermineGpuState(NvAPIWrapper.GPU.PhysicalGPU gpu, string? gpuInstanceId, List<Process> processNames, string pnpDeviceIdPart, GPUState previousState)
+    {
         if (NVAPI.IsDisplayConnected(gpu))
         {
-            _processes = processNames;
-            _state = GPUState.MonitorConnected;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace(
-                    $"Monitor connected [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+            HandleMonitorConnected(processNames, previousState);
         }
         else if (processNames.Count != 0)
         {
-            _processes = processNames;
-            _state = GPUState.Active;
-            _gpuInstanceId = gpuInstanceId;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Active [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}, pnpDeviceIdPart={pnpDeviceIdPart}]");
+            HandleActive(gpuInstanceId, processNames, pnpDeviceIdPart, previousState);
         }
         else
         {
-            _state = GPUState.Inactive;
-            _gpuInstanceId = gpuInstanceId;
+            HandleInactive(gpuInstanceId, previousState);
+        }
+    }
 
+    private void HandleMonitorConnected(List<Process> processNames, GPUState previousState)
+    {
+        _processes = processNames;
+        _state = GPUState.MonitorConnected;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Monitor connected [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+
+        CheckStateChange(previousState);
+    }
+
+    private void HandleActive(string? gpuInstanceId, List<Process> processNames, string pnpDeviceIdPart, GPUState previousState)
+    {
+        _processes = processNames;
+        _state = GPUState.Active;
+        _gpuInstanceId = gpuInstanceId;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Active [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}, pnpDeviceIdPart={pnpDeviceIdPart}]");
+
+        CheckStateChange(previousState);
+    }
+
+    private void HandleInactive(string? gpuInstanceId, GPUState previousState)
+    {
+        _state = GPUState.Inactive;
+        _gpuInstanceId = gpuInstanceId;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Inactive [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+
+        CheckStateChange(previousState);
+    }
+
+    private void CheckStateChange(GPUState previousState)
+    {
+        if (_state != previousState)
+        {
+            _lastStateChangeTime = DateTime.UtcNow;
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Inactive [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+                Log.Instance.Trace($"GPU state changed from {previousState} to {_state}");
         }
     }
 }

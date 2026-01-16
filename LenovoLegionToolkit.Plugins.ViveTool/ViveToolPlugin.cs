@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;
@@ -10,7 +11,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
 [Plugin(
     id: PluginConstants.ViveTool,
     name: "ViVeTool",
-    version: "1.0.0",
+    version: "1.1.0",
     description: "Manage Windows feature flags using ViVeTool",
     author: "LenovoLegionToolkit Team",
     MinimumHostVersion = "1.0.0",
@@ -32,6 +33,15 @@ public class ViveToolPlugin : PluginBase
         // Return ViVeTool page (implements IPluginPage interface)
         return new ViveToolPluginPage();
     }
+
+    /// <summary>
+    /// Plugin provides settings page
+    /// </summary>
+    public override object? GetSettingsPage()
+    {
+        // Return ViVeTool settings page
+        return new ViveToolSettingsPluginPage();
+    }
 }
 
 /// <summary>
@@ -47,5 +57,20 @@ public class ViveToolPluginPage : IPluginPage
     {
         // Return ViVeTool page control
         return new ViveToolPage();
+    }
+}
+
+/// <summary>
+/// ViVeTool settings plugin page provider
+/// </summary>
+public class ViveToolSettingsPluginPage : IPluginPage
+{
+    public string PageTitle => string.Empty;
+    public string PageIcon => string.Empty;
+
+    public object CreatePage()
+    {
+        // Return ViVeTool settings page control
+        return new ViveToolSettingsPage();
     }
 }

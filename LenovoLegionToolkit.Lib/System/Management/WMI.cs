@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -10,7 +10,7 @@ namespace LenovoLegionToolkit.Lib.System.Management;
 
 public static partial class WMI
 {
-    private static async Task<bool> ExistsAsync(string scope, FormattableString query)
+    internal static async Task<bool> ExistsAsync(string scope, FormattableString query)
     {
         try
         {
@@ -39,7 +39,7 @@ public static partial class WMI
         });
     }
 
-    private static async Task<IEnumerable<T>> ReadAsync<T>(string scope, FormattableString query, Func<PropertyDataCollection, T> converter)
+    internal static async Task<IEnumerable<T>> ReadAsync<T>(string scope, FormattableString query, Func<PropertyDataCollection, T> converter)
     {
         try
         {
@@ -55,21 +55,11 @@ public static partial class WMI
         }
     }
 
-    private static async Task CallAsync(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams)
+    internal static async Task CallAsync(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams)
     {
         try
         {
-            var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
-            var mos = new ManagementObjectSearcher(scope, queryFormatted);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-            var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
-
-            var mo = (ManagementObject)managementObject;
-            var methodParamsObject = mo.GetMethodParameters(methodName);
-            foreach (var pair in methodParams)
-                methodParamsObject[pair.Key] = pair.Value;
-
-            mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+            await CallInternalAsync(scope, query, methodName, methodParams).ConfigureAwait(false);
         }
         catch (ManagementException ex)
         {
@@ -77,22 +67,11 @@ public static partial class WMI
         }
     }
 
-    private static async Task<T> CallAsync<T>(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams, Func<PropertyDataCollection, T> converter)
+    internal static async Task<T> CallAsync<T>(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams, Func<PropertyDataCollection, T> converter)
     {
         try
         {
-            var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
-
-            var mos = new ManagementObjectSearcher(scope, queryFormatted);
-            var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-            var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
-
-            var mo = (ManagementObject)managementObject;
-            var methodParamsObject = mo.GetMethodParameters(methodName);
-            foreach (var pair in methodParams)
-                methodParamsObject[pair.Key] = pair.Value;
-
-            var resultProperties = mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+            var resultProperties = await CallInternalAsync(scope, query, methodName, methodParams).ConfigureAwait(false);
             var result = converter(resultProperties.Properties);
             return result;
         }
@@ -102,7 +81,22 @@ public static partial class WMI
         }
     }
 
-    private class WMIPropertyValueFormatter : IFormatProvider, ICustomFormatter
+    private static async Task<ManagementBaseObject> CallInternalAsync(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams)
+    {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        var mos = new ManagementObjectSearcher(scope, queryFormatted);
+        var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+        var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
+
+        var mo = (ManagementObject)managementObject;
+        var methodParamsObject = mo.GetMethodParameters(methodName);
+        foreach (var pair in methodParams)
+            methodParamsObject[pair.Key] = pair.Value;
+
+        return mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+    }
+
+    internal class WMIPropertyValueFormatter : IFormatProvider, ICustomFormatter
     {
         public static readonly WMIPropertyValueFormatter Instance = new();
 

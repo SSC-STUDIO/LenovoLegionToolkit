@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,13 +37,8 @@ public class AIController(
 
     public async Task StartIfNeededAsync()
     {
-        if (!await IsSupportedAsync().ConfigureAwait(false))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Not supported.");
-
+        if (!await IsSupportedAndLogAsync().ConfigureAwait(false))
             return;
-        }
 
         await StopAsync().ConfigureAwait(false);
 
@@ -70,13 +65,8 @@ public class AIController(
 
     public async Task StopAsync()
     {
-        if (!await IsSupportedAsync().ConfigureAwait(false))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Not supported.");
-
+        if (!await IsSupportedAndLogAsync().ConfigureAwait(false))
             return;
-        }
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
@@ -99,13 +89,8 @@ public class AIController(
 
     private async Task RefreshAsync()
     {
-        if (!await IsSupportedAsync().ConfigureAwait(false))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Not supported.");
-
+        if (!await IsSupportedAndLogAsync().ConfigureAwait(false))
             return;
-        }
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
@@ -121,6 +106,17 @@ public class AIController(
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Refreshed");
         }
+    }
+
+    private static async Task<bool> IsSupportedAndLogAsync()
+    {
+        if (!await IsSupportedAsync().ConfigureAwait(false))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Not supported.");
+            return false;
+        }
+        return true;
     }
 
     private static async Task<bool> IsSupportedAsync()

@@ -36,7 +36,7 @@
                 Margin="0,0,0,0"
                 FontSize="14"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="配置应用程序的外观、行为和功能选项。"
+                Text="{x:Static resources:Resource.SettingsPage_Description}"
                 TextWrapping="Wrap" />
         </StackPanel>
 

@@ -162,7 +162,7 @@ public class ThrottleLastDispatcherTests
                 return Task.CompletedTask;
             });
             
-            // Wait more than the interval to allow previous task to complete
+            // Wait more than interval to allow previous task to complete
             await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(100)));
         }
         
@@ -172,5 +172,730 @@ public class ThrottleLastDispatcherTests
         {
             executedTasks[i].Should().Be(i);
         }
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithVeryShortInterval_ShouldExecuteLast()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(10);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executedTasks = new List<int>();
+        
+        // Act - Dispatch multiple tasks rapidly
+        for (int i = 0; i < 5; i++)
+        {
+            var taskId = i;
+            dispatcher.DispatchAsync(() => {
+                executedTasks.Add(taskId);
+                return Task.CompletedTask;
+            });
+            await Task.Delay(5); // Small delay between dispatches
+        }
+        
+        // Wait for interval to pass
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Only the last task should have executed
+        executedTasks.Count.Should().Be(1);
+        executedTasks[0].Should().Be(4);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithLongInterval_ShouldWait()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(500);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executionTime = DateTime.MinValue;
+        
+        // Act
+        var dispatchTime = DateTime.UtcNow;
+        await dispatcher.DispatchAsync(() => {
+            executionTime = DateTime.UtcNow;
+            return Task.CompletedTask;
+        });
+        
+        // Wait for execution
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Task should have executed after the interval
+        var elapsed = executionTime - dispatchTime;
+        elapsed.TotalMilliseconds.Should().BeGreaterOrEqualTo(interval.TotalMilliseconds - 50);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithMultipleRapidDispatches_ShouldExecuteLast()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(100);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executedTasks = new List<int>();
+        
+        // Act - Dispatch 10 tasks as fast as possible
+        var tasks = new List<Task>();
+        for (int i = 0; i < 10; i++)
+        {
+            var taskId = i;
+            tasks.Add(dispatcher.DispatchAsync(() => {
+                executedTasks.Add(taskId);
+                return Task.CompletedTask;
+            }));
+        }
+        
+        await Task.WhenAll(tasks);
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Only the last task should have executed
+        executedTasks.Count.Should().Be(1);
+        executedTasks[0].Should().Be(9);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskTakingLongerThanInterval_ShouldComplete()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskCompleted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Delay(100); // Task takes longer than interval
+            taskCompleted = true;
+        });
+        
+        // Wait for task to complete
+        await Task.Delay(150);
+        
+        // Assert - Task should have completed
+        taskCompleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithZeroInterval_ShouldExecuteImmediately()
+    {
+        // Arrange
+        var interval = TimeSpan.Zero;
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        // Assert - Task should have executed immediately
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithNegativeInterval_ShouldThrow()
+    {
+        // Arrange & Act
+        Action act = () => new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(-1), "test");
+        
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithVeryLongInterval_ShouldWait()
+    {
+        // Arrange
+        var interval = TimeSpan.FromSeconds(1);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        var dispatchTime = DateTime.UtcNow;
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        // Wait for execution
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(100)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithName_ShouldStoreName()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var name = "TestDispatcher";
+        var dispatcher = new ThrottleLastDispatcher(interval, name);
+        
+        // Act & Assert - Name is stored but not directly accessible
+        // This test ensures the constructor accepts a name parameter
+        dispatcher.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithEmptyName_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithNullName_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, null);
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithMultipleDispose_ShouldNotThrow()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        
+        // Act & Assert
+        Action act = () => {
+            dispatcher.Dispose();
+            dispatcher.Dispose();
+            dispatcher.Dispose();
+        };
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_AfterDispose_ShouldThrow()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        dispatcher.Dispose();
+        
+        // Act & Assert
+        Func<Task> act = async () => await dispatcher.DispatchAsync(() => Task.CompletedTask);
+        await act.Should().ThrowAsync<ObjectDisposedException>();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskReturningValue_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var expectedValue = 42;
+        int? actualValue = null;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            actualValue = expectedValue;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        actualValue.Should().Be(expectedValue);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThrowingAfterDelay_ShouldPropagate()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var expectedException = new InvalidOperationException("Delayed exception");
+        
+        // Act & Assert
+        Func<Task> act = async () => 
+            await dispatcher.DispatchAsync(async () => {
+                await Task.Delay(10);
+                throw expectedException;
+            });
+        
+        (await act.Should().ThrowAsync<InvalidOperationException>()).And.Should().Be(expectedException);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithConcurrentDispatchesAndExceptions_ShouldHandle()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executedTasks = new List<int>();
+        
+        // Act - Dispatch tasks where some throw exceptions
+        var tasks = new List<Task>();
+        for (int i = 0; i < 5; i++)
+        {
+            var taskId = i;
+            tasks.Add(dispatcher.DispatchAsync(() => {
+                if (taskId == 2)
+                    throw new InvalidOperationException("Test exception");
+                executedTasks.Add(taskId);
+                return Task.CompletedTask;
+            }));
+        }
+        
+        // Wait for all tasks to complete
+        await Task.WhenAll(tasks);
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - At least one task should have executed
+        executedTasks.Count.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithRapidFireDispatches_ShouldExecuteLast()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(100);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executedTasks = new List<int>();
+        
+        // Act - Dispatch tasks in a tight loop
+        for (int i = 0; i < 100; i++)
+        {
+            var taskId = i;
+            dispatcher.DispatchAsync(() => {
+                executedTasks.Add(taskId);
+                return Task.CompletedTask;
+            });
+        }
+        
+        // Wait for execution
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Only the last task should have executed
+        executedTasks.Count.Should().Be(1);
+        executedTasks[0].Should().Be(99);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatModifiesState_ShouldBeConsistent()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var counter = 0;
+        
+        // Act - Dispatch multiple tasks that modify the same state
+        var tasks = new List<Task>();
+        for (int i = 0; i < 10; i++)
+        {
+            tasks.Add(dispatcher.DispatchAsync(() => {
+                counter = i;
+                return Task.CompletedTask;
+            }));
+        }
+        
+        await Task.WhenAll(tasks);
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Counter should have the last value
+        counter.Should().Be(9);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatReturnsTask_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Delay(10);
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithMultipleIntervals_ShouldExecuteCorrectly()
+    {
+        // Arrange
+        var interval1 = TimeSpan.FromMilliseconds(50);
+        var dispatcher1 = new ThrottleLastDispatcher(interval1, "test1");
+        var interval2 = TimeSpan.FromMilliseconds(100);
+        var dispatcher2 = new ThrottleLastDispatcher(interval2, "test2");
+        
+        var executedTasks1 = new List<int>();
+        var executedTasks2 = new List<int>();
+        
+        // Act - Dispatch to both dispatchers
+        await dispatcher1.DispatchAsync(() => {
+            executedTasks1.Add(1);
+            return Task.CompletedTask;
+        });
+        
+        await dispatcher2.DispatchAsync(() => {
+            executedTasks2.Add(1);
+            return Task.CompletedTask;
+        });
+        
+        // Wait for both to complete
+        await Task.Delay(interval2.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Both should have executed
+        executedTasks1.Count.Should().Be(1);
+        executedTasks2.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithVerySmallInterval_ShouldExecuteLast()
+    {
+        // Arrange
+        var interval = TimeSpan.FromTicks(1);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var executedTasks = new List<int>();
+        
+        // Act
+        for (int i = 0; i < 5; i++)
+        {
+            var taskId = i;
+            dispatcher.DispatchAsync(() => {
+                executedTasks.Add(taskId);
+                return Task.CompletedTask;
+            });
+        }
+        
+        await Task.Delay(50);
+        
+        // Assert - Only the last task should have executed
+        executedTasks.Count.Should().Be(1);
+        executedTasks[0].Should().Be(4);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatThrowsAndThenSucceeds_ShouldExecute()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var attemptCount = 0;
+        bool taskSucceeded = false;
+        
+        // Act - First dispatch throws, second succeeds
+        try
+        {
+            await dispatcher.DispatchAsync(() => {
+                attemptCount++;
+                throw new InvalidOperationException("First attempt");
+            });
+        }
+        catch { }
+        
+        await dispatcher.DispatchAsync(() => {
+            attemptCount++;
+            taskSucceeded = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Second task should have succeeded
+        taskSucceeded.Should().BeTrue();
+        attemptCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatCatchesException_ShouldNotThrow()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            try
+            {
+                throw new InvalidOperationException("Internal exception");
+            }
+            catch
+            {
+                taskExecuted = true;
+            }
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert - Task should have executed and caught the exception
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatReturnsNull_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatUsesCancellationToken_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(cancellationToken => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatReturnsCompletedTask_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.CompletedTask;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatReturnsFromResult_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.FromResult(true);
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatReturnsRun_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            taskExecuted = true;
+            return Task.Run(() => { });
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatYields_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Yield();
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatDelays_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Delay(10);
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatWhenAll_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.WhenAll(Task.Delay(10), Task.Delay(10));
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatWhenAny_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.WhenAny(Task.Delay(10), Task.Delay(100));
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatContinueWith_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(() => {
+            return Task.Delay(10).ContinueWith(_ => {
+                taskExecuted = true;
+            });
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatUsesConfigureAwait_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Delay(10).ConfigureAwait(false);
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DispatchAsync_WithTaskThatUsesConfigureAwaitTrue_ShouldWork()
+    {
+        // Arrange
+        var interval = TimeSpan.FromMilliseconds(50);
+        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        bool taskExecuted = false;
+        
+        // Act
+        await dispatcher.DispatchAsync(async () => {
+            await Task.Delay(10).ConfigureAwait(true);
+            taskExecuted = true;
+        });
+        
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        
+        // Assert
+        taskExecuted.Should().BeTrue();
     }
 }

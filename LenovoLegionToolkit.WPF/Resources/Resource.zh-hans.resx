@@ -1200,6 +1200,12 @@
   <data name="RestartLater" xml:space="preserve">
     <value>稍后自行重启</value>
   </data>
+  <data name="WindowsOptimization_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI 鼠标样式</value>
+  </data>
+  <data name="WindowsOptimization_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>应用 Windows 11 风格的高清鼠标指针样式</value>
+  </data>
   <data name="RestartNow" xml:space="preserve">
     <value>立刻重启</value>
   </data>
@@ -1370,6 +1376,9 @@
   </data>
   <data name="SettingsPage_Title" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>配置应用程序的外观、行为和功能选项。</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>调节键盘背光亮度</value>
@@ -3528,5 +3537,34 @@
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>最低兼容版本: {0}</value>
   </data>
-
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>永久删除</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
+    <value>使用说明</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve">
+    <value>此编辑器用于直接编辑 shell.nss 配置文件。修改后点击</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve">
+    <value>按钮将保存所有更改并重启资源管理器使配置生效。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve">
+    <value>• 配置文件路径：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve">
+    <value>• 修改配置后，需要重启资源管理器（Explorer）才能生效。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>工具将在 tools 目录中可用后显示在这里。</value>
+  </data>
 </root>

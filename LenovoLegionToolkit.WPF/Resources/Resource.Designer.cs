@@ -4073,7 +4073,25 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("WindowsOptimizationPage_Beautification_RestoreError", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to No tools available.
+        /// </summary>
+        public static string WindowsOptimizationPage_NoTools {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_NoTools", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No tools available at the moment.
+        /// </summary>
+        public static string WindowsOptimizationPage_NoTools_Subtitle {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_NoTools_Subtitle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Failed to install shell..
         /// </summary>
@@ -5117,7 +5135,16 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("SettingsPage_Title", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Configure application settings.
+        /// </summary>
+        public static string SettingsPage_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_Description", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Adjust keyboard backlight brightness..
         /// </summary>
@@ -8735,7 +8762,61 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("MenuStyleSettingsWindow_Details_EffectShadows", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: [options] [arguments].
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_Usage {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_Usage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open configuration editor.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_Description {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_ApplyButton {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_ApplyButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Apply configuration changes.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_ApplyDescription {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_ApplyDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration file path.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_ConfigPath {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_ConfigPath", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Note: You may need to restart your computer for changes to take effect.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ConfigEditor_RestartNote {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_RestartNote", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Action Details.
         /// </summary>
@@ -9885,6 +9966,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string PluginExtensionsPage_MinimumVersion {
             get {
                 return ResourceManager.GetString("PluginExtensionsPage_MinimumVersion", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Permanently delete.
+        /// </summary>
+        public static string PluginExtensionsPage_PermanentlyDelete {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PermanentlyDelete", resourceCulture);
             }
         }
     }

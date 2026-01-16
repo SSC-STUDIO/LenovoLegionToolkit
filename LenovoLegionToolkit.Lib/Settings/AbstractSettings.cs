@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -11,12 +12,14 @@ public abstract class AbstractSettings<T> where T : class, new()
     protected readonly JsonSerializerSettings JsonSerializerSettings;
     private readonly string _settingsStorePath;
     private readonly string _fileName;
+    private readonly object _lock = new();
+    private T? _cachedStore;
+    private DateTime _lastLoadTime = DateTime.MinValue;
+    private readonly TimeSpan _cacheDuration = TimeSpan.FromSeconds(5);
 
     protected virtual T Default => new();
 
-    public T Store => _store ??= LoadStore() ?? Default;
-
-    private T? _store;
+    public T Store => _cachedStore ??= LoadStore() ?? Default;
 
     protected AbstractSettings(string filename)
     {
@@ -34,16 +37,65 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     public void SynchronizeStore()
     {
-        var settingsSerialized = JsonConvert.SerializeObject(_store, JsonSerializerSettings);
-        File.WriteAllText(_settingsStorePath, settingsSerialized);
+        lock (_lock)
+        {
+            var settingsSerialized = JsonConvert.SerializeObject(_cachedStore ?? Default, JsonSerializerSettings);
+            File.WriteAllText(_settingsStorePath, settingsSerialized);
+            _lastLoadTime = DateTime.UtcNow;
+        }
+    }
+
+    public async Task SynchronizeStoreAsync()
+    {
+        string settingsSerialized;
+        lock (_lock)
+        {
+            settingsSerialized = JsonConvert.SerializeObject(_cachedStore ?? Default, JsonSerializerSettings);
+            _lastLoadTime = DateTime.UtcNow;
+        }
+        
+        await File.WriteAllTextAsync(_settingsStorePath, settingsSerialized).ConfigureAwait(false);
     }
 
     public virtual T? LoadStore()
     {
+        lock (_lock)
+        {
+            if (_cachedStore != null && DateTime.UtcNow - _lastLoadTime < _cacheDuration)
+                return _cachedStore;
+
+            T? store = null;
+            try
+            {
+                var settingsSerialized = File.ReadAllText(_settingsStorePath);
+                store = JsonConvert.DeserializeObject<T>(settingsSerialized, JsonSerializerSettings);
+
+                if (store is null)
+                    TryBackup();
+            }
+            catch
+            {
+                TryBackup();
+            }
+
+            _cachedStore = store;
+            _lastLoadTime = DateTime.UtcNow;
+            return store;
+        }
+    }
+
+    public virtual async Task<T?> LoadStoreAsync()
+    {
+        lock (_lock)
+        {
+            if (_cachedStore != null && DateTime.UtcNow - _lastLoadTime < _cacheDuration)
+                return _cachedStore;
+        }
+
         T? store = null;
         try
         {
-            var settingsSerialized = File.ReadAllText(_settingsStorePath);
+            var settingsSerialized = await File.ReadAllTextAsync(_settingsStorePath).ConfigureAwait(false);
             store = JsonConvert.DeserializeObject<T>(settingsSerialized, JsonSerializerSettings);
 
             if (store is null)
@@ -54,7 +106,22 @@ public abstract class AbstractSettings<T> where T : class, new()
             TryBackup();
         }
 
+        lock (_lock)
+        {
+            _cachedStore = store;
+            _lastLoadTime = DateTime.UtcNow;
+        }
+
         return store;
+    }
+
+    public void InvalidateCache()
+    {
+        lock (_lock)
+        {
+            _cachedStore = null;
+            _lastLoadTime = DateTime.MinValue;
+        }
     }
 
     private void TryBackup()

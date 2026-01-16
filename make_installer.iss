@@ -3,7 +3,7 @@
 #define MyAppName "Lenovo Legion Toolkit"
 #define MyAppNameCompact "LenovoLegionToolkit"
 #define MyAppPublisher "ChenRunsen"
-#define MyAppURL "https://github.com/BartoszCichecki/LenovoLegionToolkit"
+#define MyAppURL "https://github.com/Crs10259/LenovoLegionToolkit"
 #define MyAppExeName "Lenovo Legion Toolkit.exe"
 
 #ifndef MyAppVersion

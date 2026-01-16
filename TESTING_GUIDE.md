@@ -132,6 +132,66 @@ dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCol
 
 测试配置文件位于 `tests/test_config.json`，您可以根据需要修改配置参数。
 
+## 8. 插件测试
+
+### 8.1 插件测试概述
+
+插件测试是确保插件功能正常、与 LLT 主程序兼容的重要环节。插件测试包括单元测试、集成测试和端到端测试。
+
+### 8.2 插件测试类型
+
+#### 8.2.1 单元测试
+
+测试插件的各个组件和功能模块：
+
+```powershell
+# 运行特定插件的单元测试
+# 假设插件项目名称为 LenovoLegionToolkit.Plugins.ViveTool.Tests
+dotnet test LenovoLegionToolkit.Plugins.ViveTool.Tests
+```
+
+#### 8.2.2 集成测试
+
+测试插件与 LLT 主程序的集成情况：
+
+```powershell
+# 运行插件集成测试
+PowerShell -ExecutionPolicy Bypass -File .\tests\plugin_integration_test.ps1
+```
+
+#### 8.2.3 端到端测试
+
+测试完整的插件生命周期和功能：
+
+```powershell
+# 运行插件端到端测试
+PowerShell -ExecutionPolicy Bypass -File .\tests\plugin_e2e_test.ps1
+```
+
+### 8.3 插件测试最佳实践
+
+1. **测试插件生命周期**：确保插件能够正确安装、运行和卸载
+2. **测试依赖处理**：验证插件依赖是否正确加载
+3. **测试 UI 集成**：验证插件 UI 页面能否正确显示和交互
+4. **测试功能扩展**：验证插件添加的功能能否正常工作
+5. **测试兼容性**：确保插件在不同 LLT 版本上都能正常工作
+
+### 8.4 编写插件测试
+
+插件测试可以使用标准的 .NET 测试框架编写，如 MSTest 或 xUnit。测试项目应该引用：
+
+- 插件项目
+- LLT 插件 SDK
+- 测试框架
+
+### 8.5 测试插件开发
+
+在开发插件时，可以使用以下方法进行测试：
+
+1. **本地调试**：在 Visual Studio 中调试插件
+2. **手动测试**：将插件 DLL 复制到 `build/plugins` 目录进行测试
+3. **自动化测试**：编写自动化测试脚本进行回归测试
+
 ---
 
 通过统一使用这些测试方法，您可以确保项目的测试覆盖率和代码质量，同时提高开发效率。

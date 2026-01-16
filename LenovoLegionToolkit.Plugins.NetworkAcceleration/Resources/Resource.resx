@@ -76,6 +76,9 @@
   <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
     <value>Enable GitHub acceleration to improve GitHub access speed, including code cloning, file downloads, etc.</value>
   </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate GitHub code repository and resource downloads</value>
+  </data>
   <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
     <value>Proxy Settings</value>
   </data>
@@ -132,5 +135,68 @@
   </data>
   <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
     <value>Speed Chart</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>Real-time Traffic Statistics and Trend Analysis</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>Real-time display of download and upload speed changes</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>Reset Statistics</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>Platform Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>Enable network acceleration for the following platforms to improve access speed and stability</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steam Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Steam store, community, and downloads</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discord Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Discord app and CDN resources</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPM Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>Accelerate npm package manager downloads</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Python Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Python package index downloads</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Steam store, community, and downloads</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Discord app and CDN resources</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate npm package manager downloads</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Python package index downloads</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>Connection Timeout (seconds)</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>Set the timeout for network requests in seconds</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>Proxy Port</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>e.g., 7890</value>
   </data>
 </root>

@@ -54,12 +54,49 @@
 		<None Remove="Assets\Donate\paypal_logo.png" />
 		<None Remove="Assets\Donate\paypal_qr.png" />
 	</ItemGroup>
-	<ItemGroup>
-		<Content Include="tools\**\*.*" Condition="Exists('$(MSBuildProjectDirectory)\tools')">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<TargetPath>tools\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-		</Content>
-	</ItemGroup>
+	<Target Name="CopyAssetsDirectory" AfterTargets="Build;Publish">
+		<PropertyGroup>
+			<AssetsSourceDir>$(MSBuildProjectDirectory)\..\assets</AssetsSourceDir>
+			<AssetsTargetDir>$(TargetDir)assets</AssetsTargetDir>
+		</PropertyGroup>
+		
+		<!-- Check if assets directory exists -->
+		<PropertyGroup>
+			<AssetsDirExists>false</AssetsDirExists>
+			<AssetsDirExists Condition="Exists('$(AssetsSourceDir)')">true</AssetsDirExists>
+		</PropertyGroup>
+		
+		<!-- Create output assets directory if it doesn't exist -->
+		<MakeDir Directories="$(AssetsTargetDir)" Condition="'$(AssetsDirExists)' == 'true'" />
+		
+		<!-- Collect tools.json file -->
+		<ItemGroup Condition="'$(AssetsDirExists)' == 'true'">
+			<ToolsJsonFile Include="$(AssetsSourceDir)\tools\tools.json" />
+		</ItemGroup>
+		
+		<!-- Copy tools.json file -->
+		<Copy SourceFiles="@(ToolsJsonFile)" 
+		      DestinationFiles="$(AssetsTargetDir)\tools\tools.json" 
+		      SkipUnchangedFiles="true" 
+		      Condition="'$(AssetsDirExists)' == 'true'" />
+		
+		<!-- Collect W11-CC-V2.2-HDPI files -->
+		<ItemGroup Condition="'$(AssetsDirExists)' == 'true'">
+			<MouseStyleFiles Include="$(AssetsSourceDir)\W11-CC-V2.2-HDPI\**\*.*" />
+		</ItemGroup>
+		
+		<!-- Copy W11-CC-V2.2-HDPI files -->
+		<Copy SourceFiles="@(MouseStyleFiles)" 
+		      DestinationFiles="$(AssetsTargetDir)\W11-CC-V2.2-HDPI\%(MouseStyleFiles.RecursiveDir)%(MouseStyleFiles.Filename)%(MouseStyleFiles.Extension)" 
+		      SkipUnchangedFiles="true" 
+		      Condition="'$(AssetsDirExists)' == 'true'" />
+		
+		<!-- Log messages for debugging -->
+		<Message Text="[Assets] Source directory: $(AssetsSourceDir)" Importance="normal" Condition="'$(AssetsDirExists)' == 'true'" />
+		<Message Text="[Assets] Target directory: $(AssetsTargetDir)" Importance="normal" Condition="'$(AssetsDirExists)' == 'true'" />
+		<Message Text="[Assets] Successfully copied assets directory" Importance="high" Condition="'$(AssetsDirExists)' == 'true'" />
+		<Message Text="[Assets] WARNING: Assets directory not found at $(AssetsSourceDir), skipping copy." Importance="high" Condition="'$(AssetsDirExists)' == 'false'" />
+	</Target>
 	<ItemGroup>
 		<Resource Include="Assets\default_exe.png" />
 		<Resource Include="Assets\icon.ico" />
@@ -119,46 +156,5 @@
 		<!-- Copy shell.nss to app output directory -->
 		<Message Text="[Shell] Copying shell.nss to $(ShellOutputDir)..." Importance="normal" Condition="'@(ShellConfigSource)' != ''" />
 		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(ShellOutputDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
-	</Target>
-	<Target Name="CopyToolsDirectory" AfterTargets="Build;Publish">
-		<PropertyGroup>
-			<!-- Use root-level tools directory -->
-			<ToolsSourceDir>$(MSBuildProjectDirectory)\..\tools</ToolsSourceDir>
-			<ToolsTargetDir>$(TargetDir)tools</ToolsTargetDir>
-			<RepoBuildDir>$(MSBuildProjectDirectory)\..\build\</RepoBuildDir>
-		</PropertyGroup>
-		
-		<!-- Check if tools directory exists -->
-		<PropertyGroup>
-			<ToolsDirExists>false</ToolsDirExists>
-			<ToolsDirExists Condition="Exists('$(ToolsSourceDir)')">true</ToolsDirExists>
-		</PropertyGroup>
-		
-		<!-- Collect all files from tools directory -->
-		<ItemGroup Condition="'$(ToolsDirExists)' == 'true'">
-			<ToolsFiles Include="$(ToolsSourceDir)\**\*.*" />
-		</ItemGroup>
-		
-		<!-- Copy to output directory -->
-		<Copy SourceFiles="@(ToolsFiles)" 
-		      DestinationFiles="$(ToolsTargetDir)%(RecursiveDir)%(Filename)%(Extension)" 
-		      SkipUnchangedFiles="true" 
-		      Condition="'$(ToolsDirExists)' == 'true'" />
-		
-		<!-- Also copy to repo-level build folder -->
-		<MakeDir Directories="$(RepoBuildDir)" Condition="'$(ToolsDirExists)' == 'true'" />
-		<Copy SourceFiles="@(ToolsFiles)" 
-		      DestinationFiles="$(RepoBuildDir)tools\%(RecursiveDir)%(Filename)%(Extension)" 
-		      SkipUnchangedFiles="true" 
-		      Condition="'$(ToolsDirExists)' == 'true'" />
-		
-		<!-- Log messages for debugging -->
-		<Message Text="[Tools] Source directory: $(ToolsSourceDir)" Importance="normal" />
-		<Message Text="[Tools] Target directory: $(ToolsTargetDir)" Importance="normal" />
-		<Message Text="[Tools] Repo build directory: $(RepoBuildDir)tools" Importance="normal" />
-		<Message Text="[Tools] Tools directory exists: $(ToolsDirExists)" Importance="normal" />
-		<Message Text="[Tools] Found @(ToolsFiles->Count()) files to copy" Importance="normal" Condition="'$(ToolsDirExists)' == 'true'" />
-		<Message Text="[Tools] Successfully copied tools directory from $(ToolsSourceDir) to $(ToolsTargetDir) and $(RepoBuildDir)tools" Importance="high" Condition="'$(ToolsDirExists)' == 'true'" />
-		<Message Text="[Tools] WARNING: Tools directory not found at $(ToolsSourceDir), skipping copy." Importance="high" Condition="'$(ToolsDirExists)' == 'false'" />
 	</Target>
 </Project>

@@ -102,7 +102,7 @@
                     FontSize="16"
                     FontWeight="Medium"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                    Text="使用说明" />
+                    Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_Usage}" />
             </wpfui:CardControl.Header>
             <StackPanel Margin="0,8,0,0">
                 <TextBlock
@@ -111,9 +111,9 @@
                     TextWrapping="Wrap"
                     LineHeight="20"
                     Margin="0,0,0,8">
-                    <Run Text="此编辑器用于直接编辑 shell.nss 配置文件。修改后点击" />
-                    <Run Text="应用" FontWeight="Bold" />
-                    <Run Text="按钮将保存所有更改并重启资源管理器使配置生效。" />
+                    <Run Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_Description}" />
+                    <Run Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_ApplyButton}" FontWeight="Bold" />
+                    <Run Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_ApplyDescription}" />
                 </TextBlock>
                 <TextBlock
                     FontSize="13"
@@ -121,16 +121,15 @@
                     TextWrapping="Wrap"
                     LineHeight="20"
                     Margin="0,0,0,8">
-                    <Run Text="• 配置文件路径：" FontWeight="Bold" />
+                    <Run Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_ConfigPath}" />
                     <Run x:Name="_configPathTextBlock" />
                 </TextBlock>
                 <TextBlock
                     FontSize="13"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap"
-                    LineHeight="20">
-                    <Run Text="• 修改配置后，需要重启资源管理器（Explorer）才能生效。" />
-                </TextBlock>
+                    LineHeight="20"
+                    Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_RestartNote}" />
             </StackPanel>
         </wpfui:CardControl>
 
@@ -195,93 +194,101 @@
                     SnapsToDevicePixels="True" />
 
                 <!-- Tab Content -->
-                <Grid Grid.Row="2">
+                <Grid Grid.Row="2" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                    <!-- Single ScrollViewer for all tabs -->
                     <ScrollViewer
-                        x:Name="_shellNssScrollViewer"
+                        x:Name="_tabContentScrollViewer"
                         VerticalScrollBarVisibility="Auto"
                         HorizontalScrollBarVisibility="Auto"
-                        Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBox
-                            x:Name="_shellNssTextBox"
-                            FontFamily="Consolas, Courier New"
-                            FontSize="12"
-                            AcceptsReturn="True"
-                            AcceptsTab="True"
-                            TextWrapping="NoWrap"
-                            VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Auto"
-                            MinHeight="400"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Padding="8" />
-                    </ScrollViewer>
-                    
-                    <ScrollViewer
-                        x:Name="_themeNssScrollViewer"
-                        VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Auto"
-                        Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBox
-                            x:Name="_themeNssTextBox"
-                            FontFamily="Consolas, Courier New"
-                            FontSize="12"
-                            AcceptsReturn="True"
-                            AcceptsTab="True"
-                            TextWrapping="NoWrap"
-                            VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Auto"
-                            MinHeight="400"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Padding="8" />
-                    </ScrollViewer>
-                    
-                    <ScrollViewer
-                        x:Name="_imagesNssScrollViewer"
-                        VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Auto"
-                        Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBox
-                            x:Name="_imagesNssTextBox"
-                            FontFamily="Consolas, Courier New"
-                            FontSize="12"
-                            AcceptsReturn="True"
-                            AcceptsTab="True"
-                            TextWrapping="NoWrap"
-                            VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Auto"
-                            MinHeight="400"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Padding="8" />
-                    </ScrollViewer>
-                    
-                    <ScrollViewer
-                        x:Name="_modifyNssScrollViewer"
-                        VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Auto"
-                        Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBox
-                            x:Name="_modifyNssTextBox"
-                            FontFamily="Consolas, Courier New"
-                            FontSize="12"
-                            AcceptsReturn="True"
-                            AcceptsTab="True"
-                            TextWrapping="NoWrap"
-                            VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Auto"
-                            MinHeight="400"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Padding="8" />
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch">
+                        
+                        <!-- Tab Content Container -->
+                        <Grid>
+                            <!-- Shell.nss Content -->
+                            <TextBox
+                                x:Name="_shellNssTextBox"
+                                FontFamily="Consolas, Courier New"
+                                FontSize="12"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                TextWrapping="NoWrap"
+                                VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Auto"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Padding="8"
+                                Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="750"
+                                Height="400"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                            
+                            <!-- Theme.nss Content -->
+                            <TextBox
+                                x:Name="_themeNssTextBox"
+                                FontFamily="Consolas, Courier New"
+                                FontSize="12"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                TextWrapping="NoWrap"
+                                VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Auto"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Padding="8"
+                                Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="750"
+                                Height="400"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                            
+                            <!-- Images.nss Content -->
+                            <TextBox
+                                x:Name="_imagesNssTextBox"
+                                FontFamily="Consolas, Courier New"
+                                FontSize="12"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                TextWrapping="NoWrap"
+                                VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Auto"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Padding="8"
+                                Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="750"
+                                Height="400"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                            
+                            <!-- Modify.nss Content -->
+                            <TextBox
+                                x:Name="_modifyNssTextBox"
+                                FontFamily="Consolas, Courier New"
+                                FontSize="12"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                TextWrapping="NoWrap"
+                                VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Auto"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                Padding="8"
+                                Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="750"
+                                Height="400"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Grid>
                     </ScrollViewer>
                 </Grid>
             </Grid>

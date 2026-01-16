@@ -14,11 +14,11 @@ _作成された問題の数が多いため、基準を満たさないものは�
 
 **1. 問題を報告する前にREADMEをよく読んでください**
 
-[README](https://github.com/BartoszCichecki/LenovoLegionToolkit/blob/master/README.md)は、よくある質問への回答や最も一般的な問題に関する情報を���むように定期的に更新されます。問題を作成する前に、そこにある内容を確認してください。
+[README](https://github.com/Crs10259/LenovoLegionToolkit/blob/master/README.md)は、よくある質問への回答や最も一般的な問題に関する情報を���むように定期的に更新されます。問題を作成する前に、そこにある内容を確認してください。
 
 **2. 既に報告されている問題を確認してください**
 
-既に報告されている[問題](https://github.com/BartoszCichecki/LenovoLegionToolkit/issues?q=is%3Aissue)や[ディスカッション](https://github.com/BartoszCichecki/LenovoLegionToolkit/discussions?discussions_q=)を確認してください。重複する問題やディスカッションを作成しないでください。問題がクローズされていても、コメントを残すことができます。
+既に報告されている[問題](https://github.com/Crs10259/LenovoLegionToolkit/issues?q=is%3Aissue)や[ディスカッション](https://github.com/Crs10259/LenovoLegionToolkit/discussions?discussions_q=)を確認してください。重複する問題やディスカッションを作成しないでください。問題がクローズされていても、コメントを残すことができます。
 
 **3. 英語を使用してください**
 

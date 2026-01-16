@@ -791,13 +791,13 @@
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     TextAlignment="Center"
-                                    Text="当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_NoTools}"
                                     Margin="0,0,0,0" />
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     TextAlignment="Center"
-                                    Text="Tools will appear here once they are available in the tools directory."
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_NoTools_Subtitle}"
                                     Margin="0,4,0,0" />
                             </StackPanel>
                         </Border>
