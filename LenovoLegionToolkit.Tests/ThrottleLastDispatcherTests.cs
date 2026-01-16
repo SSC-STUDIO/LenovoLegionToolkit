@@ -96,22 +96,22 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromSeconds(10); // Long interval to ensure task is still pending
         var dispatcher = new ThrottleLastDispatcher(interval);
         bool taskExecuted = false;
-        
+
         // Act
         var dispatchTask = dispatcher.DispatchAsync(async () => {
             await Task.Delay(50);
             taskExecuted = true;
         });
-        
+
         // Give it a moment to start
         Task.Delay(10).Wait();
-        
+
         // Dispose to cancel
         dispatcher.Dispose();
-        
+
         // Wait a bit more than expected execution time
         Task.Delay(100).Wait();
-        
+
         // Assert
         taskExecuted.Should().BeFalse();
     }
@@ -505,20 +505,21 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromMilliseconds(50);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var counter = 0;
-        
+
         // Act - Dispatch multiple tasks that modify the same state
         var tasks = new List<Task>();
         for (int i = 0; i < 10; i++)
         {
+            var value = i;
             tasks.Add(dispatcher.DispatchAsync(() => {
-                counter = i;
+                counter = value;
                 return Task.CompletedTask;
             }));
         }
-        
+
         await Task.WhenAll(tasks);
         await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
-        
+
         // Assert - Counter should have the last value
         counter.Should().Be(9);
     }
@@ -685,15 +686,15 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromMilliseconds(50);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         bool taskExecuted = false;
-        
+
         // Act
-        await dispatcher.DispatchAsync(cancellationToken => {
+        await dispatcher.DispatchAsync(() => {
             taskExecuted = true;
             return Task.CompletedTask;
         });
-        
+
         await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
-        
+
         // Assert
         taskExecuted.Should().BeTrue();
     }

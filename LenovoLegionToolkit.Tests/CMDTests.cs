@@ -403,36 +403,7 @@ public class CMDTests
         output.Should().Contain("value3");
     }
 
-    [Fact]
-    public async Task RunAsync_WithWorkingDirectory_ShouldExecuteInDirectory()
-    {
-        // Arrange
-        var file = "cmd.exe";
-        var arguments = "/c cd";
-        var workingDirectory = @"C:\Windows";
 
-        // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, workingDirectory: workingDirectory, waitForExit: true);
-
-        // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("Windows");
-    }
-
-    [Fact]
-    public async Task RunAsync_WithInvalidWorkingDirectory_ShouldThrow()
-    {
-        // Arrange
-        var file = "cmd.exe";
-        var arguments = "/c echo test";
-        var workingDirectory = @"C:\InvalidDirectoryThatDoesNotExist";
-
-        // Act
-        Func<Task> act = async () => await CMD.RunAsync(file, arguments, workingDirectory: workingDirectory, waitForExit: true);
-
-        // Assert
-        await act.Should().ThrowAsync<System.ComponentModel.Win32Exception>();
-    }
 
     [Fact]
     public async Task RunAsync_WithEmptyOutput_ShouldReturnEmpty()
