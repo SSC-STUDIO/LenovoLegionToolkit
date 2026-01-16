@@ -17,6 +17,10 @@ public class UpdateChecker
     private readonly HttpClientFactory _httpClientFactory;
     private readonly UpdateCheckSettings _updateCheckSettings = IoCContainer.Resolve<UpdateCheckSettings>();
     private readonly AsyncLock _updateSemaphore = new();
+    private readonly object _cacheLock = new();
+    private Version? _cachedLatestVersion;
+    private DateTime _cachedLatestVersionTime = DateTime.MinValue;
+    private const int VersionCacheDurationMinutes = 5;
 
     private DateTime _lastUpdate;
     private TimeSpan _minimumTimeSpanForRefresh;
@@ -50,7 +54,17 @@ public class UpdateChecker
                 var shouldCheck = timeSpanSinceLastUpdate > _minimumTimeSpanForRefresh;
 
                 if (!forceCheck && !shouldCheck)
+                {
+                    lock (_cacheLock)
+                    {
+                        if (_cachedLatestVersion != null && 
+                            DateTime.UtcNow - _cachedLatestVersionTime < TimeSpan.FromMinutes(VersionCacheDurationMinutes))
+                        {
+                            return _cachedLatestVersion;
+                        }
+                    }
                     return _updates.Length != 0 ? _updates.First().Version : null;
+                }
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking...");
@@ -115,7 +129,13 @@ public class UpdateChecker
                 _updates = updates;
                 Status = UpdateCheckStatus.Success;
 
-                return _updates.Length != 0 ? _updates.First().Version : null;
+                lock (_cacheLock)
+                {
+                    _cachedLatestVersion = _updates.Length != 0 ? _updates.First().Version : null;
+                    _cachedLatestVersionTime = DateTime.UtcNow;
+                }
+
+                return _cachedLatestVersion;
             }
             catch (RateLimitExceededException ex)
             {

@@ -1029,6 +1029,24 @@ public class WindowsOptimizationService
                 }));
         }
 
+        // Add mouse style beautification option
+        actions.Add(new WindowsOptimizationActionDefinition(
+            "beautify.mouseStyle.w11cc",
+            "WindowsOptimization_Action_MouseStyle_W11CC_Title",
+            "WindowsOptimization_Action_MouseStyle_W11CC_Description",
+            ct =>
+            {
+                var mouseStylePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "W11-CC-V2.2-HDPI");
+                if (Directory.Exists(mouseStylePath))
+                {
+                    return ApplyMouseStyleAsync(ct, mouseStylePath);
+                }
+                return Task.CompletedTask;
+            },
+            Recommended: false,
+            IsAppliedAsync: ct => IsMouseStyleAppliedAsync(mouseStylePath: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "W11-CC-V2.2-HDPI"))
+        ));
+
         return new WindowsOptimizationCategoryDefinition(
             "beautify.contextMenu",
             "WindowsOptimization_Category_NilesoftShell_Title",
@@ -1526,6 +1544,106 @@ public class WindowsOptimizationService
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to restart Explorer.", ex);
+        }
+    }
+
+    private static Task ApplyMouseStyleAsync(CancellationToken cancellationToken, string mouseStylePath)
+    {
+        return Task.Run(async () =>
+        {
+            try
+            {
+                var lightThemePath = Path.Combine(mouseStylePath, "light", "regular", "01. default");
+                var darkThemePath = Path.Combine(mouseStylePath, "dark", "regular", "01. default");
+                
+                var themePath = Directory.Exists(lightThemePath) ? lightThemePath : darkThemePath;
+                
+                if (!Directory.Exists(themePath))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Mouse style theme directory not found: {themePath}");
+                    return;
+                }
+
+                var installInf = Path.Combine(themePath, "Install.inf");
+                if (!File.Exists(installInf))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Install.inf not found: {installInf}");
+                    return;
+                }
+
+                var infContent = File.ReadAllText(installInf);
+                
+                var schemeNameMatch = global::System.Text.RegularExpressions.Regex.Match(infContent, @"SCHEME_NAME\s*=\s*""([^""]+)""");
+                var schemeName = schemeNameMatch.Success ? schemeNameMatch.Groups[1].Value : "W11 Cursors HDPI";
+
+                await ExecuteCommandLineAsync($"rundll32.exe setupapi,InstallHinfSection DefaultInstall 128 {installInf}", cancellationToken).ConfigureAwait(false);
+
+                ToolkitRegistry.SetValue("HKEY_CURRENT_USER", @"Control Panel\Cursors", "", schemeName, true, RegistryValueKind.String);
+
+                NotifySystemCursorChanged();
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Mouse style applied successfully via Install.inf. [scheme={schemeName}]");
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to apply mouse style.", ex);
+            }
+        }, cancellationToken);
+    }
+
+    private static Task<bool> IsMouseStyleAppliedAsync(string mouseStylePath)
+    {
+        return Task.Run(() =>
+        {
+            try
+            {
+                var currentScheme = ToolkitRegistry.GetValue<string>("HKEY_CURRENT_USER", @"Control Panel\Cursors", "", string.Empty);
+                
+                if (string.IsNullOrEmpty(currentScheme))
+                    return false;
+
+                if (currentScheme.Contains("W11", StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+                var cursorsDir = Path.Combine(windowsDir, "Cursors");
+                var targetDir = Path.Combine(cursorsDir, "W11_HDPI");
+
+                if (!Directory.Exists(targetDir))
+                    return false;
+
+                var pointerPath = Path.Combine(targetDir, "pointer.cur");
+                if (!File.Exists(pointerPath))
+                    return false;
+
+                var currentArrow = ToolkitRegistry.GetValue<string>("HKEY_CURRENT_USER", @"Control Panel\Cursors", "Arrow", string.Empty);
+                return currentArrow.Equals(pointerPath, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        });
+    }
+
+    private static unsafe void NotifySystemCursorChanged()
+    {
+        try
+        {
+            const string message = "Cursor";
+            fixed (void* ptr = message)
+            {
+                PInvoke.SendNotifyMessage(HWND.HWND_BROADCAST, PInvoke.WM_SETTINGCHANGE, 0, new IntPtr(ptr));
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to notify system of cursor change.", ex);
         }
     }
 

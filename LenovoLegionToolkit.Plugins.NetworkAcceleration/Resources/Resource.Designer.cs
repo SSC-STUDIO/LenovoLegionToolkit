@@ -120,7 +120,124 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration
                 return ResourceManager.GetString("NetworkAcceleration_GithubAccelerationEnabledDescription", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to GitHub acceleration for faster access.
+        /// </summary>
+        public static string NetworkAcceleration_GithubAccelerationShortDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_GithubAccelerationShortDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Steam Acceleration.
+        /// </summary>
+        public static string NetworkAcceleration_SteamAcceleration {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_SteamAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Steam platform acceleration for faster downloads and updates.
+        /// </summary>
+        public static string NetworkAcceleration_SteamAccelerationDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_SteamAccelerationDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Steam acceleration for faster downloads.
+        /// </summary>
+        public static string NetworkAcceleration_SteamAccelerationShortDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_SteamAccelerationShortDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Discord Acceleration.
+        /// </summary>
+        public static string NetworkAcceleration_DiscordAcceleration {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_DiscordAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Discord platform acceleration for faster downloads and updates.
+        /// </summary>
+        public static string NetworkAcceleration_DiscordAccelerationDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_DiscordAccelerationDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Discord acceleration for faster downloads.
+        /// </summary>
+        public static string NetworkAcceleration_DiscordAccelerationShortDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_DiscordAccelerationShortDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NPM Acceleration.
+        /// </summary>
+        public static string NetworkAcceleration_NpmAcceleration {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_NpmAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NPM registry acceleration for faster package downloads.
+        /// </summary>
+        public static string NetworkAcceleration_NpmAccelerationDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_NpmAccelerationDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to NPM acceleration for faster downloads.
+        /// </summary>
+        public static string NetworkAcceleration_NpmAccelerationShortDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_NpmAccelerationShortDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Python Acceleration.
+        /// </summary>
+        public static string NetworkAcceleration_PythonAcceleration {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_PythonAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Python package index acceleration for faster pip installations.
+        /// </summary>
+        public static string NetworkAcceleration_PythonAccelerationDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_PythonAccelerationDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Python acceleration for faster downloads.
+        /// </summary>
+        public static string NetworkAcceleration_PythonAccelerationShortDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_PythonAccelerationShortDescription", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Network Acceleration.
         /// </summary>
@@ -210,7 +327,25 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration
                 return ResourceManager.GetString("NetworkAcceleration_RequestInterceptionEnabledDescription", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Platform Acceleration.
+        /// </summary>
+        public static string NetworkAcceleration_PlatformAcceleration {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_PlatformAcceleration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Platform-specific acceleration features for optimal performance.
+        /// </summary>
+        public static string NetworkAcceleration_PlatformAccelerationDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_PlatformAccelerationDescription", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Service Status.
         /// </summary>
@@ -309,7 +444,16 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration
                 return ResourceManager.GetString("NetworkAcceleration_ResetStatistics", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string NetworkAcceleration_ResetStatisticsButton {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_ResetStatisticsButton", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Certificate Setup Failed.
         /// </summary>
@@ -388,6 +532,60 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration
         public static string NetworkAcceleration_TrafficChart {
             get {
                 return ResourceManager.GetString("NetworkAcceleration_TrafficChart", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Real-time Traffic Statistics and Trend Analysis.
+        /// </summary>
+        public static string NetworkAcceleration_TrafficStatistics {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_TrafficStatistics", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Real-time display of download and upload speed changes.
+        /// </summary>
+        public static string NetworkAcceleration_TrafficChartDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_TrafficChartDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Connection Timeout.
+        /// </summary>
+        public static string NetworkAcceleration_ConnectionTimeout {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_ConnectionTimeout", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Connection timeout in seconds.
+        /// </summary>
+        public static string NetworkAcceleration_ConnectionTimeoutDescription {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_ConnectionTimeoutDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Proxy Port.
+        /// </summary>
+        public static string NetworkAcceleration_ProxyPort {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_ProxyPort", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to e.g., 7890.
+        /// </summary>
+        public static string NetworkAcceleration_ProxyPortPlaceholder {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_ProxyPortPlaceholder", resourceCulture);
             }
         }
     }

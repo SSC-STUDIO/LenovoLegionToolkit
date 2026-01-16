@@ -278,7 +278,7 @@
                             Visibility="Collapsed" />
                         <wpfui:Button
                             x:Name="PluginPermanentlyDeleteButton"
-                            Content="永久删除"
+                            Content="{x:Static resources:Resource.PluginExtensionsPage_PermanentlyDelete}"
                             Click="PluginPermanentlyDeleteButton_Click"
                             Appearance="Danger"
                             Visibility="Collapsed" />

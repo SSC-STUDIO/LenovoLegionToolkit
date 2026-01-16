@@ -1,0 +1,38 @@
+<wpfui:UiPage
+    x:Class="LenovoLegionToolkit.Plugins.ViveTool.ViveToolSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:plugin="clr-namespace:LenovoLegionToolkit.Plugins.ViveTool"
+    xmlns:pluginRes="clr-namespace:LenovoLegionToolkit.Plugins.ViveTool.Resources"
+    Scrollable="False">
+    <StackPanel Margin="0,0,0,16">
+        <!-- ViVeTool Path -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <wpfui:TextBox
+                Grid.Column="0"
+                x:Name="_viveToolPathTextBox"
+                PlaceholderText="{x:Static pluginRes:Resource.ViveTool_PathPlaceholder}"
+                Margin="0,0,8,0"
+                IsReadOnly="True" />
+            <wpfui:Button
+                Grid.Column="1"
+                x:Name="_browseViveToolButton"
+                Content="{x:Static pluginRes:Resource.ViveTool_Browse}"
+                Click="BrowseViveToolButton_Click"
+                Padding="12,6"
+                VerticalAlignment="Center" />
+        </Grid>
+        <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            TextWrapping="Wrap"
+            LineHeight="18"
+            Margin="0,0,0,20"
+            Text="{x:Static pluginRes:Resource.ViveTool_PathDescription}" />
+    </StackPanel>
+</wpfui:UiPage>

@@ -1,4 +1,4 @@
-﻿<wpfui:UiPage
+<wpfui:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.AboutPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -49,11 +49,11 @@
         <wpfui:Hyperlink
             Content="{x:Static resources:Resource.AboutPage_ProjectWebsiteOnGitHub}"
             Icon="Link24"
-            NavigateUri="https://github.com/BartoszCichecki/LenovoLegionToolkit" />
+            NavigateUri="https://github.com/Crs10259/LenovoLegionToolkit" />
         <wpfui:Hyperlink
             Content="{x:Static resources:Resource.AboutPage_LatestReleaseOnGitHub}"
             Icon="Link24"
-            NavigateUri="https://github.com/BartoszCichecki/LenovoLegionToolkit/releases/latest" />
+            NavigateUri="https://github.com/Crs10259/LenovoLegionToolkit/releases/latest" />
 
         <TextBlock
             Padding="0,24,0,8"

@@ -1832,6 +1832,9 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Title" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>Configure the appearance, behavior, and functionality options of the application.</value>
+  </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>Adjust keyboard backlight brightness.</value>
   </data>
@@ -3450,5 +3453,34 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>Minimum compatible version: {0}</value>
   </data>
-
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>Permanently Delete</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
+    <value>Usage</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve">
+    <value>This editor is used to directly edit shell.nss configuration file. After modification, click</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve">
+    <value>button to save all changes and restart File Explorer to apply configuration.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve">
+    <value>• Configuration file path:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve">
+    <value>• After modifying configuration, File Explorer (Explorer) needs to be restarted for changes to take effect.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>No tools available. Please add tools in tools folder in application directory.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>Tools will appear here once they are available in the tools directory.</value>
+  </data>
 </root>

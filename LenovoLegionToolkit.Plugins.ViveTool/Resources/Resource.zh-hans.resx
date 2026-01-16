@@ -163,4 +163,28 @@
   <data name="ViveTool_Download" xml:space="preserve">
     <value>下载</value>
   </data>
+  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
+    <value>ViVeTool.exe 路径</value>
+  </data>
+  <data name="ViveTool_PathDescription" xml:space="preserve">
+    <value>选择 ViVeTool.exe 文件的路径。如果未指定，将使用内置下载或系统 PATH 中的版本。</value>
+  </data>
+  <data name="ViveTool_BrowseError" xml:space="preserve">
+    <value>浏览文件时出错: {0}</value>
+  </data>
+  <data name="ViveTool_Downloading" xml:space="preserve">
+    <value>正在下载 ViVeTool...</value>
+  </data>
+  <data name="ViveTool_StatusEnabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="ViveTool_StatusDisabled" xml:space="preserve">
+    <value>已禁用</value>
+  </data>
+  <data name="ViveTool_StatusDefault" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="ViveTool_StatusUnknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
 </root>

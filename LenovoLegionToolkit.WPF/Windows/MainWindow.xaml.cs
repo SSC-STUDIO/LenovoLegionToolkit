@@ -402,58 +402,22 @@ public partial class MainWindow
     {
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-        // Update keyboard navigation item
-        if (_keyboardItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("keyboardBacklight", visibilitySettings);
-            _keyboardItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
+        SetNavigationItemVisibility(_keyboardItem, "keyboardBacklight", visibilitySettings);
+        SetNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
+        SetNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
+        SetNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
+        SetNavigationItemVisibility(_toolsItem, "tools", visibilitySettings);
+        SetNavigationItemVisibility(_donateNavigationItem, "donate", visibilitySettings);
+        SetNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
+    }
 
-        // Update automation navigation item
-        if (_automationItem != null)
+    private void SetNavigationItemVisibility(NavigationItem? item, string pageTag, Dictionary<string, bool> visibilitySettings)
+    {
+        if (item != null)
         {
-            var shouldShow = GetNavigationItemVisibility("automation", visibilitySettings);
-            _automationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
+            var shouldShow = GetNavigationItemVisibility(pageTag, visibilitySettings);
+            item.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
         }
-
-        // Update macro navigation item
-        if (_macroItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("macro", visibilitySettings);
-            _macroItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update Windows optimization navigation item
-        if (_windowsOptimizationItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
-            _windowsOptimizationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update tools navigation item (now the default interface, no need to check plugin status)
-        if (_toolsItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("tools", visibilitySettings);
-            _toolsItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update donate navigation item
-        if (_donateNavigationItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("donate", visibilitySettings);
-            _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update about navigation item
-        if (_aboutItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("about", visibilitySettings);
-            _aboutItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        // Update plugin extensions navigation item
-        // Note: This is handled separately in UpdatePluginExtensionsNavigationVisibility() 
-        // to keep the logic consistent with other navigation items
     }
 
     private bool GetNavigationItemVisibility(string pageTag, Dictionary<string, bool> visibilitySettings)

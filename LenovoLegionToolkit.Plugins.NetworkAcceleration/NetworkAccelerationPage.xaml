@@ -89,7 +89,7 @@
                                 FontSize="12"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Margin="0,3,0,0"
-                                Text="实时流量统计与趋势分析" />
+                                Text="{x:Static plugin:Resource.NetworkAcceleration_TrafficStatistics}" />
                         </StackPanel>
                         
                         <!-- Total Traffic - Compact Display -->
@@ -186,17 +186,17 @@
                                     <TextBlock
                                         FontSize="16"
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                        Text="流量趋势图" />
+                                        Text="{x:Static plugin:Resource.NetworkAcceleration_TrafficChart}" />
                                     <TextBlock
                                         FontSize="11"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                         Margin="0,2,0,0"
-                                        Text="实时显示下载和上传速度变化" />
+                                        Text="{x:Static plugin:Resource.NetworkAcceleration_TrafficChartDescription}" />
                                 </StackPanel>
                                 <wpfui:Button
                                     Grid.Column="1"
                                     x:Name="_resetStatisticsButtonInline"
-                                    Content="重置统计"
+                                    Content="{x:Static plugin:Resource.NetworkAcceleration_ResetStatisticsButton}"
                                     Click="ResetStatisticsButton_Click"
                                     Padding="10,5"
                                     FontSize="12"
@@ -375,14 +375,14 @@
                             FontSize="16"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Margin="0,0,0,8"
-                            Text="平台加速" />
+                            Text="{x:Static plugin:Resource.NetworkAcceleration_PlatformAcceleration}" />
                         <TextBlock
                             FontSize="12"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Margin="0,0,0,12"
                             TextWrapping="Wrap"
                             LineHeight="16"
-                            Text="为以下平台启用网络加速，提升访问速度和稳定性" />
+                            Text="{x:Static plugin:Resource.NetworkAcceleration_PlatformAccelerationDescription}" />
                         
                         <!-- GitHub Acceleration -->
                         <Grid Margin="0,0,0,10">
@@ -399,7 +399,7 @@
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
-                                    Text="加速 GitHub 代码仓库和资源下载" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_GithubAccelerationShortDescription}" />
                             </StackPanel>
                             <wpfui:ToggleSwitch
                                 Grid.Column="1"
@@ -423,7 +423,7 @@
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
-                                    Text="加速 Steam 商店、社区和下载" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_SteamAccelerationShortDescription}" />
                             </StackPanel>
                             <wpfui:ToggleSwitch
                                 Grid.Column="1"
@@ -447,7 +447,7 @@
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
-                                    Text="加速 Discord 应用和 CDN 资源" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_DiscordAccelerationShortDescription}" />
                             </StackPanel>
                             <wpfui:ToggleSwitch
                                 Grid.Column="1"
@@ -471,7 +471,7 @@
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
-                                    Text="加速 npm 包管理器下载" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_NpmAccelerationShortDescription}" />
                             </StackPanel>
                             <wpfui:ToggleSwitch
                                 Grid.Column="1"
@@ -495,7 +495,7 @@
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Margin="0,2,0,0"
-                                    Text="加速 Python 包索引下载" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_PythonAccelerationShortDescription}" />
                             </StackPanel>
                             <wpfui:ToggleSwitch
                                 Grid.Column="1"

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -13,10 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.WPF;
 using LenovoLegionToolkit.WPF.Utils;
-using Microsoft.Win32;
 using Wpf.Ui.Controls;
 using MessageBoxHelper = LenovoLegionToolkit.WPF.Utils.MessageBoxHelper;
 
@@ -269,80 +268,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
         await RefreshViveToolStatusAsync();
     }
 
-    private async void BrowseViveToolButton_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var openFileDialog = new OpenFileDialog
-            {
-                Title = Resource.ViveTool_SelectViveTool,
-                Filter = "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*",
-                FilterIndex = 1,
-                CheckFileExists = true,
-                CheckPathExists = true
-            };
-
-            // Set initial directory if we have a current path
-            var currentPath = await _viveToolService.GetViveToolPathAsync().ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(currentPath) && File.Exists(currentPath))
-            {
-                var directory = Path.GetDirectoryName(currentPath);
-                if (!string.IsNullOrEmpty(directory))
-                    openFileDialog.InitialDirectory = directory;
-            }
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                var selectedPath = openFileDialog.FileName;
-                var fileName = Path.GetFileName(selectedPath);
-                
-                // Verify it's ViVeTool.exe
-                if (!fileName.Equals(ViveToolService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
-                {
-                    SnackbarHelper.Show(
-                        Resource.ViveTool_Error,
-                        Resource.ViveTool_InvalidViveToolFile,
-                        SnackbarType.Error);
-                    return;
-                }
-
-                // Set the path
-                var success = await _viveToolService.SetViveToolPathAsync(selectedPath).ConfigureAwait(false);
-                
-                await Dispatcher.InvokeAsync(async () =>
-                {
-                    if (success)
-                    {
-                        await RefreshViveToolStatusAsync();
-                        SnackbarHelper.Show(
-                            Resource.ViveTool_PathSet,
-                            string.Format(Resource.ViveTool_PathSetMessage, selectedPath));
-                    }
-                    else
-                    {
-                        SnackbarHelper.Show(
-                            Resource.ViveTool_Error,
-                            Resource.ViveTool_SetPathFailed,
-                            SnackbarType.Error);
-                    }
-                });
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
-
-            await Dispatcher.InvokeAsync(() =>
-            {
-                SnackbarHelper.Show(
-                    Resource.ViveTool_Error,
-                    string.Format(Resource.ViveTool_SetPathFailed, ex.Message),
-                    SnackbarType.Error);
-            });
-        }
-    }
-
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -350,7 +275,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             IsLoading = true;
             IsDownloading = true;
             DownloadProgress = 0;
-            DownloadProgressText = "Downloading ViVeTool...";
+            DownloadProgressText = Resource.ViveTool_Downloading;
             _emptyStatePanel.Visibility = Visibility.Collapsed;
 
             // Create progress reporter
@@ -469,7 +394,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            var openFileDialog = new OpenFileDialog
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = Resource.ViveTool_ImportFromFile,
                 Filter = "All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv",
@@ -574,11 +499,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     SnackbarType.Error);
             });
         }
-    }
-
-    private async void SearchButton_Click(object sender, RoutedEventArgs e)
-    {
-        await SearchFeaturesAsync();
     }
 
     private async void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -793,10 +713,10 @@ public class FeatureStatusConverter : IValueConverter
         {
             return status switch
             {
-                FeatureFlagStatus.Enabled => "Enabled",
-                FeatureFlagStatus.Disabled => "Disabled",
-                FeatureFlagStatus.Default => "Default",
-                _ => "Unknown"
+                FeatureFlagStatus.Enabled => Resource.ViveTool_StatusEnabled,
+                FeatureFlagStatus.Disabled => Resource.ViveTool_StatusDisabled,
+                FeatureFlagStatus.Default => Resource.ViveTool_StatusDefault,
+                _ => Resource.ViveTool_StatusUnknown
             };
         }
         return value?.ToString() ?? string.Empty;

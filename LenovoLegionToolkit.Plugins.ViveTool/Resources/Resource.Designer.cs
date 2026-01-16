@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.ViveTool
+namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
 {
     using System;
     using System.CodeDom.Compiler;
@@ -68,137 +68,11 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Actions.
+        ///   Looks up a localized string similar to ViVeTool.
         /// </summary>
-        public static string ViveTool_Actions {
+        public static string ViveTool_PageTitle {
             get {
-                return ResourceManager.GetString("ViveTool_Actions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Disable.
-        /// </summary>
-        public static string ViveTool_Disable {
-            get {
-                return ResourceManager.GetString("ViveTool_Disable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to disable feature {0}. Please check administrator permissions..
-        /// </summary>
-        public static string ViveTool_DisableFeatureFailed {
-            get {
-                return ResourceManager.GetString("ViveTool_DisableFeatureFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enable.
-        /// </summary>
-        public static string ViveTool_Enable {
-            get {
-                return ResourceManager.GetString("ViveTool_Enable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to enable feature {0}. Please check administrator permissions..
-        /// </summary>
-        public static string ViveTool_EnableFeatureFailed {
-            get {
-                return ResourceManager.GetString("ViveTool_EnableFeatureFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error.
-        /// </summary>
-        public static string ViveTool_Error {
-            get {
-                return ResourceManager.GetString("ViveTool_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature Disabled.
-        /// </summary>
-        public static string ViveTool_FeatureDisabled {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureDisabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature {0} has been disabled successfully.
-        /// </summary>
-        public static string ViveTool_FeatureDisabledMessage {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureDisabledMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature Enabled.
-        /// </summary>
-        public static string ViveTool_FeatureEnabled {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureEnabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature {0} has been enabled successfully.
-        /// </summary>
-        public static string ViveTool_FeatureEnabledMessage {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureEnabledMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature Flags.
-        /// </summary>
-        public static string ViveTool_FeatureFlags {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureFlags", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ID.
-        /// </summary>
-        public static string ViveTool_FeatureId {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        public static string ViveTool_FeatureName {
-            get {
-                return ResourceManager.GetString("ViveTool_FeatureName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Loading....
-        /// </summary>
-        public static string ViveTool_Loading {
-            get {
-                return ResourceManager.GetString("ViveTool_Loading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No features found.
-        /// </summary>
-        public static string ViveTool_NoFeaturesFound {
-            get {
-                return ResourceManager.GetString("ViveTool_NoFeaturesFound", resourceCulture);
+                return ResourceManager.GetString("ViveTool_PageTitle", resourceCulture);
             }
         }
         
@@ -212,11 +86,92 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViVeTool.
+        ///   Looks up a localized string similar to Warning.
         /// </summary>
-        public static string ViveTool_PageTitle {
+        public static string ViveTool_WarningTitle {
             get {
-                return ResourceManager.GetString("ViveTool_PageTitle", resourceCulture);
+                return ResourceManager.GetString("ViveTool_WarningTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifying Windows feature flags can affect system stability. Use with caution. Some changes may require a system restart to take effect..
+        /// </summary>
+        public static string ViveTool_WarningMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_WarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool Status.
+        /// </summary>
+        public static string ViveTool_ViveToolStatus {
+            get {
+                return ResourceManager.GetString("ViveTool_ViveToolStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool found at: {0}.
+        /// </summary>
+        public static string ViveTool_ViveToolFound {
+            get {
+                return ResourceManager.GetString("ViveTool_ViveToolFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool not found. Please download vivetool.exe and place it in the plugin directory or system PATH..
+        /// </summary>
+        public static string ViveTool_ViveToolNotFound {
+            get {
+                return ResourceManager.GetString("ViveTool_ViveToolNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error checking ViVeTool status.
+        /// </summary>
+        public static string ViveTool_ViveToolError {
+            get {
+                return ResourceManager.GetString("ViveTool_ViveToolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading: {0} / {1} ({2}%).
+        /// </summary>
+        public static string ViveTool_DownloadProgress {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Complete.
+        /// </summary>
+        public static string ViveTool_DownloadComplete {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool has been downloaded to {0}.
+        /// </summary>
+        public static string ViveTool_DownloadCompleteMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadCompleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Failed.
+        /// </summary>
+        public static string ViveTool_DownloadFailed {
+            get {
+                return ResourceManager.GetString("ViveTool_DownloadFailed", resourceCulture);
             }
         }
         
@@ -226,24 +181,6 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         public static string ViveTool_Refresh {
             get {
                 return ResourceManager.GetString("ViveTool_Refresh", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Refresh List.
-        /// </summary>
-        public static string ViveTool_RefreshList {
-            get {
-                return ResourceManager.GetString("ViveTool_RefreshList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search.
-        /// </summary>
-        public static string ViveTool_Search {
-            get {
-                return ResourceManager.GetString("ViveTool_Search", resourceCulture);
             }
         }
         
@@ -266,6 +203,60 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string ViveTool_Search {
+            get {
+                return ResourceManager.GetString("ViveTool_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature Flags.
+        /// </summary>
+        public static string ViveTool_FeatureFlags {
+            get {
+                return ResourceManager.GetString("ViveTool_FeatureFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh List.
+        /// </summary>
+        public static string ViveTool_RefreshList {
+            get {
+                return ResourceManager.GetString("ViveTool_RefreshList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string ViveTool_Loading {
+            get {
+                return ResourceManager.GetString("ViveTool_Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID.
+        /// </summary>
+        public static string ViveTool_FeatureId {
+            get {
+                return ResourceManager.GetString("ViveTool_FeatureId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string ViveTool_FeatureName {
+            get {
+                return ResourceManager.GetString("ViveTool_FeatureName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string ViveTool_Status {
@@ -275,56 +266,101 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViVeTool found at: {0}.
+        ///   Looks up a localized string similar to Actions.
         /// </summary>
-        public static string ViveTool_ViveToolFound {
+        public static string ViveTool_Actions {
             get {
-                return ResourceManager.GetString("ViveTool_ViveToolFound", resourceCulture);
+                return ResourceManager.GetString("ViveTool_Actions", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error checking ViVeTool status.
+        ///   Looks up a localized string similar to Enable.
         /// </summary>
-        public static string ViveTool_ViveToolError {
+        public static string ViveTool_Enable {
             get {
-                return ResourceManager.GetString("ViveTool_ViveToolError", resourceCulture);
+                return ResourceManager.GetString("ViveTool_Enable", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViVeTool not found. Please download vivetool.exe and place it in the plugin directory or system PATH..
+        ///   Looks up a localized string similar to Disable.
         /// </summary>
-        public static string ViveTool_ViveToolNotFound {
+        public static string ViveTool_Disable {
             get {
-                return ResourceManager.GetString("ViveTool_ViveToolNotFound", resourceCulture);
+                return ResourceManager.GetString("ViveTool_Disable", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViVeTool Status.
+        ///   Looks up a localized string similar to No features found.
         /// </summary>
-        public static string ViveTool_ViveToolStatus {
+        public static string ViveTool_NoFeaturesFound {
             get {
-                return ResourceManager.GetString("ViveTool_ViveToolStatus", resourceCulture);
+                return ResourceManager.GetString("ViveTool_NoFeaturesFound", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning.
+        ///   Looks up a localized string similar to Feature Enabled.
         /// </summary>
-        public static string ViveTool_WarningTitle {
+        public static string ViveTool_FeatureEnabled {
             get {
-                return ResourceManager.GetString("ViveTool_WarningTitle", resourceCulture);
+                return ResourceManager.GetString("ViveTool_FeatureEnabled", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modifying Windows feature flags can affect system stability. Use with caution. Some changes may require a system restart to take effect..
+        ///   Looks up a localized string similar to Feature {0} has been enabled successfully.
         /// </summary>
-        public static string ViveTool_WarningMessage {
+        public static string ViveTool_FeatureEnabledMessage {
             get {
-                return ResourceManager.GetString("ViveTool_WarningMessage", resourceCulture);
+                return ResourceManager.GetString("ViveTool_FeatureEnabledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature Disabled.
+        /// </summary>
+        public static string ViveTool_FeatureDisabled {
+            get {
+                return ResourceManager.GetString("ViveTool_FeatureDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature {0} has been disabled successfully.
+        /// </summary>
+        public static string ViveTool_FeatureDisabledMessage {
+            get {
+                return ResourceManager.GetString("ViveTool_FeatureDisabledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string ViveTool_Error {
+            get {
+                return ResourceManager.GetString("ViveTool_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to enable feature {0}. Please check administrator permissions..
+        /// </summary>
+        public static string ViveTool_EnableFeatureFailed {
+            get {
+                return ResourceManager.GetString("ViveTool_EnableFeatureFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to disable feature {0}. Please check administrator permissions..
+        /// </summary>
+        public static string ViveTool_DisableFeatureFailed {
+            get {
+                return ResourceManager.GetString("ViveTool_DisableFeatureFailed", resourceCulture);
             }
         }
         
@@ -365,7 +401,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the URL to import feature flags from:.
+        ///   Looks up a localized string similar to Enter URL to import feature flags from:.
         /// </summary>
         public static string ViveTool_ImportUrlDescription {
             get {
@@ -415,52 +451,6 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         public static string ViveTool_Cancel {
             get {
                 return ResourceManager.GetString("ViveTool_Cancel", resourceCulture);
-            }
-        }
-        
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Download.
-        /// </summary>
-        public static string ViveTool_Download {
-            get {
-                return ResourceManager.GetString("ViveTool_Download", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Download Progress: {0}%
-        /// </summary>
-        public static string ViveTool_DownloadProgress {
-            get {
-                return ResourceManager.GetString("ViveTool_DownloadProgress", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Download Complete
-        /// </summary>
-        public static string ViveTool_DownloadComplete {
-            get {
-                return ResourceManager.GetString("ViveTool_DownloadComplete", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to ViVeTool has been successfully downloaded and installed.
-        /// </summary>
-        public static string ViveTool_DownloadCompleteMessage {
-            get {
-                return ResourceManager.GetString("ViveTool_DownloadCompleteMessage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Download Failed
-        /// </summary>
-        public static string ViveTool_DownloadFailed {
-            get {
-                return ResourceManager.GetString("ViveTool_DownloadFailed", resourceCulture);
             }
         }
         
@@ -515,6 +505,87 @@ namespace LenovoLegionToolkit.Plugins.ViveTool
         public static string ViveTool_SetPathFailed {
             get {
                 return ResourceManager.GetString("ViveTool_SetPathFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string ViveTool_Download {
+            get {
+                return ResourceManager.GetString("ViveTool_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool.exe Path.
+        /// </summary>
+        public static string ViveTool_PathPlaceholder {
+            get {
+                return ResourceManager.GetString("ViveTool_PathPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select path to ViVeTool.exe file. If not specified, built-in download or version in system PATH will be used..
+        /// </summary>
+        public static string ViveTool_PathDescription {
+            get {
+                return ResourceManager.GetString("ViveTool_PathDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error browsing files: {0}.
+        /// </summary>
+        public static string ViveTool_BrowseError {
+            get {
+                return ResourceManager.GetString("ViveTool_BrowseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading ViVeTool....
+        /// </summary>
+        public static string ViveTool_Downloading {
+            get {
+                return ResourceManager.GetString("ViveTool_Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string ViveTool_StatusEnabled {
+            get {
+                return ResourceManager.GetString("ViveTool_StatusEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled.
+        /// </summary>
+        public static string ViveTool_StatusDisabled {
+            get {
+                return ResourceManager.GetString("ViveTool_StatusDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string ViveTool_StatusDefault {
+            get {
+                return ResourceManager.GetString("ViveTool_StatusDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string ViveTool_StatusUnknown {
+            get {
+                return ResourceManager.GetString("ViveTool_StatusUnknown", resourceCulture);
             }
         }
     }

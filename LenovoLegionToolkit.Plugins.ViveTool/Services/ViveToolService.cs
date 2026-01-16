@@ -66,27 +66,6 @@ public class ViveToolService : IViveToolService
             return _cachedViveToolPath;
         }
 
-        // Check in plugin directory first
-        var pluginDirectory = Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location);
-        if (!string.IsNullOrEmpty(pluginDirectory))
-        {
-            var pluginPath = Path.Combine(pluginDirectory, ViveToolExeName);
-            if (File.Exists(pluginPath))
-            {
-                _cachedViveToolPath = pluginPath;
-                return _cachedViveToolPath;
-            }
-        }
-
-        // Check in tools directory
-        var toolsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tools");
-        var toolsPath = Path.Combine(toolsDirectory, ViveToolExeName);
-        if (File.Exists(toolsPath))
-        {
-            _cachedViveToolPath = toolsPath;
-            return _cachedViveToolPath;
-        }
-
         // Check in PATH
         var pathEnv = Environment.GetEnvironmentVariable("PATH");
         if (!string.IsNullOrEmpty(pathEnv))

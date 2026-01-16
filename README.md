@@ -358,6 +358,40 @@ CLI does not need to be ran as Administrator.
 
 </details>
 
+## Plugins
+
+LLT supports a plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically without restarting the application.
+
+### Core Features
+
+- **Dynamic Loading**: Plugins are loaded at runtime from the `build/plugins` directory
+- **Dependency Management**: Automatic installation and checking of plugin dependencies
+- **UI Integration**: Plugins can provide custom UI pages and settings
+- **Feature Extensions**: Plugins can extend existing features or add new ones
+- **Lifecycle Management**: Complete plugin lifecycle from installation to uninstallation
+
+### Plugin Types
+
+- **System Plugins**: Built-in plugins that provide core functionality
+- **Third-party Plugins**: Community-created plugins that extend LLT's capabilities
+
+### Available Plugins
+
+LLT comes with a built-in ViVeTool plugin that allows managing Windows feature flags:
+
+- **ViVeTool Plugin**: Manage Windows feature flags, enable or disable experimental Windows features
+
+### Installing Plugins
+
+Plugins can be installed by:
+1. Downloading the plugin DLL file
+2. Placing it in the `build/plugins` directory
+3. Restarting LLT, or using the plugin manager UI to scan for new plugins
+
+### Plugin Development
+
+For information on how to develop plugins for LLT, please refer to the plugin development documentation.
+
 ## Donate
 
 If you enjoy using the Lenovo Legion Toolkit, consider donating.
