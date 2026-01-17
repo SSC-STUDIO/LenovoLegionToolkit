@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -725,7 +726,7 @@ public partial class PluginExtensionsPage
             }
         }
     }
-    }
+    
 
     private void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
     {
@@ -844,8 +845,9 @@ public partial class PluginExtensionsPage
                         PageType = typeof(PluginPageWrapper)
                     };
                     
-                    // 导航到插件页面
-                    navigationStore.Navigate(tempItem.PageTag);
+                        // 导航到插件页面
+                        navigationStore.Navigate(tempItem.PageTag);
+                    }
                 }
             }
         }
