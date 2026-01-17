@@ -403,5 +403,64 @@ public static class NilesoftShellHelper
         return null;
     }
 
+    public static bool IsRegistered()
+    {
+        var shellExePath = GetNilesoftShellExePath();
+        return !string.IsNullOrEmpty(shellExePath) && File.Exists(shellExePath);
+    }
+
+    public static void SetImportPath(string path)
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\LenovoLegionToolkit", true);
+            if (key != null)
+            {
+                key.SetValue("ShellImportPath", path, Microsoft.Win32.RegistryValueKind.String);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Set Nilesoft Shell import path: {path}");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set Nilesoft Shell import path: {ex.Message}", ex);
+        }
+    }
+
+    public static string? GetImportPath()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\LenovoLegionToolkit", false);
+            if (key != null)
+            {
+                var path = key.GetValue("ShellImportPath") as string;
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Got Nilesoft Shell import path: {path ?? "null"}");
+                return path;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get Nilesoft Shell import path: {ex.Message}", ex);
+        }
+        return null;
+    }
+
+    public static string? GetNilesoftShellDllPath()
+    {
+        var shellExePath = GetNilesoftShellExePath();
+        if (string.IsNullOrEmpty(shellExePath))
+            return null;
+
+        var shellDir = Path.GetDirectoryName(shellExePath);
+        if (string.IsNullOrEmpty(shellDir))
+            return null;
+
+        return Path.Combine(shellDir, "shell.dll");
+    }
+
 }
 
