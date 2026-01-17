@@ -158,7 +158,7 @@ jobs:
               version = $version
               minimumHostVersion = "2.0.0"
               dependencies = $null
-              downloadUrl = "https://github.com/BartoszCiczek/LenovoLegionToolkit/releases/download/plugins/$pluginName.zip"
+              downloadUrl = "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/$pluginName.zip"
               fileHash = "${{ steps.hash.outputs.hash }}"
               fileSize = (Get-Item "release/$pluginName.zip").Length
               releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
