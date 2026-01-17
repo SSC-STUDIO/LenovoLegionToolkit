@@ -20,6 +20,9 @@ on:
         default: ''
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   build-plugin:
     runs-on: windows-latest
