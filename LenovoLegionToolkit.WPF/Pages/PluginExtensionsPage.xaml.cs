@@ -233,9 +233,26 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            // 获取所有注册的插件
-            _allPlugins = _pluginManager.GetRegisteredPlugins()
-                .ToList();
+            // 合并在线插件和本地注册的插件
+            var allPluginsList = new List<IPlugin>();
+            
+            // 添加在线插件
+            if (_onlinePlugins != null && _onlinePlugins.Count > 0)
+            {
+                allPluginsList.AddRange(_onlinePlugins);
+            }
+            
+            // 添加本地注册的插件（避免重复）
+            var localPlugins = _pluginManager.GetRegisteredPlugins().ToList();
+            foreach (var localPlugin in localPlugins)
+            {
+                if (!allPluginsList.Any(p => p.Id == localPlugin.Id))
+                {
+                    allPluginsList.Add(localPlugin);
+                }
+            }
+            
+            _allPlugins = allPluginsList;
             
             // 应用当前筛选和搜索
             ApplyFilters();
