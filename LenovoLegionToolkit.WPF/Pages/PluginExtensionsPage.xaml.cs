@@ -354,15 +354,9 @@ public partial class PluginExtensionsPage
             Height = 48
         };
         
-        var icon = new Wpf.Ui.Controls.SymbolIcon
-        {
-            Symbol = GetSymbolFromString(plugin.Icon),
-            FontSize = 24,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-        iconBorder.Child = icon;
+        // 尝试加载插件自己的图标
+        var iconContent = LoadPluginIcon(plugin);
+        iconBorder.Child = iconContent;
         iconContainer.Children.Add(iconBorder);
         
         // 已安装标签
@@ -1089,6 +1083,72 @@ public partial class PluginExtensionsPage
         {
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 Lib.Utils.Log.Instance.Trace($"Error applying language to plugin {pluginId}: {ex.Message}", ex);
+        }
+    }
+
+    private UIElement LoadPluginIcon(IPlugin plugin)
+    {
+        try
+        {
+            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", plugin.Id);
+            
+            var iconExtensions = new[] { ".png", ".jpg", ".jpeg", ".ico", ".svg" };
+            string? iconPath = null;
+            
+            foreach (var ext in iconExtensions)
+            {
+                var testPath = Path.Combine(pluginDir, $"icon{ext}");
+                if (File.Exists(testPath))
+                {
+                    iconPath = testPath;
+                    break;
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(iconPath))
+            {
+                var bitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(iconPath, UriKind.Absolute);
+                bitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                
+                var image = new System.Windows.Controls.Image
+                {
+                    Source = bitmapImage,
+                    Width = 32,
+                    Height = 32,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Stretch = System.Windows.Media.Stretch.Uniform
+                };
+                return image;
+            }
+            
+            var icon = new Wpf.Ui.Controls.SymbolIcon
+            {
+                Symbol = GetSymbolFromString(plugin.Icon),
+                FontSize = 24,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+            return icon;
+        }
+        catch (Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Error loading plugin icon for {plugin.Id}: {ex.Message}", ex);
+            
+            var icon = new Wpf.Ui.Controls.SymbolIcon
+            {
+                Symbol = SymbolRegular.Apps24,
+                FontSize = 24,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+            return icon;
         }
     }
 }
