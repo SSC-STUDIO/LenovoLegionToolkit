@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
+    <Copyright>© 2025 ChenRunsen</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SatelliteResourceLanguages>zh-hans</SatelliteResourceLanguages>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.Tools\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.Tools\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Clean up all unwanted files and directories from plugin output directory -->
+  <Target Name="CleanupPluginFiles" AfterTargets="Build">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Plugins.SDK.*" />
+      <FilesToDelete Include="$(OutputPath)*.deps.json" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+    
+    <!-- Remove unwanted language directories, but keep plugin language folders (zh-hans, etc.) -->
+    
+    <!-- Remove tools directory if it exists -->
+    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
+  </Target>
+
+</Project>
