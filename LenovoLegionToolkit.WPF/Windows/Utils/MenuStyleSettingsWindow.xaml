@@ -207,11 +207,11 @@
                         <Grid>
                             <!-- Shell.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Spacing="16" Padding="20" VerticalAlignment="Center">
-                                    <TextBlock Text="shell.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Vertical" Padding="20" VerticalAlignment="Center">
+                                    <TextBlock Text="shell.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="shell.nss 文件用于定义右键菜单的整体结构和行为" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
-                                        <wpfui:Button x:Name="_openShellNssBtn" Content="打开 shell.nss 文件" MinWidth="150" Click="OpenShellNssBtn_Click" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <wpfui:Button x:Name="_openShellNssBtn" Content="打开 shell.nss 文件" MinWidth="150" Click="OpenShellNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openShellNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenShellNssFolderBtn_Click" />
                                     </StackPanel>
                                     <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
@@ -306,7 +306,7 @@
                                     <TabItem Header="文本编辑器" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                         <Grid Width="750" Height="400">
                                             <StackPanel Orientation="Vertical" Height="400">
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="8">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
                                                     <wpfui:Button x:Name="_openThemeNssBtn" Content="在外部编辑器打开" MinWidth="150" Click="OpenThemeNssBtn_Click" />
                                                 </StackPanel>
                                                 <TextBox
@@ -334,11 +334,11 @@
                             
                             <!-- Images.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Spacing="16" Padding="20" VerticalAlignment="Center">
-                                    <TextBlock Text="images.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Vertical" Padding="20" VerticalAlignment="Center">
+                                    <TextBlock Text="images.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="images.nss 文件用于定义右键菜单的图标和图像" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
-                                        <wpfui:Button x:Name="_openImagesNssBtn" Content="打开 images.nss 文件" MinWidth="150" Click="OpenImagesNssBtn_Click" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <wpfui:Button x:Name="_openImagesNssBtn" Content="打开 images.nss 文件" MinWidth="150" Click="OpenImagesNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openImagesNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenImagesNssFolderBtn_Click" />
                                     </StackPanel>
                                     <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
@@ -348,11 +348,11 @@
                             
                             <!-- Modify.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Spacing="16" Padding="20" VerticalAlignment="Center">
-                                    <TextBlock Text="modify.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Vertical" Padding="20" VerticalAlignment="Center">
+                                    <TextBlock Text="modify.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="modify.nss 文件用于修改和自定义右键菜单项" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
-                                        <wpfui:Button x:Name="_openModifyNssBtn" Content="打开 modify.nss 文件" MinWidth="150" Click="OpenModifyNssBtn_Click" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <wpfui:Button x:Name="_openModifyNssBtn" Content="打开 modify.nss 文件" MinWidth="150" Click="OpenModifyNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openModifyNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenModifyNssFolderBtn_Click" />
                                     </StackPanel>
                                     <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
