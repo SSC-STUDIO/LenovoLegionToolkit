@@ -156,6 +156,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download plugin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: plugin-${{ inputs.plugin_name }}
+          path: release
+
       - name: Update plugin store JSON
         shell: pwsh
         run: |
