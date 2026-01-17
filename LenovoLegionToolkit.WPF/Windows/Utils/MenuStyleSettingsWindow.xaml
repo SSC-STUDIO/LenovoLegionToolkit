@@ -227,25 +227,113 @@
                                 VerticalAlignment="Center" />
                             
                             <!-- Theme.nss Content -->
-                            <TextBox
-                                x:Name="_themeNssTextBox"
-                                FontFamily="Consolas, Courier New"
-                                FontSize="12"
-                                AcceptsReturn="True"
-                                AcceptsTab="True"
-                                TextWrapping="NoWrap"
-                                VerticalScrollBarVisibility="Auto"
-                                HorizontalScrollBarVisibility="Auto"
-                                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                Padding="8"
-                                Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}"
-                                Width="750"
-                                Height="400"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
+                            <Grid Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <!-- Theme UI Settings -->
+                                <TabControl Width="750" Height="400" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                    <!-- UI Settings Tab -->
+                                    <TabItem Header="UI 设置" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="8">
+                                            <StackPanel Orientation="Vertical" Margin="0,0,0,16">
+                                                <!-- Basic Theme Settings -->
+                                                <wpfui:CardControl Margin="0">
+                                                    <wpfui:CardControl.Header>
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="基础主题设置" />
+                                                    </wpfui:CardControl.Header>
+                                                    <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+                                                        <!-- Background Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="背景颜色:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_backgroundColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_backgroundColorPicker" Width="40" Height="24" Background="#ffffff" />
+                                                        </StackPanel>
+                                                        
+                                                        <!-- Text Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="文本颜色:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_textColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_textColorPicker" Width="40" Height="24" Background="#000000" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </wpfui:CardControl>
+                                                
+                                                <!-- Hover Settings -->
+                                                <wpfui:CardControl Margin="0">
+                                                    <wpfui:CardControl.Header>
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="悬停效果设置" />
+                                                    </wpfui:CardControl.Header>
+                                                    <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+                                                        <!-- Hover Background Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="悬停背景:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_hoverBackgroundColorTextBox" Width="100" Text="#f0f0f0" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_hoverBackgroundColorPicker" Width="40" Height="24" Background="#f0f0f0" />
+                                                        </StackPanel>
+                                                        
+                                                        <!-- Hover Text Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="悬停文本:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_hoverTextColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_hoverTextColorPicker" Width="40" Height="24" Background="#000000" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </wpfui:CardControl>
+                                                
+                                                <!-- Selected Settings -->
+                                                <wpfui:CardControl Margin="0">
+                                                    <wpfui:CardControl.Header>
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="选中效果设置" />
+                                                    </wpfui:CardControl.Header>
+                                                    <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+                                                        <!-- Selected Background Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="选中背景:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_selectedBackgroundColorTextBox" Width="100" Text="#0078d4" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_selectedBackgroundColorPicker" Width="40" Height="24" Background="#0078d4" />
+                                                        </StackPanel>
+                                                        
+                                                        <!-- Selected Text Color -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                                                            <TextBlock Width="150" Text="选中文本:" VerticalAlignment="Center" />
+                                                            <TextBox x:Name="_selectedTextColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
+                                                            <wpfui:ColorPicker x:Name="_selectedTextColorPicker" Width="40" Height="24" Background="#ffffff" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </wpfui:CardControl>
+                                                
+                                                <!-- Update Button -->
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                                                    <wpfui:Button x:Name="_updateFromUIBtn" Content="从UI更新文本" MinWidth="120" Click="UpdateFromUIBtn_Click" />
+                                                    <wpfui:Button x:Name="_loadToUIBtn" Content="从文本加载" MinWidth="120" Click="LoadToUIBtn_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </TabItem>
+                                    
+                                    <!-- Text Editor Tab -->
+                                    <TabItem Header="文本编辑器" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                        <Grid Width="750" Height="400">
+                                            <TextBox
+                                                x:Name="_themeNssTextBox"
+                                                FontFamily="Consolas, Courier New"
+                                                FontSize="12"
+                                                AcceptsReturn="True"
+                                                AcceptsTab="True"
+                                                TextWrapping="NoWrap"
+                                                VerticalScrollBarVisibility="Auto"
+                                                HorizontalScrollBarVisibility="Auto"
+                                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                BorderThickness="1"
+                                                Padding="8"
+                                                Width="750"
+                                                Height="400"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center" />
+                                        </Grid>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
                             
                             <!-- Images.nss Content -->
                             <TextBox
