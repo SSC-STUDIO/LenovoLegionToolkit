@@ -34,7 +34,6 @@ public partial class PluginExtensionsPage
     private List<IPlugin> _allPlugins = new();
     private List<PluginManifest> _onlinePlugins = new();
     private string _currentSelectedPluginId = string.Empty;
-    private bool _isLoading = false;
     private bool _isRefreshing = false;
 
     public PluginExtensionsPage()
@@ -89,7 +88,7 @@ public partial class PluginExtensionsPage
         if (refreshButton != null)
         {
             refreshButton.IsEnabled = false;
-            refreshButton.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Common.SymbolRegular.ArrowSync24, Spin = true };
+            refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowSync24;
         }
 
         try
@@ -102,7 +101,7 @@ public partial class PluginExtensionsPage
             if (refreshButton != null)
             {
                 refreshButton.IsEnabled = true;
-                refreshButton.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Common.SymbolRegular.ArrowRefresh24 };
+                refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowClockwise24;
             }
         }
     }
@@ -111,8 +110,6 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            _isLoading = true;
-            
             // Show loading indicator
             var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
             if (noPluginsMessage != null)
@@ -144,10 +141,6 @@ public partial class PluginExtensionsPage
             {
                 mainWindow.Snackbar.Show("获取插件失败", $"无法从插件商店获取插件列表: {ex.Message}");
             }
-        }
-        finally
-        {
-            _isLoading = false;
         }
     }
     
