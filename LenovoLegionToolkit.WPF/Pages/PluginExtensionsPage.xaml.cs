@@ -802,19 +802,43 @@ public partial class PluginExtensionsPage
                 return;
             }
 
-            // 导航到插件页面
-            var mainWindow2 = Application.Current.MainWindow as MainWindow;
-            if (mainWindow2 != null)
+            // 查找插件的可执行文件
+            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", pluginId);
+            var exeFile = Path.Combine(pluginDir, $"{pluginId}.exe");
+            
+            if (File.Exists(exeFile))
             {
-                // 使用 NavigationStore 导航到插件页面
-                var navigationStore = mainWindow2.FindName("_navigationStore") as NavigationStore;
-                if (navigationStore != null)
+                // 运行插件的可执行文件
+                var processInfo = new System.Diagnostics.ProcessStartInfo
                 {
-                    // 注册页面标签到插件ID的映射
-                    PluginPageWrapper.RegisterPluginPageTag($"plugin:{pluginId}", pluginId);
-                    
-                    // 创建一个临时导航项来导航到插件页面
-                    var tempItem = new NavigationItem
+                    FileName = exeFile,
+                    WorkingDirectory = pluginDir,
+                    UseShellExecute = false
+                };
+                
+                System.Diagnostics.Process.Start(processInfo);
+                
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show("运行插件", $"已启动 {pluginId}.exe");
+                }
+            }
+            else
+            {
+                // 导航到插件页面（如果可执行文件不存在）
+                var mainWindow2 = Application.Current.MainWindow as MainWindow;
+                if (mainWindow2 != null)
+                {
+                    // 使用 NavigationStore 导航到插件页面
+                    var navigationStore = mainWindow2.FindName("_navigationStore") as NavigationStore;
+                    if (navigationStore != null)
+                    {
+                        // 注册页面标签到插件ID的映射
+                        PluginPageWrapper.RegisterPluginPageTag($"plugin:{pluginId}", pluginId);
+                        
+                        // 创建一个临时导航项来导航到插件页面
+                        var tempItem = new NavigationItem
                     {
                         PageTag = $"plugin:{pluginId}",
                         PageType = typeof(PluginPageWrapper)
