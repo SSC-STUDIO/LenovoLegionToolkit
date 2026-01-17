@@ -45,23 +45,19 @@
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                     To="-2"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
                                     To="12"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)"
                                     To="4"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
                                     To="0.15"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
@@ -71,23 +67,19 @@
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                                     To="0"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
                                     To="8"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)"
                                     To="2"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                                 <DoubleAnimation
                                     Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
                                     To="0.1"
-                                    Duration="0:0:0.2"
-                                    EasingFunction="{StaticResource FluentEasingFunction}" />
+                                    Duration="0:0:0.2" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.ExitActions>
@@ -102,15 +94,13 @@
                 Storyboard.TargetProperty="Opacity"
                 From="0"
                 To="1"
-                Duration="0:0:0.3"
-                EasingFunction="{StaticResource FluentEasingFunction}" />
+                Duration="0:0:0.3" />
             <DoubleAnimation
                 Storyboard.TargetName="PluginDetailsPanel"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                 From="10"
                 To="0"
-                Duration="0:0:0.3"
-                EasingFunction="{StaticResource FluentEasingFunction}" />
+                Duration="0:0:0.3" />
         </Storyboard>
 
         <Storyboard x:Key="HideDetailsPanel">
@@ -119,19 +109,14 @@
                 Storyboard.TargetProperty="Opacity"
                 From="1"
                 To="0"
-                Duration="0:0:0.2"
-                EasingFunction="{StaticResource FluentEasingFunction}" />
+                Duration="0:0:0.2" />
             <DoubleAnimation
                 Storyboard.TargetName="PluginDetailsPanel"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                 From="0"
                 To="10"
-                Duration="0:0:0.2"
-                EasingFunction="{StaticResource FluentEasingFunction}" />
+                Duration="0:0:0.2" />
         </Storyboard>
-
-        <!-- Fluent Easing Function -->
-        <CubicEase x:Key="FluentEasingFunction" EasingMode="EaseOut" />
     </wpfui:UiPage.Resources>
 
     <Grid Margin="0,0,16,12">
