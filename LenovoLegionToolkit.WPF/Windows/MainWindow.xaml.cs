@@ -390,7 +390,6 @@ public partial class MainWindow
     public void UpdateNavigationVisibility()
     {
         UpdateWindowsOptimizationNavigationVisibility();
-        UpdateToolsNavigationVisibility();
         UpdateInstalledPluginsNavigationItems(); // Ensure installed plugins have navigation items on startup
         UpdateNavigationItemsVisibilityFromSettings();
         // UpdatePluginExtensionsNavigationVisibility must be called AFTER UpdateNavigationItemsVisibilityFromSettings
