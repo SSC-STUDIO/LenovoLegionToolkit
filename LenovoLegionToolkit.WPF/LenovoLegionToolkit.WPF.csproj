@@ -43,7 +43,7 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Automation\LenovoLegionToolkit.Lib.Automation.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
-		<ProjectReference Include="..\LenovoLegionToolkit.Plugins.SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+		<ProjectReference Include="..\Plugins\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
 		<!-- Ensure native Shell build runs whenever WPF builds -->
 		<!-- ShellIntegration is now a git submodule, Shell.Build.csproj may not exist -->
 		<!-- <ProjectReference Include="..\ShellIntegration\Shell.Build.csproj" ReferenceOutputAssembly="false" OutputItemType="None" Condition="Exists('..\ShellIntegration\Shell.Build.csproj')" /> -->
