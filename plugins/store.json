@@ -1,0 +1,40 @@
+{
+  "plugins": [
+    {
+      "id": "ViveTool",
+      "name": "ViVeTool Plugin",
+      "description": "Manage Windows feature flags, enable or disable experimental Windows features",
+      "icon": "Settings24",
+      "author": "Lenovo Legion Toolkit Team",
+      "version": "1.0.0",
+      "minimumHostVersion": "2.0.0",
+      "dependencies": null,
+      "downloadUrl": "https://github.com/BartoszCiczek/LenovoLegionToolkit/releases/download/plugins/ViveTool.zip",
+      "fileHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fileSize": 0,
+      "releaseDate": "2024-01-01T00:00:00Z",
+      "changelog": "Initial release",
+      "tags": ["system", "utility"],
+      "isSystemPlugin": true
+    },
+    {
+      "id": "NetworkAcceleration",
+      "name": "Network Acceleration Plugin",
+      "description": "Optimize network traffic for gaming and improve ping latency",
+      "icon": "Wifi324",
+      "author": "Lenovo Legion Toolkit Team",
+      "version": "1.0.0",
+      "minimumHostVersion": "2.0.0",
+      "dependencies": null,
+      "downloadUrl": "https://github.com/BartoszCiczek/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration.zip",
+      "fileHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fileSize": 0,
+      "releaseDate": "2024-01-01T00:00:00Z",
+      "changelog": "Initial release",
+      "tags": ["utility", "network"],
+      "isSystemPlugin": false
+    }
+  ],
+  "lastUpdated": "2024-01-01T00:00:00Z",
+  "storeVersion": "1.0.0"
+}

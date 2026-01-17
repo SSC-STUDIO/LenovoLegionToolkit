@@ -1,0 +1,189 @@
+name: Publish Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      plugin_name:
+        description: 'Plugin name to publish (e.g., NetworkAcceleration, ViveTool)'
+        required: true
+        type: choice
+        options:
+          - NetworkAcceleration
+          - ViveTool
+      version:
+        description: 'Plugin version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+      changelog:
+        description: 'Release notes'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build-plugin:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            6.0.x
+
+      - name: Build plugin
+        run: dotnet build LenovoLegionToolkit.Plugins.${{ inputs.plugin_name }} -c Release --no-incremental
+
+      - name: Create plugin package
+        shell: pwsh
+        run: |
+          $pluginName = "${{ inputs.plugin_name }}"
+          $version = "${{ inputs.version }}"
+          $pluginDir = "build/plugins/$pluginName"
+          
+          # Create directory structure
+          New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
+          
+          # Copy plugin DLL and dependencies
+          $buildOutput = "LenovoLegionToolkit.Plugins.$pluginName/bin/Release/net8.0-windows"
+          Copy-Item "$buildOutput\$pluginName.dll" -Destination $pluginDir\
+          Copy-Item "$buildOutput\LenovoLegionToolkit.Lib.dll" -Destination $pluginDir\
+          Copy-Item "$buildOutput\LenovoLegionToolkit.Plugins.SDK.dll" -Destination $pluginDir\
+          
+          # Check for and copy resource files
+          $resourceDirs = @("zh-hans", "en", "zh-hant")
+          foreach ($culture in $resourceDirs) {
+              $resourcePath = "$buildOutput\$culture"
+              if (Test-Path $resourcePath) {
+                  New-Item -ItemType Directory -Force -Path "$pluginDir\$culture" | Out-Null
+                  Copy-Item "$resourcePath\*" -Destination "$pluginDir\$culture\" -Recurse
+              }
+          }
+          
+          # Create zip package
+          Compress-Archive -Path "$pluginDir\*" -DestinationPath "$pluginName.zip" -Force
+          
+          # Calculate SHA256 hash
+          $hash = (Get-FileHash "$pluginName.zip" -Algorithm SHA256).Hash.ToLower()
+          Write-Output "hash=$hash" | Out-File -FilePath "$pluginName.hash" -Encoding utf8
+          
+          # Output the hash for later use
+          Write-Host "Plugin hash: $hash"
+          Write-Output "plugin_hash=$hash" >> $env:GITHUB_OUTPUT
+
+      - name: Upload plugin package
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-${{ inputs.plugin_name }}
+          path: |
+            ${{ inputs.plugin_name }}.zip
+            ${{ inputs.plugin_name }}.hash
+          retention-days: 1
+
+  create-release:
+    needs: build-plugin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download plugin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: plugin-${{ inputs.plugin_name }}
+          path: release
+
+      - name: Read plugin hash
+        id: hash
+        shell: bash
+        run: |
+          hash=$(cat release/${{ inputs.plugin_name }}.hash)
+          echo "hash=$hash" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/${{ inputs.plugin_name }}.zip
+          tag_name: plugins/${{ inputs.plugin_name }}/v${{ inputs.version }}
+          name: Plugin - ${{ inputs.plugin_name }} v${{ inputs.version }}
+          body: |
+            ## ${{ inputs.plugin_name }} Plugin v${{ inputs.version }}
+
+            ### Changes
+            ${{ inputs.changelog }}
+
+            ### Installation
+            Download the zip file and extract to the `build/plugins` directory in LenovoLegionToolkit.
+
+            ### Verification
+            SHA256: ${{ steps.hash.outputs.hash }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-store:
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update plugin store JSON
+        shell: pwsh
+        run: |
+          $pluginName = "${{ inputs.plugin_name }}"
+          $version = "${{ inputs.version }}"
+          
+          # Read current store.json
+          $storePath = "plugins/store.json"
+          if (Test-Path $storePath) {
+              $storeJson = Get-Content $storePath -Raw | ConvertFrom-Json
+          } else {
+              $storeJson = @{ plugins = @(); lastUpdated = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"); storeVersion = "1.0.0" }
+          }
+          
+          # Check if plugin already exists
+          $existingIndex = $storeJson.plugins.IndexOf($storeJson.plugins | Where-Object { $_.id -eq $pluginName })
+          
+          # Create updated manifest
+          $manifest = @{
+              id = $pluginName
+              name = "$pluginName Plugin"
+              description = "$pluginName functionality for Lenovo Legion Toolkit"
+              icon = "Apps24"
+              author = "Lenovo Legion Toolkit Team"
+              version = $version
+              minimumHostVersion = "2.0.0"
+              dependencies = $null
+              downloadUrl = "https://github.com/BartoszCiczek/LenovoLegionToolkit/releases/download/plugins/$pluginName.zip"
+              fileHash = "${{ steps.hash.outputs.hash }}"
+              fileSize = (Get-Item "release/$pluginName.zip").Length
+              releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+              changelog = "${{ inputs.changelog }}"
+              tags = @("utility")
+              isSystemPlugin = $false
+          }
+          
+          if ($existingIndex -ge 0) {
+              $storeJson.plugins[$existingIndex] = $manifest
+          } else {
+              $storeJson.plugins += $manifest
+          }
+          
+          $storeJson.lastUpdated = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+          
+          # Write updated store.json
+          $storeJson | ConvertTo-Json -Depth 10 | Set-Content $storePath -Encoding utf8
+          
+          Write-Host "Updated store.json with $pluginName v$version"
+
+      - name: Commit and push store update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add plugins/store.json
+          git commit -m "Update plugin store - ${{ inputs.plugin_name }} v${{ inputs.version }}"
+          git push

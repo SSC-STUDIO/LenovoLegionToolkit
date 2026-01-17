@@ -143,6 +143,9 @@ public class IoCModule : Module
         // 注册插件管理器
         builder.Register<PluginManager>().As<IPluginManager>().SingleInstance();
         
+        // 注册插件仓库服务
+        builder.Register<PluginRepositoryService>().AsSelf().SingleInstance();
+        
         // System Optimization and Tools are now default interfaces, not plugins
         // They are registered directly in MainWindow.xaml as NavigationItems
         // No need to register them as plugins in IoC container

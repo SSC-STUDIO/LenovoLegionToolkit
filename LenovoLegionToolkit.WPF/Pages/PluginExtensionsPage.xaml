@@ -98,16 +98,24 @@
                 PlaceholderText="{x:Static resources:Resource.PluginExtensionsPage_SearchPlaceholder}"
                 TextChanged="SearchTextBox_TextChanged" />
             
-            <ComboBox
-                x:Name="_filterComboBox"
-                Grid.Column="1"
-                MinWidth="150"
-                Margin="12,0,0,0"
-                SelectionChanged="FilterComboBox_SelectionChanged">
-                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterAll}" Tag="All" IsSelected="True" />
-                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterInstalled}" Tag="Installed" />
-                <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterNotInstalled}" Tag="NotInstalled" />
-            </ComboBox>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0">
+                <ComboBox
+                    x:Name="_filterComboBox"
+                    MinWidth="150"
+                    SelectionChanged="FilterComboBox_SelectionChanged">
+                    <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterAll}" Tag="All" IsSelected="True" />
+                    <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterInstalled}" Tag="Installed" />
+                    <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterNotInstalled}" Tag="NotInstalled" />
+                </ComboBox>
+                
+                <wpfui:Button
+                    x:Name="_refreshButton"
+                    Icon="ArrowRefresh24"
+                    Appearance="Secondary"
+                    Margin="8,0,0,0"
+                    Click="RefreshButton_Click"
+                    ToolTip="刷新插件列表" />
+            </StackPanel>
         </Grid>
 
         <!-- Results Count -->
