@@ -118,7 +118,7 @@ public partial class PluginExtensionsPage
             {
                 noPluginsMessage.Visibility = Visibility.Collapsed;
             }
-
+            
             // Fetch online plugins
             _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync();
             
@@ -128,6 +128,19 @@ public partial class PluginExtensionsPage
                 foreach (var plugin in _onlinePlugins)
                 {
                     Lib.Utils.Log.Instance.Trace($"  - Online: {plugin.Id} v{plugin.Version} (DownloadUrl: {plugin.DownloadUrl})");
+                }
+            }
+            
+            // Check for plugin updates
+            var installedPlugins = _pluginManager.GetRegisteredPlugins().ToList();
+            var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedPlugins);
+            
+            if (updates.Count > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {updates.Count} plugin updates");
+                foreach (var update in updates)
+                {
+                    Lib.Utils.Log.Instance.Trace($"  - Update available: {update.Id} v{update.Version}");
                 }
             }
             
