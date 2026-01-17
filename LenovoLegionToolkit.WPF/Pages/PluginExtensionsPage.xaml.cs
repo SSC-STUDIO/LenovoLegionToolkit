@@ -236,10 +236,13 @@ public partial class PluginExtensionsPage
             // 合并在线插件和本地注册的插件
             var allPluginsList = new List<IPlugin>();
             
-            // 添加在线插件
+            // 添加在线插件（使用适配器）
             if (_onlinePlugins != null && _onlinePlugins.Count > 0)
             {
-                allPluginsList.AddRange(_onlinePlugins);
+                foreach (var onlinePlugin in _onlinePlugins)
+                {
+                    allPluginsList.Add(new PluginManifestAdapter(onlinePlugin));
+                }
             }
             
             // 添加本地注册的插件（避免重复）
