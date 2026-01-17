@@ -171,7 +171,13 @@ jobs:
           }
           
           # Check if plugin already exists
-          $existingIndex = $storeJson.plugins.IndexOf($storeJson.plugins | Where-Object { $_.id -eq $pluginName })
+          $existingIndex = -1
+          for ($i = 0; $i -lt $storeJson.plugins.Count; $i++) {
+              if ($storeJson.plugins[$i].id -eq $pluginName) {
+                  $existingIndex = $i
+                  break
+              }
+          }
           
           # Create updated manifest
           $manifest = @{
@@ -183,7 +189,7 @@ jobs:
               version = $version
               minimumHostVersion = "2.0.0"
               dependencies = $null
-              downloadUrl = "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/$pluginName.zip"
+              downloadUrl = "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/$pluginName/v$version/$pluginName.zip"
               fileHash = "${{ steps.hash.outputs.hash }}"
               fileSize = (Get-Item "release/$pluginName.zip").Length
               releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
