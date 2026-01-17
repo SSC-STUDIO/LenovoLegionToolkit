@@ -27,14 +27,20 @@ public partial class PluginExtensionsPage
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PluginSettings _pluginSettings = new();
+    private readonly PluginRepositoryService _pluginRepositoryService;
     
     private string _currentSearchText = string.Empty;
     private string _currentFilter = "All";
     private List<IPlugin> _allPlugins = new();
+    private List<PluginManifest> _onlinePlugins = new();
     private string _currentSelectedPluginId = string.Empty;
+    private bool _isLoading = false;
+    private bool _isRefreshing = false;
 
     public PluginExtensionsPage()
     {
+        _pluginRepositoryService = new PluginRepositoryService(_pluginManager);
+        
         InitializeComponent();
         Loaded += PluginExtensionsPage_Loaded;
         IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
@@ -70,6 +76,78 @@ public partial class PluginExtensionsPage
         {
             _currentFilter = filter;
             ApplyFilters();
+        }
+    }
+
+    private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        _isRefreshing = true;
+        var refreshButton = this.FindName("_refreshButton") as Wpf.Ui.Controls.Button;
+        if (refreshButton != null)
+        {
+            refreshButton.IsEnabled = false;
+            refreshButton.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Common.SymbolRegular.ArrowSync24, Spin = true };
+        }
+
+        try
+        {
+            await FetchOnlinePluginsAsync();
+        }
+        finally
+        {
+            _isRefreshing = false;
+            if (refreshButton != null)
+            {
+                refreshButton.IsEnabled = true;
+                refreshButton.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Common.SymbolRegular.ArrowRefresh24 };
+            }
+        }
+    }
+
+    private async Task FetchOnlinePluginsAsync()
+    {
+        try
+        {
+            _isLoading = true;
+            
+            // Show loading indicator
+            var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
+            if (noPluginsMessage != null)
+            {
+                noPluginsMessage.Visibility = Visibility.Collapsed;
+            }
+
+            // Fetch online plugins
+            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync();
+            
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
+                foreach (var plugin in _onlinePlugins)
+                {
+                    Lib.Utils.Log.Instance.Trace($"  - Online: {plugin.Id} v{plugin.Version} (DownloadUrl: {plugin.DownloadUrl})");
+                }
+            }
+            
+            // Refresh UI
+            UpdateAllPluginsUI();
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show("获取插件失败", $"无法从插件商店获取插件列表: {ex.Message}");
+            }
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
     
@@ -134,6 +212,16 @@ public partial class PluginExtensionsPage
     private void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
         UpdateAllPluginsUI();
+        
+        // Auto-fetch online plugins in background
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(1000); // Small delay to let UI render first
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                await FetchOnlinePluginsAsync();
+            });
+        });
     }
 
     private void PluginExtensionsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -453,6 +541,14 @@ public partial class PluginExtensionsPage
         if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
             return;
 
+        // Check if this is an online plugin installation
+        var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
+        if (onlinePlugin != null)
+        {
+            InstallOnlinePluginAsync(onlinePlugin);
+            return;
+        }
+
         try
         {
             _pluginManager.InstallPlugin(pluginId);
@@ -476,6 +572,71 @@ public partial class PluginExtensionsPage
             if (mainWindow != null)
             {
                 mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, string.Format(Resource.PluginExtensionsPage_InstallFailedMessage, ex.Message));
+            }
+        }
+    }
+
+    private async void InstallOnlinePluginAsync(PluginManifest manifest)
+    {
+        try
+        {
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            
+            // Show installing message
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show("正在安装插件", $"正在下载并安装 {manifest.Name}...");
+            }
+            
+            // Disable install button during installation
+            var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
+            if (installButton != null)
+            {
+                installButton.IsEnabled = false;
+                installButton.Content = "安装中...";
+            }
+            
+            // Download and install the plugin
+            var success = await _pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
+            
+            if (success)
+            {
+                // Refresh UI
+                _pluginManager.ScanAndLoadPlugins();
+                UpdateAllPluginsUI();
+                ShowPluginDetails(manifest.Id);
+                
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallSuccess, $"插件 {manifest.Name} 已成功安装！");
+                }
+            }
+            else
+            {
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"插件安装失败，请检查网络连接或稍后重试。");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error installing online plugin {manifest.Id}: {ex.Message}", ex);
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"安装插件时出错: {ex.Message}");
+            }
+        }
+        finally
+        {
+            // Reset install button state
+            var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
+            if (installButton != null)
+            {
+                installButton.IsEnabled = true;
+                installButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallPlugin", Resource.Culture) ?? "Install";
             }
         }
     }
