@@ -74,7 +74,7 @@ jobs:
           $version = "${{ inputs.version }}"
           
           # Plugin is already built in build\plugins\LenovoLegionToolkit.Plugins.$pluginName\
-          $pluginDir = "build/plugins/$pluginName"
+          $pluginDir = "build/plugins/LenovoLegionToolkit.Plugins.$pluginName"
           
           Write-Host "Using plugin directory: $pluginDir"
           
