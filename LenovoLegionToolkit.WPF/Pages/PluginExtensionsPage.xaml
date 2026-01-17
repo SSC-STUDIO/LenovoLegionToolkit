@@ -118,17 +118,28 @@
             </StackPanel>
         </Grid>
 
+        <!-- Deprecation Notice -->
+        <wpfui:InfoBar
+            x:Name="_deprecationNotice"
+            Grid.Row="2"
+            Margin="0,0,0,12"
+            Severity="Warning"
+            IsOpen="True"
+            IsClosable="True"
+            Title="工具箱已弃用"
+            Message="工具箱功能已被插件系统取代。请使用插件扩展页面来安装和管理工具。" />
+
         <!-- Results Count -->
         <TextBlock
             x:Name="_resultsCountTextBlock"
-            Grid.Row="2"
+            Grid.Row="3"
             Margin="0,0,0,12"
             FontSize="12"
             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
             Visibility="Collapsed" />
 
         <!-- Plugins List -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <ScrollViewer
                 x:Name="_pluginsScrollViewer"
                 VerticalScrollBarVisibility="Auto"
