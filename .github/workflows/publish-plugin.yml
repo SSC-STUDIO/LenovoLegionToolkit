@@ -45,8 +45,11 @@ jobs:
           $pluginName = "${{ inputs.plugin_name }}"
           Write-Host "Searching for $pluginName.dll..."
           $paths = @(
+            "build\plugins\LenovoLegionToolkit.Plugins.$pluginName\LenovoLegionToolkit.Plugins.$pluginName.dll",
             "build\plugins\LenovoLegionToolkit.Plugins.$pluginName\$pluginName.dll",
+            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\LenovoLegionToolkit.Plugins.$pluginName.dll",
             "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\$pluginName.dll",
+            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\LenovoLegionToolkit.Plugins.$pluginName.dll",
             "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\$pluginName.dll"
           )
           $foundPath = $null
