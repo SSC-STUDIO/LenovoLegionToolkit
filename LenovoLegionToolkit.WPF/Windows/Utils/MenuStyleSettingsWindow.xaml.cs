@@ -133,13 +133,22 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 _configPathTextBlock.Text = pathInfo;
             }
 
-            // Load shell.nss
-            LoadFileContent(_shellNssTextBox, _shellConfigPath, GetDefaultShellNssTemplate());
+            // Update path text boxes
+            if (_shellNssPathTextBox != null)
+            {
+                _shellNssPathTextBox.Text = _shellConfigPath ?? "未找到文件";
+            }
+            if (_imagesNssPathTextBox != null)
+            {
+                _imagesNssPathTextBox.Text = _imagesNssPath ?? "未找到文件";
+            }
+            if (_modifyNssPathTextBox != null)
+            {
+                _modifyNssPathTextBox.Text = _modifyNssPath ?? "未找到文件";
+            }
 
-            // Load import files
+            // Only load theme.nss content, others use external editor
             LoadFileContent(_themeNssTextBox, _themeNssPath, GetDefaultThemeNssTemplate());
-            LoadFileContent(_imagesNssTextBox, _imagesNssPath, GetDefaultImagesNssTemplate());
-            LoadFileContent(_modifyNssTextBox, _modifyNssPath, GetDefaultModifyNssTemplate());
 
             // Load theme colors from text to UI
             LoadThemeColorsFromText();
@@ -565,25 +574,7 @@ theme
 
         private void SaveAllFiles(List<string> savedFiles, List<string> failedFiles)
         {
-            // Save shell.nss
-            if (!string.IsNullOrEmpty(_shellConfigPath) && _shellNssTextBox != null)
-            {
-                try
-                {
-                    var dir = Path.GetDirectoryName(_shellConfigPath);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-
-                    File.WriteAllText(_shellConfigPath, _shellNssTextBox.Text, System.Text.Encoding.UTF8);
-                    savedFiles.Add("shell.nss");
-                }
-                catch (Exception ex)
-                {
-                    failedFiles.Add($"shell.nss: {ex.Message}");
-                }
-            }
-
-            // Save theme.nss
+            // Only save theme.nss since others are edited externally
             if (!string.IsNullOrEmpty(_themeNssPath) && _themeNssTextBox != null)
             {
                 try
@@ -598,42 +589,6 @@ theme
                 catch (Exception ex)
                 {
                     failedFiles.Add($"theme.nss: {ex.Message}");
-                }
-            }
-
-            // Save images.nss
-            if (!string.IsNullOrEmpty(_imagesNssPath) && _imagesNssTextBox != null)
-            {
-                try
-                {
-                    var dir = Path.GetDirectoryName(_imagesNssPath);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-
-                    File.WriteAllText(_imagesNssPath, _imagesNssTextBox.Text, System.Text.Encoding.UTF8);
-                    savedFiles.Add("images.nss");
-                }
-                catch (Exception ex)
-                {
-                    failedFiles.Add($"images.nss: {ex.Message}");
-                }
-            }
-
-            // Save modify.nss
-            if (!string.IsNullOrEmpty(_modifyNssPath) && _modifyNssTextBox != null)
-            {
-                try
-                {
-                    var dir = Path.GetDirectoryName(_modifyNssPath);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-
-                    File.WriteAllText(_modifyNssPath, _modifyNssTextBox.Text, System.Text.Encoding.UTF8);
-                    savedFiles.Add("modify.nss");
-                }
-                catch (Exception ex)
-                {
-                    failedFiles.Add($"modify.nss: {ex.Message}");
                 }
             }
         }
@@ -686,5 +641,103 @@ theme
         {
             Close();
         }
+
+        #region File Operations
+        
+        private void OpenShellNssBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile(_shellConfigPath);
+        }
+
+        private void OpenShellNssFolderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_shellConfigPath))
+            {
+                string? folderPath = Path.GetDirectoryName(_shellConfigPath);
+                OpenFolder(folderPath);
+            }
+        }
+
+        private void OpenThemeNssBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile(_themeNssPath);
+        }
+
+        private void OpenImagesNssBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile(_imagesNssPath);
+        }
+
+        private void OpenImagesNssFolderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_imagesNssPath))
+            {
+                string? folderPath = Path.GetDirectoryName(_imagesNssPath);
+                OpenFolder(folderPath);
+            }
+        }
+
+        private void OpenModifyNssBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile(_modifyNssPath);
+        }
+
+        private void OpenModifyNssFolderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_modifyNssPath))
+            {
+                string? folderPath = Path.GetDirectoryName(_modifyNssPath);
+                OpenFolder(folderPath);
+            }
+        }
+
+        private void OpenFile(string? filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                MessageBox.Show("文件不存在或路径无效", "打开文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                // 使用系统默认程序打开文件
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"无法打开文件: {ex.Message}", "打开文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenFolder(string? folderPath)
+        {
+            if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath))
+            {
+                MessageBox.Show("文件夹不存在或路径无效", "打开文件夹失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                // 打开文件夹
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = folderPath,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"无法打开文件夹: {ex.Message}", "打开文件夹失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
     }
 }

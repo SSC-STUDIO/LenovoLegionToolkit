@@ -327,6 +327,7 @@ public partial class PluginExtensionsPage
         };
 
         border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
+        border.MouseDoubleClick += PluginCard_MouseDoubleClick;
 
         var stackPanel = new StackPanel
         {
@@ -463,11 +464,71 @@ public partial class PluginExtensionsPage
         e.Handled = true;
     }
 
+    private void PluginCard_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var source = e.OriginalSource as DependencyObject;
+        if (source != null)
+        {
+            var current = source;
+            while (current != null)
+            {
+                if (current is Wpf.Ui.Controls.Button || current is System.Windows.Controls.Button)
+                    return;
+                current = VisualTreeHelper.GetParent(current);
+            }
+        }
+
+        if (sender is not Border border)
+            return;
+
+        var pluginId = border.Tag?.ToString();
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        var isInstalled = _pluginManager.IsInstalled(pluginId);
+        if (isInstalled)
+        {
+            PluginOpenButton_Click(sender, e);
+        }
+        else
+        {
+            PluginInstallButton_Click(sender, e);
+        }
+        e.Handled = true;
+    }
+
+    private void CloseDetailsPanel_Click(object sender, RoutedEventArgs e)
+    {
+        var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
+        if (detailsPanel != null)
+        {
+            var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
+            if (hideStoryboard != null)
+            {
+                hideStoryboard.Completed += (s, args) =>
+                {
+                    detailsPanel.Visibility = Visibility.Collapsed;
+                };
+                hideStoryboard.Begin();
+            }
+            else
+            {
+                detailsPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
     private void ShowPluginDetails(string pluginId)
     {
         try
         {
             var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
+            
+            if (plugin == null)
+            {
+                plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
+            }
+            
             if (plugin == null)
                 return;
 
@@ -475,10 +536,8 @@ public partial class PluginExtensionsPage
             if (detailsPanel == null)
                 return;
 
-            // 获取插件元数据（包含版本信息）
             var pluginMetadata = _pluginManager.GetPluginMetadata(pluginId);
             
-            // 更新插件详细信息
             var icon = this.FindName("PluginDetailsIcon") as Wpf.Ui.Controls.SymbolIcon;
             if (icon != null)
             {
@@ -515,7 +574,6 @@ public partial class PluginExtensionsPage
                 descBlock.Text = descText;
             }
 
-            // 更新按钮状态
             var isInstalled = _pluginManager.IsInstalled(pluginId);
             var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
             var uninstallButton = this.FindName("PluginUninstallButton") as Wpf.Ui.Controls.Button;
@@ -539,7 +597,6 @@ public partial class PluginExtensionsPage
                 openButton.Tag = pluginId;
             }
             
-            // Add Configure button if plugin supports configuration
             var configureButton = this.FindName("PluginConfigureButton") as Wpf.Ui.Controls.Button;
             if (configureButton != null)
             {
@@ -553,7 +610,6 @@ public partial class PluginExtensionsPage
                 configureButton.Tag = pluginId;
             }
 
-            // Add Permanently Delete button (only for non-system plugins)
             var permanentlyDeleteButton = this.FindName("PluginPermanentlyDeleteButton") as Wpf.Ui.Controls.Button;
             if (permanentlyDeleteButton != null)
             {
@@ -561,14 +617,20 @@ public partial class PluginExtensionsPage
                 permanentlyDeleteButton.Tag = pluginId;
             }
 
-            // Setup language selection
             _currentSelectedPluginId = pluginId;
             SetupLanguageSelection(pluginId);
 
-            // Setup advanced settings for Network Acceleration plugin
-
-            // 显示详情面板
-            detailsPanel.Visibility = Visibility.Visible;
+            var showStoryboard = this.FindResource("ShowDetailsPanel") as Storyboard;
+            if (showStoryboard != null)
+            {
+                detailsPanel.Visibility = Visibility.Visible;
+                showStoryboard.Begin();
+            }
+            else
+            {
+                detailsPanel.Visibility = Visibility.Visible;
+                detailsPanel.Opacity = 1;
+            }
         }
         catch (Exception ex)
         {
@@ -914,15 +976,25 @@ public partial class PluginExtensionsPage
             
             if (deleted)
             {
-                // 刷新 UI
                 var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
                 if (detailsPanel != null)
                 {
-                    detailsPanel.Visibility = Visibility.Collapsed;
+                    var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
+                    if (hideStoryboard != null)
+                    {
+                        hideStoryboard.Completed += (s, e) =>
+                        {
+                            detailsPanel.Visibility = Visibility.Collapsed;
+                        };
+                        hideStoryboard.Begin();
+                    }
+                    else
+                    {
+                        detailsPanel.Visibility = Visibility.Collapsed;
+                    }
                 }
                 UpdateAllPluginsUI();
                 
-                // 显示成功消息
                 var mainWindow = Application.Current.MainWindow as MainWindow;
                 if (mainWindow != null)
                 {
