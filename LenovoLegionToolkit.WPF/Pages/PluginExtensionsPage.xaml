@@ -152,7 +152,7 @@
                 Visibility="Visible"
                 Margin="24">
                 <wpfui:SymbolIcon
-                    Symbol="Box"
+                    Symbol="Archive24"
                     FontSize="48"
                     Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                     HorizontalAlignment="Center"
@@ -203,7 +203,7 @@
                     BorderThickness="1">
                     <wpfui:SymbolIcon
                         x:Name="PluginDetailsIcon"
-                        Symbol="Desktop"
+                        Symbol="Desktop24"
                         FontSize="24"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         HorizontalAlignment="Center"
