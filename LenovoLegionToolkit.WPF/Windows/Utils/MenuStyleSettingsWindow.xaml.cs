@@ -38,7 +38,6 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             InitializeComponent();
             LoadAllConfigFiles();
             LoadLocalizedStrings();
-            InitializeColorPickers();
         }
 
         private void LoadLocalizedStrings()
@@ -65,34 +64,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             }
         }
 
-        private void InitializeColorPickers()
-        {
-            // Initialize text box event handlers
-            if (_backgroundColorTextBox != null)
-            {
-                _backgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_backgroundColorTextBox, _backgroundColorPicker);
-            }
-            if (_textColorTextBox != null)
-            {
-                _textColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_textColorTextBox, _textColorPicker);
-            }
-            if (_hoverBackgroundColorTextBox != null)
-            {
-                _hoverBackgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_hoverBackgroundColorTextBox, _hoverBackgroundColorPicker);
-            }
-            if (_hoverTextColorTextBox != null)
-            {
-                _hoverTextColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_hoverTextColorTextBox, _hoverTextColorPicker);
-            }
-            if (_selectedBackgroundColorTextBox != null)
-            {
-                _selectedBackgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_selectedBackgroundColorTextBox, _selectedBackgroundColorPicker);
-            }
-            if (_selectedTextColorTextBox != null)
-            {
-                _selectedTextColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_selectedTextColorTextBox, _selectedTextColorPicker);
-            }
-        }
+
 
         private void UpdateColorFromTextBox(System.Windows.Controls.TextBox textBox, Button button)
         {
@@ -102,9 +74,20 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                 var color = HexToColor(hexColor);
                 if (button != null)
                 {
+                    button.Tag = color;
                     button.Background = new SolidColorBrush(color);
+                    button.Foreground = new SolidColorBrush(ContrastColor(color));
                 }
             }
+        }
+
+        private Color ContrastColor(Color color)
+        {
+            byte r = color.R;
+            byte g = color.G;
+            byte b = color.B;
+            double brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+            return brightness > 128 ? Colors.Black : Colors.White;
         }
 
         private string ColorToHex(Color color)
@@ -409,36 +392,19 @@ theme
 
         private void UpdateUIControls()
         {
-            // Update text boxes and color pickers
+            // Update text boxes
             if (_backgroundColorTextBox != null)
                 _backgroundColorTextBox.Text = _themeColors.BackgroundColor;
-            if (_backgroundColorPicker != null)
-                _backgroundColorPicker.Color = HexToColor(_themeColors.BackgroundColor);
-
             if (_textColorTextBox != null)
                 _textColorTextBox.Text = _themeColors.TextColor;
-            if (_textColorPicker != null)
-                _textColorPicker.Color = HexToColor(_themeColors.TextColor);
-
             if (_hoverBackgroundColorTextBox != null)
                 _hoverBackgroundColorTextBox.Text = _themeColors.HoverBackgroundColor;
-            if (_hoverBackgroundColorPicker != null)
-                _hoverBackgroundColorPicker.Color = HexToColor(_themeColors.HoverBackgroundColor);
-
             if (_hoverTextColorTextBox != null)
                 _hoverTextColorTextBox.Text = _themeColors.HoverTextColor;
-            if (_hoverTextColorPicker != null)
-                _hoverTextColorPicker.Color = HexToColor(_themeColors.HoverTextColor);
-
             if (_selectedBackgroundColorTextBox != null)
                 _selectedBackgroundColorTextBox.Text = _themeColors.SelectedBackgroundColor;
-            if (_selectedBackgroundColorPicker != null)
-                _selectedBackgroundColorPicker.Color = HexToColor(_themeColors.SelectedBackgroundColor);
-
             if (_selectedTextColorTextBox != null)
                 _selectedTextColorTextBox.Text = _themeColors.SelectedTextColor;
-            if (_selectedTextColorPicker != null)
-                _selectedTextColorPicker.Color = HexToColor(_themeColors.SelectedTextColor);
         }
 
         private void UpdateThemeTextFromUI()
