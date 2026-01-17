@@ -2,8 +2,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
@@ -54,6 +56,7 @@ public partial class ToolsPage : INotifyPropertyChanged
             }
 
             OnPropertyChanged();
+            LoadToolsUI();
         }
     }
 
@@ -76,6 +79,7 @@ public partial class ToolsPage : INotifyPropertyChanged
         DataContext = this;
 
         LoadCategories();
+        LoadCategoriesUI();
     }
 
     private void LoadCategories()
@@ -112,6 +116,88 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
     }
 
+    private void LoadCategoriesUI()
+    {
+        var categoriesItemsControl = this.FindName("_categoriesItemsControl") as ItemsControl;
+        if (categoriesItemsControl == null)
+            return;
+
+        categoriesItemsControl.Items.Clear();
+
+        foreach (var category in Categories)
+        {
+            var button = new Button
+            {
+                Content = category.CategoryName,
+                Style = (Style)FindResource("CategoryButtonStyle"),
+                Tag = category
+            };
+
+            button.Click += CategoryButton_Click;
+            categoriesItemsControl.Items.Add(button);
+        }
+    }
+
+    private void LoadToolsUI()
+    {
+        var toolsItemsControl = this.FindName("_toolsItemsControl") as ItemsControl;
+        if (toolsItemsControl == null)
+            return;
+
+        toolsItemsControl.Items.Clear();
+
+        foreach (var tool in Tools)
+        {
+            var border = CreateToolCard(tool);
+            toolsItemsControl.Items.Add(border);
+        }
+    }
+
+    private Border CreateToolCard(ToolViewModel tool)
+    {
+        var border = new Border
+        {
+            Style = (Style)FindResource("ToolCardButtonStyle"),
+            Tag = tool
+        };
+
+        border.MouseLeftButtonDown += ToolButton_Click;
+
+        var stackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        var icon = new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Common.SymbolRegular.Apps24,
+            FontSize = 32,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+
+        stackPanel.Children.Add(icon);
+
+        var nameTextBlock = new TextBlock
+        {
+            Text = tool.DisplayName,
+            FontSize = 12,
+            FontWeight = FontWeights.Medium,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextAlignment = TextAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 80
+        };
+        stackPanel.Children.Add(nameTextBlock);
+
+        border.Child = stackPanel;
+        return border;
+    }
+
     private string GetCategoryDisplayName(string categoryKey)
     {
         return categoryKey switch
@@ -138,9 +224,9 @@ public partial class ToolsPage : INotifyPropertyChanged
         }
     }
 
-    private void ToolButton_Click(object sender, RoutedEventArgs e)
+    private void ToolButton_Click(object sender, MouseButtonEventArgs e)
     {
-        if (sender is Button button && button.Tag is ToolViewModel tool)
+        if (sender is Border border && border.Tag is ToolViewModel tool)
         {
             _toolPlugin.LaunchTool(tool.Name);
         }
