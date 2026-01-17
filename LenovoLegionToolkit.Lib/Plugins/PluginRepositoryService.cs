@@ -300,7 +300,7 @@ public class PluginRepositoryService
     /// </summary>
     private string GetPluginDownloadUrl(PluginManifest manifest)
     {
-        return $"https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/{manifest.Id}.zip";
+        return $"https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/{manifest.Id}/v{manifest.Version}/{manifest.Id}.zip";
     }
 
     /// <summary>
