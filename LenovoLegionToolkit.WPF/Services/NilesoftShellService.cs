@@ -52,7 +52,7 @@ public static class NilesoftShellService
     /// <summary>
     /// Get the import path for Nilesoft Shell
     /// </summary>
-    public static string GetImportPath()
+    public static string? GetImportPath()
     {
         return NilesoftShellHelper.GetImportPath();
     }
