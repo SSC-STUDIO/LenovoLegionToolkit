@@ -45,6 +45,7 @@ jobs:
           $pluginName = "${{ inputs.plugin_name }}"
           Write-Host "Searching for $pluginName.dll..."
           $paths = @(
+            "build\plugins\LenovoLegionToolkit.Plugins.$pluginName\$pluginName.dll",
             "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\$pluginName.dll",
             "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\$pluginName.dll"
           )
@@ -68,30 +69,19 @@ jobs:
         run: |
           $pluginName = "${{ inputs.plugin_name }}"
           $version = "${{ inputs.version }}"
+          
+          # Plugin is already built in build\plugins\LenovoLegionToolkit.Plugins.$pluginName\
           $pluginDir = "build/plugins/$pluginName"
           
-          # Get build output path from previous step
-          $buildPath = Get-Content "build_path.txt" -Raw
-          $buildOutput = Split-Path $buildPath -Parent
+          Write-Host "Using plugin directory: $pluginDir"
           
-          Write-Host "Using build output path: $buildOutput"
-          
-          # Create directory structure
-          New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
-          
-          # Copy plugin DLL and dependencies
-          Copy-Item "$buildOutput\$pluginName.dll" -Destination $pluginDir\
-          Copy-Item "$buildOutput\LenovoLegionToolkit.Lib.dll" -Destination $pluginDir\
-          Copy-Item "$buildOutput\LenovoLegionToolkit.Plugins.SDK.dll" -Destination $pluginDir\
-          
-          # Check for and copy resource files
+          # Check for resource directories
           $resourceDirs = @("zh-hans", "en", "zh-hant")
           foreach ($culture in $resourceDirs) {
-              $resourcePath = "$buildOutput\$culture"
-              if (Test-Path $resourcePath) {
-                  New-Item -ItemType Directory -Force -Path "$pluginDir\$culture" | Out-Null
-                  Copy-Item "$resourcePath\*" -Destination "$pluginDir\$culture\" -Recurse
-              }
+            $resourcePath = "$pluginDir\$culture"
+            if (Test-Path $resourcePath) {
+              Write-Host "Found resource directory: $resourcePath"
+            }
           }
           
           # Create zip package
