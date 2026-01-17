@@ -35,6 +35,7 @@ public partial class PluginExtensionsPage
     private List<PluginManifest> _onlinePlugins = new();
     private string _currentSelectedPluginId = string.Empty;
     private bool _isRefreshing = false;
+    private string _currentDownloadingPluginId = string.Empty;
 
     public PluginExtensionsPage()
     {
@@ -593,12 +594,33 @@ public partial class PluginExtensionsPage
     {
         try
         {
+            _currentDownloadingPluginId = manifest.Id;
+            
             var mainWindow = Application.Current.MainWindow as MainWindow;
             
             // Show installing message
             if (mainWindow != null)
             {
                 mainWindow.Snackbar.Show("正在安装插件", $"正在下载并安装 {manifest.Name}...");
+            }
+            
+            // Show download progress panel
+            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
+            if (downloadProgressPanel != null)
+            {
+                downloadProgressPanel.Visibility = Visibility.Visible;
+            }
+            
+            var progressBar = this.FindName("DownloadProgressBar") as System.Windows.Controls.ProgressBar;
+            var progressText = this.FindName("DownloadProgressText") as TextBlock;
+            if (progressBar != null)
+            {
+                progressBar.Value = 0;
+                progressBar.Visibility = Visibility.Visible;
+            }
+            if (progressText != null)
+            {
+                progressText.Text = "准备下载...";
             }
             
             // Disable install button during installation
@@ -609,8 +631,14 @@ public partial class PluginExtensionsPage
                 installButton.Content = "安装中...";
             }
             
-            // Download and install the plugin
+            // Subscribe to download progress
+            _pluginRepositoryService.DownloadProgressChanged += OnDownloadProgressChanged;
+            
+            // Download and install plugin
             var success = await _pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
+            
+            // Unsubscribe from download progress
+            _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
             
             if (success)
             {
@@ -651,7 +679,52 @@ public partial class PluginExtensionsPage
                 installButton.IsEnabled = true;
                 installButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallPlugin", Resource.Culture) ?? "Install";
             }
+            
+            // Hide download progress panel
+            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
+            if (downloadProgressPanel != null)
+            {
+                downloadProgressPanel.Visibility = Visibility.Collapsed;
+            }
+            
+            _currentDownloadingPluginId = string.Empty;
         }
+    }
+
+    private void OnDownloadProgressChanged(object? sender, PluginDownloadProgress progress)
+    {
+        if (!string.IsNullOrEmpty(_currentDownloadingPluginId) && progress.PluginId != _currentDownloadingPluginId)
+            return;
+            
+        if (progress.PluginId == _currentDownloadingPluginId)
+        {
+            var progressBar = this.FindName("DownloadProgressBar") as System.Windows.Controls.ProgressBar;
+            var progressText = this.FindName("DownloadProgressText") as TextBlock;
+            
+            if (progressBar != null)
+            {
+                progressBar.Value = progress.ProgressPercentage;
+            }
+            
+            if (progressText != null)
+            {
+                if (progress.IsCompleted)
+                {
+                    progressText.Text = "下载完成";
+                }
+                else if (progress.TotalBytes > 0)
+                {
+                    var downloadedMB = progress.BytesDownloaded / 1024.0 / 1024.0;
+                    var totalMB = progress.TotalBytes / 1024.0 / 1024.0;
+                    progressText.Text = $"下载中... {downloadedMB:F1} / {totalMB:F1} MB ({progress.ProgressPercentage:F0}%)";
+                }
+                else
+                {
+                    progressText.Text = "下载中...";
+                }
+            }
+        }
+    }
     }
 
     private void PluginUninstallButton_Click(object sender, RoutedEventArgs e)

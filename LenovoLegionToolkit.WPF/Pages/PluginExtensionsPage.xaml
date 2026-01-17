@@ -289,7 +289,30 @@
                             Content="{x:Static resources:Resource.PluginExtensionsPage_PermanentlyDelete}"
                             Click="PluginPermanentlyDeleteButton_Click"
                             Appearance="Danger"
+                            Margin="0,0,8,0"
                             Visibility="Collapsed" />
+                    </StackPanel>
+                    
+                    <!-- Download Progress -->
+                    <StackPanel 
+                        Grid.Row="4"
+                        Margin="0,8,0,0"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            Text="{x:Static resources:Resource.PluginExtensionsPage_Downloading}"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Margin="0,0,4,0" />
+                        <ProgressBar
+                            x:Name="DownloadProgressBar"
+                            Height="4"
+                            Margin="0,0,8,0" />
+                        <TextBlock
+                            x:Name="DownloadProgressText"
+                            FontSize="10"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,8,0" />
                     </StackPanel>
                 </Grid>
             </Grid>
