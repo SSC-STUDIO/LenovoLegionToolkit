@@ -244,14 +244,14 @@
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="背景颜色:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_backgroundColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_backgroundColorPicker" Width="40" Height="24" Background="#ffffff" />
+                                                            <Button x:Name="_backgroundColorPicker" Width="40" Height="24" Background="#ffffff" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="文本颜色:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_textColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_textColorPicker" Width="40" Height="24" Background="#000000" />
+                                                            <Button x:Name="_textColorPicker" Width="40" Height="24" Background="#000000" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </wpfui:CardControl>
@@ -266,14 +266,14 @@
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="悬停背景:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_hoverBackgroundColorTextBox" Width="100" Text="#f0f0f0" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_hoverBackgroundColorPicker" Width="40" Height="24" Background="#f0f0f0" />
+                                                            <Button x:Name="_hoverBackgroundColorPicker" Width="40" Height="24" Background="#f0f0f0" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Hover Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="悬停文本:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_hoverTextColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_hoverTextColorPicker" Width="40" Height="24" Background="#000000" />
+                                                            <Button x:Name="_hoverTextColorPicker" Width="40" Height="24" Background="#000000" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </wpfui:CardControl>
@@ -288,14 +288,14 @@
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="选中背景:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_selectedBackgroundColorTextBox" Width="100" Text="#0078d4" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_selectedBackgroundColorPicker" Width="40" Height="24" Background="#0078d4" />
+                                                            <Button x:Name="_selectedBackgroundColorPicker" Width="40" Height="24" Background="#0078d4" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Selected Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                                             <TextBlock Width="150" Text="选中文本:" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_selectedTextColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
-                                                            <wpfui:ColorPicker x:Name="_selectedTextColorPicker" Width="40" Height="24" Background="#ffffff" />
+                                                            <Button x:Name="_selectedTextColorPicker" Width="40" Height="24" Background="#ffffff" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </wpfui:CardControl>

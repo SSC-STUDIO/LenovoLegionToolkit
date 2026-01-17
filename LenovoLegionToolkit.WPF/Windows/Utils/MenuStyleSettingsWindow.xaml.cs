@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Media;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
@@ -18,11 +20,25 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         private string? _imagesNssPath;
         private string? _modifyNssPath;
 
+        // Theme colors structure
+        private class ThemeColors
+        {
+            public string BackgroundColor { get; set; } = "#ffffff";
+            public string TextColor { get; set; } = "#000000";
+            public string HoverBackgroundColor { get; set; } = "#f0f0f0";
+            public string HoverTextColor { get; set; } = "#000000";
+            public string SelectedBackgroundColor { get; set; } = "#0078d4";
+            public string SelectedTextColor { get; set; } = "#ffffff";
+        }
+
+        private ThemeColors _themeColors = new();
+
         public MenuStyleSettingsWindow()
         {
             InitializeComponent();
             LoadAllConfigFiles();
             LoadLocalizedStrings();
+            InitializeColorPickers();
         }
 
         private void LoadLocalizedStrings()
@@ -47,6 +63,68 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             {
                 _modifyNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ModifyNss", Resource.Culture) ?? "modify.nss";
             }
+        }
+
+        private void InitializeColorPickers()
+        {
+            // Initialize text box event handlers
+            if (_backgroundColorTextBox != null)
+            {
+                _backgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_backgroundColorTextBox, _backgroundColorPicker);
+            }
+            if (_textColorTextBox != null)
+            {
+                _textColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_textColorTextBox, _textColorPicker);
+            }
+            if (_hoverBackgroundColorTextBox != null)
+            {
+                _hoverBackgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_hoverBackgroundColorTextBox, _hoverBackgroundColorPicker);
+            }
+            if (_hoverTextColorTextBox != null)
+            {
+                _hoverTextColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_hoverTextColorTextBox, _hoverTextColorPicker);
+            }
+            if (_selectedBackgroundColorTextBox != null)
+            {
+                _selectedBackgroundColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_selectedBackgroundColorTextBox, _selectedBackgroundColorPicker);
+            }
+            if (_selectedTextColorTextBox != null)
+            {
+                _selectedTextColorTextBox.TextChanged += (sender, e) => UpdateColorFromTextBox(_selectedTextColorTextBox, _selectedTextColorPicker);
+            }
+        }
+
+        private void UpdateColorFromTextBox(System.Windows.Controls.TextBox textBox, Button button)
+        {
+            string hexColor = textBox.Text.Trim();
+            if (IsValidHexColor(hexColor))
+            {
+                var color = HexToColor(hexColor);
+                if (button != null)
+                {
+                    button.Background = new SolidColorBrush(color);
+                }
+            }
+        }
+
+        private string ColorToHex(Color color)
+        {
+            return string.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+        }
+
+        private Color HexToColor(string hex)
+        {
+            if (hex.StartsWith("#"))
+                hex = hex.Substring(1);
+            byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return Color.FromRgb(r, g, b);
+        }
+
+        private bool IsValidHexColor(string hex)
+        {
+            return Regex.IsMatch(hex, @"^#[0-9A-Fa-f]{6}$");
         }
 
         private void LoadAllConfigFiles()
@@ -79,6 +157,9 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             LoadFileContent(_themeNssTextBox, _themeNssPath, GetDefaultThemeNssTemplate());
             LoadFileContent(_imagesNssTextBox, _imagesNssPath, GetDefaultImagesNssTemplate());
             LoadFileContent(_modifyNssTextBox, _modifyNssPath, GetDefaultModifyNssTemplate());
+
+            // Load theme colors from text to UI
+            LoadThemeColorsFromText();
         }
 
         private void LoadFileContent(System.Windows.Controls.TextBox textBox, string? filePath, string defaultTemplate)
@@ -294,6 +375,152 @@ theme
         private void ModifyNssTab_Checked(object sender, RoutedEventArgs e)
         {
             // Tab visibility is handled by XAML binding
+        }
+
+        private void LoadThemeColorsFromText()
+        {
+            if (_themeNssTextBox == null)
+                return;
+
+            string content = _themeNssTextBox.Text;
+
+            // Parse theme colors
+            _themeColors.BackgroundColor = ExtractColorValue(content, "background-color") ?? "#ffffff";
+            _themeColors.TextColor = ExtractColorValue(content, "text-color") ?? "#000000";
+            _themeColors.HoverBackgroundColor = ExtractColorValue(content, "hover-background-color") ?? "#f0f0f0";
+            _themeColors.HoverTextColor = ExtractColorValue(content, "hover-text-color") ?? "#000000";
+            _themeColors.SelectedBackgroundColor = ExtractColorValue(content, "selected-background-color") ?? "#0078d4";
+            _themeColors.SelectedTextColor = ExtractColorValue(content, "selected-text-color") ?? "#ffffff";
+
+            // Update UI controls
+            UpdateUIControls();
+        }
+
+        private string? ExtractColorValue(string content, string propertyName)
+        {
+            string pattern = $@"{propertyName}*:*([#0-9a-fA-F]+);";
+            Match match = Regex.Match(content, pattern);
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value.Trim();
+            }
+            return null;
+        }
+
+        private void UpdateUIControls()
+        {
+            // Update text boxes and color pickers
+            if (_backgroundColorTextBox != null)
+                _backgroundColorTextBox.Text = _themeColors.BackgroundColor;
+            if (_backgroundColorPicker != null)
+                _backgroundColorPicker.Color = HexToColor(_themeColors.BackgroundColor);
+
+            if (_textColorTextBox != null)
+                _textColorTextBox.Text = _themeColors.TextColor;
+            if (_textColorPicker != null)
+                _textColorPicker.Color = HexToColor(_themeColors.TextColor);
+
+            if (_hoverBackgroundColorTextBox != null)
+                _hoverBackgroundColorTextBox.Text = _themeColors.HoverBackgroundColor;
+            if (_hoverBackgroundColorPicker != null)
+                _hoverBackgroundColorPicker.Color = HexToColor(_themeColors.HoverBackgroundColor);
+
+            if (_hoverTextColorTextBox != null)
+                _hoverTextColorTextBox.Text = _themeColors.HoverTextColor;
+            if (_hoverTextColorPicker != null)
+                _hoverTextColorPicker.Color = HexToColor(_themeColors.HoverTextColor);
+
+            if (_selectedBackgroundColorTextBox != null)
+                _selectedBackgroundColorTextBox.Text = _themeColors.SelectedBackgroundColor;
+            if (_selectedBackgroundColorPicker != null)
+                _selectedBackgroundColorPicker.Color = HexToColor(_themeColors.SelectedBackgroundColor);
+
+            if (_selectedTextColorTextBox != null)
+                _selectedTextColorTextBox.Text = _themeColors.SelectedTextColor;
+            if (_selectedTextColorPicker != null)
+                _selectedTextColorPicker.Color = HexToColor(_themeColors.SelectedTextColor);
+        }
+
+        private void UpdateThemeTextFromUI()
+        {
+            if (_themeNssTextBox == null)
+                return;
+
+            // Get current text content
+            string content = _themeNssTextBox.Text;
+
+            // Update theme colors from UI controls
+            UpdateThemeColorsFromUI();
+
+            // Build new theme content
+            string newThemeContent = GenerateThemeContent(content);
+
+            // Update the text box
+            _themeNssTextBox.Text = newThemeContent;
+        }
+
+        private void UpdateThemeColorsFromUI()
+        {
+            if (_backgroundColorTextBox != null)
+                _themeColors.BackgroundColor = _backgroundColorTextBox.Text.Trim();
+            if (_textColorTextBox != null)
+                _themeColors.TextColor = _textColorTextBox.Text.Trim();
+            if (_hoverBackgroundColorTextBox != null)
+                _themeColors.HoverBackgroundColor = _hoverBackgroundColorTextBox.Text.Trim();
+            if (_hoverTextColorTextBox != null)
+                _themeColors.HoverTextColor = _hoverTextColorTextBox.Text.Trim();
+            if (_selectedBackgroundColorTextBox != null)
+                _themeColors.SelectedBackgroundColor = _selectedBackgroundColorTextBox.Text.Trim();
+            if (_selectedTextColorTextBox != null)
+                _themeColors.SelectedTextColor = _selectedTextColorTextBox.Text.Trim();
+        }
+
+        private string GenerateThemeContent(string originalContent)
+        {
+            // Check if theme block exists
+            string themeBlockPattern = @"theme\s*\{[\s\S]*?\}";
+            Match themeBlockMatch = Regex.Match(originalContent, themeBlockPattern);
+
+            if (themeBlockMatch.Success)
+            {
+                // Update existing theme block
+                string updatedThemeBlock = GenerateThemeBlock();
+                return Regex.Replace(originalContent, themeBlockPattern, updatedThemeBlock);
+            }
+            else
+            {
+                // Add new theme block
+                string newThemeBlock = GenerateThemeBlock();
+                return $"{originalContent}\n\n{newThemeBlock}";
+            }
+        }
+
+        private string GenerateThemeBlock()
+        {
+            return $@"theme
+{{
+    # 基础颜色
+    background-color: {_themeColors.BackgroundColor};
+    text-color: {_themeColors.TextColor};
+    
+    # 悬停颜色
+    hover-background-color: {_themeColors.HoverBackgroundColor};
+    hover-text-color: {_themeColors.HoverTextColor};
+    
+    # 选中颜色
+    selected-background-color: {_themeColors.SelectedBackgroundColor};
+    selected-text-color: {_themeColors.SelectedTextColor};
+}}";
+        }
+
+        private void LoadToUIBtn_Click(object sender, RoutedEventArgs e)
+        {
+            LoadThemeColorsFromText();
+        }
+
+        private void UpdateFromUIBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateThemeTextFromUI();
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
