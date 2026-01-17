@@ -20,26 +20,25 @@
       "description": "ViveTool functionality for Lenovo Legion Toolkit"
     },
     {
-      "id": "NetworkAcceleration",
-      "name": "Network Acceleration Plugin",
-      "description": "Optimize network traffic for gaming and improve ping latency",
-      "icon": "Wifi324",
-      "author": "Lenovo Legion Toolkit Team",
       "version": "1.0.0",
-      "minimumHostVersion": "2.0.0",
-      "dependencies": null,
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration.zip",
-      "fileHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "fileSize": 0,
-      "releaseDate": "2024-01-01T00:00:00Z",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.0.0/NetworkAcceleration.zip",
+      "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit",
+      "releaseDate": "2026-01-17T13:00:44Z",
       "changelog": "Initial release",
+      "author": "Lenovo Legion Toolkit Team",
+      "fileSize": 1253695,
+      "icon": "Apps24",
+      "isSystemPlugin": false,
+      "id": "NetworkAcceleration",
       "tags": [
-        "utility",
-        "network"
+        "utility"
       ],
-      "isSystemPlugin": false
+      "dependencies": null,
+      "minimumHostVersion": "2.0.0",
+      "name": "NetworkAcceleration Plugin",
+      "fileHash": ""
     }
   ],
-  "lastUpdated": "2026-01-17T12:56:33Z",
+  "lastUpdated": "2026-01-17T13:00:44Z",
   "storeVersion": "1.0.0"
 }
