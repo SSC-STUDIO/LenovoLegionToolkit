@@ -142,6 +142,13 @@ The app allows to:
 - Disable/enable Lenovo Vantage, Legion Zone and Lenovo Hotkeys service without uninstalling them.
 - ... and more!
 
+### Tools
+
+> [!DEPRECATED]
+> The Tools feature has been deprecated in favor of the Plugin System. Please use the Plugin Extensions page to install and manage tools.
+
+The Tools feature provided a collection of system tools organized by categories such as CPU, GPU, Memory, Storage, Gaming, Display, Peripherals, System Diagnostic, Stress Testing, and Other tools. These tools are now available as plugins that can be installed and managed through the Plugin Extensions page.
+
 ### Custom Mode
 
 Custom Mode is available on all devices that support it. You can find it in the Power Mode dropdown as it basically is 4th power mode and it allows for adjusting power limits and fans. Custom Mode can't be accessed with Fn+Q shortcut. Not all features of Custom Mode are supported by all devices.
