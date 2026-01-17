@@ -50,7 +50,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
           
           # Copy plugin DLL and dependencies
-          $buildOutput = "LenovoLegionToolkit.Plugins.$pluginName/bin/Release/net8.0-windows/win-x64"
+          $buildOutput = "LenovoLegionToolkit\LenovoLegionToolkit.Plugins.$pluginName/bin/Release/net8.0-windows/win-x64"
           Copy-Item "$buildOutput\$pluginName.dll" -Destination $pluginDir\
           Copy-Item "$buildOutput\LenovoLegionToolkit.Lib.dll" -Destination $pluginDir\
           Copy-Item "$buildOutput\LenovoLegionToolkit.Plugins.SDK.dll" -Destination $pluginDir\
