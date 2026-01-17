@@ -20,4 +20,16 @@ public class PluginManifestAdapter : IPlugin
     public string Icon => _manifest.Icon;
     public bool IsSystemPlugin => _manifest.IsSystemPlugin;
     public string[]? Dependencies => _manifest.Dependencies;
+
+    public void OnInstalled()
+    {
+    }
+
+    public void OnUninstalled()
+    {
+    }
+
+    public void OnShutdown()
+    {
+    }
 }
