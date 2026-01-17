@@ -406,7 +406,6 @@ public partial class MainWindow
         SetNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
         SetNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
         SetNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
-        SetNavigationItemVisibility(_toolsItem, "tools", visibilitySettings);
         SetNavigationItemVisibility(_donateNavigationItem, "donate", visibilitySettings);
         SetNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
     }
@@ -476,39 +475,6 @@ public partial class MainWindow
             }
         }
         
-        // Visibility is controlled by UpdateNavigationItemsVisibilityFromSettings
-    }
-
-    private void UpdateToolsNavigationVisibility()
-    {
-        // Tools interface is now the default interface, ensure it's in the navigation items list
-        if (_toolsItem != null)
-        {
-            var isInItems = _navigationStore.Items.Contains(_toolsItem);
-            if (!isInItems)
-            {
-                // Find the position of the Windows optimization navigation item and insert after it; if not found, insert after Macro
-                var insertIndex = -1;
-                if (_navigationStore.Items.Contains(_windowsOptimizationItem))
-                {
-                    insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
-                    _navigationStore.Items.Insert(insertIndex + 1, _toolsItem);
-                }
-                else
-                {
-                    var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
-                    if (macroItem != null)
-                    {
-                        insertIndex = _navigationStore.Items.IndexOf(macroItem);
-                        _navigationStore.Items.Insert(insertIndex + 1, _toolsItem);
-                    }
-                    else
-                    {
-                        _navigationStore.Items.Add(_toolsItem);
-                    }
-                }
-            }
-        }
         // Visibility is controlled by UpdateNavigationItemsVisibilityFromSettings
     }
 
@@ -585,13 +551,9 @@ public partial class MainWindow
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
 
-                    // Find the position to insert (after tools item, before plugin extensions item)
+                    // Find the position to insert (after windows optimization item, before plugin extensions item)
                     var insertIndex = -1;
-                    if (_toolsItem != null && _navigationStore.Items.Contains(_toolsItem))
-                    {
-                        insertIndex = _navigationStore.Items.IndexOf(_toolsItem);
-                    }
-                    else if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
+                    if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
                     {
                         insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
                     }

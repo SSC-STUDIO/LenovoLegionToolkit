@@ -119,12 +119,6 @@
                         Icon="Gauge24"
                         PageTag="windowsOptimization"
                         PageType="{x:Type pages:WindowsOptimizationPage}" />
-                    <custom:NavigationItem
-                        x:Name="_toolsItem"
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Tools}"
-                        Icon="Toolbox24"
-                        PageTag="tools"
-                        PageType="{x:Type pages:ToolsPage}" />
                 </wpfui:NavigationStore.Items>
 
                 <wpfui:NavigationStore.Footer>
