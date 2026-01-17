@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
@@ -327,7 +328,6 @@ public partial class PluginExtensionsPage
         };
 
         border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
-        border.MouseDoubleClick += PluginCard_MouseDoubleClick;
 
         var stackPanel = new StackPanel
         {
@@ -460,39 +460,21 @@ public partial class PluginExtensionsPage
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
-        ShowPluginDetails(pluginId);
-        e.Handled = true;
-    }
-
-    private void PluginCard_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        var source = e.OriginalSource as DependencyObject;
-        if (source != null)
+        if (e.ClickCount == 2)
         {
-            var current = source;
-            while (current != null)
+            var isInstalled = _pluginManager.IsInstalled(pluginId);
+            if (isInstalled)
             {
-                if (current is Wpf.Ui.Controls.Button || current is System.Windows.Controls.Button)
-                    return;
-                current = VisualTreeHelper.GetParent(current);
+                PluginOpenButton_Click(sender, e);
             }
-        }
-
-        if (sender is not Border border)
-            return;
-
-        var pluginId = border.Tag?.ToString();
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return;
-
-        var isInstalled = _pluginManager.IsInstalled(pluginId);
-        if (isInstalled)
-        {
-            PluginOpenButton_Click(sender, e);
+            else
+            {
+                PluginInstallButton_Click(sender, e);
+            }
         }
         else
         {
-            PluginInstallButton_Click(sender, e);
+            ShowPluginDetails(pluginId);
         }
         e.Handled = true;
     }
