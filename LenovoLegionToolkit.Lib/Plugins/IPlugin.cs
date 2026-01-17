@@ -21,7 +21,7 @@ public interface IPlugin
     string Description { get; }
 
     /// <summary>
-    /// Plugin icon (WPF UI Symbol)
+    /// Plugin icon (WPF UI Symbol or icon file path)
     /// </summary>
     string Icon { get; }
 
