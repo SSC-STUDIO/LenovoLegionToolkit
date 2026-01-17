@@ -133,7 +133,25 @@ public partial class PluginExtensionsPage
             
             // Check for plugin updates
             var installedPlugins = _pluginManager.GetRegisteredPlugins().ToList();
-            var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedPlugins);
+            
+            // Convert IPlugin list to PluginManifest list for update checking
+            var installedManifests = new List<PluginManifest>();
+            foreach (var plugin in installedPlugins)
+            {
+                var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
+                var manifest = new PluginManifest
+                {
+                    Id = plugin.Id,
+                    Name = plugin.Name,
+                    Description = plugin.Description,
+                    Version = metadata?.Version ?? "0.0.0",
+                    Icon = plugin.Icon,
+                    IsSystemPlugin = plugin.IsSystemPlugin
+                };
+                installedManifests.Add(manifest);
+            }
+            
+            var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
             
             if (updates.Count > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
             {

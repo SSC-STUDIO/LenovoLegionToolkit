@@ -360,15 +360,19 @@ CLI does not need to be ran as Administrator.
 
 ## Plugins
 
-LLT supports a plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically without restarting the application.
+LLT supports a comprehensive plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically with full UI support.
 
 ### Core Features
 
 - **Dynamic Loading**: Plugins are loaded at runtime from the `build/plugins` directory
+- **Online Plugin Repository**: Browse and install plugins from an online repository
 - **Dependency Management**: Automatic installation and checking of plugin dependencies
 - **UI Integration**: Plugins can provide custom UI pages and settings
 - **Feature Extensions**: Plugins can extend existing features or add new ones
 - **Lifecycle Management**: Complete plugin lifecycle from installation to uninstallation
+- **Download Progress**: Real-time download progress for online plugins
+- **Executable Support**: Plugins can provide standalone executable files
+- **Language Support**: Per-plugin language settings
 
 ### Plugin Types
 
@@ -377,16 +381,36 @@ LLT supports a plugin system that allows extending the functionality of the appl
 
 ### Available Plugins
 
-LLT comes with a built-in ViVeTool plugin that allows managing Windows feature flags:
+LLT currently provides the following plugins:
 
 - **ViVeTool Plugin**: Manage Windows feature flags, enable or disable experimental Windows features
 
+### Plugin Management UI
+
+LLT provides a comprehensive Plugin Extensions page with the following features:
+
+- **Plugin Browsing**: View all available plugins (local and online)
+- **Search & Filter**: Search plugins by name or description, filter by installation status
+- **Plugin Details**: View detailed information about each plugin
+- **Install/Uninstall**: Easy one-click installation and uninstallation
+- **Online Updates**: Check for and install updates from the online repository
+- **Permanent Deletion**: Option to permanently delete plugin files
+- **Language Settings**: Set per-plugin language preferences
+
 ### Installing Plugins
 
-Plugins can be installed by:
-1. Downloading the plugin DLL file
-2. Placing it in the `build/plugins` directory
-3. Restarting LLT, or using the plugin manager UI to scan for new plugins
+Plugins can be installed in two ways:
+
+1. **Online Installation**:
+   - Open the Plugin Extensions page
+   - Browse available plugins
+   - Click on a plugin to view details
+   - Click "Install" to download and install automatically
+
+2. **Manual Installation**:
+   - Download the plugin DLL file
+   - Place it in the `build/plugins` directory
+   - Restart LLT, or use the plugin manager UI to scan for new plugins
 
 ### Plugin Development
 

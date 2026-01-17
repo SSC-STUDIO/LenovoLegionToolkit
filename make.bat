@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-IF "%1"=="" (
-	SET VERSION=3.2.1
+IF "%1"=="" (       
+	SET VERSION=3.4.0
 ) ELSE (
 	SET VERSION=%1
 )

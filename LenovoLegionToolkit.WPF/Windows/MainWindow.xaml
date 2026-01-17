@@ -129,11 +129,6 @@
 
                 <wpfui:NavigationStore.Footer>
                     <custom:NavigationItem
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
-                        Icon="Settings24"
-                        PageTag="settings"
-                        PageType="{x:Type pages:SettingsPage}" />
-                    <custom:NavigationItem
                         x:Name="_pluginExtensionsItem"
                         Content="Plugin Extensions"
                         Icon="Apps24"
@@ -145,6 +140,11 @@
                         Icon="Money24"
                         PageTag="donate"
                         PageType="{x:Type pages:DonatePage}" />
+                    <custom:NavigationItem
+                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
+                        Icon="Settings24"
+                        PageTag="settings"
+                        PageType="{x:Type pages:SettingsPage}" />
                     <custom:NavigationItem
                         x:Name="_aboutItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
