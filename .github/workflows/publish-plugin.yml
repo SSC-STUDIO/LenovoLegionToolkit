@@ -40,7 +40,7 @@ jobs:
             6.0.x
 
       - name: Build plugin
-        run: dotnet build LenovoLegionToolkit.Plugins.${{ inputs.plugin_name }} -c Release --no-incremental
+        run: dotnet build Plugins/${{ inputs.plugin_name }} -c Release --no-incremental
 
       - name: Find build output path
         shell: pwsh
@@ -50,10 +50,10 @@ jobs:
           $paths = @(
             "build\plugins\LenovoLegionToolkit.Plugins.$pluginName\LenovoLegionToolkit.Plugins.$pluginName.dll",
             "build\plugins\LenovoLegionToolkit.Plugins.$pluginName\$pluginName.dll",
-            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\LenovoLegionToolkit.Plugins.$pluginName.dll",
-            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\$pluginName.dll",
-            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\LenovoLegionToolkit.Plugins.$pluginName.dll",
-            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\$pluginName.dll"
+            "Plugins\$pluginName\bin\Release\net8.0-windows\LenovoLegionToolkit.Plugins.$pluginName.dll",
+            "Plugins\$pluginName\bin\Release\net8.0-windows\$pluginName.dll",
+            "Plugins\$pluginName\bin\Release\net8.0-windows\win-x64\LenovoLegionToolkit.Plugins.$pluginName.dll",
+            "Plugins\$pluginName\bin\Release\net8.0-windows\win-x64\$pluginName.dll"
           )
           $foundPath = $null
           foreach ($path in $paths) {

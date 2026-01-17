@@ -12,18 +12,18 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\build\plugins\LenovoLegionToolkit.Plugins.SDK\</OutputPath>
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.SDK\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\build\plugins\LenovoLegionToolkit.Plugins.SDK\</OutputPath>
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.SDK\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
       <PrivateAssets>All</PrivateAssets>
       <ExcludeAssets>All</ExcludeAssets>
     </ProjectReference>

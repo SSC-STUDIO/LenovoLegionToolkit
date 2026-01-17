@@ -299,7 +299,7 @@
                         Margin="0,8,0,0"
                         Visibility="Collapsed">
                         <TextBlock
-                            Text="{x:Static resources:Resource.PluginExtensionsPage_Downloading}"
+                            Text="{x:Static resources:Resource.PackageControl_Downloading}"
                             FontSize="12"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Margin="0,0,4,0" />

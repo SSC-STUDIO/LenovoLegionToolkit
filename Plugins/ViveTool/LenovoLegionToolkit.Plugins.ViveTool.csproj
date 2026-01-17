@@ -15,35 +15,20 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LenovoLegionToolkit.Plugins.SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Reverse proxy library for HTTPS interception -->
-    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
-    <!-- DNS client with DoH (DNS over HTTPS) support -->
-    <PackageReference Include="Ae.Dns.Client" Version="3.1.0" />
-    <!-- Logging for DNS client -->
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-    <!-- Windows API bindings for system proxy configuration -->
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,9 +68,3 @@
   </Target>
 
 </Project>
-
-
-
-
-
-
