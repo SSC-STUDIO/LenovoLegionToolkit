@@ -39,6 +39,30 @@ jobs:
       - name: Build plugin
         run: dotnet build LenovoLegionToolkit.Plugins.${{ inputs.plugin_name }} -c Release --no-incremental
 
+      - name: Find build output path
+        shell: pwsh
+        run: |
+          $pluginName = "${{ inputs.plugin_name }}"
+          Write-Host "Searching for $pluginName.dll..."
+          $paths = @(
+            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\$pluginName.dll",
+            "LenovoLegionToolkit.Plugins.$pluginName\bin\Release\net8.0-windows\win-x64\$pluginName.dll"
+          )
+          $foundPath = $null
+          foreach ($path in $paths) {
+            if (Test-Path $path) {
+              $foundPath = $path
+              Write-Host "Found: $path"
+              break
+            }
+          }
+          if ($foundPath) {
+            $foundPath | Out-File -FilePath "build_path.txt" -Encoding utf8
+          } else {
+            Write-Host "ERROR: Could not find $pluginName.dll"
+            exit 1
+          }
+
       - name: Create plugin package
         shell: pwsh
         run: |
@@ -46,11 +70,16 @@ jobs:
           $version = "${{ inputs.version }}"
           $pluginDir = "build/plugins/$pluginName"
           
+          # Get build output path from previous step
+          $buildPath = Get-Content "build_path.txt" -Raw
+          $buildOutput = Split-Path $buildPath -Parent
+          
+          Write-Host "Using build output path: $buildOutput"
+          
           # Create directory structure
           New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
           
           # Copy plugin DLL and dependencies
-          $buildOutput = "LenovoLegionToolkit\LenovoLegionToolkit.Plugins.$pluginName/bin/Release/net8.0-windows/win-x64"
           Copy-Item "$buildOutput\$pluginName.dll" -Destination $pluginDir\
           Copy-Item "$buildOutput\LenovoLegionToolkit.Lib.dll" -Destination $pluginDir\
           Copy-Item "$buildOutput\LenovoLegionToolkit.Plugins.SDK.dll" -Destination $pluginDir\
