@@ -22,8 +22,8 @@ public class PluginRepositoryService
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
     private const string GITHUB_API_URL = "https://api.github.com";
-    private const string PLUGIN_STORE_URL = "https://raw.githubusercontent.com/BartoszCiczek/LenovoLegionToolkit/main/plugins/store.json";
-    private const string PLUGIN_RELEASES_URL = "https://api.github.com/repos/BartoszCiczek/LenovoLegionToolkit/releases";
+    private const string PLUGIN_STORE_URL = "https://api.github.com/repos/Crs10259/LenovoLegionToolkit/contents/plugins/store.json";
+    private const string PLUGIN_RELEASES_URL = "https://api.github.com/repos/Crs10259/LenovoLegionToolkit/releases";
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -59,7 +59,23 @@ public class PluginRepositoryService
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            var storeResponse = JsonSerializer.Deserialize<PluginStoreResponse>(json, new JsonSerializerOptions
+            
+            // GitHub API returns content in base64 encoding
+            var githubFileResponse = JsonSerializer.Deserialize<GitHubFileResponse>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (githubFileResponse == null || string.IsNullOrEmpty(githubFileResponse.Content))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get plugin store file");
+                return new List<PluginManifest>();
+            }
+
+            // Decode base64 content
+            var storeJson = Encoding.UTF8.GetString(Convert.FromBase64String(githubFileResponse.Content));
+            var storeResponse = JsonSerializer.Deserialize<PluginStoreResponse>(storeJson, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
