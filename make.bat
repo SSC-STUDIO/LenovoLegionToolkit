@@ -65,7 +65,7 @@ IF NOT EXIST "%PLUGIN_PROJECT%" (
 
 ECHO.
 ECHO Building %PLUGIN_NAME% plugin...
-dotnet publish "%PLUGIN_PROJECT%" -c release -p:DebugType=None /m || exit /b
+dotnet build "%PLUGIN_PROJECT%" -c release /p:DebugType=None /m || exit /b
 ECHO %PLUGIN_NAME% plugin built successfully!
 EXIT /B 0
 
