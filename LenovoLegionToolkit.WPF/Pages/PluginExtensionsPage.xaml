@@ -350,10 +350,11 @@
             Grid.Row="3"
             Margin="0,0,0,12"
             Severity="Warning"
-            IsOpen="True"
+            IsOpen="False"
             IsClosable="True"
             Title="工具箱已弃用"
-            Message="工具箱功能已被插件系统取代。请使用插件扩展页面来安装和管理工具。" />
+            Message="工具箱功能已被插件系统取代。请使用插件扩展页面来安装和管理工具。"
+            Visibility="Collapsed" />
 
         <!-- Results Count -->
         <TextBlock

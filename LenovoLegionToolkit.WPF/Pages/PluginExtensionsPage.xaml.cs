@@ -473,22 +473,14 @@ public partial class PluginExtensionsPage
             Margin = new Thickness(12)
         };
 
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        var topPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 8)
-        };
-
-        // 插件图标容器
         var iconContainer = new Grid
         {
             Width = 48,
             Height = 48,
-            HorizontalAlignment = HorizontalAlignment.Center
+            Margin = new Thickness(0, 0, 12, 0)
         };
         
         var iconBorder = new Border
@@ -529,15 +521,13 @@ public partial class PluginExtensionsPage
             iconContainer.Children.Add(installedBadge);
         }
 
-        topPanel.Children.Add(iconContainer);
-
-        grid.Children.Add(topPanel);
-        Grid.SetRow(topPanel, 0);
+        grid.Children.Add(iconContainer);
+        Grid.SetColumn(iconContainer, 0);
 
         var infoPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Top
+            VerticalAlignment = VerticalAlignment.Center
         };
 
         // 插件名称（使用多语言资源）
@@ -547,7 +537,7 @@ public partial class PluginExtensionsPage
             Text = displayName,
             FontSize = 13,
             FontWeight = FontWeights.Medium,
-            TextAlignment = TextAlignment.Center,
+            TextAlignment = TextAlignment.Left,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 4)
         };
@@ -560,7 +550,7 @@ public partial class PluginExtensionsPage
         {
             Text = localizedDescription,
             FontSize = 11,
-            TextAlignment = TextAlignment.Center,
+            TextAlignment = TextAlignment.Left,
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxHeight = 60,
@@ -585,7 +575,7 @@ public partial class PluginExtensionsPage
         }
 
         grid.Children.Add(infoPanel);
-        Grid.SetRow(infoPanel, 1);
+        Grid.SetColumn(infoPanel, 1);
 
         border.Child = grid;
         return border;
@@ -961,7 +951,7 @@ public partial class PluginExtensionsPage
             var descBlock = this.FindName("PluginDetailsDescription") as TextBlock;
             if (descBlock != null)
             {
-                var descText = plugin.Description;
+                var descText = GetPluginLocalizedDescription(plugin);
                 if (pluginMetadata != null)
                 {
                     if (!string.IsNullOrWhiteSpace(pluginMetadata.Author))
