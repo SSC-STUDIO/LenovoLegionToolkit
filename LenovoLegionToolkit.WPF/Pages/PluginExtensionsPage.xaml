@@ -274,13 +274,6 @@
                             Click="PluginOpenButton_Click"
                             Margin="0,0,8,0"
                             Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginPermanentlyDeleteButton"
-                            Content="{x:Static resources:Resource.PluginExtensionsPage_PermanentlyDelete}"
-                            Click="PluginPermanentlyDeleteButton_Click"
-                            Appearance="Danger"
-                            Margin="0,0,8,0"
-                            Visibility="Collapsed" />
                     </StackPanel>
                     
                     <!-- Download Progress -->

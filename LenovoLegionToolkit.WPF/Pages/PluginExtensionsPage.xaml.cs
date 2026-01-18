@@ -492,8 +492,8 @@ public partial class PluginExtensionsPage
             Height = 48
         };
         
-        // 生成彩色字母图标
-        var iconContent = CreateColoredLetterIcon(plugin);
+        // 生成彩色字母图标或使用真实图片
+        var iconContent = CreatePluginIconOrLetter(plugin);
         iconBorder.Child = iconContent;
         iconContainer.Children.Add(iconBorder);
         
@@ -557,10 +557,19 @@ public partial class PluginExtensionsPage
     }
 
     /// <summary>
-    /// 创建彩色字母图标
+    /// 创建插件图标（真实图片或彩色字母）
     /// </summary>
-    private UIElement CreateColoredLetterIcon(IPlugin plugin)
+    private UIElement CreatePluginIconOrLetter(IPlugin plugin)
     {
+        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
+        
+        if (isInstalled)
+        {
+            var icon = LoadPluginIcon(plugin);
+            if (icon != null)
+                return icon;
+        }
+
         var name = plugin.Name;
         if (string.IsNullOrWhiteSpace(name))
             name = plugin.Id;
@@ -600,13 +609,15 @@ public partial class PluginExtensionsPage
             {
                 Width = 24,
                 Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Left
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Background = colors[0]
             };
             var rightPanel = new Grid
             {
                 Width = 24,
                 Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Right
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Background = colors[1]
             };
 
             var leftLetter = new TextBlock
@@ -616,17 +627,17 @@ public partial class PluginExtensionsPage
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = colors[0]
+                Foreground = Brushes.White
             };
 
             var rightLetter = new TextBlock
             {
-                Text = letters[1].ToString().ToUpper(),
+                Text = letters[1].ToString().ToLower(),
                 FontSize = 20,
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = colors[1]
+                Foreground = Brushes.White
             };
 
             leftPanel.Children.Add(leftLetter);
@@ -636,6 +647,14 @@ public partial class PluginExtensionsPage
         }
         else if (letters.Count == 1)
         {
+            var letterPanel = new Grid
+            {
+                Width = 48,
+                Height = 48,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Background = colors[0]
+            };
+
             var letter = new TextBlock
             {
                 Text = letters[0].ToString().ToUpper(),
@@ -643,9 +662,10 @@ public partial class PluginExtensionsPage
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = colors[0]
+                Foreground = Brushes.White
             };
-            grid.Children.Add(letter);
+            letterPanel.Children.Add(letter);
+            grid.Children.Add(letterPanel);
         }
         else
         {
@@ -1068,13 +1088,16 @@ public partial class PluginExtensionsPage
 
         try
         {
-            _pluginManager.UninstallPlugin(pluginId);
+            _pluginManager.PermanentlyDeletePlugin(pluginId);
             
-            // 刷新 UI
-            ShowPluginDetails(pluginId);
+            var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
+            if (detailsPanel != null)
+            {
+                detailsPanel.Visibility = Visibility.Collapsed;
+            }
+            
             UpdateAllPluginsUI();
             
-            // 显示成功消息
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
