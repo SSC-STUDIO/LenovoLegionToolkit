@@ -937,11 +937,41 @@ public partial class PluginExtensionsPage
 
             var pluginMetadata = _pluginManager.GetPluginMetadata(pluginId);
             
-            var icon = this.FindName("PluginDetailsIcon") as Wpf.Ui.Controls.SymbolIcon;
-            if (icon != null)
+            var iconBorder = this.FindName("PluginDetailsIconBorder") as Border;
+            var iconContainer = this.FindName("PluginDetailsIconContainer") as Grid;
+            if (iconBorder != null && iconContainer != null)
             {
-                icon.Symbol = GetSymbolFromString(plugin.Icon);
-                icon.Foreground = (System.Windows.Media.Brush)FindResource("SystemAccentColorBrush");
+                iconContainer.Children.Clear();
+                
+                var isInstalled = _pluginManager.IsInstalled(pluginId);
+                UIElement iconElement;
+                
+                if (isInstalled)
+                {
+                    var icon = LoadPluginIcon(plugin);
+                    if (icon != null)
+                    {
+                        iconElement = icon;
+                    }
+                    else
+                    {
+                        var symbolIcon = new Wpf.Ui.Controls.SymbolIcon
+                        {
+                            Symbol = GetSymbolFromString(plugin.Icon),
+                            FontSize = 24,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        symbolIcon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+                        iconElement = symbolIcon;
+                    }
+                }
+                else
+                {
+                    iconElement = CreatePluginIconOrLetter(plugin);
+                }
+                
+                iconContainer.Children.Add(iconElement);
             }
 
             var nameBlock = this.FindName("PluginDetailsName") as TextBlock;
