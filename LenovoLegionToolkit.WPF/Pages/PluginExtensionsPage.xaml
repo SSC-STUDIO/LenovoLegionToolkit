@@ -333,6 +333,14 @@
                 </ComboBox>
                 
                 <wpfui:Button
+                    x:Name="_importPluginButton"
+                    Icon="Add24"
+                    Appearance="Primary"
+                    Margin="8,0,0,0"
+                    Click="ImportPluginButton_Click"
+                    ToolTip="导入插件压缩文件" />
+                
+                <wpfui:Button
                     x:Name="_refreshButton"
                     Icon="ArrowClockwise24"
                     Appearance="Secondary"

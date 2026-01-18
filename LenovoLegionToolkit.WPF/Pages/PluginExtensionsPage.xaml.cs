@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -105,6 +107,117 @@ public partial class PluginExtensionsPage
             {
                 refreshButton.IsEnabled = true;
                 refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowClockwise24;
+            }
+        }
+    }
+
+    private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
+    {
+        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "选择插件压缩文件",
+            Filter = "压缩文件 (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|所有文件 (*.*)|*.*",
+            Multiselect = false
+        };
+
+        var result = openFileDialog.ShowDialog();
+        if (result != true)
+            return;
+
+        var filePath = openFileDialog.FileName;
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            return;
+
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow == null)
+            return;
+
+        try
+        {
+            var importButton = this.FindName("_importPluginButton") as Wpf.Ui.Controls.Button;
+            if (importButton != null)
+            {
+                importButton.IsEnabled = false;
+            }
+
+            var extension = Path.GetExtension(filePath).ToLowerInvariant();
+            var pluginId = Path.GetFileNameWithoutExtension(filePath);
+
+            var pluginsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins");
+            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+
+            if (Directory.Exists(pluginDirectory))
+            {
+                mainWindow.Snackbar.Show("导入失败", $"插件目录已存在：{pluginId}");
+                if (importButton != null)
+                {
+                    importButton.IsEnabled = true;
+                }
+                return;
+            }
+
+            mainWindow.Snackbar.Show("正在导入插件", $"正在解压插件文件：{Path.GetFileName(filePath)}");
+
+            if (extension == ".zip")
+            {
+                await Task.Run(() => System.IO.Compression.ZipFile.ExtractToDirectory(filePath, pluginDirectory));
+            }
+            else if (extension == ".7z")
+            {
+                await Task.Run(() =>
+                {
+                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "7z.exe",
+                        Arguments = $"x \"{filePath}\" -o\"{pluginDirectory}\" -y",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
+                });
+            }
+            else if (extension == ".rar")
+            {
+                await Task.Run(() =>
+                {
+                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "unrar.exe",
+                        Arguments = $"x \"{filePath}\" \"{pluginDirectory}\" -y",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
+                });
+            }
+            else
+            {
+                mainWindow.Snackbar.Show("导入失败", "不支持的压缩文件格式");
+                if (importButton != null)
+                {
+                    importButton.IsEnabled = true;
+                }
+                return;
+            }
+
+            await Task.Delay(500);
+
+            _pluginManager.ScanAndLoadPlugins();
+            UpdateAllPluginsUI();
+
+            mainWindow.Snackbar.Show("导入成功", $"插件 {pluginId} 已成功导入");
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
+            mainWindow?.Snackbar.Show("导入失败", $"导入插件时出错：{ex.Message}");
+        }
+        finally
+        {
+            var importButton = this.FindName("_importPluginButton") as Wpf.Ui.Controls.Button;
+            if (importButton != null)
+            {
+                importButton.IsEnabled = true;
             }
         }
     }
