@@ -235,7 +235,6 @@ public class PluginRepositoryService
                         Log.Instance.Trace($"Failed to clean up extraction path {extractPath}: {ex.Message}");
                 }
             }
-            }
             Directory.CreateDirectory(extractPath);
 
             // Extract zip
