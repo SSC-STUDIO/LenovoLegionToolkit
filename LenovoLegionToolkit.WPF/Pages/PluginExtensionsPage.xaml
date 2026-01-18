@@ -274,6 +274,12 @@
                             Click="PluginOpenButton_Click"
                             Margin="0,0,8,0"
                             Visibility="Collapsed" />
+                        <wpfui:Button
+                            x:Name="PluginUpdateButton"
+                            Content="更新"
+                            Click="PluginUpdateButton_Click"
+                            Margin="0,0,8,0"
+                            Visibility="Collapsed" />
                     </StackPanel>
                     
                     <!-- Download Progress -->
