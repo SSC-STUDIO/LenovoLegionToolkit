@@ -324,10 +324,34 @@ public partial class PluginExtensionsPage
         {
             Style = (Style)FindResource("ToolCardButtonStyle"),
             Tag = plugin.Id,
-            Margin = new Thickness(0, 0, 12, 12)
+            Margin = new Thickness(0, 0, 12, 12),
+            Opacity = 0,
+            RenderTransform = new TranslateTransform(0, 20)
         };
 
         border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
+        
+        border.Loaded += (s, e) =>
+        {
+            var fadeInAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(300),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            
+            var slideAnimation = new DoubleAnimation
+            {
+                From = 20,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(300),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            
+            border.BeginAnimation(Border.OpacityProperty, fadeInAnimation);
+            border.RenderTransform.BeginAnimation(TranslateTransform.YProperty, slideAnimation);
+        };
 
         var stackPanel = new StackPanel
         {
@@ -355,8 +379,8 @@ public partial class PluginExtensionsPage
             Height = 48
         };
         
-        // 尝试加载插件自己的图标
-        var iconContent = LoadPluginIcon(plugin);
+        // 生成彩色字母图标
+        var iconContent = CreateColoredLetterIcon(plugin);
         iconBorder.Child = iconContent;
         iconContainer.Children.Add(iconBorder);
         
@@ -385,10 +409,11 @@ public partial class PluginExtensionsPage
         
         stackPanel.Children.Add(iconContainer);
 
-        // 插件名称
+        // 插件名称（移除"插件"字样）
+        var displayName = RemovePluginSuffix(plugin.Name);
         var nameTextBlock = new TextBlock
         {
-            Text = plugin.Name,
+            Text = displayName,
             FontSize = 12,
             FontWeight = FontWeights.Medium,
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -416,6 +441,132 @@ public partial class PluginExtensionsPage
 
         border.Child = stackPanel;
         return border;
+    }
+
+    /// <summary>
+    /// 创建彩色字母图标
+    /// </summary>
+    private UIElement CreateColoredLetterIcon(IPlugin plugin)
+    {
+        var name = plugin.Name;
+        if (string.IsNullOrWhiteSpace(name))
+            name = plugin.Id;
+
+        var letters = new List<char>();
+        foreach (var c in name)
+        {
+            if (char.IsLetter(c))
+            {
+                letters.Add(c);
+                if (letters.Count >= 2)
+                    break;
+            }
+        }
+
+        var colors = new List<SolidColorBrush>
+        {
+            new SolidColorBrush(Color.FromRgb(59, 130, 246)),
+            new SolidColorBrush(Color.FromRgb(239, 68, 68)),
+            new SolidColorBrush(Color.FromRgb(245, 158, 11)),
+            new SolidColorBrush(Color.FromRgb(34, 197, 94)),
+            new SolidColorBrush(Color.FromRgb(168, 85, 247)),
+            new SolidColorBrush(Color.FromRgb(13, 148, 136)),
+            new SolidColorBrush(Color.FromRgb(233, 30, 99)),
+            new SolidColorBrush(Color.FromRgb(42, 161, 152))
+        };
+
+        var grid = new Grid
+        {
+            Width = 48,
+            Height = 48
+        };
+
+        if (letters.Count >= 2)
+        {
+            var leftPanel = new Grid
+            {
+                Width = 24,
+                Height = 48,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            var rightPanel = new Grid
+            {
+                Width = 24,
+                Height = 48,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+
+            var leftLetter = new TextBlock
+            {
+                Text = letters[0].ToString().ToUpper(),
+                FontSize = 20,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = colors[0]
+            };
+
+            var rightLetter = new TextBlock
+            {
+                Text = letters[1].ToString().ToUpper(),
+                FontSize = 20,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = colors[1]
+            };
+
+            leftPanel.Children.Add(leftLetter);
+            rightPanel.Children.Add(rightLetter);
+            grid.Children.Add(leftPanel);
+            grid.Children.Add(rightPanel);
+        }
+        else if (letters.Count == 1)
+        {
+            var letter = new TextBlock
+            {
+                Text = letters[0].ToString().ToUpper(),
+                FontSize = 24,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = colors[0]
+            };
+            grid.Children.Add(letter);
+        }
+        else
+        {
+            var icon = new Wpf.Ui.Controls.SymbolIcon
+            {
+                Symbol = SymbolRegular.Apps24,
+                FontSize = 24,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+            grid.Children.Add(icon);
+        }
+
+        return grid;
+    }
+
+    /// <summary>
+    /// 移除插件名称中的"插件"后缀
+    /// </summary>
+    private string RemovePluginSuffix(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return name;
+
+        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in" };
+        foreach (var suffix in suffixes)
+        {
+            if (name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+            {
+                return name.Substring(0, name.Length - suffix.Length).Trim();
+            }
+        }
+        return name;
     }
 
     /// <summary>
@@ -937,60 +1088,48 @@ public partial class PluginExtensionsPage
         if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
             return;
 
+        var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
+        if (plugin == null)
+            return;
+
+        // 显示确认对话框
+        var result = await MessageBoxHelper.ShowAsync(this, 
+            "永久删除插件", 
+            $"确定要永久删除插件 \"{plugin.Name}\" 吗？\n\n此操作无法撤销，插件文件将被永久删除。",
+            "删除",
+            "取消");
+
+        if (!result)
+            return;
+
+        // 执行永久删除
         try
         {
-            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-            if (plugin == null)
-                return;
-
-            // 显示确认对话框
-            var result = await MessageBoxHelper.ShowAsync(this, 
-                "永久删除插件", 
-                $"确定要永久删除插件 \"{plugin.Name}\" 吗？\n\n此操作无法撤销，插件文件将被永久删除。",
-                "删除",
-                "取消");
-
-            if (!result)
-                return;
-
-            // 执行永久删除
-            var deleted = _pluginManager.PermanentlyDeletePlugin(pluginId);
+            _pluginManager.PermanentlyDeletePlugin(pluginId);
             
-            if (deleted)
+            var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
+            if (detailsPanel != null)
             {
-                var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
-                if (detailsPanel != null)
+                var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
+                if (hideStoryboard != null)
                 {
-                    var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
-                    if (hideStoryboard != null)
-                    {
-                        hideStoryboard.Completed += (s, e) =>
-                        {
-                            detailsPanel.Visibility = Visibility.Collapsed;
-                        };
-                        hideStoryboard.Begin();
-                    }
-                    else
+                    hideStoryboard.Completed += (s, args) =>
                     {
                         detailsPanel.Visibility = Visibility.Collapsed;
-                    }
+                    };
+                    hideStoryboard.Begin();
                 }
-                UpdateAllPluginsUI();
-                
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
+                else
                 {
-                    mainWindow.Snackbar.Show("插件已删除", "插件文件已永久删除，无法恢复。");
+                    detailsPanel.Visibility = Visibility.Collapsed;
                 }
             }
-            else
+            UpdateAllPluginsUI();
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
             {
-                // 显示失败消息
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show("删除失败", "无法删除插件文件，请检查文件是否正在使用中。");
-                }
+                mainWindow.Snackbar.Show("插件已删除", "插件文件已永久删除，无法恢复。");
             }
         }
         catch (Exception ex)
