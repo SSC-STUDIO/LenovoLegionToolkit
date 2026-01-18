@@ -221,33 +221,12 @@ public partial class PluginExtensionsPage
 
     private async Task ImportPluginFileAsync(string filePath, bool showNotification = true)
     {
-        var openFileDialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Title = "选择插件压缩文件",
-            Filter = "压缩文件 (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|所有文件 (*.*)|*.*",
-            Multiselect = false
-        };
-
-        var result = openFileDialog.ShowDialog();
-        if (result != true)
-            return;
-
-        var filePath = openFileDialog.FileName;
-        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-            return;
-
         var mainWindow = Application.Current.MainWindow as MainWindow;
         if (mainWindow == null)
             return;
 
         try
         {
-            var importButton = this.FindName("_importPluginButton") as Wpf.Ui.Controls.Button;
-            if (importButton != null)
-            {
-                importButton.IsEnabled = false;
-            }
-
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
             var pluginId = Path.GetFileNameWithoutExtension(filePath);
 
@@ -256,15 +235,17 @@ public partial class PluginExtensionsPage
 
             if (Directory.Exists(pluginDirectory))
             {
-                mainWindow.Snackbar.Show("导入失败", $"插件目录已存在：{pluginId}");
-                if (importButton != null)
+                if (showNotification)
                 {
-                    importButton.IsEnabled = true;
+                    mainWindow.Snackbar.Show("导入失败", $"插件目录已存在：{pluginId}");
                 }
                 return;
             }
 
-            mainWindow.Snackbar.Show("正在导入插件", $"正在解压插件文件：{Path.GetFileName(filePath)}");
+            if (showNotification)
+            {
+                mainWindow.Snackbar.Show("正在导入插件", $"正在解压插件文件：{Path.GetFileName(filePath)}");
+            }
 
             if (extension == ".zip")
             {
@@ -300,25 +281,29 @@ public partial class PluginExtensionsPage
             }
             else
             {
-                mainWindow.Snackbar.Show("导入失败", "不支持的压缩文件格式");
-                if (importButton != null)
+                if (showNotification)
                 {
-                    importButton.IsEnabled = true;
+                    mainWindow.Snackbar.Show("导入失败", "不支持的压缩文件格式");
                 }
                 return;
             }
 
             await Task.Delay(500);
-
             _pluginManager.ScanAndLoadPlugins();
             UpdateAllPluginsUI();
 
-            mainWindow.Snackbar.Show("导入成功", $"插件 {pluginId} 已成功导入");
+            if (showNotification)
+            {
+                mainWindow.Snackbar.Show("导入成功", $"插件 {pluginId} 已成功导入");
+            }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
-            mainWindow?.Snackbar.Show("导入失败", $"导入插件时出错：{ex.Message}");
+            if (showNotification)
+            {
+                mainWindow?.Snackbar.Show("导入失败", $"导入插件时出错：{ex.Message}");
+            }
         }
     }
 
