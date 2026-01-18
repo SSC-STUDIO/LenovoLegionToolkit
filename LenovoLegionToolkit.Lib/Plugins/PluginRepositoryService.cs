@@ -224,13 +224,23 @@ public class PluginRepositoryService
         {
             // Clean up previous extraction
             if (Directory.Exists(extractPath))
-                Directory.Delete(extractPath, true);
-
+            {
+                try
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to clean up extraction path {extractPath}: {ex.Message}");
+                }
+            }
+            }
             Directory.CreateDirectory(extractPath);
 
             // Extract zip
             ZipFile.ExtractToDirectory(zipPath, extractPath, overwriteFiles: true);
-
+            
             // Verify hash
             var dllPath = Path.Combine(extractPath, $"{manifest.Id}.dll");
             if (!File.Exists(dllPath))
@@ -246,7 +256,7 @@ public class PluginRepositoryService
                     return false;
                 }
             }
-
+            
             // Calculate hash
             using var sha256 = SHA256.Create();
             await using var stream = File.OpenRead(dllPath);
@@ -264,7 +274,35 @@ public class PluginRepositoryService
             var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
             if (Directory.Exists(pluginDir))
             {
-                Directory.Delete(pluginDir, true);
+                try
+                {
+                    Directory.Delete(pluginDir, true);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to delete plugin directory {pluginDir}: {ex.Message}");
+                    
+                    // Try to delete individual files instead
+                    try
+                    {
+                        foreach (var file in Directory.GetFiles(pluginDir, "*.*", SearchOption.AllDirectories))
+                        {
+                            try
+                            {
+                                File.Delete(file);
+                            }
+                            catch
+                            {
+                                // Continue with next file
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Continue with copy
+                    }
+                }
             }
 
             Directory.CreateDirectory(pluginDir);
