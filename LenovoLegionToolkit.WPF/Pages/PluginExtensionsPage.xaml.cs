@@ -585,76 +585,62 @@ public partial class PluginExtensionsPage
             }
         }
 
-        var colors = new List<SolidColorBrush>
+        var darkColors = new List<SolidColorBrush>
         {
-            new SolidColorBrush(Color.FromRgb(59, 130, 246)),
-            new SolidColorBrush(Color.FromRgb(239, 68, 68)),
-            new SolidColorBrush(Color.FromRgb(245, 158, 11)),
-            new SolidColorBrush(Color.FromRgb(34, 197, 94)),
-            new SolidColorBrush(Color.FromRgb(168, 85, 247)),
-            new SolidColorBrush(Color.FromRgb(13, 148, 136)),
-            new SolidColorBrush(Color.FromRgb(233, 30, 99)),
-            new SolidColorBrush(Color.FromRgb(42, 161, 152))
+            new SolidColorBrush(Color.FromRgb(30, 41, 59)),
+            new SolidColorBrush(Color.FromRgb(51, 65, 85)),
+            new SolidColorBrush(Color.FromRgb(71, 85, 105)),
+            new SolidColorBrush(Color.FromRgb(30, 58, 138)),
+            new SolidColorBrush(Color.FromRgb(44, 62, 80)),
+            new SolidColorBrush(Color.FromRgb(52, 73, 94)),
+            new SolidColorBrush(Color.FromRgb(47, 79, 79)),
+            new SolidColorBrush(Color.FromRgb(39, 60, 117))
         };
 
-        var grid = new Grid
+        var random = new Random(name.GetHashCode());
+        var backgroundColor = darkColors[Math.Abs(random.Next()) % darkColors.Count];
+
+        var border = new Border
         {
             Width = 48,
-            Height = 48
+            Height = 48,
+            Background = backgroundColor,
+            CornerRadius = new CornerRadius(12),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
         };
 
         if (letters.Count >= 2)
         {
-            var leftPanel = new Grid
+            var stackPanel = new StackPanel
             {
-                Width = 24,
-                Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Background = colors[0]
-            };
-            var rightPanel = new Grid
-            {
-                Width = 24,
-                Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Background = colors[1]
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
             };
 
-            var leftLetter = new TextBlock
+            var firstLetter = new TextBlock
             {
                 Text = letters[0].ToString().ToUpper(),
-                FontSize = 20,
+                FontSize = 18,
                 FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White
             };
 
-            var rightLetter = new TextBlock
+            var secondLetter = new TextBlock
             {
                 Text = letters[1].ToString().ToLower(),
-                FontSize = 20,
+                FontSize = 18,
                 FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White
             };
 
-            leftPanel.Children.Add(leftLetter);
-            rightPanel.Children.Add(rightLetter);
-            grid.Children.Add(leftPanel);
-            grid.Children.Add(rightPanel);
+            stackPanel.Children.Add(firstLetter);
+            stackPanel.Children.Add(secondLetter);
+            border.Child = stackPanel;
         }
         else if (letters.Count == 1)
         {
-            var letterPanel = new Grid
-            {
-                Width = 48,
-                Height = 48,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Background = colors[0]
-            };
-
             var letter = new TextBlock
             {
                 Text = letters[0].ToString().ToUpper(),
@@ -664,8 +650,7 @@ public partial class PluginExtensionsPage
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White
             };
-            letterPanel.Children.Add(letter);
-            grid.Children.Add(letterPanel);
+            border.Child = letter;
         }
         else
         {
@@ -677,10 +662,10 @@ public partial class PluginExtensionsPage
                 VerticalAlignment = VerticalAlignment.Center
             };
             icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-            grid.Children.Add(icon);
+            border.Child = icon;
         }
 
-        return grid;
+        return border;
     }
 
     /// <summary>
@@ -730,12 +715,13 @@ public partial class PluginExtensionsPage
         if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
             return;
 
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+
         try
         {
             var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
             if (onlinePlugin == null)
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
                 mainWindow?.Snackbar.Show("更新失败", "无法找到插件的在线版本");
                 return;
             }
@@ -747,7 +733,6 @@ public partial class PluginExtensionsPage
                 updateButton.Content = "更新中...";
             }
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
             mainWindow?.Snackbar.Show("正在更新插件", $"正在下载并更新 {onlinePlugin.Name}...");
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
@@ -794,7 +779,6 @@ public partial class PluginExtensionsPage
         {
             Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
             mainWindow?.Snackbar.Show("更新失败", $"更新插件时出错：{ex.Message}");
         }
         finally
@@ -1534,7 +1518,7 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", plugin.Id);
+            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", $"LenovoLegionToolkit.Plugins.{plugin.Id}");
             
             var iconExtensions = new[] { ".png", ".jpg", ".jpeg", ".ico", ".svg" };
             string? iconPath = null;
