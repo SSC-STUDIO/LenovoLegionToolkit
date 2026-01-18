@@ -1611,15 +1611,14 @@ public partial class PluginExtensionsPage
         {
             ApplyPluginLanguage(pluginId, cultureInfo);
         }
-        
-        // Refresh plugin list to update language
-        UpdateAllPluginsUI();
-    }
         else
         {
             // Use application default
             ApplyPluginLanguage(pluginId, Resource.Culture ?? CultureInfo.CurrentUICulture);
         }
+        
+        // Refresh plugin list to update language
+        UpdateAllPluginsUI();
     }
 
     private void ApplyPluginLanguage(string pluginId, CultureInfo cultureInfo)
