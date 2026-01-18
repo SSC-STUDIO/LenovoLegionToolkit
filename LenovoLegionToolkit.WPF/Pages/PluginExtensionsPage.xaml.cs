@@ -943,10 +943,9 @@ public partial class PluginExtensionsPage
             {
                 iconContainer.Children.Clear();
                 
-                var isInstalled = _pluginManager.IsInstalled(pluginId);
                 UIElement iconElement;
                 
-                if (isInstalled)
+                if (_pluginManager.IsInstalled(pluginId))
                 {
                     var icon = LoadPluginIcon(plugin);
                     if (icon != null)
