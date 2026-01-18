@@ -407,7 +407,10 @@ public partial class PluginExtensionsPage
         
         _pluginsItemsControl.Items.Clear();
         
-        foreach (var plugin in plugins)
+        // 去重：按插件 ID 去重
+        var uniquePlugins = plugins.GroupBy(p => p.Id).Select(g => g.First()).ToList();
+        
+        foreach (var plugin in uniquePlugins)
         {
             try
             {
@@ -423,14 +426,14 @@ public partial class PluginExtensionsPage
         // Update results count
         if (_resultsCountTextBlock != null)
         {
-            _resultsCountTextBlock.Text = string.Format(Resource.PluginExtensionsPage_FoundPluginsCount, plugins.Count);
-            _resultsCountTextBlock.Visibility = plugins.Any() ? Visibility.Visible : Visibility.Collapsed;
+            _resultsCountTextBlock.Text = string.Format(Resource.PluginExtensionsPage_FoundPluginsCount, uniquePlugins.Count);
+            _resultsCountTextBlock.Visibility = uniquePlugins.Any() ? Visibility.Visible : Visibility.Collapsed;
         }
         
         // Show/hide no plugins message
         if (_noPluginsMessage != null)
         {
-            _noPluginsMessage.Visibility = plugins.Any() ? Visibility.Collapsed : Visibility.Visible;
+            _noPluginsMessage.Visibility = uniquePlugins.Any() ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
@@ -757,18 +760,14 @@ public partial class PluginExtensionsPage
             new SolidColorBrush(Color.FromRgb(47, 79, 79)),
             new SolidColorBrush(Color.FromRgb(39, 60, 117))
         };
-
         var random = new Random(name.GetHashCode());
         var backgroundColor = darkColors[Math.Abs(random.Next()) % darkColors.Count];
-
         var border = new Border
         {
-            Width = 48,
-            Height = 48,
             Background = backgroundColor,
             CornerRadius = new CornerRadius(12),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch
         };
 
         if (letters.Count >= 2)
@@ -783,7 +782,7 @@ public partial class PluginExtensionsPage
             var firstLetter = new TextBlock
             {
                 Text = letters[0].ToString().ToUpper(),
-                FontSize = 18,
+                FontSize = 48,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White
             };
@@ -791,7 +790,7 @@ public partial class PluginExtensionsPage
             var secondLetter = new TextBlock
             {
                 Text = letters[1].ToString().ToLower(),
-                FontSize = 18,
+                FontSize = 48,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White
             };
@@ -805,7 +804,7 @@ public partial class PluginExtensionsPage
             var letter = new TextBlock
             {
                 Text = letters[0].ToString().ToUpper(),
-                FontSize = 24,
+                FontSize = 64,
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -818,14 +817,13 @@ public partial class PluginExtensionsPage
             var icon = new Wpf.Ui.Controls.SymbolIcon
             {
                 Symbol = SymbolRegular.Apps24,
-                FontSize = 24,
+                FontSize = 64,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
             icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
             border.Child = icon;
         }
-
         return border;
     }
 
@@ -837,7 +835,7 @@ public partial class PluginExtensionsPage
         if (string.IsNullOrWhiteSpace(name))
             return name;
 
-        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in" };
+        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in", "本地", "Local" };
         foreach (var suffix in suffixes)
         {
             if (name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
