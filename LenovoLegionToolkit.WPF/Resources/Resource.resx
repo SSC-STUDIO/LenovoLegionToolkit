@@ -3456,6 +3456,24 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Permanently Delete</value>
   </data>
+  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
+    <value>Network Acceleration</value>
+  </data>
+  <data name="Plugin_Name_ViveTool" xml:space="preserve">
+    <value>ViveTool</value>
+  </data>
+  <data name="Plugin_Name_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
+    <value>Real-time network acceleration and optimization features</value>
+  </data>
+  <data name="Plugin_Description_ViveTool" xml:space="preserve">
+    <value>Manage Windows feature flags using ViVeTool</value>
+  </data>
+  <data name="Plugin_Description_Tools" xml:space="preserve">
+    <value>System optimization and utility tools</value>
+  </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
     <value>Usage</value>
   </data>
@@ -3477,10 +3495,193 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve">
+    <value>shell.nss Configuration File</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve">
+    <value>shell.nss file is used to define the overall structure and behavior of the right-click menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve">
+    <value>Open shell.nss file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve">
+    <value>Open containing folder</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Path" xml:space="preserve">
+    <value>Path:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve">
+    <value>UI Settings</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve">
+    <value>Basic Theme Settings</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve">
+    <value>Background Color:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve">
+    <value>Text Color:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve">
+    <value>Hover Effect Settings</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve">
+    <value>Hover Background:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve">
+    <value>Hover Text:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve">
+    <value>Selected Effect Settings</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve">
+    <value>Selected Background:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve">
+    <value>Selected Text:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve">
+    <value>Update Text from UI</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve">
+    <value>Load from Text</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve">
+    <value>Text Editor</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve">
+    <value>Open in External Editor</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve">
+    <value>images.nss Configuration File</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve">
+    <value>images.nss file is used to define icons and images for the right-click menu</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve">
+    <value>Open images.nss file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve">
+    <value>modify.nss Configuration File</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve">
+    <value>modify.nss file is used to modify and customize right-click menu items</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve">
+    <value>Open modify.nss file</value>
+  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>No tools available. Please add tools in tools folder in application directory.</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
     <value>Tools will appear here once they are available in the tools directory.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve">
+    <value>Base Directory: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve">
+    <value>Configuration file directory not found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve">
+    <value>File not found</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve">
+    <value>Cannot read configuration file: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve">
+    <value>This file is used to define theme-related style settings</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve">
+    <value>Theme color definition</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve">
+    <value>Base color</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve">
+    <value>Hover color</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve">
+    <value>Selected color</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve">
+    <value>For more theme configuration options, please refer to the official Nilesoft Shell documentation</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve">
+    <value>Are you sure you want to apply the configuration?
+
+This will:
+1. Save all configuration files
+2. Restart File Explorer to apply the configuration
+
+Note: Restarting will close all open folder windows and the taskbar, then automatically restart.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve">
+    <value>Confirm Apply Configuration</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve">
+    <value>Cannot save configuration file:
+{0}
+
+Please check file permissions and try again.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve">
+    <value>Save Failed</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve">
+    <value>Successfully saved the following files:
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve">
+    <value>Failed to save files:
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve">
+    <value>File Explorer has been restarted, configuration is now in effect!</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve">
+    <value>Partially Applied</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve">
+    <value>Applied Successfully</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve">
+    <value>Error applying configuration:
+{0}
+
+You can manually save the files and restart the Explorer process in Task Manager.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve">
+    <value>Apply Failed</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve">
+    <value>File does not exist or path is invalid</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve">
+    <value>Open File Failed</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve">
+    <value>Use system default program to open file</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve">
+    <value>Cannot open file: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve">
+    <value>Open File Failed</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve">
+    <value>Folder does not exist or path is invalid</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve">
+    <value>Open Folder Failed</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve">
+    <value>Cannot open folder: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve">
+    <value>Open Folder Failed</value>
   </data>
 </root>

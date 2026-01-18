@@ -3540,6 +3540,24 @@
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>永久删除</value>
   </data>
+  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
+    <value>网络加速</value>
+  </data>
+  <data name="Plugin_Name_ViveTool" xml:space="preserve">
+    <value>ViVeTool</value>
+  </data>
+  <data name="Plugin_Name_Tools" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
+    <value>实时网络加速和优化功能</value>
+  </data>
+  <data name="Plugin_Description_ViveTool" xml:space="preserve">
+    <value>使用 ViVeTool 管理 Windows 功能标志</value>
+  </data>
+  <data name="Plugin_Description_Tools" xml:space="preserve">
+    <value>系统优化和实用工具</value>
+  </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
     <value>使用说明</value>
   </data>
@@ -3561,10 +3579,193 @@
   <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
     <value>应用</value>
   </data>
+  <data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve">
+    <value>shell.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve">
+    <value>shell.nss 文件用于定义右键菜单的整体结构和行为</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve">
+    <value>打开 shell.nss 文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve">
+    <value>打开所在文件夹</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Path" xml:space="preserve">
+    <value>路径：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve">
+    <value>UI 设置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve">
+    <value>基础主题设置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve">
+    <value>背景颜色：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve">
+    <value>文本颜色：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve">
+    <value>悬停效果设置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve">
+    <value>悬停背景：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve">
+    <value>悬停文本：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve">
+    <value>选中效果设置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve">
+    <value>选中背景：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve">
+    <value>选中文本：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve">
+    <value>从UI更新文本</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve">
+    <value>从文本加载</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve">
+    <value>文本编辑器</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve">
+    <value>在外部编辑器打开</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve">
+    <value>images.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve">
+    <value>images.nss 文件用于定义右键菜单的图标和图像</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve">
+    <value>打开 images.nss 文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve">
+    <value>modify.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve">
+    <value>modify.nss 文件用于修改和自定义右键菜单项</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve">
+    <value>打开 modify.nss 文件</value>
+  </data>
   <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
     <value>当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。</value>
   </data>
   <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
     <value>工具将在 tools 目录中可用后显示在这里。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve">
+    <value>基础目录: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve">
+    <value>未找到配置文件目录</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve">
+    <value>未找到文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve">
+    <value>无法读取配置文件: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve">
+    <value>此文件用于定义主题相关的样式设置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve">
+    <value>主题颜色定义</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve">
+    <value>基础颜色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve">
+    <value>悬停颜色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve">
+    <value>选中颜色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve">
+    <value>更多主题配置选项请参考 Nilesoft Shell 官方文档</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve">
+    <value>确定要应用配置吗？
+
+这将：
+1. 保存所有配置文件
+2. 重启资源管理器（Explorer）使配置生效
+
+注意：重启将关闭所有打开的文件夹窗口和任务栏，然后自动重新启动。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve">
+    <value>确认应用配置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve">
+    <value>无法保存配置文件：
+{0}
+
+请检查文件权限后重试。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve">
+    <value>保存失败</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve">
+    <value>已成功保存以下文件：
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve">
+    <value>保存失败的文件：
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve">
+    <value>资源管理器已重启，配置已生效！</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve">
+    <value>部分应用成功</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve">
+    <value>应用成功</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve">
+    <value>应用配置时出错：
+{0}
+
+您可以手动保存文件并在任务管理器中重启 Explorer 进程。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve">
+    <value>应用失败</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve">
+    <value>文件不存在或路径无效</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve">
+    <value>打开文件失败</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve">
+    <value>使用系统默认程序打开文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve">
+    <value>无法打开文件: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve">
+    <value>打开文件失败</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve">
+    <value>文件夹不存在或路径无效</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve">
+    <value>打开文件夹失败</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve">
+    <value>无法打开文件夹: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve">
+    <value>打开文件夹失败</value>
   </data>
 </root>
