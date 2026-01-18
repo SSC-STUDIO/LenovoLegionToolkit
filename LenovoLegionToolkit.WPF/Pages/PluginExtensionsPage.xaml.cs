@@ -1064,7 +1064,8 @@ public partial class PluginExtensionsPage
             var nameBlock = this.FindName("PluginDetailsName") as TextBlock;
             if (nameBlock != null)
             {
-                var nameText = plugin.Name;
+                var displayName = GetPluginLocalizedName(plugin);
+                var nameText = displayName;
                 if (pluginMetadata != null && !string.IsNullOrWhiteSpace(pluginMetadata.Version))
                 {
                     nameText += $" v{pluginMetadata.Version}";
@@ -1605,11 +1606,15 @@ public partial class PluginExtensionsPage
 
         _pluginSettings.SetPluginCulture(pluginId, cultureInfo);
         
-        // Apply the language change immediately
+        // Apply language change immediately
         if (cultureInfo != null)
         {
             ApplyPluginLanguage(pluginId, cultureInfo);
         }
+        
+        // Refresh plugin list to update language
+        UpdateAllPluginsUI();
+    }
         else
         {
             // Use application default
