@@ -943,33 +943,7 @@ public partial class PluginExtensionsPage
             {
                 iconContainer.Children.Clear();
                 
-                UIElement iconElement;
-                
-                if (_pluginManager.IsInstalled(pluginId))
-                {
-                    var icon = LoadPluginIcon(plugin);
-                    if (icon != null)
-                    {
-                        iconElement = icon;
-                    }
-                    else
-                    {
-                        var symbolIcon = new Wpf.Ui.Controls.SymbolIcon
-                        {
-                            Symbol = GetSymbolFromString(plugin.Icon),
-                            FontSize = 24,
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
-                        symbolIcon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-                        iconElement = symbolIcon;
-                    }
-                }
-                else
-                {
-                    iconElement = CreatePluginIconOrLetter(plugin);
-                }
-                
+                var iconElement = CreatePluginIconOrLetter(plugin);
                 iconContainer.Children.Add(iconElement);
             }
 
