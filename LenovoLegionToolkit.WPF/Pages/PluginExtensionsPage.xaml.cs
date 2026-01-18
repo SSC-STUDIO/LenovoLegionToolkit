@@ -439,7 +439,9 @@ public partial class PluginExtensionsPage
             Tag = plugin.Id,
             Margin = new Thickness(0, 0, 12, 12),
             Opacity = 0,
-            RenderTransform = new TranslateTransform(0, 20)
+            RenderTransform = new TranslateTransform(0, 20),
+            Width = 200,
+            Height = 180
         };
 
         border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
@@ -466,11 +468,19 @@ public partial class PluginExtensionsPage
             border.RenderTransform.BeginAnimation(TranslateTransform.YProperty, slideAnimation);
         };
 
-        var stackPanel = new StackPanel
+        var grid = new Grid
         {
-            Orientation = Orientation.Vertical,
+            Margin = new Thickness(12)
+        };
+
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+        var topPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
+            Margin = new Thickness(0, 0, 0, 8)
         };
 
         // 插件图标容器
@@ -478,7 +488,6 @@ public partial class PluginExtensionsPage
         {
             Width = 48,
             Height = 48,
-            Margin = new Thickness(0, 0, 0, 8),
             HorizontalAlignment = HorizontalAlignment.Center
         };
         
@@ -519,23 +528,46 @@ public partial class PluginExtensionsPage
             installedBadge.Child = badgeText;
             iconContainer.Children.Add(installedBadge);
         }
-        
-        stackPanel.Children.Add(iconContainer);
 
-        // 插件名称（移除"插件"字样）
-        var displayName = RemovePluginSuffix(plugin.Name);
+        topPanel.Children.Add(iconContainer);
+
+        grid.Children.Add(topPanel);
+        Grid.SetRow(topPanel, 0);
+
+        var infoPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Top
+        };
+
+        // 插件名称（使用多语言资源）
+        var displayName = GetPluginLocalizedName(plugin);
         var nameTextBlock = new TextBlock
         {
             Text = displayName,
-            FontSize = 12,
+            FontSize = 13,
             FontWeight = FontWeights.Medium,
-            HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = TextAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 100
+            Margin = new Thickness(0, 0, 0, 4)
         };
         nameTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-        stackPanel.Children.Add(nameTextBlock);
+        infoPanel.Children.Add(nameTextBlock);
+        
+        // 插件简介（使用多语言资源）
+        var localizedDescription = GetPluginLocalizedDescription(plugin);
+        var descriptionTextBlock = new TextBlock
+        {
+            Text = localizedDescription,
+            FontSize = 11,
+            TextAlignment = TextAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxHeight = 60,
+            Margin = new Thickness(0, 0, 0, 4)
+        };
+        descriptionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
+        infoPanel.Children.Add(descriptionTextBlock);
         
         // 插件版本（如果有）
         var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
@@ -548,11 +580,14 @@ public partial class PluginExtensionsPage
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 2, 0, 0)
             };
-            versionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
-            stackPanel.Children.Add(versionTextBlock);
+            versionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
+            infoPanel.Children.Add(versionTextBlock);
         }
 
-        border.Child = stackPanel;
+        grid.Children.Add(infoPanel);
+        Grid.SetRow(infoPanel, 1);
+
+        border.Child = grid;
         return border;
     }
 
@@ -1578,5 +1613,31 @@ public partial class PluginExtensionsPage
             icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
             return icon;
         }
+    }
+
+    private string GetPluginLocalizedName(IPlugin plugin)
+    {
+        var resourceName = $"Plugin_Name_{plugin.Id}";
+        var property = typeof(Resource).GetProperty(resourceName);
+        if (property != null)
+        {
+            var value = property.GetValue(null) as string;
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+        return RemovePluginSuffix(plugin.Name);
+    }
+
+    private string GetPluginLocalizedDescription(IPlugin plugin)
+    {
+        var resourceName = $"Plugin_Description_{plugin.Id}";
+        var property = typeof(Resource).GetProperty(resourceName);
+        if (property != null)
+        {
+            var value = property.GetValue(null) as string;
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+        return plugin.Description;
     }
 }
