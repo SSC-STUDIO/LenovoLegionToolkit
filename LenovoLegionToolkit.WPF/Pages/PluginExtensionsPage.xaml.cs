@@ -702,6 +702,120 @@ public partial class PluginExtensionsPage
         return name;
     }
 
+    private bool CheckPluginHasUpdate(string pluginId)
+    {
+        var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
+        if (plugin == null)
+            return false;
+
+        var metadata = _pluginManager.GetPluginMetadata(pluginId);
+        if (metadata == null || string.IsNullOrWhiteSpace(metadata.Version))
+            return false;
+
+        var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
+        if (onlinePlugin == null || string.IsNullOrWhiteSpace(onlinePlugin.Version))
+            return false;
+
+        if (Version.TryParse(onlinePlugin.Version, out var onlineVersion) &&
+            Version.TryParse(metadata.Version, out var installedVersion))
+        {
+            return onlineVersion > installedVersion;
+        }
+
+        return false;
+    }
+
+    private async void PluginUpdateButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+            return;
+
+        try
+        {
+            var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
+            if (onlinePlugin == null)
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow?.Snackbar.Show("更新失败", "无法找到插件的在线版本");
+                return;
+            }
+
+            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
+            if (updateButton != null)
+            {
+                updateButton.IsEnabled = false;
+                updateButton.Content = "更新中...";
+            }
+
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow?.Snackbar.Show("正在更新插件", $"正在下载并更新 {onlinePlugin.Name}...");
+
+            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
+            if (downloadProgressPanel != null)
+            {
+                downloadProgressPanel.Visibility = Visibility.Visible;
+            }
+
+            var progressBar = this.FindName("DownloadProgressBar") as System.Windows.Controls.ProgressBar;
+            var progressText = this.FindName("DownloadProgressText") as TextBlock;
+            if (progressBar != null)
+            {
+                progressBar.Value = 0;
+                progressBar.Visibility = Visibility.Visible;
+            }
+
+            if (progressText != null)
+            {
+                progressText.Text = "准备下载...";
+            }
+
+            _currentDownloadingPluginId = pluginId;
+
+            _pluginRepositoryService.DownloadProgressChanged += OnDownloadProgressChanged;
+
+            var success = await _pluginRepositoryService.DownloadAndInstallPluginAsync(onlinePlugin);
+
+            _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
+
+            if (success)
+            {
+                _pluginManager.ScanAndLoadPlugins();
+                UpdateAllPluginsUI();
+                ShowPluginDetails(pluginId);
+
+                mainWindow?.Snackbar.Show("更新成功", $"插件 {onlinePlugin.Name} 已成功更新到 v{onlinePlugin.Version}");
+            }
+            else
+            {
+                mainWindow?.Snackbar.Show("更新失败", "插件更新失败，请检查网络连接或稍后重试。");
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
+
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow?.Snackbar.Show("更新失败", $"更新插件时出错：{ex.Message}");
+        }
+        finally
+        {
+            _currentDownloadingPluginId = string.Empty;
+
+            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
+            if (updateButton != null)
+            {
+                updateButton.IsEnabled = true;
+                updateButton.Content = "更新";
+            }
+
+            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
+            if (downloadProgressPanel != null)
+            {
+                downloadProgressPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
     /// <summary>
     /// 将字符串转换为 SymbolRegular 枚举值
     /// </summary>
@@ -876,11 +990,12 @@ public partial class PluginExtensionsPage
                 configureButton.Tag = pluginId;
             }
 
-            var permanentlyDeleteButton = this.FindName("PluginPermanentlyDeleteButton") as Wpf.Ui.Controls.Button;
-            if (permanentlyDeleteButton != null)
+            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
+            if (updateButton != null)
             {
-                permanentlyDeleteButton.Visibility = !plugin.IsSystemPlugin ? Visibility.Visible : Visibility.Collapsed;
-                permanentlyDeleteButton.Tag = pluginId;
+                var hasUpdate = CheckPluginHasUpdate(pluginId);
+                updateButton.Visibility = (isInstalled && hasUpdate) ? Visibility.Visible : Visibility.Collapsed;
+                updateButton.Tag = pluginId;
             }
 
             _currentSelectedPluginId = pluginId;
