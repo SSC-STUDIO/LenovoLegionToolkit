@@ -128,6 +128,114 @@ public partial class PluginExtensionsPage
         if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             return;
 
+        await ImportPluginFileAsync(filePath);
+    }
+
+    private async void ImportPluginLibraryButton_Click(object sender, RoutedEventArgs e)
+    {
+        var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+        {
+            Description = "选择包含插件压缩文件的文件夹",
+            ShowNewFolderButton = false
+        };
+
+        var result = folderDialog.ShowDialog();
+        if (result != System.Windows.Forms.DialogResult.OK)
+            return;
+
+        var folderPath = folderDialog.SelectedPath;
+        if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            return;
+
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow == null)
+            return;
+
+        try
+        {
+            var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
+            if (importButton != null)
+            {
+                importButton.IsEnabled = false;
+            }
+
+            var pluginFiles = Directory.GetFiles(folderPath, "*.zip")
+                .Concat(Directory.GetFiles(folderPath, "*.7z"))
+                .Concat(Directory.GetFiles(folderPath, "*.rar"))
+                .ToArray();
+
+            if (pluginFiles.Length == 0)
+            {
+                mainWindow.Snackbar.Show("导入失败", "所选文件夹中没有找到插件压缩文件");
+                if (importButton != null)
+                {
+                    importButton.IsEnabled = true;
+                }
+                return;
+            }
+
+            var successCount = 0;
+            var failCount = 0;
+
+            foreach (var filePath in pluginFiles)
+            {
+                try
+                {
+                    await ImportPluginFileAsync(filePath, showNotification: false);
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Error importing plugin {Path.GetFileName(filePath)}: {ex.Message}", ex);
+                    failCount++;
+                }
+            }
+
+            await Task.Delay(500);
+            _pluginManager.ScanAndLoadPlugins();
+            UpdateAllPluginsUI();
+
+            if (failCount == 0)
+            {
+                mainWindow.Snackbar.Show("导入成功", $"成功导入 {successCount} 个插件");
+            }
+            else
+            {
+                mainWindow.Snackbar.Show("导入完成", $"成功导入 {successCount} 个插件，失败 {failCount} 个");
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error importing plugin library: {ex.Message}", ex);
+            mainWindow?.Snackbar.Show("导入失败", $"导入插件库时出错：{ex.Message}");
+        }
+        finally
+        {
+            var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
+            if (importButton != null)
+            {
+                importButton.IsEnabled = true;
+            }
+        }
+    }
+
+    private async Task ImportPluginFileAsync(string filePath, bool showNotification = true)
+    {
+        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "选择插件压缩文件",
+            Filter = "压缩文件 (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|所有文件 (*.*)|*.*",
+            Multiselect = false
+        };
+
+        var result = openFileDialog.ShowDialog();
+        if (result != true)
+            return;
+
+        var filePath = openFileDialog.FileName;
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            return;
+
         var mainWindow = Application.Current.MainWindow as MainWindow;
         if (mainWindow == null)
             return;
@@ -211,14 +319,6 @@ public partial class PluginExtensionsPage
         {
             Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
             mainWindow?.Snackbar.Show("导入失败", $"导入插件时出错：{ex.Message}");
-        }
-        finally
-        {
-            var importButton = this.FindName("_importPluginButton") as Wpf.Ui.Controls.Button;
-            if (importButton != null)
-            {
-                importButton.IsEnabled = true;
-            }
         }
     }
 
@@ -353,6 +453,16 @@ public partial class PluginExtensionsPage
     {
         UpdateAllPluginsUI();
         
+        // Auto-load plugins from root directory if exists
+        Task.Run(async () =>
+        {
+            await Task.Delay(100);
+            await Dispatcher.InvokeAsync(() =>
+            {
+                LoadPluginsFromRootDirectory();
+            });
+        });
+        
         // Auto-fetch online plugins in background
         _ = Task.Run(async () =>
         {
@@ -362,6 +472,72 @@ public partial class PluginExtensionsPage
                 await FetchOnlinePluginsAsync();
             });
         });
+    }
+
+    private async void LoadPluginsFromRootDirectory()
+    {
+        try
+        {
+            var rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var pluginsDirectory = Path.Combine(rootDirectory, "plugins");
+            
+            if (!Directory.Exists(pluginsDirectory))
+                return;
+            
+            var pluginDirectories = Directory.GetDirectories(pluginsDirectory);
+            if (pluginDirectories.Length == 0)
+                return;
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow == null)
+                return;
+            
+            var loadCount = 0;
+            foreach (var pluginDir in pluginDirectories)
+            {
+                var pluginId = Path.GetFileName(pluginDir);
+                
+                // Check if plugin is already installed
+                if (_pluginManager.IsInstalled(pluginId))
+                    continue;
+                
+                // Check if this is a plugin directory (has DLL file)
+                var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
+                if (dllFiles.Length == 0)
+                    continue;
+                
+                try
+                {
+                    // Try to load the plugin
+                    _pluginManager.ScanAndLoadPlugins();
+                    loadCount++;
+                    
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    {
+                        Lib.Utils.Log.Instance.Trace($"Auto-loaded plugin from root directory: {pluginId}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Error auto-loading plugin {pluginId}: {ex.Message}", ex);
+                }
+            }
+            
+            if (loadCount > 0)
+            {
+                await Task.Delay(500);
+                UpdateAllPluginsUI();
+                
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Auto-loaded {loadCount} plugins from root directory");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error loading plugins from root directory: {ex.Message}", ex);
+        }
     }
 
     private void PluginExtensionsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -441,7 +617,7 @@ public partial class PluginExtensionsPage
             Opacity = 0,
             RenderTransform = new TranslateTransform(0, 20),
             Width = 200,
-            Height = 180
+            Height = 200
         };
 
         border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
@@ -470,33 +646,22 @@ public partial class PluginExtensionsPage
 
         var grid = new Grid
         {
-            Margin = new Thickness(12)
+            Margin = new Thickness(0)
         };
 
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-        var iconContainer = new Grid
-        {
-            Width = 48,
-            Height = 48,
-            Margin = new Thickness(0, 0, 12, 0)
-        };
-        
         var iconBorder = new Border
         {
             Background = (Brush)FindResource("ControlFillColorSecondaryBrush"),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = new CornerRadius(12),
             BorderBrush = (Brush)FindResource("ControlStrokeColorDefaultBrush"),
-            BorderThickness = new Thickness(1),
-            Width = 48,
-            Height = 48
+            BorderThickness = new Thickness(1)
         };
         
-        // 生成彩色字母图标或使用真实图片
         var iconContent = CreatePluginIconOrLetter(plugin);
         iconBorder.Child = iconContent;
-        iconContainer.Children.Add(iconBorder);
         
         // 已安装标签
         if (_pluginManager.IsInstalled(plugin.Id))
@@ -508,7 +673,7 @@ public partial class PluginExtensionsPage
                 Padding = new Thickness(4, 2, 4, 2),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, -4, -4, 0)
+                Margin = new Thickness(0, 4, 4, 0)
             };
             var badgeText = new TextBlock
             {
@@ -518,16 +683,17 @@ public partial class PluginExtensionsPage
                 Foreground = Brushes.White
             };
             installedBadge.Child = badgeText;
-            iconContainer.Children.Add(installedBadge);
+            iconBorder.Child = installedBadge;
         }
 
-        grid.Children.Add(iconContainer);
-        Grid.SetColumn(iconContainer, 0);
+        grid.Children.Add(iconBorder);
+        Grid.SetRow(iconBorder, 0);
 
         var infoPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(12, 0, 12, 0)
         };
 
         // 插件名称（使用多语言资源）
@@ -535,29 +701,14 @@ public partial class PluginExtensionsPage
         var nameTextBlock = new TextBlock
         {
             Text = displayName,
-            FontSize = 13,
+            FontSize = 14,
             FontWeight = FontWeights.Medium,
-            TextAlignment = TextAlignment.Left,
+            TextAlignment = TextAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 4)
         };
         nameTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
         infoPanel.Children.Add(nameTextBlock);
-        
-        // 插件简介（使用多语言资源）
-        var localizedDescription = GetPluginLocalizedDescription(plugin);
-        var descriptionTextBlock = new TextBlock
-        {
-            Text = localizedDescription,
-            FontSize = 11,
-            TextAlignment = TextAlignment.Left,
-            TextWrapping = TextWrapping.Wrap,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxHeight = 60,
-            Margin = new Thickness(0, 0, 0, 4)
-        };
-        descriptionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
-        infoPanel.Children.Add(descriptionTextBlock);
         
         // 插件版本（如果有）
         var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
@@ -566,16 +717,16 @@ public partial class PluginExtensionsPage
             var versionTextBlock = new TextBlock
             {
                 Text = $"v{metadata.Version}",
-                FontSize = 10,
+                FontSize = 11,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 2, 0, 0)
+                Margin = new Thickness(0, 0, 0, 0)
             };
             versionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
             infoPanel.Children.Add(versionTextBlock);
         }
 
         grid.Children.Add(infoPanel);
-        Grid.SetColumn(infoPanel, 1);
+        Grid.SetRow(infoPanel, 1);
 
         border.Child = grid;
         return border;
@@ -927,16 +1078,6 @@ public partial class PluginExtensionsPage
 
             var pluginMetadata = _pluginManager.GetPluginMetadata(pluginId);
             
-            var iconBorder = this.FindName("PluginDetailsIconBorder") as Border;
-            var iconContainer = this.FindName("PluginDetailsIconContainer") as Grid;
-            if (iconBorder != null && iconContainer != null)
-            {
-                iconContainer.Children.Clear();
-                
-                var iconElement = CreatePluginIconOrLetter(plugin);
-                iconContainer.Children.Add(iconElement);
-            }
-
             var nameBlock = this.FindName("PluginDetailsName") as TextBlock;
             if (nameBlock != null)
             {
