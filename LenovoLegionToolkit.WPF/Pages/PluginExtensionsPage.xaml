@@ -168,6 +168,7 @@
                 
                 <!-- Icon -->
                 <Border
+                    x:Name="PluginDetailsIconBorder"
                     Grid.Column="0"
                     Width="48"
                     Height="48"
@@ -176,13 +177,7 @@
                     CornerRadius="8"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                    <wpfui:SymbolIcon
-                        x:Name="PluginDetailsIcon"
-                        Symbol="Desktop24"
-                        FontSize="24"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
+                    <Grid x:Name="PluginDetailsIconContainer" />
                 </Border>
                 
                 <!-- Details -->
