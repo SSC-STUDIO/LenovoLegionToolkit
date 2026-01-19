@@ -115,8 +115,8 @@ public partial class PluginExtensionsPage
     {
         var openFileDialog = new Microsoft.Win32.OpenFileDialog
         {
-            Title = "选择插件压缩文件",
-            Filter = "压缩文件 (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|所有文件 (*.*)|*.*",
+            Title = "Select plugin compressed file",
+            Filter = "Compressed files (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|All files (*.*)|*.*",
             Multiselect = false
         };
 
@@ -135,7 +135,7 @@ public partial class PluginExtensionsPage
     {
         var folderDialog = new System.Windows.Forms.FolderBrowserDialog
         {
-            Description = "选择包含插件压缩文件的文件夹",
+            Description = "Select folder containing plugin compressed files",
             ShowNewFolderButton = false
         };
 
@@ -166,7 +166,7 @@ public partial class PluginExtensionsPage
 
             if (pluginFiles.Length == 0)
             {
-                mainWindow.Snackbar.Show("导入失败", "所选文件夹中没有找到插件压缩文件");
+                mainWindow.Snackbar.Show("Import failed", "No plugin compressed files found in the selected folder");
                 if (importButton != null)
                 {
                     importButton.IsEnabled = true;
@@ -193,21 +193,22 @@ public partial class PluginExtensionsPage
 
             await Task.Delay(500);
             _pluginManager.ScanAndLoadPlugins();
+            LocalizationHelper.SetPluginResourceCultures();
             UpdateAllPluginsUI();
 
             if (failCount == 0)
             {
-                mainWindow.Snackbar.Show("导入成功", $"成功导入 {successCount} 个插件");
+                mainWindow.Snackbar.Show("Import successful", $"Successfully imported {successCount} plugin(s)");
             }
             else
             {
-                mainWindow.Snackbar.Show("导入完成", $"成功导入 {successCount} 个插件，失败 {failCount} 个");
+                mainWindow.Snackbar.Show("Import completed", $"Successfully imported {successCount} plugin(s), failed {failCount} plugin(s)");
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error importing plugin library: {ex.Message}", ex);
-            mainWindow?.Snackbar.Show("导入失败", $"导入插件库时出错：{ex.Message}");
+            mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin library: {ex.Message}");
         }
         finally
         {
@@ -228,28 +229,20 @@ public partial class PluginExtensionsPage
         try
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            var pluginId = Path.GetFileNameWithoutExtension(filePath);
+            var pluginsDirectory = GetPluginsDirectory();
 
-            var pluginsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins");
-            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
-
-            if (Directory.Exists(pluginDirectory))
-            {
-                if (showNotification)
-                {
-                    mainWindow.Snackbar.Show("导入失败", $"插件目录已存在：{pluginId}");
-                }
-                return;
-            }
+            // Extract to a temporary directory first to analyze structure
+            var tempExtractDir = Path.Combine(Path.GetTempPath(), $"plugin_import_{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tempExtractDir);
 
             if (showNotification)
             {
-                mainWindow.Snackbar.Show("正在导入插件", $"正在解压插件文件：{Path.GetFileName(filePath)}");
+                mainWindow.Snackbar.Show("Importing plugin", $"Extracting plugin file: {Path.GetFileName(filePath)}");
             }
 
             if (extension == ".zip")
             {
-                await Task.Run(() => System.IO.Compression.ZipFile.ExtractToDirectory(filePath, pluginDirectory));
+                await Task.Run(() => System.IO.Compression.ZipFile.ExtractToDirectory(filePath, tempExtractDir));
             }
             else if (extension == ".7z")
             {
@@ -258,7 +251,7 @@ public partial class PluginExtensionsPage
                     var processStartInfo = new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = "7z.exe",
-                        Arguments = $"x \"{filePath}\" -o\"{pluginDirectory}\" -y",
+                        Arguments = $"x \"{filePath}\" -o\"{tempExtractDir}\" -y",
                         UseShellExecute = false,
                         CreateNoWindow = true
                     };
@@ -272,7 +265,7 @@ public partial class PluginExtensionsPage
                     var processStartInfo = new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = "unrar.exe",
-                        Arguments = $"x \"{filePath}\" \"{pluginDirectory}\" -y",
+                        Arguments = $"x \"{filePath}\" \"{tempExtractDir}\" -y",
                         UseShellExecute = false,
                         CreateNoWindow = true
                     };
@@ -283,18 +276,47 @@ public partial class PluginExtensionsPage
             {
                 if (showNotification)
                 {
-                    mainWindow.Snackbar.Show("导入失败", "不支持的压缩文件格式");
+                    mainWindow.Snackbar.Show("Import failed", "Unsupported compressed file format");
                 }
+                Directory.Delete(tempExtractDir, true);
                 return;
             }
 
+            // Analyze the extracted structure to find the plugin directory
+            var pluginId = await AnalyzeAndFixPluginStructureAsync(tempExtractDir);
+            if (string.IsNullOrEmpty(pluginId))
+            {
+                if (showNotification)
+                {
+                    mainWindow.Snackbar.Show("Import failed", "Unable to recognize plugin structure, please check the compressed package contents");
+                }
+                Directory.Delete(tempExtractDir, true);
+                return;
+            }
+
+            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+
+            if (Directory.Exists(pluginDirectory))
+            {
+                if (showNotification)
+                {
+                    mainWindow.Snackbar.Show("Import failed", $"Plugin directory already exists: {pluginId}");
+                }
+                Directory.Delete(tempExtractDir, true);
+                return;
+            }
+
+            // Move the fixed plugin directory to the plugins folder
+            Directory.Move(tempExtractDir, pluginDirectory);
+
             await Task.Delay(500);
             _pluginManager.ScanAndLoadPlugins();
+            LocalizationHelper.SetPluginResourceCultures();
             UpdateAllPluginsUI();
 
             if (showNotification)
             {
-                mainWindow.Snackbar.Show("导入成功", $"插件 {pluginId} 已成功导入");
+                mainWindow.Snackbar.Show("Import successful", $"Plugin {pluginId} imported successfully");
             }
         }
         catch (Exception ex)
@@ -302,7 +324,7 @@ public partial class PluginExtensionsPage
             Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
             if (showNotification)
             {
-                mainWindow?.Snackbar.Show("导入失败", $"导入插件时出错：{ex.Message}");
+                mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin: {ex.Message}");
             }
         }
     }
@@ -380,9 +402,11 @@ public partial class PluginExtensionsPage
     {
         var filteredPlugins = _allPlugins.AsEnumerable();
         
-        // Apply filter - 只有外置插件，没有内置和第三方之分
+        // Apply filter - 支持在线/本地分类
         filteredPlugins = _currentFilter switch
         {
+            "Online" => filteredPlugins.Where(p => _onlinePlugins.Any(op => op.Id == p.Id)),
+            "Local" => filteredPlugins.Where(p => !_onlinePlugins.Any(op => op.Id == p.Id) && !p.IsSystemPlugin),
             "Installed" => filteredPlugins.Where(p => _pluginManager.IsInstalled(p.Id)),
             "NotInstalled" => filteredPlugins.Where(p => !_pluginManager.IsInstalled(p.Id)),
             _ => filteredPlugins
@@ -439,17 +463,8 @@ public partial class PluginExtensionsPage
 
     private void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
+        LocalizationHelper.SetPluginResourceCultures();
         UpdateAllPluginsUI();
-        
-        // Auto-load plugins from root directory if exists
-        Task.Run(async () =>
-        {
-            await Task.Delay(100);
-            await Dispatcher.InvokeAsync(() =>
-            {
-                LoadPluginsFromRootDirectory();
-            });
-        });
         
         // Auto-fetch online plugins in background
         _ = Task.Run(async () =>
@@ -535,6 +550,7 @@ public partial class PluginExtensionsPage
             // Use Dispatcher to ensure UI updates happen after plugin scanning
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
             }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
@@ -593,7 +609,7 @@ public partial class PluginExtensionsPage
     }
 
     /// <summary>
-    /// 创建插件卡片 UI 元素
+    /// Create plugin card UI element
     /// </summary>
     private Border CreatePluginCard(IPlugin plugin)
     {
@@ -637,31 +653,72 @@ public partial class PluginExtensionsPage
             Margin = new Thickness(0)
         };
 
-        grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
+        // 创建图标容器，填充整个卡片
         var iconBorder = new Border
         {
-            Background = (Brush)FindResource("ControlFillColorSecondaryBrush"),
             CornerRadius = new CornerRadius(12),
             BorderBrush = (Brush)FindResource("ControlStrokeColorDefaultBrush"),
             BorderThickness = new Thickness(1)
         };
         
+        // 获取图标内容
         var iconContent = CreatePluginIconOrLetter(plugin);
-        iconBorder.Child = iconContent;
+        
+        // 设置图标填充整个卡片
+        if (iconContent is Image image)
+        {
+            image.Stretch = Stretch.UniformToFill;
+            image.HorizontalAlignment = HorizontalAlignment.Stretch;
+            image.VerticalAlignment = VerticalAlignment.Stretch;
+        }
+        
+        // 使用 Grid 来叠加图标、徽章和名称
+        var iconGrid = new Grid();
+        iconGrid.Children.Add(iconContent);
+        
+        // 徽章容器（右上角）
+        var badgeContainer = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 4, 4, 0)
+        };
+        
+        // 本地标签：如果插件不在在线插件列表中，则视为本地插件
+        var isOnlinePlugin = _onlinePlugins.Any(p => p.Id == plugin.Id);
+        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
+        
+        if (!isOnlinePlugin && !plugin.IsSystemPlugin)
+        {
+            var localBadge = new Border
+            {
+                Background = (Brush)FindResource("SystemFillColorCautionBrush"),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(4, 2, 4, 2),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 0, 0, 4)
+            };
+            var localBadgeText = new TextBlock
+            {
+                Text = "本地",
+                FontSize = 8,
+                FontWeight = FontWeights.Medium,
+                Foreground = Brushes.White
+            };
+            localBadge.Child = localBadgeText;
+            badgeContainer.Children.Add(localBadge);
+        }
         
         // 已安装标签
-        if (_pluginManager.IsInstalled(plugin.Id))
+        if (isInstalled)
         {
             var installedBadge = new Border
             {
                 Background = (Brush)FindResource("SystemFillColorSuccessBrush"),
                 CornerRadius = new CornerRadius(4),
                 Padding = new Thickness(4, 2, 4, 2),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 4, 4, 0)
+                HorizontalAlignment = HorizontalAlignment.Right
             };
             var badgeText = new TextBlock
             {
@@ -671,19 +728,29 @@ public partial class PluginExtensionsPage
                 Foreground = Brushes.White
             };
             installedBadge.Child = badgeText;
-            iconBorder.Child = installedBadge;
+            badgeContainer.Children.Add(installedBadge);
         }
-
-        grid.Children.Add(iconBorder);
-        Grid.SetRow(iconBorder, 0);
-
-        var infoPanel = new StackPanel
+        
+        // 如果有徽章，则添加到网格中
+        if (badgeContainer.Children.Count > 0)
         {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(12, 0, 12, 0)
+            iconGrid.Children.Add(badgeContainer);
+        }
+        
+        // 创建底部名称覆盖层
+        var nameOverlay = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0)),
+            CornerRadius = new CornerRadius(0, 0, 12, 12),
+            Padding = new Thickness(12, 8, 12, 8),
+            VerticalAlignment = VerticalAlignment.Bottom
         };
-
+        
+        var namePanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+        
         // 插件名称（使用多语言资源）
         var displayName = GetPluginLocalizedName(plugin);
         var nameTextBlock = new TextBlock
@@ -693,10 +760,9 @@ public partial class PluginExtensionsPage
             FontWeight = FontWeights.Medium,
             TextAlignment = TextAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            Margin = new Thickness(0, 0, 0, 4)
+            Foreground = Brushes.White
         };
-        nameTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-        infoPanel.Children.Add(nameTextBlock);
+        namePanel.Children.Add(nameTextBlock);
         
         // 插件版本（如果有）
         var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
@@ -707,21 +773,23 @@ public partial class PluginExtensionsPage
                 Text = $"v{metadata.Version}",
                 FontSize = 11,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 0, 0, 0)
+                Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255))
             };
-            versionTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
-            infoPanel.Children.Add(versionTextBlock);
+            namePanel.Children.Add(versionTextBlock);
         }
-
-        grid.Children.Add(infoPanel);
-        Grid.SetRow(infoPanel, 1);
+        
+        nameOverlay.Child = namePanel;
+        iconGrid.Children.Add(nameOverlay);
+        
+        iconBorder.Child = iconGrid;
+        grid.Children.Add(iconBorder);
 
         border.Child = grid;
         return border;
     }
 
     /// <summary>
-    /// 创建插件图标（真实图片或彩色字母）
+    /// Create plugin icon (real image or colored letters)
     /// </summary>
     private UIElement CreatePluginIconOrLetter(IPlugin plugin)
     {
@@ -828,7 +896,7 @@ public partial class PluginExtensionsPage
     }
 
     /// <summary>
-    /// 移除插件名称中的"插件"后缀
+    /// Remove "Plugin" suffix from plugin name
     /// </summary>
     private string RemovePluginSuffix(string name)
     {
@@ -924,6 +992,7 @@ public partial class PluginExtensionsPage
             if (success)
             {
                 _pluginManager.ScanAndLoadPlugins();
+                LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
                 ShowPluginDetails(pluginId);
 
@@ -1250,6 +1319,7 @@ public partial class PluginExtensionsPage
             {
                 // Refresh UI
                 _pluginManager.ScanAndLoadPlugins();
+                LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
                 ShowPluginDetails(manifest.Id);
                 
@@ -1412,7 +1482,7 @@ public partial class PluginExtensionsPage
             }
 
             // 查找插件的可执行文件
-            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", pluginId);
+            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginId);
             var exeFile = Path.Combine(pluginDir, $"{pluginId}.exe");
             
             if (File.Exists(exeFile))
@@ -1674,22 +1744,73 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build", "plugins", $"LenovoLegionToolkit.Plugins.{plugin.Id}");
-            
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var pluginsRootDir = GetPluginsDirectory();
             var iconExtensions = new[] { ".png", ".jpg", ".jpeg", ".ico", ".svg" };
             string? iconPath = null;
             
-            foreach (var ext in iconExtensions)
+            // Try multiple possible plugin directory names
+            var possibleDirNames = new[]
             {
-                var testPath = Path.Combine(pluginDir, $"icon{ext}");
-                if (File.Exists(testPath))
+                $"LenovoLegionToolkit.Plugins.{plugin.Id}",
+                plugin.Id
+            };
+            
+            // Try multiple possible file icon names
+            var possibleIconNames = new[]
+            {
+                "icon",
+                plugin.Id,
+                "plugin",
+                "logo"
+            };
+            
+            foreach (var dirName in possibleDirNames)
+            {
+                var pluginDir = Path.Combine(pluginsRootDir, dirName);
+                if (Directory.Exists(pluginDir))
                 {
-                    iconPath = testPath;
-                    break;
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace($"Checking plugin directory for icons: {pluginDir}");
+                    
+                    foreach (var iconName in possibleIconNames)
+                    {
+                        foreach (var ext in iconExtensions)
+                        {
+                            var testPath = Path.Combine(pluginDir, $"{iconName}{ext}");
+                            if (File.Exists(testPath))
+                            {
+                                iconPath = testPath;
+                                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                                    Lib.Utils.Log.Instance.Trace($"Found icon for plugin {plugin.Id}: {iconPath}");
+                                break;
+                            }
+                        }
+                        if (iconPath != null)
+                            break;
+                    }
+                    if (iconPath != null)
+                        break;
                 }
             }
             
-            if (!string.IsNullOrEmpty(iconPath))
+            if (string.IsNullOrEmpty(iconPath))
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"No icon file found for plugin {plugin.Id}, using SymbolIcon with icon string: {plugin.Icon}");
+                
+                var symbol = GetSymbolFromString(plugin.Icon);
+                var icon = new Wpf.Ui.Controls.SymbolIcon
+                {
+                    Symbol = symbol,
+                    FontSize = 24,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
+                return icon;
+            }
+            else
             {
                 var bitmapImage = new System.Windows.Media.Imaging.BitmapImage();
                 bitmapImage.BeginInit();
@@ -1708,16 +1829,6 @@ public partial class PluginExtensionsPage
                 };
                 return image;
             }
-            
-            var icon = new Wpf.Ui.Controls.SymbolIcon
-            {
-                Symbol = GetSymbolFromString(plugin.Icon),
-                FontSize = 24,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-            return icon;
         }
         catch (Exception ex)
         {
@@ -1736,6 +1847,35 @@ public partial class PluginExtensionsPage
         }
     }
 
+    private string GetPluginsDirectory()
+    {
+        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
+        
+        var possiblePaths = new[]
+        {
+            Path.Combine(appBaseDir, "build", "plugins"),
+            Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
+            Path.Combine(appBaseDir, "..", "build", "plugins"),
+        };
+
+        foreach (var possiblePath in possiblePaths)
+        {
+            var fullPath = Path.GetFullPath(possiblePath);
+            if (Directory.Exists(fullPath))
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"Found plugins directory: {fullPath}");
+                return fullPath;
+            }
+        }
+
+        var defaultPath = Path.Combine(appBaseDir, "build", "plugins");
+        Directory.CreateDirectory(defaultPath);
+        if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            Lib.Utils.Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
+        return defaultPath;
+    }
+
     private string GetPluginLocalizedName(IPlugin plugin)
     {
         var resourceName = $"Plugin_Name_{plugin.Id}";
@@ -1747,6 +1887,138 @@ public partial class PluginExtensionsPage
                 return value;
         }
         return RemovePluginSuffix(plugin.Name);
+    }
+
+    private async Task<string?> AnalyzeAndFixPluginStructureAsync(string extractDir)
+    {
+        try
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Analyzing plugin structure in {extractDir}");
+
+            var subDirectories = Directory.GetDirectories(extractDir);
+            if (subDirectories.Length == 0)
+            {
+                // No subdirectories, check if this is already a plugin directory
+                var dllFiles = Directory.GetFiles(extractDir, "*.dll", SearchOption.TopDirectoryOnly);
+                var pluginDll = dllFiles.FirstOrDefault(f => Path.GetFileName(f).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase));
+                
+                if (pluginDll != null)
+                {
+                    // Extract plugin ID from DLL name
+                    var dllName = Path.GetFileNameWithoutExtension(pluginDll);
+                    var pluginId = dllName.Replace("LenovoLegionToolkit.Plugins.", "");
+                    
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace($"  Found plugin directory with DLL: {pluginId}");
+                    
+                    // Rename extractDir to pluginId
+                    var parentDir = Path.GetDirectoryName(extractDir);
+                    if (parentDir != null)
+                    {
+                        var targetDir = Path.Combine(parentDir, pluginId);
+                        if (Directory.Exists(targetDir))
+                            Directory.Delete(targetDir, true);
+                        Directory.Move(extractDir, targetDir);
+                        return pluginId;
+                    }
+                }
+                
+                return null;
+            }
+
+            // Check for nested structure
+            var firstSubDir = subDirectories[0];
+            var firstSubDirName = Path.GetFileName(firstSubDir);
+
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"  Found subdirectory: {firstSubDirName}");
+
+            // Case 1: Single level nesting (e.g., NetworkAcceleration/LenovoLegionToolkit.Plugins.NetworkAcceleration/)
+            if (firstSubDirName.StartsWith("LenovoLegionToolkit.Plugins."))
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"  Detected single-level nesting, flattening...");
+
+                var pluginId = firstSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
+
+                // Move all contents from nested directory to extractDir
+                await MoveDirectoryContentsAsync(firstSubDir, extractDir);
+
+                // Delete the now-empty nested directory
+                Directory.Delete(firstSubDir, true);
+
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"  Successfully flattened to plugin: {pluginId}");
+
+                return pluginId;
+            }
+
+            // Case 2: Double level nesting (e.g., NetworkAcceleration/NetworkAcceleration/LenovoLegionToolkit.Plugins.NetworkAcceleration/)
+            var nestedSubDirs = Directory.GetDirectories(firstSubDir);
+            if (nestedSubDirs.Length == 1)
+            {
+                var nestedSubDir = nestedSubDirs[0];
+                var nestedSubDirName = Path.GetFileName(nestedSubDir);
+
+                if (nestedSubDirName.StartsWith("LenovoLegionToolkit.Plugins."))
+                {
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace($"  Detected double-level nesting, flattening...");
+
+                    var pluginId = nestedSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
+
+                    // Move all contents from deeply nested directory to extractDir
+                    await MoveDirectoryContentsAsync(nestedSubDir, extractDir);
+
+                    // Delete the now-empty nested directories
+                    Directory.Delete(nestedSubDir, true);
+                    Directory.Delete(firstSubDir, true);
+
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace($"  Successfully flattened to plugin: {pluginId}");
+
+                    return pluginId;
+                }
+            }
+
+            // Case 3: Use the subdirectory name as plugin ID
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"  Using subdirectory as plugin ID: {firstSubDirName}");
+
+            return firstSubDirName;
+        }
+        catch (Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Error analyzing plugin structure: {ex.Message}", ex);
+            return null;
+        }
+    }
+
+    private async Task MoveDirectoryContentsAsync(string sourceDir, string targetDir)
+    {
+        await Task.Run(() =>
+        {
+            var files = Directory.GetFiles(sourceDir);
+            var dirs = Directory.GetDirectories(sourceDir);
+
+            foreach (var file in files)
+            {
+                var destFile = Path.Combine(targetDir, Path.GetFileName(file));
+                if (File.Exists(destFile))
+                    File.Delete(destFile);
+                File.Move(file, destFile);
+            }
+
+            foreach (var dir in dirs)
+            {
+                var destDir = Path.Combine(targetDir, Path.GetFileName(dir));
+                if (Directory.Exists(destDir))
+                    Directory.Delete(destDir, true);
+                Directory.Move(dir, destDir);
+            }
+        });
     }
 
     private string GetPluginLocalizedDescription(IPlugin plugin)
