@@ -402,11 +402,10 @@ public partial class PluginExtensionsPage
     {
         var filteredPlugins = _allPlugins.AsEnumerable();
         
-        // Apply filter - 支持在线/本地分类
+        // Apply filter
         filteredPlugins = _currentFilter switch
         {
             "Online" => filteredPlugins.Where(p => _onlinePlugins.Any(op => op.Id == p.Id)),
-            "Local" => filteredPlugins.Where(p => !_onlinePlugins.Any(op => op.Id == p.Id) && !p.IsSystemPlugin),
             "Installed" => filteredPlugins.Where(p => _pluginManager.IsInstalled(p.Id)),
             "NotInstalled" => filteredPlugins.Where(p => !_pluginManager.IsInstalled(p.Id)),
             _ => filteredPlugins
@@ -569,16 +568,6 @@ public partial class PluginExtensionsPage
                 foreach (var onlinePlugin in _onlinePlugins)
                 {
                     allPluginsList.Add(new PluginManifestAdapter(onlinePlugin));
-                }
-            }
-            
-            // 添加本地注册的插件（避免重复）
-            var localPlugins = _pluginManager.GetRegisteredPlugins().ToList();
-            foreach (var localPlugin in localPlugins)
-            {
-                if (!allPluginsList.Any(p => p.Id == localPlugin.Id))
-                {
-                    allPluginsList.Add(localPlugin);
                 }
             }
             
@@ -878,7 +867,7 @@ public partial class PluginExtensionsPage
         if (string.IsNullOrWhiteSpace(name))
             return name;
 
-        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in", "本地", "Local" };
+        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in" };
         foreach (var suffix in suffixes)
         {
             if (name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
