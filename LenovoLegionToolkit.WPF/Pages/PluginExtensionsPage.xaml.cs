@@ -753,19 +753,10 @@ public partial class PluginExtensionsPage
     }
 
     /// <summary>
-    /// Create plugin icon (real image or colored letters)
+    /// Create plugin icon (colored letters)
     /// </summary>
     private UIElement CreatePluginIconOrLetter(IPlugin plugin)
     {
-        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
-        
-        if (isInstalled)
-        {
-            var icon = LoadPluginIcon(plugin);
-            if (icon != null)
-                return icon;
-        }
-
         var name = plugin.Name;
         if (string.IsNullOrWhiteSpace(name))
             name = plugin.Id;
