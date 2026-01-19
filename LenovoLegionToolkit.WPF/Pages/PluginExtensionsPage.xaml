@@ -205,7 +205,7 @@
                             Appearance="Secondary"
                             Margin="8,0,0,0"
                             Click="CloseDetailsPanel_Click"
-                            ToolTip="关闭详情" />
+                            ToolTip="Close details" />
                     </Grid>
                     
                     <!-- Language Selection and Action Buttons -->
@@ -250,7 +250,7 @@
                             Visibility="Collapsed" />
                         <wpfui:Button
                             x:Name="PluginUpdateButton"
-                            Content="更新"
+                            Content="Update"
                             Click="PluginUpdateButton_Click"
                             Margin="8,0,0,0"
                             Visibility="Collapsed" />
@@ -301,25 +301,11 @@
                     MinWidth="150"
                     SelectionChanged="FilterComboBox_SelectionChanged">
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterAll}" Tag="All" IsSelected="True" />
+                    <ComboBoxItem Content="Online Plugins" Tag="Online" />
+                    <ComboBoxItem Content="Local Plugins" Tag="Local" />
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterInstalled}" Tag="Installed" />
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterNotInstalled}" Tag="NotInstalled" />
                 </ComboBox>
-                
-                <wpfui:Button
-                    x:Name="_importPluginButton"
-                    Icon="Add24"
-                    Appearance="Primary"
-                    Margin="8,0,0,0"
-                    Click="ImportPluginButton_Click"
-                    ToolTip="导入插件压缩文件" />
-                
-                <wpfui:Button
-                    x:Name="_importPluginLibraryButton"
-                    Icon="FolderZip24"
-                    Appearance="Secondary"
-                    Margin="8,0,0,0"
-                    Click="ImportPluginLibraryButton_Click"
-                    ToolTip="导入插件库文件夹" />
                 
                 <wpfui:Button
                     x:Name="_refreshButton"
@@ -327,7 +313,7 @@
                     Appearance="Secondary"
                     Margin="8,0,0,0"
                     Click="RefreshButton_Click"
-                    ToolTip="刷新插件列表" />
+                    ToolTip="Refresh plugin list" />
             </StackPanel>
         </Grid>
 
@@ -339,8 +325,8 @@
             Severity="Warning"
             IsOpen="False"
             IsClosable="True"
-            Title="工具箱已弃用"
-            Message="工具箱功能已被插件系统取代。请使用插件扩展页面来安装和管理工具。"
+            Title="Toolkit Deprecated"
+            Message="The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools."
             Visibility="Collapsed" />
 
         <!-- Results Count -->

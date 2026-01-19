@@ -25,7 +25,6 @@ using Wpf.Ui.Controls;
 using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
 
 namespace LenovoLegionToolkit.WPF.Pages;
-
 public partial class PluginExtensionsPage
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
@@ -111,223 +110,223 @@ public partial class PluginExtensionsPage
         }
     }
 
-    private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
-    {
-        var openFileDialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Title = "Select plugin compressed file",
-            Filter = "Compressed files (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|All files (*.*)|*.*",
-            Multiselect = false
-        };
+    // private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
+    // {
+    //     var openFileDialog = new Microsoft.Win32.OpenFileDialog
+    //     {
+    //         Title = "Select plugin compressed file",
+    //         Filter = "Compressed files (*.zip;*.7z;*.rar)|*.zip;*.7z;*.rar|All files (*.*)|*.*",
+    //         Multiselect = false
+    //     };
 
-        var result = openFileDialog.ShowDialog();
-        if (result != true)
-            return;
+    //     var result = openFileDialog.ShowDialog();
+    //     if (result != true)
+    //         return;
 
-        var filePath = openFileDialog.FileName;
-        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-            return;
+    //     var filePath = openFileDialog.FileName;
+    //     if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+    //         return;
 
-        await ImportPluginFileAsync(filePath);
-    }
+    //     await ImportPluginFileAsync(filePath);
+    // }
 
-    private async void ImportPluginLibraryButton_Click(object sender, RoutedEventArgs e)
-    {
-        var folderDialog = new System.Windows.Forms.FolderBrowserDialog
-        {
-            Description = "Select folder containing plugin compressed files",
-            ShowNewFolderButton = false
-        };
+    // private async void ImportPluginLibraryButton_Click(object sender, RoutedEventArgs e)
+    // {
+    //     var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+    //     {
+    //         Description = "Select folder containing plugin compressed files",
+    //         ShowNewFolderButton = false
+    //     };
 
-        var result = folderDialog.ShowDialog();
-        if (result != System.Windows.Forms.DialogResult.OK)
-            return;
+    //     var result = folderDialog.ShowDialog();
+    //     if (result != System.Windows.Forms.DialogResult.OK)
+    //         return;
 
-        var folderPath = folderDialog.SelectedPath;
-        if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
-            return;
+    //     var folderPath = folderDialog.SelectedPath;
+    //     if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+    //         return;
 
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-        if (mainWindow == null)
-            return;
+    //     var mainWindow = Application.Current.MainWindow as MainWindow;
+    //     if (mainWindow == null)
+    //         return;
 
-        try
-        {
-            var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
-            if (importButton != null)
-            {
-                importButton.IsEnabled = false;
-            }
+    //     try
+    //     {
+    //         var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
+    //         if (importButton != null)
+    //         {
+    //             importButton.IsEnabled = false;
+    //         }
 
-            var pluginFiles = Directory.GetFiles(folderPath, "*.zip")
-                .Concat(Directory.GetFiles(folderPath, "*.7z"))
-                .Concat(Directory.GetFiles(folderPath, "*.rar"))
-                .ToArray();
+    //         var pluginFiles = Directory.GetFiles(folderPath, "*.zip")
+    //             .Concat(Directory.GetFiles(folderPath, "*.7z"))
+    //             .Concat(Directory.GetFiles(folderPath, "*.rar"))
+    //             .ToArray();
 
-            if (pluginFiles.Length == 0)
-            {
-                mainWindow.Snackbar.Show("Import failed", "No plugin compressed files found in the selected folder");
-                if (importButton != null)
-                {
-                    importButton.IsEnabled = true;
-                }
-                return;
-            }
+    //         if (pluginFiles.Length == 0)
+    //         {
+    //             mainWindow.Snackbar.Show("Import failed", "No plugin compressed files found in the selected folder");
+    //             if (importButton != null)
+    //             {
+    //                 importButton.IsEnabled = true;
+    //             }
+    //             return;
+    //         }
 
-            var successCount = 0;
-            var failCount = 0;
+    //         var successCount = 0;
+    //         var failCount = 0;
 
-            foreach (var filePath in pluginFiles)
-            {
-                try
-                {
-                    await ImportPluginFileAsync(filePath, showNotification: false);
-                    successCount++;
-                }
-                catch (Exception ex)
-                {
-                    Lib.Utils.Log.Instance.Trace($"Error importing plugin {Path.GetFileName(filePath)}: {ex.Message}", ex);
-                    failCount++;
-                }
-            }
+    //         foreach (var filePath in pluginFiles)
+    //         {
+    //             try
+    //             {
+    //                 await ImportPluginFileAsync(filePath, showNotification: false);
+    //                 successCount++;
+    //             }
+    //             catch (Exception ex)
+    //             {
+    //                 Lib.Utils.Log.Instance.Trace($"Error importing plugin {Path.GetFileName(filePath)}: {ex.Message}", ex);
+    //                 failCount++;
+    //             }
+    //         }
 
-            await Task.Delay(500);
-            _pluginManager.ScanAndLoadPlugins();
-            LocalizationHelper.SetPluginResourceCultures();
-            UpdateAllPluginsUI();
+    //         await Task.Delay(500);
+    //         _pluginManager.ScanAndLoadPlugins();
+    //         LocalizationHelper.SetPluginResourceCultures();
+    //         UpdateAllPluginsUI();
 
-            if (failCount == 0)
-            {
-                mainWindow.Snackbar.Show("Import successful", $"Successfully imported {successCount} plugin(s)");
-            }
-            else
-            {
-                mainWindow.Snackbar.Show("Import completed", $"Successfully imported {successCount} plugin(s), failed {failCount} plugin(s)");
-            }
-        }
-        catch (Exception ex)
-        {
-            Lib.Utils.Log.Instance.Trace($"Error importing plugin library: {ex.Message}", ex);
-            mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin library: {ex.Message}");
-        }
-        finally
-        {
-            var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
-            if (importButton != null)
-            {
-                importButton.IsEnabled = true;
-            }
-        }
-    }
+    //         if (failCount == 0)
+    //         {
+    //             mainWindow.Snackbar.Show("Import successful", $"Successfully imported {successCount} plugin(s)");
+    //         }
+    //         else
+    //         {
+    //             mainWindow.Snackbar.Show("Import completed", $"Successfully imported {successCount} plugin(s), failed {failCount} plugin(s)");
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Lib.Utils.Log.Instance.Trace($"Error importing plugin library: {ex.Message}", ex);
+    //         mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin library: {ex.Message}");
+    //     }
+    //     finally
+    //     {
+    //         var importButton = this.FindName("_importPluginLibraryButton") as Wpf.Ui.Controls.Button;
+    //         if (importButton != null)
+    //         {
+    //             importButton.IsEnabled = true;
+    //         }
+    //     }
+    // }
 
-    private async Task ImportPluginFileAsync(string filePath, bool showNotification = true)
-    {
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-        if (mainWindow == null)
-            return;
+    // private async Task ImportPluginFileAsync(string filePath, bool showNotification = true)
+    // {
+    //     var mainWindow = Application.Current.MainWindow as MainWindow;
+    //     if (mainWindow == null)
+    //         return;
 
-        try
-        {
-            var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            var pluginsDirectory = GetPluginsDirectory();
+    //     try
+    //     {
+    //         var extension = Path.GetExtension(filePath).ToLowerInvariant();
+    //         var pluginsDirectory = GetPluginsDirectory();
 
-            // Extract to a temporary directory first to analyze structure
-            var tempExtractDir = Path.Combine(Path.GetTempPath(), $"plugin_import_{Guid.NewGuid():N}");
-            Directory.CreateDirectory(tempExtractDir);
+    //         // Extract to a temporary directory first to analyze structure
+    //         var tempExtractDir = Path.Combine(Path.GetTempPath(), $"plugin_import_{Guid.NewGuid():N}");
+    //         Directory.CreateDirectory(tempExtractDir);
 
-            if (showNotification)
-            {
-                mainWindow.Snackbar.Show("Importing plugin", $"Extracting plugin file: {Path.GetFileName(filePath)}");
-            }
+    //         if (showNotification)
+    //         {
+    //             mainWindow.Snackbar.Show("Importing plugin", $"Extracting plugin file: {Path.GetFileName(filePath)}");
+    //         }
 
-            if (extension == ".zip")
-            {
-                await Task.Run(() => System.IO.Compression.ZipFile.ExtractToDirectory(filePath, tempExtractDir));
-            }
-            else if (extension == ".7z")
-            {
-                await Task.Run(() =>
-                {
-                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "7z.exe",
-                        Arguments = $"x \"{filePath}\" -o\"{tempExtractDir}\" -y",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    };
-                    System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
-                });
-            }
-            else if (extension == ".rar")
-            {
-                await Task.Run(() =>
-                {
-                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "unrar.exe",
-                        Arguments = $"x \"{filePath}\" \"{tempExtractDir}\" -y",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    };
-                    System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
-                });
-            }
-            else
-            {
-                if (showNotification)
-                {
-                    mainWindow.Snackbar.Show("Import failed", "Unsupported compressed file format");
-                }
-                Directory.Delete(tempExtractDir, true);
-                return;
-            }
+    //         if (extension == ".zip")
+    //         {
+    //             await Task.Run(() => System.IO.Compression.ZipFile.ExtractToDirectory(filePath, tempExtractDir));
+    //         }
+    //         else if (extension == ".7z")
+    //         {
+    //             await Task.Run(() =>
+    //             {
+    //                 var processStartInfo = new System.Diagnostics.ProcessStartInfo
+    //                 {
+    //                     FileName = "7z.exe",
+    //                     Arguments = $"x \"{filePath}\" -o\"{tempExtractDir}\" -y",
+    //                     UseShellExecute = false,
+    //                     CreateNoWindow = true
+    //                 };
+    //                 System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
+    //             });
+    //         }
+    //         else if (extension == ".rar")
+    //         {
+    //             await Task.Run(() =>
+    //             {
+    //                 var processStartInfo = new System.Diagnostics.ProcessStartInfo
+    //                 {
+    //                     FileName = "unrar.exe",
+    //                     Arguments = $"x \"{filePath}\" \"{tempExtractDir}\" -y",
+    //                     UseShellExecute = false,
+    //                     CreateNoWindow = true
+    //                 };
+    //                 System.Diagnostics.Process.Start(processStartInfo)?.WaitForExit();
+    //             });
+    //         }
+    //         else
+    //         {
+    //             if (showNotification)
+    //             {
+    //                 mainWindow.Snackbar.Show("Import failed", "Unsupported compressed file format");
+    //             }
+    //             Directory.Delete(tempExtractDir, true);
+    //             return;
+    //         }
 
-            // Analyze the extracted structure to find the plugin directory
-            var pluginId = await AnalyzeAndFixPluginStructureAsync(tempExtractDir);
-            if (string.IsNullOrEmpty(pluginId))
-            {
-                if (showNotification)
-                {
-                    mainWindow.Snackbar.Show("Import failed", "Unable to recognize plugin structure, please check the compressed package contents");
-                }
-                Directory.Delete(tempExtractDir, true);
-                return;
-            }
+    //         // Analyze the extracted structure to find the plugin directory
+    //         var pluginId = await AnalyzeAndFixPluginStructureAsync(tempExtractDir);
+    //         if (string.IsNullOrEmpty(pluginId))
+    //         {
+    //             if (showNotification)
+    //             {
+    //                 mainWindow.Snackbar.Show("Import failed", "Unable to recognize plugin structure, please check the compressed package contents");
+    //             }
+    //             Directory.Delete(tempExtractDir, true);
+    //             return;
+    //         }
 
-            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+    //         var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
 
-            if (Directory.Exists(pluginDirectory))
-            {
-                if (showNotification)
-                {
-                    mainWindow.Snackbar.Show("Import failed", $"Plugin directory already exists: {pluginId}");
-                }
-                Directory.Delete(tempExtractDir, true);
-                return;
-            }
+    //         if (Directory.Exists(pluginDirectory))
+    //         {
+    //             if (showNotification)
+    //             {
+    //                 mainWindow.Snackbar.Show("Import failed", $"Plugin directory already exists: {pluginId}");
+    //             }
+    //             Directory.Delete(tempExtractDir, true);
+    //             return;
+    //         }
 
-            // Move the fixed plugin directory to the plugins folder
-            Directory.Move(tempExtractDir, pluginDirectory);
+    //         // Move the fixed plugin directory to the plugins folder
+    //         Directory.Move(tempExtractDir, pluginDirectory);
 
-            await Task.Delay(500);
-            _pluginManager.ScanAndLoadPlugins();
-            LocalizationHelper.SetPluginResourceCultures();
-            UpdateAllPluginsUI();
+    //         await Task.Delay(500);
+    //         _pluginManager.ScanAndLoadPlugins();
+    //         LocalizationHelper.SetPluginResourceCultures();
+    //         UpdateAllPluginsUI();
 
-            if (showNotification)
-            {
-                mainWindow.Snackbar.Show("Import successful", $"Plugin {pluginId} imported successfully");
-            }
-        }
-        catch (Exception ex)
-        {
-            Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
-            if (showNotification)
-            {
-                mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin: {ex.Message}");
-            }
-        }
-    }
+    //         if (showNotification)
+    //         {
+    //             mainWindow.Snackbar.Show("Import successful", $"Plugin {pluginId} imported successfully");
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Lib.Utils.Log.Instance.Trace($"Error importing plugin: {ex.Message}", ex);
+    //         if (showNotification)
+    //         {
+    //             mainWindow?.Snackbar.Show("Import failed", $"Error importing plugin: {ex.Message}");
+    //         }
+    //     }
+    // }
 
     private async Task FetchOnlinePluginsAsync()
     {
