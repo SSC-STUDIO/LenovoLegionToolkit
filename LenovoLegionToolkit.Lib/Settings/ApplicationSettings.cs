@@ -58,6 +58,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
         public bool ExtensionsEnabled { get; set; } = false;
         public List<string> InstalledExtensions { get; set; } = [];
+        public List<string> PendingDeletionExtensions { get; set; } = [];
         public Dictionary<string, bool> NavigationItemsVisibility { get; set; } = new()
         {
             { "keyboard", true },

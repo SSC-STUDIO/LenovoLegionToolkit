@@ -1365,7 +1365,7 @@ public partial class PluginExtensionsPage
 
         try
         {
-            _pluginManager.PermanentlyDeletePlugin(pluginId);
+            _pluginManager.UninstallPlugin(pluginId);
             
             var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
             if (detailsPanel != null)
@@ -1518,7 +1518,7 @@ public partial class PluginExtensionsPage
         // 执行永久删除
         try
         {
-            _pluginManager.PermanentlyDeletePlugin(pluginId);
+            _pluginManager.UninstallPlugin(pluginId);
             
             var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
             if (detailsPanel != null)
@@ -1542,7 +1542,7 @@ public partial class PluginExtensionsPage
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show("插件已删除", "插件文件已永久删除，无法恢复。");
+                mainWindow.Snackbar.Show("插件已卸载", "插件将在程序关闭时被删除。");
             }
         }
         catch (Exception ex)

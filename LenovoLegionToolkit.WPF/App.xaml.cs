@@ -605,6 +605,16 @@ public partial class App
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin shutdown completed.");
+
+            // Wait a bit to ensure all file handles are released
+            // This is necessary because plugins might have background threads or resources that take time to clean up
+            await Task.Delay(500).ConfigureAwait(false);
+
+            // Perform pending plugin deletions after all plugins are stopped and file handles are released
+            if (pluginManager is PluginManager manager)
+            {
+                manager.PerformPendingDeletions();
+            }
         }
         catch (Exception ex)
         {

@@ -534,6 +534,13 @@ public class PluginManager : IPluginManager
         }
 
         installedExtensions.Remove(pluginId);
+        
+        // Add to pending deletion list for actual deletion on app exit
+        if (!_applicationSettings.Store.PendingDeletionExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
+        {
+            _applicationSettings.Store.PendingDeletionExtensions.Add(pluginId);
+        }
+        
         _applicationSettings.SynchronizeStore();
 
         // 触发卸载回调
@@ -556,8 +563,9 @@ public class PluginManager : IPluginManager
 
         try
         {
-            // First uninstall the plugin if it's installed
-            UninstallPlugin(pluginId);
+            // Remove from registered plugins and metadata cache
+            _registeredPlugins.Remove(pluginId);
+            _pluginMetadataCache.Remove(pluginId);
 
             // Get plugins directory
             var pluginsDirectory = GetPluginsDirectory();
@@ -773,10 +781,6 @@ public class PluginManager : IPluginManager
                 }
             }
 
-            // Remove from registered plugins
-            _registeredPlugins.Remove(pluginId);
-            _pluginMetadataCache.Remove(pluginId);
-
             return deletedAny;
         }
         catch (Exception ex)
@@ -785,6 +789,113 @@ public class PluginManager : IPluginManager
                 Log.Instance.Trace($"Error permanently deleting plugin {pluginId}: {ex.Message}", ex);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Delete a file with retry mechanism to handle locked files
+    /// </summary>
+    private bool DeleteFileWithRetry(string filePath, int maxRetries = 10, int delayMs = 200)
+    {
+        for (int i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    return true;
+                }
+                return true;
+            }
+            catch (IOException)
+            {
+                if (i == maxRetries - 1)
+                    return false;
+                global::System.Threading.Thread.Sleep(delayMs);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (i == maxRetries - 1)
+                    return false;
+                global::System.Threading.Thread.Sleep(delayMs);
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Delete a directory with retry mechanism to handle locked files
+    /// </summary>
+    private bool DeleteDirectoryWithRetry(string directoryPath, int maxRetries = 10, int delayMs = 200)
+    {
+        for (int i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                if (Directory.Exists(directoryPath))
+                {
+                    Directory.Delete(directoryPath, true);
+                    return true;
+                }
+                return true;
+            }
+            catch (IOException)
+            {
+                if (i == maxRetries - 1)
+                    return false;
+                global::System.Threading.Thread.Sleep(delayMs);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (i == maxRetries - 1)
+                    return false;
+                global::System.Threading.Thread.Sleep(delayMs);
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Perform actual deletion of plugins marked for deletion (call on app exit)
+    /// </summary>
+    public void PerformPendingDeletions()
+    {
+        var pendingDeletions = _applicationSettings.Store.PendingDeletionExtensions.ToList();
+        
+        if (!pendingDeletions.Any())
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"No pending plugin deletions to process.");
+            return;
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Processing {pendingDeletions.Count} pending plugin deletion(s).");
+
+        foreach (var pluginId in pendingDeletions)
+        {
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Deleting plugin files for: {pluginId}");
+                
+                PermanentlyDeletePlugin(pluginId);
+                
+                // Remove from pending deletions list
+                _applicationSettings.Store.PendingDeletionExtensions.Remove(pluginId);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to delete plugin {pluginId}: {ex.Message}", ex);
+            }
+        }
+
+        // Save settings after processing all deletions
+        _applicationSettings.SynchronizeStore();
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Pending plugin deletions completed.");
     }
 
     protected virtual void OnPluginStateChanged(string pluginId, bool isInstalled)
