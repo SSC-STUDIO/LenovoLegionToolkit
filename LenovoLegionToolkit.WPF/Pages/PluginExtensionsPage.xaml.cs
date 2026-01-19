@@ -685,31 +685,6 @@ public partial class PluginExtensionsPage
             Margin = new Thickness(0, 4, 4, 0)
         };
         
-        // 本地标签：如果插件不在在线插件列表中，则视为本地插件
-        var isOnlinePlugin = _onlinePlugins.Any(p => p.Id == plugin.Id);
-        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
-        
-        if (!isOnlinePlugin && !plugin.IsSystemPlugin)
-        {
-            var localBadge = new Border
-            {
-                Background = (Brush)FindResource("SystemFillColorCautionBrush"),
-                CornerRadius = new CornerRadius(4),
-                Padding = new Thickness(4, 2, 4, 2),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Margin = new Thickness(0, 0, 0, 4)
-            };
-            var localBadgeText = new TextBlock
-            {
-                Text = "本地",
-                FontSize = 8,
-                FontWeight = FontWeights.Medium,
-                Foreground = Brushes.White
-            };
-            localBadge.Child = localBadgeText;
-            badgeContainer.Children.Add(localBadge);
-        }
-        
         // 已安装标签
         if (isInstalled)
         {
