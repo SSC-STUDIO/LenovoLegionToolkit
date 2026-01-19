@@ -3,10 +3,10 @@
     {
       "dependencies": null,
       "id": "ViveTool",
-      "changelog": "Initial release",
+      "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Simplified plugin management\n- Improved UI and user experience\n- Fixed compatibility issues with Windows 11\n- Enhanced online plugin support",
       "author": "Lenovo Legion Toolkit Team",
       "minimumHostVersion": "2.0.0",
-      "releaseDate": "2026-01-17T12:56:33Z",
+      "releaseDate": "2026-01-19T00:00:00Z",
       "fileHash": "",
       "fileSize": 1230165,
       "name": "ViveTool Plugin",
@@ -14,17 +14,17 @@
         "utility"
       ],
       "isSystemPlugin": false,
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.0.0/ViveTool.zip",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.2.0/ViveTool.zip",
       "icon": "Apps24",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "description": "ViveTool functionality for Lenovo Legion Toolkit"
     },
     {
-      "version": "1.0.0",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.0.0/NetworkAcceleration.zip",
+      "version": "1.2.0",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.2.0/NetworkAcceleration.zip",
       "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit",
-      "releaseDate": "2026-01-17T13:00:44Z",
-      "changelog": "Initial release",
+      "releaseDate": "2026-01-19T00:00:00Z",
+      "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Improved network acceleration performance\n- Fixed compatibility issues with Windows 11\n- Added support for custom DNS servers\n- Enhanced logging and debugging",
       "author": "Lenovo Legion Toolkit Team",
       "fileSize": 1253695,
       "icon": "Apps24",
@@ -39,6 +39,6 @@
       "fileHash": ""
     }
   ],
-  "lastUpdated": "2026-01-17T13:00:44Z",
+  "lastUpdated": "2026-01-19T00:00:00Z",
   "storeVersion": "1.0.0"
 }
