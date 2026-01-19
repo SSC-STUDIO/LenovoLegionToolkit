@@ -674,6 +674,7 @@ public partial class PluginExtensionsPage
         };
         
         // 已安装标签
+        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
         if (isInstalled)
         {
             var installedBadge = new Border
