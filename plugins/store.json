@@ -4,13 +4,13 @@
       "icon": "Apps24",
       "fileSize": 1231933,
       "name": "ViveTool Plugin",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.0.0/ViveTool.zip",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.2.0/ViveTool.zip",
       "isSystemPlugin": false,
       "description": "ViveTool functionality for Lenovo Legion Toolkit",
-      "version": "1.0.0",
-      "changelog": "",
-      "releaseDate": "2026-01-19T13:18:33Z",
-      "fileHash": "",
+      "version": "1.2.0",
+      "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Improved plugin icon display logic\n- Fixed compatibility issues",
+      "releaseDate": "2026-01-19T14:00:16Z",
+      "fileHash": "27b3484493ebf046124e1531a48715ef1525148706d0936cdd250d6bdf7096d8",
       "author": "Lenovo Legion Toolkit Team",
       "dependencies": null,
       "id": "ViveTool",
@@ -23,7 +23,7 @@
       "version": "1.2.0",
       "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.2.0/NetworkAcceleration.zip",
       "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit",
-      "releaseDate": "2026-01-19T00:00:00Z",
+      "releaseDate": "2026-01-19T14:00:16Z",
       "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Improved network acceleration performance\n- Fixed compatibility issues with Windows 11\n- Added support for custom DNS servers\n- Enhanced logging and debugging",
       "author": "Lenovo Legion Toolkit Team",
       "fileSize": 1253695,
@@ -36,9 +36,9 @@
       "dependencies": null,
       "minimumHostVersion": "2.0.0",
       "name": "NetworkAcceleration Plugin",
-      "fileHash": ""
+      "fileHash": "bc266417527308172b3386de4db67e0f686e65b3bbc28e99d4df791cf0388b96"
     }
   ],
-  "lastUpdated": "2026-01-19T13:18:33Z",
+  "lastUpdated": "2026-01-19T14:00:16Z",
   "storeVersion": "1.0.0"
 }
