@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented proper ZIP file import functionality for local plugins / 实现了本地插件ZIP文件的正确导入功能
 - Fixed configure button visibility to require both installed and supports configuration / 修复配置按钮可见性，需要同时安装且支持配置
 
+### Added / 新增
+- Plugin state reset functionality with Ctrl+Shift+R shortcut / 添加了插件状态重置功能，使用Ctrl+Shift+R快捷键
+- Visual tip about plugin state reset shortcut in UI / 在UI中添加了插件状态重置快捷键的视觉提示
+
 ### Improved / 改进
 - ViveTool plugin interface optimization by removing redundant status display / 优化ViveTool插件界面，移除冗余状态显示
 - Plugin import workflow with ZIP file validation / 增强插件导入工作流及ZIP文件验证
