@@ -822,10 +822,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>System optimization</value>
   </data>
-  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+<data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
@@ -852,10 +849,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the System Optimization navigation item</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Tools navigation item</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Plugin Extensions navigation item</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
@@ -1383,8 +1377,11 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
     <value>Failed to remove selected apps.</value>
   </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+<data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
     <value>Loading apps, please wait...</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>Loading plugins...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
     <value>Failed to load: {0}</value>
@@ -2657,8 +2654,11 @@ Supported formats are: {1}.</value>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Download</value>
   </data>
-  <data name="PackageControl_Install" xml:space="preserve">
+<data name="PackageControl_Install" xml:space="preserve">
     <value>Install</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Installation failed</value>
@@ -3008,7 +3008,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>1. COM Component Registration:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
-    <value>   shell.exe -register -treat -restart</value>
+    <value>   regsvr32.exe /s shell.dll</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
     <value>   Path: {0}</value>
@@ -3214,82 +3214,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Freed {0} in {1}s</value>
 
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>Launch system tools and utilities.</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>Failed to start tool</value>
-  </data>
-  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
-    <value>Tools will appear here once they are available in the tools directory.</value>
-  </data>
-  <data name="ToolsPage_Launch_Button" xml:space="preserve">
-    <value>Launch</value>
-  </data>
-  <data name="ToolsPage_Details_Version" xml:space="preserve">
-    <value>Version: {0}</value>
-  </data>
-  <data name="ToolsPage_Details_Author" xml:space="preserve">
-    <value>Author: {0}</value>
-  </data>
-  <data name="ToolsPage_Details_Path" xml:space="preserve">
-    <value>Path: {0}</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>Display Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>Gaming Tools</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>Memory Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>Other Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>Peripheral Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>Storage Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>Stress Test Tools</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>System Diagnostic Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
-    <value>Hardware Tools</value>
-  </data>
-  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
-    <value>System Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
-    <value>Quick Tools</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_OpenFileLocation" xml:space="preserve">
-    <value>Open File Location</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_CopyPath" xml:space="preserve">
-    <value>Copy Path</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_OpenToolsDirectory" xml:space="preserve">
-    <value>Open Tools Directory</value>
-  </data>
-  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+<data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Executing {0}%</value>
   </data>
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
@@ -3411,6 +3336,39 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Found {0} plugins</value>
   </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Bulk Import</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Import plugins from local ZIP files</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Import from Files</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Select plugin files (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>Successfully imported {0} plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} plugins have been successfully imported and are available</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Bulk import failed</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Failed to import plugins: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Importing plugins...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>Importing {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>Processing {0}...</value>
+  </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Plugin installed successfully</value>
   </data>
@@ -3430,31 +3388,31 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Plugin has been successfully uninstalled</value>
   </data>
   <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
-    <value>Uninstall failed</value>
+    <value>Uninstallation failed</value>
   </data>
   <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
     <value>Unable to uninstall plugin: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
-    <value>Open failed</value>
+    <value>Failed to open plugin: {0}</value>
   </data>
-  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
-    <value>Unable to open plugin settings: {0}</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
-    <value>Please install plugin first</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
-    <value>Plugin must be installed before use</value>
-  </data>
-  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
     <value>Unable to open plugin: {0}</value>
   </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>Plugin not installed</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>Plugin is not installed and cannot be opened</value>
+  </data>
   <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
-    <value>Minimum compatible version: {0}</value>
+    <value>Minimum host version {0} is required</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
-    <value>Permanently Delete</value>
+    <value>Plugin will be permanently deleted</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Plugin will be permanently deleted. This action cannot be undone.</value>
   </data>
   <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
     <value>Network Acceleration</value>
