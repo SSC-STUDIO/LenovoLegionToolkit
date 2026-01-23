@@ -2,7 +2,7 @@
   "plugins": [
     {
       "icon": "Apps24",
-      "iconBackground": "#FF6B35",  // 橙色 - 适合ViVeTool工具类插件
+      "iconBackground": "#FF6B35",
       "fileSize": 1231933,
       "name": "ViveTool Plugin",
       "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.4.0/ViveTool.zip",
@@ -22,7 +22,7 @@
     },
     {
       "icon": "Apps24",
-      "iconBackground": "#00BCF4",  // 蓝色 - 适合网络加速类插件
+      "iconBackground": "#00BCF4",
       "version": "1.3.0",
       "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.3.0/NetworkAcceleration.zip",
       "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit",
@@ -42,7 +42,7 @@
     },
     {
       "icon": "Download24",
-      "iconBackground": "#9C27B0",  // 紫色 - 适合导入/下载类功能
+      "iconBackground": "#9C27B0",
       "fileSize": 2456789,
       "name": "Plugin Import Tool",
       "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/PluginImport/v1.0.0/PluginImport.zip",
