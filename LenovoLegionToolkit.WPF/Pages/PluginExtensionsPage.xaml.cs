@@ -1574,12 +1574,191 @@ if (success)
         }
     }
 
-    private void BulkImportButton_Click(object sender, RoutedEventArgs e)
+    private async void BulkImportButton_Click(object sender, RoutedEventArgs e)
     {
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-        if (mainWindow != null)
+        try
         {
-            mainWindow.Snackbar.Show("Bulk Import", "Use make.bat -p to compile plugins locally");
+            // Create OpenFileDialog for ZIP files
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = Resource.PluginExtensionsPage_SelectPluginFiles,
+                Filter = "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*",
+                Multiselect = true
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_ImportProgress, Resource.PluginExtensionsPage_ImportProgress);
+                }
+
+                int importedCount = 0;
+                foreach (var zipFilePath in openFileDialog.FileNames)
+                {
+                    try
+                    {
+                        // Extract and install plugin
+                        var result = await ExtractAndInstallPluginAsync(zipFilePath);
+                        if (result)
+                        {
+                            importedCount++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Lib.Utils.Log.Instance.Trace($"Error importing plugin from {zipFilePath}: {ex.Message}", ex);
+
+                        if (mainWindow != null)
+                        {
+                            mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportFailed,
+                                string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, Path.GetFileName(zipFilePath), ex.Message));
+                        }
+                    }
+                }
+
+                // Refresh plugins and UI
+                _pluginManager.ScanAndLoadPlugins();
+                UpdateAllPluginsUI();
+
+                // Show success message
+                if (mainWindow != null && importedCount > 0)
+                {
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportSuccess,
+                        string.Format(Resource.PluginExtensionsPage_BulkImportSuccessMessage, importedCount));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error in bulk import: {ex.Message}", ex);
+
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportFailed,
+                    string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, "Unknown", ex.Message));
+            }
+        }
+    }
+
+    private async Task<bool> ExtractAndInstallPluginAsync(string zipFilePath)
+    {
+        var pluginsDir = GetPluginsDirectory();
+        var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
+
+        try
+        {
+            // Create temp directory
+            Directory.CreateDirectory(tempDir);
+
+            // Extract ZIP
+            ZipFile.ExtractToDirectory(zipFilePath, tempDir);
+
+            // Find plugin directories (should contain a .csproj file)
+            var pluginDirs = Directory.GetDirectories(tempDir)
+                .Where(dir => Directory.GetFiles(dir, "*.csproj").Any())
+                .ToList();
+
+            if (!pluginDirs.Any())
+            {
+                throw new InvalidOperationException("No valid plugin project found in ZIP file");
+            }
+
+            foreach (var pluginDir in pluginDirs)
+            {
+                var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
+                var pluginId = Path.GetFileNameWithoutExtension(csprojFile).Replace("LenovoLegionToolkit.Plugins.", "");
+
+                // Copy to plugins directory
+                var targetDir = Path.Combine(pluginsDir, pluginId);
+                if (Directory.Exists(targetDir))
+                {
+                    Directory.Delete(targetDir, true);
+                }
+
+                CopyDirectory(pluginDir, targetDir);
+
+                // Try to build the plugin
+                var buildResult = await BuildPluginAsync(targetDir);
+                if (!buildResult)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Failed to build plugin {pluginId}");
+                    continue;
+                }
+
+                // Plugin files copied successfully
+                Lib.Utils.Log.Instance.Trace($"Successfully copied plugin {pluginId} to {targetDir}");
+                return true;
+            }
+
+            return false;
+        }
+        finally
+        {
+            // Clean up temp directory
+            try
+            {
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
+        }
+    }
+
+    private void CopyDirectory(string sourceDir, string targetDir)
+    {
+        Directory.CreateDirectory(targetDir);
+
+        foreach (var file in Directory.GetFiles(sourceDir))
+        {
+            var fileName = Path.GetFileName(file);
+            var targetFile = Path.Combine(targetDir, fileName);
+            File.Copy(file, targetFile, true);
+        }
+
+        foreach (var dir in Directory.GetDirectories(sourceDir))
+        {
+            var dirName = Path.GetFileName(dir);
+            var targetSubDir = Path.Combine(targetDir, dirName);
+            CopyDirectory(dir, targetSubDir);
+        }
+    }
+
+    private async Task<bool> BuildPluginAsync(string pluginDir)
+    {
+        try
+        {
+            var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = $"build \"{csprojFile}\" --configuration Release --no-incremental",
+                WorkingDirectory = pluginDir,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            using var process = System.Diagnostics.Process.Start(startInfo);
+            if (process == null)
+            {
+                return false;
+            }
+
+            await process.WaitForExitAsync();
+            return process.ExitCode == 0;
+        }
+        catch
+        {
+            return false;
         }
     }
 
