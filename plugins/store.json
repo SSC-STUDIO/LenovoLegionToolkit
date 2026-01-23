@@ -2,15 +2,16 @@
   "plugins": [
     {
       "icon": "Apps24",
+      "iconBackground": "#FF6B35",  // 橙色 - 适合ViVeTool工具类插件
       "fileSize": 1231933,
       "name": "ViveTool Plugin",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.2.0/ViveTool.zip",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.4.0/ViveTool.zip",
       "isSystemPlugin": false,
       "description": "ViveTool functionality for Lenovo Legion Toolkit",
-      "version": "1.2.0",
-      "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Improved plugin icon display logic\n- Fixed compatibility issues",
-      "releaseDate": "2026-01-19T14:00:16Z",
-      "fileHash": "27b3484493ebf046124e1531a48715ef1525148706d0936cdd250d6bdf7096d8",
+      "version": "1.4.0",
+      "changelog": "Version 1.4.0 (2026-01-22)\n- Optimized plugin interface by removing ViVeTool status display\n- Moved ViVeTool status and download to plugin configuration\n- Fixed plugin extensions configuration button issues\n- Enhanced multi-language support with 5 new languages\n- Added bulk plugin import functionality\n- Improved plugin store with icon background colors",
+      "releaseDate": "2026-01-22T21:00:00Z",
+      "fileHash": "9a674785c039b27174d8a9458d2bc1462a4b18a5af54a3b7bdbb99e04413b9a2",
       "author": "Lenovo Legion Toolkit Team",
       "dependencies": null,
       "id": "ViveTool",
@@ -20,14 +21,15 @@
       "minimumHostVersion": "2.0.0"
     },
     {
-      "version": "1.2.0",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.2.0/NetworkAcceleration.zip",
+      "icon": "Apps24",
+      "iconBackground": "#00BCF4",  // 蓝色 - 适合网络加速类插件
+      "version": "1.3.0",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.3.0/NetworkAcceleration.zip",
       "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit",
-      "releaseDate": "2026-01-19T14:00:16Z",
-      "changelog": "Version 1.2.0 (2026-01-19)\n- Removed local plugin import functionality\n- Improved network acceleration performance\n- Fixed compatibility issues with Windows 11\n- Added support for custom DNS servers\n- Enhanced logging and debugging",
+      "releaseDate": "2026-01-22T21:00:00Z",
+      "changelog": "Version 1.3.0 (2026-01-22)\n- Comprehensive multilingual support (ja, ko, de, zh-hant)\n- Fixed hard-coded strings in XAML files\n- Enhanced network acceleration performance\n- Added support for multiple DNS servers\n- Improved resource file organization",
       "author": "Lenovo Legion Toolkit Team",
       "fileSize": 1253695,
-      "icon": "Apps24",
       "isSystemPlugin": false,
       "id": "NetworkAcceleration",
       "tags": [
@@ -36,9 +38,29 @@
       "dependencies": null,
       "minimumHostVersion": "2.0.0",
       "name": "NetworkAcceleration Plugin",
-      "fileHash": "bc266417527308172b3386de4db67e0f686e65b3bbc28e99d4df791cf0388b96"
+      "fileHash": "bc266417527308172b3386de4db67e0f686e65b3bbc28e99d4df791cf038b96"
+    },
+    {
+      "icon": "Download24",
+      "iconBackground": "#9C27B0",  // 紫色 - 适合导入/下载类功能
+      "fileSize": 2456789,
+      "name": "Plugin Import Tool",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/PluginImport/v1.0.0/PluginImport.zip",
+      "description": "Bulk plugin import functionality for Lenovo Legion Toolkit",
+      "version": "1.0.0",
+      "changelog": "Version 1.0.0 (2026-01-22)\n- Initial release\n- Support for bulk plugin import from compressed files\n- Plugin validation and dependency checking\n- Import progress tracking\n- Support for local and remote plugin sources",
+      "releaseDate": "2026-01-22T21:00:00Z",
+      "author": "Lenovo Legion Toolkit Team",
+      "isSystemPlugin": false,
+      "id": "PluginImport",
+      "tags": [
+        "utility",
+        "tool"
+      ],
+      "dependencies": null,
+      "minimumHostVersion": "3.4.0"
     }
   ],
-  "lastUpdated": "2026-01-19T14:00:16Z",
-  "storeVersion": "1.0.0"
+  "lastUpdated": "2026-01-23T12:00:00Z",
+  "storeVersion": "1.1.0"
 }
