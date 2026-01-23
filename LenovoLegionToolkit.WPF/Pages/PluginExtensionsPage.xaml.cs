@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Collections.ObjectModel;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
@@ -23,6 +24,7 @@ using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
+using PluginManifest = LenovoLegionToolkit.Lib.Plugins.PluginManifest;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 public partial class PluginExtensionsPage
@@ -32,10 +34,12 @@ public partial class PluginExtensionsPage
     private readonly PluginSettings _pluginSettings = new();
     private readonly PluginRepositoryService _pluginRepositoryService;
     
-    private string _currentSearchText = string.Empty;
+private string _currentSearchText = string.Empty;
     private string _currentFilter = "All";
     private List<IPlugin> _allPlugins = new();
     private List<PluginManifest> _onlinePlugins = new();
+    private List<PluginManifest> _availableUpdates = new();
+    private ObservableCollection<PluginViewModel> _pluginViewModels = new();
     private string _currentSelectedPluginId = string.Empty;
     private bool _isRefreshing = false;
     private string _currentDownloadingPluginId = string.Empty;
@@ -43,10 +47,27 @@ public partial class PluginExtensionsPage
     public PluginExtensionsPage()
     {
         _pluginRepositoryService = new PluginRepositoryService(_pluginManager);
-        
+
         InitializeComponent();
         Loaded += PluginExtensionsPage_Loaded;
         IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
+
+        // Subscribe to plugin state changes
+        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+        
+        // Initialize loading text with multi-language support
+        var loadingText = this.FindName("_loadingText") as System.Windows.Controls.TextBlock;
+        if (loadingText != null)
+        {
+            loadingText.Text = Resource.ResourceManager.GetString("PluginExtensionsPage_Loading", Resource.Culture) ?? "Loading plugins...";
+        }
+        
+        // Initialize ListBox data binding
+        if (_pluginsListBox != null)
+        {
+            _pluginsListBox.ItemsSource = _pluginViewModels;
+            _pluginsListBox.MouseDoubleClick += PluginListBox_MouseDoubleClick;
+        }
         
         // Set page title and text (using dynamic resources to avoid auto-generated resource issues)
         Title = Resource.ResourceManager.GetString("PluginExtensionsPage_Title", Resource.Culture) ?? "Plugin Extensions";
@@ -330,16 +351,24 @@ public partial class PluginExtensionsPage
 
     private async Task FetchOnlinePluginsAsync()
     {
+        // Show loading indicator
+        var loadingIndicator = this.FindName("_loadingIndicator") as StackPanel;
+        var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
+        
         try
         {
-            // Show loading indicator
-            var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
+            if (loadingIndicator != null)
+            {
+                loadingIndicator.Visibility = Visibility.Visible;
+            }
+            
             if (noPluginsMessage != null)
             {
                 noPluginsMessage.Visibility = Visibility.Collapsed;
             }
             
             // Fetch online plugins
+            _availableUpdates.Clear();
             _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync();
             
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -372,6 +401,7 @@ public partial class PluginExtensionsPage
             }
             
             var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
+            _availableUpdates = updates;
             
             if (updates.Count > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
             {
@@ -384,6 +414,12 @@ public partial class PluginExtensionsPage
             
             // Refresh UI
             UpdateAllPluginsUI();
+            
+            // Hide loading indicator
+            if (loadingIndicator != null)
+            {
+                loadingIndicator.Visibility = Visibility.Collapsed;
+            }
         }
         catch (Exception ex)
         {
@@ -392,7 +428,13 @@ public partial class PluginExtensionsPage
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show("获取插件失败", $"无法从插件商店获取插件列表: {ex.Message}");
+                mainWindow.Snackbar.Show("Failed to fetch plugins", $"Unable to get plugin list from store: {ex.Message}");
+            }
+            
+            // Hide loading indicator
+            if (loadingIndicator != null)
+            {
+                loadingIndicator.Visibility = Visibility.Collapsed;
             }
         }
     }
@@ -401,10 +443,9 @@ public partial class PluginExtensionsPage
     {
         var filteredPlugins = _allPlugins.AsEnumerable();
         
-        // Apply filter
+// Apply filter
         filteredPlugins = _currentFilter switch
         {
-            "Online" => filteredPlugins.Where(p => _onlinePlugins.Any(op => op.Id == p.Id)),
             "Installed" => filteredPlugins.Where(p => _pluginManager.IsInstalled(p.Id)),
             "NotInstalled" => filteredPlugins.Where(p => !_pluginManager.IsInstalled(p.Id)),
             _ => filteredPlugins
@@ -423,27 +464,104 @@ public partial class PluginExtensionsPage
         UpdatePluginsList(filteredPlugins.ToList());
     }
     
-    private void UpdatePluginsList(List<IPlugin> plugins)
+ private void UpdatePluginsList(List<IPlugin> plugins)
     {
-        if (_pluginsItemsControl == null) return;
+        if (_pluginsListBox == null) return;
         
-        _pluginsItemsControl.Items.Clear();
-        
-        // 去重：按插件 ID 去重
+        // Remove duplicates: deduplicate by plugin ID
         var uniquePlugins = plugins.GroupBy(p => p.Id).Select(g => g.First()).ToList();
+        
+        // Create current plugin ID set for quick lookup
+        var currentPluginIds = new HashSet<string>(uniquePlugins.Select(p => p.Id));
+        
+        // Remove ViewModels for plugins that no longer exist
+        for (int i = _pluginViewModels.Count - 1; i >= 0; i--)
+        {
+            var viewModel = _pluginViewModels[i];
+            if (!currentPluginIds.Contains(viewModel.PluginId))
+            {
+                _pluginViewModels.RemoveAt(i);
+            }
+        }
         
         foreach (var plugin in uniquePlugins)
         {
             try
             {
-                var pluginCard = CreatePluginCard(plugin);
-                _pluginsItemsControl.Items.Add(pluginCard);
+                var isInstalled = _pluginManager.IsInstalled(plugin.Id);
+                var updateAvailable = _availableUpdates.Any(au => au.Id == plugin.Id);
+                
+                // Get version information
+                var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
+                var onlinePlugin = _onlinePlugins.FirstOrDefault(op => op.Id == plugin.Id);
+                var updatePlugin = updateAvailable ? _availableUpdates.FirstOrDefault(au => au.Id == plugin.Id) : null;
+                
+                string version = "1.0.0";
+                if (updatePlugin != null && !string.IsNullOrWhiteSpace(updatePlugin.Version))
+                    version = updatePlugin.Version;
+                else if (onlinePlugin != null && !string.IsNullOrWhiteSpace(onlinePlugin.Version))
+                    version = onlinePlugin.Version;
+                else if (metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
+                    version = metadata.Version;
+                
+                // Find existing ViewModel, update if exists, otherwise create new one
+                var existingViewModel = _pluginViewModels.FirstOrDefault(vm => vm.PluginId == plugin.Id);
+                
+                if (existingViewModel != null)
+                {
+                    // Update existing ViewModel
+                    existingViewModel.IsInstalled = isInstalled;
+                    existingViewModel.SetUpdateAvailable(updateAvailable);
+                    existingViewModel.Version = $"v{version}";
+                    
+                    // Check if plugin supports configuration
+                    var supportsConfig = false;
+                    if (isInstalled && plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+                    {
+                        try
+                        {
+                            var featureExtension = sdkPlugin.GetFeatureExtension();
+                            supportsConfig = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                        }
+                        catch
+                        {
+                            supportsConfig = false;
+                        }
+                    }
+                    existingViewModel.SupportsConfiguration = supportsConfig;
+                }
+                else
+                {
+                    // Create new ViewModel
+                    var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version);
+                    
+                    // Check if plugin supports configuration
+                    var supportsConfig = false;
+                    if (isInstalled && plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+                    {
+                        try
+                        {
+                            var featureExtension = sdkPlugin.GetFeatureExtension();
+                            supportsConfig = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                        }
+                        catch
+                        {
+                            supportsConfig = false;
+                        }
+                    }
+                    pluginViewModel.SupportsConfiguration = supportsConfig;
+                    
+                    _pluginViewModels.Add(pluginViewModel);
+                }
             }
             catch (Exception ex)
             {
-                Lib.Utils.Log.Instance.Trace($"Failed to create card for plugin {plugin.Id}: {ex.Message}", ex);
+                Lib.Utils.Log.Instance.Trace($"Failed to update ViewModel for plugin {plugin.Id}: {ex.Message}", ex);
             }
         }
+        
+        // Set ListBox data source
+        _pluginsListBox.ItemsSource = _pluginViewModels;
         
         // Update results count
         if (_resultsCountTextBlock != null)
@@ -475,7 +593,7 @@ public partial class PluginExtensionsPage
         });
     }
 
-    private async void LoadPluginsFromRootDirectory()
+    private async Task LoadPluginsFromRootDirectoryAsync()
     {
         try
         {
@@ -558,21 +676,33 @@ public partial class PluginExtensionsPage
     {
         try
         {
-            // 合并在线插件和本地注册的插件
+            // Merge online plugins and locally registered plugins
             var allPluginsList = new List<IPlugin>();
+            var pluginIds = new HashSet<string>();
             
-            // 添加在线插件（使用适配器）
+            // First add locally installed plugins
+            var installedPlugins = _pluginManager.GetRegisteredPlugins().ToList();
+            foreach (var plugin in installedPlugins)
+            {
+                allPluginsList.Add(plugin);
+                pluginIds.Add(plugin.Id);
+            }
+            
+            // Then add online plugins (using adapters), but skip already installed ones
             if (_onlinePlugins != null && _onlinePlugins.Count > 0)
             {
                 foreach (var onlinePlugin in _onlinePlugins)
                 {
-                    allPluginsList.Add(new PluginManifestAdapter(onlinePlugin));
+                    if (!pluginIds.Contains(onlinePlugin.Id))
+                    {
+                        allPluginsList.Add(new PluginManifestAdapter(onlinePlugin));
+                    }
                 }
             }
             
             _allPlugins = allPluginsList;
             
-            // 应用当前筛选和搜索
+            // Apply current filters and search
             ApplyFilters();
             
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -588,7 +718,7 @@ public partial class PluginExtensionsPage
         {
             Lib.Utils.Log.Instance.Trace($"Error updating plugins UI: {ex.Message}", ex);
             
-            // 确保"没有插件"消息在出错时也能显示
+            // Ensure "no plugins" message is shown even on error
             if (_noPluginsMessage != null)
             {
                 _noPluginsMessage.Visibility = Visibility.Visible;
@@ -596,161 +726,7 @@ public partial class PluginExtensionsPage
         }
     }
 
-    /// <summary>
-    /// Create plugin card UI element
-    /// </summary>
-    private Border CreatePluginCard(IPlugin plugin)
-    {
-        var border = new Border
-        {
-            Style = (Style)FindResource("ToolCardButtonStyle"),
-            Tag = plugin.Id,
-            Margin = new Thickness(0, 0, 12, 12),
-            Opacity = 0,
-            RenderTransform = new TranslateTransform(0, 20),
-            Width = 200,
-            Height = 200
-        };
 
-        border.MouseLeftButtonDown += PluginCard_MouseLeftButtonDown;
-        
-        border.Loaded += (s, e) =>
-        {
-            var fadeInAnimation = new DoubleAnimation
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-            };
-            
-            var slideAnimation = new DoubleAnimation
-            {
-                From = 20,
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-            };
-            
-            border.BeginAnimation(Border.OpacityProperty, fadeInAnimation);
-            border.RenderTransform.BeginAnimation(TranslateTransform.YProperty, slideAnimation);
-        };
-
-        var grid = new Grid
-        {
-            Margin = new Thickness(0)
-        };
-
-        // 创建图标容器，填充整个卡片
-        var iconBorder = new Border
-        {
-            CornerRadius = new CornerRadius(12),
-            BorderBrush = (Brush)FindResource("ControlStrokeColorDefaultBrush"),
-            BorderThickness = new Thickness(1)
-        };
-        
-        // 获取图标内容
-        var iconContent = CreatePluginIconOrLetter(plugin);
-        
-        // 设置图标填充整个卡片
-        if (iconContent is Image image)
-        {
-            image.Stretch = Stretch.UniformToFill;
-            image.HorizontalAlignment = HorizontalAlignment.Stretch;
-            image.VerticalAlignment = VerticalAlignment.Stretch;
-        }
-        
-        // 使用 Grid 来叠加图标、徽章和名称
-        var iconGrid = new Grid();
-        iconGrid.Children.Add(iconContent);
-        
-        // 徽章容器（右上角）
-        var badgeContainer = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 4, 4, 0)
-        };
-        
-        // 已安装标签
-        var isInstalled = _pluginManager.IsInstalled(plugin.Id);
-        if (isInstalled)
-        {
-            var installedBadge = new Border
-            {
-                Background = (Brush)FindResource("SystemFillColorSuccessBrush"),
-                CornerRadius = new CornerRadius(4),
-                Padding = new Thickness(4, 2, 4, 2),
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-            var badgeText = new TextBlock
-            {
-                Text = Resource.PluginExtensionsPage_PluginInstalled,
-                FontSize = 8,
-                FontWeight = FontWeights.Medium,
-                Foreground = Brushes.White
-            };
-            installedBadge.Child = badgeText;
-            badgeContainer.Children.Add(installedBadge);
-        }
-        
-        // 如果有徽章，则添加到网格中
-        if (badgeContainer.Children.Count > 0)
-        {
-            iconGrid.Children.Add(badgeContainer);
-        }
-        
-        // 创建底部名称覆盖层
-        var nameOverlay = new Border
-        {
-            Background = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0)),
-            CornerRadius = new CornerRadius(0, 0, 12, 12),
-            Padding = new Thickness(12, 8, 12, 8),
-            VerticalAlignment = VerticalAlignment.Bottom
-        };
-        
-        var namePanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical
-        };
-        
-        // 插件名称（使用多语言资源）
-        var displayName = GetPluginLocalizedName(plugin);
-        var nameTextBlock = new TextBlock
-        {
-            Text = displayName,
-            FontSize = 14,
-            FontWeight = FontWeights.Medium,
-            TextAlignment = TextAlignment.Center,
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = Brushes.White
-        };
-        namePanel.Children.Add(nameTextBlock);
-        
-        // 插件版本（如果有）
-        var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
-        if (metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
-        {
-            var versionTextBlock = new TextBlock
-            {
-                Text = $"v{metadata.Version}",
-                FontSize = 11,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255))
-            };
-            namePanel.Children.Add(versionTextBlock);
-        }
-        
-        nameOverlay.Child = namePanel;
-        iconGrid.Children.Add(nameOverlay);
-        
-        iconBorder.Child = iconGrid;
-        grid.Children.Add(iconBorder);
-
-        border.Child = grid;
-        return border;
-    }
 
     /// <summary>
     /// Create plugin icon (colored letters)
@@ -858,7 +834,7 @@ public partial class PluginExtensionsPage
         if (string.IsNullOrWhiteSpace(name))
             return name;
 
-        var suffixes = new[] { "插件", "Plugin", "plugin", "PLUG-IN", "Plug-in" };
+        var suffixes = new[] { "Plugin", "plugin", "PLUG-IN", "Plug-in" };
         foreach (var suffix in suffixes)
         {
             if (name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
@@ -904,7 +880,7 @@ public partial class PluginExtensionsPage
             var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
             if (onlinePlugin == null)
             {
-                mainWindow?.Snackbar.Show("更新失败", "无法找到插件的在线版本");
+                mainWindow?.Snackbar.Show("Update Failed", "Unable to find online version of plugin");
                 return;
             }
 
@@ -912,10 +888,10 @@ public partial class PluginExtensionsPage
             if (updateButton != null)
             {
                 updateButton.IsEnabled = false;
-                updateButton.Content = "更新中...";
+                updateButton.Content = "Updating...";
             }
 
-            mainWindow?.Snackbar.Show("正在更新插件", $"正在下载并更新 {onlinePlugin.Name}...");
+            mainWindow?.Snackbar.Show("Updating Plugin", $"Downloading and updating {onlinePlugin.Name}...");
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
             if (downloadProgressPanel != null)
@@ -933,7 +909,7 @@ public partial class PluginExtensionsPage
 
             if (progressText != null)
             {
-                progressText.Text = "准备下载...";
+                progressText.Text = "Preparing download...";
             }
 
             _currentDownloadingPluginId = pluginId;
@@ -944,25 +920,24 @@ public partial class PluginExtensionsPage
 
             _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
 
-            if (success)
+if (success)
             {
                 _pluginManager.ScanAndLoadPlugins();
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
-                ShowPluginDetails(pluginId);
 
-                mainWindow?.Snackbar.Show("更新成功", $"插件 {onlinePlugin.Name} 已成功更新到 v{onlinePlugin.Version}");
+                mainWindow?.Snackbar.Show("Update Successful", $"Plugin {onlinePlugin.Name} has been successfully updated to v{onlinePlugin.Version}");
             }
             else
             {
-                mainWindow?.Snackbar.Show("更新失败", "插件更新失败，请检查网络连接或稍后重试。");
+                mainWindow?.Snackbar.Show("Update Failed", "Plugin update failed, please check network connection and try again later.");
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
 
-            mainWindow?.Snackbar.Show("更新失败", $"更新插件时出错：{ex.Message}");
+            mainWindow?.Snackbar.Show("Update Failed", $"Error updating plugin: {ex.Message}");
         }
         finally
         {
@@ -972,7 +947,7 @@ public partial class PluginExtensionsPage
             if (updateButton != null)
             {
                 updateButton.IsEnabled = true;
-                updateButton.Content = "更新";
+                updateButton.Content = "Update";
             }
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
@@ -984,7 +959,7 @@ public partial class PluginExtensionsPage
     }
 
     /// <summary>
-    /// 将字符串转换为 SymbolRegular 枚举值
+    /// Convert string to SymbolRegular enum value
     /// </summary>
     private Wpf.Ui.Common.SymbolRegular GetSymbolFromString(string symbolString)
     {
@@ -997,211 +972,136 @@ public partial class PluginExtensionsPage
 
     private void UpdatePluginUI(string pluginId)
     {
-        // 工具箱和系统优化现在是默认应用，不再需要在这里更新
-        // 未来真正的插件系统将在这里处理第三方插件
+        // Toolbox and system optimization are now default apps, no longer need updates here
+        // Future real plugin system will handle third-party plugins here
     }
 
-    // 工具箱和系统优化现在是默认应用，相关代码已移除
-    // 未来真正的插件系统将在这里实现第三方插件的安装和管理
-
-    private void PluginCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        var source = e.OriginalSource as DependencyObject;
-        if (source != null)
-        {
-            var current = source;
-            while (current != null)
-            {
-                if (current is Wpf.Ui.Controls.Button || current is System.Windows.Controls.Button)
-                    return;
-                current = VisualTreeHelper.GetParent(current);
-            }
-        }
-
-        if (sender is not Border border)
-            return;
-
-        var pluginId = border.Tag?.ToString();
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return;
-
-        if (e.ClickCount == 2)
-        {
-            var isInstalled = _pluginManager.IsInstalled(pluginId);
-            if (isInstalled)
-            {
-                PluginOpenButton_Click(sender, e);
-            }
-            else
-            {
-                PluginInstallButton_Click(sender, e);
-            }
-        }
-        else
-        {
-            ShowPluginDetails(pluginId);
-        }
-        e.Handled = true;
-    }
-
-    private void CloseDetailsPanel_Click(object sender, RoutedEventArgs e)
-    {
-        var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
-        if (detailsPanel != null)
-        {
-            var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
-            if (hideStoryboard != null)
-            {
-                hideStoryboard.Completed += (s, args) =>
-                {
-                    detailsPanel.Visibility = Visibility.Collapsed;
-                };
-                hideStoryboard.Begin();
-            }
-            else
-            {
-                detailsPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-    }
-
-    private void ShowPluginDetails(string pluginId)
+    private void UpdateSpecificPluginUI(string pluginId)
     {
         try
         {
-            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-            
-            if (plugin == null)
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
+                Lib.Utils.Log.Instance.Trace($"UpdateSpecificPluginUI called for {pluginId}");
+                Lib.Utils.Log.Instance.Trace($"  - IsInstalled from manager: {_pluginManager.IsInstalled(pluginId)}");
+                Lib.Utils.Log.Instance.Trace($"  - Available updates: {_availableUpdates.Count}");
+                Lib.Utils.Log.Instance.Trace($"  - ViewModel count: {_pluginViewModels.Count}");
             }
             
-            if (plugin == null)
-                return;
-
-            var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
-            if (detailsPanel == null)
-                return;
-
-            var pluginMetadata = _pluginManager.GetPluginMetadata(pluginId);
-            
-            var nameBlock = this.FindName("PluginDetailsName") as TextBlock;
-            if (nameBlock != null)
+            // Find corresponding ViewModel and update its status
+            var viewModel = _pluginViewModels.FirstOrDefault(vm => vm.PluginId == pluginId);
+            if (viewModel != null)
             {
-                var displayName = GetPluginLocalizedName(plugin);
-                var nameText = displayName;
-                if (pluginMetadata != null && !string.IsNullOrWhiteSpace(pluginMetadata.Version))
+                var isInstalled = _pluginManager.IsInstalled(pluginId);
+                var updateAvailable = _availableUpdates.Any(au => au.Id == pluginId);
+                
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    nameText += $" v{pluginMetadata.Version}";
+                    Lib.Utils.Log.Instance.Trace($"Found ViewModel for {pluginId}:");
+                    Lib.Utils.Log.Instance.Trace($"  - Current IsInstalled: {viewModel.IsInstalled}");
+                    Lib.Utils.Log.Instance.Trace($"  - New IsInstalled: {isInstalled}");
+                    Lib.Utils.Log.Instance.Trace($"  - UpdateAvailable: {updateAvailable}");
                 }
-                nameBlock.Text = nameText;
-            }
-
-            var descBlock = this.FindName("PluginDetailsDescription") as TextBlock;
-            if (descBlock != null)
-            {
-                var descText = GetPluginLocalizedDescription(plugin);
-                if (pluginMetadata != null)
+                
+                // Update ViewModel's installation status and available update status
+                viewModel.IsInstalled = isInstalled;
+                viewModel.SetUpdateAvailable(updateAvailable);
+                
+                // If plugin is now installed, check if it supports configuration
+                if (isInstalled)
                 {
-                    if (!string.IsNullOrWhiteSpace(pluginMetadata.Author))
+                    var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
+                    if (plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
                     {
-                        descText += $"\n{string.Format(Resource.PluginSettingsWindow_Author, pluginMetadata.Author)}";
-                    }
-                    if (!string.IsNullOrWhiteSpace(pluginMetadata.MinimumHostVersion))
-                    {
-                        descText += $"\n{string.Format(Resource.PluginExtensionsPage_MinimumVersion, pluginMetadata.MinimumHostVersion)}";
+                        try
+                        {
+                            var featureExtension = sdkPlugin.GetFeatureExtension();
+                            viewModel.SupportsConfiguration = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                        }
+                        catch
+                        {
+                            viewModel.SupportsConfiguration = false;
+                        }
                     }
                 }
-                descBlock.Text = descText;
-            }
-
-            var isInstalled = _pluginManager.IsInstalled(pluginId);
-            var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
-            var uninstallButton = this.FindName("PluginUninstallButton") as Wpf.Ui.Controls.Button;
-            var openButton = this.FindName("PluginOpenButton") as Wpf.Ui.Controls.Button;
-
-            if (installButton != null)
-            {
-                installButton.Visibility = isInstalled ? Visibility.Collapsed : Visibility.Visible;
-                installButton.Tag = pluginId;
-            }
-
-            if (uninstallButton != null)
-            {
-                uninstallButton.Visibility = isInstalled ? Visibility.Visible : Visibility.Collapsed;
-                uninstallButton.Tag = pluginId;
-            }
-
-            if (openButton != null)
-            {
-                openButton.Visibility = isInstalled ? Visibility.Visible : Visibility.Collapsed;
-                openButton.Tag = pluginId;
-            }
-            
-            var configureButton = this.FindName("PluginConfigureButton") as Wpf.Ui.Controls.Button;
-            if (configureButton != null)
-            {
-                var supportsConfig = false;
-                if (plugin is Plugins.SDK.PluginBase sdkPlugin)
+                
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    var featureExtension = sdkPlugin.GetFeatureExtension();
-                    supportsConfig = featureExtension is Plugins.SDK.IPluginPage;
+                    Lib.Utils.Log.Instance.Trace($"Updated plugin UI for {pluginId}: Installed={isInstalled}, UpdateAvailable={updateAvailable}");
+                    Lib.Utils.Log.Instance.Trace($"  - ViewModel InstallButtonText after update: {viewModel.InstallButtonText}");
                 }
-                configureButton.Visibility = (isInstalled && supportsConfig) ? Visibility.Visible : Visibility.Collapsed;
-                configureButton.Tag = pluginId;
-            }
-
-            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
-            if (updateButton != null)
-            {
-                var hasUpdate = CheckPluginHasUpdate(pluginId);
-                updateButton.Visibility = (isInstalled && hasUpdate) ? Visibility.Visible : Visibility.Collapsed;
-                updateButton.Tag = pluginId;
-            }
-
-            _currentSelectedPluginId = pluginId;
-            SetupLanguageSelection(pluginId);
-
-            var showStoryboard = this.FindResource("ShowDetailsPanel") as Storyboard;
-            if (showStoryboard != null)
-            {
-                detailsPanel.Visibility = Visibility.Visible;
-                showStoryboard.Begin();
             }
             else
             {
-                detailsPanel.Visibility = Visibility.Visible;
-                detailsPanel.Opacity = 1;
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    Lib.Utils.Log.Instance.Trace($"ViewModel not found for {pluginId}, falling back to full UI update");
+                }
+                    // If existing ViewModel is not found, perform full UI update
+                UpdateAllPluginsUI();
             }
         }
         catch (Exception ex)
         {
-            Lib.Utils.Log.Instance.Trace($"Error showing plugin details: {ex.Message}", ex);
+            Lib.Utils.Log.Instance.Trace($"Error updating specific plugin UI for {pluginId}: {ex.Message}", ex);
+            // Fallback: perform full UI update
+            UpdateAllPluginsUI();
         }
     }
-
-    private void PluginInstallButton_Click(object sender, RoutedEventArgs e)
+    private async void PluginInstallButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
+
+        if (Lib.Utils.Log.Instance.IsTraceEnabled)
+        {
+            Lib.Utils.Log.Instance.Trace($"PluginInstallButton_Click called for {pluginId}");
+            Lib.Utils.Log.Instance.Trace($"  - IsInstalled before install: {_pluginManager.IsInstalled(pluginId)}");
+        }
 
         // Check if this is an online plugin installation
         var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
         if (onlinePlugin != null)
         {
-            InstallOnlinePluginAsync(onlinePlugin);
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
+            }
+            await InstallOnlinePluginAsync(onlinePlugin);
             return;
         }
 
         try
         {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"Installing local plugin: {pluginId}");
+            }
+            
+            // If plugin is already installed, uninstall it first to release file locks
+            if (_pluginManager.IsInstalled(pluginId))
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is already installed, uninstalling first to release file locks");
+                }
+                _pluginManager.UninstallPlugin(pluginId);
+                
+                // Wait a moment for the uninstall to complete
+                await Task.Delay(1000);
+            }
+            
             _pluginManager.InstallPlugin(pluginId);
             
-            // 刷新 UI
-            ShowPluginDetails(pluginId);
-            UpdateAllPluginsUI();
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
+            }
             
-            // 显示成功消息
+            // Immediately update specific plugin's UI state
+            UpdateSpecificPluginUI(pluginId);
+            
+            // Show success message
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
@@ -1220,75 +1120,69 @@ public partial class PluginExtensionsPage
         }
     }
 
-    private async void InstallOnlinePluginAsync(PluginManifest manifest)
+    private async Task InstallOnlinePluginAsync(PluginManifest manifest)
     {
+        if (Lib.Utils.Log.Instance.IsTraceEnabled)
+        {
+            Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync started for {manifest.Id}");
+        }
+        
+        var pluginViewModel = _pluginViewModels.FirstOrDefault(p => p.PluginId == manifest.Id);
+        
         try
         {
             _currentDownloadingPluginId = manifest.Id;
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            
-            // Show installing message
-            if (mainWindow != null)
+            if (pluginViewModel != null)
             {
-                mainWindow.Snackbar.Show("正在安装插件", $"正在下载并安装 {manifest.Name}...");
+                pluginViewModel.IsInstalling = true;
+                pluginViewModel.InstallStatusText = "Preparing download...";
+                pluginViewModel.InstallProgress = 0;
             }
             
-            // Show download progress panel
-            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
-            if (downloadProgressPanel != null)
+            // If plugin is already installed, uninstall it first to release file locks
+            if (_pluginManager.IsInstalled(manifest.Id))
             {
-                downloadProgressPanel.Visibility = Visibility.Visible;
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Plugin {manifest.Id} is already installed, uninstalling first to release file locks");
+                }
+                _pluginManager.UninstallPlugin(manifest.Id);
+                
+                // Wait a moment for the uninstall to complete
+                await Task.Delay(1000);
             }
             
-            var progressBar = this.FindName("DownloadProgressBar") as System.Windows.Controls.ProgressBar;
-            var progressText = this.FindName("DownloadProgressText") as TextBlock;
-            if (progressBar != null)
-            {
-                progressBar.Value = 0;
-                progressBar.Visibility = Visibility.Visible;
-            }
-            if (progressText != null)
-            {
-                progressText.Text = "准备下载...";
-            }
-            
-            // Disable install button during installation
-            var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
-            if (installButton != null)
-            {
-                installButton.IsEnabled = false;
-                installButton.Content = "安装中...";
-            }
-            
-            // Subscribe to download progress
             _pluginRepositoryService.DownloadProgressChanged += OnDownloadProgressChanged;
             
-            // Download and install plugin
             var success = await _pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
             
-            // Unsubscribe from download progress
             _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
+            
+            var mainWindow = Application.Current.MainWindow as MainWindow;
             
             if (success)
             {
-                // Refresh UI
                 _pluginManager.ScanAndLoadPlugins();
                 LocalizationHelper.SetPluginResourceCultures();
-                UpdateAllPluginsUI();
-                ShowPluginDetails(manifest.Id);
+                
+                // After rescanning plugins, immediately update specific plugin's UI state
+                UpdateSpecificPluginUI(manifest.Id);
                 
                 if (mainWindow != null)
                 {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallSuccess, $"插件 {manifest.Name} 已成功安装！");
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallSuccess, $"Plugin {manifest.Name} has been successfully installed!");
                 }
             }
             else
             {
                 if (mainWindow != null)
                 {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"插件安装失败，请检查网络连接或稍后重试。");
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"Plugin installation failed, please check network connection and try again later.");
                 }
+                
+                // Reset plugin's UI state
+                UpdateSpecificPluginUI(manifest.Id);
             }
         }
         catch (Exception ex)
@@ -1298,25 +1192,18 @@ public partial class PluginExtensionsPage
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"安装插件时出错: {ex.Message}");
+                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"Error installing plugin: {ex.Message}");
             }
         }
         finally
         {
-            // Reset install button state
-            var installButton = this.FindName("PluginInstallButton") as Wpf.Ui.Controls.Button;
-            if (installButton != null)
+            if (pluginViewModel != null)
             {
-                installButton.IsEnabled = true;
-                installButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallPlugin", Resource.Culture) ?? "Install";
+                pluginViewModel.IsInstalling = false;
             }
             
-            // Hide download progress panel
-            var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
-            if (downloadProgressPanel != null)
-            {
-                downloadProgressPanel.Visibility = Visibility.Collapsed;
-            }
+            // Ensure UI state is reset in all cases
+            UpdateSpecificPluginUI(manifest.Id);
             
             _currentDownloadingPluginId = string.Empty;
         }
@@ -1327,32 +1214,24 @@ public partial class PluginExtensionsPage
         if (!string.IsNullOrEmpty(_currentDownloadingPluginId) && progress.PluginId != _currentDownloadingPluginId)
             return;
             
-        if (progress.PluginId == _currentDownloadingPluginId)
+        var pluginViewModel = _pluginViewModels.FirstOrDefault(p => p.PluginId == progress.PluginId);
+        if (pluginViewModel != null)
         {
-            var progressBar = this.FindName("DownloadProgressBar") as System.Windows.Controls.ProgressBar;
-            var progressText = this.FindName("DownloadProgressText") as TextBlock;
+            pluginViewModel.InstallProgress = progress.ProgressPercentage;
             
-            if (progressBar != null)
+            if (progress.IsCompleted)
             {
-                progressBar.Value = progress.ProgressPercentage;
+                pluginViewModel.InstallStatusText = "Download completed";
             }
-            
-            if (progressText != null)
+            else if (progress.TotalBytes > 0)
             {
-                if (progress.IsCompleted)
-                {
-                    progressText.Text = "下载完成";
-                }
-                else if (progress.TotalBytes > 0)
-                {
-                    var downloadedMB = progress.BytesDownloaded / 1024.0 / 1024.0;
-                    var totalMB = progress.TotalBytes / 1024.0 / 1024.0;
-                    progressText.Text = $"下载中... {downloadedMB:F1} / {totalMB:F1} MB ({progress.ProgressPercentage:F0}%)";
-                }
-                else
-                {
-                    progressText.Text = "下载中...";
-                }
+                var downloadedMB = progress.BytesDownloaded / 1024.0 / 1024.0;
+                var totalMB = progress.TotalBytes / 1024.0 / 1024.0;
+                pluginViewModel.InstallStatusText = $"Downloading... {downloadedMB:F1} / {totalMB:F1} MB ({progress.ProgressPercentage:F0}%)";
+            }
+            else
+            {
+                pluginViewModel.InstallStatusText = "Downloading...";
             }
         }
     }
@@ -1373,7 +1252,8 @@ public partial class PluginExtensionsPage
                 detailsPanel.Visibility = Visibility.Collapsed;
             }
             
-            UpdateAllPluginsUI();
+            // Immediately update specific plugin's UI state
+            UpdateSpecificPluginUI(pluginId);
             
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
@@ -1425,7 +1305,7 @@ public partial class PluginExtensionsPage
 
         try
         {
-            // 确保插件已安装
+            // Ensure plugin is installed
             if (!_pluginManager.IsInstalled(pluginId))
             {
                 var mainWindow = Application.Current.MainWindow as MainWindow;
@@ -1436,13 +1316,13 @@ public partial class PluginExtensionsPage
                 return;
             }
 
-            // 查找插件的可执行文件
+            // Find plugin's executable file
             var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginId);
             var exeFile = Path.Combine(pluginDir, $"{pluginId}.exe");
             
             if (File.Exists(exeFile))
             {
-                // 运行插件的可执行文件
+                // Run plugin's executable file
                 var processInfo = new System.Diagnostics.ProcessStartInfo
                 {
                     FileName = exeFile,
@@ -1455,30 +1335,30 @@ public partial class PluginExtensionsPage
                 var mainWindow = Application.Current.MainWindow as MainWindow;
                 if (mainWindow != null)
                 {
-                    mainWindow.Snackbar.Show("运行插件", $"已启动 {pluginId}.exe");
+                    mainWindow.Snackbar.Show("Run Plugin", $"Started {pluginId}.exe");
                 }
             }
             else
             {
-                // 导航到插件页面（如果可执行文件不存在）
+                // Navigate to plugin page (if executable file doesn't exist)
                 var mainWindow2 = Application.Current.MainWindow as MainWindow;
                 if (mainWindow2 != null)
                 {
-                    // 使用 NavigationStore 导航到插件页面
+                    // Use NavigationStore to navigate to plugin page
                     var navigationStore = mainWindow2.FindName("_navigationStore") as NavigationStore;
                     if (navigationStore != null)
                     {
-                        // 注册页面标签到插件ID的映射
+                        // Register page tag to plugin ID mapping
                         PluginPageWrapper.RegisterPluginPageTag($"plugin:{pluginId}", pluginId);
                         
-                        // 创建一个临时导航项来导航到插件页面
+                        // Create a temporary navigation item to navigate to plugin page
                         var tempItem = new NavigationItem
                     {
                         PageTag = $"plugin:{pluginId}",
                         PageType = typeof(PluginPageWrapper)
                     };
                     
-                        // 导航到插件页面
+                        // Navigate to plugin page
                         navigationStore.Navigate(tempItem.PageTag);
                     }
                 }
@@ -1505,17 +1385,17 @@ public partial class PluginExtensionsPage
         if (plugin == null)
             return;
 
-        // 显示确认对话框
+        // Show confirmation dialog
         var result = await MessageBoxHelper.ShowAsync(this, 
-            "永久删除插件", 
-            $"确定要永久删除插件 \"{plugin.Name}\" 吗？\n\n此操作无法撤销，插件文件将被永久删除。",
-            "删除",
-            "取消");
+            "Permanently Delete Plugin", 
+            $"Are you sure you want to permanently delete plugin \"{plugin.Name}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted.",
+            "Delete",
+            "Cancel");
 
         if (!result)
             return;
 
-        // 执行永久删除
+        // Execute permanent deletion
         try
         {
             _pluginManager.UninstallPlugin(pluginId);
@@ -1542,7 +1422,7 @@ public partial class PluginExtensionsPage
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show("插件已卸载", "插件将在程序关闭时被删除。");
+                mainWindow.Snackbar.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes.");
             }
         }
         catch (Exception ex)
@@ -1552,7 +1432,7 @@ public partial class PluginExtensionsPage
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show("删除失败", $"删除插件时发生错误: {ex.Message}");
+                mainWindow.Snackbar.Show("Deletion Failed", $"Error occurred while deleting plugin: {ex.Message}");
             }
         }
     }
@@ -1682,16 +1562,24 @@ public partial class PluginExtensionsPage
                         }
                         catch
                         {
-                            // Continue searching
+                            // Continue searching for the right plugin
                         }
                     }
                 }
             }
         }
-        catch (Exception ex)
+        finally
         {
-            if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                Lib.Utils.Log.Instance.Trace($"Error applying language to plugin {pluginId}: {ex.Message}", ex);
+            // Cleanup or final operations if needed
+        }
+    }
+
+    private void BulkImportButton_Click(object sender, RoutedEventArgs e)
+    {
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow != null)
+        {
+            mainWindow.Snackbar.Show("Bulk Import", "Use make.bat -p to compile plugins locally");
         }
     }
 
@@ -1976,7 +1864,7 @@ public partial class PluginExtensionsPage
         });
     }
 
-    private string GetPluginLocalizedDescription(IPlugin plugin)
+private string GetPluginLocalizedDescription(IPlugin plugin)
     {
         var resourceName = $"Plugin_Description_{plugin.Id}";
         var property = typeof(Resource).GetProperty(resourceName);
@@ -1987,5 +1875,33 @@ public partial class PluginExtensionsPage
                 return value;
         }
         return plugin.Description;
+    }
+
+    
+
+    private void PluginListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (_pluginsListBox.SelectedItem is PluginViewModel selectedViewModel)
+        {
+            var isInstalled = _pluginManager.IsInstalled(selectedViewModel.PluginId);
+            if (isInstalled)
+            {
+                PluginOpenButton_Click(sender, e);
+            }
+            else
+            {
+                PluginInstallButton_Click(sender, e);
+            }
+        }
+    }
+
+    private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
+    {
+        // Update UI when plugin state changes (installed/uninstalled)
+        Dispatcher.Invoke(() =>
+        {
+            UpdateSpecificPluginUI(e.PluginId);
+            UpdateAllPluginsUI();
+        });
     }
 }
