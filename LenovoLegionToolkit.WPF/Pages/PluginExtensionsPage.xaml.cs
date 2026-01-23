@@ -54,6 +54,9 @@ private string _currentSearchText = string.Empty;
 
         // Subscribe to plugin state changes
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+
+        // Add keyboard shortcut for resetting plugin states (Ctrl+Shift+R)
+        PreviewKeyDown += PluginExtensionsPage_PreviewKeyDown;
         
         // Initialize loading text with multi-language support
         var loadingText = this.FindName("_loadingText") as System.Windows.Controls.TextBlock;
@@ -1622,6 +1625,9 @@ if (success)
                 _pluginManager.ScanAndLoadPlugins();
                 UpdateAllPluginsUI();
 
+                // Clear the import status cache
+                _currentDownloadingPluginId = string.Empty;
+
                 // Show success message
                 if (mainWindow != null && importedCount > 0)
                 {
@@ -2082,5 +2088,54 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             UpdateSpecificPluginUI(e.PluginId);
             UpdateAllPluginsUI();
         });
+    }
+
+    private void PluginExtensionsPage_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        // Ctrl+Shift+R to reset all plugin states (for debugging/testing)
+        if (e.Key == Key.R && Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
+        {
+            e.Handled = true;
+            ResetAllPluginStates();
+        }
+    }
+
+    /// <summary>
+    /// Reset all plugin installation states (for debugging/testing purposes)
+    /// This clears the installed extensions list so plugins show as uninstalled
+    /// </summary>
+    private void ResetAllPluginStates()
+    {
+        try
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"ResetAllPluginStates called");
+            }
+
+            // Clear all installed extensions
+            var applicationSettings = IoCContainer.Resolve<LenovoLegionToolkit.Lib.Settings.ApplicationSettings>();
+            applicationSettings.Store.InstalledExtensions.Clear();
+            applicationSettings.SynchronizeStore();
+
+            // Update UI for all plugins
+            UpdateAllPluginsUI();
+
+            // Show confirmation
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.Snackbar.Show("Plugin States Reset", "All plugin installation states have been cleared");
+            }
+
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"All plugin states have been reset");
+            }
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error resetting plugin states: {ex.Message}", ex);
+        }
     }
 }

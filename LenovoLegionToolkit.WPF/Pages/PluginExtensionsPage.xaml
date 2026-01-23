@@ -123,6 +123,11 @@
                 Margin="0,8,0,0"
                 Focusable="True"
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
+            <TextBlock
+                Margin="0,4,0,0"
+                FontSize="12"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="Tip: Press Ctrl+Shift+R to reset all plugin installation states for testing" />
         </StackPanel>
 
 
