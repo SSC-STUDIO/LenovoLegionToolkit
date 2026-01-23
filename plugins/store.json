@@ -11,7 +11,7 @@
       "version": "1.4.0",
       "changelog": "Version 1.4.0 (2026-01-22)\n- Optimized plugin interface by removing ViVeTool status display\n- Moved ViVeTool status and download to plugin configuration\n- Fixed plugin extensions configuration button issues\n- Enhanced multi-language support with 5 new languages\n- Added bulk plugin import functionality\n- Improved plugin store with icon background colors",
       "releaseDate": "2026-01-22T21:00:00Z",
-      "fileHash": "9a674785c039b27174d8a9458d2bc1462a4b18a5af54a3b7bdbb99e04413b9a2",
+      "fileHash": "83bc5c241aa0288f6ace2d36db7644545da642ef16a904f0be4908ce373ac0c1",
       "author": "Lenovo Legion Toolkit Team",
       "dependencies": null,
       "id": "ViveTool",
