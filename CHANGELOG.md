@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Missing Resource.Designer.cs entries for bulk import / 批量导入缺失的 Resource.Designer.cs 条目
 - Duplicate resource entries in Resource.resx file / Resource.resx 文件中重复的资源条目
 - JSON syntax errors in plugin store preventing online plugin loading / 插件商店JSON语法错误导致无法加载在线插件
+- Removed redundant PluginImport plugin from store / 从商店中移除冗余的PluginImport插件
+- Plugin uninstall button not updating UI after successful uninstall / 插件卸载成功后卸载按钮UI未更新
+- Plugin descriptions not supporting Chinese localization / 插件描述不支持中文本地化
+- Bulk import button icon and tooltip unclear / 批量导入按钮图标和提示不清晰
 
 ### Improved / 改进
 - ViveTool plugin interface optimization by removing redundant status display / 优化ViveTool插件界面，移除冗余状态显示
