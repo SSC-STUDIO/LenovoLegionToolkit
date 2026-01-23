@@ -10,118 +10,96 @@
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Scrollable="True">
     
-    <wpfui:UiPage.Resources>
-        <!-- Tool Card Button Style -->
-        <Style x:Key="ToolCardButtonStyle" TargetType="Border">
+<wpfui:UiPage.Resources>
+        <!-- Boolean to Visibility Converter -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        
+        <!-- List Box Item Style -->
+        <Style x:Key="PluginListItemContainerStyle" TargetType="ListBoxItem">
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16,12" />
+            <Setter Property="MinHeight" Value="90" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Plugin Icon Style -->
+        <Style x:Key="PluginIconStyle" TargetType="Border">
+            <Setter Property="Width" Value="48" />
+            <Setter Property="Height" Value="48" />
             <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="14" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Margin" Value="0,0,12,12" />
-            <Setter Property="Width" Value="110" />
-            <Setter Property="MinHeight" Value="110" />
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect
-                        BlurRadius="8"
-                        ShadowDepth="2"
-                        Opacity="0.1"
-                        Color="Black" />
-                </Setter.Value>
-            </Setter>
-            <Setter Property="RenderTransform">
-                <Setter.Value>
-                    <TranslateTransform />
-                </Setter.Value>
-            </Setter>
-            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                    To="-2"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
-                                    To="12"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)"
-                                    To="4"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
-                                    To="0.15"
-                                    Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                    <Trigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                    To="0"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
-                                    To="8"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)"
-                                    To="2"
-                                    Duration="0:0:0.2" />
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
-                                    To="0.1"
-                                    Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.ExitActions>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+        
+        <!-- Plugin Title Style -->
+        <Style x:Key="PluginTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        
+        <!-- Plugin Version Style -->
+        <Style x:Key="PluginVersionStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+        
+        <!-- Plugin Description Style -->
+        <Style x:Key="PluginDescriptionStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="MaxHeight" Value="36" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        
+        <!-- Plugin Action Button Style -->
+        <Style x:Key="PluginActionButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="70" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        
+        <!-- Install Button Style (Primary) -->
+        <Style x:Key="InstallButtonStyle" TargetType="Button" BasedOn="{StaticResource PluginActionButtonStyle}">
+            <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
 
-        <!-- Plugin Details Panel Animation -->
-        <Storyboard x:Key="ShowDetailsPanel">
-            <DoubleAnimation
-                Storyboard.TargetName="PluginDetailsPanel"
-                Storyboard.TargetProperty="Opacity"
-                From="0"
-                To="1"
-                Duration="0:0:0.3" />
-            <DoubleAnimation
-                Storyboard.TargetName="PluginDetailsPanel"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                From="10"
-                To="0"
-                Duration="0:0:0.3" />
-        </Storyboard>
+        <!-- Plugin List Box Style -->
+        <Style x:Key="PluginListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
 
-        <Storyboard x:Key="HideDetailsPanel">
-            <DoubleAnimation
-                Storyboard.TargetName="PluginDetailsPanel"
-                Storyboard.TargetProperty="Opacity"
-                From="1"
-                To="0"
-                Duration="0:0:0.2" />
-            <DoubleAnimation
-                Storyboard.TargetName="PluginDetailsPanel"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                From="0"
-                To="10"
-                Duration="0:0:0.2" />
-        </Storyboard>
+
     </wpfui:UiPage.Resources>
 
     <Grid Margin="0,0,16,12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+<Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -144,145 +122,10 @@
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
         </StackPanel>
 
-        <!-- Plugin Details Panel -->
-        <Border
-            Grid.Row="1"
-            x:Name="PluginDetailsPanel"
-            Margin="0,0,0,16"
-            Padding="16,12"
-            Background="{DynamicResource ControlFillColorSecondaryBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="0,1,0,0"
-            CornerRadius="0"
-            Visibility="Collapsed"
-            Opacity="0"
-            RenderTransformOrigin="0.5,0.5">
-            <Border.RenderTransform>
-                <TranslateTransform />
-            </Border.RenderTransform>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                
-                <!-- Details -->
-                <Grid Grid.Column="0" Grid.ColumnSpan="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        
-                        <StackPanel Grid.Column="0">
-                            <TextBlock
-                                x:Name="PluginDetailsName"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Margin="0,0,0,2" />
-                            <TextBlock
-                                x:Name="PluginDetailsDescription"
-                                FontSize="12"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                TextWrapping="Wrap"
-                                MaxHeight="100"
-                                TextTrimming="CharacterEllipsis"
-                                Margin="0,0,0,8" />
-                        </StackPanel>
-                        
-                        <wpfui:Button
-                            Grid.Column="1"
-                            Icon="Dismiss24"
-                            Appearance="Secondary"
-                            Margin="8,0,0,0"
-                            Click="CloseDetailsPanel_Click"
-                            ToolTip="Close details" />
-                    </Grid>
-                    
-                    <!-- Language Selection and Action Buttons -->
-                    <StackPanel 
-                        Grid.Row="1"
-                        Orientation="Horizontal"
-                        Margin="0,0,0,8">
-                        <TextBlock
-                            Text="{x:Static resources:Resource.PluginExtensionsPage_Language}"
-                            FontSize="12"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            VerticalAlignment="Center"
-                            Margin="0,0,8,0" />
-                        <ComboBox
-                            x:Name="PluginLanguageComboBox"
-                            MinWidth="150"
-                            SelectionChanged="PluginLanguageComboBox_SelectionChanged"
-                            Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginInstallButton"
-                            Content="{x:Static resources:Resource.PluginExtensionsPage_InstallPlugin}"
-                            Click="PluginInstallButton_Click"
-                            Margin="8,0,0,0"
-                            Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginUninstallButton"
-                            Content="{x:Static resources:Resource.PluginExtensionsPage_Uninstall}"
-                            Click="PluginUninstallButton_Click"
-                            Margin="8,0,0,0"
-                            Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginConfigureButton"
-                            Content="{x:Static resources:Resource.PluginExtensionsPage_Configure}"
-                            Click="PluginConfigureButton_Click"
-                            Margin="8,0,0,0"
-                            Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginOpenButton"
-                            Content="{x:Static resources:Resource.PluginExtensionsPage_Open}"
-                            Click="PluginOpenButton_Click"
-                            Margin="8,0,0,0"
-                            Visibility="Collapsed" />
-                        <wpfui:Button
-                            x:Name="PluginUpdateButton"
-                            Content="Update"
-                            Click="PluginUpdateButton_Click"
-                            Margin="8,0,0,0"
-                            Visibility="Collapsed" />
-                    </StackPanel>
-                    
-                    <!-- Download Progress -->
-                    <StackPanel 
-                        Grid.Row="4"
-                        Margin="0,8,0,0"
-                        Visibility="Collapsed">
-                        <TextBlock
-                            Text="{x:Static resources:Resource.PackageControl_Downloading}"
-                            FontSize="12"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Margin="0,0,4,0" />
-                        <ProgressBar
-                            x:Name="DownloadProgressBar"
-                            Height="4"
-                            Margin="0,0,8,0" />
-                        <TextBlock
-                            x:Name="DownloadProgressText"
-                            FontSize="10"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Right"
-                            Margin="0,0,8,0" />
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </Border>
 
-        <!-- Search and Filter -->
-        <Grid Grid.Row="2" Margin="0,0,0,16">
+
+<!-- Search and Filter -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -293,34 +136,48 @@
                     Grid.Column="0"
                     Icon="Search24"
                     PlaceholderText="{x:Static resources:Resource.PluginExtensionsPage_SearchPlaceholder}"
-                    TextChanged="SearchTextBox_TextChanged" />
+                    TextChanged="SearchTextBox_TextChanged"
+                    Height="36"
+                    Margin="0,0,12,0" />
             
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0">
+                <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal" 
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center">
                 <ComboBox
                     x:Name="_filterComboBox"
-                    MinWidth="150"
+                    MinWidth="140"
+                    Height="36"
                     SelectionChanged="FilterComboBox_SelectionChanged">
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterAll}" Tag="All" IsSelected="True" />
-                    <ComboBoxItem Content="Online Plugins" Tag="Online" />
-                    <ComboBoxItem Content="Local Plugins" Tag="Local" />
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterInstalled}" Tag="Installed" />
                     <ComboBoxItem Content="{x:Static resources:Resource.PluginExtensionsPage_FilterNotInstalled}" Tag="NotInstalled" />
                 </ComboBox>
+                
+                <wpfui:Button
+                    x:Name="_bulkImportButton"
+                    Icon="Open24"
+                    Appearance="Secondary"
+                    Margin="8,0,0,0"
+                    Height="36"
+                    Click="BulkImportButton_Click"
+                    ToolTip="{x:Static resources:Resource.PluginExtensionsPage_BulkImportTooltip}" />
                 
                 <wpfui:Button
                     x:Name="_refreshButton"
                     Icon="ArrowClockwise24"
                     Appearance="Secondary"
                     Margin="8,0,0,0"
+                    Height="36"
                     Click="RefreshButton_Click"
                     ToolTip="Refresh plugin list" />
             </StackPanel>
         </Grid>
 
-        <!-- Deprecation Notice -->
+<!-- Deprecation Notice -->
         <wpfui:InfoBar
             x:Name="_deprecationNotice"
-            Grid.Row="3"
+            Grid.Row="2"
             Margin="0,0,0,12"
             Severity="Warning"
             IsOpen="False"
@@ -332,28 +189,159 @@
         <!-- Results Count -->
         <TextBlock
             x:Name="_resultsCountTextBlock"
-            Grid.Row="4"
+            Grid.Row="3"
             Margin="0,0,0,12"
             FontSize="12"
             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
             Visibility="Collapsed" />
 
         <!-- Plugins List -->
-        <Grid Grid.Row="5">
-            <ScrollViewer
-                x:Name="_pluginsScrollViewer"
-                VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Disabled"
-                Padding="0,0,0,24"
-                ClipToBounds="False">
-                <ItemsControl x:Name="_pluginsItemsControl">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" Margin="0,2,0,0" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+        <Grid Grid.Row="4">
+            <ListBox x:Name="_pluginsListBox"
+                     Style="{StaticResource PluginListBoxStyle}"
+                     Padding="0,0,0,24"
+                     ClipToBounds="False"
+                     SelectionMode="Single"
+                     MouseDoubleClick="PluginListBox_MouseDoubleClick"
+                     ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid MinHeight="90">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Plugin Icon -->
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource PluginIconStyle}"
+                                    Background="{Binding IconBackground}">
+                                 <TextBlock Text="{Binding IconLetter}"
+                                            FontSize="18"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                            </Border>
+                            
+                            <!-- Plugin Info -->
+                            <StackPanel Grid.Column="1" 
+                                        Orientation="Vertical" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,16,0">
+                                <TextBlock Text="{Binding Name}"
+                                           Style="{StaticResource PluginTitleStyle}" />
+                                <TextBlock Text="{Binding Version}"
+                                           Style="{StaticResource PluginVersionStyle}" />
+                                <TextBlock Text="{Binding Description}"
+                                           Style="{StaticResource PluginDescriptionStyle}"
+                                           Margin="0,4,0,0"
+                                           Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+                                
+                                <!-- Installation Progress -->
+                                <StackPanel Orientation="Vertical" 
+                                            Margin="0,4,0,0"
+                                            Visibility="{Binding IsInstalling, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="{Binding InstallStatusText}"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource SystemAccentColorBrush}"
+                                               Margin="0,0,0,4" />
+                                    <ProgressBar Value="{Binding InstallProgress}"
+                                                 Height="4"
+                                                 Maximum="100"
+                                                 Minimum="0" />
+                                </StackPanel>
+                            </StackPanel>
+                            
+                            <!-- Action Buttons -->
+                            <StackPanel Grid.Column="2" 
+                                        Orientation="Horizontal" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right">
+                                <!-- Install/Update Button -->
+                                <Button Content="{Binding InstallButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="90"
+                                        Height="30"
+                                        Click="PluginInstallButton_Click"
+                                        Tag="{Binding PluginId}" />
+                                
+                                <!-- Configuration Button -->
+                                <Button Content="{Binding ConfigureButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Click="PluginConfigureButton_Click"
+                                        Tag="{Binding PluginId}" />
+                                
+                                <!-- Open Button -->
+                                <Button Content="{Binding OpenButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Click="PluginOpenButton_Click"
+                                        Tag="{Binding PluginId}" />
+                                
+                                <!-- Uninstall Button -->
+                                <Button Content="{Binding UninstallButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Click="PluginUninstallButton_Click"
+                                        Tag="{Binding PluginId}" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Loading Indicator -->
+            <StackPanel
+                x:Name="_loadingIndicator"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Visibility="Collapsed"
+                Margin="24">
+                <wpfui:SymbolIcon
+                    Symbol="ArrowSync24"
+                    FontSize="48"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,16">
+                    <wpfui:SymbolIcon.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </wpfui:SymbolIcon.RenderTransform>
+                    <wpfui:SymbolIcon.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                        From="0"
+                                        To="360"
+                                        Duration="0:0:1"
+                                        RepeatBehavior="Forever" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </wpfui:SymbolIcon.Triggers>
+                </wpfui:SymbolIcon>
+                <TextBlock
+                    x:Name="_loadingText"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center" />
+            </StackPanel>
 
             <!-- No Plugins Message -->
             <StackPanel
