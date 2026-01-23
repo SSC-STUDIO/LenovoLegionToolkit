@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin uninstall button not updating UI after successful uninstall / 插件卸载成功后卸载按钮UI未更新
 - Plugin descriptions not supporting Chinese localization / 插件描述不支持中文本地化
 - Bulk import button icon and tooltip unclear / 批量导入按钮图标和提示不清晰
+- Implemented proper ZIP file import functionality for local plugins / 实现了本地插件ZIP文件的正确导入功能
+- Fixed configure button visibility to require both installed and supports configuration / 修复配置按钮可见性，需要同时安装且支持配置
 
 ### Improved / 改进
 - ViveTool plugin interface optimization by removing redundant status display / 优化ViveTool插件界面，移除冗余状态显示
