@@ -588,5 +588,52 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration
                 return ResourceManager.GetString("NetworkAcceleration_ProxyPortPlaceholder", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to GitHub.
+        /// </summary>
+        public static string NetworkAcceleration_Platform_GitHub {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Platform_GitHub", resourceCulture);
+            }
+        }
+
+
+
+        /// <summary>
+        ///   Looks up a localized string similar to Steam.
+        /// </summary>
+        public static string NetworkAcceleration_Platform_Steam {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Platform_Steam", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Discord.
+        /// </summary>
+        public static string NetworkAcceleration_Platform_Discord {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Platform_Discord", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to npm.
+        /// </summary>
+        public static string NetworkAcceleration_Platform_Npm {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Platform_Npm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to PyPI.
+        /// </summary>
+        public static string NetworkAcceleration_Platform_PyPI {
+            get {
+                return ResourceManager.GetString("NetworkAcceleration_Platform_PyPI", resourceCulture);
+            }
+        }
     }
 }

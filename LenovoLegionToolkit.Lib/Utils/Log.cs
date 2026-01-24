@@ -74,10 +74,44 @@ public class Log
                 {
                     File.Delete(logFiles[i]);
                 }
-                catch (Exception) { /* Ignore failures while deleting legacy log files */ }
+                catch (Exception ex) 
+                { 
+                    // Log cleanup failures but continue processing
+                    if (IsTraceEnabled)
+                    {
+                        var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                        var threadId = Environment.CurrentManagedThreadId;
+                        var logLine = $"[{timestamp}] [{threadId}] [Log.cs#76:CleanupOldLogFiles] [Trace] Failed to delete log file {logFiles[i]}: {ex.Message}";
+                        try
+                        {
+                            File.AppendAllText(Path.Combine(_folderPath, $"cleanup_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                        }
+                        catch
+                        {
+                            // If we can't write the error, continue silently
+                        }
+                    }
+                }
             }
         }
-        catch (Exception) { /* Ignore unexpected failures while cleaning up logs */ }
+        catch (Exception ex) 
+        { 
+            // Log cleanup failures but continue processing
+            if (IsTraceEnabled)
+            {
+                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                var threadId = Environment.CurrentManagedThreadId;
+                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#80:CleanupOldLogFiles] [Trace] Failed during log cleanup: {ex.Message}";
+                try
+                {
+                    File.AppendAllText(Path.Combine(_folderPath, $"cleanup_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                }
+                catch
+                {
+                    // If we can't write the error, continue silently
+                }
+            }
+        }
     }
 
     public void ErrorReport(string header, Exception ex)
@@ -201,7 +235,24 @@ public class Log
                     await WriteToFileAsync(linesToWrite).ConfigureAwait(false);
                 }
             }
-            catch (Exception) { /* Ignore transient failures while draining the queue */ }
+            catch (Exception ex) 
+            { 
+                // Log queue processing failures but continue
+                if (IsTraceEnabled)
+                {
+                    var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                    var threadId = Environment.CurrentManagedThreadId;
+                    var logLine = $"[{timestamp}] [{threadId}] [Log.cs#204:ProcessLogQueue] [Trace] Failed during queue processing: {ex.Message}";
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(_folderPath, $"queue_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                    }
+                    catch
+                    {
+                        // If we can't write the error, continue silently
+                    }
+                }
+            }
         }
     }
 
@@ -239,7 +290,24 @@ public class Log
             // The path is captured while holding the lock, preventing rotation during write
             await File.AppendAllLinesAsync(logPathToUse, lines).ConfigureAwait(false);
         }
-        catch (Exception) { /* Ignore transient write failures */ }
+        catch (Exception ex) 
+        { 
+            // Log write failures but continue processing
+            if (IsTraceEnabled)
+            {
+                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                var threadId = Environment.CurrentManagedThreadId;
+                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#242:WriteToFileAsync] [Trace] Failed to write to log file: {ex.Message}";
+                try
+                {
+                    File.AppendAllText(Path.Combine(_folderPath, $"write_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                }
+                catch
+                {
+                    // If we can't write the error, continue silently
+                }
+            }
+        }
     }
     
     private void ForceWriteToFile(List<string> lines)
@@ -276,7 +344,24 @@ public class Log
             // The path is captured while holding the lock, preventing rotation during write
             File.AppendAllLines(logPathToUse, lines);
         }
-        catch (Exception) { /* Ignore failures during the forced write */ }
+        catch (Exception ex) 
+        { 
+            // Log forced write failures but continue processing
+            if (IsTraceEnabled)
+            {
+                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                var threadId = Environment.CurrentManagedThreadId;
+                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#279:ForceWriteToFile] [Trace] Failed during forced write: {ex.Message}";
+                try
+                {
+                    File.AppendAllText(Path.Combine(_folderPath, $"force_write_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                }
+                catch
+                {
+                    // If we can't write the error, continue silently
+                }
+            }
+        }
     }
 
     public void Flush()
@@ -389,11 +474,53 @@ public class Log
                 const int FINAL_WAIT_MS = 300; // Final wait for I/O operations to complete
                 await Task.WhenAny(_logTask, Task.Delay(FINAL_WAIT_MS)).ConfigureAwait(false);
             }
-            catch (Exception) { /* Ignore */ }
+            catch (Exception ex) 
+            { 
+                // Log final wait failures
+                if (IsTraceEnabled)
+                {
+                    var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                    var threadId = Environment.CurrentManagedThreadId;
+                    var logLine = $"[{timestamp}] [{threadId}] [Log.cs#392:ShutdownAsync] [Trace] Failed during final wait: {ex.Message}";
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(_folderPath, $"shutdown_wait_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                    }
+                    catch
+                    {
+                        // If we can't write the error, continue silently
+                    }
+                }
+            }
         }
     }
 
-    public void Shutdown() => ShutdownAsync().GetAwaiter().GetResult();
+    public void Shutdown()
+    {
+        try
+        {
+            // Use ConfigureAwait(false) to avoid potential deadlocks in synchronization contexts
+            ShutdownAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            // Log shutdown errors to help with debugging
+            if (IsTraceEnabled)
+            {
+                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
+                var threadId = Environment.CurrentManagedThreadId;
+                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#396:Shutdown] [Trace] Error during shutdown: {ex.Message}";
+                try
+                {
+                    File.AppendAllText(Path.Combine(_folderPath, $"shutdown_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
+                }
+                catch
+                {
+                    // If we can't even write the error, there's nothing more we can do
+                }
+            }
+        }
+    }
 
     private static string Serialize(Exception ex) => new StringBuilder()
         .AppendLine("=== Exception ===")

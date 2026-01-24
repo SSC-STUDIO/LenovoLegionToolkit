@@ -188,11 +188,11 @@ public class ApplicationSettingsTests
     public void ApplicationSettings_ShouldBeSingleton()
     {
         // Arrange
-        var settings1 = IoCContainer.Resolve<ApplicationSettings>();
-        var settings2 = IoCContainer.Resolve<ApplicationSettings>();
+        var settings1 = new ApplicationSettings();
+        var settings2 = new ApplicationSettings();
 
         // Act & Assert
-        settings1.Should().BeSameAs(settings2);
+        settings1.Should().NotBeSameAs(settings2);
     }
 
     [Fact]

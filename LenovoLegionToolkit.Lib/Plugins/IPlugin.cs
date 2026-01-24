@@ -49,5 +49,10 @@ public interface IPlugin
     /// Called when the application is shutting down
     /// </summary>
     void OnShutdown();
+
+    /// <summary>
+    /// Called before plugin update or uninstallation to stop any running processes
+    /// </summary>
+    void Stop();
 }
 

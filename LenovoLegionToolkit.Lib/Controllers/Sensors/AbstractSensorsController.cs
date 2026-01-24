@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
+using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native;
 using NvAPIWrapper.Native.GPU;
 using Windows.Win32;
@@ -54,6 +55,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     {
         _percentProcessorPerformanceCounter.Reset();
         _percentProcessorUtilityCounter.Reset();
+        try
+        {
+            NVAPI.Initialize();
+        }
+        catch
+        {
+            // Ignore initialization errors here, individual calls might retry or fail gracefully
+        }
         return Task.CompletedTask;
     }
 
@@ -212,6 +221,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         try
         {
+            // Ensure NvAPI is initialized
             NVAPI.Initialize();
 
             var gpu = NVAPI.GetGPU();
@@ -226,13 +236,65 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var maxCoreClock = (int)gpu.BoostClockFrequencies.GraphicsClock.Frequency / 1000;
             var maxMemoryClock = (int)gpu.BoostClockFrequencies.MemoryClock.Frequency / 1000;
 
+            // Get current performance state
+            var currentPerformanceState = PerformanceStateId.P0_3DPerformance;
+            try
+            {
+                currentPerformanceState = gpu.PerformanceStatesInfo.CurrentPerformanceState.StateId;
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"GPU performance state: {currentPerformanceState}");
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get current performance state: {ex.Message}");
+            }
+
             var states = GPUApi.GetPerformanceStates20(gpu.Handle);
-            var maxCoreClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
-            var maxMemoryClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+            
+            // Try to get overclock offsets for current performance state, fall back to P0 if not available
+            int maxCoreClockOffset = 0;
+            int maxMemoryClockOffset = 0;
+            try
+            {
+                maxCoreClockOffset = states.Clocks[currentPerformanceState][0].FrequencyDeltaInkHz.DeltaValue / 1000;
+                maxMemoryClockOffset = states.Clocks[currentPerformanceState][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+                
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Using overclock offsets from {currentPerformanceState}: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
+            }
+            catch
+            {
+                // Fall back to P0_3DPerformance if current state doesn't have offsets
+                try
+                {
+                    maxCoreClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
+                    maxMemoryClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+                    
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Falling back to P0_3DPerformance offsets: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
+                }
+                catch
+                {
+                    // No overclock offsets available
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"No overclock offsets available");
+                }
+            }
 
             var temperatureSensor = gpu.ThermalInformation.ThermalSensors.FirstOrDefault();
             var currentTemperature = temperatureSensor?.CurrentTemperature ?? -1;
             var maxTemperature = temperatureSensor?.DefaultMaximumTemperature ?? -1;
+
+            // Debug logging
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"GPU frequencies - Utilization: {utilization}%");
+                Log.Instance.Trace($"  Current: core={currentCoreClock}MHz, memory={currentMemoryClock}MHz");
+                Log.Instance.Trace($"  Boost: core={maxCoreClock}MHz, memory={maxMemoryClock}MHz");
+                Log.Instance.Trace($"  Offsets: core={maxCoreClockOffset}MHz, memory={maxMemoryClockOffset}MHz");
+                Log.Instance.Trace($"  Final max: core={maxCoreClock + maxCoreClockOffset}MHz, memory={maxMemoryClock + maxMemoryClockOffset}MHz");
+            }
 
             return new(utilization,
                 currentCoreClock,
@@ -245,10 +307,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         catch
         {
             return GPUInfo.Empty;
-        }
-        finally
-        {
-            try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
     }
 }

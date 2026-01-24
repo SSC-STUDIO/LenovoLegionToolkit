@@ -28,7 +28,7 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
         _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
         _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
-        _toolsToggle.IsChecked = GetNavigationItemVisibility("tools", visibilitySettings);
+
         _pluginExtensionsToggle.IsChecked = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
         _donateToggle.IsChecked = GetNavigationItemVisibility("donate", visibilitySettings);
         _aboutToggle.IsChecked = GetNavigationItemVisibility("about", visibilitySettings);

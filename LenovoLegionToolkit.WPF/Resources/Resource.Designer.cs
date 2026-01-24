@@ -9844,6 +9844,87 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bulk Import.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImport {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import multiple plugins from local files.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImportTooltip {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImportTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import from Files.
+        /// </summary>
+        public static string PluginExtensionsPage_ImportFromFiles {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ImportFromFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select plugin files (.zip).
+        /// </summary>
+        public static string PluginExtensionsPage_SelectPluginFiles {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SelectPluginFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully imported {0} plugins.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImportSuccess {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImportSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} plugins have been successfully imported and are available.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImportSuccessMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImportSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bulk import failed.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImportFailed {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import plugins: {0}.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkImportFailedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkImportFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing plugins....
+        /// </summary>
+        public static string PluginExtensionsPage_ImportProgress {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ImportProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin installed successfully.
         /// </summary>
         public static string PluginExtensionsPage_InstallSuccess {
@@ -9975,6 +10056,186 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string PluginExtensionsPage_PermanentlyDelete {
             get {
                 return ResourceManager.GetString("PluginExtensionsPage_PermanentlyDelete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update Failed.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateFailed {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin update failed, please check network connection and try again later.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateFailedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update Successful.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateSuccessful {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateSuccessful", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin has been successfully updated.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateSuccessfulMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateSuccessfulMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Updating Plugin.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdatingPlugin {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdatingPlugin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading and updating plugin....
+        /// </summary>
+        public static string PluginExtensionsPage_UpdatingPluginMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdatingPluginMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Run Plugin.
+        /// </summary>
+        public static string PluginExtensionsPage_RunPlugin {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_RunPlugin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin started.
+        /// </summary>
+        public static string PluginExtensionsPage_RunPluginMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_RunPluginMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin Uninstalled.
+        /// </summary>
+        public static string PluginExtensionsPage_PluginUninstalled {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PluginUninstalled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin will be deleted when the program closes.
+        /// </summary>
+        public static string PluginExtensionsPage_PluginUninstalledMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PluginUninstalledMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deletion Failed.
+        /// </summary>
+        public static string PluginExtensionsPage_DeletionFailed {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_DeletionFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Error occurred while deleting plugin.
+        /// </summary>
+        public static string PluginExtensionsPage_DeletionFailedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_DeletionFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration Failed.
+        /// </summary>
+        public static string PluginExtensionsPage_ConfigurationFailed {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ConfigurationFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin is installed but not loaded. Please try restarting the application.
+        /// </summary>
+        public static string PluginExtensionsPage_ConfigurationFailedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ConfigurationFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No Configuration.
+        /// </summary>
+        public static string PluginExtensionsPage_NoConfiguration {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_NoConfiguration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin has no configuration options.
+        /// </summary>
+        public static string PluginExtensionsPage_NoConfigurationMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_NoConfigurationMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration Not Supported.
+        /// </summary>
+        public static string PluginExtensionsPage_ConfigurationNotSupported {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ConfigurationNotSupported", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin configuration is not supported in this version.
+        /// </summary>
+        public static string PluginExtensionsPage_ConfigurationNotSupportedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ConfigurationNotSupportedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin States Reset.
+        /// </summary>
+        public static string PluginExtensionsPage_PluginStatesReset {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PluginStatesReset", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin states have been reset.
+        /// </summary>
+        public static string PluginExtensionsPage_PluginStatesResetMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PluginStatesResetMessage", resourceCulture);
             }
         }
     }

@@ -171,7 +171,7 @@ public class IpcServer(
                 return new IpcResponse { Success = true, Message = message };
 
             case IpcRequest.OperationType.IsShellInstalled:
-                message = await IsShellInstalledAsync().ConfigureAwait(false);
+                message = IsShellInstalled();
                 return new IpcResponse { Success = true, Message = message };
             case IpcRequest.OperationType.InstallShell:
                 await InstallShellAsync().ConfigureAwait(false);
@@ -319,13 +319,13 @@ public class IpcServer(
 
 
 
-    private static async Task<string> IsShellInstalledAsync()
+    private static string IsShellInstalled()
     {
         try
         {
             // Use NilesoftShellHelper.IsInstalled() to check if shell.exe and shell.dll exist
-            // This checks if the files are present (not registry registration status)
-            var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalled()).ConfigureAwait(false);
+            // This checks if files are present (not registry registration status)
+            var isInstalled = NilesoftShellHelper.IsInstalled();
             return isInstalled.ToString().ToLowerInvariant();
         }
         catch (Exception ex)
@@ -338,18 +338,15 @@ public class IpcServer(
     {
         try
         {
-            await Task.Run(() =>
+            try
             {
-                try
-                {
                     // 使用NilesoftShellService安装Shell
-                    NilesoftShellService.Install();
-                }
-                catch (Exception ex)
-                {
-                    throw new IpcException($"Shell installation failed: {ex.Message}");
-                }
-            }).ConfigureAwait(false);
+                    await NilesoftShellService.InstallAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new IpcException($"Shell installation failed: {ex.Message}");
+            }
         }
         catch (IpcException)
         {
@@ -361,22 +358,20 @@ public class IpcServer(
         }
     }
 
-    private static async Task UninstallShellAsync()
+    private static Task UninstallShellAsync()
     {
         try
         {
-            await Task.Run(() =>
+            try
             {
-                try
-                {
-                    // 使用NilesoftShellService卸载Shell
-                    NilesoftShellService.Uninstall();
-                }
-                catch (Exception ex)
-                {
-                    throw new IpcException($"Shell uninstallation failed: {ex.Message}");
-                }
-            }).ConfigureAwait(false);
+                // 使用NilesoftShellService卸载Shell
+                NilesoftShellService.Uninstall();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw new IpcException($"Failed to uninstall shell: {ex.Message}");
+            }
         }
         catch (IpcException)
         {

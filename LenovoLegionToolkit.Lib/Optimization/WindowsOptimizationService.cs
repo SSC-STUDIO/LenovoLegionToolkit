@@ -967,8 +967,8 @@ public class WindowsOptimizationService
                 "WindowsOptimization_Action_NilesoftShell_Uninstall_Description",
                 ct =>
                 {
-                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
-                    if (string.IsNullOrWhiteSpace(shellExe))
+                    var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                    if (string.IsNullOrWhiteSpace(shellDll))
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Command skipped.");
@@ -984,7 +984,7 @@ public class WindowsOptimizationService
                     if (!NilesoftShellHelper.IsInstalledUsingShellExe())
                     {
                         // If somehow not registered, register it
-                        return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
+                        return ExecuteCommandsSequentiallyAsync(ct, $"regsvr32.exe /s \"{shellDll}\"");
                     }
                     
                     // Already installed and registered, no action needed
@@ -1009,15 +1009,15 @@ public class WindowsOptimizationService
                 "WindowsOptimization_Action_NilesoftShell_Enable_Description",
                 ct =>
                 {
-                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
-                    if (string.IsNullOrWhiteSpace(shellExe))
+                    var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                    if (string.IsNullOrWhiteSpace(shellDll))
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Enable command skipped.");
                         return Task.CompletedTask;
                     }
-                    // Register and enable the shell
-                    return ExecuteCommandsSequentiallyAsync(ct, $@"""{shellExe}"" -register -treat -restart");
+                    // Register and enable the shell using regsvr32 for DLL
+                    return ExecuteCommandsSequentiallyAsync(ct, $"regsvr32.exe /s \"{shellDll}\"");
                 },
                 Recommended: isInstalled,  // Only recommend if files exist
                 IsAppliedAsync: async ct => 
@@ -1549,43 +1549,64 @@ public class WindowsOptimizationService
 
     private static Task ApplyMouseStyleAsync(CancellationToken cancellationToken, string mouseStylePath)
     {
-        return Task.Run(async () =>
+        return Task.Run(() =>
         {
             try
             {
-                var lightThemePath = Path.Combine(mouseStylePath, "light", "regular", "01. default");
-                var darkThemePath = Path.Combine(mouseStylePath, "dark", "regular", "01. default");
+                var isLightTheme = IsLightTheme();
+                var themeDir = Path.Combine(mouseStylePath, isLightTheme ? "light" : "dark", "regular");
+                var basePath = Path.Combine(themeDir, "base");
+                var classicPath = Path.Combine(themeDir, "02. classic");
                 
-                var themePath = Directory.Exists(lightThemePath) ? lightThemePath : darkThemePath;
-                
-                if (!Directory.Exists(themePath))
+                if (!Directory.Exists(basePath))
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Mouse style theme directory not found: {themePath}");
+                        Log.Instance.Trace($"Mouse style base directory not found: {basePath}");
                     return;
                 }
 
-                var installInf = Path.Combine(themePath, "Install.inf");
-                if (!File.Exists(installInf))
+                var cursorMappings = new Dictionary<string, string>
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Install.inf not found: {installInf}");
-                    return;
-                }
+                    ["Arrow"] = "pointer.cur",
+                    ["Help"] = "help.cur",
+                    ["AppStarting"] = "working.ani",
+                    ["Wait"] = "busy.ani",
+                    ["Crosshair"] = "precision.cur",
+                    ["IBeam"] = "beam.cur",
+                    ["NWPen"] = "handwriting.cur",
+                    ["No"] = "unavailable.cur",
+                    ["SizeNS"] = "vert.cur",
+                    ["SizeWE"] = "horz.cur",
+                    ["SizeNWSE"] = "dgn1.cur",
+                    ["SizeNESW"] = "dgn2.cur",
+                    ["SizeAll"] = "move.cur",
+                    ["UpArrow"] = "alternate.cur",
+                    ["Hand"] = "link.cur",
+                    ["Pin"] = "pin.cur",
+                    ["Person"] = "person.cur"
+                };
 
-                var infContent = File.ReadAllText(installInf);
-                
-                var schemeNameMatch = global::System.Text.RegularExpressions.Regex.Match(infContent, @"SCHEME_NAME\s*=\s*""([^""]+)""");
-                var schemeName = schemeNameMatch.Success ? schemeNameMatch.Groups[1].Value : "W11 Cursors HDPI";
-
-                await ExecuteCommandLineAsync($"rundll32.exe setupapi,InstallHinfSection DefaultInstall 128 {installInf}", cancellationToken).ConfigureAwait(false);
-
+                var schemeName = isLightTheme ? "W11 Cursors Light HDPI" : "W11 Cursors Dark HDPI";
                 ToolkitRegistry.SetValue("HKEY_CURRENT_USER", @"Control Panel\Cursors", "", schemeName, true, RegistryValueKind.String);
+
+                foreach (var mapping in cursorMappings)
+                {
+                    var cursorFile = Path.Combine(basePath, mapping.Value);
+                    if (!File.Exists(cursorFile) && mapping.Value.EndsWith(".ani", StringComparison.OrdinalIgnoreCase))
+                    {
+                        cursorFile = Path.Combine(classicPath, mapping.Value);
+                    }
+                    
+                    if (File.Exists(cursorFile))
+                    {
+                        ToolkitRegistry.SetValue("HKEY_CURRENT_USER", @"Control Panel\Cursors", mapping.Key, cursorFile, true, RegistryValueKind.ExpandString);
+                    }
+                }
 
                 NotifySystemCursorChanged();
 
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Mouse style applied successfully via Install.inf. [scheme={schemeName}]");
+                    Log.Instance.Trace($"Mouse style applied successfully. [scheme={schemeName}]");
             }
             catch (Exception ex)
             {
@@ -1606,28 +1627,35 @@ public class WindowsOptimizationService
                 if (string.IsNullOrEmpty(currentScheme))
                     return false;
 
-                if (currentScheme.Contains("W11", StringComparison.OrdinalIgnoreCase))
+                if (currentScheme.Contains("W11 Cursors", StringComparison.OrdinalIgnoreCase) && 
+                    currentScheme.Contains("HDPI", StringComparison.OrdinalIgnoreCase))
                     return true;
 
-                var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-                var cursorsDir = Path.Combine(windowsDir, "Cursors");
-                var targetDir = Path.Combine(cursorsDir, "W11_HDPI");
-
-                if (!Directory.Exists(targetDir))
-                    return false;
-
-                var pointerPath = Path.Combine(targetDir, "pointer.cur");
-                if (!File.Exists(pointerPath))
-                    return false;
-
                 var currentArrow = ToolkitRegistry.GetValue<string>("HKEY_CURRENT_USER", @"Control Panel\Cursors", "Arrow", string.Empty);
-                return currentArrow.Equals(pointerPath, StringComparison.OrdinalIgnoreCase);
+                if (string.IsNullOrEmpty(currentArrow))
+                    return false;
+
+                return currentArrow.Contains("W11-CC-V2.2-HDPI", StringComparison.OrdinalIgnoreCase) ||
+                       currentArrow.Contains("pointer.cur", StringComparison.OrdinalIgnoreCase);
             }
             catch
             {
                 return false;
             }
         });
+    }
+
+    private static bool IsLightTheme()
+    {
+        try
+        {
+            var appsUseLightTheme = ToolkitRegistry.GetValue<int>("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", 1);
+            return appsUseLightTheme != 0;
+        }
+        catch
+        {
+            return true;
+        }
     }
 
     private static unsafe void NotifySystemCursorChanged()

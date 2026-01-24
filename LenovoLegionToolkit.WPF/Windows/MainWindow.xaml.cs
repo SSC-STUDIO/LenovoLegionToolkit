@@ -285,8 +285,8 @@ public partial class MainWindow
         Task.Run(() => _updateChecker.CheckAsync(manualCheck))
             .ContinueWith(async updatesAvailable =>
             {
-                var result = updatesAvailable.Result;
-                if (result is null)
+                var result = updatesAvailable.IsCompletedSuccessfully ? updatesAvailable.Result : null;
+                if (result is null || updatesAvailable.IsFaulted)
                 {
                     _updateIndicator.Visibility = Visibility.Collapsed;
 
@@ -490,7 +490,7 @@ public partial class MainWindow
     /// <summary>
     /// Update navigation items for installed plugins
     /// </summary>
-    private void UpdateInstalledPluginsNavigationItems()
+    public void UpdateInstalledPluginsNavigationItems()
     {
         try
         {

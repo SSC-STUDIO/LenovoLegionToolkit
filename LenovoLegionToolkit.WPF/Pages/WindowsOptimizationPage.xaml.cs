@@ -292,7 +292,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             var isInstalled = NilesoftShellHelper.IsInstalled();
             var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
-            // Can install if shell.exe exists but not registered (not installed using shell.exe API)
+            // Can install if shell.dll exists but not registered (not installed using shell DLL registration)
             return isInstalled && !isInstalledUsingShellExe;
         }
     }
@@ -1756,7 +1756,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             }
             else
             {
-                // 切换到其他模式时，停止驱动下载重试计时器
+                // When switching to other modes, stop driver download retry timer
                 StopDriverRetryTimer();
             }
             
@@ -1917,13 +1917,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Log.Instance.Trace($"User checked beautify action {actionKey}, checking installation status first");
 
                     // First check if installed
-                    var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
-                    
-                    var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
-                    if (string.IsNullOrWhiteSpace(shellExe))
+                    var isInstalled = NilesoftShellHelper.IsInstalled();
+                     
+                    var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                    if (string.IsNullOrWhiteSpace(shellDll))
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Shell.exe not found, cannot execute install command");
+                            Log.Instance.Trace($"Shell.dll not found, cannot execute install command");
                         
                         await Dispatcher.InvokeAsync(() =>
                         {
@@ -1943,21 +1943,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Nilesoft Shell not installed, installing first");
 
-                            await Task.Run(() =>
+                            try
                             {
-                                try
-                                {
-                                    NilesoftShellService.Install();
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Nilesoft Shell installed successfully");
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Failed to install Nilesoft Shell: {ex.Message}", ex);
-                                    throw;
-                                }
-                            });
+                                await NilesoftShellService.InstallAsync();
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Nilesoft Shell installed successfully");
+                            }
+                            catch (Exception ex)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Failed to install Nilesoft Shell: {ex.Message}", ex);
+                                throw;
+                            }
 
                             // Clear cache after installation and wait a moment to allow system time to complete installation
                             NilesoftShellHelper.ClearInstallationStatusCache();
@@ -1967,7 +1964,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         {
                             // If installed, apply settings directly (register and restart Explorer)
                             if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Nilesoft Shell already installed, applying settings: {shellExe} -register -treat -restart");
+                                Log.Instance.Trace($"Nilesoft Shell already installed, applying settings with regsvr32");
 
                             await Task.Run(() =>
                             {
@@ -1976,7 +1973,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                                     StartInfo = new System.Diagnostics.ProcessStartInfo
                                     {
                                         FileName = "cmd.exe",
-                                        Arguments = $"/c \"\"{shellExe}\"\" -register -treat -restart -silent",
+                                        Arguments = "/c regsvr32.exe /s \"shell.dll\"",
                                         UseShellExecute = false,
                                         CreateNoWindow = true
                                     }
@@ -2090,8 +2087,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     Log.Instance.Trace($"User unchecked beautify action {actionKey}, executing uninstall command");
 
                 // Directly execute uninstall command, always execute regardless of current status
-                var shellExe = NilesoftShellHelper.GetNilesoftShellExePath();
-                if (!string.IsNullOrWhiteSpace(shellExe))
+                var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                if (!string.IsNullOrWhiteSpace(shellDll))
                 {
                     await ExecuteAsync(
                         async ct =>

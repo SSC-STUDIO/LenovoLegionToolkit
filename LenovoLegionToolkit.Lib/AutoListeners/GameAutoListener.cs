@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -119,10 +119,10 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
 
                         RaiseChangedIfNeeded(true);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Can't get game \"{game}\" details.");
+                            Log.Instance.Trace($"Can't get game \"{game}\" details: {ex.Message}", ex);
                     }
                 }
             }

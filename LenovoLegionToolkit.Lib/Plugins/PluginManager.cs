@@ -9,6 +9,17 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
+/// Interface for plugins that can be stopped
+/// </summary>
+public interface IStoppablePlugin : IPlugin
+{
+    /// <summary>
+    /// Stop the plugin
+    /// </summary>
+    new void Stop();
+}
+
+/// <summary>
 /// Plugin manager implementation
 /// </summary>
 public class PluginManager : IPluginManager
@@ -286,6 +297,18 @@ public class PluginManager : IPluginManager
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {pluginFilePath}");
+
+            // Check if this assembly is already loaded to prevent duplicate loading
+            var assemblyName = AssemblyName.GetAssemblyName(pluginFilePath);
+            var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(a => a.GetName().Name == assemblyName.Name);
+            
+            if (loadedAssembly != null)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Assembly {assemblyName.Name} is already loaded from {loadedAssembly.Location}, skipping {pluginFilePath}");
+                return;
+            }
 
             // Load the assembly with reflection-only context first to check for types
             Assembly? assembly = null;
@@ -896,6 +919,107 @@ public class PluginManager : IPluginManager
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Pending plugin deletions completed.");
+    }
+
+    /// <summary>
+    /// Unload all plugins and release references (useful before plugin updates)
+    /// </summary>
+    public void UnloadAllPlugins()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unloading all plugins...");
+
+            var pluginIds = _registeredPlugins.Keys.ToList();
+            foreach (var pluginId in pluginIds)
+            {
+                StopPlugin(pluginId);
+            }
+
+            _registeredPlugins.Clear();
+            _pluginMetadataCache.Clear();
+            _pluginFileCache.Clear();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"All plugins unloaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error unloading all plugins: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Stop a specific plugin (call its Stop method) before update or uninstallation
+    /// </summary>
+    public bool StopPlugin(string pluginId)
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Stopping plugin: {pluginId}");
+
+            if (_registeredPlugins.TryGetValue(pluginId, out var plugin))
+            {
+                // Call plugin's Stop method if it has one
+                if (plugin is IStoppablePlugin stoppablePlugin)
+                {
+                    stoppablePlugin.Stop();
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Plugin {pluginId} stopped successfully.");
+                    return true;
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Plugin {pluginId} does not implement IStoppablePlugin, removing from registry.");
+                    
+                    // Just remove from registry if not stoppable
+                    _registeredPlugins.Remove(pluginId);
+                    return true;
+                }
+            }
+            else
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Plugin {pluginId} not found in registry.");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping plugin {pluginId}: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Stop all plugins (call Stop method for each plugin)
+    /// </summary>
+    public void StopAllPlugins()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Stopping all plugins...");
+
+            var pluginIds = _registeredPlugins.Keys.ToList();
+            foreach (var pluginId in pluginIds)
+            {
+                StopPlugin(pluginId);
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"All plugins stopped successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping all plugins: {ex.Message}", ex);
+        }
     }
 
     protected virtual void OnPluginStateChanged(string pluginId, bool isInstalled)
