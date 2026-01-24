@@ -16,8 +16,11 @@ public class AbstractSensorsControllerTests
     // 测试子类，实现抽象方法
     private class MockSensorsController : AbstractSensorsController
     {
-        public MockSensorsController(GPUController gpuController) : base(gpuController)
+        private readonly Task<GPUState> _gpuStateTask;
+
+        public MockSensorsController(GPUController gpuController, Task<GPUState>? gpuStateTask = null) : base(gpuController)
         {
+            _gpuStateTask = gpuStateTask ?? Task.FromResult(GPUState.Unknown);
         }
 
         public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
@@ -33,20 +36,17 @@ public class AbstractSensorsControllerTests
     public async Task GetDataAsync_ShouldReturnCachedData_WhenCacheIsValid()
     {
         // Arrange
-        var mockGPUController = new Mock<GPUController>();
-        mockGPUController.Setup(g => g.IsSupported()).Returns(false);
-        mockGPUController.Setup(g => g.GetLastKnownStateAsync()).ReturnsAsync(GPUState.Unknown);
-        
-        var controller = new MockSensorsController(mockGPUController.Object);
-        
-        // Act - 第一次调用，生成缓存
+        var gpuController = new GPUController();
+        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+
+        // Act - First call, generate cache
         var data1 = await controller.GetDataAsync();
-        
-        // Act - 第二次调用，应该使用缓存
+
+        // Act - Second call, should use cache
         var data2 = await controller.GetDataAsync();
-        
+
         // Assert
-        data1.Should().Be(data2); // 应该返回相同的对象引用（缓存）
+        data1.Should().Be(data2); // Should return same object reference (cached)
         data1.CPU.Temperature.Should().Be(50);
         data1.GPU.Temperature.Should().Be(60);
     }
@@ -55,23 +55,20 @@ public class AbstractSensorsControllerTests
     public async Task GetDataAsync_ShouldUpdateCache_WhenCacheExpires()
     {
         // Arrange
-        var mockGPUController = new Mock<GPUController>();
-        mockGPUController.Setup(g => g.IsSupported()).Returns(false);
-        mockGPUController.Setup(g => g.GetLastKnownStateAsync()).ReturnsAsync(GPUState.Unknown);
-        
-        var controller = new MockSensorsController(mockGPUController.Object);
-        
-        // Act - 第一次调用，生成缓存
+        var gpuController = new GPUController();
+        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+
+        // Act - First call, generate cache
         var data1 = await controller.GetDataAsync();
-        
-        // Act - 等待缓存过期（100ms）
+
+        // Act - Wait for cache to expire (100ms)
         await Task.Delay(150);
-        
-        // Act - 第二次调用，应该更新缓存
+
+        // Act - Second call, should update cache
         var data2 = await controller.GetDataAsync();
-        
+
         // Assert
-        data1.Should().NotBe(data2); // 应该返回不同的对象引用（缓存已更新）
+        data1.Should().NotBe(data2); // Should return different object reference (cache updated)
         data2.CPU.Temperature.Should().Be(50);
         data2.GPU.Temperature.Should().Be(60);
     }
@@ -80,24 +77,21 @@ public class AbstractSensorsControllerTests
     public async Task CacheAccess_ShouldBeThreadSafe()
     {
         // Arrange
-        var mockGPUController = new Mock<GPUController>();
-        mockGPUController.Setup(g => g.IsSupported()).Returns(false);
-        mockGPUController.Setup(g => g.GetLastKnownStateAsync()).ReturnsAsync(GPUState.Unknown);
-        
-        var controller = new MockSensorsController(mockGPUController.Object);
-        
+        var gpuController = new GPUController();
+        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+
         // Act - 并发调用GetDataAsync多次
         var tasks = new List<Task<SensorsData>>();
         for (int i = 0; i < 10; i++)
         {
             tasks.Add(controller.GetDataAsync());
         }
-        
+
         var results = await Task.WhenAll(tasks);
-        
+
         // Assert - 所有调用都应该成功，没有异常
         results.Should().NotBeEmpty();
-        
+
         // Assert - 至少有一些调用应该使用缓存（返回相同的对象引用）
         var distinctResults = results.Distinct().Count();
         distinctResults.Should().BeLessThan(results.Length);
@@ -107,18 +101,15 @@ public class AbstractSensorsControllerTests
     public async Task FanSpeedsAsync_ShouldReturnFromCache_WhenCacheIsValid()
     {
         // Arrange
-        var mockGPUController = new Mock<GPUController>();
-        mockGPUController.Setup(g => g.IsSupported()).Returns(false);
-        mockGPUController.Setup(g => g.GetLastKnownStateAsync()).ReturnsAsync(GPUState.Unknown);
-        
-        var controller = new MockSensorsController(mockGPUController.Object);
-        
+        var gpuController = new GPUController();
+        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+
         // Act - 第一次调用GetDataAsync，生成缓存
         await controller.GetDataAsync();
-        
+
         // Act - 调用GetFanSpeedsAsync，应该使用缓存
         var fanSpeeds = await controller.GetFanSpeedsAsync();
-        
+
         // Assert
         fanSpeeds.cpuFanSpeed.Should().Be(1000);
         fanSpeeds.gpuFanSpeed.Should().Be(1500);

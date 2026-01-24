@@ -90,7 +90,7 @@ public class ThrottleLastDispatcherTests
     }
     
     [Fact]
-    public void Dispose_ShouldCancelPendingOperations()
+    public async Task Dispose_ShouldCancelPendingOperations()
     {
         // Arrange
         var interval = TimeSpan.FromSeconds(10); // Long interval to ensure task is still pending
@@ -104,13 +104,13 @@ public class ThrottleLastDispatcherTests
         });
 
         // Give it a moment to start
-        Task.Delay(10).Wait();
+        await Task.Delay(10);
 
         // Dispose to cancel
         dispatcher.Dispose();
 
         // Wait a bit more than expected execution time
-        Task.Delay(100).Wait();
+        await Task.Delay(100);
 
         // Assert
         taskExecuted.Should().BeFalse();
@@ -123,8 +123,7 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromMilliseconds(50);
         var dispatcher = new ThrottleLastDispatcher(interval);
         var executedTasks = new List<int>();
-        var counter = 0;
-        
+
         // Act - Dispatch multiple tasks concurrently
         var tasks = new List<Task>();
         for (int i = 0; i < 10; i++)
@@ -136,10 +135,10 @@ public class ThrottleLastDispatcherTests
                 return Task.CompletedTask;
             }));
         }
-        
+
         await Task.WhenAll(tasks);
         await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
-        
+
         // Assert - At least one task should have executed, and likely only the last one
         executedTasks.Count.Should().BeGreaterThan(0);
         executedTasks.Count.Should().BeLessThanOrEqualTo(10);
@@ -181,21 +180,24 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromMilliseconds(10);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var executedTasks = new List<int>();
-        
+
         // Act - Dispatch multiple tasks rapidly
+        var tasks = new List<Task>();
         for (int i = 0; i < 5; i++)
         {
             var taskId = i;
-            dispatcher.DispatchAsync(() => {
+            tasks.Add(dispatcher.DispatchAsync(() => {
                 executedTasks.Add(taskId);
                 return Task.CompletedTask;
-            });
+            }));
             await Task.Delay(5); // Small delay between dispatches
         }
-        
+
+        await Task.WhenAll(tasks);
+
         // Wait for interval to pass
         await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
-        
+
         // Assert - Only the last task should have executed
         executedTasks.Count.Should().Be(1);
         executedTasks[0].Should().Be(4);
@@ -479,17 +481,18 @@ public class ThrottleLastDispatcherTests
         var interval = TimeSpan.FromMilliseconds(100);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var executedTasks = new List<int>();
-        
+
         // Act - Dispatch tasks in a tight loop
+        var tasks = new List<Task>();
         for (int i = 0; i < 100; i++)
         {
             var taskId = i;
-            dispatcher.DispatchAsync(() => {
+            tasks.Add(dispatcher.DispatchAsync(() => {
                 executedTasks.Add(taskId);
                 return Task.CompletedTask;
-            });
+            }));
         }
-        
+
         // Wait for execution
         await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
         

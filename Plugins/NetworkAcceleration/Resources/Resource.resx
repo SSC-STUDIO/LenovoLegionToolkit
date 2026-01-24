@@ -199,4 +199,22 @@
   <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
     <value>e.g., 7890</value>
   </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>:</value>
+  </data>
 </root>

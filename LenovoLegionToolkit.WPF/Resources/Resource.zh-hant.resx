@@ -2021,8 +2021,17 @@
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
     <value>開啟下載資料夾</value>
   </data>
-  <data name="PackageControl_Download" xml:space="preserve">
+<data name="PackageControl_Download" xml:space="preserve">
     <value>下載</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>正在載入外掛程式...</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>解除安裝</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
     <value>開啟讀我檔案（README）</value>
@@ -2689,52 +2698,7 @@
   <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
     <value>正在刪除: {0}</value>
   </data>
-  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
-    <value>工具箱</value>
-  </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>工具箱</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>啟動系統工具和實用程式</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU工具</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>顯示工具</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>遊戲工具</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU工具</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>記憶體工具</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>其他工具</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>週邊設備工具</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>儲存工具</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>壓力測試工具</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>系統診斷工具</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>啟動工具失敗</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>目前沒有可用的工具。請在應用程式目錄下的 tools 資料夾中添加工具。</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+<data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>電池最大充電容量。</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
@@ -3086,6 +3050,43 @@
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Synchronise zones</value>
+  </data>
+
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>插件將被永久刪除。此操作無法撤銷。</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>批量導入</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>從本地ZIP文件導入插件</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>從文件導入</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>選擇插件文件 (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>成功導入 {0} 個插件</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} 個插件已成功導入並可用</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>批量導入失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>無法導入插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>正在導入插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>正在導入 {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>正在處理 {0}...</value>
   </data>
 
 </root>

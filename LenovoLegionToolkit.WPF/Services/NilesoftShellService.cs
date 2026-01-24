@@ -57,7 +57,7 @@ public static class NilesoftShellService
         return NilesoftShellHelper.GetImportPath();
     }
 
-    public static void Install()
+    public static async Task InstallAsync()
     {
         // Directly register shell.dll in the registry
         var shellDllPath = NilesoftShellHelper.GetNilesoftShellDllPath();
@@ -89,7 +89,7 @@ public static class NilesoftShellService
         {
             // Wait with increasing delay (2s, 3s, 4s, 5s, 6s)
             int delayMs = initialDelayMs + (retry * 1000);
-            Thread.Sleep(delayMs);
+            await Task.Delay(delayMs).ConfigureAwait(false);
             
             // Check installation status using registry check
             // This directly checks if the CLSID keys are registered
@@ -113,16 +113,25 @@ public static class NilesoftShellService
         NilesoftShellHelper.ClearInstallationStatusCache();
         
         // Restart Windows Explorer to apply registry changes
-        RestartExplorer();
+        await RestartExplorerAsync().ConfigureAwait(false);
         
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Shell installation process completed");
     }
 
     /// <summary>
+    /// Synchronous version of Install for backward compatibility
+    /// </summary>
+    [Obsolete("Use InstallAsync() instead.")]
+    public static void Install()
+    {
+        InstallAsync().GetAwaiter().GetResult();
+    }
+
+    /// <summary>
     /// Restart Windows Explorer to apply registry changes
     /// </summary>
-    private static void RestartExplorer()
+    private static async Task RestartExplorerAsync()
     {
         try
         {
@@ -143,8 +152,8 @@ public static class NilesoftShellService
                 }
             }
 
-            // Wait a moment for the process to fully terminate
-            Thread.Sleep(1000);
+            // Wait a moment for processes to fully terminate
+            await Task.Delay(1000).ConfigureAwait(false);
 
             // Start explorer.exe again
             Process.Start(new ProcessStartInfo
@@ -160,25 +169,7 @@ public static class NilesoftShellService
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to restart Windows Explorer: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Notify shell of registry changes
-    /// </summary>
-    private static void NotifyShellChange()
-    {
-        try
-        {
-            SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Notified shell of registry changes");
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to notify shell of changes: {ex.Message}");
+                Log.Instance.Trace($"Failed to restart Windows Explorer: {ex.Message}", ex);
         }
     }
 
@@ -362,7 +353,7 @@ public static class NilesoftShellService
         NilesoftShellHelper.ClearInstallationStatusCache();
         
         // Restart Windows Explorer to apply registry changes
-        RestartExplorer();
+        RestartExplorerAsync().GetAwaiter().GetResult();
         
         // Note: We intentionally do NOT delete shell.exe, shell.dll, or shell.nss files
         // The files should remain in the application directory so they can be used for reinstallation

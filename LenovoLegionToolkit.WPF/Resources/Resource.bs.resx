@@ -904,49 +904,7 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Optimizacija sistema</value>
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>Launch system tools and utilities.</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>Failed to start tool</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>Display Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>Gaming Tools</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>Memory Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>Other Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>Peripherals Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>Storage Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>Stress Testing Tools</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>System Diagnostic Tools</value>
-  </data>
-  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+<data name="AboutPage_ApplicationFolders" xml:space="preserve">
     <value>Application Folders</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">

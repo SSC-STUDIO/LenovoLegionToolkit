@@ -216,14 +216,22 @@ public static class Battery
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Checking battery data at index {index}...");
 
-            var info = GetLenovoBatteryInformation(index);
-            if (info.Temperature is ushort.MinValue or ushort.MaxValue)
+            try
+            {
+                var info = GetLenovoBatteryInformation(index);
+                if (info.Temperature is ushort.MinValue or ushort.MaxValue)
+                    continue;
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Battery data found at index {index}.");
+
+                return info;
+            }
+            catch
+            {
+                // Device not available or IOCTL not supported
                 continue;
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery data found at index {index}.");
-
-            return info;
+            }
         }
 
         if (Log.Instance.IsTraceEnabled)

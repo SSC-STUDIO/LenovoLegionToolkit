@@ -1,6 +1,6 @@
 <img height="128" align="left" src="assets/logo.png" alt="Logo">
 
-# 拯救者工具箱 Lenovo Legion Toolkit
+# Lenovo Legion Toolkit
 
 [![Build](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml)
 [![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)
@@ -9,13 +9,13 @@
 
 ---
 
-联想拯救者工具箱 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化工具箱。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
+Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化应用程序。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
 本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
 
 加入 Legion Series Discord 频道: https://discord.com/invite/legionseries!
 
-**中文用户可加入[拯救者工具箱 QQ 频道](https://pd.qq.com/s/jj0737)，频道内推送正式版/测试版更新并附带国内镜像加速下载链接。**
+**中文用户可加入[LLT QQ 频道](https://pd.qq.com/s/jj0737)，频道内推送正式版/测试版更新并附带国内镜像加速下载链接。**
 
 <img src="assets/screenshot_zh_hans.png" width="700" />
 
@@ -66,10 +66,10 @@
 
 #### 接下来的步骤
 
-拯救者工具箱在后台运行时效果最好，所以去设置中启用_开机启动_和_关闭时最小化_。接下载就是在设置中禁用 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys，或者你也可以直接卸载他们。之后，拯救者工具箱将会在开机后自启并在后台一直保持运行，并接管 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys 的功能。
+LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_关闭时最小化_。接下载就是在设置中禁用 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys，或者你也可以直接卸载他们。之后，LLT 将会在开机后自启并在后台一直保持运行，并接管 Lenovo Vantage, Legion Zone 与 Lenovo Hotkeys 的功能。
 
 > [!WARNING]
-> 如果你完全关闭拯救者工具箱，一些功能例如同步不同的性能模式（Fn + Q）与电源计划，键盘宏以及自动化功能将无法正常工作。这是因为 LLT **不运行任何后台服务**，也就意味着其无法在被完全关闭时响应指令或执行设置同步。
+> 如果你完全关闭 LLT，一些功能例如同步不同的性能模式（Fn + Q）与电源计划，键盘宏以及自动化功能将无法正常工作。这是因为 LLT **不运行任何后台服务**，也就意味着其无法在被完全关闭时响应指令或执行设置同步。
 
 另外，请查看下方的 [兼容性](#兼容性) 部分。
 
@@ -82,7 +82,7 @@
 
 #### 在安装 .NET 依赖时出现问题？
 
-如果拯救者工具箱安装程序没有正确安装 .NET 依赖，则请按照以下步骤手动安装：
+如果 LLT 安装程序没有正确安装 .NET 依赖，则请按照以下步骤手动安装：
 
 1. 打开 https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0
 2. 找到 “.NET 桌面运行时” 一栏；
@@ -101,17 +101,17 @@
 
 `Microsoft.WindowsDesktop.App 8.0.0 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]`
 
-确切的版本号可能不同，但只要是`8.x.x`就应该没问题。如果经过上述步骤确认后，拯救者工具箱在启动时仍然报错提示找不到 .NET 之类的信息，那么就是你的机器或系统的问题，而不是拯救者工具箱的问题。
+确切的版本号可能不同，但只要是`8.x.x`就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么就是你的机器或系统的问题，而不是 LLT 的问题。
 
 #### 想要帮助我们测试？
 
 加入 [Legion Series Discord](https://discord.com/invite/legionseries) 并前往 `#legion-toolkit` 子频道，Beta 测试版与未来更新将会在那里频繁更新。
 
-中文用户可加入 [拯救者工具箱 QQ 频道](https://pd.qq.com/s/jj0737) 并前往 `#测试版更新💻` 子频道，Beta 测试版将会经常在那里同步发布。
+中文用户可加入 [LLT QQ 频道](https://pd.qq.com/s/jj0737) 并前往 `#测试版更新💻` 子频道，Beta 测试版将会经常在那里同步发布。
 
 ## 兼容性
 
-拯救者工具箱适配 2020 款及其之后的拯救者机型。
+LLT 适配 2020 款及其之后的拯救者机型。
 
 一些功能在 2020 款之前发布的机型和 Ideapad Gaming 3 笔记本可以正常工作（或者说大部分工作），但可能会遇到一些小问题。这里是测试过支持的型号列表 [Compatibility.cs](https://github.com/Crs10259/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
 
@@ -121,18 +121,18 @@
 
 ### 联想软件兼容
 
-总的来说，建议在使用拯救者工具箱时禁用或卸载 Lenovo Vantage、Hotkeys 和 Legion Zone。当拯救者工具箱与其他联想应用程序一起工作时，可能会导致部分功能冲突或可能无法正常工作。
+总的来说，建议在使用 LLT 时禁用或卸载 Lenovo Vantage、Hotkeys 和 Legion Zone。当 LLT 与其他联想应用程序一起工作时，可能会导致部分功能冲突或可能无法正常工作。
 
 > [!TIP]
-> 一般来说最简单的解决方法就是使用拯救者工具箱内的禁用选项。
+> 一般来说最简单的解决方法就是使用 LLT 内的禁用选项。
 
 ### 备注
 
-拯救者工具箱目前不支持多用户安装，所以如果你的笔记本电脑上有多个用户，你可能会遇到兼容性问题，即使是没有管理员权限的账户。拯救者工具箱需要一个有管理员权限的账户，拯救者工具箱无法在普通账户上正常运行。
+LLT 目前不支持多用户安装，所以如果你的笔记本电脑上有多个用户，你可能会遇到兼容性问题，即使是没有管理员权限的账户。LLT 需要一个有管理员权限的账户，LLT 无法在普通账户上正常运行。
 
 ## 功能介绍
 
-拯救者工具箱可以做到：
+LLT 可以做到：
 
 - 改变诸如性能模式、充电模式等只有通过 Lenovo Vantage、联想电脑管家才能更改的设置。
 - 使用并修改自定义模式，包括 2022 款及更新的机型的调节风扇曲线功能。
@@ -143,6 +143,42 @@
 - 从命令行控制设备。
 - 下载、更新驱动。
 - 无需卸载即可禁用 Lenovo Vantage、Legion Zone 和 Lenovo Hotkeys 服务。
+
+### 插件扩展
+
+插件扩展页面提供了现代化、用户友好的插件管理界面：
+
+**功能特点：**
+- **列表式布局**：插件以清晰的列表格式显示，所有必要信息一目了然
+- **完整信息**：每个插件条目显示图标、名称、版本和描述
+- **快捷操作**：安装、配置、打开、卸载按钮直接在每个条目上
+- **智能按钮显示**：根据插件安装状态显示/隐藏按钮
+- **多语言支持**：所有按钮文本支持 20+ 语言
+- **搜索筛选**：实时搜索和按安装状态筛选
+
+**界面布局：**
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ [搜索框]                         [全部 ▼]  [刷新]                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [图标]  插件名称 v1.0.0                       [安装/更新]           │
+│         插件描述文字（可换行显示，最大3行）                           │
+│                                                                     │
+│  ─────────────────────────────────────────────────────────────────  │
+│                                                                     │
+│  [图标]  已安装的插件 v2.1.0                 [安装] [配置] [打开]    │
+│         这个插件支持配置和打开操作             [卸载]                 │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**支持的语言：**
+- 英语、中文（简体/繁体）、日语、韩语
+- 德语、法语、西班牙语、葡萄牙语、俄语、意大利语、波兰语
+- 土耳其语、乌克兰语、越南语、泰语、阿拉伯语 等
+
+详细的插件开发文档请查看 [PLUGINS.md](PLUGINS_zh-hans.md)。
 
 ### 自定义模式
 
@@ -199,7 +235,7 @@ LLT 也支持其他像一级或三级白色键盘背光，Legion Logo 背光和�
 
 有时独立显卡会一直保持活动状态。例如在你插上外接显示器并断开后，一些进程会继续使用独显上运行，导致续航骤减。
 
-在拯救者工具箱中有两种办法强制休眠显卡。
+在 LLT 中有两种办法强制休眠显卡。
 
 1. 强制关闭所有在独显上运行的进程。（这种方式貌似更有效）,
 2. 短暂强制禁用独立显卡，使在独显上运行的进程全部切换到核显。
@@ -424,7 +460,7 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 ## 赞助
 
-开发不易，如果你觉得拯救者工具箱不错的话，可以考虑赞助以支持开发。
+开发不易，如果你觉得 LLT 不错的话，可以考虑赞助以支持开发。
 
 [使用PayPal赞助](https://www.paypal.com/donate/?hosted_button_id=22AZE2NBP3HTL)
 
@@ -434,7 +470,7 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 特别感谢：
 
-* [ViRb3](https://github.com/ViRb3) 创建了 [Lenovo Controller](https://github.com/ViRb3/LenovoController)，这是拯救者工具箱的基础。
+* [ViRb3](https://github.com/ViRb3) 创建了 [Lenovo Controller](https://github.com/ViRb3/LenovoController)，这是 LLT 的基础。
 * [falahati](https://github.com/falahati) 创建了 [NvAPIWrapper](https://github.com/falahati/NvAPIWrapper) 和 [WindowsDisplayAPI](https://github.com/falahati/WindowsDisplayAPI)
 * [SmokelessCPU](https://github.com/SmokelessCPU) 帮助我适配了四分区 RGB 键盘背光。
 * [Mario Bălănică](https://github.com/mariobalanica) 的所有贡献。
@@ -471,13 +507,13 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 * [我可以更改安静，均衡及野兽模式的风扇策略吗？](#我可以更改安静，均衡及野兽模式的风扇策略吗？)
 * [更换主板后提示不兼容？](#更换主板后提示不兼容？)
 * [为什么我无法在使用电池供电时切换到野兽与自定义模式？](#为什么我无法在使用电池供电时切换到野兽与自定义模式？)
-* [我可以在使用拯救者工具箱时使用其他RGB软件吗？](#我可以在使用拯救者工具箱时使用其他RGB软件吗？)
+* [我可以在使用 LLT 时使用其他RGB软件吗？](#我可以在使用LLT时使用其他RGB软件吗？)
 * [支持 iCue RGB 键盘吗？](#支持-iCue-RGB-键盘吗？)
 * [能不能多增加一些 RGB 效果？](#能不能多增加一些-RGB-效果？)
 * [2022 款之前的机器能否自定义调节风扇曲线？](#2022-款之前的机器能否自定义调节风扇曲线？)
 * [为啥在启用 Legion AI 引擎后切换性能模式看起来似乎有些问题？](#为啥在启用-Legion-AI-引擎后切换性能模式看起来似乎有些问题？)
 * [为何即使自动化配置正确，游戏检测仍无法正常触发？](#为何即使自动化配置正确，游戏检测仍无法正常触发？)
-* [为什么将鼠标悬停在拯救者工具箱托盘图标上却看不到自定义工具提示？](#为什么将鼠标悬停在拯救者工具箱托盘图标上却看不到自定义工具提示？)
+* [为什么将鼠标悬停在 LLT 托盘图标上却看不到自定义工具提示？](#为什么将鼠标悬停在LLT托盘图标上却看不到自定义工具提示？)
 * [我在哪里可以找到 CPU 睿频模式的设置？](#我在哪里可以找到-CPU-睿频模式的设置？)
 * [如果我在对 GPU 进行超频时超过了阈值，该怎么办？](#如果我在对-GPU-进行超频时超过了阈值，该怎么办？)
 * [我的开机画面为什么没有生效？](#我的开机画面为什么没有生效？)
@@ -497,7 +533,7 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 #### 为什么我的杀毒软件报告安装程序含有病毒/木马/恶意软件？
 
-拯救者工具箱使用了许多底层的 Windows API，杀毒软件可能会识别这些 API 的调用为可疑的，从而造成误报。拯救者工具箱本身是开源的，任何感觉此软件有问题的人可以很简单的审查此软件源代码。同时所有安装包都是直接在 Github 上使用 Github Actions 构建的，所以你也不需要担心安装包含有恶意内容。此问题可以通过对程序签名来解决，但此项目只是我业余时间来制作的开源项目，我无法负担每年花几百美元买一个证书。
+LLT 使用了许多底层的 Windows API，杀毒软件可能会识别这些 API 的调用为可疑的，从而造成误报。LLT 本身是开源的，任何感觉此软件有问题的人可以很简单的审查此软件源代码。同时所有安装包都是直接在 Github 上使用 Github Actions 构建的，所以你也不需要担心安装包含有恶意内容。此问题可以通过对程序签名来解决，但此项目只是我业余时间来制作的开源项目，我无法负担每年花几百美元买一个证书。
 
 简而言之，如果你从这个项目的网站上下载了安装程序，不需要担心杀毒软件的报毒，这只是一个误报。同时如果你有能力帮助解决杀毒软件的误报问题，欢迎联系我。
 
@@ -515,20 +551,20 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 #### 更换主板后提示不兼容？
 
-有时新主板内的机型和序列号信息出错，你可以尝试 [这篇教程](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) 来恢复。如果这不起作用你可以尝试打开 `%LOCALAPPDATA%\LenovoLegionToolkit` 并创建一个名为 `args.txt` 的文件并打开文件后呼入 `--skip-compat-check` ，这会禁用拯救者工具箱的兼容性检查。我们建议你在无法正确恢复型号、序列号等信息的情况下再使用这个办法。
+有时新主板内的机型和序列号信息出错，你可以尝试 [这篇教程](https://laptopwiki.eu/laptopwiki/guides/lenovo/legion_bios_lvarrecovery) 来恢复。如果这不起作用你可以尝试打开 `%LOCALAPPDATA%\LenovoLegionToolkit` 并创建一个名为 `args.txt` 的文件并打开文件后呼入 `--skip-compat-check` ，这会禁用 LLT 的兼容性检查。我们建议你在无法正确恢复型号、序列号等信息的情况下再使用这个办法。
 
 #### 为什么我无法在使用电池供电时切换到野兽与自定义模式？
 
-在 2.11.0 版本后，拯救者工具箱与 Lenovo Vantage 与 Legion Zone 的行为保持一致，将不再允许在没有插入适当电源适配器的情况下启用野兽与自定义模式。
+在 2.11.0 版本后，LLT 与 Lenovo Vantage 与 Legion Zone 的行为保持一致，将不再允许在没有插入适当电源适配器的情况下启用野兽与自定义模式。
 
 如果出于某种原因，你想在电池供电的情况下使用这些模式，你可以使用`--allow-all-power-modes-on-battery`参数来启用（参见[命令行参数](#命令行参数)）。
 
 > [!WARNING]
 > 当笔记本电脑没有连接到全功率的电源适配器时，功耗限制与其他设置在大多数设备上无法正常应用，同时可能会出现一些未知的问题。
 
-#### 我可以在使用拯救者工具箱时使用其他RGB软件吗？
+#### 我可以在使用 LLT 时使用其他RGB软件吗？
 
-总的来说，可以。 当 Lenovo Vantage 运行时，拯救者工具箱将禁用 RGB 控制，以避免冲突。如果你想使用其他 RGB 软件，如 [L5P-Keyboard-RGB](https://github.com/4JX/L5P-Keyboard-RGB) 或 [OpenRGB](https://openrgb.org/)，你可以在拯救者工具箱中使用 `--force-disable-rgbkb` 或 `--force-disable-spectrumkb` 参数禁用 RGB 以避免冲突（参考[命令行参数](#命令行参数)）。
+总的来说，可以。 当 Lenovo Vantage 运行时，LLT 将禁用 RGB 控制，以避免冲突。如果你想使用其他 RGB 软件，如 [L5P-Keyboard-RGB](https://github.com/4JX/L5P-Keyboard-RGB) 或 [OpenRGB](https://openrgb.org/)，你可以在 LLT 中使用 `--force-disable-rgbkb` 或 `--force-disable-spectrumkb` 参数禁用 RGB 以避免冲突（参考[命令行参数](#命令行参数)）。
 
 #### 支持 iCue RGB 键盘吗？
 
@@ -548,17 +584,17 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 #### 为何即使自动化配置正确，游戏检测仍无法正常触发？
 
-拯救者工具箱的游戏检测功能是基于 Windows 游戏检测的。这意味着游戏检测功能仅能被 Windows 认为是游戏的 EXE 文件触发。同时如果你删除了 Xbox Game Bar，此功能大概率将无法正常工作。
+LLT 的游戏检测功能是基于 Windows 游戏检测的。这意味着游戏检测功能仅能被 Windows 认为是游戏的 EXE 文件触发。同时如果你删除了 Xbox Game Bar，此功能大概率将无法正常工作。
 
 Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar (Win + G) 设置中将任何程序标记为游戏。你可以在注册表中找到可识别的游戏列表：`HKEY_CURRENT_USER\System\GameConfigStore\Children`。
 
-#### 为什么将鼠标悬停在拯救者工具箱托盘图标上却看不到自定义工具提示？
+#### 为什么将鼠标悬停在 LLT 托盘图标上却看不到自定义工具提示？
 
 在 Windows 10 和 11 中，微软对托盘做了大量的修改，修改导致了很多东西产生了变化，从而导致许多东西无法正常工作。因此，自定义工具提示有时会无法正常工作。你可以试试更新你的 Windows，除此之外没什么好办法了。
 
 #### 我在哪里可以找到 CPU 睿频模式的设置？
 
-简而言之，在 Windows 控制面板中。此选项因很难维护已经从拯救者工具箱中删除了。在拯救者工具箱的设置中，你可以找到一个直接跳转到控制面板中电源计划设置页面的按钮，在那里你可以轻松地编辑 CPU 睿频模式设置以及 Windows 电源计划的其他设置。
+简而言之，在 Windows 控制面板中。此选项因很难维护已经从 LLT 中删除了。在 LLT 的设置中，你可以找到一个直接跳转到控制面板中电源计划设置页面的按钮，在那里你可以轻松地编辑 CPU 睿频模式设置以及 Windows 电源计划的其他设置。
 
 默认情况下，这个设置是隐藏的，但你也可以通过在终端运行`powercfg.exe -attributes sub_processor perfboostmode -attrib_hide`来重新打开这个选项。
 另外我还推荐其他一些应用程序可以轻松地管理多个电源计划设置：[PowerSettingsExplorer](https://forums.guru3d.com/threads/windows-power-plan-settings-explorer-utility.416058/) 与 [QuickCPU](https://coderbag.com/product/quickcpu)。
@@ -567,8 +603,8 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 如果你超频到 GPU 无法稳定运行，甚至无法启动 Windows 的情况，你可以通过以下两种方法尝试解决：
 
-1. 进入 BIOS，尝试找到类似于 “Enabled GPU Overclocking” 与“显卡超频”的选项并将其禁用，启动 Windows，修改拯救者工具箱中的超频参数，并将此选项再次启用。
-2. 在安全模式下启动 Windows，删除拯救者工具箱设置下的 `gpu_oc.json` 文件，该文件位于 `"%LOCALAPPDATA%\LenovoLegionToolkit`。
+1. 进入 BIOS，尝试找到类似于 “Enabled GPU Overclocking” 与“显卡超频”的选项并将其禁用，启动 Windows，修改LLT中的超频参数，并将此选项再次启用。
+2. 在安全模式下启动 Windows，删除 LLT 设置下的 `gpu_oc.json` 文件，该文件位于 `"%LOCALAPPDATA%\LenovoLegionToolkit`。
 
 #### 我的开机画面为什么没有生效？
 
@@ -618,11 +654,11 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 记录 Log 日志的步骤：
 
-1. 确保拯救者工具箱已关闭（后台也记得关掉）；
+1. 确保 LLT 已关闭（后台也记得关掉）；
 2. 打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\Programs\LenovoLegionToolkit\Lenovo Legion Toolkit.exe" --trace` 然后点击确定；
-3. 拯救者工具箱将会启动并且可以在左上角能看到 `[LOGGING ENABLED]` ；
+3. LLT 将会启动并且可以在左上角能看到 `[LOGGING ENABLED]` ；
 4. 复现你遇到的问题；
-5. 关闭拯救者工具箱 （同样记得关掉后台）；
+5. 关闭 LLT （同样记得关掉后台）；
 6. 然后打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\LenovoLegionToolkit\log"` ；
 7. 这里就是存放日志文件的地方了，请在 Issue 内汇报 Bug 时一并提交。
 
@@ -636,11 +672,11 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 #### 适配
 
 > [!IMPORTANT]
-> 拯救者工具箱只目标适配联想拯救者（海内及海外版）、IdeaPad Gaming 和 LOQ 系列。请不要为除上述系列以外的设备提出兼容请求。
+> LLT 只目标适配联想拯救者（海内及海外版）、IdeaPad Gaming 和 LOQ 系列。请不要为除上述系列以外的设备提出兼容请求。
 
 如果能适配更多设备就更好了！但要做到这点，我真的很需要你的帮助！
 
-如果你愿意在未适配的机型上试试这个软件，请在启动时点击弹窗的继续按钮，拯救者工具箱会自动打开日志记录，这样你就可以在提交 Issue 时提交了！
+如果你愿意在未适配的机型上试试这个软件，请在启动时点击弹窗的继续按钮，LLT 会自动打开日志记录，这样你就可以在提交 Issue 时提交了！
 
 *注意一些功能可能无法正常运行*
 
@@ -653,6 +689,6 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 3. 出错的功能
 4. 会导致崩溃闪退的功能
 
-你提交的信息越多，随着时间的推进，拯救者工具箱就会变得越来越好！如果有什么出错的地方请准确写下问题并附上日志。(日志保存地址 `%LOCALAPPDATA%\LenovoLegionToolkit\log`). 
+你提交的信息越多，随着时间的推进，LLT 就会变得越来越好！如果有什么出错的地方请准确写下问题并附上日志。(日志保存地址 `%LOCALAPPDATA%\LenovoLegionToolkit\log`). 
 
 **万分感谢！**

@@ -109,18 +109,7 @@
                         Tag="windowsOptimization" />
                 </custom:CardControl>
 
-                <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Tools}" 
-                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_toolsToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="tools" />
-                </custom:CardControl>
+
 
                 <custom:CardControl Margin="0,0,0,8">
                     <custom:CardControl.Header>

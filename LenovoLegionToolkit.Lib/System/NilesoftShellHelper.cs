@@ -25,11 +25,11 @@ public static class NilesoftShellHelper
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Checking if Nilesoft Shell is installed...");
 
-        var shellExePath = GetNilesoftShellExePath();
-        var isInstalled = !string.IsNullOrWhiteSpace(shellExePath) && File.Exists(shellExePath);
+        var shellDllPath = GetNilesoftShellDllPath();
+        var isInstalled = !string.IsNullOrWhiteSpace(shellDllPath) && File.Exists(shellDllPath);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Nilesoft Shell installation check result: {isInstalled}, path: {shellExePath ?? "null"}");
+            Log.Instance.Trace($"Nilesoft Shell installation check result: {isInstalled}, dll path: {shellDllPath ?? "null"}");
 
         return isInstalled;
     }

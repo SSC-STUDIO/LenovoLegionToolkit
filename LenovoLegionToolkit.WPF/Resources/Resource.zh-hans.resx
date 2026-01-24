@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>拯救者工具箱 Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Toolkit</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Build</value>
@@ -166,7 +166,7 @@
     <value>保持 USB 供电</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>拯救者工具箱 Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Toolkit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>应用</value>
@@ -741,7 +741,7 @@
     <value>导入</value>
   </data>
   <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>此设备可能与拯救者工具箱不兼容。</value>
+    <value>此设备可能与 LLT 不兼容。</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
     <value>您的设备可能缺少必要的系统组件（LenovoGameZoneData）。</value>
@@ -812,10 +812,7 @@
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>设置</value>
   </data>
-  <data name="MainWindow_NavigationItem_Tools" xml:space="preserve">
-    <value>工具箱</value>
-  </data>
-  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
     <value>插件扩展</value>
   </data>
   <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
@@ -839,10 +836,7 @@
   <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏系统优化导航项</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowToolsNavigationItem_Description" xml:space="preserve">
-    <value>显示或隐藏工具箱导航项</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏插件扩展导航项</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
@@ -1021,8 +1015,11 @@
   <data name="PackageControl_Version" xml:space="preserve">
     <value>版本</value>
   </data>
-  <data name="PackageControl_Install" xml:space="preserve">
+<data name="PackageControl_Install" xml:space="preserve">
     <value>安装</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>卸载</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>安装失败</value>
@@ -1345,7 +1342,7 @@
     <value>启用扩展</value>
   </data>
   <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
-    <value>启用扩展系统以在工具箱页面中访问插件市场。</value>
+    <value>启用扩展系统以访问插件市场。</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
     <value>选择显示哪些通知弹窗。</value>
@@ -1707,8 +1704,11 @@
   <data name="PackageControl_Downloading" xml:space="preserve">
     <value>下载中</value>
   </data>
-  <data name="PackageControl_Installing" xml:space="preserve">
+<data name="PackageControl_Installing" xml:space="preserve">
     <value>安装中</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>正在加载插件...</value>
   </data>
   <data name="PackageControl_Completed" xml:space="preserve">
     <value>已完成</value>
@@ -3147,68 +3147,7 @@
   <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
     <value>正在删除: {0}</value>
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>工具箱</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>启动系统工具和实用程序</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU工具</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>显示工具</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>游戏工具</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU工具</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>内存工具</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>其他工具</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>外设工具</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>存储工具</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>压力测试工具</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>系统诊断工具</value>
-  </data>
-  <data name="ToolsPage_Category_Hardware_Tools" xml:space="preserve">
-    <value>硬件工具</value>
-  </data>
-  <data name="ToolsPage_Category_System_Tools" xml:space="preserve">
-    <value>系统工具</value>
-  </data>
-  <data name="ToolsPage_Category_Batch_Tools" xml:space="preserve">
-    <value>快捷工具</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_OpenFileLocation" xml:space="preserve">
-    <value>打开文件位置</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_CopyPath" xml:space="preserve">
-    <value>复制路径</value>
-  </data>
-  <data name="ToolsPage_ContextMenu_OpenToolsDirectory" xml:space="preserve">
-    <value>打开工具目录</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>启动工具失败</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>当前没有可用的工具。请在应用程序目录下的 tools 文件夹中添加工具。</value>
-  </data>
-
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+<data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>电池最大充电容量。</value>
   </data>
 
@@ -3382,22 +3321,7 @@
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>同步区域</value>
   </data>
-  <data name="ToolsPage_EmptyDescription" xml:space="preserve">
-    <value>工具将在工具目录中可用后显示在此处。</value>
-  </data>
-  <data name="ToolsPage_Launch_Button" xml:space="preserve">
-    <value>启动</value>
-  </data>
-  <data name="ToolsPage_Details_Version" xml:space="preserve">
-    <value>版本: {0}</value>
-  </data>
-  <data name="ToolsPage_Details_Author" xml:space="preserve">
-    <value>作者: {0}</value>
-  </data>
-  <data name="ToolsPage_Details_Path" xml:space="preserve">
-    <value>路径: {0}</value>
-  </data>
-  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+<data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
     <value>使用 Windows 内置的注册表清理功能</value>
   </data>
   <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
@@ -3540,6 +3464,102 @@
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>永久删除</value>
   </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>插件将被永久删除。此操作无法撤销。</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>更新失败</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>插件更新失败，请检查网络连接后重试</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>更新成功</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>插件已成功更新</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>正在更新插件</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>正在下载并更新插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>运行插件</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>插件已启动</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>插件已卸载</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>插件将在程序关闭时删除</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>删除失败</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>删除插件时发生错误</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>配置失败</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>插件已安装但未加载，请尝试重启应用程序</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>无配置选项</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>此插件没有配置选项</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>不支持配置</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>此插件不支持配置</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>插件状态已重置</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>所有插件的安装状态已清除</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>批量导入</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>从本地ZIP文件导入插件</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>从文件导入</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>选择插件文件 (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>成功导入 {0} 个插件</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} 个插件已成功导入并可用</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>批量导入失败</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>无法导入插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>正在导入插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>正在导入 {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>正在处理 {0}...</value>
+  </data>
   <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
     <value>网络加速</value>
   </data>
@@ -3547,7 +3567,7 @@
     <value>ViVeTool</value>
   </data>
   <data name="Plugin_Name_Tools" xml:space="preserve">
-    <value>工具箱</value>
+    <value>工具</value>
   </data>
   <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
     <value>实时网络加速和优化功能</value>

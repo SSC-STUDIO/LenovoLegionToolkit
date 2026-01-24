@@ -13,7 +13,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 [Plugin(
     id: PluginConstants.NetworkAcceleration,
     name: "Network Acceleration",
-    version: "1.1.0",
+    version: "1.4.0",
     description: "Real-time network acceleration and optimization features",
     author: "LenovoLegionToolkit Team",
     MinimumHostVersion = "1.0.0",

@@ -69,16 +69,7 @@
 		<!-- Create output assets directory if it doesn't exist -->
 		<MakeDir Directories="$(AssetsTargetDir)" Condition="'$(AssetsDirExists)' == 'true'" />
 		
-		<!-- Collect tools.json file -->
-		<ItemGroup Condition="'$(AssetsDirExists)' == 'true'">
-			<ToolsJsonFile Include="$(AssetsSourceDir)\tools\tools.json" />
-		</ItemGroup>
-		
-		<!-- Copy tools.json file -->
-		<Copy SourceFiles="@(ToolsJsonFile)" 
-		      DestinationFiles="$(AssetsTargetDir)\tools\tools.json" 
-		      SkipUnchangedFiles="true" 
-		      Condition="'$(AssetsDirExists)' == 'true'" />
+
 		
 		<!-- Collect W11-CC-V2.2-HDPI files -->
 		<ItemGroup Condition="'$(AssetsDirExists)' == 'true'">
@@ -132,9 +123,8 @@
 			<ShellOutputDir Condition="'$(PublishDir)' != ''">$(PublishDir)</ShellOutputDir>
 			<ShellOutputDir Condition="'$(PublishDir)' == ''">$(TargetDir)</ShellOutputDir>
 		</PropertyGroup>
-		<!-- Find shell.exe and shell.dll from ShellIntegration src/bin directory -->
+		<!-- Find shell.dll from ShellIntegration src/bin directory -->
 		<ItemGroup>
-			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.exe" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.exe')" />
 			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.dll" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.dll')" />
 		</ItemGroup>
 		<!-- Copy shell artifacts to app output directory for distribution -->

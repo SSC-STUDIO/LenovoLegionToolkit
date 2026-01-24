@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -109,49 +109,7 @@
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>시스템 최적화</value>
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>Launch system tools and utilities.</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>Failed to start tool</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>Display Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>Gaming Tools</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>Memory Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>Other Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>Peripherals Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>Storage Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>Stress Testing Tools</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>System Diagnostic Tools</value>
-  </data>
-  <data name="AboutPage_AppName" xml:space="preserve">
+<data name="AboutPage_AppName" xml:space="preserve">
     <value>Lenovo Legion Toolkit</value>
   </data>
   <data name="AboutPage_ApplicationFolders" xml:space="preserve">
@@ -2983,6 +2941,43 @@ Logging will be enabled automatically, if you choose to continue.</value>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Synchronise zones</value>
+  </data>
+
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>플러그인이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>대량 가져오기</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>로컬 ZIP 파일에서 플러그인 가져오기</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>파일에서 가져오기</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>플러그인 파일 선택 (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0}개 플러그인을 성공적으로 가져왔습니다</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0}개 플러그인이 성공적으로 가져와져 사용할 수 있습니다</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>대량 가져오기 실패</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>플러그인을 가져올 수 없습니다: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>플러그인을 가져오는 중...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0}을(를) 가져오는 중...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0}을(를) 처리하는 중...</value>
   </data>
 
 </root>

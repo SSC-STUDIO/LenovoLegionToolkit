@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2789,19 +2789,7 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Freed {0} in {1}s</value>
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>Launch system tools and utilities.</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>Failed to start tool</value>
-  </data>
-  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+<data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
     <value>COM Component Registration + Configuration File</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
@@ -2925,6 +2913,43 @@ It won't affect other full screen windows, but you will not be able to click on 
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Synchronise zones</value>
+  </data>
+
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>سيتم حذف المكون الإضافي نهائيًا. لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>استيراد مجمع</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>استيراد المكونات الإضافية من ملفات ZIP محلية</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>استيراد من الملفات</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>تحديد ملفات المكون الإضافي (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>تم استيراد {0} مكون إضافي بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>تم استيراد {0} مكون إضافي بنجاح وهي متاحة</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>فشل الاستيراد المجمع</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>تعذر استيراد المكونات الإضافية: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>استيراد المكونات الإضافية...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>استيراد {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>معالجة {0}...</value>
   </data>
 
 </root>
