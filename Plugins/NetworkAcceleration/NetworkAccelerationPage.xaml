@@ -394,7 +394,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="GitHub" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_Platform_GitHub}" />
                                 <TextBlock
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -418,7 +418,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="Steam" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_Platform_Steam}" />
                                 <TextBlock
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -442,7 +442,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="Discord" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_Platform_Discord}" />
                                 <TextBlock
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -466,7 +466,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="npm" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_Platform_Npm}" />
                                 <TextBlock
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -490,7 +490,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="PyPI" />
+                                    Text="{x:Static plugin:Resource.NetworkAcceleration_Platform_PyPI}" />
                                 <TextBlock
                                     FontSize="11"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"

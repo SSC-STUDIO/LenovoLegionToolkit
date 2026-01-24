@@ -30,12 +30,31 @@ public static partial class WMI
         var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         var watcher = new ManagementEventWatcher(scope, queryFormatted);
         watcher.EventArrived += (_, e) => handler(e.NewEvent.Properties);
-        watcher.Start();
+        
+        try
+        {
+            watcher.Start();
+        }
+        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
+        {
+            watcher.Dispose();
+            throw new ManagementException($"WMI class or namespace not available [scope={scope}, query={queryFormatted}]", ex);
+        }
 
         return new LambdaDisposable(() =>
         {
-            watcher.Stop();
-            watcher.Dispose();
+            try
+            {
+                watcher.Stop();
+            }
+            catch (ManagementException)
+            {
+                // Ignore exceptions during cleanup
+            }
+            finally
+            {
+                watcher.Dispose();
+            }
         });
     }
 

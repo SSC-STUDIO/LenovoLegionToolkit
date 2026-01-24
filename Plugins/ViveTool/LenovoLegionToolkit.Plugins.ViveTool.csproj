@@ -7,11 +7,15 @@
     <Nullable>enable</Nullable>
     <Copyright>© 2025 ChenRunsen</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    <SatelliteResourceLanguages>zh-hans</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Plugin version -->
+    <Version>1.4.0</Version>
+    <FileVersion>1.4.0</FileVersion>
+    <AssemblyVersion>1.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

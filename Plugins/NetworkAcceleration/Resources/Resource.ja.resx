@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NetworkAcceleration_PageTitle" xml:space="preserve">
+    <value>ネットワークアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_PageDescription" xml:space="preserve">
+    <value>リアルタイムネットワークアクセラレーションと最適化機能。DNS最適化、リクエストインターセプション、プロキシアクセラレーションなどの機能を含みます。</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatus" xml:space="preserve">
+    <value>サービス状態</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusDescription" xml:space="preserve">
+    <value>ネットワークアクセラレーションサービスの実行状態</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunning" xml:space="preserve">
+    <value>実行中</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStopped" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunningDescription" xml:space="preserve">
+    <value>ネットワークアクセラレーションサービスが実行中で、アクセラレーションサービスを提供しています</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStoppedDescription" xml:space="preserve">
+    <value>ネットワークアクセラレーションサービスは現在実行されていません</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimization" xml:space="preserve">
+    <value>DNS最適化</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationDescription" xml:space="preserve">
+    <value>ネットワーク状態に基づいて最適なドメインIPアドレスをインテリジェントに解決し、DNS汚染問題を解決します</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationEnabledDescription" xml:space="preserve">
+    <value>有効にすると、最速のDNSサーバーを自動的に選択してドメイン名解決を行い、アクセス速度を向上させます。</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterception" xml:space="preserve">
+    <value>リクエストインターセプション</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionDescription" xml:space="preserve">
+    <value>アクセス不可能なウェブサイトをインターセプトし、アクセラレーションミラーサイトにプロキシします</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionEnabledDescription" xml:space="preserve">
+    <value>有効にすると、アクセス不可能なウェブサイトリクエストを自動的に利用可能なアクセラレーションミラーサイトにプロキシします。</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAcceleration" xml:space="preserve">
+    <value>GitHubアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationDescription" xml:space="preserve">
+    <value>GitHub直接接続アクセラレーション。Release、Clone、Rawなどのダウンロードを含みます</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
+    <value>GitHubアクセラレーション機能を有効にし、コードクローン、ファイルダウンロードなどGitHubアクセス速度を向上させます。</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>GitHubコードリポジトリとリソースのダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
+    <value>プロキシ設定</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettingsDescription" xml:space="preserve">
+    <value>ネットワークプロキシサーバー設定を構成</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddress" xml:space="preserve">
+    <value>プロキシアドレス：</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressPlaceholder" xml:space="preserve">
+    <value>例：127.0.0.1:7890</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressDescription" xml:space="preserve">
+    <value>ローカルプロキシサーバーのアドレスとポートを構成します。空白の場合はデフォルト設定を使用します。</value>
+  </data>
+  <data name="NetworkAcceleration_AcceleratedTraffic" xml:space="preserve">
+    <value>アクセラレーショントラフィック</value>
+  </data>
+  <data name="NetworkAcceleration_Downloaded" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="NetworkAcceleration_Uploaded" xml:space="preserve">
+    <value>アップロード</value>
+  </data>
+  <data name="NetworkAcceleration_TotalTraffic" xml:space="preserve">
+    <value>合計トラフィック</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatistics" xml:space="preserve">
+    <value>リセット</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailed" xml:space="preserve">
+    <value>証明書セットアップ失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailedDescription" xml:space="preserve">
+    <value>ルート証明書をセットアップできません。権限を確認してください</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailed" xml:space="preserve">
+    <value>プロキシサービス起動失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailedDescription" xml:space="preserve">
+    <value>リバースプロキシサービスを起動できません</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailed" xml:space="preserve">
+    <value>起動失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailedDescription" xml:space="preserve">
+    <value>サービス起動時にエラーが発生しました: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailed" xml:space="preserve">
+    <value>停止失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailedDescription" xml:space="preserve">
+    <value>サービス停止時にエラーが発生しました: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
+    <value>速度チャート</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>リアルタイムトラフィック統計とトレンド分析</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>ダウンロードとアップロード速度の変化をリアルタイム表示</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>統計をリセット</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>プラットフォームアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>次のプラットフォームでネットワークアクセラレーションを有効にし、アクセス速度と安定性を向上させます</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steamアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>Steamストア、コミュニティ、ダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discordアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>DiscordアプリとCDNリソースを加速</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPMアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>npmパッケージマネージャーダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Pythonアクセラレーション</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>Pythonパッケージインデックスダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>Steamストア、コミュニティ、ダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>DiscordアプリとCDNリソースを加速</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>npmパッケージマネージャーダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>Pythonパッケージインデックスダウンロードを加速</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>接続タイムアウト（秒）</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>ネットワークリクエストのタイムアウト時間を秒単位で設定</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>プロキシポート</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>例: 7890</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>：</value>
+  </data>
+</root>

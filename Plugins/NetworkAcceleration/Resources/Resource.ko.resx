@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NetworkAcceleration_PageTitle" xml:space="preserve">
+    <value>네트워크 가속</value>
+  </data>
+  <data name="NetworkAcceleration_PageDescription" xml:space="preserve">
+    <value>실시간 네트워크 가속 및 최적화 기능. DNS 최적화, 요청 가로채기, 프록시 가속 등의 기능을 포함합니다.</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatus" xml:space="preserve">
+    <value>서비스 상태</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusDescription" xml:space="preserve">
+    <value>네트워크 가속 서비스의 실행 상태</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunning" xml:space="preserve">
+    <value>실행 중</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStopped" xml:space="preserve">
+    <value>중지됨</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunningDescription" xml:space="preserve">
+    <value>네트워크 가속 서비스가 실행 중이며 가속 서비스를 제공하고 있습니다</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStoppedDescription" xml:space="preserve">
+    <value>네트워크 가속 서비스가 현재 실행되고 있지 않습니다</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimization" xml:space="preserve">
+    <value>DNS 최적화</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationDescription" xml:space="preserve">
+    <value>네트워크 상태에 따라 최적의 도메인 IP 주소를 지능적으로 확인하여 DNS 오염 문제를 해결합니다</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationEnabledDescription" xml:space="preserve">
+    <value>활성화하면 가장 빠른 DNS 서버를 자동으로 선택하여 도메인 이름 확인을 수행하고 접속 속도를 향상시킵니다.</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterception" xml:space="preserve">
+    <value>요청 가로채기</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionDescription" xml:space="preserve">
+    <value>접근할 수 없는 웹사이트를 가로채서 가속 미러 사이트로 프록시합니다</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionEnabledDescription" xml:space="preserve">
+    <value>활성화하면 접근할 수 없는 웹사이트 요청을 사용 가능한 가속 미러 사이트로 자동 프록시합니다.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAcceleration" xml:space="preserve">
+    <value>GitHub 가속</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationDescription" xml:space="preserve">
+    <value>GitHub 직접 연결 가속. Release, Clone, Raw 등 다운로드 포함</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
+    <value>GitHub 가속 기능을 활성화하여 코드 클론, 파일 다운로드 등 GitHub 접속 속도를 향상시킵니다.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>GitHub 코드 저장소 및 리소스 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
+    <value>프록시 설정</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettingsDescription" xml:space="preserve">
+    <value>네트워크 프록시 서버 설정 구성</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddress" xml:space="preserve">
+    <value>프록시 주소:</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressPlaceholder" xml:space="preserve">
+    <value>예: 127.0.0.1:7890</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressDescription" xml:space="preserve">
+    <value>로컬 프록시 서버 주소와 포트를 구성합니다. 비워두면 기본 설정을 사용합니다.</value>
+  </data>
+  <data name="NetworkAcceleration_AcceleratedTraffic" xml:space="preserve">
+    <value>가속 트래픽</value>
+  </data>
+  <data name="NetworkAcceleration_Downloaded" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="NetworkAcceleration_Uploaded" xml:space="preserve">
+    <value>업로드</value>
+  </data>
+  <data name="NetworkAcceleration_TotalTraffic" xml:space="preserve">
+    <value>총 트래픽</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatistics" xml:space="preserve">
+    <value>초기화</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailed" xml:space="preserve">
+    <value>인증서 설정 실패</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailedDescription" xml:space="preserve">
+    <value>루트 인증서를 설정할 수 없습니다. 권한을 확인하세요</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailed" xml:space="preserve">
+    <value>프록시 서비스 시작 실패</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailedDescription" xml:space="preserve">
+    <value>역방향 프록시 서비스를 시작할 수 없습니다</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailed" xml:space="preserve">
+    <value>시작 실패</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailedDescription" xml:space="preserve">
+    <value>서비스 시작 중 오류 발생: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailed" xml:space="preserve">
+    <value>중지 실패</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailedDescription" xml:space="preserve">
+    <value>서비스 중지 중 오류 발생: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
+    <value>속도 차트</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>실시간 트래픽 통계 및 트렌드 분석</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>다운로드 및 업로드 속도 변화를 실시간으로 표시</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>통계 초기화</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>플랫폼 가속</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>다음 플랫폼에 대해 네트워크 가속을 활성화하여 접속 속도와 안정성을 향상시킵니다</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steam 가속</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>Steam 상점, 커뮤니티, 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discord 가속</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>Discord 앱 및 CDN 리소스 가속</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPM 가속</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>npm 패키지 관리자 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Python 가속</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>Python 패키지 인덱스 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>Steam 상점, 커뮤니티, 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>Discord 앱 및 CDN 리소스 가속</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>npm 패키지 관리자 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>Python 패키지 인덱스 다운로드 가속</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>연결 시간 초과(초)</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>네트워크 요청의 시간 초과 시간을 초 단위로 설정</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>프록시 포트</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>예: 7890</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>:</value>
+  </data>
+</root>

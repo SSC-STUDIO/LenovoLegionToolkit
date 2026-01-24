@@ -274,45 +274,8 @@
                                         Width="90"
                                         Height="30"
                                         Click="PluginInstallButton_Click"
-                                        Tag="{Binding PluginId}" />
-                                
-                                <!-- Configuration Button -->
-                                <Button Content="{Binding ConfigureButtonText}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0">
-                                    <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                            <Binding Path="IsInstalled" />
-                                            <Binding Path="SupportsConfiguration" />
-                                        </MultiBinding>
-                                    </Button.Visibility>
-                                    <Button.Click>PluginConfigureButton_Click</Button.Click>
-                                    <Button.Tag>
-                                        <Binding Path="PluginId" />
-                                    </Button.Tag>
-                                </Button>
-                                
-                                <!-- Open Button -->
-                                <Button Content="{Binding OpenButtonText}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0"
-                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Click="PluginOpenButton_Click"
-                                        Tag="{Binding PluginId}" />
-                                
-                                <!-- Uninstall Button -->
-                                <Button Content="{Binding UninstallButtonText}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0"
-                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Click="PluginUninstallButton_Click"
-                                        Tag="{Binding PluginId}" />
+                                        Tag="{Binding PluginId}"
+                                        Visibility="{Binding IsInstallButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

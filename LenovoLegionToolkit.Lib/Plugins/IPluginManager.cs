@@ -57,6 +57,21 @@ public interface IPluginManager
     /// Permanently delete plugin files from disk (cannot be recovered)
     /// </summary>
     bool PermanentlyDeletePlugin(string pluginId);
+
+    /// <summary>
+    /// Unload all plugins and release references (useful before plugin updates)
+    /// </summary>
+    void UnloadAllPlugins();
+
+    /// <summary>
+    /// Stop a specific plugin (call its Stop method) before update or uninstallation
+    /// </summary>
+    bool StopPlugin(string pluginId);
+
+    /// <summary>
+    /// Stop all plugins (call Stop method for each plugin)
+    /// </summary>
+    void StopAllPlugins();
 }
 
 /// <summary>

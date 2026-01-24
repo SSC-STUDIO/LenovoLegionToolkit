@@ -580,3 +580,9 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,dotnetcore,csharp
 
 build_installer
+
+# AGENTS.md - Development guide file (prevent accidental commits)
+AGENTS.md
+
+# UPDATE_CHANGELOG.md - Changelog quick guide
+UPDATE_CHANGELOG.md

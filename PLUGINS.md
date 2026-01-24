@@ -275,3 +275,106 @@ A: 不需要。插件系统支持热重载，用户更新插件后刷新页面�
 - [插件 SDK](../LenovoLegionToolkit.Plugins.SDK)
 - [ViVeTool 插件示例](../LenovoLegionToolkit.Plugins.ViveTool)
 - [Network Acceleration 插件示例](../LenovoLegionToolkit.Plugins.NetworkAcceleration)
+
+---
+
+## 插件扩展页面 UI 改进说明
+
+### 2024年1月 更新
+
+插件扩展页面经过重新设计，提供更好的用户体验：
+
+### 主要变更
+
+#### 1. 新的列表式布局
+
+- **简洁的列表显示**：每个插件显示为一行，包含所有必要信息
+- **信息完整**：图标、名称、版本、描述一目了然
+- **操作便捷**：安装、配置、打开、卸载按钮直接显示
+
+#### 2. 布局结构
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ [搜索框]                         [全部 ▼]  [刷新]                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [图标]  插件名称 v1.0.0                       [安装/更新]           │
+│         插件描述文字（可换行显示，最大3行）                           │
+│                                                                     │
+│  ─────────────────────────────────────────────────────────────────  │
+│                                                                     │
+│  [图标]  已安装的插件 v2.1.0                 [安装] [配置] [打开]    │
+│         这个插件支持配置和打开操作                                   │
+│         [卸载]                                                     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+#### 3. 按钮显示逻辑
+
+| 插件状态 | 显示的按钮 |
+|---------|----------|
+| 未安装 | [安装/更新] |
+| 已安装 | [安装] [配置] [打开] [卸载] |
+
+#### 4. 多语言支持
+
+插件页面按钮支持多种语言：
+
+| 语言 | 配置 | 打开 | 卸载 |
+|------|------|------|------|
+| 中文简体 | 配置 | 打开 | 卸载 |
+| 中文繁体 | 設定 | 開啟 | 解除安裝 |
+| 英语 | Configure | Open | Uninstall |
+| 日语 | 設定 | 開く | アンインストール |
+| 韩语 | 설정 | 열기 | 제거 |
+| 德语 | Konfigurieren | Öffnen | Deinstallieren |
+| 法语 | Configurer | Ouvrir | Désinstaller |
+| 西班牙语 | Configurar | Abrir | Desinstalar |
+| 俄语 | Настройка | Открыть | Удалить |
+| ... | ... | ... | ... |
+
+#### 5. 筛选选项
+
+- **全部**：显示所有插件
+- **已安装**：只显示已安装的插件
+- **未安装**：只显示未安装的插件
+
+#### 6. 搜索功能
+
+- 实时搜索插件名称和描述
+- 搜索结果自动筛选
+
+### 技术实现
+
+#### 数据绑定
+
+使用 `PluginViewModel` 类实现 MVVM 模式：
+
+```csharp
+public class PluginViewModel : INotifyPropertyChanged
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Version { get; set; }
+    public bool IsInstalled { get; set; }
+    public string InstallButtonText { get; set; }
+    public string ConfigureButtonText { get; set; }
+    public string OpenButtonText { get; set; }
+    public string UninstallButtonText { get; set; }
+    public bool SupportsConfiguration { get; set; }
+}
+```
+
+#### UI 组件
+
+- 使用 `ListBox` 替代原来的 `ItemsControl`
+- 使用 `DataTemplate` 定义列表项布局
+- 使用 `BooleanToVisibilityConverter` 控制按钮显示
+
+### 开发者注意事项
+
+1. **按钮事件处理**：所有按钮通过 `Tag` 属性传递插件 ID
+2. **配置支持检测**：自动检测插件是否支持配置功能
+3. **图标生成**：根据插件名称自动生成图标首字母和背景色

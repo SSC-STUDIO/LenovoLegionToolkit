@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <OutputType>Library</OutputType>
+    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
+    <RootNamespace>LenovoLegionToolkit.Plugins.ShellIntegration</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="WPFUI" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </Resource>
+    <Resource Include="Resources\Resource.zh-hans.resx">
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Resource>
+    <Resource Include="Resources\Resource.zh-hant.resx">
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Resource>
+    <Resource Include="Resources\Resource.ja.resx">
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Resource>
+    <Resource Include="Resources.Resource.de.resx">
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

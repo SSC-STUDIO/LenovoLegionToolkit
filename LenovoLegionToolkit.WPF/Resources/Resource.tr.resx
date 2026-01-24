@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2273,49 +2273,7 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Sistem optimizasyonu</value>
   </data>
-  <data name="ToolsPage_Title" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="ToolsPage_Description" xml:space="preserve">
-    <value>Launch system tools and utilities.</value>
-  </data>
-  <data name="ToolsPage_Empty" xml:space="preserve">
-    <value>No tools available. Please add tools in the tools folder under the application directory.</value>
-  </data>
-  <data name="ToolsPage_Error_StartTool" xml:space="preserve">
-    <value>Failed to start tool</value>
-  </data>
-  <data name="ToolsPage_Category_CPU_Tools" xml:space="preserve">
-    <value>CPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Display_Tools" xml:space="preserve">
-    <value>Display Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Gaming_Tools" xml:space="preserve">
-    <value>Gaming Tools</value>
-  </data>
-  <data name="ToolsPage_Category_GPU_Tools" xml:space="preserve">
-    <value>GPU Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Memory_Tools" xml:space="preserve">
-    <value>Memory Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Other_Tools" xml:space="preserve">
-    <value>Other Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Peripherals_Tools" xml:space="preserve">
-    <value>Peripherals Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Storage_Tools" xml:space="preserve">
-    <value>Storage Tools</value>
-  </data>
-  <data name="ToolsPage_Category_Stress_Testing_Tools" xml:space="preserve">
-    <value>Stress Testing Tools</value>
-  </data>
-  <data name="ToolsPage_Category_System_Diagnostic_Tools" xml:space="preserve">
-    <value>System Diagnostic Tools</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+<data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>Battery maximum charge capacity.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
@@ -2989,5 +2947,43 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Synchronise zones</value>
   </data>
+
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>Eklenti kalıcı olarak silinecektir. Bu işlem geri alınamaz.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>Toplu içe aktarma</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>Yerel ZIP dosyalarından eklentileri içe aktar</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>Dosyadan içe aktar</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>Eklenti dosyalarını seç (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>{0} eklenti başarıyla içe aktarıldı</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} eklenti başarıyla içe aktarıldı ve kullanılabilir</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>Toplu içe aktarma başarısız</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>Eklentiler içe aktarılamadı: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>Eklentiler içe aktarılıyor...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>{0} içe aktarılıyor...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>{0} işleniyor...</value>
+  </data>
+
 
 </root>

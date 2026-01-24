@@ -66,7 +66,6 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "automation", true },
             { "macro", true },
             { "windowsOptimization", true },
-            { "tools", true },
             { "pluginExtensions", true },
             { "donate", true },
             { "about", true }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using LenovoLegionToolkit.WPF.Resources;
@@ -498,7 +499,7 @@ theme
             UpdateThemeTextFromUI();
         }
 
-        private void ApplyButton_Click(object sender, RoutedEventArgs e)
+        private async void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -520,7 +521,7 @@ theme
                 var savedFiles = new List<string>();
                 var failedFiles = new List<string>();
 
-                SaveAllFiles(savedFiles, failedFiles);
+                await SaveAllFilesAsync(savedFiles, failedFiles);
 
                 // Check if save was successful
                 if (failedFiles.Count > 0 && savedFiles.Count == 0)
@@ -534,7 +535,7 @@ theme
                 }
 
                 // Step 2: Restart Explorer
-                RestartExplorer();
+                await RestartExplorerAsync();
 
                 // Show success message
                 var message = "";
@@ -572,7 +573,7 @@ theme
             }
         }
 
-        private void SaveAllFiles(List<string> savedFiles, List<string> failedFiles)
+        private async Task SaveAllFilesAsync(List<string> savedFiles, List<string> failedFiles)
         {
             // Only save theme.nss since others are edited externally
             if (!string.IsNullOrEmpty(_themeNssPath) && _themeNssTextBox != null)
@@ -583,7 +584,7 @@ theme
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
 
-                    File.WriteAllText(_themeNssPath, _themeNssTextBox.Text, System.Text.Encoding.UTF8);
+                    await File.WriteAllTextAsync(_themeNssPath, _themeNssTextBox.Text, System.Text.Encoding.UTF8);
                     savedFiles.Add("theme.nss");
                 }
                 catch (Exception ex)
@@ -593,7 +594,7 @@ theme
             }
         }
 
-        private static void RestartExplorer()
+        private static async Task RestartExplorerAsync()
         {
             try
             {
@@ -616,7 +617,7 @@ theme
                 }
 
                 // Wait a moment for processes to fully terminate
-                System.Threading.Thread.Sleep(1000);
+                await Task.Delay(1000).ConfigureAwait(false);
 
                 // Then, start explorer.exe
                 var startInfo = new ProcessStartInfo

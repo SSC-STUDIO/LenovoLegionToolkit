@@ -142,12 +142,43 @@ The app allows to:
 - Disable/enable Lenovo Vantage, Legion Zone and Lenovo Hotkeys service without uninstalling them.
 - ... and more!
 
-### Tools
 
-> [!DEPRECATED]
-> The Tools feature has been deprecated in favor of the Plugin System. Please use the Plugin Extensions page to install and manage tools.
 
-The Tools feature provided a collection of system tools organized by categories such as CPU, GPU, Memory, Storage, Gaming, Display, Peripherals, System Diagnostic, Stress Testing, and Other tools. These tools are now available as plugins that can be installed and managed through the Plugin Extensions page.
+### Plugin Extensions
+
+The Plugin Extensions page provides a modern, user-friendly interface for managing plugins:
+
+**Features:**
+- **List View Layout**: Plugins are displayed in a clean list format with all essential information visible at a glance
+- **Rich Information**: Each plugin entry shows icon, name, version, and description
+- **Quick Actions**: Install, Configure, Open, and Uninstall buttons directly on each entry
+- **Smart Button Visibility**: Buttons are shown/hidden based on plugin installation status
+- **Multi-language Support**: All button texts support 20+ languages
+- **Search & Filter**: Real-time search and filter by installation status
+
+**UI Layout:**
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ [Search Box]                        [All ▼]  [Refresh]             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [Icon]  Plugin Name v1.0.0                 [Install/Update]        │
+│         Plugin description text (wraps up to 3 lines)               │
+│                                                                     │
+│  ─────────────────────────────────────────────────────────────────  │
+│                                                                     │
+│  [Icon]  Installed Plugin v2.1.0            [Install] [Configure]   │
+│         This plugin supports configuration    [Open] [Uninstall]    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Supported Languages:**
+- English, Chinese (Simplified/Traditional), Japanese, Korean
+- German, French, Spanish, Portuguese, Russian, Italian, Polish
+- Turkish, Ukrainian, Vietnamese, Thai, Arabic, and more
+
+For detailed plugin development documentation, see [PLUGINS.md](PLUGINS.md).
 
 ### Custom Mode
 

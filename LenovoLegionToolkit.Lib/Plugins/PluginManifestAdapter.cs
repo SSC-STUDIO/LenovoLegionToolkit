@@ -32,4 +32,8 @@ public class PluginManifestAdapter : IPlugin
     public void OnShutdown()
     {
     }
+
+    public void Stop()
+    {
+    }
 }

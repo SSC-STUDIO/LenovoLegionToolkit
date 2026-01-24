@@ -45,6 +45,51 @@ public class ReverseProxyService : IReverseProxyService
         "githubstatus.com"
     };
 
+    private readonly HashSet<string> _steamDomains = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "steamcommunity.com",
+        "steampowered.com",
+        "steamstatic.com",
+        "steamgames.com",
+        "steamusercontent.com",
+        "steamstore-a.akamaihd.net",
+        "steamcdn-a.akamaihd.net",
+        "steam-chat.com"
+    };
+
+    private readonly HashSet<string> _discordDomains = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "discord.com",
+        "discordapp.com",
+        "discordapp.net",
+        "discord.gg",
+        "discord.media",
+        "discord.gift",
+        "discord.new",
+        "discord.co",
+        "discord.services"
+    };
+
+    private readonly HashSet<string> _npmDomains = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "npmjs.com",
+        "npmjs.org",
+        "registry.npmjs.org",
+        "registry.npmjs.com",
+        "npmcdn.com",
+        "npm-stat.com",
+        "npmcharts.com"
+    };
+
+    private readonly HashSet<string> _pypiDomains = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "pypi.org",
+        "python.org",
+        "files.pythonhosted.org",
+        "pypi.python.org",
+        "pypi.io"
+    };
+
     public bool IsRunning => _isRunning;
     public ushort ProxyPort { get; private set; } = DefaultProxyPort;
     public string ProxyIp { get; private set; } = DefaultProxyIp;

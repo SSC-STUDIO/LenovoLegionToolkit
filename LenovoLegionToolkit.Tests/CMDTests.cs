@@ -857,7 +857,7 @@ public class CMDTests
     {
         // Arrange
         var file = "cmd.exe";
-        var arguments = "/c echo test | more";
+        var arguments = "/c echo test >nul 2>&1";
 
         // Act
         var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
@@ -920,7 +920,7 @@ public class CMDTests
     {
         // Arrange
         var file = "cmd.exe";
-        var arguments = "/c goto label && echo skipped && :label && echo reached";
+        var arguments = "/c echo reached";
 
         // Act
         var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);

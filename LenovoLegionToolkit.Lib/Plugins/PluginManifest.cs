@@ -21,6 +21,9 @@ public class PluginManifest
     [JsonPropertyName("icon")]
     public string Icon { get; set; } = string.Empty;
 
+    [JsonPropertyName("iconBackground")]
+    public string? IconBackground { get; set; }
+
     [JsonPropertyName("author")]
     public string Author { get; set; } = string.Empty;
 

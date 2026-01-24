@@ -12,9 +12,10 @@ using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
 
-public class GPUController
+public class GPUController : IDisposable
 {
     private readonly AsyncLock _lock = new();
+    private bool _disposed = false;
 
     private Task? _refreshTask;
     private CancellationTokenSource? _refreshCancellationTokenSource;
@@ -49,7 +50,12 @@ public class GPUController
             {
                 NVAPI.Unload();
             }
-            catch { /* Ignored. */ }
+            catch (Exception ex) 
+            { 
+                // Log NVAPI unload failures but don't throw
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"NVAPI unload failed: {ex.Message}", ex);
+            }
         }
     }
 
@@ -160,6 +166,19 @@ public class GPUController
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Couldn't kill process. [pid={process.Id}, name={process.ProcessName}]", ex);
+                }
+                finally
+                {
+                    // Ensure process resources are properly disposed
+                    try
+                    {
+                        process.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Couldn't dispose process. [pid={process.Id}, name={process.ProcessName}]", ex);
+                    }
                 }
             }
 
@@ -391,6 +410,77 @@ public class GPUController
             _lastStateChangeTime = DateTime.UtcNow;
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"GPU state changed from {previousState} to {_state}");
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources
+                try
+                {
+                    // Stop any running refresh task
+                    if (_refreshTask != null)
+                    {
+                        StopAsync(true).Wait(2000); // Wait up to 2 seconds for graceful shutdown
+                    }
+
+                    // Dispose all processes in the list
+                    if (_processes != null)
+                    {
+                        foreach (var process in _processes)
+                        {
+                            try
+                            {
+                                if (!process.HasExited)
+                                {
+                                    process.Kill(true);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Couldn't kill process during dispose. [pid={process.Id}, name={process.ProcessName}]", ex);
+                            }
+                            finally
+                            {
+                                try
+                                {
+                                    process.Dispose();
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Couldn't dispose process during dispose. [pid={process.Id}, name={process.ProcessName}]", ex);
+                                }
+                            }
+                        }
+                        _processes.Clear();
+                    }
+
+                    // Dispose cancellation token source
+                    _refreshCancellationTokenSource?.Dispose();
+                    _refreshCancellationTokenSource = null;
+
+                    // AsyncLock doesn't need explicit disposal
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during GPUController disposal", ex);
+                }
+            }
+
+            _disposed = true;
         }
     }
 }

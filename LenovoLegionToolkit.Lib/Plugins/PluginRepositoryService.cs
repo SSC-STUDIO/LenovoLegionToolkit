@@ -22,7 +22,8 @@ public class PluginRepositoryService
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
     private const string GITHUB_API_URL = "https://api.github.com";
-    private const string PLUGIN_STORE_URL = "https://api.github.com/repos/Crs10259/LenovoLegionToolkit/contents/plugins/store.json";
+    // For local development, use local store.json file
+    private const string PLUGIN_STORE_URL = "https://raw.githubusercontent.com/Crs10259/LenovoLegionToolkit/main/plugins/store.json";
     private const string PLUGIN_RELEASES_URL = "https://api.github.com/repos/Crs10259/LenovoLegionToolkit/releases";
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
@@ -55,26 +56,28 @@ public class PluginRepositoryService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Fetching plugins from online repository...");
 
-            var response = await _httpClient.GetAsync(PLUGIN_STORE_URL, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
+            string storeJson;
             
-            // GitHub API returns content in base64 encoding
-            var githubFileResponse = JsonSerializer.Deserialize<GitHubFileResponse>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            if (githubFileResponse == null || string.IsNullOrEmpty(githubFileResponse.Content))
+            // Try local file first for development
+            var localStorePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "store.json");
+            if (File.Exists(localStorePath))
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to get plugin store file");
-                return new List<PluginManifest>();
+                    Log.Instance.Trace($"Using local store.json file at {localStorePath}");
+                
+                storeJson = await File.ReadAllTextAsync(localStorePath);
+            }
+            else
+            {
+                // Fall back to GitHub URL
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Fetching store.json from GitHub: {PLUGIN_STORE_URL}");
+                
+                var response = await _httpClient.GetAsync(PLUGIN_STORE_URL, HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+                storeJson = await response.Content.ReadAsStringAsync();
             }
 
-            // Decode base64 content
-            var storeJson = Encoding.UTF8.GetString(Convert.FromBase64String(githubFileResponse.Content));
             var storeResponse = JsonSerializer.Deserialize<PluginStoreResponse>(storeJson, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -90,7 +93,11 @@ public class PluginRepositoryService
             // Filter out already installed plugins or show their status
             var plugins = storeResponse.Plugins.Select(manifest =>
             {
-                manifest.DownloadUrl = GetPluginDownloadUrl(manifest);
+                // Use the download URL from store.json if available, otherwise generate one
+                if (string.IsNullOrEmpty(manifest.DownloadUrl))
+                {
+                    manifest.DownloadUrl = GetPluginDownloadUrl(manifest);
+                }
                 return manifest;
             }).ToList();
 
@@ -174,6 +181,38 @@ public class PluginRepositoryService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Downloading plugin {manifest.Id} from {manifest.DownloadUrl}");
 
+            // Handle file:// URLs for local development
+            if (manifest.DownloadUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+            {
+                var filePath = new Uri(manifest.DownloadUrl).LocalPath;
+                if (File.Exists(filePath))
+                {
+                    File.Copy(filePath, destinationPath, overwrite: true);
+                    
+                    // Report progress for local file copy
+                    var fileInfo = new FileInfo(filePath);
+                    DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                    {
+                        PluginId = manifest.Id,
+                        BytesDownloaded = fileInfo.Length,
+                        TotalBytes = fileInfo.Length,
+                        ProgressPercentage = 100
+                    });
+                    
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Copied local plugin {manifest.Id} from {filePath} to {destinationPath}");
+                    
+                    return true;
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Local plugin file not found: {filePath}");
+                    return false;
+                }
+            }
+
+            // Handle HTTP/HTTPS URLs
             using var response = await _httpClient.GetAsync(manifest.DownloadUrl, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
@@ -333,10 +372,20 @@ public class PluginRepositoryService
     }
 
     /// <summary>
-    /// Get plugin download URL from GitHub releases
+    /// Get plugin download URL - supports both local development and GitHub releases
     /// </summary>
     private string GetPluginDownloadUrl(PluginManifest manifest)
     {
+        // Check if local plugin zip exists for development
+        var localPluginPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", $"{manifest.Id}.zip");
+        if (File.Exists(localPluginPath))
+        {
+            // For local development, we need to use a file:// URL
+            var uri = new Uri(localPluginPath);
+            return uri.AbsoluteUri;
+        }
+        
+        // Fall back to GitHub URL
         return $"https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/{manifest.Id}/v{manifest.Version}/{manifest.Id}.zip";
     }
 

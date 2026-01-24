@@ -16,6 +16,8 @@ public partial class ViveToolSettingsPage
 {
     private readonly IViveToolService _viveToolService;
     private readonly Services.Settings.ViveToolSettings _settings;
+    private bool _isDownloading = false;
+    private int _downloadProgress = 0;
 
     public ViveToolSettingsPage()
     {
@@ -25,12 +27,13 @@ public partial class ViveToolSettingsPage
         Loaded += ViveToolSettingsPage_Loaded;
     }
 
-    private async void ViveToolSettingsPage_Loaded(object sender, RoutedEventArgs e)
+    private void ViveToolSettingsPage_Loaded(object sender, RoutedEventArgs e)
     {
         try
         {
-            await _settings.LoadAsync();
-            
+            _settings.LoadAsync().Wait();
+            RefreshStatus();
+             
             if (_viveToolPathTextBox != null)
             {
                 _viveToolPathTextBox.Text = _settings.ViveToolPath ?? string.Empty;
@@ -40,6 +43,34 @@ public partial class ViveToolSettingsPage
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error loading ViveTool settings: {ex.Message}", ex);
+        }
+    }
+
+    private void RefreshStatus()
+    {
+        try
+        {
+            var available = _viveToolService.IsViveToolAvailableAsync().Result;
+            var path = _viveToolService.GetViveToolPathAsync().Result;
+            
+            var statusText = available ? 
+                string.Format(Resource.ViveTool_ViveToolFound, path ?? Resource.ViveTool_ViveToolNotFound) :
+                Resource.ViveTool_ViveToolNotFound;
+
+            if (_statusTextBlock != null)
+            {
+                _statusTextBlock.Text = statusText;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
+            
+            if (_statusTextBlock != null)
+            {
+                _statusTextBlock.Text = Resource.ViveTool_ViveToolError;
+            }
         }
     }
 
@@ -84,6 +115,90 @@ public partial class ViveToolSettingsPage
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
             System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_BrowseError, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshStatus();
+    }
+
+    private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isDownloading)
+            return;
+
+        try
+        {
+            _isDownloading = true;
+            _downloadProgress = 0;
+
+            // Update UI
+            if (_downloadViveToolButton != null)
+                _downloadViveToolButton.IsEnabled = false;
+            if (_refreshStatusButton != null)
+                _refreshStatusButton.IsEnabled = false;
+            if (_downloadProgressGrid != null)
+                _downloadProgressGrid.Visibility = Visibility.Visible;
+            if (_downloadProgressBar != null)
+                _downloadProgressBar.Value = 0;
+            if (_downloadProgressText != null)
+                _downloadProgressText.Text = Resource.ViveTool_Downloading;
+
+            // Start download
+            var progress = new Progress<long>(progress =>
+            {
+                _downloadProgress = (int)(progress / 10); // Convert long to int percentage
+                if (_downloadProgressBar != null)
+                    _downloadProgressBar.Value = _downloadProgress;
+            });
+
+            var downloadSuccess = await _viveToolService.DownloadViveToolAsync(progress);
+            
+            // Download completed
+            if (_downloadProgressText != null)
+                _downloadProgressText.Text = Resource.ViveTool_DownloadComplete;
+            _downloadProgress = 100;
+            if (_downloadProgressBar != null)
+                _downloadProgressBar.Value = 100;
+
+            // Set the path and refresh status
+            if (downloadSuccess)
+            {
+                // Get the downloaded path from the service
+                var viveToolPath = await _viveToolService.GetViveToolPathAsync();
+                if (!string.IsNullOrEmpty(viveToolPath) && _viveToolPathTextBox != null)
+                {
+                    _viveToolPathTextBox.Text = viveToolPath;
+                }
+            }
+
+            await Task.Delay(2000); // Show success message for 2 seconds
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error downloading ViveTool: {ex.Message}", ex);
+            
+            System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_DownloadFailed, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            _isDownloading = false;
+            
+            // Reset UI
+            if (_downloadViveToolButton != null)
+                _downloadViveToolButton.IsEnabled = true;
+            if (_refreshStatusButton != null)
+                _refreshStatusButton.IsEnabled = true;
+            
+            await Task.Delay(1000); // Brief pause before hiding progress
+            
+            if (_downloadProgressGrid != null)
+                _downloadProgressGrid.Visibility = Visibility.Collapsed;
+            
+            // Refresh status after download
+            RefreshStatus();
         }
     }
 }

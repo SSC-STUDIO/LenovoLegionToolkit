@@ -30,6 +30,14 @@ public abstract class PluginBase : IPlugin
     }
 
     /// <summary>
+    /// Called before plugin update or uninstallation to stop any running processes
+    /// </summary>
+    public virtual void Stop()
+    {
+        // Default implementation: do nothing
+    }
+
+    /// <summary>
     /// Get feature extension provided by this plugin (e.g., IPluginPage)
     /// </summary>
     /// <returns>Feature extension object, or null if not provided</returns>
