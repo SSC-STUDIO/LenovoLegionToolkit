@@ -8,6 +8,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased]
+
+## [3.4.1] - 2026-01-24
+
+### Added / 新增
+- Plugin Stop interface for safe updates and uninstallation / 插件 Stop 接口，支持安全更新和卸载
+- Debug logging for plugin configuration visibility diagnostics / 插件配置可见性诊断的调试日志
+- Bulk plugin import functionality / 批量插件导入功能
+- Comprehensive multilingual support for plugin bulk import features / 插件批量导入功能的完整多语言支持
+- Plugin icon background color support from store.json / 从 store.json 读取插件图标背景颜色支持
+- Improved make.bat plugin build commands with local test copy option / 改进 make.bat 插件构建命令，支持本地测试复制选项
+
+### Fixed / 修复
+- Plugin update process now stops plugins before updating / 插件更新流程现在会在更新前停止插件
+- Configuration button responsiveness with better error handling / 配置按钮响应性及更好的错误处理
+- Plugin installation/uninstallation file lock issues / 插件安装/卸载文件锁定问题
+- PluginManifestAdapter missing Stop() method implementation / PluginManifestAdapter 缺失 Stop() 方法实现
+- Plugin configuration button appearing for uninstalled plugins (with debug logging) / 插件配置按钮出现在未安装插件上的问题（附带调试日志）
+- IsInstalled check now verifies plugin files exist on disk / IsInstalled 检查现在会验证插件文件是否存在于磁盘
+- BooleanAndConverter safety improvements for null and non-boolean values / BooleanAndConverter 安全性改进，处理 null 和非布尔值
+- **Plugin configuration button not responding - completely redesigned implementation** / **插件配置按钮无响应 - 完全重新设计实现**
+- **Configuration button visibility logic with HasConfiguration property** / **配置按钮可见性逻辑使用 HasConfiguration 属性**
+- **PluginViewModel compilation errors after configuration support changes** / **配置支持更改后的 PluginViewModel 编译错误**
+- **ViveTool plugin appearing multiple times due to development folder scanning** / **ViveTool插件因开发文件夹扫描而多次显示**
+- **PluginManager.PluginManifestAdapter priority issue - installed plugins showing as online adapters** / **PluginManager.PluginManifestAdapter优先级问题 - 已安装插件显示为在线适配器**
+- **UI update loop caused by excessive UpdateAllPluginsUI calls** / **UI更新循环由过多的UpdateAllPluginsUI调用引起**
+- **Plugin icon background colors changing on each app launch** / **插件图标背景颜色在每次应用启动时变化**
+- **XAML tag mismatch error in PluginExtensionsPage** / **PluginExtensionsPage 中的 XAML 标签不匹配错误**
+- **Missing translations for plugin snackbar messages** / **插件 snackbar 消息缺少翻译**
+- **Hardcoded English text in plugin UI elements** / **插件 UI 元素中的硬编码英文文本**
+- **Resource.Designer.cs missing new plugin resource strings** / **Resource.Designer.cs 缺少新的插件资源字符串**
+
+### Improved / 改进
+- Plugin update reliability with proper resource cleanup / 插件更新可靠性及正确的资源清理
+- Plugin configuration window error handling / 插件配置窗口错误处理
+- Plugin state tracking and installation status validation / 插件状态跟踪和安装状态验证
+- **Configuration button click handling with detailed logging** / **配置按钮点击处理及详细日志记录**
+- **Plugin configuration support detection with CheckConfigurationSupport method** / **插件配置支持检测使用 CheckConfigurationSupport 方法**
+- **Error handling and user feedback for configuration operations** / **配置操作的错误处理和用户反馈**
+- **Plugin scanning filter to exclude development folders (obj, bin, Debug, Release)** / **插件扫描过滤器排除开发文件夹（obj、bin、Debug、Release）**
+- **Plugin merging logic to prioritize installed plugins over online adapters** / **插件合并逻辑优先选择已安装插件而非在线适配器**
+- **Optimized UI update flow to prevent infinite loops** / **优化UI更新流程防止无限循环**
+- **Simplified plugin scanning logic - only scan root plugin directories** / **简化插件扫描逻辑 - 仅扫描根目录的插件目录**
+- **Plugin icon background colors now read from store.json instead of dynamic generation** / **插件图标背景颜色现在从 store.json 读取，而非动态生成**
+- **ViveTool status display moved to configuration page only** / **ViveTool 状态显示仅移至配置页面**
+- **Enhanced make.bat with improved plugin build and local test copy functionality** / **增强 make.bat，改进插件构建和本地测试复制功能**
+
 ## [3.4.0] - 2026-01-22
 
 ### Added / 新增
