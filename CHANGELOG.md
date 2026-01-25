@@ -16,29 +16,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Context menu item management with customizable commands / 右键菜单项管理，支持自定义命令
 - Shell extension management with enable/disable controls / Shell扩展管理，支持启用/禁用控制
 - Multi-language support for Shell Integration plugin (English and Chinese) / Shell集成插件的多语言支持（英文和中文）
-- Plugin Extension ViewModel for better integration with system optimization / 插件扩展ViewModel，更好地与系统集成
+ - Plugin Extension ViewModel for better integration with system optimization / 插件扩展ViewModel，更好地与系统集成
 - Plugin icon background color mapping for different plugin types / 不同插件类型的图标背景颜色映射
- - Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
- - PluginManager TryGetPlugin method for better plugin discovery / PluginManager TryGetPlugin方法，改进插件发现
+- Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
+- PluginManager TryGetPlugin method for better plugin discovery / PluginManager TryGetPlugin方法，改进插件发现
 
 
 ### Fixed / 修复
-- Extensions tab showing "Coming Soon" placeholder instead of actual plugins / 扩展标签页显示"即将推出"占位符而非实际插件
-- Missing ExtensionsNavButton_Checked event handler / 缺少ExtensionsNavButton_Checked事件处理器
-- Plugin extensions list not updating when switching to Extensions tab / 切换到扩展标签页时插件扩展列表不更新
-- Plugin bulk import failing for compiled plugins (DLL-only packages) / 批量导入编译插件失败问题（仅包含DLL的包）
+- Added missing ExtensionsNavButton_Checked event handler for plugin tab navigation / 添加了缺失的ExtensionsNavButton_Checked事件处理器，用于插件标签页导航
+- Plugin bulk import improvements for compiled plugins (DLL-only packages) / 针对编译插件（仅包含DLL的包）的批量导入改进
+- Fixed ViveTool plugin compilation error / 修复ViveTool插件编译错误
 
 ### Improved / 改进
 - System optimization page now integrates with plugin system / 系统优化页面现在与插件系统集成
 - Plugin management interface in Windows Optimization settings / Windows优化设置中的插件管理界面
 - Enhanced plugin discovery for shell integration and system tools / Shell集成和系统工具的增强插件发现
 - Better error handling for plugin configuration operations / 插件配置操作的更好错误处理
+- Extensions tab now shows actual plugins instead of "Coming Soon" placeholder / 扩展标签页现在显示实际插件而非"即将推出"占位符
+- Plugin extensions list updates when switching to Extensions tab / 切换到扩展标签页时插件扩展列表更新
 - Refactored Shell Integration from core system to plugin-based architecture / 将Shell集成从核心系统重构为基于插件的架构
 - Removed beautification-related code from WindowsOptimizationService and WindowsOptimizationPage / 从WindowsOptimizationService和WindowsOptimizationPage中移除美化相关代码
 - Moved NilesoftShellHelper to ShellIntegration plugin / 将NilesoftShellHelper移动到ShellIntegration插件
- - Fixed Shell Integration plugin build issues and added missing dependencies / 修复Shell Integration插件构建问题并添加缺失的依赖项
- - Git repository cleanup: merged duplicate commits, fixed tag versioning, organized working directory / Git仓库清理：合并重复提交，修复tag版本号，整理工作目录
- - Refactored shell integration helper usage to instance-based pattern / 重构Shell集成helper使用为基于实例的模式
+- Organized working directory: removed unused templates, moved shell integration files to plugin directory / 整理工作目录：删除未使用的模板，将Shell集成文件移动到插件目录
+- Refactored shell integration helper usage to instance-based pattern for consistency / 重构Shell集成helper使用为基于实例的模式以确保一致性
 
 
 ## [3.4.1] - 2026-01-24
