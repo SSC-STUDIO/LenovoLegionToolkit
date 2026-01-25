@@ -72,6 +72,14 @@ public interface IPluginManager
     /// Stop all plugins (call Stop method for each plugin)
     /// </summary>
     void StopAllPlugins();
+
+    /// <summary>
+    /// Try to get a plugin by ID
+    /// </summary>
+    /// <param name="pluginId">The plugin ID</param>
+    /// <param name="plugin">The plugin instance if found</param>
+    /// <returns>True if the plugin was found</returns>
+    bool TryGetPlugin(string pluginId, out IPlugin plugin);
 }
 
 /// <summary>

@@ -641,7 +641,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void UpdateBeautificationUIForRegistrationStatus(bool isRegistered)
     {
-        var isInstalled = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.IsInstalled();
+        var helper = GetShellIntegrationHelper();
+        var isInstalled = helper?.IsInstalled() ?? false;
 
         if (!isInstalled)
         {
@@ -728,7 +729,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
     
-    private static string? GetShellConfigPath()
+    private string? GetShellConfigPath()
     {
         try
         {
@@ -1415,7 +1416,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         var helper = GetShellIntegrationHelper();
         var isInstalled = helper?.IsInstalled() ?? false;
                     
-                    var shellDll = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.GetNilesoftShellDllPath();
+                    var shellDll = helper?.GetNilesoftShellDllPath();
                     if (string.IsNullOrWhiteSpace(shellDll))
                     {
                         if (Log.Instance.IsTraceEnabled)
@@ -1455,7 +1456,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             });
                             
                             // 安装后清除缓存并等待片刻，让系统有时间完成安装
-                            LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
+                            helper?.ClearInstallationStatusCache();
                             await Task.Delay(2000);
                         }
                         else
@@ -1482,7 +1483,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         }
                         
                         // 应用操作后清除缓存，强制下次检查时使用最新的实际状态
-                        LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
+                        helper?.ClearInstallationStatusCache();
                         
                         // 显示成功消息
                         await Dispatcher.InvokeAsync(() =>
@@ -1519,7 +1520,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 // 清除缓存以确保刷新状态时使用最新的实际状态
                 if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
                 {
-                    LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
+                    GetShellIntegrationHelper()?.ClearInstallationStatusCache();
                 }
                 
                 // 刷新操作状态
