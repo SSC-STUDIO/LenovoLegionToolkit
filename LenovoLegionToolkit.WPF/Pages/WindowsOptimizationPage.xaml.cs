@@ -622,9 +622,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         try
         {
             // 清除缓存以确保获取最新的安装状态
-            LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
+            var helper = GetShellIntegrationHelper();
+            helper?.ClearInstallationStatusCache();
             
-            var isInstalled = await Task.Run(() => LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.IsInstalledUsingShellExe());
+            var isInstalled = helper != null ? await helper.IsInstalledUsingShellExeAsync() : false;
             await Dispatcher.InvokeAsync(() =>
             {
                 TransparencyEnabled = GetTransparencyEnabled();
@@ -731,7 +732,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
-            var shellExePath = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.GetNilesoftShellExePath();
+            var helper = GetShellIntegrationHelper();
+            var shellExePath = helper?.GetNilesoftShellExePath();
             if (string.IsNullOrWhiteSpace(shellExePath))
                 return null;
                 
@@ -1410,7 +1412,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         Log.Instance.Trace($"用户选中美化操作 {actionKey}，首先检查安装状态");
                         
                     // 首先检查是否安装
-                    var isInstalled = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.IsInstalled();
+        var helper = GetShellIntegrationHelper();
+        var isInstalled = helper?.IsInstalled() ?? false;
                     
                     var shellDll = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.GetNilesoftShellDllPath();
                     if (string.IsNullOrWhiteSpace(shellDll))
