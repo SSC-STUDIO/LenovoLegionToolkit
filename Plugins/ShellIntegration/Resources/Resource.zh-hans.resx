@@ -276,4 +276,68 @@
   <data name="MenuItem_OpenFileLocation_Desc" xml:space="preserve">
     <value>打开包含文件的文件夹</value>
   </data>
+  
+  <!-- Optimization Category -->
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>增强的 Windows Shell 集成，包含右键菜单美化和鼠标样式自定义</value>
+  </data>
+  
+  <!-- Optimization Actions -->
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>启用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>启用 Nilesoft Shell 以美化 Windows 右键菜单，使用现代风格</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>禁用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>注销 Nilesoft Shell 并恢复默认的 Windows 右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>应用 Windows 11 光标样式</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>应用 Windows 11 风格的光标主题，支持高 DPI</value>
+  </data>
+  
+  <!-- 附加优化操作 -->
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Title" xml:space="preserve">
+    <value>禁用上下文菜单动画</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Description" xml:space="preserve">
+    <value>通过禁用动画加速上下文菜单显示</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowFileExtensions_Title" xml:space="preserve">
+    <value>显示文件扩展名</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowFileExtensions_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示所有文件的扩展名</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Title" xml:space="preserve">
+    <value>显示隐藏文件</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示隐藏的文件和文件夹</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>使用快速访问</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>设置文件资源管理器默认打开快速访问</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>启用预览窗格</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示文件预览</value>
+  </data>
 </root>

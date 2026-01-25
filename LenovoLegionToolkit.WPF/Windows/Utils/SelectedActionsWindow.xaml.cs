@@ -4,18 +4,18 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
 using LenovoLegionToolkit.WPF.Windows;
-using SelectedActionViewModel = LenovoLegionToolkit.WPF.Pages.WindowsOptimizationPage.SelectedActionViewModel;
+using static LenovoLegionToolkit.WPF.Pages.WindowsOptimizationPage;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
     public partial class SelectedActionsWindow : BaseWindow
     {
-        private readonly ObservableCollection<SelectedActionViewModel> _selectedActions;
+        private readonly ObservableCollection<OptimizationActionViewModel> _selectedActions;
 
-        public ObservableCollection<SelectedActionViewModel> SelectedActions => _selectedActions;
+        public ObservableCollection<OptimizationActionViewModel> SelectedActions => _selectedActions;
         public string EmptyText { get; }
 
-        public SelectedActionsWindow(ObservableCollection<SelectedActionViewModel> selectedActions, string emptyText)
+        public SelectedActionsWindow(ObservableCollection<OptimizationActionViewModel> selectedActions, string emptyText)
         {
             InitializeComponent();
 
@@ -54,13 +54,13 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             if (e.OldItems is not null)
             {
-                foreach (SelectedActionViewModel action in e.OldItems)
+                foreach (OptimizationActionViewModel action in e.OldItems)
                     action.PropertyChanged -= Action_PropertyChanged;
             }
 
             if (e.NewItems is not null)
             {
-                foreach (SelectedActionViewModel action in e.NewItems)
+                foreach (OptimizationActionViewModel action in e.NewItems)
                     action.PropertyChanged += Action_PropertyChanged;
             }
 
@@ -69,7 +69,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
         private void Action_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SelectedActionViewModel.IsSelected))
+            if (e.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
                 UpdateEmptyState();
         }
 

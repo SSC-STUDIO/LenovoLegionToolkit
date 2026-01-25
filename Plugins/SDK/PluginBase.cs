@@ -4,56 +4,11 @@ namespace LenovoLegionToolkit.Plugins.SDK;
 
 /// <summary>
 /// Base class for plugins that provides default implementation
+/// This is a forwarder class that inherits from the main PluginBase in Lib
 /// </summary>
-public abstract class PluginBase : IPlugin
+public abstract class PluginBase : LenovoLegionToolkit.Lib.Plugins.PluginBase
 {
-    public abstract string Id { get; }
-    public abstract string Name { get; }
-    public abstract string Description { get; }
-    public abstract string Icon { get; }
-    public abstract bool IsSystemPlugin { get; }
-    public virtual string[]? Dependencies => null;
-
-    public virtual void OnInstalled()
-    {
-        // Default implementation: do nothing
-    }
-
-    public virtual void OnUninstalled()
-    {
-        // Default implementation: do nothing
-    }
-
-    public virtual void OnShutdown()
-    {
-        // Default implementation: do nothing
-    }
-
-    /// <summary>
-    /// Called before plugin update or uninstallation to stop any running processes
-    /// </summary>
-    public virtual void Stop()
-    {
-        // Default implementation: do nothing
-    }
-
-    /// <summary>
-    /// Get feature extension provided by this plugin (e.g., IPluginPage)
-    /// </summary>
-    /// <returns>Feature extension object, or null if not provided</returns>
-    public virtual object? GetFeatureExtension()
-    {
-        return null;
-    }
-
-    /// <summary>
-    /// Get settings page provided by this plugin (e.g., IPluginPage for settings)
-    /// </summary>
-    /// <returns>Settings page object, or null if not provided</returns>
-    public virtual object? GetSettingsPage()
-    {
-        return null;
-    }
+    // All implementation is inherited from the base class in Lib
 }
 
 

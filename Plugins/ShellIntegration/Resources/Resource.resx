@@ -288,4 +288,68 @@
   <data name="MenuItem_OpenFileLocation_Desc" xml:space="preserve">
     <value>Open folder containing the file</value>
   </data>
+  
+  <!-- Optimization Category -->
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell Integration</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>Enhanced Windows Shell integration with context menu beautification and mouse style customization</value>
+  </data>
+  
+  <!-- Optimization Actions -->
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Modern Context Menu</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Enable Nilesoft Shell to beautify Windows context menu with modern style</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>Disable Modern Context Menu</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore default Windows context menu</value>
+  </data>
+  
+  <!-- Additional Optimization Actions -->
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Title" xml:space="preserve">
+    <value>Disable Context Menu Animations</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Description" xml:space="preserve">
+    <value>Speed up context menu display by disabling animations</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowFileExtensions_Title" xml:space="preserve">
+    <value>Show File Extensions</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowFileExtensions_Description" xml:space="preserve">
+    <value>Display file extensions for all files in File Explorer</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Title" xml:space="preserve">
+    <value>Show Hidden Files</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Description" xml:space="preserve">
+    <value>Show hidden files and folders in File Explorer</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>Use Quick Access in Explorer</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>Set File Explorer to open to Quick Access by default</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>Enable Preview Pane</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>Show file preview in File Explorer</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>Apply Windows 11 Cursor Style</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>Apply Windows 11 style cursor theme with high DPI support</value>
+  </data>
 </root>

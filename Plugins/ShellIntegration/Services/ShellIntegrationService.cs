@@ -284,7 +284,7 @@ public class ShellIntegrationService : IShellIntegrationService
     {
         try
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 // Create registry entries for shell extension
                 using var key = Registry.ClassesRoot.CreateSubKey(ContextMenuHandlersPath);

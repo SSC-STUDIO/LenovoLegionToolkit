@@ -131,21 +131,18 @@
                     <Button Grid.Column="1" 
                             Content="Refresh"
                             Click="RefreshButton_Click"
-                            Icon="ArrowClockwise24"
-                            Appearance="Secondary"
                             Height="32"
                             Width="80" />
                 </Grid>
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
-                    <wpfui:Button x:Name="InstallButton"
-                                   Content="Install"
-                                   Icon="Add24"
-                                   Appearance="Primary"
-                                   Click="InstallButton_Click"
-                                   Style="{StaticResource ActionButtonStyle}" />
-                    
+                <wpfui:Button
+                    x:Name="StopButton"
+                    Content="Stop"
+                    Appearance="Caution"
+                    Click="StopButton_Click"
+                    Style="{StaticResource ActionButtonStyle}" />
                     <wpfui:Button x:Name="UninstallButton"
                                    Content="Uninstall"
                                    Icon="Delete24"
@@ -207,17 +204,13 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Menu Settings"
                             Click="MenuSettingsButton_Click"
-                            Icon="List24"
-                            Appearance="Secondary"
                             Height="36"
                             Width="140"
                             Margin="0,0,16,0"
                             ToolTip="Configure context menu items" />
-                    
+                     
                     <Button Content="Extension Settings"
                             Click="ExtensionSettingsButton_Click"
-                            Icon="AppFolder24"
-                            Appearance="Secondary"
                             Height="36"
                             Width="160"
                             ToolTip="Manage shell extensions" />

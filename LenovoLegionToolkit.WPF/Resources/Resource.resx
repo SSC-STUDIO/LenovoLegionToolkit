@@ -1321,13 +1321,13 @@ Restart is recommended after changing this option.</value>
     <value>Extensions</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Install and manage extensions to extend functionality</value>
+    <value>Manage system optimization extensions and tools</value>
   </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
-    <value>Coming Soon</value>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>No Extensions Available</value>
   </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>Extension marketplace will be available in a future update.</value>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>Install extensions from the Plugin Extensions page to enhance system optimization functionality.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimization</value>
@@ -1458,6 +1458,30 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>Completely uninstall shell.exe and related files</value>
+  </data>
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell Integration</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>Enhanced Windows Shell integration with context menu beautification and mouse style customization</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Modern Context Menu</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Enable Nilesoft Shell to beautify Windows context menu with modern style</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>Disable Modern Context Menu</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore default Windows context menu</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>Apply Windows 11 Cursor Style</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>Apply Windows 11 style cursor theme with high DPI support</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
     <value>Select the theme for the context menu.</value>

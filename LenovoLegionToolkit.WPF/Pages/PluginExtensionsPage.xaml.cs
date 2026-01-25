@@ -1659,41 +1659,69 @@ if (success)
             // Extract ZIP
             ZipFile.ExtractToDirectory(zipFilePath, tempDir);
 
-            // Find plugin directories (should contain a .csproj file)
+            // First try to find source code projects (with .csproj files)
             var pluginDirs = Directory.GetDirectories(tempDir)
                 .Where(dir => Directory.GetFiles(dir, "*.csproj").Any())
                 .ToList();
 
-            if (!pluginDirs.Any())
+            if (pluginDirs.Any())
             {
-                throw new InvalidOperationException("No valid plugin project found in ZIP file");
+                // Handle source code plugins
+                foreach (var pluginDir in pluginDirs)
+                {
+                    var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
+                    var pluginId = Path.GetFileNameWithoutExtension(csprojFile).Replace("LenovoLegionToolkit.Plugins.", "");
+
+                    // Copy to plugins directory
+                    var targetDir = Path.Combine(pluginsDir, pluginId);
+                    if (Directory.Exists(targetDir))
+                    {
+                        Directory.Delete(targetDir, true);
+                    }
+
+                    CopyDirectory(pluginDir, targetDir);
+
+                    // Try to build the plugin
+                    var buildResult = await BuildPluginAsync(targetDir);
+                    if (!buildResult)
+                    {
+                        Lib.Utils.Log.Instance.Trace($"Failed to build plugin {pluginId}");
+                        continue;
+                    }
+
+                    // Plugin files copied successfully
+                    Lib.Utils.Log.Instance.Trace($"Successfully copied plugin {pluginId} to {targetDir}");
+                    return true;
+                }
             }
-
-            foreach (var pluginDir in pluginDirs)
+            else
             {
-                var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
-                var pluginId = Path.GetFileNameWithoutExtension(csprojFile).Replace("LenovoLegionToolkit.Plugins.", "");
-
-                // Copy to plugins directory
-                var targetDir = Path.Combine(pluginsDir, pluginId);
-                if (Directory.Exists(targetDir))
+                // No source projects found, look for compiled plugins
+                var pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir);
+                if (!string.IsNullOrEmpty(pluginId))
                 {
-                    Directory.Delete(targetDir, true);
+                    // The plugin directory has been restructured by AnalyzeAndFixPluginStructureAsync
+                    var restructuredDir = Path.Combine(Path.GetDirectoryName(tempDir) ?? tempDir, pluginId);
+                    if (!Directory.Exists(restructuredDir))
+                    {
+                        restructuredDir = tempDir;
+                    }
+
+                    // Copy to plugins directory
+                    var targetDir = Path.Combine(pluginsDir, pluginId);
+                    if (Directory.Exists(targetDir))
+                    {
+                        Directory.Delete(targetDir, true);
+                    }
+
+                    CopyDirectory(restructuredDir, targetDir);
+
+                    // Plugin files copied successfully
+                    Lib.Utils.Log.Instance.Trace($"Successfully copied compiled plugin {pluginId} to {targetDir}");
+                    return true;
                 }
 
-                CopyDirectory(pluginDir, targetDir);
-
-                // Try to build the plugin
-                var buildResult = await BuildPluginAsync(targetDir);
-                if (!buildResult)
-                {
-                    Lib.Utils.Log.Instance.Trace($"Failed to build plugin {pluginId}");
-                    continue;
-                }
-
-                // Plugin files copied successfully
-                Lib.Utils.Log.Instance.Trace($"Successfully copied plugin {pluginId} to {targetDir}");
-                return true;
+                throw new InvalidOperationException("No valid plugin project or compiled plugin found in ZIP file");
             }
 
             return false;

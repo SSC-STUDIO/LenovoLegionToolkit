@@ -53,6 +53,7 @@ IF "%3"=="copy" (
 IF "%2"=="" (
     ECHO Building all plugins...
     CALL :BUILD_PLUGIN NetworkAcceleration %COPY_TO_TEST%
+    CALL :BUILD_PLUGIN ShellIntegration %COPY_TO_TEST%
     CALL :BUILD_PLUGIN ViveTool %COPY_TO_TEST%
     CALL :BUILD_PLUGIN Tools %COPY_TO_TEST%
     ECHO All plugins built successfully!

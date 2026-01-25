@@ -1,53 +1,86 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <OutputType>Library</OutputType>
-    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
-    <RootNamespace>LenovoLegionToolkit.Plugins.ShellIntegration</RootNamespace>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+   <PropertyGroup>
+     <TargetFramework>net8.0-windows</TargetFramework>
+     <Platforms>x64</Platforms>
+     <Nullable>enable</Nullable>
+     <Copyright>© 2025 Lenovo Legion Toolkit</Copyright>
+     <NeutralLanguage>en</NeutralLanguage>
+     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+     <GenerateDependencyFile>false</GenerateDependencyFile>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="System.Management" Version="8.0.0" />
-    <PackageReference Include="WPFUI" Version="3.0.0" />
+    <Compile Remove="ShellIntegrationPage.xaml.cs" />
+    <Compile Remove="ShellIntegrationSettingsPage.xaml.cs" />
+    <Page Remove="ShellIntegrationPage.xaml" />
+    <Page Remove="ShellIntegrationSettingsPage.xaml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Resources\Resource.zh-hans.resx">
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Resource>
-    <Resource Include="Resources\Resource.zh-hant.resx">
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Resource>
-    <Resource Include="Resources\Resource.ja.resx">
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Resource>
-    <Resource Include="Resources.Resource.de.resx">
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Resources\Resource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+  <!-- Copy shell files from ShellIntegration build output to build directory -->
+  <Target Name="CopyShellFiles" AfterTargets="Build">
+    <PropertyGroup>
+      <ShellSourceDir>$(MSBuildProjectDirectory)\..\..\ShellIntegration\src\bin</ShellSourceDir>
+      <ShellTargetDir>$(TargetDir)..\</ShellTargetDir> <!-- Go up one level to build/ directory -->
+    </PropertyGroup>
+    
+    <Message Text="Copying shell files from $(ShellSourceDir) to $(ShellTargetDir)" Importance="high" />
+    
+    <!-- Check if source directory exists -->
+    <PropertyGroup>
+      <ShellSourceDirExists>false</ShellSourceDirExists>
+      <ShellSourceDirExists Condition="Exists('$(ShellSourceDir)')">true</ShellSourceDirExists>
+    </PropertyGroup>
+    
+    <!-- Copy shell.dll -->
+    <Copy SourceFiles="$(ShellSourceDir)\shell.dll"
+          DestinationFiles="$(ShellTargetDir)\shell.dll"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and Exists('$(ShellSourceDir)\shell.dll')" />
+    
+    <!-- Copy shell.nss -->
+    <Copy SourceFiles="$(ShellSourceDir)\shell.nss"
+          DestinationFiles="$(ShellTargetDir)\shell.nss"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and Exists('$(ShellSourceDir)\shell.nss')" />
+    
+    <!-- Copy imports directory recursively -->
+    <ItemGroup Condition="'$(ShellSourceDirExists)' == 'true'">
+      <ImportsFiles Include="$(ShellSourceDir)\imports\**\*.*" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(ImportsFiles)"
+          DestinationFiles="$(ShellTargetDir)\imports\%(ImportsFiles.RecursiveDir)%(ImportsFiles.Filename)%(ImportsFiles.Extension)"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and '@(ImportsFiles)' != ''" />
+    
+    <Message Text="Shell files copied successfully" Importance="high" Condition="'$(ShellSourceDirExists)' == 'true'" />
+    <Warning Text="ShellIntegration source directory not found at $(ShellSourceDir), skipping shell files copy" 
+             Condition="'$(ShellSourceDirExists)' == 'false'" />
+  </Target>
 
 </Project>

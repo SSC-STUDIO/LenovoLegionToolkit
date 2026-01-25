@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Settings;
@@ -234,10 +235,53 @@ public class WindowsOptimizationService
     public static IReadOnlyList<WindowsOptimizationCategoryDefinition> GetCategories()
     {
         var list = new List<WindowsOptimizationCategoryDefinition>(StaticBaseCategories);
-        // Append beautification (right-click menu style) as a regular category
-        // Always include the category, even if actions list is empty, so users can see the option
-        var beautifyCategory = CreateBeautificationCategoryDynamic();
-        list.Add(beautifyCategory);
+        
+        // Collect optimization categories from installed plugins
+        try
+        {
+            var pluginManager = IoCContainer.Resolve<IPluginManager>();
+            var installedPlugins = pluginManager.GetRegisteredPlugins()
+                .Where(p => pluginManager.IsInstalled(p.Id));
+            
+            foreach (var plugin in installedPlugins)
+            {
+                try
+                {
+                    WindowsOptimizationCategoryDefinition? category = null;
+                    
+                    // Check if plugin implements IOptimizationCategoryProvider interface
+                    if (plugin is IOptimizationCategoryProvider provider)
+                    {
+                        category = provider.GetOptimizationCategory();
+                    }
+                    // Check if plugin is PluginBase and has GetOptimizationCategory method
+                    else if (plugin is PluginBase pluginBase)
+                    {
+                        category = pluginBase.GetOptimizationCategory();
+                    }
+                    
+                    if (category != null)
+                    {
+                        list.Add(category);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Added optimization category from plugin: {plugin.Id}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't fail the entire operation
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to get optimization category from plugin {plugin.Id}: {ex.Message}", ex);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // If plugin manager is not available or fails, continue without plugin categories
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to load plugin optimization categories: {ex.Message}", ex);
+        }
+        
         return list;
     }
 
@@ -942,118 +986,6 @@ public class WindowsOptimizationService
 
 
 
-    // Nilesoft Shell context menu integration
-
-    // CLS_ContextMenu = {BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}
-
-    // Beautification: Right-click menu style (classic/default) using Nilesoft Shell handler
-
-    private static WindowsOptimizationCategoryDefinition CreateBeautificationCategoryDynamic()
-    {
-        var actions = new List<WindowsOptimizationActionDefinition>();
-        // Use NilesoftShellHelper API to check if installed
-        var isInstalled = NilesoftShellHelper.IsInstalled();
-        var isInstalledUsingShellExe = NilesoftShellHelper.IsInstalledUsingShellExe();
-
-        // Dynamic action based on registration status (not just file existence)
-        // Always show the category and action, even if files don't exist, so users can see the option
-        // The action will handle the case when files are missing
-        if (isInstalledUsingShellExe)
-        {
-            // Shell is installed and registered - show "Uninstall" action
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "beautify.contextMenu.uninstallShell",
-                "WindowsOptimization_Action_NilesoftShell_Uninstall_Title",
-                "WindowsOptimization_Action_NilesoftShell_Uninstall_Description",
-                ct =>
-                {
-                    var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
-                    if (string.IsNullOrWhiteSpace(shellDll))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Command skipped.");
-                        return Task.CompletedTask;
-                    }
-
-                    // This action is now "Apply Modern Context Menu"
-                    // When checked: if not installed/registered, register it
-                    // When unchecked: unregister it (handled by HandleActionUncheckedAsync)
-                    // Since this action is only shown when shell is already installed and registered,
-                    // and IsAppliedAsync returns true when installed, checking this action should do nothing
-                    // (it's already applied). Unchecking is handled separately.
-                    if (!NilesoftShellHelper.IsInstalledUsingShellExe())
-                    {
-                        // If somehow not registered, register it
-                        return ExecuteCommandsSequentiallyAsync(ct, $"regsvr32.exe /s \"{shellDll}\"");
-                    }
-                    
-                    // Already installed and registered, no action needed
-                    return Task.CompletedTask;
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct => 
-                {
-                    // Use shell.exe's API for more accurate installation status check
-                    // Call the async version directly since we're already in an async context
-                    return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
-                }));
-        }
-        else
-        {
-            // Shell.exe exists but not registered, OR shell.exe doesn't exist
-            // Always show "Install/Enable" action so users can see the option
-            // The action will handle file existence check internally
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "beautify.contextMenu.enableClassic",
-                "WindowsOptimization_Action_NilesoftShell_Enable_Title",
-                "WindowsOptimization_Action_NilesoftShell_Enable_Description",
-                ct =>
-                {
-                    var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
-                    if (string.IsNullOrWhiteSpace(shellDll))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace((FormattableString)$"Nilesoft Shell not found. Enable command skipped.");
-                        return Task.CompletedTask;
-                    }
-                    // Register and enable the shell using regsvr32 for DLL
-                    return ExecuteCommandsSequentiallyAsync(ct, $"regsvr32.exe /s \"{shellDll}\"");
-                },
-                Recommended: isInstalled,  // Only recommend if files exist
-                IsAppliedAsync: async ct => 
-                {
-                    // Use shell.exe's API for more accurate installation status check
-                    // This matches what shell.exe /isinstalled returns
-                    // Call the async version directly since we're already in an async context
-                    return await NilesoftShellHelper.IsInstalledUsingShellExeAsync().ConfigureAwait(false);
-                }));
-        }
-
-        // Add mouse style beautification option
-        actions.Add(new WindowsOptimizationActionDefinition(
-            "beautify.mouseStyle.w11cc",
-            "WindowsOptimization_Action_MouseStyle_W11CC_Title",
-            "WindowsOptimization_Action_MouseStyle_W11CC_Description",
-            ct =>
-            {
-                var mouseStylePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "W11-CC-V2.2-HDPI");
-                if (Directory.Exists(mouseStylePath))
-                {
-                    return ApplyMouseStyleAsync(ct, mouseStylePath);
-                }
-                return Task.CompletedTask;
-            },
-            Recommended: false,
-            IsAppliedAsync: ct => IsMouseStyleAppliedAsync(mouseStylePath: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "W11-CC-V2.2-HDPI"))
-        ));
-
-        return new WindowsOptimizationCategoryDefinition(
-            "beautify.contextMenu",
-            "WindowsOptimization_Category_NilesoftShell_Title",
-            "WindowsOptimization_Category_NilesoftShell_Description",
-            actions);
-    }
-
     private static Task ExecuteCustomCleanupAsync(CancellationToken cancellationToken)
     {
         var settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -1547,132 +1479,5 @@ public class WindowsOptimizationService
         }
     }
 
-    private static Task ApplyMouseStyleAsync(CancellationToken cancellationToken, string mouseStylePath)
-    {
-        return Task.Run(() =>
-        {
-            try
-            {
-                var isLightTheme = IsLightTheme();
-                var themeDir = Path.Combine(mouseStylePath, isLightTheme ? "light" : "dark", "regular");
-                var basePath = Path.Combine(themeDir, "base");
-                var classicPath = Path.Combine(themeDir, "02. classic");
-                
-                if (!Directory.Exists(basePath))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Mouse style base directory not found: {basePath}");
-                    return;
-                }
-
-                var cursorMappings = new Dictionary<string, string>
-                {
-                    ["Arrow"] = "pointer.cur",
-                    ["Help"] = "help.cur",
-                    ["AppStarting"] = "working.ani",
-                    ["Wait"] = "busy.ani",
-                    ["Crosshair"] = "precision.cur",
-                    ["IBeam"] = "beam.cur",
-                    ["NWPen"] = "handwriting.cur",
-                    ["No"] = "unavailable.cur",
-                    ["SizeNS"] = "vert.cur",
-                    ["SizeWE"] = "horz.cur",
-                    ["SizeNWSE"] = "dgn1.cur",
-                    ["SizeNESW"] = "dgn2.cur",
-                    ["SizeAll"] = "move.cur",
-                    ["UpArrow"] = "alternate.cur",
-                    ["Hand"] = "link.cur",
-                    ["Pin"] = "pin.cur",
-                    ["Person"] = "person.cur"
-                };
-
-                var schemeName = isLightTheme ? "W11 Cursors Light HDPI" : "W11 Cursors Dark HDPI";
-                ToolkitRegistry.SetValue("HKEY_CURRENT_USER", @"Control Panel\Cursors", "", schemeName, true, RegistryValueKind.String);
-
-                foreach (var mapping in cursorMappings)
-                {
-                    var cursorFile = Path.Combine(basePath, mapping.Value);
-                    if (!File.Exists(cursorFile) && mapping.Value.EndsWith(".ani", StringComparison.OrdinalIgnoreCase))
-                    {
-                        cursorFile = Path.Combine(classicPath, mapping.Value);
-                    }
-                    
-                    if (File.Exists(cursorFile))
-                    {
-                        ToolkitRegistry.SetValue("HKEY_CURRENT_USER", @"Control Panel\Cursors", mapping.Key, cursorFile, true, RegistryValueKind.ExpandString);
-                    }
-                }
-
-                NotifySystemCursorChanged();
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Mouse style applied successfully. [scheme={schemeName}]");
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to apply mouse style.", ex);
-            }
-        }, cancellationToken);
-    }
-
-    private static Task<bool> IsMouseStyleAppliedAsync(string mouseStylePath)
-    {
-        return Task.Run(() =>
-        {
-            try
-            {
-                var currentScheme = ToolkitRegistry.GetValue<string>("HKEY_CURRENT_USER", @"Control Panel\Cursors", "", string.Empty);
-                
-                if (string.IsNullOrEmpty(currentScheme))
-                    return false;
-
-                if (currentScheme.Contains("W11 Cursors", StringComparison.OrdinalIgnoreCase) && 
-                    currentScheme.Contains("HDPI", StringComparison.OrdinalIgnoreCase))
-                    return true;
-
-                var currentArrow = ToolkitRegistry.GetValue<string>("HKEY_CURRENT_USER", @"Control Panel\Cursors", "Arrow", string.Empty);
-                if (string.IsNullOrEmpty(currentArrow))
-                    return false;
-
-                return currentArrow.Contains("W11-CC-V2.2-HDPI", StringComparison.OrdinalIgnoreCase) ||
-                       currentArrow.Contains("pointer.cur", StringComparison.OrdinalIgnoreCase);
-            }
-            catch
-            {
-                return false;
-            }
-        });
-    }
-
-    private static bool IsLightTheme()
-    {
-        try
-        {
-            var appsUseLightTheme = ToolkitRegistry.GetValue<int>("HKEY_CURRENT_USER", @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", 1);
-            return appsUseLightTheme != 0;
-        }
-        catch
-        {
-            return true;
-        }
-    }
-
-    private static unsafe void NotifySystemCursorChanged()
-    {
-        try
-        {
-            const string message = "Cursor";
-            fixed (void* ptr = message)
-            {
-                PInvoke.SendNotifyMessage(HWND.HWND_BROADCAST, PInvoke.WM_SETTINGCHANGE, 0, new IntPtr(ptr));
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to notify system of cursor change.", ex);
-        }
-    }
 
 }
