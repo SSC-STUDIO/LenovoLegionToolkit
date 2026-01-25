@@ -1569,8 +1569,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"用户取消勾选美化操作 {actionKey}，执行卸载命令");
                     
+                var helper = GetShellIntegrationHelper();
+                    
                 // 直接执行卸载命令，始终执行无论当前状态如何
-                var shellDll = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.GetNilesoftShellDllPath();
+                var shellDll = helper?.GetNilesoftShellDllPath();
                 if (!string.IsNullOrWhiteSpace(shellDll))
                 {
                     await ExecuteAsync(
@@ -1610,8 +1612,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                         
                     // 卸载操作完成后，清除缓存和注册表中的安装状态值
                     // 这确保下次检查时不会从注册表中读取旧的已安装状态
-                    LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
-                    LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearRegistryInstallationStatus();
+                    helper?.ClearInstallationStatusCache();
+                    helper?.ClearRegistryInstallationStatus();
                     
                     // 将操作添加到用户取消列表，防止状态刷新时自动勾选
                     if (!_userUncheckedActions.Contains(actionKey))
@@ -1629,7 +1631,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 
                 // 延迟状态刷新以给shell卸载操作足够时间完成
                 // 必须在检查状态前清除缓存，否则将使用旧的缓存值
-                LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.ClearInstallationStatusCache();
+                helper?.ClearInstallationStatusCache();
                 await Task.Delay(3000);
                 
                 // 刷新操作状态
