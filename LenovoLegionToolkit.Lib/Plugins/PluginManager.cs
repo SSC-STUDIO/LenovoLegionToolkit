@@ -466,6 +466,11 @@ public class PluginManager : IPluginManager
         return _registeredPlugins.Values;
     }
 
+    public bool TryGetPlugin(string pluginId, out IPlugin plugin)
+    {
+        return _registeredPlugins.TryGetValue(pluginId, out plugin);
+    }
+
     public PluginMetadata? GetPluginMetadata(string pluginId)
     {
         // First try to get from cache (contains version info)
