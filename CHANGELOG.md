@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-language support for Shell Integration plugin (English and Chinese) / Shell集成插件的多语言支持（英文和中文）
 - Plugin Extension ViewModel for better integration with system optimization / 插件扩展ViewModel，更好地与系统集成
 - Plugin icon background color mapping for different plugin types / 不同插件类型的图标背景颜色映射
-- Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
+ - Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
+ - PluginManager TryGetPlugin method for better plugin discovery / PluginManager TryGetPlugin方法，改进插件发现
+
 
 ### Fixed / 修复
 - Extensions tab showing "Coming Soon" placeholder instead of actual plugins / 扩展标签页显示"即将推出"占位符而非实际插件
@@ -36,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved NilesoftShellHelper to ShellIntegration plugin / 将NilesoftShellHelper移动到ShellIntegration插件
  - Fixed Shell Integration plugin build issues and added missing dependencies / 修复Shell Integration插件构建问题并添加缺失的依赖项
  - Git repository cleanup: merged duplicate commits, fixed tag versioning, organized working directory / Git仓库清理：合并重复提交，修复tag版本号，整理工作目录
+ - Refactored shell integration helper usage to instance-based pattern / 重构Shell集成helper使用为基于实例的模式
+
 
 ## [3.4.1] - 2026-01-24
 
