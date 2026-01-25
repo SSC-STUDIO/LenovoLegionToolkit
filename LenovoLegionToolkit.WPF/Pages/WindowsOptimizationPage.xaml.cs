@@ -362,6 +362,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private bool _isRefreshingStates = false;
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
+    private DateTime _lastUserInteraction = DateTime.Now;
     private bool _transparencyEnabled;
     private bool _roundedCornersEnabled = true;
     private bool _shadowsEnabled = true;
@@ -1230,30 +1231,30 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
              if (string.IsNullOrWhiteSpace(configPath))
              {
                  // Nilesoft Shell not installed, maybe prompt installation
-                 await SnackbarHelper.ShowAsync(
-                     Resource.SettingsPage_WindowsOptimization_Title,
-                     Resource.WindowsOptimizationPage_Beautification_ShellNotFound_Message ?? "Nilesoft Shell is not installed. Please install it first.",
-                     SnackbarType.Warning);
+                  await SnackbarHelper.ShowAsync(
+                      Resource.SettingsPage_WindowsOptimization_Title,
+                      "Nilesoft Shell is not installed. Please install it first.",
+                      SnackbarType.Warning);
                  return;
              }
 
              var config = GenerateShellConfig(SelectedTheme, TransparencyEnabled, RoundedCornersEnabled, ShadowsEnabled);
              await File.WriteAllTextAsync(configPath, config);
 
-             await SnackbarHelper.ShowAsync(
-                 Resource.SettingsPage_WindowsOptimization_Title,
-                 Resource.WindowsOptimizationPage_Beautification_Applied_Message ?? "Beautification style applied successfully.",
-                 SnackbarType.Success);
+              await SnackbarHelper.ShowAsync(
+                  Resource.SettingsPage_WindowsOptimization_Title,
+                  "Beautification style applied successfully.",
+                  SnackbarType.Success);
          }
          catch (Exception ex)
          {
              if (Log.Instance.IsTraceEnabled)
                  Log.Instance.Trace($"Failed to apply beautification style: {ex.Message}", ex);
 
-             await SnackbarHelper.ShowAsync(
-                 Resource.SettingsPage_WindowsOptimization_Title,
-                 Resource.WindowsOptimizationPage_Beautification_ApplyError_Message ?? "Failed to apply beautification style.",
-                 SnackbarType.Error);
+              await SnackbarHelper.ShowAsync(
+                  Resource.SettingsPage_WindowsOptimization_Title,
+                  "Failed to apply beautification style.",
+                  SnackbarType.Error);
          }
      }
     
@@ -1396,6 +1397,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
+            _lastUserInteraction = DateTime.Now;
+            
             // 确定交互范围
             var interactionScope = actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase)
                 ? InteractionScope.Beautification
@@ -1562,6 +1565,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         try
         {
+            _lastUserInteraction = DateTime.Now;
+            
             // 对于右键美化，当用户取消勾选时立即执行卸载操作（实时应用）
             // 移除状态检查，始终执行卸载命令
             if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
