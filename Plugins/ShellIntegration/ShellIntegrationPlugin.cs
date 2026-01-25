@@ -353,7 +353,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
     {
         try
         {
-            var shellExePath = LenovoLegionToolkit.Plugins.ShellIntegration.Services.NilesoftShellHelper.GetNilesoftShellExePath();
+            var shellExePath = NilesoftShellHelper.GetNilesoftShellExePath();
             if (string.IsNullOrWhiteSpace(shellExePath))
                 return null;
                 
@@ -504,6 +504,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to execute command: {command}. Error: {ex.Message}", ex);
+            }
         }
     }
 
@@ -524,5 +525,4 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
     public void ClearRegistryInstallationStatus() => NilesoftShellHelper.ClearRegistryInstallationStatus();
     
     #endregion
-}
 }
