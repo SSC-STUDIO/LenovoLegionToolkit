@@ -525,4 +525,108 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
     public void ClearRegistryInstallationStatus() => NilesoftShellHelper.ClearRegistryInstallationStatus();
     
     #endregion
+    
+    /// <summary>
+    /// Called before plugin update or uninstallation to stop any running processes
+    /// </summary>
+    public override void Stop()
+    {
+        try
+        {
+            // Check if Shell Integration is installed and needs to be unregistered before update
+            if (NilesoftShellHelper.IsInstalledUsingShellExe())
+            {
+                var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                if (!string.IsNullOrWhiteSpace(shellDll))
+                {
+                    // Unregister shell DLL before update
+                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "regsvr32.exe",
+                        Arguments = $"/s /u \"{shellDll}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+
+                    var process = System.Diagnostics.Process.Start(processStartInfo);
+                    if (process != null)
+                    {
+                        process.WaitForExit();
+                        
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Shell Integration unregistered before plugin update: {shellDll}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to stop Shell Integration before update: {ex.Message}", ex);
+        }
+    }
+    
+    /// <summary>
+    /// Called when plugin is installed
+    /// </summary>
+    public override void OnInstalled()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Shell Integration plugin installed");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during Shell Integration plugin installation: {ex.Message}", ex);
+        }
+    }
+    
+    /// <summary>
+    /// Called when plugin is uninstalled
+    /// </summary>
+    public override void OnUninstalled()
+    {
+        try
+        {
+            // Clean up Shell Integration if installed
+            if (NilesoftShellHelper.IsInstalledUsingShellExe())
+            {
+                var shellDll = NilesoftShellHelper.GetNilesoftShellDllPath();
+                if (!string.IsNullOrWhiteSpace(shellDll))
+                {
+                    // Unregister shell DLL during uninstallation
+                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "regsvr32.exe",
+                        Arguments = $"/s /u \"{shellDll}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+
+                    var process = System.Diagnostics.Process.Start(processStartInfo);
+                    if (process != null)
+                    {
+                        process.WaitForExit();
+                        
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Shell Integration unregistered during plugin uninstallation: {shellDll}");
+                    }
+                }
+            }
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Shell Integration plugin uninstalled");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during Shell Integration plugin uninstallation: {ex.Message}", ex);
+        }
+    }
 }

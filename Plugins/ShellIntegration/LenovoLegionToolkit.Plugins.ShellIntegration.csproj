@@ -44,7 +44,7 @@
   <!-- Copy shell files from ShellIntegration build output to build directory -->
   <Target Name="CopyShellFiles" AfterTargets="Build">
     <PropertyGroup>
-      <ShellSourceDir>$(MSBuildProjectDirectory)\..\..\ShellIntegration\src\bin</ShellSourceDir>
+      <ShellSourceDir>$(MSBuildProjectDirectory)\..\..\..\Shell\src\bin</ShellSourceDir>
       <ShellTargetDir>$(TargetDir)..\</ShellTargetDir> <!-- Go up one level to build/ directory -->
     </PropertyGroup>
     
