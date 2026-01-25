@@ -245,12 +245,7 @@
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
                             Checked="DriverDownloadNavButton_Checked" />
-                        <RadioButton
-                            x:Name="_extensionsNavButton"
-                            Style="{StaticResource NavRadioButtonStyle}"
-                            GroupName="OptimizationCleanupBeautificationNav"
-                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Extensions}"
-                            Checked="ExtensionsNavButton_Checked" />
+
                     </StackPanel>
                 </Border>
                 
@@ -735,14 +730,7 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                            <Style x:Key="RightColumnExtensionsCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsExtensionsMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
+
                         <Style x:Key="RightColumnBeautificationCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
@@ -753,118 +741,7 @@
                         </Style>
                         </StackPanel.Resources>
                         
-                        <!-- Extensions Mode Content -->
-                        <Border
-                            Style="{StaticResource RightColumnExtensionsCardStyle}">
-                            <Grid Margin="16">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                
-                                <!-- Header -->
-                                <StackPanel Grid.Row="0" Margin="0,0,0,16">
-                                    <TextBlock
-                                        FontSize="18"
-                                        FontWeight="Medium"
-                                        Text="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Extensions}" />
-                                    <TextBlock
-                                        Margin="0,4,0,0"
-                                        FontSize="14"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="{x:Static resources:Resource.WindowsOptimizationPage_Extensions_Description}"
-                                        TextWrapping="Wrap" />
-                                </StackPanel>
-                                
-                                <!-- Plugin Extensions List -->
-                                <ScrollViewer Grid.Row="1" 
-                                              VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Disabled">
-                                    <Grid>
-                                        <ItemsControl x:Name="_pluginExtensionsList"
-                                                      ItemsSource="{Binding PluginExtensions}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                            BorderThickness="1"
-                                                            CornerRadius="8"
-                                                            Padding="16"
-                                                            Margin="0,0,0,12">
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                            </Grid.ColumnDefinitions>
-                                                            
-                                                            <!-- Plugin Icon -->
-                                                            <Border Grid.Column="0"
-                                                                    Width="48"
-                                                                    Height="48"
-                                                                    CornerRadius="8"
-                                                                    Background="{Binding IconBackground}"
-                                                                    VerticalAlignment="Center"
-                                                                    Margin="0,0,12,0">
-                                                                <TextBlock Text="{Binding IconLetter}"
-                                                                           FontSize="20"
-                                                                           FontWeight="Medium"
-                                                                           Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                                                                           HorizontalAlignment="Center"
-                                                                           VerticalAlignment="Center" />
-                                                            </Border>
-                                                            
-                                                            <!-- Plugin Info -->
-                                                            <StackPanel Grid.Column="1" 
-                                                                        VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding Name}"
-                                                                           FontWeight="Medium"
-                                                                           FontSize="15" />
-                                                                <TextBlock Text="{Binding Description}"
-                                                                           FontSize="12"
-                                                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                           Margin="0,2,0,0"
-                                                                           TextWrapping="Wrap" />
-                                                            </StackPanel>
-                                                            
-                                                            <!-- Action Button -->
-                                                            <Button Grid.Column="2"
-                                                                    Content="Configure"
-                                                                    Click="PluginExtensionConfigure_Click"
-                                                                    Tag="{Binding Id}"
-                                                                    Height="32"
-                                                                    Width="90"
-                                                                    Margin="8,0,0,0"
-                                                                    Visibility="{Binding IsInstalled, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                        </Grid>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                        
-                                        <!-- Empty State -->
-                                        <StackPanel x:Name="_pluginExtensionsEmptyState"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Margin="0,40,0,0"
-                                                    Visibility="Collapsed">
-                                            <TextBlock Text="{x:Static resources:Resource.WindowsOptimizationPage_NoExtensions}"
-                                                       FontSize="16"
-                                                       FontWeight="Medium"
-                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                       HorizontalAlignment="Center"
-                                                       TextAlignment="Center" />
-                                            <TextBlock Text="{x:Static resources:Resource.WindowsOptimizationPage_NoExtensions_Subtitle}"
-                                                       FontSize="14"
-                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                                       HorizontalAlignment="Center"
-                                                       TextAlignment="Center"
-                                                       Margin="0,8,0,0" />
-                                        </StackPanel>
-                                    </Grid>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
+
                         
                         <Border
                             Style="{StaticResource RightColumnOptimizationCardStyle}">

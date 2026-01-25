@@ -103,8 +103,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         Optimization,
         Cleanup,
-        DriverDownload,
-        Extensions
+        DriverDownload
     }
     
     [Flags]
@@ -322,7 +321,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
     public bool IsBeautificationMode => _currentMode == PageMode.Optimization && BeautificationCategories.Count > 0;
     public bool IsDriverDownloadMode => _currentMode == PageMode.DriverDownload;
-    public bool IsExtensionsMode => _currentMode == PageMode.Extensions;
+
     
     public OptimizationCategoryViewModel? SelectedCategory
     {
@@ -1008,10 +1007,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         SetMode(PageMode.DriverDownload);
     }
     
-    private void ExtensionsNavButton_Checked(object sender, RoutedEventArgs e)
-    {
-        SetMode(PageMode.Extensions);
-    }
+
     
     private void SetMode(PageMode mode)
     {
@@ -1024,7 +1020,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         OnPropertyChanged(nameof(IsCleanupMode));
         OnPropertyChanged(nameof(IsBeautificationMode));
         OnPropertyChanged(nameof(IsDriverDownloadMode));
-        OnPropertyChanged(nameof(IsExtensionsMode));
+
         OnPropertyChanged(nameof(ActiveCategories));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
@@ -1258,11 +1254,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
          }
      }
     
-    // 插件扩展相关事件处理程序
-    private void PluginExtensionConfigure_Click(object sender, RoutedEventArgs e)
-    {
-        // TODO: 实现插件扩展配置按钮点击事件
-    }
+
     
     #endregion
     
