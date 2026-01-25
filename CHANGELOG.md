@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved NilesoftShellHelper to ShellIntegration plugin / 将NilesoftShellHelper移动到ShellIntegration插件
 - Organized working directory: removed unused templates, moved shell integration files to plugin directory / 整理工作目录：删除未使用的模板，将Shell集成文件移动到插件目录
 - Refactored shell integration helper usage to instance-based pattern for consistency / 重构Shell集成helper使用为基于实例的模式以确保一致性
+- Removed Extensions tab and integrated Shell functionality into Beautification section / 移除扩展标签页并将Shell功能集成到美化部分
+- Automatically copy plugins to publish directory during build / 构建期间自动将插件复制到发布目录
+- Shell Integration plugin optimization categories now correctly appear in Beautification section / Shell集成插件优化类别现在正确显示在美化部分
+- Added automatic Shell Extension unregistration during plugin updates and uninstallation / 插件更新和卸载期间自动取消Shell扩展注册
 
 
 ## [3.4.1] - 2026-01-24

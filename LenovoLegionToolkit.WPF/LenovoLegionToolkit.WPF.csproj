@@ -88,6 +88,36 @@
 		<Message Text="[Assets] Successfully copied assets directory" Importance="high" Condition="'$(AssetsDirExists)' == 'true'" />
 		<Message Text="[Assets] WARNING: Assets directory not found at $(AssetsSourceDir), skipping copy." Importance="high" Condition="'$(AssetsDirExists)' == 'false'" />
 	</Target>
+	
+	<Target Name="CopyPluginsDirectory" AfterTargets="Publish">
+		<PropertyGroup>
+			<PluginsSourceDir>$(MSBuildProjectDirectory)\..\build\plugins</PluginsSourceDir>
+			<PluginsTargetDir>$(PublishDir)plugins</PluginsTargetDir>
+		</PropertyGroup>
+		
+		<!-- Check if plugins directory exists -->
+		<PropertyGroup>
+			<PluginsDirExists>false</PluginsDirExists>
+			<PluginsDirExists Condition="Exists('$(PluginsSourceDir)')">true</PluginsDirExists>
+		</PropertyGroup>
+		
+		<!-- Skip if plugins directory doesn't exist -->
+		<Message Text="[Plugins] Source plugins directory: $(PluginsSourceDir)" Importance="normal" Condition="'$(PluginsDirExists)' == 'true'" />
+		<Message Text="[Plugins] Target plugins directory: $(PluginsTargetDir)" Importance="normal" Condition="'$(PluginsDirExists)' == 'true'" />
+		<Message Text="[Plugins] WARNING: Plugins directory not found at $(PluginsSourceDir), skipping copy." Importance="high" Condition="'$(PluginsDirExists)' == 'false'" />
+		
+		<!-- Copy plugins if source exists -->
+		<ItemGroup Condition="'$(PluginsDirExists)' == 'true'">
+			<PluginDirectories Include="$(PluginsSourceDir)\**\*" />
+		</ItemGroup>
+		
+		<Copy SourceFiles="@(PluginDirectories)" 
+		      DestinationFiles="$(PluginsTargetDir)\%(RecursiveDir)%(Filename)%(Extension)" 
+		      SkipUnchangedFiles="true" 
+		      Condition="'$(PluginsDirExists)' == 'true'" />
+		
+		<Message Text="[Plugins] Successfully copied plugins directory" Importance="high" Condition="'$(PluginsDirExists)' == 'true'" />
+	</Target>
 	<ItemGroup>
 		<Resource Include="Assets\default_exe.png" />
 		<Resource Include="Assets\icon.ico" />
