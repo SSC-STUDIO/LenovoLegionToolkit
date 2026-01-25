@@ -78,17 +78,15 @@
                                        Foreground="{DynamicResource SystemAccentColorBrush}" />
                     <TextBlock Text="Context Menu Items"
                                Style="{StaticResource SettingsHeaderStyle}" />
-                    <Button Content="Reset to Defaults"
+                    <wpfui:Button Content="Reset to Defaults"
                             Click="ResetMenuItems_Click"
-                            Icon="ArrowReset24"
                             Appearance="Secondary"
                             Height="32"
                             Width="140"
                             Margin="16,0,0,0"
                             HorizontalAlignment="Left" />
-                    <Button Content="Refresh"
+                    <wpfui:Button Content="Refresh"
                             Click="RefreshButton_Click"
-                            Icon="ArrowClockwise24"
                             Appearance="Secondary"
                             Height="32"
                             Width="80"
@@ -193,7 +191,7 @@
                     <TextBlock Grid.Column="2" Text="Version" FontWeight="Medium" />
                     <TextBlock Grid.Column="3" Text="System" FontWeight="Medium" HorizontalAlignment="Center" />
                     <TextBlock Grid.Column="4" Text="Status" FontWeight="Medium" HorizontalAlignment="Center" />
-                </Grid.ColumnDefinitions>
+                </Grid>
                 
                 <!-- Extensions List -->
                 <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="300">

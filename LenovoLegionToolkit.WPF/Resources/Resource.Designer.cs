@@ -4093,6 +4093,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to No Extensions Available.
+        /// </summary>
+        public static string WindowsOptimizationPage_NoExtensions {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_NoExtensions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Install extensions from the Plugin Extensions page to enhance system optimization functionality..
+        /// </summary>
+        public static string WindowsOptimizationPage_NoExtensions_Subtitle {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_NoExtensions_Subtitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Failed to install shell..
         /// </summary>
         public static string WindowsOptimizationPage_Beautification_InstallError {

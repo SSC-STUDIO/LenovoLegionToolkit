@@ -261,7 +261,7 @@ public partial class PackageControl : IProgress<float>
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace((FormattableString)$"Failed to check download button state.", ex);
+                Log.Instance.Trace($"Failed to check download button state.", ex);
         }
     }
 
@@ -596,7 +596,7 @@ public partial class PackageControl : IProgress<float>
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace((FormattableString)$"Failed to start installer.", ex);
+                    Log.Instance.Trace($"Failed to start installer.", ex);
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
                 Status = PackageStatus.NotStarted;
             }
@@ -604,7 +604,7 @@ public partial class PackageControl : IProgress<float>
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace((FormattableString)$"Error occurred when installing package.", ex);
+                Log.Instance.Trace($"Error occurred when installing package.", ex);
             await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
             Status = PackageStatus.NotStarted;
         }
@@ -621,7 +621,7 @@ public partial class PackageControl : IProgress<float>
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace((FormattableString)$"Failed to stop installation process.", ex);
+                    Log.Instance.Trace($"Failed to stop installation process.", ex);
             }
             _installProcess = null;
         }

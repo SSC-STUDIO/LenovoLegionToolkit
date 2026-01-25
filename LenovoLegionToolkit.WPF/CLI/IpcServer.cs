@@ -15,10 +15,10 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI.Features;
-using LenovoLegionToolkit.WPF.Services;
 using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.CLI;
@@ -311,75 +311,47 @@ public class IpcServer(
 
     private static async Task<string> IsShellRegisteredAsync()
     {
-        // Use NilesoftShellHelper.IsInstalledUsingShellExe() which properly checks the registry
-        // using shell.exe's own API, more accurate than checking registry directly
-        var isInstalled = await Task.Run(() => NilesoftShellHelper.IsInstalledUsingShellExe()).ConfigureAwait(false);
-        return isInstalled.ToString().ToLowerInvariant();
+        // Shell functionality moved to ShellIntegration plugin
+        // Use plugin system to check shell status
+        try
+        {
+            var pluginManager = IoCContainer.Resolve<IPluginManager>();
+            var shellPlugin = pluginManager.GetRegisteredPlugins()
+                .FirstOrDefault(p => p.Id == "shell-integration" && pluginManager.IsInstalled(p.Id));
+            
+            if (shellPlugin != null)
+            {
+                // Plugin provides shell functionality
+                return "true";
+            }
+            return "false";
+        }
+        catch
+        {
+            return "false";
+        }
     }
+
+
+
 
 
 
     private static string IsShellInstalled()
     {
-        try
-        {
-            // Use NilesoftShellHelper.IsInstalled() to check if shell.exe and shell.dll exist
-            // This checks if files are present (not registry registration status)
-            var isInstalled = NilesoftShellHelper.IsInstalled();
-            return isInstalled.ToString().ToLowerInvariant();
-        }
-        catch (Exception ex)
-        {
-            throw new IpcException($"Failed to check shell installation status: {ex.Message}");
-        }
+        // Shell integration is now handled by plugin. Use GUI for shell management.
+        return "false";
     }
 
     private static async Task InstallShellAsync()
     {
-        try
-        {
-            try
-            {
-                    // 使用NilesoftShellService安装Shell
-                    await NilesoftShellService.InstallAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new IpcException($"Shell installation failed: {ex.Message}");
-            }
-        }
-        catch (IpcException)
-        {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            throw new IpcException($"Failed to install shell: {ex.Message}");
-        }
+        // Shell integration is now handled by plugin. Use GUI for shell management.
+        throw new IpcException("Shell installation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application.");
     }
 
     private static Task UninstallShellAsync()
     {
-        try
-        {
-            try
-            {
-                // 使用NilesoftShellService卸载Shell
-                NilesoftShellService.Uninstall();
-                return Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                throw new IpcException($"Failed to uninstall shell: {ex.Message}");
-            }
-        }
-        catch (IpcException)
-        {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            throw new IpcException($"Failed to uninstall shell: {ex.Message}");
-        }
+        // Shell integration is now handled by plugin. Use GUI for shell management.
+        throw new IpcException("Shell uninstallation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application.");
     }
 }

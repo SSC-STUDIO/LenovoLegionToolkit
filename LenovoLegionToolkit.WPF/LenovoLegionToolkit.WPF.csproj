@@ -116,35 +116,5 @@
 	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
-	<Target Name="CopyNilesoftShellArtifacts" AfterTargets="Build;Publish">
-		<PropertyGroup>
-			<ShellIntegrationSrcBinDir>$(MSBuildProjectDirectory)\..\ShellIntegration\src\bin</ShellIntegrationSrcBinDir>
-			<!-- Use PublishDir if available (during publish), otherwise use TargetDir -->
-			<ShellOutputDir Condition="'$(PublishDir)' != ''">$(PublishDir)</ShellOutputDir>
-			<ShellOutputDir Condition="'$(PublishDir)' == ''">$(TargetDir)</ShellOutputDir>
-		</PropertyGroup>
-		<!-- Find shell.dll from ShellIntegration src/bin directory -->
-		<ItemGroup>
-			<ShellArtifactsSource Include="$(ShellIntegrationSrcBinDir)\shell.dll" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.dll')" />
-		</ItemGroup>
-		<!-- Copy shell artifacts to app output directory for distribution -->
-		<Message Text="[Shell] Copying shell artifacts to $(ShellOutputDir)..." Importance="normal" />
-		<Message Text="[Shell] Found @(ShellArtifactsSource->Count()) shell artifact(s) to copy" Importance="normal" Condition="'@(ShellArtifactsSource)' != ''" />
-		<Message Text="[Shell] WARNING: No shell artifacts found to copy. Checked: $(ShellIntegrationSrcBinDir)" Importance="high" Condition="'@(ShellArtifactsSource)' == ''" />
-		<Copy SourceFiles="@(ShellArtifactsSource)" DestinationFolder="$(ShellOutputDir)" SkipUnchangedFiles="true" Condition="'@(ShellArtifactsSource)' != ''" />
-		<!-- Find imports from ShellIntegration src/bin/imports -->
-		<ItemGroup>
-			<ShellImportsSource Include="$(ShellIntegrationSrcBinDir)\imports\**\*.*" Condition="Exists('$(ShellIntegrationSrcBinDir)\imports\')" />
-		</ItemGroup>
-		<!-- Copy imports to app output directory preserving structure -->
-		<Message Text="[Shell] Copying imports to $(ShellOutputDir)imports..." Importance="normal" Condition="'@(ShellImportsSource)' != ''" />
-		<Copy SourceFiles="@(ShellImportsSource)" DestinationFiles="$(ShellOutputDir)imports\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" Condition="'@(ShellImportsSource)' != ''" />
-		<!-- Find shell.nss from ShellIntegration src/bin -->
-		<ItemGroup>
-			<ShellConfigSource Include="$(ShellIntegrationSrcBinDir)\shell.nss" Condition="Exists('$(ShellIntegrationSrcBinDir)\shell.nss')" />
-		</ItemGroup>
-		<!-- Copy shell.nss to app output directory -->
-		<Message Text="[Shell] Copying shell.nss to $(ShellOutputDir)..." Importance="normal" Condition="'@(ShellConfigSource)' != ''" />
-		<Copy SourceFiles="@(ShellConfigSource)" DestinationFolder="$(ShellOutputDir)" SkipUnchangedFiles="true" Condition="'@(ShellConfigSource)' != ''" />
-	</Target>
+
 </Project>

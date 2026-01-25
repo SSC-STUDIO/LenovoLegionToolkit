@@ -2553,6 +2553,15 @@
     <value>扩展</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>管理系统优化扩展和工具</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>暂无可用扩展</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>从插件扩展页面安装扩展以增强系统优化功能。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
     <value>安装和管理扩展以扩展功能</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
@@ -3143,6 +3152,30 @@
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>替换系统自带默认右键菜单，效果更好。</value>
+  </data>
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>增强的 Windows Shell 集成，包含右键菜单美化和鼠标样式自定义</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>启用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>启用 Nilesoft Shell 以美化 Windows 右键菜单，使用现代风格</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>禁用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>注销 Nilesoft Shell 并恢复默认的 Windows 右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>应用 Windows 11 光标样式</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>应用 Windows 11 风格的光标主题，支持高 DPI</value>
   </data>
   <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
     <value>正在删除: {0}</value>

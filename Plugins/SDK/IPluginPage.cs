@@ -1,25 +1,14 @@
+using LenovoLegionToolkit.Lib.Plugins;
+
 namespace LenovoLegionToolkit.Plugins.SDK;
 
 /// <summary>
 /// Plugin page interface, used for plugins to provide UI pages
+/// This is a forwarder interface that inherits from the main IPluginPage in Lib
 /// </summary>
-public interface IPluginPage
+public interface IPluginPage : LenovoLegionToolkit.Lib.Plugins.IPluginPage
 {
-    /// <summary>
-    /// Page title
-    /// </summary>
-    string PageTitle { get; }
-
-    /// <summary>
-    /// Page icon (WPF UI Symbol)
-    /// </summary>
-    string? PageIcon { get; }
-
-    /// <summary>
-    /// Create page control
-    /// </summary>
-    /// <returns>UI element</returns>
-    object CreatePage();
+    // All interface members are inherited from the base interface in Lib
 }
 
 
