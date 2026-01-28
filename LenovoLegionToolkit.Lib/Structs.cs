@@ -959,6 +959,8 @@ public readonly struct Time(int hour, int minute)
 public readonly struct Update(Release release)
 {
     public Version Version { get; } = ParseVersion(release.TagName);
+    public string TagName { get; } = release.TagName;
+    public bool IsPrerelease { get; } = release.Prerelease;
     public string Title { get; } = release.Name;
     public string Description { get; } = release.Body;
     public DateTimeOffset Date { get; } = release.PublishedAt ?? release.CreatedAt;
@@ -972,6 +974,17 @@ public readonly struct Update(Release release)
     {
         if (string.IsNullOrWhiteSpace(tagName))
             throw new ArgumentException("Tag name cannot be null or empty", nameof(tagName));
+
+        // Strip 'v' prefix if present
+        if (tagName.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+            tagName = tagName.Substring(1);
+
+        // Strip prerelease suffix (e.g. -beta, -rc1)
+        var dashIndex = tagName.IndexOf('-');
+        if (dashIndex > 0)
+        {
+            tagName = tagName.Substring(0, dashIndex);
+        }
 
         // Try to parse the version directly
         if (Version.TryParse(tagName, out var version))
