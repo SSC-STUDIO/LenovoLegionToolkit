@@ -7,7 +7,7 @@ IF "%1"=="-p" (
 )
 
 IF "%1"=="" (       
-	SET VERSION=3.4.1
+	SET VERSION=3.5.0
 ) ELSE (
 	SET VERSION=%1
 )
