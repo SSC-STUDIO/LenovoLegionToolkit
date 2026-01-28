@@ -405,7 +405,7 @@ public partial class MainWindow
         SetNavigationItemVisibility(_automationItem, "automation", visibilitySettings);
         SetNavigationItemVisibility(_macroItem, "macro", visibilitySettings);
         SetNavigationItemVisibility(_windowsOptimizationItem, "windowsOptimization", visibilitySettings);
-        SetNavigationItemVisibility(_donateNavigationItem, "donate", visibilitySettings);
+
         SetNavigationItemVisibility(_aboutItem, "about", visibilitySettings);
     }
 
@@ -598,17 +598,7 @@ public partial class MainWindow
         return SymbolRegular.Apps24;
     }
 
-    public void UpdateDonateButtonVisibility()
-    {
-        // Use the same logic as UpdateNavigationItemsVisibilityFromSettings
-        // to ensure consistency with navigation items visibility settings
-        var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
-        if (_donateNavigationItem != null)
-        {
-            var shouldShow = GetNavigationItemVisibility("donate", visibilitySettings);
-            _donateNavigationItem.Visibility = shouldShow ? Visibility.Visible : Visibility.Collapsed;
-        }
-    }
+
 
     private static unsafe void SetEfficiencyMode(bool enabled)
     {

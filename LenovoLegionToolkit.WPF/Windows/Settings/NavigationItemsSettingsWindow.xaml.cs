@@ -30,7 +30,7 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);
 
         _pluginExtensionsToggle.IsChecked = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
-        _donateToggle.IsChecked = GetNavigationItemVisibility("donate", visibilitySettings);
+
         _aboutToggle.IsChecked = GetNavigationItemVisibility("about", visibilitySettings);
         
         _isInitializing = false;

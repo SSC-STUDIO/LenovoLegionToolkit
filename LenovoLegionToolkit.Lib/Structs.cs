@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -27,8 +27,11 @@ public readonly struct BatteryInformation(
     bool isLowBattery,
     double? batteryTemperatureC,
     DateTime? manufactureDate,
-    DateTime? firstUseDate)
+    DateTime? firstUseDate,
+    string? modelName)
 {
+    public static readonly BatteryInformation Empty = new(false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, null, null, null, null);
+
     public bool IsCharging { get; } = isCharging;
     public int BatteryPercentage { get; } = batteryPercentage;
     public int BatteryLifeRemaining { get; } = batteryLifeRemaining;
@@ -44,6 +47,43 @@ public readonly struct BatteryInformation(
     public double? BatteryTemperatureC { get; } = batteryTemperatureC;
     public DateTime? ManufactureDate { get; } = manufactureDate;
     public DateTime? FirstUseDate { get; } = firstUseDate;
+    public string? ModelName { get; } = modelName;
+    
+    // 平均温度 (新增)
+    public double? AvgTemperatureC { get; }
+    
+    public BatteryInformation WithAvgTemp(double? avgTemp)
+    {
+         return new BatteryInformation(
+             IsCharging, BatteryPercentage, BatteryLifeRemaining, FullBatteryLifeRemaining,
+             DischargeRate, MinDischargeRate, MaxDischargeRate,
+             EstimateChargeRemaining, DesignCapacity, FullChargeCapacity,
+             CycleCount, IsLowBattery, BatteryTemperatureC,
+             ManufactureDate, FirstUseDate, ModelName, avgTemp);
+    }
+    
+    private BatteryInformation(
+    bool isCharging,
+    int batteryPercentage,
+    int batteryLifeRemaining,
+    int fullBatteryLifeRemaining,
+    int dischargeRate,
+    int minDischargeRate,
+    int maxDischargeRate,
+    int estimateChargeRemaining,
+    int designCapacity,
+    int fullChargeCapacity,
+    int cycleCount,
+    bool isLowBattery,
+    double? temperatureC,
+    DateTime? manufactureDate,
+    DateTime? firstUseDate,
+    string? modelName,
+    double? avgTemperatureC) : this(isCharging, batteryPercentage, batteryLifeRemaining, fullBatteryLifeRemaining, dischargeRate, minDischargeRate, maxDischargeRate, estimateChargeRemaining, designCapacity, fullChargeCapacity, cycleCount, isLowBattery, temperatureC, manufactureDate, firstUseDate, modelName)
+    {
+        AvgTemperatureC = avgTemperatureC;
+    }
+
     public double BatteryHealth =>
         DesignCapacity > 0
         ? Math.Round((double)FullChargeCapacity / DesignCapacity * 100.0, 2, MidpointRounding.AwayFromZero)
@@ -668,10 +708,27 @@ public readonly struct SensorData(
     int maxMemoryClock,
     int temperature,
     int maxTemperature,
+    int wattage,
+    double voltage,
     int fanSpeed,
     int maxFanSpeed)
 {
-    public static readonly SensorData Empty = new(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
+    public static readonly SensorData Empty = new(-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1);
+
+    public SensorData(
+        int utilization,
+        int maxUtilization,
+        int coreClock,
+        int maxCoreClock,
+        int memoryClock,
+        int maxMemoryClock,
+        int temperature,
+        int maxTemperature,
+        int fanSpeed,
+        int maxFanSpeed)
+        : this(utilization, maxUtilization, coreClock, maxCoreClock, memoryClock, maxMemoryClock, temperature, maxTemperature, -1, 0, fanSpeed, maxFanSpeed)
+    {
+    }
 
     public int Utilization { get; } = utilization;
     public int MaxUtilization { get; } = maxUtilization;
@@ -679,22 +736,64 @@ public readonly struct SensorData(
     public int MaxCoreClock { get; } = maxCoreClock;
     public int MemoryClock { get; } = memoryClock;
     public int MaxMemoryClock { get; } = maxMemoryClock;
+    // 温度
     public int Temperature { get; } = temperature;
     public int MaxTemperature { get; } = maxTemperature;
+
+    // 功耗 (W)
+    public int Wattage { get; } = wattage;
+
+    // 电压 (V)
+    public double Voltage { get; } = voltage;
+    
+    // Min/Max values for tracking
+    public double MinVoltage { get; }
+    public double MaxVoltage { get; }
+    public int MinTemperature { get; }
+    public int MaxTemperatureRecord { get; }
+
+    // 风扇转速
     public int FanSpeed { get; } = fanSpeed;
     public int MaxFanSpeed { get; } = maxFanSpeed;
+    
+    public SensorData WithMinMax(double minVolt, double maxVolt, int minTemp, int maxTemp)
+    {
+        return new SensorData(
+            Utilization, MaxUtilization,
+            CoreClock, MaxCoreClock,
+            MemoryClock, MaxMemoryClock,
+            Temperature, MaxTemperature,
+            Wattage, Voltage,
+            FanSpeed, MaxFanSpeed,
+            minVolt, maxVolt, minTemp, maxTemp);
+    }
+    
+    private SensorData(
+    int utilization,
+    int maxUtilization,
+    int coreClock,
+    int maxCoreClock,
+    int memoryClock,
+    int maxMemoryClock,
+    int temperature,
+    int maxTemperature,
+    int wattage,
+    double voltage,
+    int fanSpeed,
+    int maxFanSpeed,
+    double minVoltage,
+    double maxVoltage,
+    int minTemperature,
+    int maxTemperatureRecord) : this(utilization, maxUtilization, coreClock, maxCoreClock, memoryClock, maxMemoryClock, temperature, maxTemperature, wattage, voltage, fanSpeed, maxFanSpeed)
+    {
+        MinVoltage = minVoltage;
+        MaxVoltage = maxVoltage;
+        MinTemperature = minTemperature;
+        MaxTemperatureRecord = maxTemperatureRecord;
+    }
 
     public override string ToString() =>
-        $"{nameof(Utilization)}: {Utilization}," +
-        $" {nameof(MaxUtilization)}: {MaxUtilization}," +
-        $" {nameof(CoreClock)}: {CoreClock}," +
-        $" {nameof(MaxCoreClock)}: {MaxCoreClock}," +
-        $" {nameof(MemoryClock)}: {MemoryClock}," +
-        $" {nameof(MaxMemoryClock)}: {MaxMemoryClock}," +
-        $" {nameof(Temperature)}: {Temperature}," +
-        $" {nameof(MaxTemperature)}: {MaxTemperature}," +
-        $" {nameof(FanSpeed)}: {FanSpeed}," +
-        $" {nameof(MaxFanSpeed)}: {MaxFanSpeed}";
+        $"Utilization: {Utilization}%, Clock: {CoreClock}MHz, Temp: {Temperature}C, Fan: {FanSpeed}RPM, Power: {Wattage}W, Voltage: {Voltage}V";
 }
 
 public readonly struct SensorsData(SensorData cpu, SensorData gpu)

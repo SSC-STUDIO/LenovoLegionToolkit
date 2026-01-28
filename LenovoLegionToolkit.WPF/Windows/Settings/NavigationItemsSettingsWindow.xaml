@@ -124,18 +124,7 @@
                         Tag="pluginExtensions" />
                 </custom:CardControl>
 
-                <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Donate}" 
-                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_donateToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="donate" />
-                </custom:CardControl>
+
 
                 <custom:CardControl Margin="0,0,0,24">
                     <custom:CardControl.Header>

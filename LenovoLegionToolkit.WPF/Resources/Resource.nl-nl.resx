@@ -469,19 +469,6 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Schermhelderheid</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Doneren met</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>De ontwikkeling en het onderhoud van Lenovo Legion Toolkit kost veel tijd. Als u deze software graag gebruikt, kunt u de toekomst ervan steunen door een bedrag naar keuze te doneren.
-
-Klik op het PayPal-logo hieronder of scan de QR-code om te doneren met PayPal.
-
-Bij voorbaat bedankt!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Doneer</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Wijzig</value>
   </data>
@@ -730,9 +717,6 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Doneer</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Toetsenbord</value>

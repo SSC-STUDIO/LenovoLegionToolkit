@@ -1320,41 +1320,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Donate with.
-        /// </summary>
-        public static string DonatePage_DonateWith {
-            get {
-                return ResourceManager.GetString("DonatePage_DonateWith", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Development and maintenance of Lenovo Legion Toolkit takes a lot of time. If you like using this sof....
-        /// </summary>
-        public static string DonatePage_Message {
-            get {
-                return ResourceManager.GetString("DonatePage_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Donate.
-        /// </summary>
-        public static string DonatePage_Title {
-            get {
-                return ResourceManager.GetString("DonatePage_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Note: You can hide this donate button in the navigation menu by disabling "Show donate button" in Se....
-        /// </summary>
-        public static string DonatePage_CanBeHidden_Message {
-            get {
-                return ResourceManager.GetString("DonatePage_CanBeHidden_Message", resourceCulture);
-            }
-        }
+
         
         /// <summary>
         ///   Looks up a localized string similar to Edit.
@@ -2085,14 +2051,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Donate.
-        /// </summary>
-        public static string MainWindow_NavigationItem_Donate {
-            get {
-                return ResourceManager.GetString("MainWindow_NavigationItem_Donate", resourceCulture);
-            }
-        }
+
         
         /// <summary>
         ///   Looks up a localized string similar to Keyboard.
@@ -2229,14 +2188,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Show or hide the Donate navigation item.
-        /// </summary>
-        public static string NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description {
-            get {
-                return ResourceManager.GetString("NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description", resourceCulture);
-            }
-        }
+
         
         /// <summary>
         ///   Looks up a localized string similar to Show or hide the About navigation item.
@@ -5028,23 +4980,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Show or hide the donate button in the navigation menu..
-        /// </summary>
-        public static string SettingsPage_ShowDonateButton_Message {
-            get {
-                return ResourceManager.GetString("SettingsPage_ShowDonateButton_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show donate button.
-        /// </summary>
-        public static string SettingsPage_ShowDonateButton_Title {
-            get {
-                return ResourceManager.GetString("SettingsPage_ShowDonateButton_Title", resourceCulture);
-            }
-        }
+
         
         /// <summary>
         ///   Looks up a localized string similar to Enable Extensions.
@@ -10254,6 +10190,176 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string PluginExtensionsPage_PluginStatesResetMessage {
             get {
                 return ResourceManager.GetString("PluginExtensionsPage_PluginStatesResetMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Model.
+        /// </summary>
+        public static string SensorsControl_Model {
+            get {
+                return ResourceManager.GetString("SensorsControl_Model", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Power Usage.
+        /// </summary>
+        public static string SensorsControl_PowerUsage {
+            get {
+                return ResourceManager.GetString("SensorsControl_PowerUsage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Charge.
+        /// </summary>
+        public static string SensorsControl_Charge {
+            get {
+                return ResourceManager.GetString("SensorsControl_Charge", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Health.
+        /// </summary>
+        public static string SensorsControl_Health {
+            get {
+                return ResourceManager.GetString("SensorsControl_Health", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rate.
+        /// </summary>
+        public static string SensorsControl_Rate {
+            get {
+                return ResourceManager.GetString("SensorsControl_Rate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Min Rate.
+        /// </summary>
+        public static string SensorsControl_MinRate {
+            get {
+                return ResourceManager.GetString("SensorsControl_MinRate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Max Rate.
+        /// </summary>
+        public static string SensorsControl_MaxRate {
+            get {
+                return ResourceManager.GetString("SensorsControl_MaxRate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cycles.
+        /// </summary>
+        public static string SensorsControl_Cycles {
+            get {
+                return ResourceManager.GetString("SensorsControl_Cycles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Capacity.
+        /// </summary>
+        public static string SensorsControl_Capacity {
+            get {
+                return ResourceManager.GetString("SensorsControl_Capacity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Full Cap.
+        /// </summary>
+        public static string SensorsControl_FullCapacity {
+            get {
+                return ResourceManager.GetString("SensorsControl_FullCapacity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Design.
+        /// </summary>
+        public static string SensorsControl_DesignCapacity {
+            get {
+                return ResourceManager.GetString("SensorsControl_DesignCapacity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string SensorsControl_Date {
+            get {
+                return ResourceManager.GetString("SensorsControl_Date", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Core / Memory Clock.
+        /// </summary>
+        public static string SensorsControl_GpuClocks_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_GpuClocks_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Core Voltage.
+        /// </summary>
+        public static string SensorsControl_Voltage {
+            get {
+                return ResourceManager.GetString("SensorsControl_Voltage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Voltage Range.
+        /// </summary>
+        public static string SensorsControl_VoltageRange {
+            get {
+                return ResourceManager.GetString("SensorsControl_VoltageRange", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Avg Temp.
+        /// </summary>
+        public static string SensorsControl_AvgTemp {
+            get {
+                return ResourceManager.GetString("SensorsControl_AvgTemp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sidebar.
+        /// </summary>
+        public static string PluginExtensionsPage_LocationSidebar {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_LocationSidebar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        public static string PluginExtensionsPage_LocationSystem {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_LocationSystem", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Rate Range.
+        /// </summary>
+        public static string SensorsControl_RateRange {
+            get {
+                return ResourceManager.GetString("SensorsControl_RateRange", resourceCulture);
             }
         }
     }

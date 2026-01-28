@@ -465,19 +465,6 @@ ESLETPE: Eger ishki displey óshirilgen bolsa, bul háreket durıs islemeydi.</v
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Displey jarıqlıǵı</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Járdeminde qollap-quwatlaw</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Lenovo Legion Toolkitti rawajlandırıw hám turaqlı islewin támiyinlew ushın kóp waqıt ketedi. Eger sizge bul baǵdarlamanı qollanıw unasa, siz qálegen summańız benen onıń keleshegin qollap-quwatlawıńız múmkin.
-
-PayPal arqalı qollap-quwatlaw ushın PayPal logotibine basıń yamasa tómendegi QR-kodtı tekseriń.
-
-Aldınnan raxmet!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Qollap-quwatlaw</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Ózgertiw</value>
   </data>
@@ -723,9 +710,6 @@ DIQQAT: Eger ishki displey óshirilgen bolsa, bul háreket durıs orınlanbaydı
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Basqarıw paneli</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Qollap-quwatlaw</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Klaviatura</value>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -19,10 +19,10 @@ public class SensorsController(
         await controller.PrepareAsync().ConfigureAwait(false);
     }
 
-    public async Task<SensorsData> GetDataAsync()
+    public async Task<SensorsData> GetDataAsync(bool detailed = false)
     {
         var controller = await GetControllerAsync().ConfigureAwait(false) ?? throw new InvalidOperationException("No supported controller found");
-        return await controller.GetDataAsync().ConfigureAwait(false);
+        return await controller.GetDataAsync(detailed).ConfigureAwait(false);
     }
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()

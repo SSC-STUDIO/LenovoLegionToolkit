@@ -7,31 +7,7 @@ namespace LenovoLegionToolkit.Tests;
 
 public class ApplicationSettingsTests
 {
-    [Fact]
-    public void ShowDonateButton_ShouldDefaultToTrue()
-    {
-        // Arrange & Act
-        // Create a new store instance to test default value
-        var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Assert
-        store.ShowDonateButton.Should().BeTrue();
-    }
-
-    [Fact]
-    public void ShowDonateButton_ShouldPersistValue()
-    {
-        // Arrange
-        var settings = new ApplicationSettings();
-        settings.Store.ShowDonateButton = false;
-
-        // Act
-        settings.SynchronizeStore();
-        var value = settings.Store.ShowDonateButton;
-
-        // Assert
-        value.Should().BeFalse();
-    }
 
     [Fact]
     public void Notifications_ShouldHaveDefaultValues()

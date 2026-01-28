@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
@@ -16,6 +16,9 @@ public static class Battery
     private static int MinDischargeRate { get; set; } = int.MaxValue;
     private static int MaxDischargeRate { get; set; }
 
+    private static double _totalTemp = 0;
+    private static int _tempSampleCount = 0;
+    
     public static void SetMinMaxDischargeRate(BATTERY_STATUS? status = null)
     {
         if (!status.HasValue)
@@ -48,6 +51,7 @@ public static class Battery
         var batteryTag = GetBatteryTag();
         var information = GetBatteryInformation(batteryTag);
         var status = GetBatteryStatus(batteryTag);
+        var modelName = GetBatteryDeviceName(batteryTag);
 
         double? temperatureC = null;
         DateTime? manufactureDate = null;
@@ -61,6 +65,14 @@ public static class Battery
             if (lenovoBatteryInformation.HasValue)
             {
                 temperatureC = DecodeTemperatureC(lenovoBatteryInformation.Value.Temperature);
+                
+                // Update average temp
+                if (temperatureC.HasValue)
+                {
+                    _totalTemp += temperatureC.Value;
+                    _tempSampleCount++;
+                }
+                
                 manufactureDate = DecodeDateTime(lenovoBatteryInformation.Value.ManufactureDate);
                 firstUseDate = DecodeDateTime(lenovoBatteryInformation.Value.FirstUseDate);
             }
@@ -70,8 +82,11 @@ public static class Battery
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to get temperature of battery.", ex);
         }
+        
+        double? avgTemp = _tempSampleCount > 0 ? _totalTemp / _tempSampleCount : null;
 
-        return new(powerStatus.ACLineStatus == 1,
+        return new BatteryInformation(
+            powerStatus.ACLineStatus == 1,
             powerStatus.BatteryLifePercent,
             (int)powerStatus.BatteryLifeTime,
             (int)powerStatus.BatteryFullLifeTime,
@@ -85,7 +100,104 @@ public static class Battery
             powerStatus.ACLineStatus == 0 && information.DefaultAlert2 >= status.Capacity,
             temperatureC,
             manufactureDate,
-            firstUseDate);
+            firstUseDate,
+            modelName).WithAvgTemp(avgTemp);
+    }
+
+    private static string? GetBatteryDeviceName(uint batteryTag)
+    {
+        try
+        {
+            var queryInformation = new BATTERY_QUERY_INFORMATION
+            {
+                BatteryTag = batteryTag,
+                InformationLevel = BATTERY_QUERY_INFORMATION_LEVEL.BatteryDeviceName,
+            };
+
+            const int bufferSize = 256;
+            
+            // We need to use unsafe code or a byte array to get the string because PInvokeExtensions.DeviceIoControl 
+            // is generic and expects a structure for output, but here we expect a variable length string (wchar).
+            // However, looking at PInvokeExtensions, there might not be an overload for byte array output easily accessible 
+            // or we need to define a struct that can hold the string.
+            // A common trick is to use a struct with a fixed buffer or just allocate unmanaged memory.
+            // Since PInvokeExtensions wraps DeviceIoControl, let's see if we can use it.
+            // The PInvokeExtensions.DeviceIoControl usually takes a struct 'out T output'.
+            
+            // Actually, BatteryDeviceName returns a wide string (WCHAR[]).
+            // Let's use a byte array and manually call the native method if PInvokeExtensions is too restrictive,
+            // OR define a struct. But string length is variable.
+            
+            // Let's look at existing PInvoke usage.
+            // We can try to use a custom struct or just use the native PInvoke directly for this specific call 
+            // to handle the buffer correctly.
+            
+            // Since I cannot easily modify PInvokeExtensions or see its full content, 
+            // I will implement a local PInvoke call for this specific needs using Interop.
+            
+            // But wait, the file already uses Windows.Win32 (CsWin32 likely).
+            // Let's try to use PInvoke.DeviceIoControl directly if available.
+            
+            unsafe
+            {
+                // Allocate buffer on stack or heap
+                byte[] buffer = new byte[bufferSize];
+                
+                // Using GCHandle to pin the buffer because we cannot use fixed on a local variable if it's already considered movable by GC in some contexts,
+                // but actually 'fixed' keyword is designed for this.
+                // The error CS0213 "You cannot use the fixed statement to take the address of an already fixed expression" 
+                // suggests that maybe 'queryInformation' is a struct on stack which is already fixed? No, struct on stack is fixed.
+                // But passing address of local struct variable '&queryInformation' doesn't need 'fixed' block if it's a struct.
+                // However, C# requires 'fixed' or taking address in unsafe context.
+                
+                // Let's simplify. We can just pass the pointer if we are in unsafe context.
+                // But PInvoke call expects pointers.
+                
+                // Fix for CS0213: If queryInformation is a local variable of a struct type, you can take its address directly
+                // without a fixed statement because it resides on the stack, which is not movable by the GC.
+                
+                // Fix for CS0234: System.Runtime and System.Text namespaces are missing or fully qualified name is wrong.
+                // We should use 'global::System.Runtime...' or add using directives.
+                
+                fixed (void* outputPtr = buffer)
+                {
+                    // Using the raw PInvoke from Windows.Win32.PInvoke or defining a local one if needed.
+                    // The 'PInvoke' class is imported.
+                    
+                    var handle = Devices.GetBattery();
+                    if (handle.IsInvalid) return null;
+
+                    uint bytesReturned;
+                    var result = PInvoke.DeviceIoControl(
+                        handle,
+                        PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
+                        &queryInformation, // Take address directly since it's on stack
+                        (uint)global::System.Runtime.InteropServices.Marshal.SizeOf<BATTERY_QUERY_INFORMATION>(),
+                        outputPtr,
+                        bufferSize,
+                        &bytesReturned,
+                        null
+                    );
+
+                    if (!result) return null;
+
+                    // The result is a WCHAR string (null terminated or not? usually null terminated or length is bytesReturned)
+                    // The first few bytes might be empty or valid data.
+                    // It returns a WCHAR string.
+                    if (bytesReturned > 0)
+                    {
+                        var str = global::System.Text.Encoding.Unicode.GetString(buffer, 0, (int)bytesReturned);
+                        return str.Trim('\0').Trim();
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get battery device name.", ex);
+        }
+        return null;
     }
 
     public static double? GetBatteryTemperatureC()

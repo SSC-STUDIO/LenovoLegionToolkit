@@ -51,8 +51,7 @@
 	<ItemGroup>
 		<None Remove="Assets\icon.ico" />
 		<None Remove="Assets\default_exe.png" />
-		<None Remove="Assets\Donate\paypal_logo.png" />
-		<None Remove="Assets\Donate\paypal_qr.png" />
+
 	</ItemGroup>
 	<Target Name="CopyAssetsDirectory" AfterTargets="Build;Publish">
 		<PropertyGroup>
@@ -121,8 +120,7 @@
 	<ItemGroup>
 		<Resource Include="Assets\default_exe.png" />
 		<Resource Include="Assets\icon.ico" />
-		<Resource Include="Assets\Donate\paypal_logo.png" />
-		<Resource Include="Assets\Donate\paypal_qr.png" />
+
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Assets\AssetResources.Designer.cs">

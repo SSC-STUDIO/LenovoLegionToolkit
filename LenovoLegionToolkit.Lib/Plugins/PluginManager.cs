@@ -3,21 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
-
-/// <summary>
-/// Interface for plugins that can be stopped
-/// </summary>
-public interface IStoppablePlugin : IPlugin
-{
-    /// <summary>
-    /// Stop the plugin
-    /// </summary>
-    new void Stop();
-}
 
 /// <summary>
 /// Plugin manager implementation
@@ -298,18 +288,6 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {pluginFilePath}");
 
-            // Check if this assembly is already loaded to prevent duplicate loading
-            var assemblyName = AssemblyName.GetAssemblyName(pluginFilePath);
-            var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == assemblyName.Name);
-            
-            if (loadedAssembly != null)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Assembly {assemblyName.Name} is already loaded from {loadedAssembly.Location}, skipping {pluginFilePath}");
-                return;
-            }
-
             // Load the assembly with reflection-only context first to check for types
             Assembly? assembly = null;
             try
@@ -466,7 +444,8 @@ public class PluginManager : IPluginManager
         return _registeredPlugins.Values;
     }
 
-    public bool TryGetPlugin(string pluginId, out IPlugin plugin)
+    /// <inheritdoc />
+    public bool TryGetPlugin(string pluginId, out IPlugin? plugin)
     {
         return _registeredPlugins.TryGetValue(pluginId, out plugin);
     }
@@ -498,7 +477,95 @@ public class PluginManager : IPluginManager
 
     public bool IsInstalled(string pluginId)
     {
-        return _applicationSettings.Store.InstalledExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase);
+        var isInstalled = _applicationSettings.Store.InstalledExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase);
+        
+        if (Log.Instance.IsTraceEnabled)
+        {
+            Log.Instance.Trace($"IsInstalled({pluginId}) = {isInstalled} (from settings)");
+            Log.Instance.Trace($"  - Installed extensions count: {_applicationSettings.Store.InstalledExtensions.Count}");
+            Log.Instance.Trace($"  - Installed extensions: [{string.Join(", ", _applicationSettings.Store.InstalledExtensions)}]");
+        }
+        
+        // If not in installed list, definitely not installed
+        if (!isInstalled)
+            return false;
+            
+        // Check if plugin files actually exist on disk
+        // This prevents showing "installed" state when files have been deleted manually
+        try
+        {
+            var pluginsDirectory = GetPluginsDirectory();
+            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+            
+            // Check for alternative directory naming (LenovoLegionToolkit.Plugins.{Id})
+            if (!Directory.Exists(pluginDirectory))
+            {
+                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}");
+                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", "")}");
+                
+                if (Directory.Exists(altPluginDirectory))
+                {
+                    pluginDirectory = altPluginDirectory;
+                }
+                else if (Directory.Exists(altPluginDirectoryNoHyphen))
+                {
+                    pluginDirectory = altPluginDirectoryNoHyphen;
+                }
+                else
+                {
+                    // Check for root level DLLs (backward compatibility)
+                    var rootDllPath1 = Path.Combine(pluginsDirectory, $"{pluginId}.dll");
+                    var rootDllPath2 = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.dll");
+                    
+                    if (File.Exists(rootDllPath1) || File.Exists(rootDllPath2))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"IsInstalled({pluginId}): Found as root level DLL");
+                        return true;
+                    }
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"IsInstalled({pluginId}): Plugin directory does not exist: {pluginDirectory} (or alternative path)");
+                    return false;
+                }
+            }
+            
+            // Check for DLL files in the plugin directory
+            var dllFiles = Directory.GetFiles(pluginDirectory, "*.dll", SearchOption.TopDirectoryOnly);
+            if (dllFiles.Length == 0)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"IsInstalled({pluginId}): No DLL files found in plugin directory");
+                return false;
+            }
+            
+            // Check for the main plugin DLL (either pluginId.dll or LenovoLegionToolkit.Plugins.{pluginId}.dll)
+            var mainDllName1 = $"{pluginId}.dll";
+            var mainDllName2 = $"LenovoLegionToolkit.Plugins.{pluginId}.dll";
+            var hasMainDll = dllFiles.Any(f => 
+                Path.GetFileName(f).Equals(mainDllName1, StringComparison.OrdinalIgnoreCase) ||
+                Path.GetFileName(f).Equals(mainDllName2, StringComparison.OrdinalIgnoreCase));
+            
+            if (!hasMainDll)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"IsInstalled({pluginId}): Main plugin DLL not found. Available DLLs: [{string.Join(", ", dllFiles.Select(Path.GetFileName))}]");
+                // Still return true if there are DLL files (might be different naming convention)
+                // But log warning
+            }
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IsInstalled({pluginId}): Plugin files exist, returning true");
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IsInstalled({pluginId}): Error checking plugin files: {ex.Message}");
+            // If we can't check files, fall back to settings-based check
+            return isInstalled;
+        }
     }
 
     public void InstallPlugin(string pluginId)
@@ -506,10 +573,20 @@ public class PluginManager : IPluginManager
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
+        if (Log.Instance.IsTraceEnabled)
+        {
+            Log.Instance.Trace($"InstallPlugin called for {pluginId}");
+        }
+
         var installedExtensions = _applicationSettings.Store.InstalledExtensions;
 
         if (!installedExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
         {
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"Adding {pluginId} to installed extensions list");
+            }
+            
             installedExtensions.Add(pluginId);
             _applicationSettings.SynchronizeStore();
 
@@ -531,7 +608,19 @@ public class PluginManager : IPluginManager
                 installedPlugin.OnInstalled();
             }
 
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"Triggering PluginStateChanged for {pluginId} (installed=true)");
+            }
+            
             OnPluginStateChanged(pluginId, true);
+        }
+        else
+        {
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"Plugin {pluginId} is already installed");
+            }
         }
     }
 
@@ -548,7 +637,7 @@ public class PluginManager : IPluginManager
         // Get plugin instance
         _registeredPlugins.TryGetValue(pluginId, out var plugin);
 
-        // 检查是否有其他插件依赖此插件
+        // Check if any other plugins depend on this plugin
         var dependentPlugins = _registeredPlugins.Values
             .Where(p => p.Dependencies != null && p.Dependencies.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
             .Where(p => IsInstalled(p.Id))
@@ -571,7 +660,18 @@ public class PluginManager : IPluginManager
         
         _applicationSettings.SynchronizeStore();
 
-        // 触发卸载回调
+        // Stop plugin before uninstall callback
+        try
+        {
+            plugin?.Stop();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping plugin {pluginId}: {ex.Message}", ex);
+        }
+
+        // Trigger uninstall callback
         plugin?.OnUninstalled();
 
         OnPluginStateChanged(pluginId, false);
@@ -822,7 +922,7 @@ public class PluginManager : IPluginManager
     /// <summary>
     /// Delete a file with retry mechanism to handle locked files
     /// </summary>
-    private bool DeleteFileWithRetry(string filePath, int maxRetries = 10, int delayMs = 200)
+    private async Task<bool> DeleteFileWithRetryAsync(string filePath, int maxRetries = 10, int delayMs = 200)
     {
         for (int i = 0; i < maxRetries; i++)
         {
@@ -839,13 +939,13 @@ public class PluginManager : IPluginManager
             {
                 if (i == maxRetries - 1)
                     return false;
-                global::System.Threading.Thread.Sleep(delayMs);
+                await Task.Delay(delayMs).ConfigureAwait(false);
             }
             catch (UnauthorizedAccessException)
             {
                 if (i == maxRetries - 1)
                     return false;
-                global::System.Threading.Thread.Sleep(delayMs);
+                await Task.Delay(delayMs).ConfigureAwait(false);
             }
         }
         return false;
@@ -854,7 +954,7 @@ public class PluginManager : IPluginManager
     /// <summary>
     /// Delete a directory with retry mechanism to handle locked files
     /// </summary>
-    private bool DeleteDirectoryWithRetry(string directoryPath, int maxRetries = 10, int delayMs = 200)
+    private async Task<bool> DeleteDirectoryWithRetryAsync(string directoryPath, int maxRetries = 10, int delayMs = 200)
     {
         for (int i = 0; i < maxRetries; i++)
         {
@@ -871,13 +971,13 @@ public class PluginManager : IPluginManager
             {
                 if (i == maxRetries - 1)
                     return false;
-                global::System.Threading.Thread.Sleep(delayMs);
+                await Task.Delay(delayMs).ConfigureAwait(false);
             }
             catch (UnauthorizedAccessException)
             {
                 if (i == maxRetries - 1)
                     return false;
-                global::System.Threading.Thread.Sleep(delayMs);
+                await Task.Delay(delayMs).ConfigureAwait(false);
             }
         }
         return false;
@@ -926,9 +1026,6 @@ public class PluginManager : IPluginManager
             Log.Instance.Trace($"Pending plugin deletions completed.");
     }
 
-    /// <summary>
-    /// Unload all plugins and release references (useful before plugin updates)
-    /// </summary>
     public void UnloadAllPlugins()
     {
         try
@@ -936,62 +1033,55 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Unloading all plugins...");
 
-            var pluginIds = _registeredPlugins.Keys.ToList();
-            foreach (var pluginId in pluginIds)
+            // Trigger OnUninstalled for all registered plugins
+            foreach (var plugin in _registeredPlugins.Values)
             {
-                StopPlugin(pluginId);
+                try
+                {
+                    plugin.OnUninstalled();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to trigger OnUninstalled for plugin {plugin.Id}: {ex.Message}", ex);
+                }
             }
 
+            // Clear all registered plugins and metadata
             _registeredPlugins.Clear();
             _pluginMetadataCache.Clear();
             _pluginFileCache.Clear();
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"All plugins unloaded successfully.");
+                Log.Instance.Trace($"All plugins unloaded successfully");
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error unloading all plugins: {ex.Message}", ex);
+                Log.Instance.Trace($"Error unloading plugins: {ex.Message}", ex);
         }
     }
 
-    /// <summary>
-    /// Stop a specific plugin (call its Stop method) before update or uninstallation
-    /// </summary>
+    /// <inheritdoc/>
     public bool StopPlugin(string pluginId)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(pluginId))
+                return false;
+
+            if (!_registeredPlugins.TryGetValue(pluginId, out var plugin))
+                return false;
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping plugin: {pluginId}");
 
-            if (_registeredPlugins.TryGetValue(pluginId, out var plugin))
-            {
-                // Call plugin's Stop method if it has one
-                if (plugin is IStoppablePlugin stoppablePlugin)
-                {
-                    stoppablePlugin.Stop();
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Plugin {pluginId} stopped successfully.");
-                    return true;
-                }
-                else
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Plugin {pluginId} does not implement IStoppablePlugin, removing from registry.");
-                    
-                    // Just remove from registry if not stoppable
-                    _registeredPlugins.Remove(pluginId);
-                    return true;
-                }
-            }
-            else
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Plugin {pluginId} not found in registry.");
-                return false;
-            }
+            plugin.Stop();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugin {pluginId} stopped successfully");
+
+            return true;
         }
         catch (Exception ex)
         {
@@ -1001,9 +1091,7 @@ public class PluginManager : IPluginManager
         }
     }
 
-    /// <summary>
-    /// Stop all plugins (call Stop method for each plugin)
-    /// </summary>
+    /// <inheritdoc/>
     public void StopAllPlugins()
     {
         try
@@ -1011,14 +1099,21 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping all plugins...");
 
-            var pluginIds = _registeredPlugins.Keys.ToList();
-            foreach (var pluginId in pluginIds)
+            foreach (var plugin in _registeredPlugins.Values)
             {
-                StopPlugin(pluginId);
+                try
+                {
+                    plugin.Stop();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to stop plugin {plugin.Id}: {ex.Message}", ex);
+                }
             }
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"All plugins stopped successfully.");
+                Log.Instance.Trace($"All plugins stopped successfully");
         }
         catch (Exception ex)
         {

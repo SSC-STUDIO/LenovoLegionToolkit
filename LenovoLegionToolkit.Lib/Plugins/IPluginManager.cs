@@ -79,7 +79,7 @@ public interface IPluginManager
     /// <param name="pluginId">The plugin ID</param>
     /// <param name="plugin">The plugin instance if found</param>
     /// <returns>True if the plugin was found</returns>
-    bool TryGetPlugin(string pluginId, out IPlugin plugin);
+    bool TryGetPlugin(string pluginId, out IPlugin? plugin);
 }
 
 /// <summary>

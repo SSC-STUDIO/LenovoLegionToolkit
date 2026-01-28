@@ -343,10 +343,10 @@ public class IpcServer(
         return "false";
     }
 
-    private static async Task InstallShellAsync()
+    private static Task InstallShellAsync()
     {
         // Shell integration is now handled by plugin. Use GUI for shell management.
-        throw new IpcException("Shell installation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application.");
+        return Task.FromException(new IpcException("Shell installation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application."));
     }
 
     private static Task UninstallShellAsync()

@@ -20,14 +20,13 @@ namespace LenovoLegionToolkit.WPF.Pages
         private string _installButtonText = "Install";
         private string _pluginId = string.Empty;
         private bool _isInstalled;
-
+        private bool _supportsConfiguration;
         private bool _isInstalling;
         private double _installProgress;
         private string _installStatusText = string.Empty;
         private bool _updateAvailable;
-        private bool _isInstallButtonVisible;
-        private bool _supportsConfiguration;
-
+        private bool _isLocal;
+        private string _location = string.Empty;
 
         public string Name
         {
@@ -39,6 +38,19 @@ namespace LenovoLegionToolkit.WPF.Pages
                     _name = value;
                     OnPropertyChanged(nameof(Name));
                     UpdateIconLetter();
+                }
+            }
+        }
+
+        public string Location
+        {
+            get => _location;
+            set
+            {
+                if (_location != value)
+                {
+                    _location = value;
+                    OnPropertyChanged(nameof(Location));
                 }
             }
         }
@@ -198,29 +210,83 @@ namespace LenovoLegionToolkit.WPF.Pages
             }
         }
 
-
+        public string ConfigureButtonText
+        {
+            get
+            {
+                var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                if (culture.StartsWith("zh-Hant"))
+                {
+                    return "設定";
+                }
+                else if (culture.StartsWith("zh"))
+                {
+                    return "配置";
+                }
+                else if (culture.StartsWith("ja"))
+                {
+                    return "設定";
+                }
+                else if (culture.StartsWith("ko"))
+                {
+                    return "설정";
+                }
+                else if (culture.StartsWith("de"))
+                {
+                    return "Konfigurieren";
+                }
+                else if (culture.StartsWith("fr"))
+                {
+                    return "Configurer";
+                }
+                else if (culture.StartsWith("es"))
+                {
+                    return "Configurar";
+                }
+                else if (culture.StartsWith("pt"))
+                {
+                    return "Configurar";
+                }
+                else if (culture.StartsWith("ru"))
+                {
+                    return "Настройка";
+                }
+                else if (culture.StartsWith("it"))
+                {
+                    return "Configura";
+                }
+                else if (culture.StartsWith("pl"))
+                {
+                    return "Konfiguruj";
+                }
+                else if (culture.StartsWith("tr"))
+                {
+                    return "Yapılandır";
+                }
+                else if (culture.StartsWith("uk") || culture.StartsWith("ru"))
+                {
+                    return "Налаштування";
+                }
+                else if (culture.StartsWith("vi"))
+                {
+                    return "Cấu hình";
+                }
+                else if (culture.StartsWith("th"))
+                {
+                    return "กำหนดค่า";
+                }
+                else if (culture.StartsWith("ar"))
+                {
+                    return "تكوين";
+                }
+                return "Configure";
+            }
+        }
 
         public string OpenButtonText
         {
             get
             {
-                // Try to get localized text, fallback to hardcoded values
-                try
-                {
-                    var property = typeof(Resource).GetProperty("Open");
-                    if (property != null)
-                    {
-                        var value = property.GetValue(null) as string;
-                        if (!string.IsNullOrWhiteSpace(value))
-                            return value;
-                    }
-                }
-                catch
-                {
-                    // Ignore errors
-                }
-                
-                // Fallback based on current culture
                 var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
                 if (culture.StartsWith("zh-Hant"))
                 {
@@ -290,8 +356,6 @@ namespace LenovoLegionToolkit.WPF.Pages
             }
         }
 
-
-
 public string PluginId
         {
             get => _pluginId;
@@ -321,7 +385,18 @@ public string PluginId
             }
         }
 
-
+        public bool SupportsConfiguration
+        {
+            get => _supportsConfiguration;
+            set
+            {
+                if (_supportsConfiguration != value)
+                {
+                    _supportsConfiguration = value;
+                    OnPropertyChanged(nameof(SupportsConfiguration));
+                }
+            }
+        }
 
         public bool IsInstalling
         {
@@ -335,21 +410,6 @@ public string PluginId
                 }
             }
         }
-
-        public bool IsInstallButtonVisible
-        {
-            get => _isInstallButtonVisible;
-            set
-            {
-                if (_isInstallButtonVisible != value)
-                {
-                    _isInstallButtonVisible = value;
-                    OnPropertyChanged(nameof(IsInstallButtonVisible));
-                }
-            }
-        }
-
-
 
         public double InstallProgress
         {
@@ -377,22 +437,22 @@ public string PluginId
             }
         }
 
-        public bool SupportsConfiguration
+        public bool IsLocal
         {
-            get => _supportsConfiguration;
+            get => _isLocal;
             set
             {
-                if (_supportsConfiguration != value)
+                if (_isLocal != value)
                 {
-                    _supportsConfiguration = value;
-                    OnPropertyChanged(nameof(SupportsConfiguration));
+                    _isLocal = value;
+                    OnPropertyChanged(nameof(IsLocal));
                 }
             }
         }
 
         public IPlugin Plugin { get; private set; }
 
-    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", string? iconBackground = null)
+    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", bool isLocal = false)
     {
         Plugin = plugin;
         PluginId = plugin.Id;
@@ -401,10 +461,10 @@ public string PluginId
         Version = $"v{version}";
         IsInstalled = isInstalled;
         _updateAvailable = updateAvailable;
-        SupportsConfiguration = false; // Will be set later based on plugin capabilities
+        IsLocal = isLocal;
         
         UpdateInstallButtonText();
-        UpdateIconLetter(iconBackground);
+        UpdateIconLetter();
     }
 
         private void UpdateInstallButtonText()
@@ -414,12 +474,10 @@ public string PluginId
             if (IsInstalled)
             {
                 InstallButtonText = _updateAvailable ? Resource.Update : Resource.PluginExtensionsPage_PluginInstalled;
-                IsInstallButtonVisible = _updateAvailable;
             }
             else
             {
                 InstallButtonText = Resource.PluginExtensionsPage_InstallPlugin;
-                IsInstallButtonVisible = true;
             }
             
             // Add debug logging
@@ -428,7 +486,7 @@ public string PluginId
                 var logger = LenovoLegionToolkit.Lib.Utils.Log.Instance;
                 if (logger.IsTraceEnabled)
                 {
-                    logger.Trace($"UpdateInstallButtonText for {PluginId}: {oldText} -> {InstallButtonText} (IsInstalled={IsInstalled}, UpdateAvailable={_updateAvailable}, Visible={IsInstallButtonVisible})");
+                    logger.Trace($"UpdateInstallButtonText for {PluginId}: {oldText} -> {InstallButtonText} (IsInstalled={IsInstalled}, UpdateAvailable={_updateAvailable})");
                 }
             }
             catch
@@ -446,50 +504,7 @@ public string PluginId
             }
         }
 
-        public void CheckConfigurationSupport(IPlugin plugin)
-        {
-            try
-            {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"CheckConfigurationSupport for {PluginId}: plugin type = {plugin.GetType().Name}");
-                }
-                
-                if (plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
-                {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {PluginId} is SDK plugin, calling GetSettingsPage...");
-                    }
-                    
-                    var settingsPage = sdkPlugin.GetSettingsPage();
-                    SupportsConfiguration = settingsPage != null;
-                    
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {PluginId} configuration check: GetSettingsPage returned {settingsPage?.GetType().Name ?? "null"}, SupportsConfiguration={SupportsConfiguration}");
-                    }
-                }
-                else
-                {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {PluginId} is not an SDK plugin, SupportsConfiguration=false");
-                    }
-                    SupportsConfiguration = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error checking configuration support for plugin {PluginId}: {ex.Message}", ex);
-                }
-                SupportsConfiguration = false;
-            }
-        }
-
-        private void UpdateIconLetter(string? iconBackgroundColor = null)
+        private void UpdateIconLetter()
         {
             var displayName = Name;
             if (string.IsNullOrWhiteSpace(displayName))
@@ -520,29 +535,10 @@ public string PluginId
 
                 IconLetter = new string(letters.Take(2).ToArray());
                 
-                // Use iconBackground from store.json if provided, otherwise generate based on plugin ID
-                if (!string.IsNullOrWhiteSpace(iconBackgroundColor))
-                {
-                    try
-                    {
-                        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(iconBackgroundColor);
-                        IconBackground = new SolidColorBrush(color);
-                    }
-                    catch
-                    {
-                        // If parsing fails, fall back to generated color
-                        var hash = PluginId.GetHashCode();
-                        var hue = Math.Abs(hash % 360);
-                        IconBackground = new SolidColorBrush(HsvToRgb(hue, 0.7, 0.8));
-                    }
-                }
-                else
-                {
-                    // Generate background color based on plugin ID (stable hash)
-                    var hash = PluginId.GetHashCode();
-                    var hue = Math.Abs(hash % 360);
-                    IconBackground = new SolidColorBrush(HsvToRgb(hue, 0.7, 0.8));
-                }
+                // Generate background color based on plugin ID
+                var hash = PluginId.GetHashCode();
+                var hue = Math.Abs(hash % 360);
+                IconBackground = new SolidColorBrush(HsvToRgb(hue, 0.7, 0.8));
             }
         }
 

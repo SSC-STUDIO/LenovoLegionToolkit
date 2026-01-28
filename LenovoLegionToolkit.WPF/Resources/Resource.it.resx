@@ -465,17 +465,6 @@ ATTENZIONE: questa azione non verrà eseguita correttamente se il display intern
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Luminosità Display</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Dona con</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Lo sviluppo e il mantenimento di Lenovo Legion Toolkit richiede parecchio tempo. Se ti piace usare questo software puoi supportarlo donando una cifra a tua scelta.
-
-Clicca il logo PayPal qui sotto oppure scansiona il QR code per donare con PayPal.</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Donazioni</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>
@@ -699,9 +688,6 @@ ATTENZIONE: questa azione non verrà eseguita correttamente se il display intern
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Pannello di controllo</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Donazioni</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Tastiera</value>
