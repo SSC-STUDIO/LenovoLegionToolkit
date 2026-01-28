@@ -13,12 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🎉 **Major Release / 重大版本发布**
 - Shell Integration plugin for enhanced Windows context menu functionality / Shell集成插件，增强Windows右键菜单功能
 - Shell extension management with enable/disable controls / Shell扩展管理，支持启用/禁用控制
+- Context menu item management with customizable commands / 右键菜单项管理，支持自定义命令
 - Multi-language support for Shell Integration plugin (English and Chinese) / Shell集成插件的多语言支持（英文和中文）
 - Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
+- Removed Extensions tab and integrated Shell functionality into Beautification section / 移除扩展标签页并将Shell功能集成到美化部分
 
 ### 🔧 **Technical Improvements / 技术改进**
 - Enhanced plugin discovery for shell integration tools / Shell集成工具的增强插件发现
 - Better error handling for plugin configuration operations / 插件配置操作的更好错误处理
+- Moved NilesoftShellHelper to ShellIntegration plugin / 将NilesoftShellHelper移动到ShellIntegration插件
+- Refactored Shell Integration from core system to plugin-based architecture / 将Shell集成从核心系统重构为基于插件的架构
+- Added automatic Shell Extension unregistration during plugin updates and uninstallation / 插件更新和卸载期间自动取消Shell扩展注册
+
+### Fixed / 修复
+- Shell Integration plugin optimization categories now correctly appear in Beautification section / Shell集成插件优化类别现在正确显示在美化部分
 
 ## [3.4.1] - 2026-01-24
 

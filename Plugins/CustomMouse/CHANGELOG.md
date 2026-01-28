@@ -23,6 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Startup auto-apply functionality / 启动时自动应用功能
 - Mouse style restoration to Windows defaults / 恢复Windows默认鼠标样式
 - Multi-language support for plugin interface / 插件界面多语言支持
+- Improved user experience with dedicated mouse customization interface / 专用鼠标自定义界面改善用户体验
+
+### Fixed / 修复
+- Resolved mouse style application conflicts in system optimization / 解决系统优化中鼠标样式应用冲突
+- Fixed resource loading issues for cursor themes / 修复光标主题资源加载问题
+
+### Improved / 改进
+- Updated CustomMouse plugin comments to English for broader developer accessibility / 更新CustomMouse插件注释为英文，提高开发者可访问性
 
 ### Features / 功能特性
 - **Color Detection Algorithm** / **颜色检测算法**:
