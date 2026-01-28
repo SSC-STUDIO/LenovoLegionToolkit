@@ -7,15 +7,15 @@ using System.Windows.Controls;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
 
-/// &lt;summary&gt;
+/// <summary>
 /// CustomMousePage.xaml 的交互逻辑
-/// &lt;/summary&gt;
+/// </summary>
 public partial class CustomMousePage : UserControl
 {
     private readonly ICustomMouseService _mouseService;
     private readonly CustomMouseSettingsManager _settingsManager;
     private readonly CustomMouseSettings _settings;
-    private readonly List&lt;MouseStyleInfo&gt; _availableStyles = new();
+    private readonly List<MouseStyleInfo> _availableStyles = new();
 
     public CustomMousePage(ICustomMouseService mouseService, CustomMouseSettingsManager settingsManager, CustomMouseSettings settings)
     {
@@ -45,7 +45,7 @@ public partial class CustomMousePage : UserControl
             UpdateModeDescription();
 
             // 初始化设置选项
-            AutoColorDetectionToggle.IsChecked = _settings.AutoColorDetectionEnabled;
+            AutoColorDetectionCheckBox.IsChecked = _settings.AutoColorDetectionEnabled;
             
             // 设置主题模式
             foreach (ComboBoxItem item in ThemeModeComboBox.Items)
@@ -86,10 +86,10 @@ public partial class CustomMousePage : UserControl
                 _availableStyles.AddRange(styles);
                 
                 // 更新样式列表
-                StylesListBox.ItemsSource = _availableStyles.Select(s =&gt; $"{s.Name} ({s.Theme})").ToList();
+                StylesListBox.ItemsSource = _availableStyles.Select(s => $"{s.Name} ({s.Theme})").ToList();
                 
                 // 选择当前样式
-                for (int i = 0; i &lt; _availableStyles.Count; i++)
+                for (int i = 0; i < _availableStyles.Count; i++)
                 {
                     if (_availableStyles[i].Name == _settings.SelectedStyle)
                     {
@@ -115,10 +115,10 @@ public partial class CustomMousePage : UserControl
             
             var themeText = _settings.ThemeMode.ToLower() switch
             {
-                "auto" =&gt; "自动",
-                "light" =&gt; "浅色",
-                "dark" =&gt; "深色",
-                _ =&gt; "未知"
+                "auto" => "自动",
+                "light" => "浅色",
+                "dark" => "深色",
+                _ => "未知"
             };
             
             if (_settings.AutoColorDetectionEnabled)
@@ -136,10 +136,17 @@ public partial class CustomMousePage : UserControl
 
     private void UpdateModeDescription()
     {
-        var isExtension = ExtensionModeRadio.IsChecked == true;
-        ModeDescriptionText.Text = isExtension 
-            ? Resource.CustomMouse_ExtensionMode_Description 
-            : Resource.CustomMouse_IndependentMode_Description;
+        try
+        {
+            var isExtension = ExtensionModeRadio.IsChecked == true;
+            ModeDescriptionText.Text = isExtension 
+                ? Resource.CustomMouse_ExtensionMode_Description 
+                : Resource.CustomMouse_IndependentMode_Description;
+        }
+        catch
+        {
+            ModeDescriptionText.Text = "插件模式描述";
+        }
     }
 
     private void UpdateStatus(string message, bool isError = false)
@@ -275,16 +282,27 @@ public partial class CustomMousePage : UserControl
         }
     }
 
-    private void AutoColorDetectionToggle_Toggled(object sender, RoutedEventArgs e)
+    private void AutoColorDetectionCheckBox_Checked(object sender, RoutedEventArgs e)
     {
         try
         {
-            if (sender is ToggleSwitch toggle)
-            {
-                _settings.AutoColorDetectionEnabled = toggle.IsChecked == true;
-                _settingsManager.SaveSettings(_settings);
-                UpdateCurrentStatus();
-            }
+            _settings.AutoColorDetectionEnabled = true;
+            _settingsManager.SaveSettings(_settings);
+            UpdateCurrentStatus();
+        }
+        catch (Exception ex)
+        {
+            UpdateStatus($"设置更新失败: {ex.Message}", true);
+        }
+    }
+
+    private void AutoColorDetectionCheckBox_Unchecked(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _settings.AutoColorDetectionEnabled = false;
+            _settingsManager.SaveSettings(_settings);
+            UpdateCurrentStatus();
         }
         catch (Exception ex)
         {
@@ -309,7 +327,7 @@ public partial class CustomMousePage : UserControl
         }
     }
 
-    private void BrightnessThresholdSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs&lt;double&gt; e)
+    private void BrightnessThresholdSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         try
         {
@@ -329,7 +347,7 @@ public partial class CustomMousePage : UserControl
     {
         try
         {
-            if (StylesListBox.SelectedIndex &gt;= 0 && StylesListBox.SelectedIndex &lt; _availableStyles.Count)
+            if (StylesListBox.SelectedIndex >= 0 && StylesListBox.SelectedIndex < _availableStyles.Count)
             {
                 var selectedStyle = _availableStyles[StylesListBox.SelectedIndex];
                 _settings.SelectedStyle = selectedStyle.Name;

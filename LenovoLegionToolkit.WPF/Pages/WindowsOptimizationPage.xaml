@@ -133,15 +133,6 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="BeautificationActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource PrimaryActionButtonStyle}">
-            <Setter Property="Visibility" Value="Collapsed" />
-            <Setter Property="Margin" Value="0" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                    <Setter Property="Visibility" Value="Visible" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
     </wpfui:UiPage.Resources>
 
         <Grid>
@@ -283,16 +274,17 @@
                             <WrapPanel ItemHeight="36" ItemWidth="Auto" Orientation="Horizontal">
                             <wpfui:Button
                                 x:Name="_selectRecommendedButton"
-                                MinWidth="180"
+                                MinWidth="36"
                                 Margin="0,0,12,0"
                                 Appearance="Secondary"
                                 ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
                                 AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
-                                Click="SelectRecommendedButton_Click"
-                                Content="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}" />
+                                Click="SelectRecommendedButton_Click">
+                                <wpfui:SymbolIcon Symbol="Checkmark24" />
+                            </wpfui:Button>
                             <wpfui:Button
                                 x:Name="_clearButton"
-                                MinWidth="160"
+                                MinWidth="36"
                                 Margin="0,0,12,0"
                                 Appearance="Secondary"
                                 Click="ClearSelectionButton_Click">
@@ -300,16 +292,26 @@
                                     <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                                         <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
-                                        <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                                                 <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
                                                 <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
-                                                <Setter Property="Content" Value="{x:Static resources:Resource.WindowsOptimizationPage_PauseAll_Button}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </wpfui:Button.Style>
+                                <wpfui:SymbolIcon>
+                                    <wpfui:SymbolIcon.Style>
+                                        <Style TargetType="wpfui:SymbolIcon" BasedOn="{StaticResource {x:Type wpfui:SymbolIcon}}">
+                                            <Setter Property="Symbol" Value="Dismiss24" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                    <Setter Property="Symbol" Value="Pause24" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </wpfui:SymbolIcon.Style>
+                                </wpfui:SymbolIcon>
                             </wpfui:Button>
                             </WrapPanel>
                         </StackPanel>
@@ -590,6 +592,17 @@
                                             </RadioButton>
 
                                         </StackPanel>
+                                        
+                                        <wpfui:Button
+                                            Grid.Row="3"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="4"
+                                            Margin="0,16,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Appearance="Primary"
+                                            Icon="Search24"
+                                            Content="{x:Static resources:Resource.Filter}"
+                                            Click="DriverSearchButton_Click" />
                                     </Grid>
                                 </custom:CardControl.Header>
                             </custom:CardControl>
@@ -610,9 +623,10 @@
                                             Margin="0,0,0,8"
                                             IsClosable="False"
                                             IsOpen="True"
-                                            Severity="Informational" />
+                                            Severity="Informational"
+                                            Visibility="Collapsed" />
 
-                                        <Grid Margin="0,0,0,8">
+                                        <Grid x:Name="_driverSearchControlsGrid" Margin="0,0,0,8" Visibility="Collapsed">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="250" />
                                                 <ColumnDefinition Width="Auto" />
@@ -712,9 +726,6 @@
                                     <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                             <Style x:Key="RightColumnCardStyle" TargetType="Border" BasedOn="{StaticResource CardContainerStyle}">
@@ -730,15 +741,6 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-
-                        <Style x:Key="RightColumnBeautificationCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
                         </StackPanel.Resources>
                         
 
@@ -1099,120 +1101,6 @@
                                         Content="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Clear}" />
                                 </StackPanel>
                             </Grid>
-                        </Border>
-
-                        <!-- Windows Beautification Mode Content -->
-                        <!-- Theme Settings Section -->
-                        <Border
-                            Style="{StaticResource RightColumnBeautificationCardStyle}">
-                            <StackPanel>
-                                <TextBlock
-                                    FontWeight="Medium"
-                                    FontSize="16"
-                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Title}" />
-                                <TextBlock
-                                    Margin="0,4,0,12"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    FontSize="13"
-                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Theme_Description}"
-                                    TextWrapping="Wrap" />
-                                <StackPanel Margin="0,0,0,0">
-                                    <RadioButton
-                                        x:Name="_beautificationThemeAutoRadio"
-                                        GroupName="BeautificationTheme"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Auto}"
-                                        Margin="0,0,0,8"
-                                        Checked="BeautificationThemeRadio_Checked" />
-                                    <RadioButton
-                                        x:Name="_beautificationThemeLightRadio"
-                                        GroupName="BeautificationTheme"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Light}"
-                                        Margin="0,0,0,8"
-                                        Checked="BeautificationThemeRadio_Checked" />
-                                    <RadioButton
-                                        x:Name="_beautificationThemeDarkRadio"
-                                        GroupName="BeautificationTheme"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Dark}"
-                                        Margin="0,0,0,8"
-                                        Checked="BeautificationThemeRadio_Checked" />
-                                    <RadioButton
-                                        x:Name="_beautificationThemeClassicRadio"
-                                        GroupName="BeautificationTheme"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Classic}"
-                                        Margin="0,0,0,8"
-                                        Checked="BeautificationThemeRadio_Checked" />
-                                    <RadioButton
-                                        x:Name="_beautificationThemeModernRadio"
-                                        GroupName="BeautificationTheme"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Theme_Modern}"
-                                        Margin="0,0,0,0"
-                                        Checked="BeautificationThemeRadio_Checked" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Transparency Settings Section -->
-                        <Border
-                            Style="{StaticResource RightColumnBeautificationCardStyle}">
-                            <StackPanel>
-                                <TextBlock
-                                    FontWeight="Medium"
-                                    FontSize="16"
-                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Title}" />
-                                <TextBlock
-                                    Margin="0,4,0,12"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    FontSize="13"
-                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Transparency_Description}"
-                                    TextWrapping="Wrap" />
-                                <wpfui:ToggleSwitch
-                                    x:Name="_beautificationTransparencyToggle"
-                                    IsChecked="{Binding TransparencyEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}"
-                                    Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Transparency_Enable}"
-                                    Click="TransparencyToggle_Click" />
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Appearance Settings Section -->
-                        <Border
-                            Style="{StaticResource RightColumnBeautificationCardStyle}">
-                            <StackPanel>
-                                <TextBlock
-                                    FontWeight="Medium"
-                                    FontSize="16"
-                                    Text="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Title}" />
-                                <TextBlock
-                                    Margin="0,4,0,12"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    FontSize="13"
-                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Beautification_Appearance_Description}"
-                                    TextWrapping="Wrap" />
-                                <StackPanel Margin="0,0,0,0">
-                                    <wpfui:ToggleSwitch
-                                        x:Name="_beautificationRoundedCornersToggle"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners}"
-                                        Margin="0,0,0,8"
-                                        IsChecked="{Binding RoundedCornersEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}" />
-                                    <wpfui:ToggleSwitch
-                                        x:Name="_beautificationShadowsToggle"
-                                        Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Appearance_Shadows}"
-                                        Margin="0,0,0,0"
-                                        IsChecked="{Binding ShadowsEnabled, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}, Mode=TwoWay}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Apply Button Section -->
-                        <Border
-                            Style="{StaticResource RightColumnBeautificationCardStyle}">
-                            <StackPanel>
-                                <wpfui:Button
-                                    x:Name="_applyBeautificationStyleButton"
-                                    MinWidth="120"
-                                    HorizontalAlignment="Stretch"
-                                    Click="ApplyBeautificationStyleButton_Click"
-                                    Content="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Apply}" />
-                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>

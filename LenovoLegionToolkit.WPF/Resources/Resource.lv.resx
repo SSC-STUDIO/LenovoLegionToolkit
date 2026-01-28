@@ -469,19 +469,6 @@ BRĪDINĀJUMS. Ja iebūvētais ekrāns ir izslēgts, šī darbība nedarbosies p
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Ekrāna spilgtums</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Ziedot ar</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Lenovo Legion Toolkit izstrāde un uzturēšana prasa daudz laika. Ja jums patīk izmantot šo programmatūru, varat atbalstīt tās nākotni, ziedojot noteiktu summu.
-
-Noklikšķiniet uz zemāk redzamā PayPal logotipa vai skenējiet QR kodu, lai ziedotu ar PayPal.
-
-Paldies jau iepriekš!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Ziedot</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Rediģēt</value>
   </data>
@@ -727,9 +714,6 @@ BRĪDINĀJUMS. Ja iebūvētais ekrāns ir izslēgts, šī darbība nedarbosies p
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Informācijas panelis</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Ziedot</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Tastatūra</value>

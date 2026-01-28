@@ -423,13 +423,7 @@ Plugins can be installed in two ways:
 
 For information on how to develop plugins for LLT, please refer to the plugin development documentation.
 
-## Donate
 
-If you enjoy using the Lenovo Legion Toolkit, consider donating.
-
-[Donate with PayPal](https://www.paypal.com/donate/?hosted_button_id=22AZE2NBP3HTL)
-
-<img src="LenovoLegionToolkit.WPF/Assets/Donate/paypal_qr.png" width="200" alt="PayPal QR code" />
 
 ## Credits
 

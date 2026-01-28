@@ -54,7 +54,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public ModifierKey SmartFnLockFlags { get; set; }
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
         public bool DisableUnsupportedHardwareWarning { get; set; }
-        public bool ShowDonateButton { get; set; } = true;
+
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
         public bool ExtensionsEnabled { get; set; } = false;
         public List<string> InstalledExtensions { get; set; } = [];
@@ -67,7 +67,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "macro", true },
             { "windowsOptimization", true },
             { "pluginExtensions", true },
-            { "donate", true },
+
             { "about", true }
         };
     }
@@ -82,31 +82,8 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         var store = base.LoadStore();
         var settingsStorePath = Path.Combine(Folders.AppData, "settings.json");
         
-        // If store is null (file doesn't exist), return null to use default (ShowDonateButton = true)
         if (store is null)
             return null;
-        
-        // Check if the JSON file contains ShowDonateButton field
-        // If not, it means this is an upgrade from an older version, so default to true
-        try
-        {
-            if (File.Exists(settingsStorePath))
-            {
-                var settingsJson = File.ReadAllText(settingsStorePath);
-                var jsonObject = JObject.Parse(settingsJson);
-                
-                // If ShowDonateButton field doesn't exist in JSON, ensure it defaults to true
-                if (!jsonObject.ContainsKey("ShowDonateButton"))
-                {
-                    store.ShowDonateButton = true;
-                }
-            }
-        }
-        catch
-        {
-            // If parsing fails, ensure default is true
-            store.ShowDonateButton = true;
-        }
         
         return store;
     }

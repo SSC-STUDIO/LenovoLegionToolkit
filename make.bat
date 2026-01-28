@@ -56,7 +56,7 @@ IF "%2"=="" (
     CALL :BUILD_PLUGIN NetworkAcceleration %COPY_TO_TEST%
     CALL :BUILD_PLUGIN ShellIntegration %COPY_TO_TEST%
     CALL :BUILD_PLUGIN ViveTool %COPY_TO_TEST%
-    CALL :BUILD_PLUGIN Tools %COPY_TO_TEST%
+    CALL :BUILD_PLUGIN CustomMouse %COPY_TO_TEST%
     ECHO All plugins built successfully!
 ) ELSE (
     ECHO Building plugin: %2

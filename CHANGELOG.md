@@ -11,6 +11,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 新增
+- Real-time power usage display for CPU and GPU in dashboard / 控制台新增 CPU 和 GPU 实时功耗显示
+- Detailed model name display for CPU and GPU / CPU 和 GPU 详细型号名称显示
+- GPU memory clock monitoring in detailed view / 详细视图中新增显存频率监控
+- Double-click interaction to toggle sensor details / 双击传感器卡片切换详情显示
+- Custom Mouse plugin with intelligent color detection / 自定义鼠标插件，支持智能颜色检测
+- W11-CC-V2.2-HDPI cursor style support with high DPI optimization / W11-CC-V2.2-HDPI光标样式支持，高DPI优化
+- Automatic theme switching based on background color brightness / 基于背景颜色亮度的自动主题切换
+- Dual operation modes: Extension and Independent / 双操作模式：扩展和独立
+- Plugin configuration management with user preferences / 插件配置管理，支持用户偏好设置
+- Mouse cursor real-time preview and status display / 鼠标光标实时预览和状态显示
+- Brightness threshold adjustment for better color detection / 亮度阈值调节，优化颜色检测效果
+- Startup auto-apply functionality / 启动时自动应用功能
+- Mouse style restoration to Windows defaults / 恢复Windows默认鼠标样式
+- Multi-language support for plugin interface / 插件界面多语言支持
+
+### Improved / 改进
+- Unified dashboard layout merging battery, CPU, and GPU stats / 统一控制台布局，合并电池、CPU 和 GPU 状态
+- Enhanced battery status display with progress bars for all metrics / 增强电池状态显示，所有指标均配有进度条
+- Optimized progress bar styling and column spacing in sensors dashboard / 优化传感器控制台的进度条样式和列间距
+- GPU clock display logic (Core clock in main view, Memory clock in details) / GPU 频率显示逻辑（主视图显示核心频率，详情显示显存频率）
+- Enhanced system optimization architecture by extracting mouse functionality to plugin / 通过将鼠标功能提取为插件来增强系统优化架构
+- Converted all Chinese code comments to English for better international code maintenance / 将所有中文代码注释转换为英文，以改善国际化代码维护
+- Standardized code comments in WindowsOptimizationPage.xaml.cs for consistency / 标准化WindowsOptimizationPage.xaml.cs中的代码注释以提高一致性
+- Updated CustomMouse plugin comments to English for broader developer accessibility / 更新CustomMouse插件注释为英文，提高开发者可访问性
+- Unified comment language across AbstractSensorsController and controller classes / 统一AbstractSensorsController和控制器类中的注释语言
+- Better resource management by moving W11-CC-V2.2-HDPI assets to plugin directory / 将W11-CC-V2.2-HDPI资源移动到插件目录以实现更好的资源管理
+- Improved user experience with dedicated mouse customization interface / 专用鼠标自定义界面改善用户体验
+- Modular plugin design for easier maintenance and extensibility / 模块化插件设计，便于维护和扩展
+- Completed Windows optimization page behavior with modular handling / 完善Windows优化页面行为并模块化处理
+
+### Fixed / 修复
+- Fixed GPU information text clipping issues on left side / 修复左侧 GPU 信息文本遮挡问题
+- Resolved mouse style application conflicts in system optimization / 解决系统优化中鼠标样式应用冲突
+- Fixed resource loading issues for cursor themes / 修复光标主题资源加载问题
+- Corrected plugin metadata and version information / 修正插件元数据和版本信息
 - Shell Integration plugin for enhanced Windows context menu functionality / Shell集成插件，增强Windows右键菜单功能
 - System optimization Extensions tab for managing installed plugins / 系统优化扩展标签页，用于管理已安装的插件
 - Context menu item management with customizable commands / 右键菜单项管理，支持自定义命令
@@ -20,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin icon background color mapping for different plugin types / 不同插件类型的图标背景颜色映射
 - Shell Integration functionality migrated to plugin architecture / Shell集成功能迁移到插件架构
 - PluginManager TryGetPlugin method for better plugin discovery / PluginManager TryGetPlugin方法，改进插件发现
+- Removed donate functionality and all related UI components / 移除赞助功能及所有相关UI组件
 
 
 ### Fixed / 修复
