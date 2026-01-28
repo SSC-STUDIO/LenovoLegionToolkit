@@ -94,9 +94,9 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Current version: {thisReleaseVersion}, Found releases: {releases.Count}");
 
-                var publicReleases = releases.Where(r => !r.Draft && !r.Prerelease).ToArray();
+                var publicReleases = releases.Where(r => !r.Draft).ToArray();
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Public releases (non-draft, non-prerelease): {publicReleases.Length}");
+                    Log.Instance.Trace($"Public releases (non-draft): {publicReleases.Length}");
 
                 var updates = publicReleases
                     .Select(r =>
@@ -104,10 +104,18 @@ public class UpdateChecker
                         try
                         {
                             var update = new Update(r);
-                            // Only compare if thisReleaseVersion is not null
-                            var isNewer = thisReleaseVersion != null && update.Version > thisReleaseVersion;
+                            // Normalize versions to 3 components for comparison to avoid issues with build/revision numbers
+                            var localVersion = thisReleaseVersion != null 
+                                ? new Version(thisReleaseVersion.Major, thisReleaseVersion.Minor, thisReleaseVersion.Build) 
+                                : new Version(0, 0, 0);
+                            
+                            var updateVersion = new Version(update.Version.Major, update.Version.Minor, Math.Max(0, update.Version.Build));
+
+                            var isNewer = updateVersion > localVersion || 
+                                          (updateVersion == localVersion && !update.IsPrerelease);
+
                             if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Release {update.Version} (tag: {r.TagName}) is {(isNewer ? "newer" : "not newer")} than current version {thisReleaseVersion}");
+                                Log.Instance.Trace($"Release {update.Version} (tag: {r.TagName}, prerelease: {update.IsPrerelease}) is {(isNewer ? "newer" : "not newer")} than current version {thisReleaseVersion}");
                             return (Update: (Update?)update, IsNewer: isNewer);
                         }
                         catch (Exception ex)
