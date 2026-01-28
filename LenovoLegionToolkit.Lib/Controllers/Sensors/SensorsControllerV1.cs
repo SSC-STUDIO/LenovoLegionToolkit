@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -18,7 +18,7 @@ public class SensorsControllerV1(GPUController gpuController) : AbstractSensorsC
             result &= await WMI.LenovoFanTableData.ExistsAsync(0, GPU_FAN_ID).ConfigureAwait(false);
 
             if (result)
-                _ = await GetDataAsync().ConfigureAwait(false);
+                _ = await GetDataAsync(false).ConfigureAwait(false);
 
             return result;
         }

@@ -525,19 +525,7 @@
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>顯示亮度</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>贊助於</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>開發和維護 Lenovo Legion 工具套件需要大量的時間。如果您喜歡此應用程式，您可以透過贊助來支持應用程式未來的開發。
 
-點擊下方的 PayPal 圖示或掃描 QR 條碼使用 PayPal 贊助。
-
-萬分的感謝您！</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>贊助</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>編輯</value>
   </data>
@@ -787,9 +775,7 @@
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>控制面板</value>
   </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>贊助</value>
-  </data>
+
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>鍵盤</value>
   </data>

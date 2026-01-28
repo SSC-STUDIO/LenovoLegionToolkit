@@ -458,13 +458,7 @@ LLT 提供了功能全面的插件扩展页面，具有以下特点：
 
 有关如何为 LLT 开发插件的信息，请参考插件开发文档。
 
-## 赞助
 
-开发不易，如果你觉得 LLT 不错的话，可以考虑赞助以支持开发。
-
-[使用PayPal赞助](https://www.paypal.com/donate/?hosted_button_id=22AZE2NBP3HTL)
-
-<img src="LenovoLegionToolkit.WPF/Assets/Donate/paypal_qr.png" width="200" alt="PayPal QR code" />
 
 ## 贡献者
 

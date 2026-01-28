@@ -61,8 +61,31 @@
       "minimumHostVersion": "2.0.0",
       "name": "NetworkAcceleration",
       "fileHash": "9dbd7e23511fe9922e1ccf157545ce11aa59fdcc385273728f398a8fac7eadf5"
+    },
+    {
+      "icon": "Cursor24",
+      "iconBackground": "#FF6F00",
+      "fileSize": 1500000,
+      "name": "CustomMouse",
+      "downloadUrl": "file:///C:/Users/96152/My-Project/Application_Project/Transplant_Project/LenovoLegionToolkit/plugins/CustomMouse.zip",
+      "isSystemPlugin": false,
+      "description": "Custom mouse plugin with intelligent color detection and cursor customization / 自定义鼠标插件，支持智能颜色检测和光标自定义",
+      "version": "1.0.0",
+      "changelog": "Version 1.0.0 (2026-01-27)\n- Initial release of Custom Mouse plugin\n- Intelligent color detection for automatic theme switching\n- W11-CC-V2.2-HDPI cursor style support with high DPI optimization\n- Dual operation modes: Extension and Independent\n- Plugin configuration management with user preferences\n- Mouse cursor real-time preview and status display\n- Brightness threshold adjustment for better color detection\n- Startup auto-apply functionality\n- Mouse style restoration to Windows defaults\n- Multi-language support for plugin interface",
+      "releaseDate": "2026-01-27T21:00:00Z",
+      "fileHash": "custom_mouse_placeholder_hash",
+      "author": "LenovoLegionToolkit Team",
+      "dependencies": null,
+      "id": "custom-mouse",
+      "tags": [
+        "utility",
+        "mouse",
+        "cursor",
+        "customization"
+      ],
+      "minimumHostVersion": "2.0.0"
     }
   ],
-  "lastUpdated": "2026-01-23T12:00:00Z",
-  "storeVersion": "1.1.0"
+  "lastUpdated": "2026-01-27T21:00:00Z",
+  "storeVersion": "1.2.0"
 }

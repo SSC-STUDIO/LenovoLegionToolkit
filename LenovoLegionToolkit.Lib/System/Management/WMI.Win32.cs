@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,12 +58,61 @@ public static partial class WMI
 
         public static class Processor
         {
+            public static async Task<string> GetNameAsync()
+            {
+                var result = await ReadAsync("root\\CIMV2",
+                    $"SELECT * FROM Win32_Processor",
+                    pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
+                return result.FirstOrDefault() ?? "Unknown CPU";
+            }
+
             public static async Task<int> GetAddressWidthAsync()
             {
                 var result = await ReadAsync("root\\CIMV2",
                     $"SELECT * FROM Win32_Processor",
                     pdc => Convert.ToInt32(pdc["AddressWidth"].Value)).ConfigureAwait(false);
                 return result.First();
+            }
+
+            public static async Task<double> GetVoltageAsync()
+            {
+                var result = await ReadAsync("root\\CIMV2",
+                    $"SELECT CurrentVoltage FROM Win32_Processor",
+                    pdc =>
+                    {
+                        if (pdc["CurrentVoltage"].Value is ushort voltageRaw)
+                        {
+                            if ((voltageRaw & 0x80) != 0)
+                            {
+                                return (voltageRaw & 0x7F) / 10.0;
+                            }
+                            else
+                            {
+                                return voltageRaw / 1000.0;
+                            }
+                        }
+                        return 0.0;
+                    }).ConfigureAwait(false);
+                return result.FirstOrDefault();
+            }
+        }
+
+        public static class VideoController
+        {
+            public static async Task<string> GetNameAsync()
+            {
+                // Prioritize discrete GPU if possible, or return the first one that is not "Microsoft Basic Display Adapter"
+                var result = await ReadAsync("root\\CIMV2",
+                    $"SELECT * FROM Win32_VideoController",
+                    pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
+                
+                // Simple logic: pick the one with "NVIDIA" or "AMD" or "Intel" (Arc?) if multiple
+                // For now just return the first one or combine them?
+                // Usually laptops have iGPU and dGPU. Users care about dGPU.
+                // Or maybe I should return all unique names?
+                // Let's filter for NVIDIA/AMD first.
+                var discrete = result.FirstOrDefault(n => n.Contains("NVIDIA") || n.Contains("Radeon") || n.Contains("Arc"));
+                return discrete ?? result.FirstOrDefault() ?? "Unknown GPU";
             }
         }
 

@@ -525,19 +525,6 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je displej notebooku vypnutý
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Jas displeje</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Přispět pomocí</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Vývoj a údržba Lenovo Legion Toolkit zabere spoustu času. Pokud rád používáš tento software, můžeš podpořit jeho budoucnost darováním částky dle vlastního výběru.
-
-Klikněte na logo PayPal níže nebo naskenujte QR kód a přispějte přes PayPal.
-
-Díky předem!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Přispět</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Editovat</value>
   </data>
@@ -760,9 +747,6 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Přehled</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Přispět</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Klávesnice</value>

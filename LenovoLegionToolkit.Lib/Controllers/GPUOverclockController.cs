@@ -43,9 +43,9 @@ public class GPUOverclockController
             NVAPI.Initialize();
             return GetMaxMemoryDeltaMhz(NVAPI.GetGPU());
         }
-        catch
+        finally
         {
-            return 750; // Fallback default
+            try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
     }
 
@@ -61,6 +61,10 @@ public class GPUOverclockController
         catch
         {
             isSupported = false;
+        }
+        finally
+        {
+            try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
 
         if (Log.Instance.IsTraceEnabled)
@@ -180,6 +184,8 @@ public class GPUOverclockController
         finally
         {
             Changed?.Invoke(this, EventArgs.Empty);
+
+            try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
     }
 

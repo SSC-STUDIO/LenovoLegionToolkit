@@ -576,7 +576,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Shell Integration plugin installed");
+                Log.Instance.Trace($"Shell Integration plugin installed");
         }
         catch (Exception ex)
         {
@@ -621,7 +621,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
             }
             
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Shell Integration plugin uninstalled");
+                Log.Instance.Trace($"Shell Integration plugin uninstalled");
         }
         catch (Exception ex)
         {

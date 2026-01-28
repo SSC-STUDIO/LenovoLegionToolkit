@@ -12,15 +12,12 @@ using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.WPF.Windows;
 using LenovoLegionToolkit.WPF.Windows.Utils;
-using Microsoft.Win32;
 using System.IO;
 using System.Diagnostics;
 using LenovoLegionToolkit.Lib.PackageDownloader;
@@ -32,46 +29,15 @@ using System.Windows.Media;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
-
-#pragma warning disable CS0169 // 字段从未使用
-#pragma warning disable CS1998 // 异步方法缺少 await 运算符
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
 public partial class WindowsOptimizationPage : INotifyPropertyChanged
 {
-    #region 服务和依赖项
-    
     private readonly WindowsOptimizationService _windowsOptimizationService = IoCContainer.Resolve<WindowsOptimizationService>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
-    private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
     private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();
-    
-    #endregion
-
-    #region Shell Integration Helper
-
-    private IShellIntegrationHelper? GetShellIntegrationHelper()
-    {
-        try
-        {
-            // Try to get the shell-integration plugin
-            if (_pluginManager.TryGetPlugin("shell-integration", out var plugin) && plugin is IShellIntegrationHelper helper)
-                return helper;
-        }
-        catch
-        {
-            // Plugin not available or not implementing the interface
-        }
-        return null;
-    }
-
-    #endregion
-    
-    #region 驱动下载字段
-    
     private IPackageDownloader? _driverPackageDownloader;
     private CancellationTokenSource? _driverGetPackagesTokenSource;
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
@@ -94,11 +60,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             OnPropertyChanged(nameof(DriverExpandCollapseText));
         }
     }
-    
-    #endregion
-    
-    #region 页面模式
-    
     private enum PageMode
     {
         Optimization,
@@ -111,16 +72,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         Optimization = 1,
         Cleanup = 2,
-        Beautification = 4,
-        All = Optimization | Cleanup | Beautification
+        All = Optimization | Cleanup
     }
     
     private PageMode _currentMode = PageMode.Optimization;
-    
-    #endregion
-    
-    #region 主要属性
-    
     private bool _isBusy;
     private SelectedActionsWindow? _selectedActionsWindow;
     private string _selectedActionsSummaryFormat = "{0}";
@@ -128,12 +83,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private OptimizationCategoryViewModel? _selectedCategory;
     private OptimizationCategoryViewModel? _lastOptimizationCategory;
     private OptimizationCategoryViewModel? _lastCleanupCategory;
-    private OptimizationCategoryViewModel? _lastBeautificationCategory;
+    private bool _isLoadingCustomCleanupRules;
     private long _estimatedCleanupSize;
     private bool _isCalculatingSize;
+    private CancellationTokenSource? _sizeCalculationCts;
     private string _currentOperationText = string.Empty;
     private string _currentDeletingFile = string.Empty;
     private string _runCleanupButtonText = string.Empty;
+    private bool _hasInitializedCleanupMode;
     
     public bool IsBusy
     {
@@ -158,18 +115,15 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     public ObservableCollection<OptimizationCategoryViewModel> Categories { get; } = [];
     public ObservableCollection<OptimizationCategoryViewModel> OptimizationCategories { get; } = [];
     public ObservableCollection<OptimizationCategoryViewModel> CleanupCategories { get; } = [];
-    public ObservableCollection<OptimizationCategoryViewModel> BeautificationCategories { get; } = [];
     public ObservableCollection<SelectedActionViewModel> SelectedOptimizationActions { get; } = [];
     public ObservableCollection<SelectedActionViewModel> SelectedCleanupActions { get; } = [];
-    public ObservableCollection<SelectedActionViewModel> SelectedBeautificationActions { get; } = [];
     public ObservableCollection<SelectedDriverPackageViewModel> SelectedDriverPackages { get; } = [];
     public ObservableCollection<CustomCleanupRuleViewModel> CustomCleanupRules { get; } = [];
     
     public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => _currentMode switch
     {
         PageMode.Cleanup => SelectedCleanupActions,
-        PageMode.Optimization => new ObservableCollection<SelectedActionViewModel>(
-            SelectedOptimizationActions.Concat(SelectedBeautificationActions)),
+        PageMode.Optimization => SelectedOptimizationActions,
         _ => SelectedOptimizationActions
     };
     
@@ -319,7 +273,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     }
     
     public bool IsCleanupMode => _currentMode == PageMode.Cleanup;
-    public bool IsBeautificationMode => _currentMode == PageMode.Optimization && BeautificationCategories.Count > 0;
     public bool IsDriverDownloadMode => _currentMode == PageMode.DriverDownload;
 
     
@@ -338,10 +291,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     _lastCleanupCategory = value;
                     break;
                 default:
-                    if (value != null && value.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
-                        _lastBeautificationCategory = value;
-                    else
-                        _lastOptimizationCategory = value;
+                    _lastOptimizationCategory = value;
                     break;
             }
             OnPropertyChanged(nameof(SelectedCategory));
@@ -352,112 +302,19 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         PageMode.Cleanup => CleanupCategories,
         PageMode.DriverDownload => [],
-        _ => OptimizationCategories.Concat(BeautificationCategories)
+        _ => OptimizationCategories
     };
-    
-    #endregion
-    
-    #region Beautification字段和属性
-    
     private bool _isRefreshingStates = false;
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
-    private DateTime _lastUserInteraction = DateTime.Now;
-    private bool _transparencyEnabled;
-    private bool _roundedCornersEnabled = true;
-    private bool _shadowsEnabled = true;
-    private string _selectedTheme = "auto";
-    private System.Windows.Threading.DispatcherTimer? _beautificationStatusTimer;
-    private MenuStyleSettingsWindow? _styleSettingsWindow;
+    private bool _isUserInteracting;
+    private DateTime _lastUserInteraction = DateTime.MinValue;
+    private System.Windows.Threading.DispatcherTimer? _actionStateRefreshTimer;
+    private DateTime _lastActionItemClickTime = DateTime.MinValue;
+    private string? _lastActionItemKey;
     private ActionDetailsWindow? _actionDetailsWindow;
-    
-    public bool TransparencyEnabled
-    {
-        get => _transparencyEnabled;
-        set
-        {
-            if (_transparencyEnabled == value)
-                return;
-                
-            _transparencyEnabled = value;
-            OnPropertyChanged(nameof(TransparencyEnabled));
-            SetTransparencyEnabled(value);
-        }
-    }
-    
-    public bool RoundedCornersEnabled
-    {
-        get => _roundedCornersEnabled;
-        set
-        {
-            if (_roundedCornersEnabled == value)
-                return;
-                
-            _roundedCornersEnabled = value;
-            OnPropertyChanged(nameof(RoundedCornersEnabled));
-        }
-    }
-    
-    public bool ShadowsEnabled
-    {
-        get => _shadowsEnabled;
-        set
-        {
-            if (_shadowsEnabled == value)
-                return;
-                
-            _shadowsEnabled = value;
-            OnPropertyChanged(nameof(ShadowsEnabled));
-        }
-    }
-    
-    public string SelectedTheme
-    {
-        get => _selectedTheme;
-        set
-        {
-            if (_selectedTheme == value)
-                return;
-                
-            _selectedTheme = value;
-            OnPropertyChanged(nameof(SelectedTheme));
-        }
-    }
-    
-    public string BeautificationStatusText { get; private set; } = string.Empty;
-    
-    public bool CanInstall
-    {
-        get
-        {
-            var helper = GetShellIntegrationHelper();
-            if (helper == null)
-                return false;
-                
-            var isInstalled = helper.IsInstalled();
-            var isInstalledUsingShellExe = helper.IsInstalledUsingShellExe();
-            return isInstalled && !isInstalledUsingShellExe;
-        }
-    }
-    
-    public bool CanUninstall
-    {
-        get
-        {
-            var helper = GetShellIntegrationHelper();
-            if (helper == null)
-                return false;
-                
-            return helper.IsInstalledUsingShellExe();
-        }
-    }
-    
-    #endregion
-    
-    #region 辅助方法和字段
     
     private bool _optimizationInteractionEnabled = true;
     private bool _cleanupInteractionEnabled = true;
-    private bool _beautificationInteractionEnabled = true;
     
     private static string FormatBytes(long bytes)
     {
@@ -477,22 +334,86 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         return Resource.ResourceManager.GetString(key) ?? key;
     }
+
+    private static void UpdateCollection<T>(ObservableCollection<T> existing, List<T> updated)
+    {
+        if (existing.Count == updated.Count && existing.SequenceEqual(updated))
+            return;
+        for (int i = existing.Count - 1; i >= 0; i--)
+        {
+            var item = existing[i];
+            if (!updated.Contains(item))
+            {
+                if (item is IDisposable disposable)
+                    disposable.Dispose();
+                existing.RemoveAt(i);
+            }
+        }
+        for (int i = 0; i < updated.Count; i++)
+        {
+            var item = updated[i];
+            if (i < existing.Count)
+            {
+                if (EqualityComparer<T>.Default.Equals(existing[i], item))
+                    continue;
+                var existingIndex = existing.IndexOf(item);
+                if (existingIndex >= 0)
+                {
+                    existing.RemoveAt(existingIndex);
+                    existing.Insert(i, item);
+                }
+                else
+                {
+                    existing.Insert(i, item);
+                }
+            }
+            else
+            {
+                existing.Add(item);
+            }
+        }
+        while (existing.Count > updated.Count)
+        {
+            var lastIndex = existing.Count - 1;
+            if (existing[lastIndex] is IDisposable disposable)
+                disposable.Dispose();
+            existing.RemoveAt(lastIndex);
+        }
+    }
     
     private void ApplyInteractionState()
     {
         var optimizationEnabled = _optimizationInteractionEnabled;
         var cleanupEnabled = _cleanupInteractionEnabled;
-        var beautificationEnabled = _beautificationInteractionEnabled;
         
         var primaryButtonsEnabled = _currentMode switch
         {
             PageMode.Cleanup => cleanupEnabled,
-            PageMode.Optimization => optimizationEnabled || beautificationEnabled,
-            PageMode.DriverDownload => true,
-            _ => true
+            PageMode.Optimization => optimizationEnabled,
+            PageMode.DriverDownload => !IsDriverDownloadBusy(),
+            _ => optimizationEnabled
         };
-        
-        // TODO: 更新UI控件启用状态
+
+        if (_selectRecommendedButton != null)
+            _selectRecommendedButton.IsEnabled = primaryButtonsEnabled;
+
+        if (_clearButton != null)
+            _clearButton.IsEnabled = primaryButtonsEnabled;
+
+        if (_runCleanupButton != null)
+            _runCleanupButton.IsEnabled = cleanupEnabled;
+
+        var categoriesList = FindName("_categoriesList") as System.Windows.Controls.ItemsControl;
+        if (categoriesList != null)
+        {
+            var listEnabled = _currentMode switch
+            {
+                PageMode.Cleanup => cleanupEnabled,
+                PageMode.Optimization => optimizationEnabled,
+                _ => optimizationEnabled
+            };
+            categoriesList.IsEnabled = listEnabled;
+        }
     }
     
     private void ToggleInteraction(bool isEnabled, InteractionScope scope)
@@ -502,9 +423,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             
         if (scope.HasFlag(InteractionScope.Cleanup))
             _cleanupInteractionEnabled = isEnabled;
-            
-        if (scope.HasFlag(InteractionScope.Beautification))
-            _beautificationInteractionEnabled = isEnabled;
             
         foreach (var category in GetCategoriesForScope(scope))
             category.SetEnabled(isEnabled);
@@ -518,13 +436,10 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         foreach (var category in Categories)
         {
             var isCleanupCategory = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
-            var isBeautificationCategory = category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase);
             
             if (isCleanupCategory && scope.HasFlag(InteractionScope.Cleanup))
                 yield return category;
-            else if (isBeautificationCategory && scope.HasFlag(InteractionScope.Beautification))
-                yield return category;
-            else if (!isCleanupCategory && !isBeautificationCategory && scope.HasFlag(InteractionScope.Optimization))
+            else if (!isCleanupCategory && scope.HasFlag(InteractionScope.Optimization))
                 yield return category;
         }
     }
@@ -556,205 +471,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
     
-    private static string GenerateShellConfig(string theme, bool transparencyEnabled, bool roundedCornersEnabled, bool shadowsEnabled)
+    
+    private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
     {
-        string themeColors;
-        switch (theme)
-        {
-            case "light":
-                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
-                break;
-            case "dark":
-                themeColors = "background-color: #2d2d2d;\ntext-color: #ffffff;";
-                break;
-            case "classic":
-                themeColors = "background-color: #f0f0f0;\ntext-color: #000000;";
-                break;
-            case "modern":
-                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
-                break;
-            default:
-                themeColors = "background-color: #ffffff;\ntext-color: #000000;";
-                break;
-        }
-
-        return "# Generated by Lenovo Legion Toolkit\n" +
-               $"# Theme: {theme}\n" +
-               $"# Transparency: {(transparencyEnabled ? "enabled" : "disabled")}\n" +
-               $"# Rounded corners: {(roundedCornersEnabled ? "enabled" : "disabled")}\n" +
-               $"# Shadows: {(shadowsEnabled ? "enabled" : "disabled")}\n" +
-               $"\n" +
-               $"# Import base theme configuration\n" +
-               $"import 'imports/theme.nss'\n" +
-               $"import 'imports/images.nss'\n" +
-               $"import 'imports/modify.nss'\n" +
-               $"\n" +
-               $"# Theme settings based on user selection\n" +
-               $"theme\n" +
-               $"{{\n" +
-               $"    # Appearance settings\n" +
-               $"    corner-radius: {(roundedCornersEnabled ? "5" : "0")}px;\n" +
-               $"    shadow: {(shadowsEnabled ? "true" : "false")};\n" +
-               $"    transparency: {(transparencyEnabled ? "true" : "false")};\n" +
-               $"\n" +
-               $"    # Color settings based on selected theme\n" +
-               $"    {themeColors}\n" +
-               $"}}\n" +
-               $"\n" +
-               $"# Additional configuration for different contexts\n" +
-               $".menu\n" +
-               $"{{\n" +
-               $"    padding: 4px;\n" +
-               $"    border-width: 1px;\n" +
-               $"    border-style: solid;\n" +
-               $"    {(roundedCornersEnabled ? "border-radius: 5px;" : "")}\n" +
-               $"}}\n" +
-               $"\n" +
-               $".separator\n" +
-               $"{{\n" +
-               $"    height: 1px;\n" +
-               $"    margin: 4px 20px;\n" +
-               $"}}\n";
+        _actionStateRefreshTimer?.Stop();
+        _actionDetailsWindow?.Close();
     }
-    
-    private async Task RefreshBeautificationStatusAsync()
-    {
-        try
-        {
-            // 清除缓存以确保获取最新的安装状态
-            var helper = GetShellIntegrationHelper();
-            helper?.ClearInstallationStatusCache();
-            
-            var isInstalled = helper != null ? await helper.IsInstalledUsingShellExeAsync() : false;
-            await Dispatcher.InvokeAsync(() =>
-            {
-                TransparencyEnabled = GetTransparencyEnabled();
-                UpdateBeautificationUIForRegistrationStatus(isInstalled);
-            });
-            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
-        }
-        catch
-        {
-            // ignore
-        }
-    }
-    
-    private void UpdateBeautificationUIForRegistrationStatus(bool isRegistered)
-    {
-        var helper = GetShellIntegrationHelper();
-        var isInstalled = helper?.IsInstalled() ?? false;
-
-        if (!isInstalled)
-        {
-            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_NotInstalled;
-        }
-        else if (isRegistered)
-        {
-            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_Installed;
-        }
-        else
-        {
-            BeautificationStatusText = Resource.SystemBeautification_RightClick_Status_InstalledButNotRegistered;
-        }
-
-        OnPropertyChanged(nameof(BeautificationStatusText));
-        OnPropertyChanged(nameof(CanInstall));
-        OnPropertyChanged(nameof(CanUninstall));
-    }
-    
-    private void StartBeautificationStatusMonitoring()
-    {
-        _beautificationStatusTimer?.Stop();
-        _beautificationStatusTimer = new System.Windows.Threading.DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(5) // 每5秒更新一次shell安装状态
-        };
-        _beautificationStatusTimer.Tick += async (s, e) => await RefreshBeautificationStatusAsync();
-        _beautificationStatusTimer.Start();
-    }
-    
-    private void LoadBeautificationSettings()
-    {
-        try
-        {
-            var configPath = GetShellConfigPath();
-            if (string.IsNullOrWhiteSpace(configPath))
-            {
-                // Use defaults
-                SelectedTheme = "auto";
-                TransparencyEnabled = GetTransparencyEnabled();
-                RoundedCornersEnabled = true;
-                ShadowsEnabled = true;
-            }
-            else
-            {
-                // Load from config file
-                var configContent = File.ReadAllText(configPath);
-                // Parse config file to get current settings
-                // For now, use defaults
-                SelectedTheme = "auto";
-                TransparencyEnabled = GetTransparencyEnabled();
-                RoundedCornersEnabled = true;
-                ShadowsEnabled = true;
-            }
-
-            // Update radio buttons
-            Dispatcher.Invoke(() =>
-            {
-                var autoRadio = FindName("_beautificationThemeAutoRadio") as System.Windows.Controls.RadioButton;
-                var lightRadio = FindName("_beautificationThemeLightRadio") as System.Windows.Controls.RadioButton;
-                var darkRadio = FindName("_beautificationThemeDarkRadio") as System.Windows.Controls.RadioButton;
-                var classicRadio = FindName("_beautificationThemeClassicRadio") as System.Windows.Controls.RadioButton;
-                var modernRadio = FindName("_beautificationThemeModernRadio") as System.Windows.Controls.RadioButton;
-
-                if (autoRadio != null)
-                    autoRadio.IsChecked = SelectedTheme == "auto";
-                if (lightRadio != null)
-                    lightRadio.IsChecked = SelectedTheme == "light";
-                if (darkRadio != null)
-                    darkRadio.IsChecked = SelectedTheme == "dark";
-                if (classicRadio != null)
-                    classicRadio.IsChecked = SelectedTheme == "classic";
-                if (modernRadio != null)
-                    modernRadio.IsChecked = SelectedTheme == "modern";
-            });
-        }
-        catch
-        {
-            // Use defaults on error
-            SelectedTheme = "auto";
-            TransparencyEnabled = GetTransparencyEnabled();
-            RoundedCornersEnabled = true;
-            ShadowsEnabled = true;
-        }
-    }
-    
-    private string? GetShellConfigPath()
-    {
-        try
-        {
-            var helper = GetShellIntegrationHelper();
-            var shellExePath = helper?.GetNilesoftShellExePath();
-            if (string.IsNullOrWhiteSpace(shellExePath))
-                return null;
-                
-            var shellDir = Path.GetDirectoryName(shellExePath);
-            if (string.IsNullOrWhiteSpace(shellDir))
-                return null;
-                
-            return Path.Combine(shellDir, "shell.nss");
-        }
-        catch
-        {
-            return null;
-        }
-    }
-    
-    #endregion
-    
-    #region 构造函数和初始化
-    
-    public WindowsOptimizationPage()
+        public WindowsOptimizationPage()
     {
         InitializeComponent();
         DataContext = this;
@@ -766,47 +489,102 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void LoadCustomCleanupRules()
     {
-        var settings = IoCContainer.Resolve<ApplicationSettings>();
-        var rules = settings.Store.CustomCleanupRules ?? new List<CustomCleanupRule>();
-        
-        CustomCleanupRules.Clear();
-        foreach (var rule in rules)
+        _isLoadingCustomCleanupRules = true;
+        try
         {
-            CustomCleanupRules.Add(new CustomCleanupRuleViewModel(
-                rule.DirectoryPath,
-                rule.Extensions ?? [],
-                rule.Recursive));
+            foreach (var rule in CustomCleanupRules.ToList())
+                DetachRuleEvents(rule);
+
+            CustomCleanupRules.Clear();
+
+            var rules = _applicationSettings.Store.CustomCleanupRules ?? new List<CustomCleanupRule>();
+            foreach (var rule in rules)
+            {
+                var viewModel = new CustomCleanupRuleViewModel(
+                    rule.DirectoryPath,
+                    rule.Extensions ?? new List<string>(),
+                    rule.Recursive);
+                CustomCleanupRules.Add(viewModel);
+            }
         }
+        finally
+        {
+            _isLoadingCustomCleanupRules = false;
+        }
+
+        RefreshCleanupActionAvailability();
+        UpdateCleanupControlsState();
     }
     
     private void UpdateCleanupControlsState()
     {
-        // TODO: 实现清理控件状态更新
+        if (_addCustomCleanupRuleButton != null)
+            _addCustomCleanupRuleButton.IsEnabled = !IsBusy;
+
+        if (_clearCustomCleanupRulesButton != null)
+            _clearCustomCleanupRulesButton.IsEnabled = !IsBusy && CustomCleanupRules.Count > 0;
     }
     
     private void CustomCleanupRules_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        var settings = IoCContainer.Resolve<ApplicationSettings>();
-        settings.Store.CustomCleanupRules = CustomCleanupRules.Select(r => r.ToModel()).ToList();
-        settings.SynchronizeStore();
-    }
-    
-    private void WindowsOptimizationPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        if (IsVisible)
+        if (e.OldItems is not null)
         {
-            // 页面变为可见时初始化
+            foreach (CustomCleanupRuleViewModel rule in e.OldItems)
+                DetachRuleEvents(rule);
+        }
+
+        if (e.NewItems is not null)
+        {
+            foreach (CustomCleanupRuleViewModel rule in e.NewItems)
+                AttachRuleEvents(rule);
+        }
+
+        OnCustomCleanupRulesChanged();
+    }
+
+    private void CustomCleanupRuleViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e) => OnCustomCleanupRulesChanged();
+
+    private void CustomCleanupRuleExtensions_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnCustomCleanupRulesChanged();
+
+    private void OnCustomCleanupRulesChanged()
+    {
+        if (_isLoadingCustomCleanupRules)
+            return;
+
+        SaveCustomCleanupRules();
+        RefreshCleanupActionAvailability();
+        UpdateCleanupControlsState();
+
+        if (_currentMode == PageMode.Cleanup)
+        {
+            if (HasSelectedActions)
+                _ = UpdateEstimatedCleanupSizeAsync();
+            else
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+            }
         }
     }
-    
-    private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
+
+    private void AttachRuleEvents(CustomCleanupRuleViewModel rule)
     {
-        // TODO: 清理资源
+        rule.PropertyChanged += CustomCleanupRuleViewModel_PropertyChanged;
+        rule.Extensions.CollectionChanged += CustomCleanupRuleExtensions_CollectionChanged;
     }
-    
-    #endregion
-    
-    #region 清理规则管理
+
+    private void DetachRuleEvents(CustomCleanupRuleViewModel rule)
+    {
+        rule.PropertyChanged -= CustomCleanupRuleViewModel_PropertyChanged;
+        rule.Extensions.CollectionChanged -= CustomCleanupRuleExtensions_CollectionChanged;
+    }
+
+    private void SaveCustomCleanupRules()
+    {
+        var rules = CustomCleanupRules.Select(rule => rule.ToModel()).ToList();
+        _applicationSettings.Store.CustomCleanupRules = rules;
+        _applicationSettings.SynchronizeStore();
+    }
     
     private void RefreshCleanupActionAvailability()
     {
@@ -833,52 +611,51 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private async Task UpdateEstimatedCleanupSizeAsync()
     {
-        if (_currentMode != PageMode.Cleanup)
-            return;
-            
-        var selectedKeys = CleanupCategories
-            .SelectMany(c => c.Actions.Where(a => a.IsEnabled && a.IsSelected))
-            .Select(a => a.Key)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-            
-        if (selectedKeys.Count == 0)
+        if (!HasSelectedActions)
         {
             EstimatedCleanupSize = 0;
+            IsCalculatingSize = false;
             return;
         }
-        
-        IsCalculatingSize = true;
+
+        _sizeCalculationCts?.Cancel();
+        _sizeCalculationCts?.Dispose();
+        _sizeCalculationCts = new CancellationTokenSource();
+
+        var cancellationToken = _sizeCalculationCts.Token;
         try
         {
-            var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(selectedKeys, CancellationToken.None);
-            EstimatedCleanupSize = size;
+            IsCalculatingSize = true;
+            await Task.Delay(300, cancellationToken).ConfigureAwait(false);
+            var actionKeys = SelectedCleanupActions.Select(a => a.ActionKey).ToList();
+            if (actionKeys.Count == 0)
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+                return;
+            }
+            var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+            if (!cancellationToken.IsCancellationRequested)
+                EstimatedCleanupSize = size;
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch
         {
-            EstimatedCleanupSize = 0;
         }
         finally
         {
-            IsCalculatingSize = false;
+            if (!cancellationToken.IsCancellationRequested)
+                IsCalculatingSize = false;
         }
     }
-    
-    #endregion
-    
-    #region INotifyPropertyChanged 实现
-    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
-    #endregion
-    
-    #region XAML 事件处理程序占位符
-    
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         if (Categories.Count > 0)
@@ -902,7 +679,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         Categories.Clear();
         OptimizationCategories.Clear();
         CleanupCategories.Clear();
-        BeautificationCategories.Clear();
         
         var selectionSummaryFormat = GetResource("WindowsOptimization_Category_SelectionSummary");
         if (string.IsNullOrWhiteSpace(selectionSummaryFormat))
@@ -934,7 +710,25 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                  {
                      if (args.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
                      {
-                         // TODO: 处理操作选中状态变化
+                         if (_isRefreshingStates)
+                             return;
+
+                         _lastUserInteraction = DateTime.Now;
+                         _isUserInteracting = true;
+
+                         _ = Dispatcher.InvokeAsync(async () =>
+                         {
+                             if (!actionVm.IsSelected)
+                             {
+                                 _userUncheckedActions.Add(actionVm.Key);
+                                 await HandleActionUncheckedAsync(actionVm.Key);
+                             }
+                             else
+                             {
+                                 _userUncheckedActions.Remove(actionVm.Key);
+                                 await HandleActionCheckedAsync(actionVm.Key);
+                             }
+                         });
                      }
                  };
             }
@@ -956,8 +750,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             
             if (category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 CleanupCategories.Add(categoryVm);
-            else if (category.Key.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
-                BeautificationCategories.Add(categoryVm);
             else
                 OptimizationCategories.Add(categoryVm);
         }
@@ -969,20 +761,57 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void Category_SelectionChanged(object? sender, EventArgs e)
     {
+        _lastUserInteraction = DateTime.Now;
+        _isUserInteracting = true;
         UpdateSelectedActions();
+        OnPropertyChanged(nameof(SelectedActionsSummary));
+        Task.Delay(3000).ContinueWith(_ => _isUserInteracting = false);
     }
     
     private void UpdateSelectedActions()
     {
-        // TODO: 实现选中操作更新
+        var newOptimizationActions = new List<SelectedActionViewModel>();
+        var newCleanupActions = new List<SelectedActionViewModel>();
+
+        foreach (var category in Categories)
+        {
+            List<SelectedActionViewModel> target;
+            if (category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+                target = newCleanupActions;
+            else
+                target = newOptimizationActions;
+
+            foreach (var action in category.Actions.Where(action => action.IsEnabled && action.IsSelected))
+                target.Add(new SelectedActionViewModel(category.Key, category.Title, action.Key, action.Title, action.Description, action));
+        }
+
+        UpdateCollection(SelectedOptimizationActions, newOptimizationActions);
+        UpdateCollection(SelectedCleanupActions, newCleanupActions);
+
+        OnPropertyChanged(nameof(VisibleSelectedActions));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
+
+        if (_currentMode == PageMode.Cleanup)
+        {
+            if (HasSelectedActions)
+                _ = UpdateEstimatedCleanupSizeAsync();
+            else
+            {
+                EstimatedCleanupSize = 0;
+                IsCalculatingSize = false;
+            }
+        }
+        else
+        {
+            EstimatedCleanupSize = 0;
+        }
     }
     
-    private Task InitializeActionStatesAsync()
+    private async Task InitializeActionStatesAsync()
     {
-        // TODO: 初始化操作状态
-        return Task.CompletedTask;
+        await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+        StartActionStateMonitoring();
     }
     
     private void RefreshExpandCollapseText()
@@ -1005,45 +834,162 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private void DriverDownloadNavButton_Checked(object sender, RoutedEventArgs e)
     {
         SetMode(PageMode.DriverDownload);
+        InitializeDriverDownloadPage();
+    }
+    
+    private async void InitializeDriverDownloadPage()
+    {
+        _isInitializingDriverDownload = true;
+        try
+        {
+            if (_driverOsComboBox != null && _driverOsComboBox.Items.Count == 0)
+                _driverOsComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
+
+            if (_driverMachineTypeTextBox != null && string.IsNullOrWhiteSpace(_driverMachineTypeTextBox.Text))
+            {
+                try
+                {
+                    var machineInfo = await Compatibility.GetMachineInformationAsync();
+                    _driverMachineTypeTextBox.Text = machineInfo.MachineType;
+                }
+                catch
+                {
+                }
+            }
+
+            if (_driverDownloadToText != null && string.IsNullOrWhiteSpace(_driverDownloadToText.Text))
+            {
+                var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
+                _driverDownloadToText.Text = Directory.Exists(_packageDownloaderSettings.Store.DownloadPath)
+                    ? _packageDownloaderSettings.Store.DownloadPath
+                    : downloadsFolder;
+            }
+
+            if (_driverSourcePrimaryRadio != null && _driverSourcePrimaryRadio.Tag == null)
+                _driverSourcePrimaryRadio.Tag = PackageDownloaderFactory.Type.Vantage;
+            if (_driverSourceSecondaryRadio != null && _driverSourceSecondaryRadio.Tag == null)
+                _driverSourceSecondaryRadio.Tag = PackageDownloaderFactory.Type.PCSupport;
+
+            if (_driverSearchControlsGrid != null)
+                _driverSearchControlsGrid.Visibility = Visibility.Collapsed;
+            if (_driverInfoBar != null)
+                _driverInfoBar.Visibility = Visibility.Collapsed;
+        }
+        finally
+        {
+            _isInitializingDriverDownload = false;
+        }
     }
     
 
     
     private void SetMode(PageMode mode)
     {
-        if (_currentMode == mode)
-            return;
-            
+        var modeChanged = _currentMode != mode;
         _currentMode = mode;
-        
-        // 更新UI状态
-        OnPropertyChanged(nameof(IsCleanupMode));
-        OnPropertyChanged(nameof(IsBeautificationMode));
-        OnPropertyChanged(nameof(IsDriverDownloadMode));
 
-        OnPropertyChanged(nameof(ActiveCategories));
-        OnPropertyChanged(nameof(HasSelectedActions));
-        OnPropertyChanged(nameof(SelectedActionsSummary));
-        
-        // 恢复上次选中的分类
-        SelectedCategory = mode switch
+        if (modeChanged)
         {
-            PageMode.Cleanup => _lastCleanupCategory,
-            PageMode.Optimization => _lastOptimizationCategory ?? _lastBeautificationCategory,
-            _ => null
-        };
-        
-        // 确保至少有一个分类被选中
-        if (SelectedCategory == null)
-            SelectedCategory = ActiveCategories.FirstOrDefault();
-            
-        RefreshExpandCollapseText();
-        ApplyInteractionState();
+            OnPropertyChanged(nameof(IsCleanupMode));
+            OnPropertyChanged(nameof(IsDriverDownloadMode));
+            OnPropertyChanged(nameof(ActiveCategories));
+            OnPropertyChanged(nameof(VisibleSelectedActions));
+            OnPropertyChanged(nameof(HasSelectedActions));
+            OnPropertyChanged(nameof(SelectedActionsSummary));
+
+            if (mode == PageMode.Cleanup)
+            {
+                if (!_hasInitializedCleanupMode)
+                {
+                    _hasInitializedCleanupMode = true;
+                    var activeCategories = ActiveCategories.ToList();
+                    SelectRecommended(activeCategories);
+                    UpdateSelectedActions();
+                }
+                _ = UpdateEstimatedCleanupSizeAsync();
+            }
+            else if (mode == PageMode.DriverDownload)
+            {
+                ApplyInteractionState();
+            }
+            else
+            {
+                StopDriverRetryTimer();
+            }
+
+            if (mode == PageMode.Optimization)
+            {
+                EstimatedCleanupSize = 0;
+            }
+            else
+            {
+                EstimatedCleanupSize = 0;
+            }
+        }
+        else
+        {
+            OnPropertyChanged(nameof(ActiveCategories));
+        }
+
+        if (mode != PageMode.DriverDownload)
+        {
+            var activeCategoriesList = ActiveCategories.ToList();
+            var preferredCategory = mode switch
+            {
+                PageMode.Cleanup => _lastCleanupCategory,
+                PageMode.Optimization => _lastOptimizationCategory,
+                _ => _lastOptimizationCategory
+            };
+            if (preferredCategory is null || !activeCategoriesList.Contains(preferredCategory))
+                preferredCategory = activeCategoriesList.FirstOrDefault();
+
+            SelectedCategory = preferredCategory;
+            OnPropertyChanged(nameof(VisibleSelectedActions));
+            OnPropertyChanged(nameof(HasSelectedActions));
+            OnPropertyChanged(nameof(SelectedActionsSummary));
+            ApplyInteractionState();
+            RefreshExpandCollapseText();
+        }
     }
     
     private void SelectedActionsButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现选中操作按钮点击
+        _selectedActionsWindow?.Close();
+
+        if (_currentMode == PageMode.DriverDownload)
+        {
+            var driverPackages = new ObservableCollection<SelectedActionViewModel>();
+            foreach (var dp in SelectedDriverPackages)
+            {
+                var viewModel = new SelectedActionViewModel(
+                    dp.Category,
+                    dp.Category,
+                    dp.PackageId,
+                    dp.Title,
+                    $"{dp.Description}{(dp.IsCompleted ? " [已完成]" : string.Empty)}",
+                    null!);
+                viewModel.Tag = dp;
+                viewModel.IsSelected = true;
+                driverPackages.Add(viewModel);
+            }
+
+            _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(
+                driverPackages,
+                Resource.WindowsOptimizationPage_SelectedActions_Empty ?? string.Empty)
+            {
+                Owner = Window.GetWindow(this)
+            };
+        }
+        else
+        {
+            _selectedActionsWindow = new Windows.Utils.SelectedActionsWindow(VisibleSelectedActions, SelectedActionsEmptyText)
+            {
+                Owner = Window.GetWindow(this)
+            };
+        }
+
+        _selectedActionsWindow.Closed += (s, args) => _selectedActionsWindow = null;
+        _selectedActionsWindow.Show();
     }
     
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -1062,12 +1008,74 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void OpenStyleSettingsButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现打开样式设置按钮点击
+    }
+
+
+    private void OpenActionDetailsWindow(string actionKey)
+    {
+        try
+        {
+            _actionDetailsWindow?.Close();
+
+            WindowsOptimizationActionDefinition? actionDefinition = null;
+            var categories = WindowsOptimizationService.GetCategories();
+            foreach (var category in categories)
+            {
+                var action = category.Actions.FirstOrDefault(a =>
+                    string.Equals(a.Key, actionKey, StringComparison.OrdinalIgnoreCase));
+                if (action != null)
+                {
+                    actionDefinition = action;
+                    break;
+                }
+            }
+
+            _actionDetailsWindow = new ActionDetailsWindow(actionKey, actionDefinition)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            _actionDetailsWindow.Closed += (s, args) => _actionDetailsWindow = null;
+            _actionDetailsWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to open action details window.", ex);
+        }
     }
     
     private void ActionItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        // TODO: 实现操作项鼠标左键按下事件
+        try
+        {
+            if (sender is not System.Windows.FrameworkElement element)
+                return;
+            if (element.DataContext is not OptimizationActionViewModel actionViewModel)
+                return;
+
+            var now = DateTime.Now;
+            var isDoubleClick = _lastActionItemKey == actionViewModel.Key &&
+                                (now - _lastActionItemClickTime).TotalMilliseconds < 500;
+            _lastActionItemClickTime = now;
+            _lastActionItemKey = actionViewModel.Key;
+
+            if (isDoubleClick)
+            {
+                if (actionViewModel.Key.StartsWith("explorer.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("performance.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("services.", StringComparison.OrdinalIgnoreCase) ||
+                         actionViewModel.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+                {
+                    OpenActionDetailsWindow(actionViewModel.Key);
+                    e.Handled = true;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to handle action item click.", ex);
+        }
     }
     
     private void SelectRecommendedButton_Click(object sender, RoutedEventArgs e)
@@ -1099,20 +1107,47 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
     {
-        foreach (var category in categories)
-            category.SelectRecommended();
-            
-        UpdateSelectedActions();
+        _isRefreshingStates = true;
+        try
+        {
+            var allActions = categories.SelectMany(c => c.Actions);
+            foreach (var action in allActions.Where(a => a.Recommended))
+                _userUncheckedActions.Remove(action.Key);
+            foreach (var category in categories)
+                category.SelectRecommended();
+            UpdateSelectedActions();
+        }
+        finally
+        {
+            _isRefreshingStates = false;
+        }
     }
     
     private void DriverSelectRecommendedButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现驱动选择推荐按钮点击
+        if (_driverPackagesStackPanel?.Children == null)
+            return;
+
+        foreach (var child in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+        {
+            if (child.IsRecommended)
+            {
+                child.IsSelected = true;
+            }
+        }
     }
     
     private void DriverPauseAllButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现驱动暂停所有按钮点击
+        if (_driverPackagesStackPanel?.Children == null)
+            return;
+
+        foreach (var child in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+        {
+            if (child.Status == PackageControl.PackageStatus.Downloading ||
+                child.Status == PackageControl.PackageStatus.Installing)
+                child.IsSelected = false;
+        }
     }
     
     // 驱动下载相关事件处理程序
@@ -1130,135 +1165,560 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
     
-    private void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
+    private async void DriverSearchButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现驱动源单选按钮选中事件
+        await DriverDownloadPackagesButton_Click(sender, e);
+    }
+    
+    private async Task DriverDownloadPackagesButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        var errorOccurred = false;
+        try
+        {
+            if (_driverLoader != null)
+            {
+                _driverLoader.Visibility = Visibility.Visible;
+            }
+
+// Ensure InfoBar is always visible
+            if (_driverInfoBar != null)
+            {
+                _driverInfoBar.IsOpen = true;
+                _driverInfoBar.Visibility = Visibility.Visible;
+            }
+
+            _driverPackages = null;
+
+            if (_driverPackagesStackPanel != null)
+                _driverPackagesStackPanel.Children.Clear();
+            if (_driverScrollViewer != null)
+                _driverScrollViewer.ScrollToHome();
+
+            if (_driverFilterTextBox != null)
+                _driverFilterTextBox.Text = string.Empty;
+            if (_driverSortingComboBox != null)
+                _driverSortingComboBox.SelectedIndex = 2;
+
+            var machineType = _driverMachineTypeTextBox?.Text.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(machineType) || machineType.Length != 4 ||
+                _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem(out OS os))
+            {
+                // Ensure _driverLoader is visible so users can see filter and sort controls
+                if (_driverLoader != null)
+                {
+                    _driverLoader.Visibility = Visibility.Visible;
+                }
+                await SnackbarHelper.ShowAsync(Resource.PackagesPage_DownloadFailed_Title,
+                    Resource.PackagesPage_DownloadFailed_Message);
+                return;
+            }
+
+            // Show loading indicator
+            if (_driverLoadingIndicator != null)
+                _driverLoadingIndicator.Visibility = Visibility.Visible;
+
+            if (_driverGetPackagesTokenSource is not null)
+                await _driverGetPackagesTokenSource.CancelAsync();
+
+            _driverGetPackagesTokenSource = new();
+
+            var token = _driverGetPackagesTokenSource.Token;
+
+            var packageDownloaderType = new[] { _driverSourcePrimaryRadio, _driverSourceSecondaryRadio }
+                .Where(r => r != null && r.IsChecked == true)
+                .Select(r => (PackageDownloaderFactory.Type)r.Tag)
+                .FirstOrDefault();
+
+            if (_driverOnlyShowUpdatesCheckBox != null)
+            {
+                // Both sources support "show updates only" feature, always show checkbox
+                _driverOnlyShowUpdatesCheckBox.Visibility = Visibility.Visible;
+                // Set default checked state based on source type
+                if (packageDownloaderType == PackageDownloaderFactory.Type.Vantage)
+                {
+                    _driverOnlyShowUpdatesCheckBox.IsChecked = _packageDownloaderSettings.Store.OnlyShowUpdates;
+                }
+                else
+                {
+                    // Secondary source defaults to not checking "show updates only"
+                    _driverOnlyShowUpdatesCheckBox.IsChecked = false;
+                }
+            }
+
+            _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
+
+            _driverPackages = packages;
+
+            DriverReload();
+
+            // Stop auto-retry timer (if running)
+            StopDriverRetryTimer();
+
+            // Hide loading indicator
+            if (_driverLoadingIndicator != null)
+                _driverLoadingIndicator.Visibility = Visibility.Collapsed;
+
+            // Show search controls after loading completes
+            if (_driverSearchControlsGrid != null)
+            {
+                _driverSearchControlsGrid.Visibility = Visibility.Visible;
+            }
+
+            // Update button states after loading completes
+            ApplyInteractionState();
+        }
+        catch (UpdateCatalogNotFoundException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Update catalog not found.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_UpdateCatalogNotFound_Title, Resource.PackagesPage_UpdateCatalogNotFound_Message, SnackbarType.Info);
+
+            errorOccurred = true;
+        }
+        catch (OperationCanceledException)
+        {
+            errorOccurred = true;
+        }
+        catch (HttpRequestException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error occurred when downloading packages.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, Resource.PackagesPage_Error_CheckInternet_Message, SnackbarType.Error);
+
+            errorOccurred = true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error occurred when downloading packages.", ex);
+
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
+
+            errorOccurred = true;
+        }
+        finally
+        {
+// Only hide loading indicator if it's not a network error
+            // On network errors, loading indicator remains visible and shows "network problem"
+            if (!errorOccurred)
+            {
+                if (_driverLoadingIndicator != null)
+                    _driverLoadingIndicator.Visibility = Visibility.Collapsed;
+            }
+
+            if (errorOccurred)
+            {
+                if (_driverPackagesStackPanel != null)
+                    _driverPackagesStackPanel.Children.Clear();
+// Don't hide _driverLoader on error, keep visible to show error status or allow user retry
+                // Ensure _driverLoader is always visible so users can see error messages or retry
+                if (_driverLoader != null)
+                {
+                    _driverLoader.Visibility = Visibility.Visible;
+                }
+            }
+        }
+    }
+    
+    private async void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
+    {
+        // If initializing, don't trigger refresh
+        if (_isInitializingDriverDownload)
+            return;
+
+        // Check if machine type and operating system are set
+        var machineType = _driverMachineTypeTextBox?.Text.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(machineType) || machineType.Length != 4 ||
+            _driverOsComboBox == null || !_driverOsComboBox.TryGetSelectedItem<OS>(out _))
+        {
+            return;
+        }
+
+        // If currently scanning driver packages, cancel current scan and restart
+        if (_driverGetPackagesTokenSource != null && !_driverGetPackagesTokenSource.Token.IsCancellationRequested)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Cancelling current driver package scan due to source change...");
+
+            // Cancel current scan
+            await _driverGetPackagesTokenSource.CancelAsync();
+
+            // Wait a short time to ensure cancellation operation completes
+            await Task.Delay(100);
+        }
+
+        // 确保 InfoBar 始终可见
+        if (_driverInfoBar != null)
+        {
+            _driverInfoBar.IsOpen = true;
+        }
+
+        // Automatically refresh driver package list when switching sources (regardless of whether previously loaded)
+        await DriverDownloadPackagesButton_Click(this, new RoutedEventArgs());
     }
     
     private void DriverDownloadToText_OnTextChanged(object sender, TextChangedEventArgs e)
     {
-        // TODO: 实现驱动下载路径文本更改事件
+        if (_driverDownloadToText == null)
+            return;
+
+        var location = _driverDownloadToText.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(location) && Directory.Exists(location))
+        {
+            _packageDownloaderSettings.Store.DownloadPath = location;
+            _packageDownloaderSettings.SynchronizeStore();
+        }
     }
     
     private void DriverDownloadToButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现驱动下载路径按钮点击事件
+        if (_driverDownloadToText == null)
+            return;
+
+        using var ofd = new FolderBrowserDialog();
+        ofd.InitialDirectory = _driverDownloadToText.Text;
+
+        if (ofd.ShowDialog() != DialogResult.OK)
+            return;
+
+        var selectedPath = ofd.SelectedPath;
+        _driverDownloadToText.Text = selectedPath;
+        _packageDownloaderSettings.Store.DownloadPath = selectedPath;
+        _packageDownloaderSettings.SynchronizeStore();
     }
     
     private void DriverOpenDownloadToButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现打开驱动下载路径按钮点击事件
+        var location = GetDriverDownloadLocation();
+        if (Directory.Exists(location))
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = location,
+                UseShellExecute = true
+            });
+        }
     }
     
-    private void DriverFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    private async void DriverFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        // TODO: 实现驱动筛选器文本更改事件
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        try
+        {
+            if (_driverPackages is null)
+                return;
+
+            if (_driverFilterDebounceCancellationTokenSource is not null)
+                await _driverFilterDebounceCancellationTokenSource.CancelAsync();
+
+            _driverFilterDebounceCancellationTokenSource = new();
+
+            await Task.Delay(500, _driverFilterDebounceCancellationTokenSource.Token);
+
+            if (_driverPackagesStackPanel != null)
+                _driverPackagesStackPanel.Children.Clear();
+            if (_driverScrollViewer != null)
+                _driverScrollViewer.ScrollToHome();
+
+            DriverReload();
+        }
+        catch (OperationCanceledException) { }
     }
     
-    private void DriverOnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)
+    private async void DriverOnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现仅显示更新复选框选中事件
-    }
-    
-    private void DriverOnlyShowUpdatesCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
-    {
-        // TODO: 实现仅显示更新复选框取消选中事件
+        if (!await ShouldInterruptDriverDownloadsIfRunning())
+            return;
+
+        if (_driverPackages is null)
+            return;
+
+        if (_driverOnlyShowUpdatesCheckBox != null)
+        {
+            _packageDownloaderSettings.Store.OnlyShowUpdates = _driverOnlyShowUpdatesCheckBox.IsChecked ?? false;
+            _packageDownloaderSettings.SynchronizeStore();
+        }
+
+        if (_driverPackagesStackPanel != null)
+            _driverPackagesStackPanel.Children.Clear();
+        if (_driverScrollViewer != null)
+            _driverScrollViewer.ScrollToHome();
+
+        DriverReload();
     }
     
     private void DriverSortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        // TODO: 实现驱动排序组合框选择更改事件
+        if (_driverPackages is null)
+            return;
+
+        if (_driverPackagesStackPanel != null)
+            _driverPackagesStackPanel.Children.Clear();
+        if (_driverScrollViewer != null)
+            _driverScrollViewer.ScrollToHome();
+
+        DriverReload();
     }
     
     // 清理相关事件处理程序
-    private void RunCleanupButton_Click(object sender, RoutedEventArgs e)
+    private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现运行清理按钮点击事件
+        var selectedCleanupActions = new List<(string CategoryKey, string CategoryTitle, string ActionKey, string ActionTitle, string Description)>();
+        foreach (var category in CleanupCategories)
+        {
+            foreach (var action in category.Actions.Where(a => a.IsEnabled && a.IsSelected))
+                selectedCleanupActions.Add((category.Key, category.Title, action.Key, action.Title, action.Description));
+        }
+
+        var selectedKeys = selectedCleanupActions
+            .Select(a => a.ActionKey)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (selectedKeys.Count == 0)
+        {
+            await SnackbarHelper.ShowAsync(
+                Resource.SettingsPage_WindowsOptimization_Title,
+                GetResource("WindowsOptimizationPage_Cleanup_NoSelection_Warning") ?? "Please select at least one cleanup option before executing cleanup operations.",
+                SnackbarType.Warning);
+            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+            return;
+        }
+
+        await ExecuteAsync(
+            async ct =>
+            {
+                var actionsByKey = WindowsOptimizationService.GetCategories()
+                    .SelectMany(c => c.Actions)
+                    .ToDictionary(a => a.Key, a => a, StringComparer.OrdinalIgnoreCase);
+                var missingKeys = selectedKeys.Where(k => !actionsByKey.ContainsKey(k)).ToList();
+                if (missingKeys.Any())
+                    throw new InvalidOperationException($"Unable to find the following actions: {string.Join(", ", missingKeys)}");
+
+                var actionsInOrder = selectedCleanupActions
+                    .Where(a => selectedKeys.Contains(a.ActionKey, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+
+                long totalFreedBytes = 0;
+                var swOverall = Stopwatch.StartNew();
+                var totalActions = actionsInOrder.Count;
+                var currentActionIndex = 0;
+                foreach (var action in actionsInOrder)
+                {
+                    currentActionIndex++;
+                    var progressPercentage = (int)Math.Round((double)currentActionIndex / totalActions * 100);
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        CurrentOperationText = string.Format(GetResource("WindowsOptimizationPage_RunningStep"), action.ActionTitle);
+                        CurrentDeletingFile = string.Empty;
+                        RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, progressPercentage);
+                    });
+
+                    long sizeBefore = 0;
+                    try { sizeBefore = await _windowsOptimizationService.EstimateActionSizeAsync(action.ActionKey, ct).ConfigureAwait(false); } catch { }
+
+                    var sw = Stopwatch.StartNew();
+                    try
+                    {
+                        if (action.ActionKey.Equals(WindowsOptimizationService.CustomCleanupActionKey, StringComparison.OrdinalIgnoreCase))
+                            await ExecuteCustomCleanupWithProgressAsync(ct);
+                        else
+                            await _windowsOptimizationService.ExecuteActionsAsync([action.ActionKey], ct).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        sw.Stop();
+                    }
+
+                    await Task.Delay(500, ct).ConfigureAwait(false);
+
+                    long sizeAfter = 0;
+                    try { sizeAfter = await _windowsOptimizationService.EstimateActionSizeAsync(action.ActionKey, ct).ConfigureAwait(false); } catch { }
+
+                    var freed = Math.Max(0, sizeBefore - sizeAfter);
+                    totalFreedBytes += freed;
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        CurrentOperationText = $"{action.ActionTitle} ✓ {FormatBytes(freed)} in {sw.Elapsed.TotalSeconds:0.0}s";
+                        CurrentDeletingFile = string.Empty;
+                    });
+                }
+
+                swOverall.Stop();
+                var summaryFmt = GetResource("WindowsOptimizationPage_CleanupSummary");
+                if (string.IsNullOrWhiteSpace(summaryFmt))
+                    summaryFmt = "Freed {0} in {1}s";
+                await Dispatcher.InvokeAsync(() =>
+                    SnackbarHelper.Show(GetResource("SettingsPage_WindowsOptimization_Title"),
+                        string.Format(summaryFmt, FormatBytes(totalFreedBytes), swOverall.Elapsed.TotalSeconds.ToString("0.0")),
+                        SnackbarType.Success));
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    CurrentOperationText = string.Empty;
+                    CurrentDeletingFile = string.Empty;
+                    RunCleanupButtonText = string.Empty;
+                });
+            },
+            Resource.SettingsPage_WindowsOptimization_Cleanup_Success,
+            Resource.SettingsPage_WindowsOptimization_Cleanup_Error,
+            InteractionScope.Cleanup);
+
+        try
+        {
+            EstimatedCleanupSize = 0;
+            await UpdateEstimatedCleanupSizeAsync();
+        }
+        catch { }
+    }
+
+    private async Task ExecuteCustomCleanupWithProgressAsync(CancellationToken cancellationToken)
+    {
+        var rules = _applicationSettings.Store.CustomCleanupRules ?? new List<CustomCleanupRule>();
+
+        foreach (var rule in rules)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(rule.DirectoryPath))
+                continue;
+
+            var directoryPath = Environment.ExpandEnvironmentVariables(rule.DirectoryPath.Trim());
+            if (!Directory.Exists(directoryPath))
+                continue;
+
+            var normalizedExtensions = (rule.Extensions ?? [])
+                .Select(NormalizeExtension)
+                .Where(extension => !string.IsNullOrEmpty(extension))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            if (normalizedExtensions.Length == 0)
+                continue;
+
+            var extensionsSet = new HashSet<string>(normalizedExtensions, StringComparer.OrdinalIgnoreCase);
+            var searchOption = rule.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(directoryPath, "*", searchOption))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    string extension;
+                    try
+                    {
+                        extension = Path.GetExtension(file);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (!extensionsSet.Contains(extension))
+                        continue;
+
+                    await Dispatcher.InvokeAsync(() => CurrentDeletingFile = file);
+
+                    try
+                    {
+                        File.Delete(file);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Custom cleanup deleted file. [path={file}]");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Custom cleanup failed to delete file. [path={file}]", ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Custom cleanup failed to enumerate directory. [path={directoryPath}]", ex);
+            }
+        }
+
+        await Dispatcher.InvokeAsync(() => CurrentDeletingFile = string.Empty);
+    }
+
+    private static string NormalizeExtension(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var trimmed = value.Trim();
+        return trimmed.StartsWith(".", StringComparison.Ordinal) ? trimmed : "." + trimmed;
     }
     
     private void AddCustomCleanupRuleButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现添加自定义清理规则按钮点击事件
+        var window = new CustomCleanupRuleWindow { Owner = Window.GetWindow(this) };
+        if (window.ShowDialog() == true && window.Result is CustomCleanupRule rule)
+        {
+            var viewModel = new CustomCleanupRuleViewModel(rule.DirectoryPath, rule.Extensions ?? new List<string>(), rule.Recursive);
+            CustomCleanupRules.Add(viewModel);
+        }
     }
     
     private void ClearCustomCleanupRulesButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现清除自定义清理规则按钮点击事件
+        if (CustomCleanupRules.Count == 0)
+            return;
+        foreach (var rule in CustomCleanupRules.ToList())
+            DetachRuleEvents(rule);
+        CustomCleanupRules.Clear();
     }
     
     private void EditCustomCleanupRuleButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现编辑自定义清理规则按钮点击事件
+        if (sender is not System.Windows.Controls.Button button)
+            return;
+        if (button.Tag is not CustomCleanupRuleViewModel viewModel)
+            return;
+
+        var window = new CustomCleanupRuleWindow(viewModel.ToModel()) { Owner = Window.GetWindow(this) };
+        if (window.ShowDialog() == true && window.Result is CustomCleanupRule rule)
+        {
+            _isLoadingCustomCleanupRules = true;
+            try
+            {
+                viewModel.DirectoryPath = rule.DirectoryPath;
+                viewModel.Recursive = rule.Recursive;
+
+                viewModel.Extensions.CollectionChanged -= CustomCleanupRuleExtensions_CollectionChanged;
+                viewModel.Extensions.Clear();
+                foreach (var extension in rule.Extensions ?? new List<string>())
+                    viewModel.Extensions.Add(extension);
+                viewModel.Extensions.CollectionChanged += CustomCleanupRuleExtensions_CollectionChanged;
+
+                viewModel.NotifyExtensionsChanged();
+            }
+            finally
+            {
+                _isLoadingCustomCleanupRules = false;
+            }
+            OnCustomCleanupRulesChanged();
+        }
     }
     
     private void RemoveCustomCleanupRuleButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: 实现移除自定义清理规则按钮点击事件
+        if (sender is not System.Windows.Controls.Button button)
+            return;
+        if (button.Tag is not CustomCleanupRuleViewModel viewModel)
+            return;
+        CustomCleanupRules.Remove(viewModel);
     }
-    
-    // 美化相关事件处理程序
-     private void BeautificationThemeRadio_Checked(object sender, RoutedEventArgs e)
-     {
-         if (sender is System.Windows.Controls.RadioButton radio && radio.IsChecked == true)
-         {
-             if (radio.Name.Contains("Auto"))
-                 SelectedTheme = "auto";
-             else if (radio.Name.Contains("Light"))
-                 SelectedTheme = "light";
-             else if (radio.Name.Contains("Dark"))
-                 SelectedTheme = "dark";
-             else if (radio.Name.Contains("Classic"))
-                 SelectedTheme = "classic";
-             else if (radio.Name.Contains("Modern"))
-                 SelectedTheme = "modern";
-         }
-     }
-    
-     private void TransparencyToggle_Click(object sender, RoutedEventArgs e)
-     {
-         TransparencyEnabled = !TransparencyEnabled;
-     }
-    
-     private async void ApplyBeautificationStyleButton_Click(object sender, RoutedEventArgs e)
-     {
-         try
-         {
-             var configPath = GetShellConfigPath();
-             if (string.IsNullOrWhiteSpace(configPath))
-             {
-                 // Nilesoft Shell not installed, maybe prompt installation
-                  await SnackbarHelper.ShowAsync(
-                      Resource.SettingsPage_WindowsOptimization_Title,
-                      "Nilesoft Shell is not installed. Please install it first.",
-                      SnackbarType.Warning);
-                 return;
-             }
-
-             var config = GenerateShellConfig(SelectedTheme, TransparencyEnabled, RoundedCornersEnabled, ShadowsEnabled);
-             await File.WriteAllTextAsync(configPath, config);
-
-              await SnackbarHelper.ShowAsync(
-                  Resource.SettingsPage_WindowsOptimization_Title,
-                  "Beautification style applied successfully.",
-                  SnackbarType.Success);
-         }
-         catch (Exception ex)
-         {
-             if (Log.Instance.IsTraceEnabled)
-                 Log.Instance.Trace($"Failed to apply beautification style: {ex.Message}", ex);
-
-              await SnackbarHelper.ShowAsync(
-                  Resource.SettingsPage_WindowsOptimization_Title,
-                  "Failed to apply beautification style.",
-                  SnackbarType.Error);
-         }
-     }
-    
-
-    
-    #endregion
-    
-    #region 异步操作和错误处理
     
     private async Task ExecuteAsync(
         Func<CancellationToken, Task> operation,
@@ -1274,115 +1734,100 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         
         try
         {
+            if (scope.HasFlag(InteractionScope.Cleanup))
+                RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, 0);
+            ShowOperationIndicator(true);
             await operation(CancellationToken.None);
-            // TODO: 显示成功消息
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, successMessage, SnackbarType.Success));
         }
         catch (OperationCanceledException)
         {
-            // TODO: 显示取消消息
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, Resource.WindowsOptimizationPage_OperationCancelled, SnackbarType.Warning));
         }
         catch (Exception ex)
         {
-            // TODO: 显示错误消息
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"操作失败: {ex.Message}", ex);
+            var detailedError = $"{errorMessage}\n{string.Format(Resource.WindowsOptimizationPage_ErrorDetails, ex.Message)}";
+            await Dispatcher.InvokeAsync(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, detailedError, SnackbarType.Error));
         }
         finally
         {
             IsBusy = false;
             ToggleInteraction(true, scope);
+            if (scope.HasFlag(InteractionScope.Cleanup))
+                RunCleanupButtonText = string.Empty;
+            ShowOperationIndicator(false);
         }
     }
     
     private async Task RefreshActionStatesAsync(bool skipUserInteractionCheck = false)
     {
-        // 如果正在刷新状态，直接返回，避免重复刷新
-        if (_isRefreshingStates)
+        if (!skipUserInteractionCheck && (_isUserInteracting || (DateTime.Now - _lastUserInteraction).TotalSeconds < 5))
             return;
-            
+
         _isRefreshingStates = true;
-        
         try
         {
-            var actionsByKey = WindowsOptimizationService.GetCategories()
-                .SelectMany(category => category.Actions)
-                .ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
-                
-            foreach (var category in Categories)
+            var actions = Categories.SelectMany(category => category.Actions).ToList();
+            foreach (var action in actions)
             {
-                foreach (var action in category.Actions)
+                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                if (applied.HasValue)
                 {
-                    if (!actionsByKey.TryGetValue(action.Key, out var actionDefinition))
-                        continue;
-                        
-                    if (actionDefinition.IsAppliedAsync == null)
-                        continue;
-                        
-                    try
+                    await Dispatcher.InvokeAsync(() =>
                     {
-                        var applied = await actionDefinition.IsAppliedAsync(CancellationToken.None).ConfigureAwait(false);
-                        
-                        // 计算距离上次用户交互的时间
-                        var timeSinceLastInteraction = DateTime.Now - _lastUserInteraction;
-                        var isRecentInteraction = timeSinceLastInteraction < TimeSpan.FromSeconds(10);
-                        
-                        // 如果用户在取消列表中且当前状态是已应用，取消操作可能仍在进行中，不要自动勾选
-                        if (_userUncheckedActions.Contains(action.Key) && applied)
+                        var timeSinceLastInteraction = (DateTime.Now - _lastUserInteraction).TotalSeconds;
+                        var isRecentInteraction = timeSinceLastInteraction < 10;
+
+                        if (_userUncheckedActions.Contains(action.Key) && applied.Value)
                         {
-                            // 用户明确取消勾选，即使系统状态仍然是已应用，也不要自动勾选
-                            // 只有当系统状态变为未应用时才从取消列表中移除
-                            if (!applied)
+                            if (!applied.Value)
                             {
                                 _userUncheckedActions.Remove(action.Key);
                                 action.IsSelected = false;
                             }
                             else
                             {
-                                // 确保复选框保持未勾选状态
                                 if (action.IsSelected)
-                                {
                                     action.IsSelected = false;
-                                }
                             }
-                            continue;
+                            return;
                         }
-                        
-                        if (action.IsSelected != applied)
+
+                        if (action.IsSelected != applied.Value)
                         {
-                            // 如果用户有最近交互且用户选中但检查显示未应用，操作可能正在进行中，不要立即更新
-                            // 但如果用户未选中但检查显示已应用，应该更新（可能是外部操作导致的）
-                            if (isRecentInteraction && action.IsSelected && !applied)
+                            if (isRecentInteraction && action.IsSelected && !applied.Value)
                             {
-                                // 用户选中但检查显示未应用，操作可能正在进行中，暂时不更新
                                 if (Log.Instance.IsTraceEnabled)
                                     Log.Instance.Trace($"跳过 {action.Key} 的状态更新：用户选中但尚未应用（操作可能正在进行中）");
                             }
                             else
                             {
-                                action.IsSelected = applied;
-                                // 如果状态更新为未应用，从取消列表中移除（表示取消操作已完成）
-                                if (!applied && _userUncheckedActions.Contains(action.Key))
-                                {
+                                action.IsSelected = applied.Value;
+                                if (!applied.Value && _userUncheckedActions.Contains(action.Key))
                                     _userUncheckedActions.Remove(action.Key);
-                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"检查操作状态失败: {action.Key}", ex);
-                    }
+                    });
                 }
             }
-            
             await Dispatcher.InvokeAsync(UpdateSelectedActions);
         }
         finally
         {
-            // 重置标志以允许后续用户操作触发命令
             _isRefreshingStates = false;
         }
+    }
+
+    private void StartActionStateMonitoring()
+    {
+        _actionStateRefreshTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(10)
+        };
+        _actionStateRefreshTimer.Tick += async (s, e) => await RefreshActionStatesAsync();
+        _actionStateRefreshTimer.Start();
     }
     
     private async Task HandleActionCheckedAsync(string actionKey)
@@ -1390,166 +1835,37 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         try
         {
             _lastUserInteraction = DateTime.Now;
-            
-            // 确定交互范围
-            var interactionScope = actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase)
-                ? InteractionScope.Beautification
-                : actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
+            var interactionScope = actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
                 ? InteractionScope.Cleanup
                 : InteractionScope.Optimization;
-                
-            // 对于美化操作，始终执行命令而不检查当前状态
-            if (actionKey.StartsWith("beautify.", StringComparison.OrdinalIgnoreCase))
+
+            // Check if action is applied
+            var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+            
+            // If not applied, execute apply action
+            if (applied.HasValue && !applied.Value)
             {
-                // 对于右键美化操作，首先检查是否安装，如果未安装，先安装再应用
-                if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"用户选中美化操作 {actionKey}，首先检查安装状态");
-                        
-                    // 首先检查是否安装
-        var helper = GetShellIntegrationHelper();
-        var isInstalled = helper?.IsInstalled() ?? false;
+                await ExecuteAsync(
+                    ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
+                    GetResource("WindowsOptimizationPage_ApplySelected_Success"),
+                    GetResource("WindowsOptimizationPage_ApplySelected_Error"),
+                    interactionScope);
                     
-                    var shellDll = helper?.GetNilesoftShellDllPath();
-                    if (string.IsNullOrWhiteSpace(shellDll))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Shell.dll 未找到，无法执行安装命令");
-                        
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            // 显示错误消息
-                            // TODO: 实现Snackbar消息显示
-                        });
-                        return;
-                    }
-                    
-                    try
-                    {
-                        // 如果未安装，先安装；如果已安装，直接应用设置
-                        if (!isInstalled)
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Nilesoft Shell 未安装，先安装");
-                                
-                            // 执行安装命令
-                            await Task.Run(() =>
-                            {
-                                var process = new System.Diagnostics.Process
-                                {
-                                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                                    {
-                                        FileName = "cmd.exe",
-                                        Arguments = $"/c regsvr32.exe /s \"{shellDll}\"",
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true
-                                    }
-                                };
-                                process.Start();
-                                process.WaitForExit();
-                            });
-                            
-                            // 安装后清除缓存并等待片刻，让系统有时间完成安装
-                            helper?.ClearInstallationStatusCache();
-                            await Task.Delay(2000);
-                        }
-                        else
-                        {
-                            // 如果已安装，直接应用设置（注册并重启资源管理器）
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Nilesoft Shell 已安装，使用 regsvr32 应用设置");
-                                
-                            await Task.Run(() =>
-                            {
-                                var process = new System.Diagnostics.Process
-                                {
-                                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                                    {
-                                        FileName = "cmd.exe",
-                                        Arguments = "/c regsvr32.exe /s \"shell.dll\"",
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true
-                                    }
-                                };
-                                process.Start();
-                                process.WaitForExit();
-                            });
-                        }
-                        
-                        // 应用操作后清除缓存，强制下次检查时使用最新的实际状态
-                        helper?.ClearInstallationStatusCache();
-                        
-                        // 显示成功消息
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            // TODO: 实现Snackbar成功消息显示
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"应用美化操作失败: {actionKey}", ex);
-                            
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            // TODO: 实现Snackbar错误消息显示
-                        });
-                    }
-                }
-                else
-                {
-                    // 对于其他美化操作，通过 WindowsOptimizationService 执行
-                    await ExecuteAsync(
-                        ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
-                        "WindowsOptimizationPage_ApplySelected_Success",
-                        "WindowsOptimizationPage_ApplySelected_Error",
-                        interactionScope);
-                }
+                // Delay refresh
+                await Task.Delay(2000);
                 
-                // 延迟状态刷新以给操作足够时间完成
-                // Shell注册需要重启资源管理器，可能需要几秒钟
-                var delay = actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase) ? 3000 : 2000;
-                await Task.Delay(delay);
-                
-                // 清除缓存以确保刷新状态时使用最新的实际状态
-                if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
-                {
-                    GetShellIntegrationHelper()?.ClearInstallationStatusCache();
-                }
-                
-                // 刷新操作状态
+                // Refresh states
                 await RefreshActionStatesAsync(skipUserInteractionCheck: true);
-                
-                // 刷新美化状态
-                _ = RefreshBeautificationStatusAsync();
-            }
-            else
-            {
-                // 对于非美化操作，检查操作是否已应用
-                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
-                
-                // 如果未应用，立即执行应用操作
-                if (applied.HasValue && !applied.Value)
-                {
-                    await ExecuteAsync(
-                        ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
-                        "WindowsOptimizationPage_ApplySelected_Success",
-                        "WindowsOptimizationPage_ApplySelected_Error",
-                        interactionScope);
-                        
-                    // 延迟状态刷新以给操作足够时间完成
-                    await Task.Delay(2000);
-                    
-                    // 刷新操作状态
-                    await RefreshActionStatesAsync(skipUserInteractionCheck: true);
-                }
             }
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"处理选中操作失败: {actionKey}", ex);
+                Log.Instance.Trace($"Failed to handle selected action: {actionKey}", ex);
+        }
+        finally
+        {
+            _isUserInteracting = false;
         }
     }
     
@@ -1559,120 +1875,38 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             _lastUserInteraction = DateTime.Now;
             
-            // 对于右键美化，当用户取消勾选时立即执行卸载操作（实时应用）
-            // 移除状态检查，始终执行卸载命令
-            if (actionKey.StartsWith("beautify.contextMenu", StringComparison.OrdinalIgnoreCase))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"用户取消勾选美化操作 {actionKey}，执行卸载命令");
-                    
-                var helper = GetShellIntegrationHelper();
-                    
-                // 直接执行卸载命令，始终执行无论当前状态如何
-                var shellDll = helper?.GetNilesoftShellDllPath();
-                if (!string.IsNullOrWhiteSpace(shellDll))
-                {
-                    await ExecuteAsync(
-                        async ct =>
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"卸载 Nilesoft Shell");
-                                
-                            await Task.Run(() =>
-                            {
-                                try
-                                {
-                                    var process = new System.Diagnostics.Process
-                                    {
-                                        StartInfo = new System.Diagnostics.ProcessStartInfo
-                                        {
-                                            FileName = "cmd.exe",
-                                            Arguments = $"/c regsvr32.exe /s /u \"{shellDll}\"",
-                                            UseShellExecute = false,
-                                            CreateNoWindow = true
-                                        }
-                                    };
-                                    process.Start();
-                                    process.WaitForExit();
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"卸载 Nilesoft Shell 失败: {ex.Message}", ex);
-                                    throw;
-                                }
-                            });
-                        },
-                        "WindowsOptimizationPage_ApplySelected_Success",
-                        "WindowsOptimizationPage_ApplySelected_Error",
-                        InteractionScope.Beautification);
-                        
-                    // 卸载操作完成后，清除缓存和注册表中的安装状态值
-                    // 这确保下次检查时不会从注册表中读取旧的已安装状态
-                    helper?.ClearInstallationStatusCache();
-                    helper?.ClearRegistryInstallationStatus();
-                    
-                    // 将操作添加到用户取消列表，防止状态刷新时自动勾选
-                    if (!_userUncheckedActions.Contains(actionKey))
-                    {
-                        _userUncheckedActions.Add(actionKey);
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"已添加 {actionKey} 到取消列表以防止自动勾选");
-                    }
-                }
-                else
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Shell.exe 未找到，无法执行卸载命令");
-                }
+            // Execute cancel action via WindowsOptimizationService
+            var interactionScope = actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
+                ? InteractionScope.Cleanup
+                : InteractionScope.Optimization;
                 
-                // 延迟状态刷新以给shell卸载操作足够时间完成
-                // 必须在检查状态前清除缓存，否则将使用旧的缓存值
-                helper?.ClearInstallationStatusCache();
-                await Task.Delay(3000);
+            await ExecuteAsync(
+                ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
+                GetResource("WindowsOptimizationPage_ApplySelected_Success"),
+                GetResource("WindowsOptimizationPage_ApplySelected_Error"),
+                interactionScope);
                 
-                // 刷新操作状态
-                await RefreshActionStatesAsync(skipUserInteractionCheck: true);
-                
-                // 刷新美化状态
-                _ = RefreshBeautificationStatusAsync();
-            }
-            else
-            {
-                // 对于非美化操作，通过 WindowsOptimizationService 执行取消操作
-                var interactionScope = actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
-                    ? InteractionScope.Cleanup
-                    : InteractionScope.Optimization;
-                    
-                await ExecuteAsync(
-                    ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
-                    "WindowsOptimizationPage_ApplySelected_Success",
-                    "WindowsOptimizationPage_ApplySelected_Error",
-                    interactionScope);
-                    
-                // 延迟状态刷新
-                await Task.Delay(2000);
-                
-                // 刷新操作状态
-                await RefreshActionStatesAsync(skipUserInteractionCheck: true);
-            }
+            // Delay refresh
+            await Task.Delay(2000);
+            
+            // Refresh states
+            await RefreshActionStatesAsync(skipUserInteractionCheck: true);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"处理取消勾选操作失败: {actionKey}", ex);
+                Log.Instance.Trace($"Failed to handle uncheck action: {actionKey}", ex);
+        }
+        finally
+        {
+            _isUserInteracting = false;
         }
     }
     
     private void ShowOperationIndicator(bool show)
     {
-        // TODO: 显示或隐藏操作指示器
     }
-    
-    #endregion
-    
-    #region 嵌套 ViewModel 类占位符
-    
+
     public class OptimizationCategoryViewModel : INotifyPropertyChanged
     {
         private bool _isEnabled = true;
@@ -1856,7 +2090,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     
-    public class SelectedActionViewModel : INotifyPropertyChanged, IDisposable
+    public class SelectedActionViewModel : ISelectedActionViewModel, IDisposable
     {
         private readonly OptimizationActionViewModel? _sourceAction;
         private bool _isSelected;
@@ -1867,7 +2101,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             string actionKey,
             string actionTitle,
             string description,
-            OptimizationActionViewModel sourceAction)
+            OptimizationActionViewModel? sourceAction)
         {
             CategoryKey = categoryKey;
             CategoryTitle = categoryTitle;
@@ -1936,6 +2170,13 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                             driverPackage._sourcePackageControl.IsSelected = false;
                         }
                     }
+                    else if (value && Tag is SelectedDriverPackageViewModel driverPackageSelected)
+                    {
+                        if (driverPackageSelected._sourcePackageControl != null)
+                        {
+                            driverPackageSelected._sourcePackageControl.IsSelected = true;
+                        }
+                    }
                     
                     _isSelected = value;
                     OnPropertyChanged(nameof(IsSelected));
@@ -1971,6 +2212,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             DirectoryPath = directoryPath;
             Extensions = new ObservableCollection<string>(extensions);
             Recursive = recursive;
+            Extensions.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ExtensionsDisplay));
         }
 
         public string DirectoryPath
@@ -2021,14 +2263,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposable
     {
-        internal readonly Controls.Packages.PackageControl? _sourcePackageControl;
+        internal readonly PackageControl? _sourcePackageControl;
 
         public SelectedDriverPackageViewModel(
             string packageId,
             string title,
             string description,
             string category,
-            Controls.Packages.PackageControl sourcePackageControl)
+            PackageControl sourcePackageControl)
         {
             PackageId = packageId;
             Title = title;
@@ -2071,11 +2313,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             {
                 if (_sourcePackageControl is not null)
                 {
-                    return _sourcePackageControl.Status switch
+return _sourcePackageControl.Status switch
                     {
-                        Controls.Packages.PackageControl.PackageStatus.Downloading => "下载中",
-                        Controls.Packages.PackageControl.PackageStatus.Installing => "安装中",
-                        Controls.Packages.PackageControl.PackageStatus.Completed => "已完成",
+                        PackageControl.PackageStatus.Downloading => "Downloading",
+                        PackageControl.PackageStatus.Installing => "Installing",
+                        PackageControl.PackageStatus.Completed => "Completed",
                         _ => string.Empty
                     };
                 }
@@ -2103,14 +2345,14 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         private void SourcePackageControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Controls.Packages.PackageControl.IsSelected))
+            if (e.PropertyName == nameof(PackageControl.IsSelected))
                 OnPropertyChanged(nameof(IsSelected));
-            else if (e.PropertyName == nameof(Controls.Packages.PackageControl.Status))
+            else if (e.PropertyName == nameof(PackageControl.Status))
             {
                 OnPropertyChanged(nameof(StatusText));
                 OnPropertyChanged(nameof(IsCompleted));
 
-                if (_sourcePackageControl != null && _sourcePackageControl.Status == Controls.Packages.PackageControl.PackageStatus.Completed)
+                if (_sourcePackageControl != null && _sourcePackageControl.Status == PackageControl.PackageStatus.Completed)
                 {
                     _sourcePackageControl.Visibility = Visibility.Collapsed;
                 }
@@ -2121,34 +2363,268 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     
-    public class DriverDownloadProgressReporter
+    private class DriverDownloadProgressReporter : IProgress<float>
     {
-        private readonly Action<long, long> _progressCallback;
-        private long _totalBytes;
-        private long _downloadedBytes;
+        private readonly WindowsOptimizationPage _page;
 
-        public DriverDownloadProgressReporter(Action<long, long> progressCallback)
+        public DriverDownloadProgressReporter(WindowsOptimizationPage page)
         {
-            _progressCallback = progressCallback;
+            _page = page;
         }
 
-        public void ReportTotalBytes(long totalBytes)
+        public void Report(float value) => _page.Dispatcher.Invoke(() =>
         {
-            _totalBytes = totalBytes;
-            UpdateProgress();
+            // Progress reporting can be implemented here if needed
+        });
+    }
+
+    private bool _isInitializingDriverDownload = false;
+
+    private bool IsDriverDownloadBusy()
+    {
+        if (_driverPackagesStackPanel?.Children is null)
+            return false;
+
+        return _driverPackagesStackPanel.Children
+            .OfType<PackageControl>()
+            .Any(pc => pc.IsDownloading || pc.Status == PackageControl.PackageStatus.Installing);
+    }
+    
+    private string GetDriverDownloadLocation()
+    {
+        if (_driverDownloadToText == null)
+            return KnownFolders.GetPath(KnownFolder.Downloads);
+
+        var location = _driverDownloadToText.Text.Trim();
+
+        if (!Directory.Exists(location))
+        {
+            var downloads = KnownFolders.GetPath(KnownFolder.Downloads);
+            location = downloads;
+            _driverDownloadToText.Text = downloads;
+            _packageDownloaderSettings.Store.DownloadPath = downloads;
+            _packageDownloaderSettings.SynchronizeStore();
         }
 
-        public void ReportDownloadedBytes(long downloadedBytes)
+        return location;
+    }
+    
+    private ContextMenu? GetDriverContextMenu(Package package, IEnumerable<Package> packages)
+    {
+        if (_packageDownloaderSettings.Store.HiddenPackages.Contains(package.Id))
+            return null;
+
+        var hideMenuItem = new MenuItem
         {
-            _downloadedBytes = downloadedBytes;
-            UpdateProgress();
+            SymbolIcon = SymbolRegular.EyeOff24,
+            Header = Resource.Hide,
+        };
+        hideMenuItem.Click += (_, _) =>
+        {
+            _packageDownloaderSettings.Store.HiddenPackages.Add(package.Id);
+            _packageDownloaderSettings.SynchronizeStore();
+
+            DriverReload();
+        };
+
+        var hideAllMenuItem = new MenuItem
+        {
+            SymbolIcon = SymbolRegular.EyeOff24,
+            Header = Resource.HideAll,
+        };
+        hideAllMenuItem.Click += (_, _) =>
+        {
+            foreach (var id in packages.Select(p => p.Id))
+                _packageDownloaderSettings.Store.HiddenPackages.Add(id);
+            _packageDownloaderSettings.SynchronizeStore();
+
+            DriverReload();
+        };
+
+        var cm = new ContextMenu();
+        cm.Items.Add(hideMenuItem);
+        cm.Items.Add(hideAllMenuItem);
+        return cm;
+    }
+    
+    private async Task<bool> ShouldInterruptDriverDownloadsIfRunning()
+    {
+        if (_driverPackagesStackPanel?.Children is null)
+            return true;
+
+        if (_driverPackagesStackPanel.Children.ToArray().OfType<PackageControl>().Where(pc => pc.IsDownloading).IsEmpty())
+            return true;
+
+        return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);
+    }
+    
+    private void DriverReload()
+    {
+        if (_driverPackageDownloader is null || _driverPackagesStackPanel == null)
+            return;
+
+        _driverPackagesStackPanel.Children.Clear();
+
+        if (_driverPackages is null || _driverPackages.Count == 0)
+            return;
+
+        var packages = DriverSortAndFilter(_driverPackages);
+
+        foreach (var package in packages)
+        {
+            var control = new PackageControl(_driverPackageDownloader, package, GetDriverDownloadLocation)
+            {
+                ContextMenu = GetDriverContextMenu(package, packages)
+            };
+
+            // 监听选择状态变化
+            control.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(PackageControl.IsSelected))
+                {
+                    UpdateSelectedDriverPackages();
+                }
+                // 监听状态变化，如果变成已完成则隐藏控件
+                else if (e.PropertyName == nameof(PackageControl.Status) ||
+                         e.PropertyName == nameof(PackageControl.IsDownloading))
+                {
+                    if (control.Status == PackageControl.PackageStatus.Completed)
+                    {
+                        control.Visibility = Visibility.Collapsed;
+                    }
+                    // 当驱动包状态改变时，更新按钮状态（如果当前在驱动下载模式）
+                    if (_currentMode == PageMode.DriverDownload)
+                    {
+                        ApplyInteractionState();
+                    }
+                }
+            };
+
+            _driverPackagesStackPanel.Children.Add(control);
         }
 
-        private void UpdateProgress()
+// Initialize selected driver packages list
+        UpdateSelectedDriverPackages();
+
+        // Check selected driver packages, hide corresponding controls if completed
+        foreach (var selectedPackage in SelectedDriverPackages)
         {
-            _progressCallback(_downloadedBytes, _totalBytes);
+            if (selectedPackage.IsCompleted && selectedPackage._sourcePackageControl != null)
+            {
+                selectedPackage._sourcePackageControl.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        if (packages.IsEmpty())
+        {
+            var tb = new TextBlock
+            {
+                Text = Resource.PackagesPage_NoMatchingDownloads,
+                Foreground = (SolidColorBrush)FindResource("TextFillColorSecondaryBrush"),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new(0, 32, 0, 32),
+                Focusable = true
+            };
+            _driverPackagesStackPanel.Children.Add(tb);
+        }
+
+        if (_packageDownloaderSettings.Store.HiddenPackages.Count != 0)
+        {
+            var clearHidden = new Wpf.Ui.Controls.Hyperlink
+            {
+                Icon = SymbolRegular.Eye24,
+                Content = Resource.WindowsOptimizationPage_ShowHiddenDownloads,
+                HorizontalAlignment = HorizontalAlignment.Right,
+            };
+            clearHidden.Click += (_, _) =>
+            {
+                _packageDownloaderSettings.Store.HiddenPackages.Clear();
+                _packageDownloaderSettings.SynchronizeStore();
+
+                DriverReload();
+            };
+            _driverPackagesStackPanel.Children.Add(clearHidden);
         }
     }
     
-    #endregion
+    private List<Package> DriverSortAndFilter(List<Package> packages)
+    {
+        var selectedIndex = _driverSortingComboBox?.SelectedIndex ?? 2;
+        var result = selectedIndex switch
+        {
+            0 => packages.OrderBy(p => p.Title),
+            1 => packages.OrderBy(p => p.Category),
+            2 => packages.OrderByDescending(p => p.ReleaseDate),
+            _ => packages.AsEnumerable(),
+        };
+
+        result = result.Where(p => !_packageDownloaderSettings.Store.HiddenPackages.Contains(p.Id));
+
+        if (_driverOnlyShowUpdatesCheckBox?.IsChecked ?? false)
+            result = result.Where(p => p.IsUpdate);
+
+        var filterText = _driverFilterTextBox?.Text ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(filterText))
+            result = result.Where(p => p.Index.Contains(filterText, StringComparison.InvariantCultureIgnoreCase));
+
+        return result.ToList();
+    }
+    
+    private void UpdateSelectedDriverPackages()
+    {
+        if (_driverPackagesStackPanel?.Children == null)
+            return;
+
+        var newSelectedPackages = new List<SelectedDriverPackageViewModel>();
+        foreach (var child in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+        {
+            if (child.IsSelected)
+            {
+                var existing = SelectedDriverPackages.FirstOrDefault(p => p.PackageId == child.Package.Id);
+                if (existing != null)
+                {
+                    newSelectedPackages.Add(existing);
+                }
+                else
+                {
+                    newSelectedPackages.Add(new SelectedDriverPackageViewModel(
+                        child.Package.Id,
+                        child.Package.Title,
+                        child.Package.Description,
+                        child.Package.Category,
+                        child));
+                }
+            }
+        }
+
+        foreach (var existing in SelectedDriverPackages.ToList())
+        {
+            if (!newSelectedPackages.Any(p => p.PackageId == existing.PackageId))
+            {
+                existing.Dispose();
+                SelectedDriverPackages.Remove(existing);
+            }
+        }
+
+        foreach (var newPackage in newSelectedPackages)
+        {
+            if (!SelectedDriverPackages.Any(p => p.PackageId == newPackage.PackageId))
+                SelectedDriverPackages.Add(newPackage);
+        }
+
+        OnPropertyChanged(nameof(HasSelectedActions));
+        OnPropertyChanged(nameof(SelectedActionsSummary));
+    }
+    
+    private void StopDriverRetryTimer()
+    {
+        if (_driverRetryTimer != null)
+        {
+            _driverRetryTimer.Stop();
+            _driverRetryTimer = null;
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Driver retry timer stopped.");
+        }
+    }
 }

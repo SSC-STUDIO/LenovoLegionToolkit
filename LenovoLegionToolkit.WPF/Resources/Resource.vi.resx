@@ -487,19 +487,6 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Độ sáng màn hình</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Ủng hộ qua</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Phát triển và duy trì Lenovo Legion Toolkit tốn rất nhiều thời gian. Nếu bạn thích phần mềm này, bạn có thể tuỳ tâm hỗ trợ chút tiền cho việc hỗ trợ nó sau này.
-
-Bấm vào logo PayPal bên dưới hoặc quét mã QR để ủng hộ qua PayPal.
-
-Xin chân thành cảm ơn!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Ủng hộ</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Chỉnh sửa</value>
   </data>
@@ -748,9 +735,6 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Trang chủ</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Ủng hộ</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Bàn phím</value>

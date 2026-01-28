@@ -545,22 +545,7 @@ WARNING: This action will not run correctly, if internal display is off.</value>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Display brightness</value>
   </data>
-  <data name="DonatePage_DonateWith" xml:space="preserve">
-    <value>Donate with</value>
-  </data>
-  <data name="DonatePage_Message" xml:space="preserve">
-    <value>Development and maintenance of Lenovo Legion Toolkit takes a lot of time. If you like using this software you can support its future by donating an amount of your choice.
 
-Click the PayPal logo below or scan the QR code to donate with PayPal.
-
-Thanks in advance!</value>
-  </data>
-  <data name="DonatePage_Title" xml:space="preserve">
-    <value>Donate</value>
-  </data>
-  <data name="DonatePage_CanBeHidden_Message" xml:space="preserve">
-    <value>Note: You can hide this donate button in the navigation menu by disabling "Show donate button" in Settings.</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -810,9 +795,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
-  <data name="MainWindow_NavigationItem_Donate" xml:space="preserve">
-    <value>Donate</value>
-  </data>
+
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Keyboard</value>
   </data>
@@ -852,9 +835,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
 <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Plugin Extensions navigation item</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowDonateNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Donate navigation item</value>
-  </data>
+
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the About navigation item</value>
   </data>
@@ -1811,12 +1792,7 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
     <value>Disable incompatible device warning</value>
   </data>
-  <data name="SettingsPage_ShowDonateButton_Message" xml:space="preserve">
-    <value>Show or hide the donate button in the navigation menu.</value>
-  </data>
-  <data name="SettingsPage_ShowDonateButton_Title" xml:space="preserve">
-    <value>Show donate button</value>
-  </data>
+
   <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
     <value>Enable Extensions</value>
   </data>
@@ -3725,5 +3701,62 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve">
     <value>Open Folder Failed</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>Power Usage</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>Charge</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>Health</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>Min Rate</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>Max Rate</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>Cycles</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>Capacity</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>Full Cap</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>Core / Memory Clock</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>Core Voltage</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>Voltage Range</value>
+  </data>
+  <data name="SensorsControl_AvgTemp" xml:space="preserve">
+    <value>Avg Temp</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>Sidebar</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>Rate Range</value>
   </data>
 </root>

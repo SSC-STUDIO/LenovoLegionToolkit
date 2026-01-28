@@ -239,10 +239,29 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Margin="0,0,16,0">
-                                <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource PluginTitleStyle}" />
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}"
+                                               Style="{StaticResource PluginTitleStyle}" />
+                                    <!-- Local Badge -->
+                                    <Border Background="{DynamicResource SystemAccentColorBrush}"
+                                            CornerRadius="4"
+                                            Padding="6,2"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Local"
+                                                   FontSize="10"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                    </Border>
+                                </StackPanel>
                                 <TextBlock Text="{Binding Version}"
                                            Style="{StaticResource PluginVersionStyle}" />
+                                <TextBlock Text="{Binding Location}"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SystemAccentColorBrush}"
+                                           Margin="0,2,0,0"
+                                           Visibility="{Binding Location, Converter={StaticResource wpfui:TextToVisibilityConverter}}" />
                                 <TextBlock Text="{Binding Description}"
                                            Style="{StaticResource PluginDescriptionStyle}"
                                            Margin="0,4,0,0"
@@ -274,8 +293,45 @@
                                         Width="90"
                                         Height="30"
                                         Click="PluginInstallButton_Click"
-                                        Tag="{Binding PluginId}"
-                                        Visibility="{Binding IsInstallButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        Tag="{Binding PluginId}" />
+                                
+                                <!-- Configuration Button -->
+                                <Button Content="{Binding ConfigureButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                            <Binding Path="IsInstalled" />
+                                            <Binding Path="SupportsConfiguration" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                    <Button.Click>PluginConfigureButton_Click</Button.Click>
+                                    <Button.Tag>
+                                        <Binding Path="PluginId" />
+                                    </Button.Tag>
+                                </Button>
+                                
+                                <!-- Open Button -->
+                                <Button Content="{Binding OpenButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Click="PluginOpenButton_Click"
+                                        Tag="{Binding PluginId}" />
+                                
+                                <!-- Uninstall Button -->
+                                <Button Content="{Binding UninstallButtonText}"
+                                        Style="{DynamicResource DefaultButtonStyle}"
+                                        Width="70"
+                                        Height="28"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Click="PluginUninstallButton_Click"
+                                        Tag="{Binding PluginId}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

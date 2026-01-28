@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace LenovoLegionToolkit.WPF;
 
@@ -9,5 +9,5 @@ public static class Constants
     public const string UpdateRepositoryOwner = "Crs10259";
     public const string UpdateRepositoryName = "LenovoLegionToolkit";
     public static readonly Uri LatestReleaseUri = new($"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}/releases/latest");
-    public static readonly Uri PayPalUri = new("https://www.paypal.com/donate/?hosted_button_id=22AZE2NBP3HTL");
+
 }

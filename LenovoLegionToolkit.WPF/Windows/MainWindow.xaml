@@ -128,12 +128,7 @@
                         Icon="Apps24"
                         PageTag="pluginExtensions"
                         PageType="{x:Type pages:PluginExtensionsPage}" />
-                    <custom:NavigationItem
-                        x:Name="_donateNavigationItem"
-                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_Donate}"
-                        Icon="Money24"
-                        PageTag="donate"
-                        PageType="{x:Type pages:DonatePage}" />
+
                     <custom:NavigationItem
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
                         Icon="Settings24"
