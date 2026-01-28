@@ -6,8 +6,8 @@
       Current version in make.bat: 3.4.1
     -->
     <MajorVersion>3</MajorVersion>
-    <MinorVersion>4</MinorVersion>
-    <PatchVersion>1</PatchVersion>
+    <MinorVersion>5</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     
     <!-- Default version values -->
     <GitCommitCount>0</GitCommitCount>

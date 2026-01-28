@@ -9,7 +9,11 @@
      <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
      <GenerateDependencyFile>false</GenerateDependencyFile>
      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-   </PropertyGroup>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>

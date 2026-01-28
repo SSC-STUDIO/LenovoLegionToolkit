@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "[0-9]*.[0-9]*.[0-9]*"
+      - "v*"
 
 jobs:
   build:
@@ -26,18 +26,22 @@ jobs:
       uses: microsoft/setup-msbuild@v2
     - name: Install Inno Setup
       run: choco install innosetup -y
-    - name: Restore
-      run: dotnet restore
     - name: Update submodules to latest
       run: git submodule update --init --recursive --depth=0
+    - name: Prepare Version
+      shell: pwsh
+      run: |
+        $version = "${{ github.ref_name }}" -replace "^v", ""
+        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: Build
-      run: .\make.bat ${{ github.ref_name }}
+      run: .\make.bat ${{ env.VERSION }}
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        draft: true
         files: build_installer/LenovoLegionToolkitSetup.exe
         fail_on_unmatched_files: true
+        prerelease: ${{ contains(github.ref, '-') }}
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
