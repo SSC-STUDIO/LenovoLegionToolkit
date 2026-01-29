@@ -19,14 +19,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: false
         fetch-depth: 0
+    - name: Checkout submodules
+      shell: bash
+      run: |
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git submodule sync --recursive
+        git -c "http.extraheader=$auth_header" submodule update --init --recursive --force --depth=1
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    - name: Update submodules to latest
-      run: git submodule update --init --recursive --depth=0
     - name: Build
       run: .\make.bat
     - name: Upload artifact
