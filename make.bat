@@ -7,29 +7,10 @@ IF "%1"=="-p" (
 )
 
 IF "%1"=="" (       
-	SET VERSION=3.5.0
+	SET VERSION=3.5.1
 ) ELSE (
 	SET VERSION=%1
 )
-
-REM Skip legacy ShellIntegration build - now using plugin architecture
-REM pushd ShellIntegration\src
-REM if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-REM ) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
-REM ) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-REM ) else if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-REM ) else if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
-REM ) else if exist "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" (
-REM     call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-REM )
-REM msbuild dll\Shell.vcxproj /p:Configuration=release /p:Platform=x64 /p:SolutionDir=%CD%\ /m || exit /b
-REM msbuild setup\ca\ca.vcxproj /p:Configuration=release /p:Platform=x64 /p:SolutionDir=%CD%\ /m || exit /b
-REM popd
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
 dotnet publish LenovoLegionToolkit.WPF -c release -o build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b

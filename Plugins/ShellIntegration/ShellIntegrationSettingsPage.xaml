@@ -44,6 +44,7 @@
     <Grid Margin="0,0,16,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -60,8 +61,119 @@
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         </StackPanel>
 
-        <!-- Context Menu Items -->
+        <!-- System Optimizations -->
         <Border Grid.Row="1" Style="{StaticResource SettingsCardStyle}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <wpfui:SymbolIcon Symbol="Settings24"
+                                       FontSize="20"
+                                       Margin="0,0,8,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemAccentColorBrush}" />
+                    <TextBlock Text="System Optimizations"
+                               Style="{StaticResource SettingsHeaderStyle}" />
+                </StackPanel>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="ContextMenu Animations" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable context menu animations" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding ContextMenuAnimations}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Show File Extensions" FontWeight="Medium" />
+                        <TextBlock Text="Show or hide file extensions in Explorer" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding ShowFileExtensions}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Show Hidden Files" FontWeight="Medium" />
+                        <TextBlock Text="Show or hide hidden files in Explorer" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding ShowHiddenFiles}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Quick Access" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable Quick Access in File Explorer" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding QuickAccess}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Preview Pane" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable File Explorer Preview Pane" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding PreviewPane}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Transparency" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable menu transparency" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding Transparency}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Rounded Corners" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable rounded corners" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding RoundedCorners}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Shadows" FontWeight="Medium" />
+                        <TextBlock Text="Enable or disable menu shadows" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" IsChecked="{Binding Shadows}" Style="{StaticResource ToggleStyle}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Context Menu Items -->
+        <Border Grid.Row="2" Style="{StaticResource SettingsCardStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

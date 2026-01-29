@@ -4,10 +4,12 @@ using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.Plugins.ShellIntegration.Services;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.System;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +31,37 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
     public override string Icon => "ContextMenu24";
     
     public override bool IsSystemPlugin => true;
+
+    /// <summary>
+    /// Get settings page provided by this plugin
+    /// </summary>
+    public override object? GetSettingsPage()
+    {
+        try
+        {
+            // We instantiate the settings page directly because plugin services 
+            // are not registered in the main IoC container.
+            // This avoids hardcoding plugin-specific services in the main application.
+            var loggerFactory = IoCContainer.TryResolve<Microsoft.Extensions.Logging.ILoggerFactory>();
+            
+            var menuLogger = loggerFactory?.CreateLogger<ContextMenuItemManager>() ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<ContextMenuItemManager>.Instance;
+            var extensionLogger = loggerFactory?.CreateLogger<ShellExtensionManager>() ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<ShellExtensionManager>.Instance;
+            var optimizationLogger = loggerFactory?.CreateLogger<ShellOptimizationService>() ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<ShellOptimizationService>.Instance;
+            var pageLogger = loggerFactory?.CreateLogger<ShellIntegrationSettingsPage>() ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<ShellIntegrationSettingsPage>.Instance;
+
+            var menuManager = new ContextMenuItemManager(menuLogger);
+            var extensionManager = new ShellExtensionManager(extensionLogger);
+            var optimizationService = new ShellOptimizationService(optimizationLogger);
+            
+            return new ShellIntegrationSettingsPage(pageLogger, menuManager, extensionManager, optimizationService);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to create ShellIntegrationSettingsPage: {ex.Message}", ex);
+            return null;
+        }
+    }
 
     /// <summary>
     /// Get optimization category provided by this plugin
@@ -73,227 +106,6 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
                 IsAppliedAsync: async ct => await Task.FromResult(isInstalledUsingShellExe)
             ));
 
-            // Action 2: Enable/Disable Context Menu Animations
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "shell-integration.animations.contextMenu",
-                "ShellIntegration_Action_ContextMenuAnimations_Title",
-                "ShellIntegration_Action_ContextMenuAnimations_Description",
-                async ct =>
-                {
-                    // Toggle context menu animations in registry
-                    using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Control Panel\Desktop");
-                    if (key != null)
-                    {
-                        var currentValue = key.GetValue("MenuShowDelay")?.ToString();
-                        key.SetValue("MenuShowDelay", currentValue == "0" ? "400" : "0", Microsoft.Win32.RegistryValueKind.String);
-                    }
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
-                    var value = key?.GetValue("MenuShowDelay")?.ToString();
-                    return await Task.FromResult(value == "0");
-                }
-            ));
-
-            // Action 3: Enable/Disable Show File Extensions
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "shell-integration.visibility.showFileExt",
-                "ShellIntegration_Action_ShowFileExtensions_Title",
-                "ShellIntegration_Action_ShowFileExtensions_Description",
-                async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    if (key != null)
-                    {
-                        var currentValue = key.GetValue("HideFileExt") as int?;
-                        key.SetValue("HideFileExt", currentValue == 0 ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
-                    }
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    var value = key?.GetValue("HideFileExt") as int?;
-                    return await Task.FromResult(value == 0);
-                }
-            ));
-
-            // Action 4: Enable/Disable Show Hidden Files
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "shell-integration.visibility.showHiddenFiles",
-                "ShellIntegration_Action_ShowHiddenFiles_Title",
-                "ShellIntegration_Action_ShowHiddenFiles_Description",
-                async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    if (key != null)
-                    {
-                        var currentValue = key.GetValue("Hidden") as int?;
-                        key.SetValue("Hidden", currentValue == 1 ? 0 : 1, Microsoft.Win32.RegistryValueKind.DWord);
-                    }
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    var value = key?.GetValue("Hidden") as int?;
-                    return await Task.FromResult(value == 1);
-                }
-            ));
-
-            // Action 5: Enable/Disable Quick Access in File Explorer
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "shell-integration.navigation.quickAccess",
-                "ShellIntegration_Action_QuickAccess_Title",
-                "ShellIntegration_Action_QuickAccess_Description",
-                async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    if (key != null)
-                    {
-                        var currentValue = key.GetValue("LaunchTo") as int?;
-                        key.SetValue("LaunchTo", currentValue == 2 ? 1 : 2, Microsoft.Win32.RegistryValueKind.DWord);
-                    }
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    var value = key?.GetValue("LaunchTo") as int?;
-                    return await Task.FromResult(value == 2);
-                }
-            ));
-
-            // Action 6: Enable/Disable File Explorer Preview Pane
-            actions.Add(new WindowsOptimizationActionDefinition(
-                "shell-integration.view.previewPane",
-                "ShellIntegration_Action_PreviewPane_Title",
-                "ShellIntegration_Action_PreviewPane_Description",
-                async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    if (key != null)
-                    {
-                        var currentValue = key.GetValue("PreviewPane") as int?;
-                        key.SetValue("PreviewPane", currentValue == 1 ? 0 : 1, Microsoft.Win32.RegistryValueKind.DWord);
-                    }
-                },
-                Recommended: false,
-                IsAppliedAsync: async ct =>
-                {
-                    using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
-                    var value = key?.GetValue("PreviewPane") as int?;
-                    return await Task.FromResult(value == 1);
-                }
-            ));
-
-             // Beautification Actions
-             // Theme: Auto
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.theme.auto",
-                 "ShellIntegration_Action_ThemeAuto_Title",
-                 "ShellIntegration_Action_ThemeAuto_Description",
-                 async ct =>
-                 {
-                     await ApplyThemeAsync("auto");
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetCurrentTheme() == "auto")
-             ));
-             
-             // Theme: Light
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.theme.light",
-                 "ShellIntegration_Action_ThemeLight_Title",
-                 "ShellIntegration_Action_ThemeLight_Description",
-                 async ct =>
-                 {
-                     await ApplyThemeAsync("light");
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetCurrentTheme() == "light")
-             ));
-             
-             // Theme: Dark
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.theme.dark",
-                 "ShellIntegration_Action_ThemeDark_Title",
-                 "ShellIntegration_Action_ThemeDark_Description",
-                 async ct =>
-                 {
-                     await ApplyThemeAsync("dark");
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetCurrentTheme() == "dark")
-             ));
-             
-             // Theme: Classic
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.theme.classic",
-                 "ShellIntegration_Action_ThemeClassic_Title",
-                 "ShellIntegration_Action_ThemeClassic_Description",
-                 async ct =>
-                 {
-                     await ApplyThemeAsync("classic");
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetCurrentTheme() == "classic")
-             ));
-             
-             // Theme: Modern
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.theme.modern",
-                 "ShellIntegration_Action_ThemeModern_Title",
-                 "ShellIntegration_Action_ThemeModern_Description",
-                 async ct =>
-                 {
-                     await ApplyThemeAsync("modern");
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetCurrentTheme() == "modern")
-             ));
-             
-             // Transparency
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.transparency",
-                 "ShellIntegration_Action_Transparency_Title",
-                 "ShellIntegration_Action_Transparency_Description",
-                 async ct =>
-                 {
-                     await ToggleTransparencyAsync();
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetTransparencyEnabled())
-             ));
-             
-             // Rounded Corners
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.roundedCorners",
-                 "ShellIntegration_Action_RoundedCorners_Title",
-                 "ShellIntegration_Action_RoundedCorners_Description",
-                 async ct =>
-                 {
-                     await ToggleRoundedCornersAsync();
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetRoundedCornersEnabled())
-             ));
-             
-             // Shadows
-             actions.Add(new WindowsOptimizationActionDefinition(
-                 "beautify.shadows",
-                 "ShellIntegration_Action_Shadows_Title",
-                 "ShellIntegration_Action_Shadows_Description",
-                 async ct =>
-                 {
-                     await ToggleShadowsAsync();
-                 },
-                 Recommended: false,
-                 IsAppliedAsync: async ct => await Task.FromResult(GetShadowsEnabled())
-             ));
-             
              // Return category if we have actions
             if (actions.Count > 0)
             {
@@ -301,7 +113,8 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Lib.Plugins.PluginBase
                      "beautify.shell-integration",
                      "ShellIntegration_Category_Title",
                      "ShellIntegration_Category_Description",
-                     actions
+                     actions,
+                     PluginId: Id
                  );
             }
 

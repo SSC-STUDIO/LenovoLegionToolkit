@@ -23,6 +23,8 @@ using System.Diagnostics;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.WPF.Controls.Packages;
 using LenovoLegionToolkit.WPF.Extensions;
+using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.WPF.Windows.Settings;
 using System.Net.Http;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -43,10 +45,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private List<Package>? _driverPackages;
     private System.Windows.Threading.DispatcherTimer? _driverRetryTimer;
-    private string? _driverRetryMachineType;
-    private OS? _driverRetryOS;
-    private PackageDownloaderFactory.Type? _driverRetryPackageDownloaderType;
-    private bool _driverPackagesExpanded;
     private string _driverExpandCollapseText = string.Empty;
     
     public string DriverExpandCollapseText
@@ -91,6 +89,36 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     private string _currentDeletingFile = string.Empty;
     private string _runCleanupButtonText = string.Empty;
     private bool _hasInitializedCleanupMode;
+    private bool _isRefreshingStates;
+    private bool _cleanupConfirmedInSession;
+    private bool _isAnyDriverRunning;
+    
+    private bool _isScanned;
+    private List<FileInfo> _largeFiles = [];
+    
+    public bool IsScanned
+    {
+        get => _isScanned;
+        private set
+        {
+            if (_isScanned == value)
+                return;
+            _isScanned = value;
+            OnPropertyChanged(nameof(IsScanned));
+        }
+    }
+
+    public bool IsAnyDriverRunning
+    {
+        get => _isAnyDriverRunning;
+        private set
+        {
+            if (_isAnyDriverRunning == value)
+                return;
+            _isAnyDriverRunning = value;
+            OnPropertyChanged(nameof(IsAnyDriverRunning));
+        }
+    }
     
     public bool IsBusy
     {
@@ -200,6 +228,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
     
+    public string ScanCleanupButtonText => GetResource("WindowsOptimizationPage_Scan_Button");
+    public string PauseAllButtonText => GetResource("WindowsOptimizationPage_PauseAll_Button");
+    public string StartAllButtonText => GetResource("WindowsOptimizationPage_StartAll_Button");
     public string PendingText => GetResource("WindowsOptimizationPage_EstimatedCleanupSize_Pending");
     public string CompactText => GetResource("Compact");
     public string ExpandAllText => GetResource("ExpandAll");
@@ -304,7 +335,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         PageMode.DriverDownload => [],
         _ => OptimizationCategories
     };
-    private bool _isRefreshingStates = false;
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
     private bool _isUserInteracting;
     private DateTime _lastUserInteraction = DateTime.MinValue;
@@ -386,6 +416,18 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         var optimizationEnabled = _optimizationInteractionEnabled;
         var cleanupEnabled = _cleanupInteractionEnabled;
         
+        // Update IsAnyDriverRunning if in Driver Download mode
+        if (_currentMode == PageMode.DriverDownload && _driverPackagesStackPanel != null)
+        {
+            IsAnyDriverRunning = _driverPackagesStackPanel.Children
+                .OfType<PackageControl>()
+                .Any(c => c.Status == PackageControl.PackageStatus.Downloading || c.Status == PackageControl.PackageStatus.Installing);
+        }
+        else
+        {
+            IsAnyDriverRunning = false;
+        }
+
         var primaryButtonsEnabled = _currentMode switch
         {
             PageMode.Cleanup => cleanupEnabled,
@@ -557,9 +599,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            if (HasSelectedActions)
-                _ = UpdateEstimatedCleanupSizeAsync();
-            else
+            // Do not auto-calculate size in Cleanup mode anymore
+            // User must click "Scan" button
+            if (!HasSelectedActions)
             {
                 EstimatedCleanupSize = 0;
                 IsCalculatingSize = false;
@@ -632,11 +674,58 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             {
                 EstimatedCleanupSize = 0;
                 IsCalculatingSize = false;
+                IsScanned = true;
                 return;
             }
+
+            // If large files is selected, perform detailed analysis
+            if (actionKeys.Contains("cleanup.largeFiles", StringComparer.OrdinalIgnoreCase))
+            {
+                await Dispatcher.InvokeAsync(() => CurrentOperationText = GetResource("WindowsOptimizationPage_ScanningLargeFiles") ?? "Scanning for large files...");
+                var files = await _windowsOptimizationService.GetLargeFilesAsync(100 * 1024 * 1024, cancellationToken).ConfigureAwait(false);
+                _largeFiles = files;
+                
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    var dialog = new LargeFilesWindow(_largeFiles)
+                    {
+                        Owner = Window.GetWindow(this)
+                    };
+                    if (dialog.ShowDialog() == true)
+                    {
+                        _largeFiles = dialog.SelectedFiles;
+                    }
+                    else
+                    {
+                        _largeFiles = [];
+                        // Unselect large files action if no files were selected
+                        var largeFilesAction = CleanupCategories
+                            .SelectMany(c => c.Actions)
+                            .FirstOrDefault(a => a.Key.Equals("cleanup.largeFiles", StringComparison.OrdinalIgnoreCase));
+                        if (largeFilesAction != null)
+                            largeFilesAction.IsSelected = false;
+                    }
+                });
+            }
+
             var size = await _windowsOptimizationService.EstimateCleanupSizeAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+            
+            // Adjust size based on selected large files
+            if (actionKeys.Contains("cleanup.largeFiles", StringComparer.OrdinalIgnoreCase))
+            {
+                // The service estimate already includes all files > 100MB, 
+                // but we might have filtered them in the dialog.
+                // However, the estimate is just an estimate. 
+                // Let's replace the large files part of the estimate with actual selected files size.
+                var largeFilesEstimate = await _windowsOptimizationService.EstimateActionSizeAsync("cleanup.largeFiles", cancellationToken).ConfigureAwait(false);
+                size = size - largeFilesEstimate + _largeFiles.Sum(f => f.Length);
+            }
+
             if (!cancellationToken.IsCancellationRequested)
+            {
                 EstimatedCleanupSize = size;
+                IsScanned = true;
+            }
         }
         catch (OperationCanceledException)
         {
@@ -738,7 +827,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                 GetResource(category.TitleResourceKey),
                 GetResource(category.DescriptionResourceKey),
                 selectionSummaryFormat,
-                actions);
+                actions,
+                category.PluginId);
+
+            foreach (var actionVm in actions)
+                actionVm.Category = categoryVm;
                 
             categoryVm.SelectionChanged += Category_SelectionChanged;
             categoryVm.PropertyChanged += (_, args) =>
@@ -794,8 +887,16 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
         if (_currentMode == PageMode.Cleanup)
         {
-            if (HasSelectedActions)
-                _ = UpdateEstimatedCleanupSizeAsync();
+            if (IsScanned)
+            {
+                if (HasSelectedActions)
+                    _ = UpdateEstimatedCleanupSizeAsync();
+                else
+                {
+                    EstimatedCleanupSize = 0;
+                    IsCalculatingSize = false;
+                }
+            }
             else
             {
                 EstimatedCleanupSize = 0;
@@ -899,6 +1000,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             if (mode == PageMode.Cleanup)
             {
+                IsScanned = false;
                 if (!_hasInitializedCleanupMode)
                 {
                     _hasInitializedCleanupMode = true;
@@ -906,7 +1008,6 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     SelectRecommended(activeCategories);
                     UpdateSelectedActions();
                 }
-                _ = UpdateEstimatedCleanupSizeAsync();
             }
             else if (mode == PageMode.DriverDownload)
             {
@@ -1008,6 +1109,33 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     
     private void OpenStyleSettingsButton_Click(object sender, RoutedEventArgs e)
     {
+        if (sender is not System.Windows.FrameworkElement element)
+            return;
+
+        OpenStyleSettings(element.DataContext as OptimizationCategoryViewModel);
+    }
+
+    private void OpenStyleSettings(OptimizationCategoryViewModel? categoryVm)
+    {
+        if (categoryVm == null || string.IsNullOrEmpty(categoryVm.PluginId))
+            return;
+
+        try
+        {
+            var pluginSettingsWindow = new PluginSettingsWindow(categoryVm.PluginId)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            pluginSettingsWindow.ShowDialog();
+            
+            // Refresh action states after settings changed
+            _ = RefreshActionStatesAsync(skipUserInteractionCheck: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Failed to open plugin settings window for {categoryVm.PluginId}.", ex);
+        }
     }
 
 
@@ -1061,10 +1189,17 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
 
             if (isDoubleClick)
             {
+                // Open settings if available
+                if (actionViewModel.Category != null && actionViewModel.Category.HasSettings)
+                {
+                    OpenStyleSettings(actionViewModel.Category);
+                    return;
+                }
+
                 if (actionViewModel.Key.StartsWith("explorer.", StringComparison.OrdinalIgnoreCase) ||
-                         actionViewModel.Key.StartsWith("performance.", StringComparison.OrdinalIgnoreCase) ||
-                         actionViewModel.Key.StartsWith("services.", StringComparison.OrdinalIgnoreCase) ||
-                         actionViewModel.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+                    actionViewModel.Key.StartsWith("performance.", StringComparison.OrdinalIgnoreCase) ||
+                    actionViewModel.Key.StartsWith("services.", StringComparison.OrdinalIgnoreCase) ||
+                    actionViewModel.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
                 {
                     OpenActionDetailsWindow(actionViewModel.Key);
                     e.Handled = true;
@@ -1094,28 +1229,64 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     {
         if (_currentMode == PageMode.DriverDownload)
         {
-            DriverPauseAllButton_Click(sender, e);
+            if (IsAnyDriverRunning)
+            {
+                DriverPauseAllButton_Click(sender, e);
+            }
+            else
+            {
+                DriverStartAllButton_Click(sender, e);
+            }
+            return;
         }
-        else
-        {
-            foreach (var category in ActiveCategories)
-                category.ClearSelection();
-                
-            UpdateSelectedActions();
-        }
+
+        foreach (var category in ActiveCategories)
+            category.ClearSelection();
+            
+        UpdateSelectedActions();
     }
     
-    private void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
+    private async void SelectRecommended(IEnumerable<OptimizationCategoryViewModel> categories)
     {
         _isRefreshingStates = true;
         try
         {
-            var allActions = categories.SelectMany(c => c.Actions);
-            foreach (var action in allActions.Where(a => a.Recommended))
+            var allActions = categories.SelectMany(c => c.Actions).ToList();
+            var recommendedActions = allActions.Where(a => a.Recommended).ToList();
+            
+            foreach (var action in recommendedActions)
+            {
                 _userUncheckedActions.Remove(action.Key);
+                action.IsSelected = true;
+            }
+
             foreach (var category in categories)
                 category.SelectRecommended();
+
             UpdateSelectedActions();
+
+            // Execute all recommended actions that are not yet applied
+            var actionsToExecute = new List<string>();
+            foreach (var action in recommendedActions)
+            {
+                var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                if (applied.HasValue && !applied.Value)
+                {
+                    actionsToExecute.Add(action.Key);
+                }
+            }
+
+            if (actionsToExecute.Count > 0)
+            {
+                await ExecuteAsync(
+                    ct => _windowsOptimizationService.ExecuteActionsAsync(actionsToExecute, ct),
+                    GetResource("WindowsOptimizationPage_ApplySelected_Success"),
+                    GetResource("WindowsOptimizationPage_ApplySelected_Error"),
+                    InteractionScope.Optimization | InteractionScope.Cleanup);
+
+                await Task.Delay(2000);
+                await RefreshActionStatesAsync(skipUserInteractionCheck: true);
+            }
         }
         finally
         {
@@ -1137,6 +1308,20 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         }
     }
     
+    private void DriverStartAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_driverPackagesStackPanel == null)
+            return;
+
+        foreach (var control in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+        {
+            if (control.IsSelected && control.Status != PackageControl.PackageStatus.Completed)
+            {
+                _ = control.StartAsync();
+            }
+        }
+    }
+
     private void DriverPauseAllButton_Click(object sender, RoutedEventArgs e)
     {
         if (_driverPackagesStackPanel?.Children == null)
@@ -1146,7 +1331,9 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         {
             if (child.Status == PackageControl.PackageStatus.Downloading ||
                 child.Status == PackageControl.PackageStatus.Installing)
-                child.IsSelected = false;
+            {
+                child.Pause();
+            }
         }
     }
     
@@ -1470,6 +1657,11 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
     }
     
     // 清理相关事件处理程序
+    private async void ScanCleanupButton_Click(object sender, RoutedEventArgs e)
+    {
+        await UpdateEstimatedCleanupSizeAsync();
+    }
+
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
         var selectedCleanupActions = new List<(string CategoryKey, string CategoryTitle, string ActionKey, string ActionTitle, string Description)>();
@@ -1531,6 +1723,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
                     {
                         if (action.ActionKey.Equals(WindowsOptimizationService.CustomCleanupActionKey, StringComparison.OrdinalIgnoreCase))
                             await ExecuteCustomCleanupWithProgressAsync(ct);
+                        else if (action.ActionKey.Equals("cleanup.largeFiles", StringComparison.OrdinalIgnoreCase))
+                            await ExecuteLargeFilesCleanupWithProgressAsync(ct);
                         else
                             await _windowsOptimizationService.ExecuteActionsAsync([action.ActionKey], ct).ConfigureAwait(false);
                     }
@@ -1578,6 +1772,33 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             await UpdateEstimatedCleanupSizeAsync();
         }
         catch { }
+    }
+
+    private async Task ExecuteLargeFilesCleanupWithProgressAsync(CancellationToken cancellationToken)
+    {
+        var filesToDelete = _largeFiles.ToList();
+        if (filesToDelete.Count == 0)
+            return;
+
+        foreach (var file in filesToDelete)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!file.Exists)
+                continue;
+
+            await Dispatcher.InvokeAsync(() => CurrentDeletingFile = file.FullName);
+
+            try
+            {
+                file.Delete();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to delete large file: {file.FullName}", ex);
+            }
+        }
     }
 
     private async Task ExecuteCustomCleanupWithProgressAsync(CancellationToken cancellationToken)
@@ -1842,9 +2063,31 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
             // Check if action is applied
             var applied = await _windowsOptimizationService.TryGetActionAppliedAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
             
-            // If not applied, execute apply action
-            if (applied.HasValue && !applied.Value)
+            // If not applied or if it's a cleanup action (where applied is null), execute apply action
+            if (!applied.HasValue || !applied.Value)
             {
+                // For cleanup actions, show safety confirmation if it's the first time in this session
+                if (interactionScope == InteractionScope.Cleanup && !_cleanupConfirmedInSession)
+                {
+                    var confirmed = await MessageBoxHelper.ShowAsync(
+                        this,
+                        GetResource("WindowsOptimizationPage_Cleanup_Safety_Title"),
+                        GetResource("WindowsOptimizationPage_Cleanup_Safety_Message"),
+                        Resource.Yes,
+                        Resource.No);
+                    
+                    if (!confirmed)
+                    {
+                        // Revert selection
+                        _isRefreshingStates = true;
+                        var action = Categories.SelectMany(c => c.Actions).FirstOrDefault(a => a.Key == actionKey);
+                        if (action != null) action.IsSelected = false;
+                        _isRefreshingStates = false;
+                        return;
+                    }
+                    _cleanupConfirmedInSession = true;
+                }
+
                 await ExecuteAsync(
                     ct => _windowsOptimizationService.ExecuteActionsAsync([actionKey], ct),
                     GetResource("WindowsOptimizationPage_ApplySelected_Success"),
@@ -1913,13 +2156,32 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         private bool _isExpanded = false;
         private readonly string _selectionSummaryFormat;
 
-        public OptimizationCategoryViewModel(string key, string title, string description, string selectionSummaryFormat, IEnumerable<OptimizationActionViewModel> actions)
+        public OptimizationCategoryViewModel(string key, string title, string description, string selectionSummaryFormat, IEnumerable<OptimizationActionViewModel> actions, string? pluginId = null)
         {
             Key = key;
             Title = title;
             Description = description;
+            PluginId = pluginId;
             _selectionSummaryFormat = string.IsNullOrWhiteSpace(selectionSummaryFormat) ? "{0} / {1}" : selectionSummaryFormat;
             Actions = new ObservableCollection<OptimizationActionViewModel>(actions);
+
+            // Check if the plugin has a settings page
+            if (!string.IsNullOrEmpty(PluginId))
+            {
+                try
+                {
+                    var pluginManager = IoCContainer.Resolve<IPluginManager>();
+                    var plugin = pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == PluginId);
+                    if (plugin is PluginBase pluginBase)
+                    {
+                        HasSettings = pluginBase.GetSettingsPage() != null;
+                    }
+                }
+                catch
+                {
+                    HasSettings = false;
+                }
+            }
 
             foreach (var action in Actions)
                 action.PropertyChanged += (_, args) =>
@@ -1937,6 +2199,8 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         public string Key { get; }
         public string Title { get; }
         public string Description { get; }
+        public string? PluginId { get; }
+        public bool HasSettings { get; }
         public ObservableCollection<OptimizationActionViewModel> Actions { get; }
         
         public bool IsExpanded
@@ -2058,6 +2322,7 @@ public partial class WindowsOptimizationPage : INotifyPropertyChanged
         public string Description { get; }
         public bool Recommended { get; }
         public string? RecommendedTagText { get; }
+        public OptimizationCategoryViewModel? Category { get; set; }
         public bool HasRecommendedTag => Recommended && !string.IsNullOrWhiteSpace(RecommendedTagText);
 
         public bool IsSelected

@@ -1,6 +1,4 @@
-#if !DEBUG
 using LenovoLegionToolkit.Lib.System;
-#endif
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -315,7 +313,8 @@ public partial class App
             () => IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
             () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
             () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
-            () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
+            () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync(),
+            () => Task.Run(() => HardwareMonitor.Instance.Initialize())
         };
 
         _backgroundInitializationTask = Task.Run(async () =>
@@ -559,7 +558,8 @@ public partial class App
             StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
             StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
             StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
-            StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service")
+            StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service"),
+            Task.Run(() => HardwareMonitor.Instance.Dispose())
         ).ConfigureAwait(false);
     }
 

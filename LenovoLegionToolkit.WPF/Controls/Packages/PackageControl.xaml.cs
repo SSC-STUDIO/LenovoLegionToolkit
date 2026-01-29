@@ -271,6 +271,54 @@ public partial class PackageControl : IProgress<float>
         StopInstallation();
     }
 
+    public async Task StartAsync()
+    {
+        if (Status == PackageStatus.Completed || Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+            return;
+
+        // Check if file is already downloaded
+        var downloadPath = _getDownloadPath();
+        var filePath = _actualDownloadedFilePath;
+
+        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+        {
+            filePath = Path.Combine(downloadPath, GetActualFileName());
+        }
+
+        if (!File.Exists(filePath) && Directory.Exists(downloadPath))
+        {
+            var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
+            if (files.Length > 0)
+            {
+                filePath = files[0];
+                _actualDownloadedFilePath = filePath;
+            }
+        }
+
+        if (File.Exists(filePath))
+        {
+            await InstallPackageAsync();
+        }
+        else
+        {
+            await DownloadAndInstallPackageAsync();
+        }
+    }
+
+    public void Pause()
+    {
+        if (Status == PackageStatus.Downloading)
+        {
+            _downloadPackageTokenSource?.Cancel();
+            Status = PackageStatus.NotStarted;
+        }
+        else if (Status == PackageStatus.Installing)
+        {
+            StopInstallation();
+            Status = PackageStatus.NotStarted;
+        }
+    }
+
     private async void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
     {
         IsSelected = true;
@@ -283,37 +331,7 @@ public partial class PackageControl : IProgress<float>
         if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
             return;
         
-        // Check if file is already downloaded
-        var downloadPath = _getDownloadPath();
-        var filePath = _actualDownloadedFilePath;
-        
-        // If actual path doesn't exist, try constructed path
-        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-        {
-            filePath = Path.Combine(downloadPath, GetActualFileName());
-        }
-        
-        // If still not found, try searching for matching files
-        if (!File.Exists(filePath) && Directory.Exists(downloadPath))
-        {
-            var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-            if (files.Length > 0)
-            {
-                filePath = files[0];
-                _actualDownloadedFilePath = filePath;
-            }
-        }
-        
-        if (File.Exists(filePath))
-        {
-            // File exists, install directly
-            await InstallPackageAsync();
-        }
-        else
-        {
-            // File doesn't exist, download first then install
-            await DownloadAndInstallPackageAsync();
-        }
+        await StartAsync();
     }
 
     private void SelectCheckBox_Unchecked(object sender, RoutedEventArgs e)

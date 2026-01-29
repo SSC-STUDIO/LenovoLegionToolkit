@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,8 @@ public class NotificationAoTWindow : NativeLayeredWindow, INotificationWindow
     private readonly Bitmap _bitmap;
     private readonly ScreenInfo _screenInfo;
     private readonly NotificationPosition _pos;
+
+    public event EventHandler? Closed;
 
     public NotificationAoTWindow(Bitmap bitmap, ScreenInfo screenInfo, NotificationPosition position)
     {
@@ -29,6 +32,12 @@ public class NotificationAoTWindow : NativeLayeredWindow, INotificationWindow
         }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
+    public new void Close(bool immediate)
+    {
+        base.Close(immediate);
+        Closed?.Invoke(this, EventArgs.Empty);
+    }
+
     protected override void Paint(PaintEventArgs e)
     {
         e.Graphics.DrawImage(_bitmap, new Rectangle(0, 0, _bitmap.Width, _bitmap.Height));
@@ -44,8 +53,9 @@ public class NotificationAoTWindow : NativeLayeredWindow, INotificationWindow
         Size = new(_bitmap.Width, _bitmap.Height);
 
         const int MARGIN = 16;
-        var marginX = MARGIN * multiplierX;
-        var marginY = MARGIN * multiplierY;
+        const int SHADOW_PADDING = 20;
+        var marginX = (MARGIN - SHADOW_PADDING) * multiplierX;
+        var marginY = (MARGIN - SHADOW_PADDING) * multiplierY;
 
         double left = 0;
         double top = 0;
