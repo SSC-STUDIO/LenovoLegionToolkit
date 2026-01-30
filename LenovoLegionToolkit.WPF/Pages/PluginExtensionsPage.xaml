@@ -179,6 +179,17 @@
                     Height="36"
                     Click="RefreshButton_Click"
                     ToolTip="Refresh plugin list" />
+
+                <wpfui:Button
+                    x:Name="_bulkUpdateButton"
+                    Icon="ArrowUpCircle24"
+                    Appearance="Primary"
+                    Margin="8,0,0,0"
+                    Height="36"
+                    Click="BulkUpdateButton_Click"
+                    Visibility="Collapsed"
+                    ToolTip="Update all available plugins"
+                    Content="{x:Static resources:Resource.PluginExtensionsPage_UpdateAll}" />
             </StackPanel>
         </Grid>
 
@@ -255,8 +266,47 @@
                                                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="{Binding Version}"
-                                           Style="{StaticResource PluginVersionStyle}" />
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Version}"
+                                               Style="{StaticResource PluginVersionStyle}" />
+                                    
+                                    <!-- Update Info Icon -->
+                                    <wpfui:Button Icon="Info24"
+                                                 Padding="4,0"
+                                                 Margin="6,0,0,0"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 FontSize="12"
+                                                 Foreground="{DynamicResource SystemAccentColorBrush}"
+                                                 Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                 ToolTipService.InitialShowDelay="100">
+                                        <wpfui:Button.ToolTip>
+                                            <ToolTip Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                     Padding="12"
+                                                     MaxWidth="400">
+                                                <StackPanel>
+                                                    <TextBlock Text="New Version Available" 
+                                                               FontWeight="Bold" 
+                                                               FontSize="14" 
+                                                               Margin="0,0,0,8" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <TextBlock Text="Version: " FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding NewVersion}" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                                        <TextBlock Text="Release Date: " FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding ReleaseDate}" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="What's New:" FontWeight="SemiBold" Margin="0,0,0,4" />
+                                                    <TextBlock Text="{Binding Changelog}" 
+                                                               TextWrapping="Wrap" 
+                                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                </StackPanel>
+                                            </ToolTip>
+                                        </wpfui:Button.ToolTip>
+                                    </wpfui:Button>
+                                </StackPanel>
                                 <TextBlock Text="{Binding Location}"
                                            FontSize="11"
                                            Foreground="{DynamicResource SystemAccentColorBrush}"

@@ -13,7 +13,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 /// <summary>
 /// Shell Integration main page
 /// </summary>
-public partial class ShellIntegrationPage : UiPage, IPluginPage
+public partial class ShellIntegrationPage : Page, IPluginPage
 {
     private readonly ILogger<ShellIntegrationPage> _logger;
     private readonly IShellIntegrationService _shellService;
@@ -42,6 +42,10 @@ public partial class ShellIntegrationPage : UiPage, IPluginPage
     #region Properties
 
     public string PageTitle => "Shell Integration";
+    
+    public string PageIcon => "ContextMenu24";
+
+    public object CreatePage() => this;
     
     public string PageDescription => "Enhanced Windows Shell integration with context menu extensions";
 
@@ -182,7 +186,6 @@ public partial class ShellIntegrationPage : UiPage, IPluginPage
             
             StartProgressBar.IsIndeterminate = false;
             StartProgressBar.Visibility = Visibility.Collapsed;
-            StartButton.IsEnabled = true;
 
             if (success)
             {
@@ -190,16 +193,20 @@ public partial class ShellIntegrationPage : UiPage, IPluginPage
             }
             else
             {
-                ShowSnackbar("Failed to start Shell Integration", "Error");
+                System.Windows.MessageBox.Show("Failed to start Shell Integration. Check logs for details.");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to start Shell Integration");
-            ShowSnackbar($"Failed to start: {ex.Message}", "Error");
+            _logger.LogError(ex, "Error in StartButton_Click");
+            System.Windows.MessageBox.Show("An error occurred: " + ex.Message);
             
             StartProgressBar.Visibility = Visibility.Collapsed;
+        }
+        finally
+        {
             StartButton.IsEnabled = true;
+            UninstallButton.IsEnabled = true;
         }
     }
 
@@ -298,7 +305,6 @@ public partial class ShellIntegrationPage : UiPage, IPluginPage
         {
             if (IsInstalled)
             {
-                InstallButton.Visibility = Visibility.Collapsed;
                 UninstallButton.Visibility = Visibility.Visible;
                 
                 if (IsRunning)
@@ -314,9 +320,8 @@ public partial class ShellIntegrationPage : UiPage, IPluginPage
             }
             else
             {
-                InstallButton.Visibility = Visibility.Visible;
                 UninstallButton.Visibility = Visibility.Collapsed;
-                StartButton.Visibility = Visibility.Collapsed;
+                StartButton.Visibility = Visibility.Visible;
                 StopButton.Visibility = Visibility.Collapsed;
             }
         });

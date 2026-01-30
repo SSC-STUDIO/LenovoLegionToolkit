@@ -39,103 +39,92 @@ public class WindowsOptimizationServiceTests
     }
 
     [Fact]
-    public void EstimateCleanupSizeAsync_ShouldReturnZeroForInvalidActionKey()
+    public async Task EstimateCleanupSizeAsync_ShouldReturnZeroForInvalidActionKey()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         var invalidActionKey = "invalid.action.key";
         
         // Act
-        var result = service.EstimateCleanupSizeAsync(new[] { invalidActionKey }, CancellationToken.None);
+        var result = await service.EstimateCleanupSizeAsync(new[] { invalidActionKey }, CancellationToken.None);
         
         // Assert
-        result.Should().NotBeNull();
-        result.Result.Should().Be(0);
+        result.Should().Be(0);
     }
 
     [Fact]
-    public void EstimateActionSizeAsync_ShouldReturnZeroForInvalidActionKey()
+    public async Task EstimateActionSizeAsync_ShouldReturnZeroForInvalidActionKey()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         var invalidActionKey = "invalid.action.key";
         
         // Act
-        var result = service.EstimateActionSizeAsync(invalidActionKey, CancellationToken.None);
+        var result = await service.EstimateActionSizeAsync(invalidActionKey, CancellationToken.None);
         
         // Assert
-        result.Should().NotBeNull();
-        result.Result.Should().Be(0);
+        result.Should().Be(0);
     }
 
     [Fact]
-    public void TryGetActionAppliedAsync_ShouldReturnNullForInvalidActionKey()
+    public async Task TryGetActionAppliedAsync_ShouldReturnNullForInvalidActionKey()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         var invalidActionKey = "invalid.action.key";
         
         // Act
-        var result = service.TryGetActionAppliedAsync(invalidActionKey, CancellationToken.None);
+        var result = await service.TryGetActionAppliedAsync(invalidActionKey, CancellationToken.None);
         
         // Assert
-        result.Should().NotBeNull();
-        result.Result.Should().BeNull();
+        result.Should().BeNull();
     }
 
     [Fact]
-    public void ExecuteActionsAsync_WithNullActionKeys_ShouldNotThrow()
+    public async Task ExecuteActionsAsync_WithNullActionKeys_ShouldNotThrow()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         
-        // Act
-        Func<Task> act = async () => await service.ExecuteActionsAsync(null, CancellationToken.None);
-        
-        // Assert
-        act.Should().NotThrowAsync();
+        // Act & Assert
+        await service.Invoking(s => s.ExecuteActionsAsync(null, CancellationToken.None))
+            .Should().NotThrowAsync();
     }
 
     [Fact]
-    public void ExecuteActionsAsync_WithEmptyActionKeys_ShouldNotThrow()
+    public async Task ExecuteActionsAsync_WithEmptyActionKeys_ShouldNotThrow()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         var emptyActionKeys = new List<string>();
         
-        // Act
-        Func<Task> act = async () => await service.ExecuteActionsAsync(emptyActionKeys, CancellationToken.None);
-        
-        // Assert
-        act.Should().NotThrowAsync();
+        // Act & Assert
+        await service.Invoking(s => s.ExecuteActionsAsync(emptyActionKeys, CancellationToken.None))
+            .Should().NotThrowAsync();
     }
 
     [Fact]
-    public void ApplyPerformanceOptimizationsAsync_ShouldNotThrow()
+    public async Task ApplyPerformanceOptimizationsAsync_ShouldNotThrow()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         
-        // Act - 这个方法会尝试执行推荐的性能优化，但在测试环境中可能无法实际执行
+        // Act & Assert - 这个方法会尝试执行推荐的性能优化，但在测试环境中可能无法实际执行
         // 我们只验证它不会抛出异常
-        Func<Task> act = async () => await service.ApplyPerformanceOptimizationsAsync(CancellationToken.None);
-        
-        // Assert
-        act.Should().NotThrowAsync();
+        await service.Invoking(s => s.ApplyPerformanceOptimizationsAsync(CancellationToken.None))
+            .Should().NotThrowAsync();
     }
 
     [Fact]
-    public void RunCleanupAsync_ShouldNotThrow()
+    public async Task RunCleanupAsync_ShouldNotThrow()
     {
         // Arrange
         var service = new WindowsOptimizationService();
         
-        // Act - 这个方法会尝试运行清理操作，但在测试环境中可能无法实际执行
+        // Act & Assert - 这个方法会尝试运行清理操作，但在测试环境中可能无法实际执行
         // 我们只验证它不会抛出异常
-        Func<Task> act = async () => await service.RunCleanupAsync(CancellationToken.None);
-        
-        // Assert
-        act.Should().NotThrowAsync();
+        await service.Invoking(s => s.RunCleanupAsync(CancellationToken.None))
+            .Should().NotThrowAsync();
     }
 
     [Fact]
@@ -168,44 +157,70 @@ public class WindowsOptimizationServiceTests
     }
 
     [Fact]
-    public void GetCategories_ShouldAlwaysIncludeBeautificationCategory()
+    public void GetCategories_ShouldIncludeAllStaticCategories()
     {
         // Arrange & Act
         var categories = WindowsOptimizationService.GetCategories();
         var categoryKeys = categories.Select(c => c.Key).ToList();
         
-        // Assert - beautify.contextMenu category should always be present, even if shell.exe is missing
-        categoryKeys.Should().Contain("beautify.contextMenu");
-        
-        var beautifyCategory = categories.FirstOrDefault(c => c.Key == "beautify.contextMenu");
-        beautifyCategory.Should().NotBeNull();
-        beautifyCategory!.Actions.Should().NotBeEmpty("Beautification category should always have at least one action");
-        
-        // Verify the action key is one of the expected values
-        var actionKeys = beautifyCategory.Actions.Select(a => a.Key).ToList();
-        actionKeys.Should().Contain(
-            a => a == "beautify.contextMenu.enableClassic" || a == "beautify.contextMenu.uninstallShell",
-            "Should contain either enableClassic or uninstallShell action");
+        // Assert
+        categoryKeys.Should().Contain(new[]
+        {
+            "explorer",
+            "performance",
+            "services",
+            "network",
+            "cleanup.cache",
+            "cleanup.systemFiles",
+            "cleanup.systemComponents",
+            "cleanup.performance",
+            "cleanup.largeFiles",
+            "cleanup.custom"
+        });
     }
 
     [Fact]
-    public void BeautificationCategory_ShouldHaveActionsRegardlessOfShellExeExistence()
+    public void CleanupCacheCategory_ShouldIncludeNewActions()
     {
         // Arrange & Act
-        // This test verifies that the category is always shown, even when shell.exe might not exist
-        // The actual file existence check happens at runtime, but the category should always be present
         var categories = WindowsOptimizationService.GetCategories();
-        var beautifyCategory = categories.FirstOrDefault(c => c.Key == "beautify.contextMenu");
+        var cleanupCache = categories.First(c => c.Key == "cleanup.cache");
+        var actionKeys = cleanupCache.Actions.Select(a => a.Key).ToList();
         
         // Assert
-        beautifyCategory.Should().NotBeNull("Beautification category should always be included");
-        
-        if (beautifyCategory != null)
-        {
-            beautifyCategory.Actions.Should().NotBeEmpty(
-                "Beautification category should always have at least one action, " +
-                "even if shell.exe doesn't exist (the action will handle missing files gracefully)");
-        }
+        actionKeys.Should().Contain("cleanup.browserCache");
+        actionKeys.Should().Contain("cleanup.appLeftovers");
+        actionKeys.Should().Contain("cleanup.thumbnailCache");
+        actionKeys.Should().Contain("cleanup.remoteDesktopCache");
     }
+
+    [Fact]
+    public void LargeFilesCategory_ShouldBePresent()
+    {
+        // Arrange & Act
+        var categories = WindowsOptimizationService.GetCategories();
+        var largeFilesCategory = categories.FirstOrDefault(c => c.Key == "cleanup.largeFiles");
+        
+        // Assert
+        largeFilesCategory.Should().NotBeNull();
+        largeFilesCategory!.Actions.Should().Contain(a => a.Key == "cleanup.largeFiles");
+    }
+
+    /*
+    [Fact]
+    public async Task EstimateActionSizeAsync_ForLargeFiles_ShouldReturnSize()
+    {
+        // Arrange
+        // Note: This test might return 0 if there are no large files in the scan paths,
+        // but it should at least not throw and return a non-negative value.
+        var service = new WindowsOptimizationService();
+        
+        // Act
+        var size = await service.EstimateActionSizeAsync("cleanup.largeFiles", CancellationToken.None);
+        
+        // Assert
+        size.Should().BeGreaterThanOrEqualTo(0);
+    }
+    */
 }
 

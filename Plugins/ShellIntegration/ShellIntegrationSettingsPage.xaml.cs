@@ -18,21 +18,28 @@ public partial class ShellIntegrationSettingsPage : System.Windows.Controls.User
     private readonly ILogger<ShellIntegrationSettingsPage> _logger;
     private readonly IContextMenuItemManager _menuManager;
     private readonly IShellExtensionManager _extensionManager;
+    private readonly IShellOptimizationService _optimizationService;
 
     public string PageTitle => "Shell Integration Settings";
+    
+    public string PageIcon => "Settings24";
+
+    public object CreatePage() => this;
 
     public string PageDescription => "Configure context menu items and shell extensions";
 
     public ShellIntegrationSettingsPage(
         ILogger<ShellIntegrationSettingsPage> logger,
         IContextMenuItemManager menuManager,
-        IShellExtensionManager extensionManager)
+        IShellExtensionManager extensionManager,
+        IShellOptimizationService optimizationService)
     {
         InitializeComponent();
         
         _logger = logger;
         _menuManager = menuManager;
         _extensionManager = extensionManager;
+        _optimizationService = optimizationService;
 
         DataContext = this;
         
@@ -44,6 +51,86 @@ public partial class ShellIntegrationSettingsPage : System.Windows.Controls.User
     public List<ContextMenuItem> MenuItems => _menuManager.GetMenuItems().ToList();
 
     public List<ShellExtension> Extensions => _extensionManager.GetExtensions().ToList();
+
+    public bool ContextMenuAnimations
+    {
+        get => _optimizationService.GetContextMenuAnimations();
+        set
+        {
+            _optimizationService.SetContextMenuAnimations(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ShowFileExtensions
+    {
+        get => _optimizationService.GetShowFileExtensions();
+        set
+        {
+            _optimizationService.SetShowFileExtensions(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ShowHiddenFiles
+    {
+        get => _optimizationService.GetShowHiddenFiles();
+        set
+        {
+            _optimizationService.SetShowHiddenFiles(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool QuickAccess
+    {
+        get => _optimizationService.GetQuickAccess();
+        set
+        {
+            _optimizationService.SetQuickAccess(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool PreviewPane
+    {
+        get => _optimizationService.GetPreviewPane();
+        set
+        {
+            _optimizationService.SetPreviewPane(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Transparency
+    {
+        get => _optimizationService.GetTransparency();
+        set
+        {
+            _optimizationService.SetTransparency(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool RoundedCorners
+    {
+        get => _optimizationService.GetRoundedCorners();
+        set
+        {
+            _optimizationService.SetRoundedCorners(value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Shadows
+    {
+        get => _optimizationService.GetShadows();
+        set
+        {
+            _optimizationService.SetShadows(value);
+            OnPropertyChanged();
+        }
+    }
 
     #endregion
 
@@ -185,7 +272,7 @@ public partial class ShellIntegrationSettingsPage : System.Windows.Controls.User
 
     public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged(string propertyName)
+    protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
     }

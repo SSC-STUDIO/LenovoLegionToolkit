@@ -31,7 +31,8 @@ public record WindowsOptimizationCategoryDefinition(
     string Key,
     string TitleResourceKey,
     string DescriptionResourceKey,
-    IReadOnlyList<WindowsOptimizationActionDefinition> Actions);
+    IReadOnlyList<WindowsOptimizationActionDefinition> Actions,
+    string? PluginId = null);
 
 public class WindowsOptimizationService
 {
@@ -132,8 +133,25 @@ public class WindowsOptimizationService
 
     private static readonly IReadOnlyList<string> BrowserCacheCommands =
     [
+        // Internet Explorer / Windows
         "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\INetCache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\INetCookies\\*\" >nul 2>&1"
+        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\INetCookies\\*\" >nul 2>&1",
+        // Edge
+        "del /f /s /q \"%LocalAppData%\\Microsoft\\Edge\\User Data\\Default\\Cache\\*\" >nul 2>&1",
+        "del /f /s /q \"%LocalAppData%\\Microsoft\\Edge\\User Data\\Default\\Code Cache\\*\" >nul 2>&1",
+        // Chrome
+        "del /f /s /q \"%LocalAppData%\\Google\\Chrome\\User Data\\Default\\Cache\\*\" >nul 2>&1",
+        "del /f /s /q \"%LocalAppData%\\Google\\Chrome\\User Data\\Default\\Code Cache\\*\" >nul 2>&1",
+        // Firefox
+        "del /f /s /q \"%LocalAppData%\\Mozilla\\Firefox\\Profiles\\*\\cache2\\*\" >nul 2>&1"
+    ];
+
+    private static readonly IReadOnlyList<string> AppLeftoverCommands =
+    [
+        "del /f /s /q \"%LocalAppData%\\Temp\\*\" >nul 2>&1",
+        "del /f /s /q \"%AppData%\\Local\\Temp\\*\" >nul 2>&1",
+        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\WER\\*\" >nul 2>&1",
+        "del /f /s /q \"%ProgramData%\\Microsoft\\Windows\\WER\\*\" >nul 2>&1"
     ];
 
     private static readonly IReadOnlyList<string> ThumbnailCacheCommands =
@@ -262,6 +280,11 @@ public class WindowsOptimizationService
                     
                     if (category != null)
                     {
+                        // Set PluginId if not already set
+                        if (string.IsNullOrEmpty(category.PluginId))
+                        {
+                            category = category with { PluginId = plugin.Id };
+                        }
                         list.Add(category);
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Added optimization category from plugin: {plugin.Id}");
@@ -473,9 +496,131 @@ public class WindowsOptimizationService
                 Environment.ExpandEnvironmentVariables("%LocalAppData%\\Microsoft\\Terminal Server Client\\Cache"),
                 filePattern: null,
                 cancellationToken: cancellationToken).ConfigureAwait(false),
+            "cleanup.largeFiles" => await EstimateLargeFilesSizeAsync(cancellationToken).ConfigureAwait(false),
             "cleanup.custom" => await EstimateCustomCleanupSizeAsync(cancellationToken).ConfigureAwait(false),
             _ => 0
         };
+    }
+
+    public async Task<List<FileInfo>> GetLargeFilesAsync(long minSize, CancellationToken cancellationToken)
+    {
+        return await Task.Run(() =>
+        {
+            var largeFiles = new List<FileInfo>();
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var scanPaths = new[]
+            {
+                Path.Combine(userProfile, "Downloads"),
+                Path.Combine(userProfile, "Desktop"),
+                Path.Combine(userProfile, "Documents"),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp"
+            };
+
+            foreach (var path in scanPaths)
+            {
+                if (!Directory.Exists(path)) continue;
+
+                var stack = new Stack<string>();
+                stack.Push(path);
+
+                while (stack.Count > 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var currentPath = stack.Pop();
+
+                    try
+                    {
+                        var files = Directory.GetFiles(currentPath);
+                        foreach (var file in files)
+                        {
+                            try
+                            {
+                                var fi = new FileInfo(file);
+                                if (fi.Length >= minSize)
+                                {
+                                    largeFiles.Add(fi);
+                                }
+                            }
+                            catch { }
+                        }
+
+                        var subDirs = Directory.GetDirectories(currentPath);
+                        foreach (var subDir in subDirs)
+                        {
+                            var di = new DirectoryInfo(subDir);
+                            if ((di.Attributes & FileAttributes.Hidden) == 0 && (di.Attributes & FileAttributes.System) == 0)
+                            {
+                                stack.Push(subDir);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+            }
+            return largeFiles;
+        }, cancellationToken);
+    }
+
+    private async Task<long> EstimateLargeFilesSizeAsync(CancellationToken cancellationToken)
+    {
+        return await Task.Run(() =>
+        {
+            long totalSize = 0;
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var scanPaths = new[]
+            {
+                Path.Combine(userProfile, "Downloads"),
+                Path.Combine(userProfile, "Desktop"),
+                Path.Combine(userProfile, "Documents"),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp"
+            };
+
+            foreach (var path in scanPaths)
+            {
+                if (!Directory.Exists(path)) continue;
+
+                var stack = new Stack<string>();
+                stack.Push(path);
+
+                while (stack.Count > 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var currentPath = stack.Pop();
+
+                    try
+                    {
+                        // Get files in current directory
+                        var files = Directory.GetFiles(currentPath);
+                        foreach (var file in files)
+                        {
+                            try
+                            {
+                                var fi = new FileInfo(file);
+                                if (fi.Length > 100 * 1024 * 1024) // 100MB
+                                {
+                                    totalSize += fi.Length;
+                                }
+                            }
+                            catch { /* Ignore file access errors */ }
+                        }
+
+                        // Push subdirectories
+                        var subDirs = Directory.GetDirectories(currentPath);
+                        foreach (var subDir in subDirs)
+                        {
+                            // Skip hidden or system directories to avoid deep recursion or restricted areas
+                            var di = new DirectoryInfo(subDir);
+                            if ((di.Attributes & FileAttributes.Hidden) == 0 && (di.Attributes & FileAttributes.System) == 0)
+                            {
+                                stack.Push(subDir);
+                            }
+                        }
+                    }
+                    catch { /* Ignore directory access errors */ }
+                }
+            }
+            return totalSize;
+        }, cancellationToken);
     }
 
     private async Task<long> EstimateDirectorySizeAsync(string directoryPath, string? filePattern = null, CancellationToken cancellationToken = default)
@@ -667,6 +812,8 @@ public class WindowsOptimizationService
 
         CreateCleanupPerformanceCategory(),
 
+        CreateCleanupLargeFilesCategory(),
+
         CreateCleanupCustomCategory()
 
     ];
@@ -856,6 +1003,11 @@ public class WindowsOptimizationService
                         "WindowsOptimization_Action_CleanupBrowserCache_Description",
                         BrowserCacheCommands),
                     CreateCommandAction(
+                        "cleanup.appLeftovers",
+                        "WindowsOptimization_Action_CleanupAppLeftovers_Title",
+                        "WindowsOptimization_Action_CleanupAppLeftovers_Description",
+                        AppLeftoverCommands),
+                    CreateCommandAction(
                         "cleanup.thumbnailCache",
                         "WindowsOptimization_Action_CleanupThumbnailCache_Title",
                         "WindowsOptimization_Action_CleanupThumbnailCache_Description",
@@ -949,6 +1101,22 @@ public class WindowsOptimizationService
                         "WindowsOptimization_Action_CleanupPrefetch_Description",
                         PrefetchCommands,
                         recommended: false)
+                });
+
+    // Large Files Cleanup Category
+    private static WindowsOptimizationCategoryDefinition CreateCleanupLargeFilesCategory() =>
+            new(
+                "cleanup.largeFiles",
+                "WindowsOptimization_Category_CleanupLargeFiles_Title",
+                "WindowsOptimization_Category_CleanupLargeFiles_Description",
+                new[]
+                {
+                    new WindowsOptimizationActionDefinition(
+                        "cleanup.largeFiles",
+                        "WindowsOptimization_Action_CleanupLargeFiles_Title",
+                        "WindowsOptimization_Action_CleanupLargeFiles_Description",
+                        ct => Task.CompletedTask, // Scanning only, deletion handled via details
+                        Recommended: false)
                 });
 
     // Custom Cleanup Category
@@ -1071,7 +1239,12 @@ public class WindowsOptimizationService
             (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs"),
             (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths"),
             (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePidlMRU"),
-            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU")
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppBadgeUpdated"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppLaunch"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView"),
+            (RegistryHive.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Search\RecentApps")
         ];
 
         foreach (var (hive, subKey) in targets)

@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.WPF.Utils;
@@ -16,12 +18,24 @@ using Windows.Win32.UI.WindowsAndMessaging;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+using Color = System.Windows.Media.Color;
+using Colors = System.Windows.Media.Colors;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
+using Size = System.Windows.Size;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
 public class NotificationWindow : UiWindow, INotificationWindow
 {
     private readonly ScreenInfo _screenInfo;
+
+    private readonly Border _container = new()
+    {
+        CornerRadius = new CornerRadius(8),
+        BorderThickness = new Thickness(1),
+        Padding = new Thickness(0),
+    };
 
     private readonly Grid _mainGrid = new()
     {
@@ -52,7 +66,17 @@ public class NotificationWindow : UiWindow, INotificationWindow
         VerticalContentAlignment = VerticalAlignment.Center,
     };
 
+    private readonly DropShadowEffect _dropShadow = new()
+    {
+        BlurRadius = 20,
+        ShadowDepth = 0,
+        Opacity = 0.4,
+    };
+
     private bool _gettingBitMap;
+    private bool _isClosing;
+
+    public new event EventHandler? Closed;
 
     public NotificationWindow(SymbolRegular symbol, SymbolRegular? overlaySymbol, Action<SymbolIcon>? symbolTransform, string text, Action? clickAction, ScreenInfo screenInfo, NotificationPosition position)
     {
@@ -71,28 +95,62 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
     public void Show(int closeAfter)
     {
+        Opacity = 0;
         Show();
+
+        var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        BeginAnimation(OpacityProperty, fadeIn);
+
         Task.Delay(closeAfter).ContinueWith(_ =>
         {
-            Close();
+            Dispatcher.Invoke(() => Close(false));
         }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
     public void Close(bool immediate)
     {
-        WindowStyle = System.Windows.WindowStyle.None;
-        Close();
+        if (_isClosing && !immediate)
+            return;
+
+        _isClosing = true;
+
+        if (immediate)
+        {
+            base.Close();
+            Closed?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+        };
+        fadeOut.Completed += (_, _) =>
+        {
+            base.Close();
+            Closed?.Invoke(this, EventArgs.Empty);
+        };
+        BeginAnimation(OpacityProperty, fadeOut);
     }
 
     public Bitmap GetBitmapView()
     {
         _gettingBitMap = true;
         Show();
-        Close();
         _gettingBitMap = false;
 
+        // Force layout update
+        _container.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        _container.Arrange(new Rect(new Size(Width, Height)));
+
         RenderTargetBitmap rtb = new((int)Width, (int)Height, 96, 96, PixelFormats.Pbgra32);
-        rtb.Render(this);
+        rtb.Render(_container);
+
+        base.Close();
+
         var ms = new MemoryStream();
         var encoder = new BmpBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(rtb));
@@ -115,7 +173,10 @@ public class NotificationWindow : UiWindow, INotificationWindow
         graphics.DrawImage(bitmap, 0, 0, newWidth, newHeight);
         graphics.ResetClip();
 
-        using var pen = new System.Drawing.Pen(System.Drawing.Color.FromArgb(64, 64, 64), 3);
+        var appTheme = Wpf.Ui.Appearance.Theme.GetAppTheme();
+        var borderColor = appTheme == ThemeType.Dark ? System.Drawing.Color.FromArgb(64, 64, 64) : System.Drawing.Color.FromArgb(200, 200, 200);
+
+        using var pen = new System.Drawing.Pen(borderColor, 3);
         graphics.DrawPath(pen, penPath);
 
         return resizedBitmap;
@@ -125,7 +186,10 @@ public class NotificationWindow : UiWindow, INotificationWindow
     {
         WindowStartupLocation = WindowStartupLocation.Manual;
         ResizeMode = ResizeMode.NoResize;
+        WindowStyle = WindowStyle.None;
         WindowBackdropType = BackgroundType.None;
+        Background = System.Windows.Media.Brushes.Transparent;
+        AllowsTransparency = true;
 
         Focusable = false;
         Topmost = true;
@@ -135,18 +199,27 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
         _mainGrid.FlowDirection = LocalizationHelper.Direction;
         _textBlock.Foreground = (SolidColorBrush)FindResource("TextFillColorPrimaryBrush");
+
+        _container.Background = (SolidColorBrush)FindResource("ApplicationBackgroundBrush");
+        _container.BorderBrush = (SolidColorBrush)FindResource("CardStrokeColorDefaultBrush");
+
+        var appTheme = Wpf.Ui.Appearance.Theme.GetAppTheme();
+        _dropShadow.Color = appTheme == ThemeType.Dark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
+        _container.Effect = _dropShadow;
     }
 
     private void InitializePosition(Rect workArea, uint dpiX, uint dpiY, NotificationPosition position)
     {
-        _mainGrid.Measure(new System.Windows.Size(double.PositiveInfinity, 80));
+        _container.Measure(new Size(double.PositiveInfinity, 80));
 
         var multiplierX = dpiX / 96d;
         var multiplierY = dpiY / 96d;
         Rect nativeWorkArea = new(workArea.Left, workArea.Top, workArea.Width * multiplierX, workArea.Height * multiplierY);
 
-        Width = MaxWidth = MinWidth = Math.Max(_mainGrid.DesiredSize.Width, 300);
-        Height = MaxHeight = MinHeight = _mainGrid.DesiredSize.Height;
+        // Add padding for shadow
+        const int SHADOW_PADDING = 20;
+        Width = MaxWidth = MinWidth = Math.Max(_container.DesiredSize.Width, 300) + (SHADOW_PADDING * 2);
+        Height = MaxHeight = MinHeight = _container.DesiredSize.Height + (SHADOW_PADDING * 2);
 
         double nativeLeft = 0;
         double nativeTop = 0;
@@ -162,8 +235,8 @@ public class NotificationWindow : UiWindow, INotificationWindow
             var nativeHeight = Height * multiplierY;
 
             const int MARGIN = 16;
-            var nativeMarginX = MARGIN * multiplierX;
-            var nativeMarginY = MARGIN * multiplierY;
+            var nativeMarginX = (MARGIN - SHADOW_PADDING) * multiplierX;
+            var nativeMarginY = (MARGIN - SHADOW_PADDING) * multiplierY;
 
             switch (position)
             {
@@ -231,7 +304,9 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
         symbolTransform?.Invoke(_symbolIcon);
 
-        Content = _mainGrid;
+        _container.Child = _mainGrid;
+        _container.Margin = new Thickness(20); // Shadow space
+        Content = _container;
     }
 
     private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius)

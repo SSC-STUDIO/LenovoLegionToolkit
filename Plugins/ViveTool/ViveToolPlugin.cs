@@ -17,7 +17,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
     MinimumHostVersion = "1.0.0",
     Icon = "Code24"
 )]
-public class ViveToolPlugin : PluginBase
+public class ViveToolPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 {
     public override string Id => PluginConstants.ViveTool;
     public override string Name => Resource.ViveTool_PageTitle;
@@ -47,7 +47,7 @@ public class ViveToolPlugin : PluginBase
 /// <summary>
 /// ViVeTool plugin page provider
 /// </summary>
-public class ViveToolPluginPage : IPluginPage
+public class ViveToolPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {
     // Return empty string to hide title in PluginPageWrapper, as we show it in the page content with description
     public string PageTitle => string.Empty;
@@ -63,7 +63,7 @@ public class ViveToolPluginPage : IPluginPage
 /// <summary>
 /// ViVeTool settings plugin page provider
 /// </summary>
-public class ViveToolSettingsPluginPage : IPluginPage
+public class ViveToolSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {
     public string PageTitle => string.Empty;
     public string PageIcon => string.Empty;
