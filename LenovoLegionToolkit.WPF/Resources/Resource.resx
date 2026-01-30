@@ -1277,6 +1277,9 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
     <value>Clear selection</value>
   </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>Scan</value>
+  </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
     <value>Run cleanup actions</value>
   </data>
@@ -1297,6 +1300,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Driver Download</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>Safety Confirmation</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>System cleanup will permanently delete temporary files and cache. While usually safe, it is recommended to ensure you have backups of important data. Do you want to continue?</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
     <value>Extensions</value>
@@ -1665,6 +1674,12 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
     <value>Clean browser cache</value>
   </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>Cleans up temporary files and logs left behind by various applications.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>App Leftovers</value>
+  </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Remove Internet Explorer and Edge cache and cookie files.</value>
   </data>
@@ -1682,6 +1697,18 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
     <value>Remove logs and diagnostic data</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Scans for large files on your system drive that may be taking up significant space.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Large Files Scan</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>Identify and manage large files on your system.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>Large Files</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
     <value>Delete Windows logs, error reports and diagnostic traces.</value>
@@ -2974,6 +3001,9 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
     <value>Pause all</value>
   </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Start all selected</value>
+  </data>
   <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
     <value>Implementation and Effect Principles</value>
   </data>
@@ -3102,7 +3132,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Estimated cleanup size: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
-    <value>Estimating...</value>
+    <value>Click Scan to calculate total size</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Running: {0}</value>
@@ -3432,6 +3462,9 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
     <value>Downloading and updating plugin...</value>
   </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>Update All</value>
+  </data>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Run Plugin</value>
   </data>
@@ -3758,5 +3791,8 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningLargeFiles" xml:space="preserve">
+    <value>Scanning for large files...</value>
   </data>
 </root>

@@ -275,6 +275,13 @@ public enum NotificationType
     WhiteKeyboardBacklightOff
 }
 
+public enum NotificationPriority
+{
+    Low,
+    Normal,
+    High
+}
+
 public enum NotificationPosition
 {
     [Display(ResourceType = typeof(Resource), Name = "NotificationPosition_BottomRight")]

@@ -157,6 +157,14 @@
                 MinWidth="300"
                 HorizontalAlignment="Center"
                 Icon="Checkmark24">
+                <wpfui:Snackbar.Effect>
+                    <DropShadowEffect
+                        BlurRadius="15"
+                        Direction="270"
+                        Opacity="0.4"
+                        ShadowDepth="3"
+                        Color="{DynamicResource SnackbarShadowColor}" />
+                </wpfui:Snackbar.Effect>
                 <StackPanel Margin="4,4,4,4" VerticalAlignment="Center">
                     <!--  ReSharper disable once UnusedMember.Global  -->
                     <TextBlock

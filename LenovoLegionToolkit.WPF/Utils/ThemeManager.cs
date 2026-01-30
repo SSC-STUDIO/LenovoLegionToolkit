@@ -87,11 +87,14 @@ public class ThemeManager
 
     private void SetTheme()
     {
-        var theme = IsDarkMode() ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+        var isDark = IsDarkMode();
+        var theme = isDark ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
         var backgroundType = _settings.Store.WindowBackdropStyle == WindowBackdropStyle.macOS 
             ? Wpf.Ui.Appearance.BackgroundType.Acrylic 
             : Wpf.Ui.Appearance.BackgroundType.Mica;
         Wpf.Ui.Appearance.Theme.Apply(theme, backgroundType, false);
+
+        Application.Current.Resources["SnackbarShadowColor"] = isDark ? System.Windows.Media.Colors.Black : System.Windows.Media.Color.FromArgb(64, 0, 0, 0);
         
         // Update all BaseWindow instances
         UpdateWindowBackdrops();

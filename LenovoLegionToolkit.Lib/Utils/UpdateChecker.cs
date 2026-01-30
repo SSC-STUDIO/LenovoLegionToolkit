@@ -111,8 +111,7 @@ public class UpdateChecker
                             
                             var updateVersion = new Version(update.Version.Major, update.Version.Minor, Math.Max(0, update.Version.Build));
 
-                            var isNewer = updateVersion > localVersion || 
-                                          (updateVersion == localVersion && !update.IsPrerelease);
+                            var isNewer = updateVersion > localVersion;
 
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Release {update.Version} (tag: {r.TagName}, prerelease: {update.IsPrerelease}) is {(isNewer ? "newer" : "not newer")} than current version {thisReleaseVersion}");

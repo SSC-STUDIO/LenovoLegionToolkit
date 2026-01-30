@@ -2,6 +2,7 @@
 
    <PropertyGroup>
      <TargetFramework>net8.0-windows</TargetFramework>
+     <UseWPF>true</UseWPF>
      <Platforms>x64</Platforms>
      <Nullable>enable</Nullable>
      <Copyright>© 2025 Lenovo Legion Toolkit</Copyright>
@@ -31,18 +32,19 @@
       <PrivateAssets>All</PrivateAssets>
       <ExcludeAssets>All</ExcludeAssets>
     </ProjectReference>
+    <ProjectReference Include="..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
     <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj">
       <PrivateAssets>All</PrivateAssets>
       <ExcludeAssets>All</ExcludeAssets>
     </ProjectReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="ShellIntegrationPage.xaml.cs" />
-    <Compile Remove="ShellIntegrationSettingsPage.xaml.cs" />
-    <Page Remove="ShellIntegrationPage.xaml" />
-    <Page Remove="ShellIntegrationSettingsPage.xaml" />
   </ItemGroup>
 
   <!-- Copy shell files from ShellIntegration build output to build directory -->
