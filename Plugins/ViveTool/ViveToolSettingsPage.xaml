@@ -64,6 +64,14 @@
                     
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <wpfui:Button
+                            x:Name="_gitHubButton"
+                            Content="GitHub"
+                            Icon="Open24"
+                            Click="GitHubButton_Click"
+                            Padding="12,6"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center" />
+                        <wpfui:Button
                             x:Name="_downloadViveToolButton"
                             Content="{x:Static pluginRes:Resource.ViveTool_Download}"
                             Click="DownloadViveToolButton_Click"

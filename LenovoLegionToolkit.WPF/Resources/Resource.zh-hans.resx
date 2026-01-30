@@ -2933,9 +2933,6 @@
   <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
     <value>全部暂停</value>
   </data>
-  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
-    <value>开始安装全部已选</value>
-  </data>
   <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
     <value>实现方式和效果原理</value>
   </data>
@@ -3522,7 +3519,7 @@
     <value>正在下载并更新插件...</value>
   </data>
   <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
-    <value>一键更新</value>
+    <value>全部更新</value>
   </data>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>运行插件</value>
@@ -3883,8 +3880,5 @@
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>功率范围</value>
-  </data>
-  <data name="WindowsOptimizationPage_ScanningLargeFiles" xml:space="preserve">
-    <value>正在扫描大文件...</value>
   </data>
 </root>

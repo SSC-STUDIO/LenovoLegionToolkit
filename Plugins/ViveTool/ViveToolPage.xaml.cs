@@ -360,6 +360,27 @@ public partial class ViveToolPage : INotifyPropertyChanged
         await LoadFeaturesAsync();
     }
 
+    private void GoToSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new LenovoLegionToolkit.WPF.Windows.Settings.PluginSettingsWindow(LenovoLegionToolkit.Lib.Plugins.PluginConstants.ViveTool)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            window.ShowDialog();
+            
+            // Refresh status after settings window is closed
+            _ = RefreshViveToolStatusAsync();
+            _ = LoadFeaturesAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
+        }
+    }
+
     private async void ImportButton_Click(object sender, RoutedEventArgs e)
     {
         try

@@ -187,4 +187,10 @@
   <data name="ViveTool_StatusUnknown" xml:space="preserve">
     <value>未知</value>
   </data>
+  <data name="ViveTool_MissingToolMessage" xml:space="preserve">
+    <value>未找到 ViVeTool。请前往配置页面进行设置。</value>
+  </data>
+  <data name="ViveTool_GoToSettings" xml:space="preserve">
+    <value>前往配置</value>
+  </data>
 </root>

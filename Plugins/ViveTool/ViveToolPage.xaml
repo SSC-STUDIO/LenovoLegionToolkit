@@ -18,6 +18,7 @@
     
     <wpfui:UiPage.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <conv:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
     </wpfui:UiPage.Resources>
 
@@ -56,31 +57,36 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <!-- Warning Message -->
+                <!-- Missing Tool Message -->
                 <Border
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1"
                     CornerRadius="12"
-                    Padding="20"
-                    Margin="0,0,0,24">
-                    <StackPanel>
+                    Padding="24"
+                    Margin="0,0,0,24"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <wpfui:SymbolIcon Symbol="Warning24" 
+                                          FontSize="32" 
+                                          Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                          Margin="0,0,0,16" />
                         <TextBlock
-                            FontSize="15"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource SystemFillColorCautionBrush}"
-                            Margin="0,0,0,8"
-                            Text="{x:Static pluginRes:Resource.ViveTool_WarningTitle}" />
-                        <TextBlock
-                            FontSize="13"
+                            FontSize="16"
+                            FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            TextWrapping="Wrap"
-                            LineHeight="18"
-                            Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}" />
+                            TextAlignment="Center"
+                            Margin="0,0,0,8"
+                            Text="{x:Static pluginRes:Resource.ViveTool_MissingToolMessage}" />
+                        <wpfui:Button
+                            Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
+                            Appearance="Primary"
+                            Click="GoToSettingsButton_Click"
+                            HorizontalAlignment="Center"
+                            Padding="24,8"
+                            Margin="0,8,0,0" />
                     </StackPanel>
                 </Border>
-
-
 
                 <!-- Feature Flags List with Search -->
                 <Border

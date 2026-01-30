@@ -17,6 +17,7 @@
 
         <!-- Boolean AND Converter for multiple conditions -->
         <utils:BooleanAndConverter x:Key="BooleanAndConverter" />
+        <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter" />
         
         <!-- List Box Item Style -->
         <Style x:Key="PluginListItemContainerStyle" TargetType="ListBoxItem">
@@ -123,11 +124,6 @@
                 Margin="0,8,0,0"
                 Focusable="True"
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
-            <TextBlock
-                Margin="0,4,0,0"
-                FontSize="12"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="Tip: Press Ctrl+Shift+R to reset all plugin installation states for testing" />
         </StackPanel>
 
 
@@ -182,7 +178,7 @@
 
                 <wpfui:Button
                     x:Name="_bulkUpdateButton"
-                    Icon="ArrowUpCircle24"
+                    Icon="ArrowCircleUp24"
                     Appearance="Primary"
                     Margin="8,0,0,0"
                     Height="36"
@@ -236,12 +232,29 @@
                             <Border Grid.Column="0"
                                     Style="{StaticResource PluginIconStyle}"
                                     Background="{Binding IconBackground}">
-                                 <TextBlock Text="{Binding IconLetter}"
-                                            FontSize="18"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center" />
+                                <Grid>
+                                    <TextBlock Text="{Binding IconLetter}"
+                                               FontSize="18"
+                                               FontWeight="Medium"
+                                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                    <!-- Installed Badge -->
+                                    <Border Background="{DynamicResource SystemAccentColorBrush}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Width="18"
+                                            Height="18"
+                                            CornerRadius="9"
+                                            Margin="0,0,-4,-4"
+                                            BorderBrush="{DynamicResource ControlFillColorDefaultBrush}"
+                                            BorderThickness="2"
+                                            Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <wpfui:SymbolIcon Symbol="Checkmark12" 
+                                                          FontSize="10" 
+                                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                    </Border>
+                                </Grid>
                             </Border>
                             
                             <!-- Plugin Info -->
@@ -311,7 +324,7 @@
                                            FontSize="11"
                                            Foreground="{DynamicResource SystemAccentColorBrush}"
                                            Margin="0,2,0,0"
-                                           Visibility="{Binding Location, Converter={StaticResource wpfui:TextToVisibilityConverter}}" />
+                                           Visibility="{Binding Location, Converter={StaticResource TextToVisibilityConverter}}" />
                                 <TextBlock Text="{Binding Description}"
                                            Style="{StaticResource PluginDescriptionStyle}"
                                            Margin="0,4,0,0"
@@ -343,7 +356,8 @@
                                         Width="90"
                                         Height="30"
                                         Click="PluginInstallButton_Click"
-                                        Tag="{Binding PluginId}" />
+                                        Tag="{Binding PluginId}"
+                                        Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 
                                 <!-- Configuration Button -->
                                 <Button Content="{Binding ConfigureButtonText}"

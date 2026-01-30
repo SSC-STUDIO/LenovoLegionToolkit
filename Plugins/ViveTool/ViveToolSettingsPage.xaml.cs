@@ -123,6 +123,25 @@ public partial class ViveToolSettingsPage
         RefreshStatus();
     }
 
+    private void GitHubButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var url = "https://github.com/thebookisclosed/ViVe/releases";
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            };
+            System.Diagnostics.Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error opening GitHub URL: {ex.Message}", ex);
+        }
+    }
+
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
     {
         if (_isDownloading)
