@@ -2501,6 +2501,9 @@
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
     <value>清除选择</value>
   </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>扫描</value>
+  </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
     <value>执行清理操作</value>
   </data>
@@ -2524,6 +2527,12 @@
   </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>驱动更新</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>安全确认</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>系统清理将永久删除临时文件和缓存。虽然通常是安全的，但建议确保您已备份重要数据。是否继续？</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
     <value>扩展</value>
@@ -2813,6 +2822,12 @@
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
     <value>清理浏览器缓存</value>
   </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>清理各种应用程序留下的临时文件和日志。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>应用残留文件</value>
+  </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>移除 IE / Edge 的缓存和 Cookie 文件。</value>
   </data>
@@ -2830,6 +2845,18 @@
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
     <value>删除日志与诊断数据</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>扫描系统盘上的大文件，找出占用大量空间的项。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>大文件扫描</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>识别并管理系统上的大文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>大文件</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
     <value>清理 Windows 日志、错误报告与诊断跟踪。</value>
@@ -2905,6 +2932,9 @@
   </data>
   <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
     <value>全部暂停</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>开始安装全部已选</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
     <value>实现方式和效果原理</value>
@@ -3031,7 +3061,7 @@
     <value>预计可清理大小: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
-    <value>正在估算中…</value>
+    <value>点击扫描以计算可清理大小</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>正在执行：{0}</value>
@@ -3491,6 +3521,9 @@
   <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
     <value>正在下载并更新插件...</value>
   </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>一键更新</value>
+  </data>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>运行插件</value>
   </data>
@@ -3850,5 +3883,8 @@
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>功率范围</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningLargeFiles" xml:space="preserve">
+    <value>正在扫描大文件...</value>
   </data>
 </root>

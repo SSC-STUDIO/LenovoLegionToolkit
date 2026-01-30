@@ -499,15 +499,20 @@ private string _currentSearchText = string.Empty;
                 }
                 
                 var updateAvailable = _availableUpdates.Any(au => au.Id == plugin.Id);
+                var updatePlugin = updateAvailable ? _availableUpdates.FirstOrDefault(au => au.Id == plugin.Id) : null;
                 
+                // Get changelog info
+                var changelog = updatePlugin?.Changelog ?? string.Empty;
+                var releaseDate = updatePlugin?.ReleaseDate ?? string.Empty;
+                var newVersion = updatePlugin?.Version ?? string.Empty;
+
                 // Get version information
                 var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
                 var onlinePlugin = _onlinePlugins.FirstOrDefault(op => op.Id == plugin.Id);
-                var updatePlugin = updateAvailable ? _availableUpdates.FirstOrDefault(au => au.Id == plugin.Id) : null;
                 
                 string version = "1.0.0";
-                if (updatePlugin != null && !string.IsNullOrWhiteSpace(updatePlugin.Version))
-                    version = updatePlugin.Version;
+                if (!string.IsNullOrWhiteSpace(newVersion))
+                    version = newVersion;
                 else if (onlinePlugin != null && !string.IsNullOrWhiteSpace(onlinePlugin.Version))
                     version = onlinePlugin.Version;
                 else if (metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
@@ -536,7 +541,7 @@ private string _currentSearchText = string.Empty;
                 {
                     // Update existing ViewModel
                     existingViewModel.IsInstalled = isInstalled;
-                    existingViewModel.SetUpdateAvailable(updateAvailable);
+                    existingViewModel.SetUpdateAvailable(updateAvailable, changelog, releaseDate, newVersion);
                     existingViewModel.Version = $"v{version}";
                     existingViewModel.IsLocal = isLocal;
                     existingViewModel.Location = location;
@@ -566,7 +571,7 @@ private string _currentSearchText = string.Empty;
                 else
                 {
                     // Create new ViewModel
-                    var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal);
+                    var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal, changelog, releaseDate, newVersion);
                     pluginViewModel.Location = location;
                     
                     // Check if plugin supports configuration
@@ -741,6 +746,12 @@ private string _currentSearchText = string.Empty;
             }
             
             _allPlugins = allPluginsList;
+            
+            // Update bulk update button visibility
+            if (_bulkUpdateButton != null)
+            {
+                _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
+            }
             
             // Apply current filters and search
             ApplyFilters();
@@ -1081,6 +1092,12 @@ if (success)
                     Lib.Utils.Log.Instance.Trace($"Updated plugin UI for {pluginId}: Installed={isInstalled}, UpdateAvailable={updateAvailable}");
                     Lib.Utils.Log.Instance.Trace($"  - ViewModel InstallButtonText after update: {viewModel.InstallButtonText}");
                 }
+
+                // Update bulk update button visibility
+                if (_bulkUpdateButton != null)
+                {
+                    _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
+                }
             }
             else
             {
@@ -1097,6 +1114,52 @@ if (success)
             Lib.Utils.Log.Instance.Trace($"Error updating specific plugin UI for {pluginId}: {ex.Message}", ex);
             // Fallback: perform full UI update
             UpdateAllPluginsUI();
+        }
+    }
+
+    private async void BulkUpdateButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_availableUpdates.Any()) return;
+
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+
+        try
+        {
+            _bulkUpdateButton.IsEnabled = false;
+            _bulkUpdateButton.Content = "Updating All...";
+
+            mainWindow?.Snackbar.Show("Updating Plugins", $"Updating all available plugins ({_availableUpdates.Count})...");
+
+            // Use a copy to avoid modification during iteration if needed, 
+            // but here we just need the IDs and manifests
+            var updatesToProcess = _availableUpdates.ToList();
+
+            foreach (var update in updatesToProcess)
+            {
+                try
+                {
+                    await InstallOnlinePluginAsync(update);
+                }
+                catch (Exception ex)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Error during bulk update for {update.Id}: {ex.Message}", ex);
+                }
+            }
+
+            mainWindow?.Snackbar.Show("Bulk Update Complete", "All plugins have been processed.");
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error in bulk update: {ex.Message}", ex);
+            mainWindow?.Snackbar.Show("Update Failed", $"Error during bulk update: {ex.Message}");
+        }
+        finally
+        {
+            _bulkUpdateButton.IsEnabled = true;
+            _bulkUpdateButton.Content = "Update All";
+            
+            // Refresh everything
+            await FetchOnlinePluginsAsync();
         }
     }
     private async void PluginInstallButton_Click(object sender, RoutedEventArgs e)

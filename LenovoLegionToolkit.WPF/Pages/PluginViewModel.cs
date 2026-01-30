@@ -25,6 +25,9 @@ namespace LenovoLegionToolkit.WPF.Pages
         private double _installProgress;
         private string _installStatusText = string.Empty;
         private bool _updateAvailable;
+        private string _changelog = string.Empty;
+        private string _releaseDate = string.Empty;
+        private string _newVersion = string.Empty;
         private bool _isLocal;
         private string _location = string.Empty;
 
@@ -437,6 +440,59 @@ public string PluginId
             }
         }
 
+        public bool UpdateAvailable
+        {
+            get => _updateAvailable;
+            set
+            {
+                if (_updateAvailable != value)
+                {
+                    _updateAvailable = value;
+                    OnPropertyChanged(nameof(UpdateAvailable));
+                    UpdateInstallButtonText();
+                }
+            }
+        }
+
+        public string Changelog
+        {
+            get => _changelog;
+            set
+            {
+                if (_changelog != value)
+                {
+                    _changelog = value;
+                    OnPropertyChanged(nameof(Changelog));
+                }
+            }
+        }
+
+        public string ReleaseDate
+        {
+            get => _releaseDate;
+            set
+            {
+                if (_releaseDate != value)
+                {
+                    _releaseDate = value;
+                    OnPropertyChanged(nameof(ReleaseDate));
+                }
+            }
+        }
+
+        public string NewVersion
+        {
+            get => _newVersion;
+            set
+            {
+                if (_newVersion != value)
+                {
+                    _newVersion = value;
+                    OnPropertyChanged(nameof(NewVersion));
+                }
+            }
+        }
+
         public bool IsLocal
         {
             get => _isLocal;
@@ -452,7 +508,7 @@ public string PluginId
 
         public IPlugin Plugin { get; private set; }
 
-    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", bool isLocal = false)
+    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", bool isLocal = false, string changelog = "", string releaseDate = "", string newVersion = "")
     {
         Plugin = plugin;
         PluginId = plugin.Id;
@@ -461,6 +517,9 @@ public string PluginId
         Version = $"v{version}";
         IsInstalled = isInstalled;
         _updateAvailable = updateAvailable;
+        _changelog = changelog;
+        _releaseDate = releaseDate;
+        _newVersion = newVersion;
         IsLocal = isLocal;
         
         UpdateInstallButtonText();
@@ -495,13 +554,12 @@ public string PluginId
             }
         }
 
-        public void SetUpdateAvailable(bool updateAvailable)
+        public void SetUpdateAvailable(bool updateAvailable, string changelog = "", string releaseDate = "", string newVersion = "")
         {
-            if (_updateAvailable != updateAvailable)
-            {
-                _updateAvailable = updateAvailable;
-                UpdateInstallButtonText();
-            }
+            Changelog = changelog;
+            ReleaseDate = releaseDate;
+            NewVersion = newVersion;
+            UpdateAvailable = updateAvailable;
         }
 
         private void UpdateIconLetter()

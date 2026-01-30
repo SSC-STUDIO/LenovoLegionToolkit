@@ -19,7 +19,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
     MinimumHostVersion = "1.0.0",
     Icon = "Rocket24"
 )]
-public class NetworkAccelerationPlugin : PluginBase
+public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 {
     public override string Id => PluginConstants.NetworkAcceleration;
     public override string Name => Resource.NetworkAcceleration_PageTitle;
@@ -80,7 +80,7 @@ public class NetworkAccelerationPlugin : PluginBase
 /// <summary>
 /// Network acceleration plugin page provider
 /// </summary>
-public class NetworkAccelerationPluginPage : IPluginPage
+public class NetworkAccelerationPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {
     // Return empty string to hide title in PluginPageWrapper, as we show it in the page content with description
     public string PageTitle => string.Empty;
@@ -96,7 +96,7 @@ public class NetworkAccelerationPluginPage : IPluginPage
 /// <summary>
 /// Network acceleration settings plugin page provider
 /// </summary>
-public class NetworkAccelerationSettingsPluginPage : IPluginPage
+public class NetworkAccelerationSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {
     public string PageTitle => string.Empty;
     public string PageIcon => string.Empty;

@@ -9,6 +9,7 @@
     Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
+            <Color x:Key="SnackbarShadowColor">#40000000</Color>
             <ResourceDictionary.MergedDictionaries>
                 <wpfui:ControlsDictionary />
                 <wpfui:ThemesDictionary Theme="Dark" />

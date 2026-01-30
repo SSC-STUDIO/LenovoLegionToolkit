@@ -1,12 +1,11 @@
-<wpfui:UiPage x:Class="LenovoLegionToolkit.Plugins.ShellIntegration.ShellIntegrationPage"
+<Page x:Class="LenovoLegionToolkit.Plugins.ShellIntegration.ShellIntegrationPage"
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
                xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
-               Scrollable="True"
                FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <wpfui:UiPage.Resources>
+    <Page.Resources>
         <!-- Card Style -->
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
@@ -52,7 +51,7 @@
             <Setter Property="Margin" Value="8,8,0,0" />
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
-    </wpfui:UiPage.Resources>
+    </Page.Resources>
 
     <Grid Margin="0,0,16,12">
         <Grid.RowDefinitions>
@@ -137,12 +136,6 @@
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
-                <wpfui:Button
-                    x:Name="StopButton"
-                    Content="Stop"
-                    Appearance="Caution"
-                    Click="StopButton_Click"
-                    Style="{StaticResource ActionButtonStyle}" />
                     <wpfui:Button x:Name="UninstallButton"
                                    Content="Uninstall"
                                    Icon="Delete24"
@@ -270,4 +263,4 @@
             </Grid>
         </Border>
     </Grid>
-</wpfui:UiPage>
+</Page>
