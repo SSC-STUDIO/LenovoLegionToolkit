@@ -49,6 +49,7 @@ public partial class App
 
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
+    private Thread? _singleInstanceThread;
     private Task? _backgroundInitializationTask;
     private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
     private readonly object _shutdownLock = new();
@@ -56,6 +57,7 @@ public partial class App
     private bool _exitRequested;
     private bool _shutdownInvoked;
     private bool _inExitHandler;
+    private bool _exceptionHandlerExecuting;
 
     public new static App Current => (App)Application.Current;
 
@@ -425,8 +427,17 @@ public partial class App
                 _inExitHandler = true;
             }
 
-            // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
-            ShutdownAsync(true).GetAwaiter().GetResult();
+            // Use timeout to prevent deadlock - if shutdown takes too long, force exit
+            var shutdownTask = ShutdownAsync(true);
+            if (!shutdownTask.Wait(TimeSpan.FromSeconds(10)))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Shutdown timeout exceeded, forcing exit...");
+                
+                // Force exit if shutdown takes too long
+                Environment.Exit(0);
+                return;
+            }
         }
         catch (Exception ex)
         {
@@ -435,8 +446,52 @@ public partial class App
         }
         finally
         {
-            Log.Instance.Shutdown();
-            _singleInstanceMutex?.Close();
+            // Clean up resources
+            try
+            {
+                // Stop and release single instance thread
+                if (_singleInstanceWaitHandle != null)
+                {
+                    try
+                    {
+                        _singleInstanceWaitHandle.Set(); // Signal the thread to exit
+                    }
+                    catch { }
+                    
+                    _singleInstanceWaitHandle.Dispose();
+                    _singleInstanceWaitHandle = null;
+                }
+
+                // Wait for single instance thread to exit (with timeout)
+                if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
+                {
+                    if (!_singleInstanceThread.Join(TimeSpan.FromSeconds(2)))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Single instance thread did not exit in time.");
+                    }
+                    _singleInstanceThread = null;
+                }
+
+                // Cancel and dispose background initialization cancellation token
+                try
+                {
+                    _backgroundInitializationCancellationTokenSource?.Cancel();
+                    _backgroundInitializationCancellationTokenSource?.Dispose();
+                    _backgroundInitializationCancellationTokenSource = null;
+                }
+                catch { }
+
+                Log.Instance.Shutdown();
+                _singleInstanceMutex?.Close();
+                _singleInstanceMutex?.Dispose();
+                _singleInstanceMutex = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error during resource cleanup.", ex);
+            }
         }
     }
 
@@ -536,31 +591,49 @@ public partial class App
 
     private async Task PerformShutdownAsync()
     {
-        await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+        try
+        {
+            // Cancel background initialization first to prevent new work from starting
+            _backgroundInitializationCancellationTokenSource?.Cancel();
 
-        // Stop all plugins first (they may depend on services)
-        await StopPluginsAsync().ConfigureAwait(false);
+            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
 
-        // Stop all services in parallel to speed up shutdown
-        await Task.WhenAll(
-            StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
-            StopServiceWithSupportCheckAsync<RGBKeyboardBacklightController>(
-                controller => controller.IsSupportedAsync(),
-                controller => controller.SetLightControlOwnerAsync(false),
-                "RGB keyboard controller"
-            ),
-            StopServiceWithSupportCheckAsync<SpectrumKeyboardBacklightController>(
-                controller => controller.IsSupportedAsync(),
-                controller => controller.StopAuroraIfNeededAsync(),
-                "Spectrum keyboard controller"
-            ),
-            StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native windows message listener"),
-            StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
-            StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
-            StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
-            StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service"),
-            Task.Run(() => HardwareMonitor.Instance.Dispose())
-        ).ConfigureAwait(false);
+            // Stop all plugins first (they may depend on services)
+            await StopPluginsAsync().ConfigureAwait(false);
+
+            // Stop all services in parallel to speed up shutdown, but with timeout
+            var stopServicesTask = Task.WhenAll(
+                StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
+                StopServiceWithSupportCheckAsync<RGBKeyboardBacklightController>(
+                    controller => controller.IsSupportedAsync(),
+                    controller => controller.SetLightControlOwnerAsync(false),
+                    "RGB keyboard controller"
+                ),
+                StopServiceWithSupportCheckAsync<SpectrumKeyboardBacklightController>(
+                    controller => controller.IsSupportedAsync(),
+                    controller => controller.StopAuroraIfNeededAsync(),
+                    "Spectrum keyboard controller"
+                ),
+                StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native windows message listener"),
+                StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
+                StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
+                StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
+                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service"),
+                Task.Run(() => HardwareMonitor.Instance.Dispose())
+            );
+
+            // Wait for services to stop with timeout
+            if (!stopServicesTask.Wait(TimeSpan.FromSeconds(8)))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Service shutdown timeout exceeded, continuing with exit...");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error during shutdown sequence.", ex);
+        }
     }
 
     private async Task StopPluginsAsync()
@@ -625,28 +698,102 @@ public partial class App
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        var exception = e.ExceptionObject as Exception;
+        // Prevent infinite recursion
+        if (_exceptionHandlerExecuting)
+        {
+            Environment.Exit(100);
+            return;
+        }
 
-        Log.Instance.ErrorReport("AppDomain_UnhandledException", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
-        Log.Instance.Trace($"Unhandled exception occurred.", exception);
+        _exceptionHandlerExecuting = true;
 
-        MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? "Unknown exception."),
-            "Application Domain Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
-        Shutdown(100);
+        try
+        {
+            var exception = e.ExceptionObject as Exception;
+
+            Log.Instance.ErrorReport("AppDomain_UnhandledException", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
+            Log.Instance.Trace($"Unhandled exception occurred.", exception);
+
+            // Try to show message box, but don't let it cause infinite recursion
+            try
+            {
+                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? "Unknown exception."),
+                    "Application Domain Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch
+            {
+                // If MessageBox fails, just log and exit
+                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+            }
+        }
+        catch
+        {
+            // If even logging fails, just exit
+        }
+        finally
+        {
+            // Force exit to prevent hanging
+            try
+            {
+                Shutdown(100);
+            }
+            catch
+            {
+                Environment.Exit(100);
+            }
+        }
     }
 
     private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
-        Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
+        // Prevent infinite recursion
+        if (_exceptionHandlerExecuting)
+        {
+            e.Handled = true;
+            Environment.Exit(101);
+            return;
+        }
 
-        MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
-            "Application Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
-        Shutdown(101);
+        _exceptionHandlerExecuting = true;
+        e.Handled = true; // Mark as handled to prevent further propagation
+
+        try
+        {
+            Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
+            Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
+
+            // Try to show message box, but don't let it cause infinite recursion
+            try
+            {
+                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
+                    "Application Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch
+            {
+                // If MessageBox fails, just log and exit
+                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+            }
+        }
+        catch
+        {
+            // If even logging fails, just exit
+        }
+        finally
+        {
+            // Force exit to prevent hanging
+            try
+            {
+                Shutdown(101);
+            }
+            catch
+            {
+                Environment.Exit(101);
+            }
+        }
     }
 
 
@@ -668,32 +815,58 @@ public partial class App
             return;
         }
 
-        new Thread(() =>
+        _singleInstanceThread = new Thread(() =>
         {
-            while (_singleInstanceWaitHandle.WaitOne())
+            try
             {
-                Current.Dispatcher.BeginInvoke(async () =>
+                while (_singleInstanceWaitHandle != null && _singleInstanceWaitHandle.WaitOne(1000))
                 {
-                    if (Current.MainWindow is { } window)
+                    if (Current == null || Current.Dispatcher == null)
+                        break;
+
+                    try
+                    {
+                        Current.Dispatcher.BeginInvoke(async () =>
+                        {
+                            if (Current.MainWindow is { } window)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
+
+                                window.BringToForeground();
+                            }
+                            else
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
+
+                                await ShutdownAsync(true);
+                            }
+                        });
+                    }
+                    catch (Exception ex)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
-
-                        window.BringToForeground();
+                            Log.Instance.Trace($"Error in single instance thread dispatcher invoke.", ex);
+                        break;
                     }
-                    else
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
-
-                        await ShutdownAsync(true);
-                    }
-                });
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // Expected when wait handle is disposed during shutdown
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error in single instance thread.", ex);
             }
         })
         {
-            IsBackground = true
-        }.Start();
+            IsBackground = true,
+            Name = "SingleInstanceThread"
+        };
+        _singleInstanceThread.Start();
     }
 
     private static async Task LogSoftwareStatusAsync()

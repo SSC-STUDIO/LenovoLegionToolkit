@@ -54,9 +54,6 @@ private string _currentSearchText = string.Empty;
 
         // Subscribe to plugin state changes
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
-
-        // Add keyboard shortcut for resetting plugin states (Ctrl+Shift+R)
-        PreviewKeyDown += PluginExtensionsPage_PreviewKeyDown;
         
         // Initialize loading text with multi-language support
         var loadingText = this.FindName("_loadingText") as System.Windows.Controls.TextBlock;
@@ -541,7 +538,7 @@ private string _currentSearchText = string.Empty;
                 {
                     // Update existing ViewModel
                     existingViewModel.IsInstalled = isInstalled;
-                    existingViewModel.SetUpdateAvailable(updateAvailable, changelog, releaseDate, newVersion);
+                    existingViewModel.SetUpdateAvailable(updateAvailable);
                     existingViewModel.Version = $"v{version}";
                     existingViewModel.IsLocal = isLocal;
                     existingViewModel.Location = location;
@@ -571,7 +568,7 @@ private string _currentSearchText = string.Empty;
                 else
                 {
                     // Create new ViewModel
-                    var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal, changelog, releaseDate, newVersion);
+                    var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal);
                     pluginViewModel.Location = location;
                     
                     // Check if plugin supports configuration
@@ -921,7 +918,7 @@ private string _currentSearchText = string.Empty;
 
     private async void PluginUpdateButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
         var mainWindow = Application.Current.MainWindow as MainWindow;
@@ -1353,14 +1350,40 @@ if (success)
     }
     
 
-    private void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
+    private async void PluginUninstallButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
+
+        if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            Lib.Utils.Log.Instance.Trace($"PluginUninstallButton_Click called for {pluginId}");
 
         try
         {
-            _pluginManager.UninstallPlugin(pluginId);
+            // For local plugins, we should ensure any running processes are stopped
+            if (_pluginManager.IsInstalled(pluginId))
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"Stopping plugin {pluginId} before uninstall");
+                
+                // Stop the plugin first
+                _pluginManager.StopPlugin(pluginId);
+            }
+
+            var result = await Task.Run(() => _pluginManager.UninstallPlugin(pluginId));
+            
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"UninstallPlugin returned: {result}");
+
+            if (!result)
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_UninstallFailed, "Plugin could not be uninstalled. It might be a dependency for another plugin.");
+                }
+                return;
+            }
             
             var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
             if (detailsPanel != null)
@@ -1371,10 +1394,10 @@ if (success)
             // Immediately update specific plugin's UI state
             UpdateSpecificPluginUI(pluginId);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
+            var mainWindowSuccess = Application.Current.MainWindow as MainWindow;
+            if (mainWindowSuccess != null)
             {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_UninstallSuccess, Resource.PluginExtensionsPage_UninstallSuccessMessage);
+                mainWindowSuccess.Snackbar.Show(Resource.PluginExtensionsPage_UninstallSuccess, Resource.PluginExtensionsPage_UninstallSuccessMessage);
             }
         }
         catch (Exception ex)
@@ -1391,7 +1414,7 @@ if (success)
 
     private void PluginConfigureButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
         if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -1455,7 +1478,7 @@ if (success)
 
     private void PluginOpenButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
         try
@@ -1531,7 +1554,7 @@ if (success)
 
     private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Wpf.Ui.Controls.Button button || button.Tag is not string pluginId)
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
         var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
@@ -1551,7 +1574,14 @@ if (success)
         // Execute permanent deletion
         try
         {
+            // Stop plugin first
+            _pluginManager.StopPlugin(pluginId);
+            
+            // Uninstall (removes from settings)
             _pluginManager.UninstallPlugin(pluginId);
+            
+            // Permanently delete from disk
+            var deleted = await Task.Run(() => _pluginManager.PermanentlyDeletePlugin(pluginId));
             
             var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
             if (detailsPanel != null)
@@ -1575,7 +1605,14 @@ if (success)
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)
             {
-                mainWindow.Snackbar.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes.");
+                if (deleted)
+                {
+                    mainWindow.Snackbar.Show("Plugin Deleted", "Plugin has been permanently deleted from your computer.");
+                }
+                else
+                {
+                    mainWindow.Snackbar.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes (some files were locked).");
+                }
             }
         }
         catch (Exception ex)
@@ -2240,54 +2277,5 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             UpdateSpecificPluginUI(e.PluginId);
             UpdateAllPluginsUI();
         });
-    }
-
-    private void PluginExtensionsPage_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        // Ctrl+Shift+R to reset all plugin states (for debugging/testing)
-        if (e.Key == Key.R && Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
-        {
-            e.Handled = true;
-            ResetAllPluginStates();
-        }
-    }
-
-    /// <summary>
-    /// Reset all plugin installation states (for debugging/testing purposes)
-    /// This clears the installed extensions list so plugins show as uninstalled
-    /// </summary>
-    private void ResetAllPluginStates()
-    {
-        try
-        {
-            if (Lib.Utils.Log.Instance.IsTraceEnabled)
-            {
-                Lib.Utils.Log.Instance.Trace($"ResetAllPluginStates called");
-            }
-
-            // Clear all installed extensions
-            var applicationSettings = IoCContainer.Resolve<LenovoLegionToolkit.Lib.Settings.ApplicationSettings>();
-            applicationSettings.Store.InstalledExtensions.Clear();
-            applicationSettings.SynchronizeStore();
-
-            // Update UI for all plugins
-            UpdateAllPluginsUI();
-
-            // Show confirmation
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show("Plugin States Reset", "All plugin installation states have been cleared");
-            }
-
-            if (Lib.Utils.Log.Instance.IsTraceEnabled)
-            {
-                Lib.Utils.Log.Instance.Trace($"All plugin states have been reset");
-            }
-        }
-        catch (Exception ex)
-        {
-            Lib.Utils.Log.Instance.Trace($"Error resetting plugin states: {ex.Message}", ex);
-        }
     }
 }

@@ -10048,15 +10048,6 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("PluginExtensionsPage_UpdateSuccessfulMessage", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Update All.
-        /// </summary>
-        public static string PluginExtensionsPage_UpdateAll {
-            get {
-                return ResourceManager.GetString("PluginExtensionsPage_UpdateAll", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to Updating Plugin.
@@ -10073,6 +10064,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string PluginExtensionsPage_UpdatingPluginMessage {
             get {
                 return ResourceManager.GetString("PluginExtensionsPage_UpdatingPluginMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update All.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateAll {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateAll", resourceCulture);
             }
         }
 

@@ -3001,9 +3001,6 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
     <value>Pause all</value>
   </data>
-  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
-    <value>Start all selected</value>
-  </data>
   <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
     <value>Implementation and Effect Principles</value>
   </data>
@@ -3791,8 +3788,5 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
-  </data>
-  <data name="WindowsOptimizationPage_ScanningLargeFiles" xml:space="preserve">
-    <value>Scanning for large files...</value>
   </data>
 </root>

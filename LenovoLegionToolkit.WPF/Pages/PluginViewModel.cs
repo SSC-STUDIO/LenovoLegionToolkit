@@ -25,11 +25,22 @@ namespace LenovoLegionToolkit.WPF.Pages
         private double _installProgress;
         private string _installStatusText = string.Empty;
         private bool _updateAvailable;
-        private string _changelog = string.Empty;
-        private string _releaseDate = string.Empty;
-        private string _newVersion = string.Empty;
         private bool _isLocal;
         private string _location = string.Empty;
+        private bool _shouldShowInstallButton;
+
+        public bool ShouldShowInstallButton
+        {
+            get => _shouldShowInstallButton;
+            set
+            {
+                if (_shouldShowInstallButton != value)
+                {
+                    _shouldShowInstallButton = value;
+                    OnPropertyChanged(nameof(ShouldShowInstallButton));
+                }
+            }
+        }
 
         public string Name
         {
@@ -440,59 +451,6 @@ public string PluginId
             }
         }
 
-        public bool UpdateAvailable
-        {
-            get => _updateAvailable;
-            set
-            {
-                if (_updateAvailable != value)
-                {
-                    _updateAvailable = value;
-                    OnPropertyChanged(nameof(UpdateAvailable));
-                    UpdateInstallButtonText();
-                }
-            }
-        }
-
-        public string Changelog
-        {
-            get => _changelog;
-            set
-            {
-                if (_changelog != value)
-                {
-                    _changelog = value;
-                    OnPropertyChanged(nameof(Changelog));
-                }
-            }
-        }
-
-        public string ReleaseDate
-        {
-            get => _releaseDate;
-            set
-            {
-                if (_releaseDate != value)
-                {
-                    _releaseDate = value;
-                    OnPropertyChanged(nameof(ReleaseDate));
-                }
-            }
-        }
-
-        public string NewVersion
-        {
-            get => _newVersion;
-            set
-            {
-                if (_newVersion != value)
-                {
-                    _newVersion = value;
-                    OnPropertyChanged(nameof(NewVersion));
-                }
-            }
-        }
-
         public bool IsLocal
         {
             get => _isLocal;
@@ -508,7 +466,7 @@ public string PluginId
 
         public IPlugin Plugin { get; private set; }
 
-    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", bool isLocal = false, string changelog = "", string releaseDate = "", string newVersion = "")
+    public PluginViewModel(IPlugin plugin, bool isInstalled, bool updateAvailable = false, string version = "1.0.0", bool isLocal = false)
     {
         Plugin = plugin;
         PluginId = plugin.Id;
@@ -517,9 +475,6 @@ public string PluginId
         Version = $"v{version}";
         IsInstalled = isInstalled;
         _updateAvailable = updateAvailable;
-        _changelog = changelog;
-        _releaseDate = releaseDate;
-        _newVersion = newVersion;
         IsLocal = isLocal;
         
         UpdateInstallButtonText();
@@ -539,6 +494,8 @@ public string PluginId
                 InstallButtonText = Resource.PluginExtensionsPage_InstallPlugin;
             }
             
+            ShouldShowInstallButton = !IsInstalled || _updateAvailable;
+            
             // Add debug logging
             try
             {
@@ -554,12 +511,13 @@ public string PluginId
             }
         }
 
-        public void SetUpdateAvailable(bool updateAvailable, string changelog = "", string releaseDate = "", string newVersion = "")
+        public void SetUpdateAvailable(bool updateAvailable)
         {
-            Changelog = changelog;
-            ReleaseDate = releaseDate;
-            NewVersion = newVersion;
-            UpdateAvailable = updateAvailable;
+            if (_updateAvailable != updateAvailable)
+            {
+                _updateAvailable = updateAvailable;
+                UpdateInstallButtonText();
+            }
         }
 
         private void UpdateIconLetter()
