@@ -51,7 +51,7 @@
       "releaseDate": "2026-01-30T16:00:00Z",
       "changelog": "Version 1.4.1 (2026-01-30)\n- Rebuilt plugin package with optimized file structure\n- Updated download URLs to point to GitHub releases\n- Fixed package size calculation and hash verification\n- No code changes - only packaging and metadata updates",
       "author": "LenovoLegionToolkit Team",
-      "fileSize": 1266960,
+      "fileSize": 58883,
       "isSystemPlugin": false,
       "id": "NetworkAcceleration",
       "tags": [
