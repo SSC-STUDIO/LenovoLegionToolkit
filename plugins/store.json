@@ -3,15 +3,15 @@
     {
       "icon": "Apps24",
       "iconBackground": "#FF6B35",
-      "fileSize": 140931,
+      "fileSize": 46930,
       "name": "ViveTool",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/ViveTool/v1.5.0/ViveTool.zip",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/ViveTool-v1.5.0/ViveTool.zip",
       "isSystemPlugin": false,
       "description": "ViveTool functionality for Lenovo Legion Toolkit / 为联想拯救者工具包提供ViveTool功能",
       "version": "1.5.0",
       "changelog": "Version 1.5.0 (2026-01-30)\n- Updated plugin to version 1.5.0 with compatibility improvements\n- Enhanced plugin stability and performance\n- Updated dependencies for better integration with main application\n- Improved error handling and logging capabilities",
       "releaseDate": "2026-01-30T21:00:00Z",
-      "fileHash": "1239A4B17E06EB353FE2D660E25AA22F92A99EC3144AED2B592C54647ECAD6F6",
+      "fileHash": "EFAF814D7A4A330C8DACE4F27979A95AC9D5D7EB25BB8BE920844F176BD40006",
       "author": "Crs10259",
       "dependencies": null,
       "id": "ViveTool",
@@ -23,7 +23,7 @@
     {
       "icon": "ContextMenu24",
       "iconBackground": "#9C27B0",
-      "fileSize": 155512,
+      "fileSize": 58883,
       "name": "ShellIntegration",
       "downloadUrl": "file:///C:/Users/96152/My-Project/Application_Project/Transplant_Project/LenovoLegionToolkit/plugins/ShellIntegration.zip",
       "isSystemPlugin": true,
@@ -46,7 +46,7 @@
       "icon": "Apps24",
       "iconBackground": "#00BCF4",
       "version": "1.4.0",
-      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/plugins/NetworkAcceleration/v1.4.1/NetworkAcceleration.zip",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit/releases/download/NetworkAcceleration-v1.4.1/NetworkAcceleration.zip",
       "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit / 为联想拯救者工具包提供网络加速功能",
       "releaseDate": "2026-01-24T16:00:00Z",
       "changelog": "Version 1.4.0 (2026-01-24)\n- Fixed missing translations for plugin snackbar messages\n- Fixed hardcoded English text in plugin UI elements\n- Added support for Steam, Discord, npm, and PyPI acceleration\n- Fixed plugin download URL issues\n- Updated to work with Lenovo Legion Toolkit v3.4.1",
@@ -60,7 +60,7 @@
       "dependencies": null,
       "minimumHostVersion": "2.0.0",
       "name": "NetworkAcceleration",
-      "fileHash": "4D239603045FE96D75041A824E4A5454CD0A8CCDB28320FFE27761DAF38723C4"
+      "fileHash": "570F671757791DC3530CAA327627B1CEE6E76183F23B056E26271990F0A71101"
     },
     {
       "icon": "Cursor24",
