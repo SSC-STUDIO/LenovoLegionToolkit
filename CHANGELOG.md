@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 - Updated plugin store URL to point to separate plugin repository / 更新插件商店URL指向独立插件仓库
+- Fixed process residue issue on incompatible systems when application closes / 修复在不兼容系统上关闭应用程序后的进程残留问题
 
 ### Improved / 改进
 - 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage
