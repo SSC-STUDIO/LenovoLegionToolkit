@@ -59,40 +59,39 @@ public partial class PluginSettingsWindow : BaseWindow
                 _pluginDescriptionTextBlock.Text += $"\n\n{string.Format(Resource.PluginSettingsWindow_Author, metadata.Author)}";
             }
 
-            // Try to get plugin's custom settings page
+            // Try to get plugin's custom settings page using reflection
             bool hasSettingsPage = false;
-            if (plugin is Plugins.SDK.PluginBase sdkPlugin)
+            if (plugin != null)
             {
-                var settingsPage = sdkPlugin.GetSettingsPage();
-                if (settingsPage is Plugins.SDK.IPluginPage pluginPage)
+                try
                 {
-                    var pageContent = pluginPage.CreatePage();
-                    if (pageContent != null)
+                    var pluginType = plugin.GetType();
+                    var getSettingsPage = pluginType.GetMethod("GetSettingsPage", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (getSettingsPage != null)
                     {
-                        hasSettingsPage = true;
-                        
-                        // Show plugin settings container
-                        if (_pluginSettingsContainer != null)
+                        var settingsPage = getSettingsPage.Invoke(plugin, null);
+                        if (settingsPage is System.Windows.Controls.Page page)
                         {
-                            _pluginSettingsContainer.Visibility = Visibility.Visible;
-                        }
-                        
-                        // Display the plugin's settings page
-                        if (pageContent is System.Windows.Controls.Page page)
-                        {
+                            hasSettingsPage = true;
+                            
+                            // Show plugin settings container
+                            if (_pluginSettingsContainer != null)
+                            {
+                                _pluginSettingsContainer.Visibility = Visibility.Visible;
+                            }
+                            
+                            // Display the plugin's settings page
                             if (_pluginSettingsFrame != null)
                             {
                                 _pluginSettingsFrame.Navigate(page);
                             }
                         }
-                        else if (pageContent is UIElement uiElement)
-                        {
-                            if (_pluginSettingsFrame != null)
-                            {
-                                _pluginSettingsFrame.Content = uiElement;
-                            }
-                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Error loading plugin settings: {ex.Message}", ex);
+                    hasSettingsPage = false;
                 }
             }
             

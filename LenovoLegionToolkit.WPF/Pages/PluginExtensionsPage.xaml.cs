@@ -425,11 +425,7 @@ private string _currentSearchText = string.Empty;
         {
             Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show("Failed to fetch plugins", $"Unable to get plugin list from store: {ex.Message}");
-            }
+            SnackbarHelper.Show("Failed to fetch plugins", $"Unable to get plugin list from store: {ex.Message}", SnackbarType.Error);
             
             // Hide loading indicator
             if (loadingIndicator != null)
@@ -484,6 +480,20 @@ private string _currentSearchText = string.Empty;
             }
         }
         
+        // Update visibility of the empty states
+        _noPluginsMessage.Visibility = uniquePlugins.Any() ? Visibility.Collapsed : Visibility.Visible;
+        
+        // Show search specific empty state if we have a search term and no results
+        if (!string.IsNullOrWhiteSpace(_currentSearchText) && !uniquePlugins.Any())
+        {
+            _noResultsStackPanel.Visibility = Visibility.Visible;
+            _noPluginsMessage.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            _noResultsStackPanel.Visibility = Visibility.Collapsed;
+        }
+
         foreach (var plugin in uniquePlugins)
         {
             try
@@ -515,7 +525,22 @@ private string _currentSearchText = string.Empty;
                 else if (metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
                     version = metadata.Version;
                 
-                bool isLocal = onlinePlugin == null;
+                // Determine if plugin is local based on its installation path
+                // Simplified logic: plugins directly in 'plugins' folder are remote, others are local
+                bool isLocal = false;
+                if (metadata?.FilePath != null)
+                {
+                    var pluginsDir = GetPluginsDirectory();
+                    var pluginDir = Path.GetDirectoryName(metadata.FilePath);
+                    var parentDir = Path.GetDirectoryName(pluginDir);
+                    
+                    isLocal = !string.Equals(parentDir, pluginsDir, StringComparison.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    // If not installed, base it on whether it's available online
+                    isLocal = onlinePlugin == null;
+                }
                 
                 // Determine location
                 string location = string.Empty;
@@ -542,15 +567,30 @@ private string _currentSearchText = string.Empty;
                     existingViewModel.Version = $"v{version}";
                     existingViewModel.IsLocal = isLocal;
                     existingViewModel.Location = location;
+                    existingViewModel.NewVersion = newVersion;
+                    existingViewModel.ReleaseDate = releaseDate;
+                    existingViewModel.Changelog = changelog;
+                    existingViewModel.Author = metadata?.Author ?? string.Empty;
                     
-                    // Check if plugin supports configuration
+                    // Check if plugin supports configuration (using reflection for dynamic plugins)
                     var supportsConfig = false;
-                    if (isInstalled && plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+                    if (isInstalled)
                     {
                         try
                         {
-                            var featureExtension = sdkPlugin.GetFeatureExtension();
-                            supportsConfig = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                            var pluginType = plugin.GetType();
+                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                            if (getFeatureExtension != null)
+                            {
+                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                                if (featureExtension != null)
+                                {
+                                    var featureType = featureExtension.GetType();
+                                    supportsConfig = featureType.Name.Contains("IPluginPage") || 
+                                                   featureType.GetProperty("Page") != null ||
+                                                   featureType.GetProperty("SettingsPage") != null;
+                                }
+                            }
                         }
                         catch
                         {
@@ -570,15 +610,30 @@ private string _currentSearchText = string.Empty;
                     // Create new ViewModel
                     var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal);
                     pluginViewModel.Location = location;
+                    pluginViewModel.NewVersion = newVersion;
+                    pluginViewModel.ReleaseDate = releaseDate;
+                    pluginViewModel.Changelog = changelog;
+                    pluginViewModel.Author = metadata?.Author ?? string.Empty;
                     
-                    // Check if plugin supports configuration
+                    // Check if plugin supports configuration (using reflection for dynamic plugins)
                     var supportsConfig = false;
-                    if (isInstalled && plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+                    if (isInstalled)
                     {
                         try
                         {
-                            var featureExtension = sdkPlugin.GetFeatureExtension();
-                            supportsConfig = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                            var pluginType = plugin.GetType();
+                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                            if (getFeatureExtension != null)
+                            {
+                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                                if (featureExtension != null)
+                                {
+                                    var featureType = featureExtension.GetType();
+                                    supportsConfig = featureType.Name.Contains("IPluginPage") || 
+                                                   featureType.GetProperty("Page") != null ||
+                                                   featureType.GetProperty("SettingsPage") != null;
+                                }
+                            }
                         }
                         catch
                         {
@@ -610,12 +665,6 @@ private string _currentSearchText = string.Empty;
         {
             _resultsCountTextBlock.Text = string.Format(Resource.PluginExtensionsPage_FoundPluginsCount, uniquePlugins.Count);
             _resultsCountTextBlock.Visibility = uniquePlugins.Any() ? Visibility.Visible : Visibility.Collapsed;
-        }
-        
-        // Show/hide no plugins message
-        if (_noPluginsMessage != null)
-        {
-            _noPluginsMessage.Visibility = uniquePlugins.Any() ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
@@ -921,14 +970,12 @@ private string _currentSearchText = string.Empty;
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-
         try
         {
             var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
             if (onlinePlugin == null)
             {
-                mainWindow?.Snackbar.Show("Update Failed", "Unable to find online version of plugin");
+                SnackbarHelper.Show("Update Failed", "Unable to find online version of plugin", SnackbarType.Error);
                 return;
             }
 
@@ -939,7 +986,7 @@ private string _currentSearchText = string.Empty;
                 updateButton.Content = "Updating...";
             }
 
-            mainWindow?.Snackbar.Show("Updating Plugin", $"Downloading and updating {onlinePlugin.Name}...");
+            SnackbarHelper.Show("Updating Plugin", $"Downloading and updating {onlinePlugin.Name}...", SnackbarType.Info);
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
             if (downloadProgressPanel != null)
@@ -979,24 +1026,24 @@ private string _currentSearchText = string.Empty;
 
             _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
 
-if (success)
+            if (success)
             {
                 _pluginManager.ScanAndLoadPlugins();
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
 
-                mainWindow?.Snackbar.Show("Update Successful", $"Plugin {onlinePlugin.Name} has been successfully updated to v{onlinePlugin.Version}");
+                SnackbarHelper.Show("Update Successful", $"Plugin {onlinePlugin.Name} has been successfully updated to v{onlinePlugin.Version}", SnackbarType.Success);
             }
             else
             {
-                mainWindow?.Snackbar.Show("Update Failed", "Plugin update failed, please check network connection and try again later.");
+                SnackbarHelper.Show("Update Failed", "Plugin update failed, please check network connection and try again later.", SnackbarType.Error);
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
 
-            mainWindow?.Snackbar.Show("Update Failed", $"Error updating plugin: {ex.Message}");
+            SnackbarHelper.Show("Update Failed", $"Error updating plugin: {ex.Message}", SnackbarType.Error);
         }
         finally
         {
@@ -1070,12 +1117,23 @@ if (success)
                 if (isInstalled)
                 {
                     var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
-                    if (plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+                    if (plugin != null)
                     {
                         try
                         {
-                            var featureExtension = sdkPlugin.GetFeatureExtension();
-                            viewModel.SupportsConfiguration = featureExtension is LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+                            var pluginType = plugin.GetType();
+                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                            if (getFeatureExtension != null)
+                            {
+                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                                if (featureExtension != null)
+                                {
+                                    var featureType = featureExtension.GetType();
+                                    viewModel.SupportsConfiguration = featureType.Name.Contains("IPluginPage") || 
+                                                   featureType.GetProperty("Page") != null ||
+                                                   featureType.GetProperty("SettingsPage") != null;
+                                }
+                            }
                         }
                         catch
                         {
@@ -1118,14 +1176,12 @@ if (success)
     {
         if (!_availableUpdates.Any()) return;
 
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-
         try
         {
             _bulkUpdateButton.IsEnabled = false;
-            _bulkUpdateButton.Content = "Updating All...";
+            _bulkUpdateButton.Content = Resource.PluginExtensionsPage_UpdatingAll;
 
-            mainWindow?.Snackbar.Show("Updating Plugins", $"Updating all available plugins ({_availableUpdates.Count})...");
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_UpdatingPlugin, string.Format(Resource.PluginExtensionsPage_UpdatingPluginMessage, _availableUpdates.Count), SnackbarType.Info);
 
             // Use a copy to avoid modification during iteration if needed, 
             // but here we just need the IDs and manifests
@@ -1143,17 +1199,17 @@ if (success)
                 }
             }
 
-            mainWindow?.Snackbar.Show("Bulk Update Complete", "All plugins have been processed.");
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkUpdateComplete, Resource.PluginExtensionsPage_BulkUpdateCompleteMessage, SnackbarType.Success);
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error in bulk update: {ex.Message}", ex);
-            mainWindow?.Snackbar.Show("Update Failed", $"Error during bulk update: {ex.Message}");
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_UpdateFailed, string.Format(Resource.PluginExtensionsPage_UpdateFailedMessage, ex.Message), SnackbarType.Error);
         }
         finally
         {
             _bulkUpdateButton.IsEnabled = true;
-            _bulkUpdateButton.Content = "Update All";
+            _bulkUpdateButton.Content = Resource.PluginExtensionsPage_UpdateAll;
             
             // Refresh everything
             await FetchOnlinePluginsAsync();
@@ -1215,20 +1271,18 @@ if (success)
             UpdateSpecificPluginUI(pluginId);
             
             // Show success message
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
+            if (Application.Current.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallSuccess, Resource.PluginExtensionsPage_InstallSuccessMessage);
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, Resource.PluginExtensionsPage_InstallSuccessMessage, SnackbarType.Success);
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error installing plugin: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
+            if (Application.Current.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, string.Format(Resource.PluginExtensionsPage_InstallFailedMessage, ex.Message));
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallFailed, string.Format(Resource.PluginExtensionsPage_InstallFailedMessage, ex.Message), SnackbarType.Error);
             }
         }
     }
@@ -1249,7 +1303,7 @@ if (success)
             if (pluginViewModel != null)
             {
                 pluginViewModel.IsInstalling = true;
-                pluginViewModel.InstallStatusText = "Preparing download...";
+                pluginViewModel.InstallStatusText = Resource.PluginExtensionsPage_PreparingDownload;
                 pluginViewModel.InstallProgress = 0;
             }
             
@@ -1282,17 +1336,11 @@ if (success)
                 // After rescanning plugins, immediately update specific plugin's UI state
                 UpdateSpecificPluginUI(manifest.Id);
                 
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallSuccess, $"Plugin {manifest.Name} has been successfully installed!");
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
             else
             {
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"Plugin installation failed, please check network connection and try again later.");
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallFailed, Resource.PluginExtensionsPage_UpdateFailedMessage, SnackbarType.Error);
                 
                 // Reset plugin's UI state
                 UpdateSpecificPluginUI(manifest.Id);
@@ -1302,11 +1350,7 @@ if (success)
         {
             Lib.Utils.Log.Instance.Trace($"Error installing online plugin {manifest.Id}: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_InstallFailed, $"Error installing plugin: {ex.Message}");
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallFailed, $"Error installing plugin: {ex.Message}", SnackbarType.Error);
         }
         finally
         {
@@ -1334,17 +1378,17 @@ if (success)
             
             if (progress.IsCompleted)
             {
-                pluginViewModel.InstallStatusText = "Download completed";
+                pluginViewModel.InstallStatusText = Resource.PluginExtensionsPage_DownloadCompleted;
             }
             else if (progress.TotalBytes > 0)
             {
                 var downloadedMB = progress.BytesDownloaded / 1024.0 / 1024.0;
                 var totalMB = progress.TotalBytes / 1024.0 / 1024.0;
-                pluginViewModel.InstallStatusText = $"Downloading... {downloadedMB:F1} / {totalMB:F1} MB ({progress.ProgressPercentage:F0}%)";
+                pluginViewModel.InstallStatusText = string.Format(Resource.PluginExtensionsPage_DownloadingWithProgress, downloadedMB, totalMB, progress.ProgressPercentage);
             }
             else
             {
-                pluginViewModel.InstallStatusText = "Downloading...";
+                pluginViewModel.InstallStatusText = Resource.PluginExtensionsPage_Downloading;
             }
         }
     }
@@ -1377,11 +1421,7 @@ if (success)
 
             if (!result)
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_UninstallFailed, "Plugin could not be uninstalled. It might be a dependency for another plugin.");
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallFailed, "Plugin could not be uninstalled. It might be a dependency for another plugin.", SnackbarType.Error);
                 return;
             }
             
@@ -1394,21 +1434,13 @@ if (success)
             // Immediately update specific plugin's UI state
             UpdateSpecificPluginUI(pluginId);
             
-            var mainWindowSuccess = Application.Current.MainWindow as MainWindow;
-            if (mainWindowSuccess != null)
-            {
-                mainWindowSuccess.Snackbar.Show(Resource.PluginExtensionsPage_UninstallSuccess, Resource.PluginExtensionsPage_UninstallSuccessMessage);
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallSuccess, Resource.PluginExtensionsPage_UninstallSuccessMessage, SnackbarType.Success);
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error uninstalling plugin: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_UninstallFailed, string.Format(Resource.PluginExtensionsPage_UninstallFailedMessage, ex.Message));
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallFailed, string.Format(Resource.PluginExtensionsPage_UninstallFailedMessage, ex.Message), SnackbarType.Error);
         }
     }
 
@@ -1428,31 +1460,38 @@ if (success)
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                     Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is not installed, configuration not available");
                 
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage);
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
                 return;
             }
 
-            // Check if plugin supports configuration
+            // Check if plugin supports configuration (using reflection for dynamic plugins)
+            var supportsSettings = false;
             var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-            if (plugin is LenovoLegionToolkit.Plugins.SDK.PluginBase sdkPlugin)
+            if (plugin != null)
             {
-                var settingsPage = sdkPlugin.GetSettingsPage();
-                if (settingsPage == null)
+                try
                 {
-                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                        Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
-                    
-                    var mainWindow = Application.Current.MainWindow as MainWindow;
-                    if (mainWindow != null)
+                    var pluginType = plugin.GetType();
+                    var getSettingsPage = pluginType.GetMethod("GetSettingsPage", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (getSettingsPage != null)
                     {
-                        mainWindow.Snackbar.Show("No Configuration", $"Plugin {plugin.Name} does not have any configuration options.");
+                        var settingsPage = getSettingsPage.Invoke(plugin, null);
+                        supportsSettings = settingsPage != null;
                     }
-                    return;
                 }
+                catch
+                {
+                    supportsSettings = false;
+                }
+            }
+            
+            if (!supportsSettings)
+            {
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                    Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
+                
+                SnackbarHelper.Show("No Configuration", $"Plugin {plugin?.Name ?? pluginId} does not have any configuration options.", SnackbarType.Info);
+                return;
             }
 
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -1468,11 +1507,7 @@ if (success)
         {
             Lib.Utils.Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message));
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
         }
     }
 
@@ -1486,11 +1521,7 @@ if (success)
             // Ensure plugin is installed
             if (!_pluginManager.IsInstalled(pluginId))
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage);
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
                 return;
             }
 
@@ -1510,11 +1541,7 @@ if (success)
                 
                 System.Diagnostics.Process.Start(processInfo);
                 
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show("Run Plugin", $"Started {pluginId}.exe");
-                }
+                SnackbarHelper.Show("Run Plugin", $"Started {pluginId}.exe", SnackbarType.Info);
             }
             else
             {
@@ -1544,11 +1571,7 @@ if (success)
         {
             Lib.Utils.Log.Instance.Trace($"Error opening plugin: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenPluginFailed, ex.Message));
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenPluginFailed, ex.Message), SnackbarType.Error);
         }
     }
 
@@ -1602,28 +1625,20 @@ if (success)
             }
             UpdateAllPluginsUI();
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
+            if (deleted)
             {
-                if (deleted)
-                {
-                    mainWindow.Snackbar.Show("Plugin Deleted", "Plugin has been permanently deleted from your computer.");
-                }
-                else
-                {
-                    mainWindow.Snackbar.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes (some files were locked).");
-                }
+                SnackbarHelper.Show("Plugin Deleted", "Plugin has been permanently deleted from your computer.", SnackbarType.Success);
+            }
+            else
+            {
+                SnackbarHelper.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes (some files were locked).", SnackbarType.Info);
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show("Deletion Failed", $"Error occurred while deleting plugin: {ex.Message}");
-            }
+            SnackbarHelper.Show("Deletion Failed", $"Error occurred while deleting plugin: {ex.Message}", SnackbarType.Error);
         }
     }
 
@@ -1778,11 +1793,7 @@ if (success)
 
             if (openFileDialog.ShowDialog() == true)
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_ImportProgress, Resource.PluginExtensionsPage_ImportProgress);
-                }
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_ImportProgress, Resource.PluginExtensionsPage_ImportProgress, SnackbarType.Info);
 
                 int importedCount = 0;
                 foreach (var zipFilePath in openFileDialog.FileNames)
@@ -1800,11 +1811,8 @@ if (success)
                     {
                         Lib.Utils.Log.Instance.Trace($"Error importing plugin from {zipFilePath}: {ex.Message}", ex);
 
-                        if (mainWindow != null)
-                        {
-                            mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportFailed,
-                                string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, Path.GetFileName(zipFilePath), ex.Message));
-                        }
+                        SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
+                            string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, Path.GetFileName(zipFilePath), ex.Message), SnackbarType.Error);
                     }
                 }
 
@@ -1816,10 +1824,10 @@ if (success)
                 _currentDownloadingPluginId = string.Empty;
 
                 // Show success message
-                if (mainWindow != null && importedCount > 0)
+                if (importedCount > 0)
                 {
-                    mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportSuccess,
-                        string.Format(Resource.PluginExtensionsPage_BulkImportSuccessMessage, importedCount));
+                    SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportSuccess,
+                        string.Format(Resource.PluginExtensionsPage_BulkImportSuccessMessage, importedCount), SnackbarType.Success);
                 }
             }
         }
@@ -1827,130 +1835,22 @@ if (success)
         {
             Lib.Utils.Log.Instance.Trace($"Error in bulk import: {ex.Message}", ex);
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.Snackbar.Show(Resource.PluginExtensionsPage_BulkImportFailed,
-                    string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, "Unknown", ex.Message));
-            }
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
+                string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, "Unknown", ex.Message), SnackbarType.Error);
         }
     }
 
     private async Task<bool> ExtractAndInstallPluginAsync(string zipFilePath)
     {
         var pluginsDir = GetPluginsDirectory();
-        var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
-
         try
         {
-            // Create temp directory
-            Directory.CreateDirectory(tempDir);
-
-            // Extract ZIP
-            ZipFile.ExtractToDirectory(zipFilePath, tempDir);
-
-            // Find plugin directories (should contain a .csproj file)
-            var pluginDirs = Directory.GetDirectories(tempDir)
-                .Where(dir => Directory.GetFiles(dir, "*.csproj").Any())
-                .ToList();
-
-            if (!pluginDirs.Any())
-            {
-                throw new InvalidOperationException("No valid plugin project found in ZIP file");
-            }
-
-            foreach (var pluginDir in pluginDirs)
-            {
-                var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
-                var pluginId = Path.GetFileNameWithoutExtension(csprojFile).Replace("LenovoLegionToolkit.Plugins.", "");
-
-                // Copy to plugins directory
-                var targetDir = Path.Combine(pluginsDir, pluginId);
-                if (Directory.Exists(targetDir))
-                {
-                    Directory.Delete(targetDir, true);
-                }
-
-                CopyDirectory(pluginDir, targetDir);
-
-                // Try to build the plugin
-                var buildResult = await BuildPluginAsync(targetDir);
-                if (!buildResult)
-                {
-                    Lib.Utils.Log.Instance.Trace($"Failed to build plugin {pluginId}");
-                    continue;
-                }
-
-                // Plugin files copied successfully
-                Lib.Utils.Log.Instance.Trace($"Successfully copied plugin {pluginId} to {targetDir}");
-                return true;
-            }
-
-            return false;
+            var installationService = new Lib.Plugins.PluginInstallationService(_pluginManager);
+            return await installationService.ExtractAndInstallPluginAsync(zipFilePath, pluginsDir);
         }
-        finally
+        catch (Exception ex)
         {
-            // Clean up temp directory
-            try
-            {
-                if (Directory.Exists(tempDir))
-                {
-                    Directory.Delete(tempDir, true);
-                }
-            }
-            catch
-            {
-                // Ignore cleanup errors
-            }
-        }
-    }
-
-    private void CopyDirectory(string sourceDir, string targetDir)
-    {
-        Directory.CreateDirectory(targetDir);
-
-        foreach (var file in Directory.GetFiles(sourceDir))
-        {
-            var fileName = Path.GetFileName(file);
-            var targetFile = Path.Combine(targetDir, fileName);
-            File.Copy(file, targetFile, true);
-        }
-
-        foreach (var dir in Directory.GetDirectories(sourceDir))
-        {
-            var dirName = Path.GetFileName(dir);
-            var targetSubDir = Path.Combine(targetDir, dirName);
-            CopyDirectory(dir, targetSubDir);
-        }
-    }
-
-    private async Task<bool> BuildPluginAsync(string pluginDir)
-    {
-        try
-        {
-            var csprojFile = Directory.GetFiles(pluginDir, "*.csproj").First();
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "dotnet",
-                Arguments = $"build \"{csprojFile}\" --configuration Release --no-incremental",
-                WorkingDirectory = pluginDir,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            };
-
-            using var process = System.Diagnostics.Process.Start(startInfo);
-            if (process == null)
-            {
-                return false;
-            }
-
-            await process.WaitForExitAsync();
-            return process.ExitCode == 0;
-        }
-        catch
-        {
+            Lib.Utils.Log.Instance.Trace($"Error installing plugin from {zipFilePath}: {ex.Message}", ex);
             return false;
         }
     }
@@ -2277,5 +2177,56 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             UpdateSpecificPluginUI(e.PluginId);
             UpdateAllPluginsUI();
         });
+    }
+
+    private void ContextMenu_OpenFolder_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem menuItem && menuItem.Tag is string pluginId)
+        {
+            try
+            {
+                var pluginsDir = GetPluginsDirectory();
+                var metadata = _pluginManager.GetPluginMetadata(pluginId);
+                string path;
+
+                if (metadata?.FilePath != null)
+                {
+                    path = Path.GetDirectoryName(metadata.FilePath) ?? string.Empty;
+                }
+                else
+                {
+                    path = Path.Combine(pluginsDir, pluginId);
+                }
+
+                if (Directory.Exists(path))
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", path);
+                }
+                else
+                {
+                    SnackbarHelper.Show(Resource.PluginExtensionsPage_FolderNotFound, Resource.PluginExtensionsPage_FolderNotFoundMessage, SnackbarType.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Lib.Utils.Log.Instance.Trace($"Error opening plugin folder: {ex.Message}", ex);
+            }
+        }
+    }
+
+    private void ContextMenu_CopyId_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem menuItem && menuItem.Tag is string pluginId)
+        {
+            try
+            {
+                System.Windows.Clipboard.SetText(pluginId);
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_Copied, string.Format(Resource.PluginExtensionsPage_CopiedMessage, pluginId), SnackbarType.Info);
+            }
+            catch (Exception ex)
+            {
+                Lib.Utils.Log.Instance.Trace($"Error copying plugin ID: {ex.Message}", ex);
+            }
+        }
     }
 }
