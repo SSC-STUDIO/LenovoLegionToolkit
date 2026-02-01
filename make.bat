@@ -1,13 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Check if plugin build mode is requested
-IF "%1"=="-p" (
-    GOTO BUILD_PLUGINS
+REM Check build mode
+IF "%1"=="-d" (
+    GOTO BUILD_DEBUG
 )
 
 IF "%1"=="" (       
-	SET VERSION=3.5.1
+	SET VERSION=0.0.0
 ) ELSE (
 	SET VERSION=%1
 )
@@ -20,83 +20,38 @@ dotnet publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:
 iscc make_installer.iss /DMyAppVersion=%VERSION% || exit /b
 GOTO END
 
-:BUILD_PLUGINS
-REM Plugin build mode
-REM Usage: make.bat -p [plugin_name] [copy_to_test]
-REM   -p: Build plugins mode
-REM   plugin_name: Optional, specific plugin to build (default: all plugins)
-REM   copy_to_test: Optional, "copy" to copy to local test directory
+:BUILD_DEBUG
+REM Debug build mode
+REM Usage: make.bat -d [version]
 
-SET COPY_TO_TEST=0
-IF "%3"=="copy" (
-    SET COPY_TO_TEST=1
-)
+echo Building DEBUG version...
 
 IF "%2"=="" (
-    ECHO Building all plugins...
-    CALL :BUILD_PLUGIN NetworkAcceleration %COPY_TO_TEST%
-    CALL :BUILD_PLUGIN ShellIntegration %COPY_TO_TEST%
-    CALL :BUILD_PLUGIN ViveTool %COPY_TO_TEST%
-    CALL :BUILD_PLUGIN CustomMouse %COPY_TO_TEST%
-    ECHO All plugins built successfully!
+	SET VERSION=0.0.0
 ) ELSE (
-    ECHO Building plugin: %2
-    CALL :BUILD_PLUGIN %2 %COPY_TO_TEST%
-    ECHO Plugin %2 built successfully!
+	SET VERSION=%2
 )
+
+echo.
+echo Building WPF Application (Debug)...
+dotnet publish LenovoLegionToolkit.WPF -c Debug -o build\debug /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
+
+echo.
+echo Building Spectrum Tester (Debug)...
+dotnet publish LenovoLegionToolkit.SpectrumTester -c Debug -o build\debug /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
+
+echo.
+echo Building CLI (Debug)...
+dotnet publish LenovoLegionToolkit.CLI -c Debug -o build\debug /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
+
+echo.
+echo Debug build completed successfully!
+echo Output directory: build\debug
+echo.
+echo To debug: Open solution in VS 2022 and attach to process
+echo.
 GOTO END
 
-:BUILD_PLUGIN
-SET PLUGIN_NAME=%1
-SET COPY_TO_TEST=%2
-SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
-SET PLUGIN_PROJECT=%PLUGIN_DIR%\LenovoLegionToolkit.Plugins.%PLUGIN_NAME%.csproj
-
-IF NOT EXIST "%PLUGIN_PROJECT%" (
-    ECHO Error: Plugin project not found: %PLUGIN_PROJECT%
-    EXIT /B 1
-)
-
-ECHO.
-ECHO Building %PLUGIN_NAME% plugin...
-dotnet build "%PLUGIN_PROJECT%" -c release /p:DebugType=None /m || exit /b
-
-REM Copy to local test directory if requested
-IF "%COPY_TO_TEST%"=="1" (
-    ECHO Copying %PLUGIN_NAME% plugin to local test directory...
-    
-    REM Determine output directory
-    SET PLUGIN_OUTPUT_DIR=%PLUGIN_DIR%\bin\Release\net8.0-windows\win-x64
-    
-    REM Create test plugins directory
-    SET TEST_PLUGINS_DIR=build\plugins\%PLUGIN_NAME%
-    IF NOT EXIST "%TEST_PLUGINS_DIR%" (
-        MKDIR "%TEST_PLUGINS_DIR%"
-    )
-    
-    REM Copy plugin DLL and dependencies
-    IF EXIST "%PLUGIN_OUTPUT_DIR%\*.dll" (
-        COPY /Y "%PLUGIN_OUTPUT_DIR%\*.dll" "%TEST_PLUGINS_DIR%\" >nul 2>&1
-    )
-    
-    REM Copy resource files if they exist (copy entire subdirectories)
-    FOR /D /R "%PLUGIN_OUTPUT_DIR%" %%D IN (*) DO (
-        SET RES_DIR=%%D
-        SET RES_DIR=!RES_DIR:%PLUGIN_OUTPUT_DIR%\=!
-        IF NOT "!RES_DIR!"=="" (
-            IF NOT EXIST "%TEST_PLUGINS_DIR%\!RES_DIR!" (
-                MKDIR "%TEST_PLUGINS_DIR%\!RES_DIR!"
-            )
-            IF EXIST "%%D\*.resources.dll" (
-                COPY /Y "%%D\*.resources.dll" "%TEST_PLUGINS_DIR%\!RES_DIR!\" >nul 2>&1
-            )
-        )
-    )
-    
-    ECHO %PLUGIN_NAME% plugin copied to %TEST_PLUGINS_DIR%
-)
-
-ECHO %PLUGIN_NAME% plugin built successfully!
-EXIT /B 0
-
 :END
+endlocal
+exit /b 0

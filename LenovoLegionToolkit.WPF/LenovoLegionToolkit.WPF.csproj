@@ -6,7 +6,7 @@
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
 		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
-		<Copyright>© 2025 ChenRunsen</Copyright>
+		<Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -43,10 +43,7 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Automation\LenovoLegionToolkit.Lib.Automation.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
-		<ProjectReference Include="..\Plugins\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-		<!-- Ensure native Shell build runs whenever WPF builds -->
-		<!-- ShellIntegration is now a git submodule, Shell.Build.csproj may not exist -->
-		<!-- <ProjectReference Include="..\ShellIntegration\Shell.Build.csproj" ReferenceOutputAssembly="false" OutputItemType="None" Condition="Exists('..\ShellIntegration\Shell.Build.csproj')" /> -->
+		<!-- Plugins are now in separate repository: https://github.com/Crs10259/LenovoLegionToolkit-Plugins -->
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\icon.ico" />
