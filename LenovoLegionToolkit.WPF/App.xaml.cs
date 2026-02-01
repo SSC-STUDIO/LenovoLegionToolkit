@@ -142,6 +142,8 @@ public partial class App
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Shutting down... [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}]");
 
+                        // Perform safe shutdown for incompatible systems to prevent process residue
+                        await PerformSafeShutdownForIncompatibleSystemAsync().ConfigureAwait(false);
                         Shutdown(202);
                         return;
                     }
@@ -179,6 +181,8 @@ public partial class App
                 var errorWindow = new Windows.Utils.CompatibilityCheckErrorWindow(ex);
                 errorWindow.ShowDialog();
                 
+                // Perform safe shutdown for compatibility check errors to prevent process residue
+                await PerformSafeShutdownForIncompatibleSystemAsync().ConfigureAwait(false);
                 Shutdown(200);
                 return;
             }
@@ -219,7 +223,13 @@ public partial class App
 
         StartBackgroundInitialization();
 
-        var mainWindow = new MainWindow
+        var mainWindow = new MainWindow(IoCContainer.Resolve<ApplicationSettings>(),
+            IoCContainer.Resolve<IPluginManager>(),
+            IoCContainer.Resolve<SpecialKeyListener>(),
+            IoCContainer.Resolve<VantageDisabler>(),
+            IoCContainer.Resolve<LegionZoneDisabler>(),
+            IoCContainer.Resolve<FnKeysDisabler>(),
+            IoCContainer.Resolve<UpdateChecker>())
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             TrayTooltipEnabled = !flags.DisableTrayTooltip,
@@ -415,6 +425,128 @@ public partial class App
         }
     }
 
+    /// <summary>
+    /// Performs safe shutdown for incompatible systems to prevent process residue
+    /// This method ensures all resources are properly cleaned up before exit
+    /// </summary>
+    private async Task PerformSafeShutdownForIncompatibleSystemAsync()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Starting safe shutdown for incompatible system...");
+
+            // Cancel any background initialization that might be running
+            _backgroundInitializationCancellationTokenSource?.Cancel();
+
+            // Wait for background tasks to complete with timeout
+            if (_backgroundInitializationTask != null)
+            {
+                try
+                {
+                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000));
+                    if (completedTask != _backgroundInitializationTask)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Background initialization did not complete in time, continuing with shutdown...");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error waiting for background initialization during safe shutdown: {ex.Message}");
+                }
+            }
+
+            // Stop the single instance thread
+            if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
+            {
+                try
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Stopping single instance thread...");
+
+                    // Signal the thread to stop by disposing the wait handle
+                    _singleInstanceWaitHandle?.Dispose();
+                    _singleInstanceWaitHandle = null;
+
+                    // Give the thread a moment to finish naturally
+                    if (!_singleInstanceThread.Join(500))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Single instance thread did not finish in time, continuing with shutdown...");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error stopping single instance thread during safe shutdown: {ex.Message}");
+                }
+            }
+
+            // Dispose the single instance mutex
+            try
+            {
+                _singleInstanceMutex?.ReleaseMutex();
+                _singleInstanceMutex?.Close();
+                _singleInstanceMutex = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing single instance mutex during safe shutdown: {ex.Message}");
+            }
+
+            // Dispose the wait handle if it's still available
+            try
+            {
+                _singleInstanceWaitHandle?.Dispose();
+                _singleInstanceWaitHandle = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing wait handle during safe shutdown: {ex.Message}");
+            }
+
+            // Cancel and dispose the cancellation token source
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+                _backgroundInitializationCancellationTokenSource?.Dispose();
+                _backgroundInitializationCancellationTokenSource = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing cancellation token source during safe shutdown: {ex.Message}");
+            }
+
+            // Flush and shutdown the log system
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Flushing and shutting down log system...");
+
+                Log.Instance.Flush();
+                Log.Instance.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                // Log shutdown failure to console as fallback
+                Console.WriteLine($"Error during log shutdown: {ex.Message}");
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Safe shutdown for incompatible system completed.");
+        }
+        catch (Exception ex)
+        {
+            // As a last resort, log to console
+            Console.WriteLine($"Critical error during safe shutdown: {ex.Message}");
+        }
+    }
+
     private void Application_Exit(object sender, ExitEventArgs e)
     {
         try
@@ -427,17 +559,8 @@ public partial class App
                 _inExitHandler = true;
             }
 
-            // Use timeout to prevent deadlock - if shutdown takes too long, force exit
-            var shutdownTask = ShutdownAsync(true);
-            if (!shutdownTask.Wait(TimeSpan.FromSeconds(10)))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Shutdown timeout exceeded, forcing exit...");
-                
-                // Force exit if shutdown takes too long
-                Environment.Exit(0);
-                return;
-            }
+            // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
+            ShutdownAsync(true).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -446,52 +569,8 @@ public partial class App
         }
         finally
         {
-            // Clean up resources
-            try
-            {
-                // Stop and release single instance thread
-                if (_singleInstanceWaitHandle != null)
-                {
-                    try
-                    {
-                        _singleInstanceWaitHandle.Set(); // Signal the thread to exit
-                    }
-                    catch { }
-                    
-                    _singleInstanceWaitHandle.Dispose();
-                    _singleInstanceWaitHandle = null;
-                }
-
-                // Wait for single instance thread to exit (with timeout)
-                if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
-                {
-                    if (!_singleInstanceThread.Join(TimeSpan.FromSeconds(2)))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Single instance thread did not exit in time.");
-                    }
-                    _singleInstanceThread = null;
-                }
-
-                // Cancel and dispose background initialization cancellation token
-                try
-                {
-                    _backgroundInitializationCancellationTokenSource?.Cancel();
-                    _backgroundInitializationCancellationTokenSource?.Dispose();
-                    _backgroundInitializationCancellationTokenSource = null;
-                }
-                catch { }
-
-                Log.Instance.Shutdown();
-                _singleInstanceMutex?.Close();
-                _singleInstanceMutex?.Dispose();
-                _singleInstanceMutex = null;
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error during resource cleanup.", ex);
-            }
+            Log.Instance.Shutdown();
+            _singleInstanceMutex?.Close();
         }
     }
 
@@ -503,7 +582,13 @@ public partial class App
             mw.Close();
         }
 
-        var mainWindow = new MainWindow
+        var mainWindow = new MainWindow(IoCContainer.Resolve<ApplicationSettings>(),
+            IoCContainer.Resolve<IPluginManager>(),
+            IoCContainer.Resolve<SpecialKeyListener>(),
+            IoCContainer.Resolve<VantageDisabler>(),
+            IoCContainer.Resolve<LegionZoneDisabler>(),
+            IoCContainer.Resolve<FnKeysDisabler>(),
+            IoCContainer.Resolve<UpdateChecker>())
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
