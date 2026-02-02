@@ -11,8 +11,8 @@ using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-// Use IPluginPage from Plugins.SDK
-using IPluginPage = LenovoLegionToolkit.Plugins.SDK.IPluginPage;
+// Use IPluginPage from Plugins.SDK (temporarily commented for compilation)
+// using IPluginPage = LenovoLegionToolkit.Plugins.SDK.IPluginPage;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 

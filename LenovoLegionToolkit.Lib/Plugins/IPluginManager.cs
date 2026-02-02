@@ -6,7 +6,7 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// <summary>
 /// Plugin manager interface
 /// </summary>
-public interface IPluginManager
+public interface IPluginManager : IDisposable
 {
     /// <summary>
     /// Plugin state changed event

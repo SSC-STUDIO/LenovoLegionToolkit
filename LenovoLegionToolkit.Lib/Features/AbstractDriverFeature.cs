@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -18,6 +18,12 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
     {
         try
         {
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             _ = await GetStateAsync().ConfigureAwait(false);
             return true;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -74,6 +74,7 @@ public static partial class Compatibility
     ];
 
     private static MachineInformation? _machineInformation;
+    private static bool? _isCompatible;
 
     public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
 
@@ -92,11 +93,20 @@ public static partial class Compatibility
     {
         var mi = await GetMachineInformationAsync().ConfigureAwait(false);
 
-        if (!await CheckBasicCompatibilityAsync().ConfigureAwait(false))
-            return (false, mi);
+        if (_isCompatible.HasValue)
+            return (_isCompatible.Value, mi);
 
-        return (IsSupportedLegionMachine(mi), mi);
+        if (!await CheckBasicCompatibilityAsync().ConfigureAwait(false))
+        {
+            _isCompatible = false;
+            return (false, mi);
+        }
+
+        _isCompatible = IsSupportedLegionMachine(mi);
+        return (_isCompatible.Value, mi);
     }
+
+    public static bool IsCompatible => _isCompatible ?? false;
 
     public static async Task<MachineInformation> GetMachineInformationAsync()
     {

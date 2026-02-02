@@ -64,7 +64,7 @@ public class Crc32AdlerTests
     public void Calculate_NullByteArray_ShouldThrowArgumentNullException()
     {
         // Arrange & Act
-        Action act = () => Crc32Adler.Calculate((byte[])null);
+        Action act = () => Crc32Adler.Calculate((byte[])null!);
         
         // Assert
         act.Should().Throw<ArgumentNullException>();
@@ -74,7 +74,7 @@ public class Crc32AdlerTests
     public void Calculate_NullFile_ShouldThrowArgumentNullException()
     {
         // Arrange & Act
-        Action act = () => Crc32Adler.Calculate((string)null);
+        Action act = () => Crc32Adler.Calculate((string)null!);
         
         // Assert
         act.Should().Throw<ArgumentNullException>();

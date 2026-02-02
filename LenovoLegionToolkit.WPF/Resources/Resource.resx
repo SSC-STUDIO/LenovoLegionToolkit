@@ -1211,7 +1211,7 @@ Make sure that your script runs correctly first.</value>
   <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
     <value>Accent color</value>
   </data>
-  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
     <value>Start minimized to tray when you log in to Windows.</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
@@ -3504,6 +3504,72 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
     <value>All plugin installation states have been cleared</value>
   </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>Bulk Update Complete</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>All plugins have been processed.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>Preparing download...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>New Version Available</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>Version: </value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>Release Date: </value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>What's New:</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>Refresh plugin list</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>No plugins found matching your search.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>Update all available plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>Updating All...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>Updating...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>Copy Plugin ID</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>Folder Not Found</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>The plugin directory does not exist yet.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>Plugin ID '{0}' copied to clipboard.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>Download completed</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>Downloading...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>Downloading... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
   <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
     <value>Network Acceleration</value>
   </data>
@@ -3788,5 +3854,50 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>Please select at least one cleanup option.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>Start All</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>e.g. 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>e.g. C:\Drivers</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+    <value>Enable Transparency</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
+    <value>Enable transparency effects for the context menu</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
+    <value>Show File Extensions</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
+    <value>Show file extensions in File Explorer</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
+    <value>Show Hidden Files</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
+    <value>Show hidden files and folders in File Explorer</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>Open to Quick Access</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>Open File Explorer to Quick Access instead of This PC</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>Show Preview Pane</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>Show preview pane in File Explorer</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>Please select at least one item to clean up.</value>
   </data>
 </root>

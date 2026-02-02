@@ -91,6 +91,7 @@
 
                 <wpfui:NavigationStore.Items>
                     <custom:NavigationItem
+                        x:Name="_dashboardItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}"
                         Icon="Home24"
                         PageTag="dashboard"

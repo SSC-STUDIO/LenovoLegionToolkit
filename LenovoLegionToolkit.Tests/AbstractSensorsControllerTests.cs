@@ -30,13 +30,14 @@ public class AbstractSensorsControllerTests
         protected override Task<int> GetGpuCurrentFanSpeedAsync() => Task.FromResult(1500);
         protected override Task<int> GetCpuMaxFanSpeedAsync() => Task.FromResult(3000);
         protected override Task<int> GetGpuMaxFanSpeedAsync() => Task.FromResult(4000);
+        protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(4000);
     }
 
     [Fact]
     public async Task GetDataAsync_ShouldReturnCachedData_WhenCacheIsValid()
     {
         // Arrange
-        var gpuController = new GPUController();
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
         var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
 
         // Act - First call, generate cache
@@ -55,7 +56,7 @@ public class AbstractSensorsControllerTests
     public async Task GetDataAsync_ShouldUpdateCache_WhenCacheExpires()
     {
         // Arrange
-        var gpuController = new GPUController();
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
         var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
 
         // Act - First call, generate cache
@@ -77,7 +78,7 @@ public class AbstractSensorsControllerTests
     public async Task CacheAccess_ShouldBeThreadSafe()
     {
         // Arrange
-        var gpuController = new GPUController();
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
         var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
 
         // Act - 并发调用GetDataAsync多次
@@ -101,7 +102,7 @@ public class AbstractSensorsControllerTests
     public async Task FanSpeedsAsync_ShouldReturnFromCache_WhenCacheIsValid()
     {
         // Arrange
-        var gpuController = new GPUController();
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
         var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
 
         // Act - 第一次调用GetDataAsync，生成缓存

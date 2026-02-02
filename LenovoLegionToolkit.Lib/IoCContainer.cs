@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Autofac;
 
 namespace LenovoLegionToolkit.Lib;
@@ -40,7 +40,8 @@ public static class IoCContainer
         lock (Lock)
         {
             if (_container is null)
-                throw new InvalidOperationException($"IoCContainer must be initialized first [type={nameof(T)}]");
+                return null;
+
             _ = _container.TryResolve(out T? value);
             return value;
         }

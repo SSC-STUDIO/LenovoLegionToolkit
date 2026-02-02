@@ -309,7 +309,7 @@ public class IpcServer(
 
 
 
-    private static async Task<string> IsShellRegisteredAsync()
+    private static Task<string> IsShellRegisteredAsync()
     {
         // Shell functionality moved to ShellIntegration plugin
         // Use plugin system to check shell status
@@ -322,13 +322,13 @@ public class IpcServer(
             if (shellPlugin != null)
             {
                 // Plugin provides shell functionality
-                return "true";
+                return Task.FromResult("true");
             }
-            return "false";
+            return Task.FromResult("false");
         }
         catch
         {
-            return "false";
+            return Task.FromResult("false");
         }
     }
 

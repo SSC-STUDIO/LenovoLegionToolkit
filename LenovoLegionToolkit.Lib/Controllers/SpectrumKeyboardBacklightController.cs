@@ -91,7 +91,16 @@ public class SpectrumKeyboardBacklightController
         }
     }
 
-    public async Task<bool> IsSupportedAsync() => await GetDeviceHandleAsync().ConfigureAwait(false) is not null;
+    public async Task<bool> IsSupportedAsync()
+    {
+        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        
+        // Strictly disable specialized machine features on incompatible machines
+        if (!Compatibility.IsSupportedLegionMachine(mi))
+            return false;
+
+        return await GetDeviceHandleAsync().ConfigureAwait(false) is not null;
+    }
 
     public async Task<(SpectrumLayout, KeyboardLayout, HashSet<ushort>)> GetKeyboardLayoutAsync()
     {

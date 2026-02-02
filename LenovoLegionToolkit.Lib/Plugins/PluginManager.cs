@@ -18,6 +18,8 @@ public class PluginManager : IPluginManager
     private readonly Dictionary<string, IPlugin> _registeredPlugins = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, PluginMetadata> _pluginMetadataCache = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
+    private ResolveEventHandler? _assemblyResolveHandler;
+    private bool _disposed;
 
     public event EventHandler<PluginEventArgs>? PluginStateChanged;
 
@@ -33,9 +35,7 @@ public class PluginManager : IPluginManager
     {
         try
         {
-            // Get the plugins directory path
             var pluginsDirectory = GetPluginsDirectory();
-            
             if (!Directory.Exists(pluginsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -46,178 +46,10 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Scanning plugins directory: {pluginsDirectory}");
 
-            // Register assembly resolver to handle plugin dependencies and satellite assemblies
-            // This ensures that when loading a plugin, its dependencies (like Plugins.SDK, Lib, WPF) and
-            // satellite assemblies (localized resources) can be found
-            ResolveEventHandler assemblyResolver = (sender, args) =>
-            {
-                try
-                {
-                    var requestedAssemblyName = new AssemblyName(args.Name);
-                    var assemblyName = requestedAssemblyName.Name;
-                    if (string.IsNullOrWhiteSpace(assemblyName))
-                        return null;
-                    
-                    // Check if this is a satellite assembly request (resources.dll)
-                    // ResourceManager requests satellite assemblies with format: "AssemblyName.resources, Culture=zh-hans, ..."
-                    var isSatelliteAssembly = requestedAssemblyName.CultureInfo != null && 
-                                              !string.IsNullOrEmpty(requestedAssemblyName.CultureInfo.Name) &&
-                                              assemblyName.EndsWith(".resources", StringComparison.OrdinalIgnoreCase);
-                    
-                    if (isSatelliteAssembly)
-                    {
-                        // For satellite assemblies, extract culture and base assembly name
-                        var cultureName = requestedAssemblyName.CultureInfo!.Name;
-                        // Remove ".resources" suffix to get base assembly name
-                        var baseName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
-                        
-                        if (Directory.Exists(pluginsDirectory))
-                        {
-                            var subdirectories = Directory.GetDirectories(pluginsDirectory);
-                            var cultureFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                            {
-                                "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-                                "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-                                "vi", "zh-hans", "zh-hant", "tools"
-                            };
-                            
-                            foreach (var subdir in subdirectories)
-                            {
-                                // Skip culture folders
-                                var dirName = Path.GetFileName(subdir);
-                                if (cultureFolders.Contains(dirName))
-                                    continue;
-                                
-                                // Check for satellite assembly in culture subfolder of plugin directory
-                                // Format: pluginDir/cultureName/AssemblyName.resources.dll
-                                var satellitePath = Path.Combine(subdir, cultureName, $"{baseName}.resources.dll");
-                                if (File.Exists(satellitePath))
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Resolving satellite assembly: {args.Name} from {satellitePath}");
-                                    return Assembly.LoadFrom(satellitePath);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Regular assembly resolution for dependencies
-                        // Check in plugins directory first (root level)
-                        var dllPath = Path.Combine(pluginsDirectory, $"{assemblyName}.dll");
-                        if (File.Exists(dllPath))
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Resolving assembly dependency: {assemblyName} from {dllPath}");
-                            return Assembly.LoadFrom(dllPath);
-                        }
-                        
-                        // Also check in plugin subdirectories
-                        if (Directory.Exists(pluginsDirectory))
-                        {
-                            var subdirectories = Directory.GetDirectories(pluginsDirectory);
-                            foreach (var subdir in subdirectories)
-                            {
-                                var subDirDllPath = Path.Combine(subdir, $"{assemblyName}.dll");
-                                if (File.Exists(subDirDllPath))
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Resolving assembly dependency: {assemblyName} from {subDirDllPath}");
-                                    return Assembly.LoadFrom(subDirDllPath);
-                                }
-                            }
-                        }
-                        
-                        // Also check in the application base directory
-                        var appBaseDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{assemblyName}.dll");
-                        if (File.Exists(appBaseDllPath))
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Resolving assembly dependency: {assemblyName} from {appBaseDllPath}");
-                            return Assembly.LoadFrom(appBaseDllPath);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to resolve assembly: {args.Name}, {ex.Message}", ex);
-                }
-                return null;
-            };
-            
-            AppDomain.CurrentDomain.AssemblyResolve += assemblyResolver;
+            RegisterAssemblyResolver(pluginsDirectory);
 
-            // Scan for plugin DLLs in subdirectories (each plugin in its own folder)
-            // Also check the root plugins directory for backward compatibility
-            var allDllFiles = new List<string>();
+            var pluginFiles = GetPluginDllFiles(pluginsDirectory);
             
-            // First, check subdirectories (each plugin should be in its own folder)
-            // Skip resource directories (culture folders like zh-hans, en, etc.)
-            if (Directory.Exists(pluginsDirectory))
-            {
-                var subdirectories = Directory.GetDirectories(pluginsDirectory);
-                var cultureFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-                    "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-                    "vi", "zh-hans", "zh-hant", "tools"
-                };
-                
-                foreach (var subdir in subdirectories)
-                {
-                    var dirName = Path.GetFileName(subdir);
-                    // Skip culture folders and known non-plugin folders
-                    if (cultureFolders.Contains(dirName) || dirName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase))
-                        continue;
-                        
-                    var dllFiles = Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly);
-                    allDllFiles.AddRange(dllFiles);
-                }
-                
-                // Also check the root plugins directory for backward compatibility
-                var rootDllFiles = Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly);
-                allDllFiles.AddRange(rootDllFiles);
-            }
-            
-            // Filter to only plugin DLLs (exclude main application DLLs, SDK DLL, and resource DLLs)
-            var pluginFiles = allDllFiles
-                .Where(f => 
-                {
-                    var fileName = Path.GetFileName(f);
-                    var fileInfo = new FileInfo(f);
-                    
-                    // Check cache to avoid reloading unchanged files
-                    if (_pluginFileCache.TryGetValue(fileName, out var cachedTime))
-                    {
-                        if (fileInfo.LastWriteTime <= cachedTime)
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Skipping unchanged plugin: {fileName}");
-                            return false;
-                        }
-                    }
-                    
-                    // Only include plugin DLLs (must start with "LenovoLegionToolkit.Plugins.")
-                    // Exclude SDK DLL itself (it's a dependency, not a plugin)
-                    // Exclude resource DLLs
-                    return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
-                           !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-                           !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
-                })
-                .Distinct() // Remove duplicates if a plugin exists in both root and subdirectory
-                .ToList();
-            
-            if (Log.Instance.IsTraceEnabled)
-            {
-                Log.Instance.Trace($"Found {allDllFiles.Count} total DLL file(s) in {pluginsDirectory}");
-                Log.Instance.Trace($"Filtered to {pluginFiles.Count} plugin DLL file(s)");
-                foreach (var pluginFile in pluginFiles)
-                {
-                    Log.Instance.Trace($"  - {Path.GetFileName(pluginFile)}");
-                }
-            }
-
             foreach (var pluginFile in pluginFiles)
             {
                 try
@@ -240,6 +72,164 @@ public class PluginManager : IPluginManager
                 Log.Instance.Trace($"Error scanning plugins directory: {ex.Message}", ex);
         }
     }
+
+    private void RegisterAssemblyResolver(string pluginsDirectory)
+    {
+        if (_assemblyResolveHandler != null)
+            return;
+
+        _assemblyResolveHandler = (sender, args) =>
+        {
+            try
+            {
+                var requestedAssemblyName = new AssemblyName(args.Name);
+                var assemblyName = requestedAssemblyName.Name;
+                if (string.IsNullOrWhiteSpace(assemblyName))
+                    return null;
+                
+                var isSatelliteAssembly = requestedAssemblyName.CultureInfo != null && 
+                                          !string.IsNullOrEmpty(requestedAssemblyName.CultureInfo.Name) &&
+                                          assemblyName.EndsWith(".resources", StringComparison.OrdinalIgnoreCase);
+                
+                if (isSatelliteAssembly)
+                {
+                    return ResolveSatelliteAssembly(pluginsDirectory, requestedAssemblyName, assemblyName);
+                }
+                
+                return ResolveDependencyAssembly(pluginsDirectory, assemblyName);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to resolve assembly: {args.Name}, {ex.Message}", ex);
+            }
+            return null;
+        };
+
+        AppDomain.CurrentDomain.AssemblyResolve += _assemblyResolveHandler;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                if (_assemblyResolveHandler != null)
+                {
+                    AppDomain.CurrentDomain.AssemblyResolve -= _assemblyResolveHandler;
+                    _assemblyResolveHandler = null;
+                }
+            }
+            _disposed = true;
+        }
+    }
+
+    private Assembly? ResolveSatelliteAssembly(string pluginsDirectory, AssemblyName requestedAssemblyName, string assemblyName)
+    {
+        var cultureName = requestedAssemblyName.CultureInfo!.Name;
+        var baseName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
+        
+        var subdirectories = Directory.GetDirectories(pluginsDirectory);
+        var cultureFolders = GetCultureFolders();
+        
+        foreach (var subdir in subdirectories)
+        {
+            var dirName = Path.GetFileName(subdir);
+            if (cultureFolders.Contains(dirName))
+                continue;
+            
+            var satellitePath = Path.Combine(subdir, cultureName, $"{baseName}.resources.dll");
+            if (File.Exists(satellitePath))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Resolving satellite assembly: {requestedAssemblyName.Name} from {satellitePath}");
+                return Assembly.LoadFrom(satellitePath);
+            }
+        }
+        return null;
+    }
+
+    private Assembly? ResolveDependencyAssembly(string pluginsDirectory, string assemblyName)
+    {
+        var dllPath = Path.Combine(pluginsDirectory, $"{assemblyName}.dll");
+        if (File.Exists(dllPath))
+            return Assembly.LoadFrom(dllPath);
+        
+        var subdirectories = Directory.GetDirectories(pluginsDirectory);
+        foreach (var subdir in subdirectories)
+        {
+            var subDirDllPath = Path.Combine(subdir, $"{assemblyName}.dll");
+            if (File.Exists(subDirDllPath))
+                return Assembly.LoadFrom(subDirDllPath);
+        }
+        
+        var appBaseDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{assemblyName}.dll");
+        if (File.Exists(appBaseDllPath))
+            return Assembly.LoadFrom(appBaseDllPath);
+
+        return null;
+    }
+
+    private List<string> GetPluginDllFiles(string pluginsDirectory)
+    {
+        var allDllFiles = new List<string>();
+        var subdirectories = Directory.GetDirectories(pluginsDirectory);
+        var cultureFolders = GetCultureFolders();
+        
+        foreach (var subdir in subdirectories)
+        {
+            var dirName = Path.GetFileName(subdir);
+            if (cultureFolders.Contains(dirName) || dirName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            // If this is the "local" directory, scan its subdirectories
+            if (dirName.Equals("local", StringComparison.OrdinalIgnoreCase))
+            {
+                var localSubDirs = Directory.GetDirectories(subdir);
+                foreach (var localSubDir in localSubDirs)
+                {
+                    allDllFiles.AddRange(Directory.GetFiles(localSubDir, "*.dll", SearchOption.TopDirectoryOnly));
+                }
+                continue;
+            }
+                
+            allDllFiles.AddRange(Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly));
+        }
+        
+        allDllFiles.AddRange(Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly));
+        
+        return allDllFiles
+            .Where(IsPluginDll)
+            .Distinct()
+            .ToList();
+    }
+
+    private bool IsPluginDll(string filePath)
+    {
+        var fileName = Path.GetFileName(filePath);
+        var fileInfo = new FileInfo(filePath);
+        
+        if (_pluginFileCache.TryGetValue(fileName, out var cachedTime) && fileInfo.LastWriteTime <= cachedTime)
+            return false;
+        
+        return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
+               !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+               !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private HashSet<string> GetCultureFolders() => new(StringComparer.OrdinalIgnoreCase)
+    {
+        "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
+        "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
+        "vi", "zh-hans", "zh-hant", "tools"
+    };
 
     /// <summary>
     /// Get the plugins directory path
@@ -381,7 +371,8 @@ public class PluginManager : IPluginManager
                             IsSystemPlugin = plugin.IsSystemPlugin,
                             Dependencies = plugin.Dependencies,
                             Version = pluginVersion,
-                            MinimumHostVersion = minimumHostVersion
+                            MinimumHostVersion = minimumHostVersion,
+                            FilePath = pluginFilePath
                         };
                         
                         // Try to get Author from attribute
@@ -496,9 +487,10 @@ public class PluginManager : IPluginManager
         {
             var pluginsDirectory = GetPluginsDirectory();
             var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+            var localPluginDirectory = Path.Combine(pluginsDirectory, "local", pluginId);
             
             // Check for alternative directory naming (LenovoLegionToolkit.Plugins.{Id})
-            if (!Directory.Exists(pluginDirectory))
+            if (!Directory.Exists(pluginDirectory) && !Directory.Exists(localPluginDirectory))
             {
                 var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}");
                 var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", "")}");
@@ -525,9 +517,13 @@ public class PluginManager : IPluginManager
                     }
 
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"IsInstalled({pluginId}): Plugin directory does not exist: {pluginDirectory} (or alternative path)");
+                        Log.Instance.Trace($"IsInstalled({pluginId}): Plugin directory does not exist: {pluginDirectory} or {localPluginDirectory} (or alternative path)");
                     return false;
                 }
+            }
+            else if (Directory.Exists(localPluginDirectory))
+            {
+                pluginDirectory = localPluginDirectory;
             }
             
             // Check for DLL files in the plugin directory
@@ -724,45 +720,57 @@ public class PluginManager : IPluginManager
                 if (cultureFolders.Contains(dirName))
                     continue;
 
-                // Check all DLL files in this subdirectory
-                var dllFiles = Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly)
-                    .Where(f => 
-                    {
-                        var fileName = Path.GetFileName(f);
-                        return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
-                               !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-                               !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
-                    });
-
-                foreach (var dllFile in dllFiles)
+                var directoriesToScan = new List<string> { subdir };
+                
+                // If this is the "local" directory, we need to scan its subdirectories
+                if (dirName.Equals("local", StringComparison.OrdinalIgnoreCase))
                 {
-                    try
-                    {
-                        // Try to load the assembly and check if it contains our plugin
-                        var assembly = Assembly.LoadFrom(dllFile);
-                        var pluginTypes = assembly.GetTypes()
-                            .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+                    directoriesToScan.Clear();
+                    directoriesToScan.AddRange(Directory.GetDirectories(subdir));
+                }
 
-                        foreach (var pluginType in pluginTypes)
+                foreach (var scanDir in directoriesToScan)
+                {
+                    // Check all DLL files in this directory
+                    var dllFiles = Directory.GetFiles(scanDir, "*.dll", SearchOption.TopDirectoryOnly)
+                        .Where(f => 
                         {
-                            if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
-                                testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
+                            var fileName = Path.GetFileName(f);
+                            return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
+                                   !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                                   !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
+                        });
+
+                    foreach (var dllFile in dllFiles)
+                    {
+                        try
+                        {
+                            // Try to load the assembly and check if it contains our plugin
+                            var assembly = Assembly.LoadFrom(dllFile);
+                            var pluginTypes = assembly.GetTypes()
+                                .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                            foreach (var pluginType in pluginTypes)
                             {
-                                foundFiles.Add(dllFile);
-                                pluginDirectoryToDelete.Add(subdir);
-                                break;
+                                if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
+                                    testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    foundFiles.Add(dllFile);
+                                    pluginDirectoryToDelete.Add(scanDir);
+                                    break;
+                                }
                             }
                         }
-                    }
-                    catch
-                    {
-                        // If we can't load it, try matching by filename pattern
-                        var fileName = Path.GetFileNameWithoutExtension(dllFile);
-                        if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
-                            fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                        catch
                         {
-                            foundFiles.Add(dllFile);
-                            pluginDirectoryToDelete.Add(subdir);
+                            // If we can't load it, try matching by filename pattern
+                            var fileName = Path.GetFileNameWithoutExtension(dllFile);
+                            if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
+                                fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                            {
+                                foundFiles.Add(dllFile);
+                                pluginDirectoryToDelete.Add(scanDir);
+                            }
                         }
                     }
                 }

@@ -77,6 +77,32 @@ public class MacroController
         _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
     }
 
+    public void Stop()
+    {
+        if (_kbHook == default)
+            return;
+
+        try
+        {
+            // Stop recording if active
+            _recorder.StopRecording();
+            
+            // Stop player to cancel any running tasks
+            _player.Stop();
+            
+            // Unhook keyboard hook
+            PInvoke.UnhookWindowsHookEx(_kbHook);
+        }
+        catch
+        {
+            // Ignore errors during cleanup
+        }
+        finally
+        {
+            _kbHook = default;
+        }
+    }
+
     public void StartRecording(MacroRecorderSettings settings = MacroRecorderSettings.Keyboard) => _recorder.StartRecording(settings);
 
     public void StopRecording() => _recorder.StopRecording();
