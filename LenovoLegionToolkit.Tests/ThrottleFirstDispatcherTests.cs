@@ -139,7 +139,7 @@ public class ThrottleFirstDispatcherTests
     }
     
     [Fact]
-    public async Task Interval_ShouldBeAccessible()
+    public void Interval_ShouldBeAccessible()
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(150);

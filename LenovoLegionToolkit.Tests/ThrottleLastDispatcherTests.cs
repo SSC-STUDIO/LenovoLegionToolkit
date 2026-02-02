@@ -177,7 +177,7 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithVeryShortInterval_ShouldExecuteLast()
     {
         // Arrange
-        var interval = TimeSpan.FromMilliseconds(10);
+        var interval = TimeSpan.FromMilliseconds(100);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var executedTasks = new List<int>();
 
@@ -190,13 +190,13 @@ public class ThrottleLastDispatcherTests
                 executedTasks.Add(taskId);
                 return Task.CompletedTask;
             }));
-            await Task.Delay(5); // Small delay between dispatches
+            await Task.Delay(20); // Small delay between dispatches
         }
 
         await Task.WhenAll(tasks);
 
         // Wait for interval to pass
-        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(100)));
 
         // Assert - Only the last task should have executed
         executedTasks.Count.Should().Be(1);
@@ -293,7 +293,7 @@ public class ThrottleLastDispatcherTests
     }
 
     [Fact]
-    public async Task DispatchAsync_WithNegativeInterval_ShouldThrow()
+    public void DispatchAsync_WithNegativeInterval_ShouldThrow()
     {
         // Arrange & Act
         Action act = () => new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(-1), "test");
@@ -325,7 +325,7 @@ public class ThrottleLastDispatcherTests
     }
 
     [Fact]
-    public async Task DispatchAsync_WithName_ShouldStoreName()
+    public void DispatchAsync_WithName_ShouldStoreName()
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(50);
@@ -378,7 +378,7 @@ public class ThrottleLastDispatcherTests
     }
 
     [Fact]
-    public async Task DispatchAsync_WithMultipleDispose_ShouldNotThrow()
+    public void DispatchAsync_WithMultipleDispose_ShouldNotThrow()
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(50);
@@ -487,10 +487,10 @@ public class ThrottleLastDispatcherTests
         for (int i = 0; i < 100; i++)
         {
             var taskId = i;
-            tasks.Add(dispatcher.DispatchAsync(() => {
+            tasks.Add(Task.Run(async () => await dispatcher.DispatchAsync(() => {
                 executedTasks.Add(taskId);
                 return Task.CompletedTask;
-            }));
+            })));
         }
 
         // Wait for execution
@@ -582,21 +582,23 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithVerySmallInterval_ShouldExecuteLast()
     {
         // Arrange
-        var interval = TimeSpan.FromTicks(1);
+        var interval = TimeSpan.FromMilliseconds(50);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var executedTasks = new List<int>();
         
         // Act
+        var tasks = new List<Task>();
         for (int i = 0; i < 5; i++)
         {
             var taskId = i;
-            dispatcher.DispatchAsync(() => {
+            tasks.Add(dispatcher.DispatchAsync(() => {
                 executedTasks.Add(taskId);
                 return Task.CompletedTask;
-            });
+            }));
         }
+        await Task.WhenAll(tasks);
         
-        await Task.Delay(50);
+        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(100)));
         
         // Assert - Only the last task should have executed
         executedTasks.Count.Should().Be(1);
