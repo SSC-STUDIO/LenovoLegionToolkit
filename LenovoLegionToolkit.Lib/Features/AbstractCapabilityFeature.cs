@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -13,6 +13,11 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             return mi.Features.Source == MachineInformation.FeatureData.SourceType.CapabilityData && mi.Features[capabilityID];
         }
         catch

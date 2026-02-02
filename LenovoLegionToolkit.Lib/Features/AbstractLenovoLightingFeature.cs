@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -17,6 +17,11 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             if (mi.Properties.IsExcludedFromLenovoLighting)
                 return false;
 

@@ -1,4 +1,4 @@
-﻿<wpfui:UiPage
+<wpfui:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.KeyboardBacklightPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,15 +13,15 @@
 
     <StackPanel Margin="0,0,0,0">
         <TextBlock
-            x:Name="_titleTextBlock"
-            Margin="0,16,0,24"
-            Focusable="True"
-            FontSize="24"
-            FontWeight="Medium"
-            Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
+                x:Name="_titleTextBlock"
+                Margin="0,16,0,24"
+                Focusable="True"
+                FontSize="24"
+                FontWeight="Medium"
+                Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
-        <controls:LoadableControl x:Name="_loader" IndicatorMargin="0,64,0,0">
-            <StackPanel x:Name="_content" Margin="0,0,8,0">
+            <controls:LoadableControl x:Name="_loader">
+                <StackPanel x:Name="_content" Margin="0,0,8,0">
                 <TextBlock
                     x:Name="_noKeyboardsText"
                     FontSize="14"

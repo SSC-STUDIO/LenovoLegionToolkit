@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Runtime.InteropServices;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -42,8 +43,11 @@ using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
 namespace LenovoLegionToolkit.WPF;
 
 public partial class App
-{
-    private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    {
+        [LibraryImport("kernel32.dll")]
+        private static partial void ExitProcess(uint uExitCode);
+
+        private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
@@ -143,8 +147,7 @@ public partial class App
                             Log.Instance.Trace($"Shutting down... [Vendor={mi.Vendor}, Model={mi.Model}, MachineType={mi.MachineType}]");
 
                         // Perform safe shutdown for incompatible systems to prevent process residue
-                        await PerformSafeShutdownForIncompatibleSystemAsync().ConfigureAwait(false);
-                        Shutdown(202);
+                        await PerformSafeShutdownForIncompatibleSystemAsync(202).ConfigureAwait(false);
                         return;
                     }
                 }
@@ -182,8 +185,7 @@ public partial class App
                 errorWindow.ShowDialog();
                 
                 // Perform safe shutdown for compatibility check errors to prevent process residue
-                await PerformSafeShutdownForIncompatibleSystemAsync().ConfigureAwait(false);
-                Shutdown(200);
+                await PerformSafeShutdownForIncompatibleSystemAsync(200).ConfigureAwait(false);
                 return;
             }
         }
@@ -429,7 +431,7 @@ public partial class App
     /// Performs safe shutdown for incompatible systems to prevent process residue
     /// This method ensures all resources are properly cleaned up before exit
     /// </summary>
-    private async Task PerformSafeShutdownForIncompatibleSystemAsync()
+    private async Task PerformSafeShutdownForIncompatibleSystemAsync(int? exitCode = null)
     {
         try
         {
@@ -539,11 +541,28 @@ public partial class App
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Safe shutdown for incompatible system completed.");
+
+            // If an exit code is provided, force exit now to prevent process residue
+            if (exitCode.HasValue)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Forcing exit via ExitProcess({exitCode.Value}) from safe shutdown...");
+
+                ExitProcess((uint)exitCode.Value);
+                Environment.Exit(exitCode.Value);
+            }
         }
         catch (Exception ex)
         {
             // As a last resort, log to console
             Console.WriteLine($"Critical error during safe shutdown: {ex.Message}");
+
+            // If we have an exit code, try to exit even if cleanup failed
+            if (exitCode.HasValue)
+            {
+                ExitProcess((uint)exitCode.Value);
+                Environment.Exit(exitCode.Value);
+            }
         }
     }
 
@@ -569,8 +588,100 @@ public partial class App
         }
         finally
         {
-            Log.Instance.Shutdown();
-            _singleInstanceMutex?.Close();
+            try
+            {
+                Log.Instance.Shutdown();
+            }
+            catch
+            {
+                // Ignore log shutdown errors
+            }
+
+            try
+            {
+                _singleInstanceMutex?.Close();
+            }
+            catch
+            {
+                // Ignore mutex close errors
+            }
+
+            // CRITICAL: Ensure MacroController is stopped even if shutdown sequence failed
+            // The keyboard hook MUST be released or the process cannot exit
+            try
+            {
+                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
+                {
+                    macroController.Stop();
+                }
+            }
+            catch
+            {
+                // Ignore errors - we're exiting anyway
+            }
+
+            // Force stop single instance thread if still alive
+            try
+            {
+                if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
+                {
+                    _singleInstanceWaitHandle?.Dispose();
+                    _singleInstanceWaitHandle = null;
+                }
+            }
+            catch
+            {
+                // Ignore errors
+            }
+
+            // CRITICAL: Force exit if we reach here
+            // On incompatible systems, Shutdown() may not actually exit the process
+            // This ensures the process terminates even if WPF shutdown hangs
+            // Use both ThreadPool.QueueUserWorkItem and a direct call as fallback
+            // Start the background exit task first
+            var exitCode = (uint)e.ApplicationExitCode;
+            var exitTaskStarted = false;
+            try
+            {
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    Thread.Sleep(500); // Give cleanup 500ms to complete
+                    try
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode}) (background task)...");
+                    }
+                    catch { }
+                    ExitProcess(exitCode);
+                    Environment.Exit((int)exitCode); // Fallback
+                });
+                exitTaskStarted = true;
+            }
+            catch
+            {
+                // ThreadPool may be shutting down, use direct exit as fallback
+            }
+
+            // If ThreadPool.QueueUserWorkItem failed, exit directly after a short delay
+            if (!exitTaskStarted)
+            {
+                // Use a new thread to ensure it executes even if thread pool is down
+                new Thread(() =>
+                {
+                    Thread.Sleep(500);
+                    try
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode}) (fallback thread)...");
+                    }
+                    catch { }
+                    ExitProcess(exitCode);
+                    Environment.Exit((int)exitCode); // Fallback
+                })
+                {
+                    IsBackground = true
+                }.Start();
+            }
         }
     }
 
@@ -667,6 +778,26 @@ public partial class App
 
         if (shouldInvokeShutdown)
         {
+            // CRITICAL: Stop MacroController BEFORE calling Shutdown()
+            // The keyboard hook MUST be released or the process cannot exit
+            // This must be done before Shutdown() to ensure it completes
+            try
+            {
+                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Stopping MacroController before Shutdown()...");
+                    macroController.Stop();
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"MacroController stopped before Shutdown().");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping MacroController before Shutdown(): {ex.Message}", ex);
+            }
+
             if (Dispatcher.CheckAccess())
                 Shutdown();
             else
@@ -712,6 +843,66 @@ public partial class App
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Service shutdown timeout exceeded, continuing with exit...");
+            }
+
+            // CRITICAL: Ensure MacroController is stopped synchronously
+            // The keyboard hook MUST be released or the process cannot exit
+            // This must be done synchronously, not in a Task.Run, to ensure it completes
+            // Even if service stop task timed out, we must stop MacroController
+            try
+            {
+                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Stopping MacroController synchronously...");
+                    macroController.Stop();
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"MacroController stopped successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping MacroController: {ex.Message}", ex);
+            }
+
+            // Stop the single instance thread to prevent it from keeping the process alive
+            if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
+            {
+                try
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Stopping single instance thread...");
+
+                    // Signal the thread to stop by disposing the wait handle
+                    _singleInstanceWaitHandle?.Dispose();
+                    _singleInstanceWaitHandle = null;
+
+                    // Give the thread a moment to finish naturally
+                    if (!_singleInstanceThread.Join(500))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Single instance thread did not finish in time, continuing with shutdown...");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error stopping single instance thread: {ex.Message}");
+                }
+            }
+
+            // Dispose the single instance mutex
+            try
+            {
+                _singleInstanceMutex?.ReleaseMutex();
+                _singleInstanceMutex?.Close();
+                _singleInstanceMutex = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing single instance mutex: {ex.Message}");
             }
         }
         catch (Exception ex)

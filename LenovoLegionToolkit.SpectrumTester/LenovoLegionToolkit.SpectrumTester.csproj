@@ -1,21 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0-windows</TargetFramework>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<Platforms>x64</Platforms>
-		<OutputType>Exe</OutputType>
-		<AssemblyName>SpectrumTester</AssemblyName>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<SelfContained>false</SelfContained>
-		<PublishSingleFile>false</PublishSingleFile>
-		<PublishReadyToRun>false</PublishReadyToRun>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
+<PropertyGroup>
+	<TargetFramework>net8.0-windows</TargetFramework>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<Platforms>x64</Platforms>
+	<OutputType>Exe</OutputType>
+	<AssemblyName>SpectrumTester</AssemblyName>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<SelfContained>false</SelfContained>
+	<PublishSingleFile>false</PublishSingleFile>
+	<PublishReadyToRun>false</PublishReadyToRun>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-	</ItemGroup>
+<ItemGroup>
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+	<PackageReference Include="System.Text.Json" Version="8.0.0" />
+</ItemGroup>
+
+<ItemGroup>
+	<ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+</ItemGroup>
 
 </Project>

@@ -64,7 +64,11 @@ public partial class StatusWindow
                     godModePresetName = await godModeController.GetActivePresetNameAsync();
             }
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get power mode state for StatusWindow.", ex);
+        }
 
         try
         {
@@ -72,13 +76,21 @@ public partial class StatusWindow
                 gpuStatus = await gpuController.RefreshNowAsync();
 
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to refresh GPU status for StatusWindow.", ex);
+        }
 
         try
         {
             batteryInformation = Battery.GetBatteryInformation();
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get battery information for StatusWindow.", ex);
+        }
 
         try
         {
@@ -86,19 +98,31 @@ public partial class StatusWindow
                 batteryState = await batteryFeature.GetStateAsync();
 
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get battery state for StatusWindow.", ex);
+        }
 
         try
         {
             onBatterySince = Battery.GetOnBatterySince();
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get battery usage time for StatusWindow.", ex);
+        }
 
         try
         {
             hasUpdate = await updateChecker.CheckAsync(false) is not null;
         }
-        catch { /* Ignored */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to check for updates for StatusWindow.", ex);
+        }
 
         return new(state, godModePresetName, gpuStatus, batteryInformation, batteryState, onBatterySince, hasUpdate);
     }

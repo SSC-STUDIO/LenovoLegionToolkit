@@ -42,6 +42,8 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public NotificationDuration NotificationDuration { get; set; } = NotificationDuration.Normal;
         public bool NotificationAlwaysOnTop { get; set; }
         public bool NotificationOnAllScreens { get; set; }
+        public bool AnimationsEnabled { get; set; } = true;
+        public double AnimationSpeed { get; set; } = 2.0;
         public Notifications Notifications { get; set; } = new();
         public TemperatureUnit TemperatureUnit { get; set; }
         public List<RefreshRate> ExcludedRefreshRates { get; set; } = [];
@@ -59,6 +61,9 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ExtensionsEnabled { get; set; } = false;
         public List<string> InstalledExtensions { get; set; } = [];
         public List<string> PendingDeletionExtensions { get; set; } = [];
+        public List<string>? SelectedCleanupActions { get; set; }
+        public List<string>? SelectedOptimizationActions { get; set; }
+        public int LastWindowsOptimizationPageMode { get; set; }
         public Dictionary<string, bool> NavigationItemsVisibility { get; set; } = new()
         {
             { "keyboard", true },

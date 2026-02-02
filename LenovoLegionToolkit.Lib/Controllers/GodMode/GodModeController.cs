@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -89,6 +89,17 @@ public class GodModeController(GodModeControllerV1 controllerV1, GodModeControll
     {
         var controller = await GetControllerAsync().ConfigureAwait(false);
         await controller.RestoreDefaultsInOtherPowerModeAsync(state).ConfigureAwait(false);
+    }
+
+    public async Task<bool> IsSupportedAsync()
+    {
+        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        
+        // Strictly disable specialized machine features on incompatible machines
+        if (!Compatibility.IsSupportedLegionMachine(mi))
+            return false;
+
+        return mi.Properties.SupportsGodMode;
     }
 
     private async Task<IGodModeController> GetControllerAsync()

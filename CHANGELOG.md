@@ -20,9 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed plugin source code and compilation from main repository / 从主仓库移除插件源码和编译
 - Plugin repository service now fetches plugins from LenovoLegionToolkit-Plugins / 插件仓库服务现在从 LenovoLegionToolkit-Plugins 获取插件
 
-### Fixed / 修复
+### Improved / 改进
+- 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
+- 优化了不兼容机器上的设置页面：在非支持机型上隐藏所有硬件相关的设置分类（性能、显示、智能按键）及相关软件禁用选项，仅保留通用的外观、应用行为和更新设置 / Optimized Settings page on incompatible machines: hidden all hardware-related categories (Power, Display, Smart Keys) and relevant software disablers on unsupported models, keeping only generic Appearance, Application behavior, and Update settings
+- 引入强制进程退出机制 (ExitProcess)，彻底解决在不兼容机器或极端情况下关闭软件后的进程残留和 CPU 占用问题 / Introduced forced process termination (ExitProcess) to completely resolve process residue and CPU usage issues upon exit on incompatible machines or in extreme cases
+- 优化 IoC 容器解析逻辑，防止在系统未完全初始化时因解析失败导致的退出过程挂起 / Optimized IoC container resolution to prevent shutdown hangs caused by resolution failures when the system is not fully initialized
 - Updated plugin store URL to point to separate plugin repository / 更新插件商店URL指向独立插件仓库
-- Fixed process residue issue on incompatible systems when application closes / 修复在不兼容系统上关闭应用程序后的进程残留问题
 
 ### Improved / 改进
 - 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage

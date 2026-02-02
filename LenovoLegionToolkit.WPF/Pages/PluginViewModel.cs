@@ -28,6 +28,62 @@ namespace LenovoLegionToolkit.WPF.Pages
         private bool _isLocal;
         private string _location = string.Empty;
         private bool _shouldShowInstallButton;
+        private string _newVersion = string.Empty;
+        private string _releaseDate = string.Empty;
+        private string _changelog = string.Empty;
+        private string _author = string.Empty;
+
+        public string NewVersion
+        {
+            get => _newVersion;
+            set
+            {
+                if (_newVersion != value)
+                {
+                    _newVersion = value;
+                    OnPropertyChanged(nameof(NewVersion));
+                }
+            }
+        }
+
+        public string ReleaseDate
+        {
+            get => _releaseDate;
+            set
+            {
+                if (_releaseDate != value)
+                {
+                    _releaseDate = value;
+                    OnPropertyChanged(nameof(ReleaseDate));
+                }
+            }
+        }
+
+        public string Changelog
+        {
+            get => _changelog;
+            set
+            {
+                if (_changelog != value)
+                {
+                    _changelog = value;
+                    OnPropertyChanged(nameof(Changelog));
+                }
+            }
+        }
+
+        public string Author
+        {
+            get => _author;
+            set
+            {
+                if (_author != value)
+                {
+                    _author = value;
+                    OnPropertyChanged(nameof(Author));
+                }
+            }
+        }
 
         public bool ShouldShowInstallButton
         {
@@ -134,241 +190,11 @@ namespace LenovoLegionToolkit.WPF.Pages
             }
         }
 
-        public string UninstallButtonText
-        {
-            get
-            {
-                // Try to get localized text, fallback to hardcoded values
-                try
-                {
-                    var property = typeof(Resource).GetProperty("PackageControl_Uninstall");
-                    if (property != null)
-                    {
-                        var value = property.GetValue(null) as string;
-                        if (!string.IsNullOrWhiteSpace(value))
-                            return value;
-                    }
-                }
-                catch
-                {
-                    // Ignore errors
-                }
-                
-                // Fallback based on current culture
-                var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
-                if (culture.StartsWith("zh-Hant"))
-                {
-                    return "解除安裝";
-                }
-                else if (culture.StartsWith("zh"))
-                {
-                    return "卸载";
-                }
-                else if (culture.StartsWith("ja"))
-                {
-                    return "アンインストール";
-                }
-                else if (culture.StartsWith("ko"))
-                {
-                    return "제거";
-                }
-                else if (culture.StartsWith("de"))
-                {
-                    return "Deinstallieren";
-                }
-                else if (culture.StartsWith("fr"))
-                {
-                    return "Désinstaller";
-                }
-                else if (culture.StartsWith("es"))
-                {
-                    return "Desinstalar";
-                }
-                else if (culture.StartsWith("pt"))
-                {
-                    return "Desinstalar";
-                }
-                else if (culture.StartsWith("ru"))
-                {
-                    return "Удалить";
-                }
-                else if (culture.StartsWith("it"))
-                {
-                    return "Disinstalla";
-                }
-                else if (culture.StartsWith("pl"))
-                {
-                    return "Odinstaluj";
-                }
-                else if (culture.StartsWith("tr"))
-                {
-                    return "Kaldır";
-                }
-                else if (culture.StartsWith("uk") || culture.StartsWith("ru"))
-                {
-                    return "Видалити";
-                }
-                else if (culture.StartsWith("vi"))
-                {
-                    return "Gỡ cài đặt";
-                }
-                else if (culture.StartsWith("th"))
-                {
-                    return "ถอนการติดตั้ง";
-                }
-                else if (culture.StartsWith("ar"))
-                {
-                    return "إلغاء التثبيت";
-                }
-                return "Uninstall";
-            }
-        }
+        public string UninstallButtonText => Resource.PluginExtensionsPage_Uninstall;
 
-        public string ConfigureButtonText
-        {
-            get
-            {
-                var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
-                if (culture.StartsWith("zh-Hant"))
-                {
-                    return "設定";
-                }
-                else if (culture.StartsWith("zh"))
-                {
-                    return "配置";
-                }
-                else if (culture.StartsWith("ja"))
-                {
-                    return "設定";
-                }
-                else if (culture.StartsWith("ko"))
-                {
-                    return "설정";
-                }
-                else if (culture.StartsWith("de"))
-                {
-                    return "Konfigurieren";
-                }
-                else if (culture.StartsWith("fr"))
-                {
-                    return "Configurer";
-                }
-                else if (culture.StartsWith("es"))
-                {
-                    return "Configurar";
-                }
-                else if (culture.StartsWith("pt"))
-                {
-                    return "Configurar";
-                }
-                else if (culture.StartsWith("ru"))
-                {
-                    return "Настройка";
-                }
-                else if (culture.StartsWith("it"))
-                {
-                    return "Configura";
-                }
-                else if (culture.StartsWith("pl"))
-                {
-                    return "Konfiguruj";
-                }
-                else if (culture.StartsWith("tr"))
-                {
-                    return "Yapılandır";
-                }
-                else if (culture.StartsWith("uk") || culture.StartsWith("ru"))
-                {
-                    return "Налаштування";
-                }
-                else if (culture.StartsWith("vi"))
-                {
-                    return "Cấu hình";
-                }
-                else if (culture.StartsWith("th"))
-                {
-                    return "กำหนดค่า";
-                }
-                else if (culture.StartsWith("ar"))
-                {
-                    return "تكوين";
-                }
-                return "Configure";
-            }
-        }
+        public string ConfigureButtonText => Resource.PluginExtensionsPage_Configure;
 
-        public string OpenButtonText
-        {
-            get
-            {
-                var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
-                if (culture.StartsWith("zh-Hant"))
-                {
-                    return "開啟";
-                }
-                else if (culture.StartsWith("zh"))
-                {
-                    return "打开";
-                }
-                else if (culture.StartsWith("ja"))
-                {
-                    return "開く";
-                }
-                else if (culture.StartsWith("ko"))
-                {
-                    return "열기";
-                }
-                else if (culture.StartsWith("de"))
-                {
-                    return "Öffnen";
-                }
-                else if (culture.StartsWith("fr"))
-                {
-                    return "Ouvrir";
-                }
-                else if (culture.StartsWith("es"))
-                {
-                    return "Abrir";
-                }
-                else if (culture.StartsWith("pt"))
-                {
-                    return "Abrir";
-                }
-                else if (culture.StartsWith("ru"))
-                {
-                    return "Открыть";
-                }
-                else if (culture.StartsWith("it"))
-                {
-                    return "Apri";
-                }
-                else if (culture.StartsWith("pl"))
-                {
-                    return "Otwórz";
-                }
-                else if (culture.StartsWith("tr"))
-                {
-                    return "Aç";
-                }
-                else if (culture.StartsWith("uk") || culture.StartsWith("ru"))
-                {
-                    return "Відкрити";
-                }
-                else if (culture.StartsWith("vi"))
-                {
-                    return "Mở";
-                }
-                else if (culture.StartsWith("th"))
-                {
-                    return "เปิด";
-                }
-                else if (culture.StartsWith("ar"))
-                {
-                    return "فتح";
-                }
-                return "Open";
-            }
-        }
+        public string OpenButtonText => Resource.PluginExtensionsPage_Open;
 
 public string PluginId
         {

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
@@ -14,6 +15,12 @@ public class SensorsControllerV1(GPUController gpuController) : AbstractSensorsC
     {
         try
         {
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             var result = await WMI.LenovoFanTableData.ExistsAsync(0, CPU_FAN_ID).ConfigureAwait(false);
             result &= await WMI.LenovoFanTableData.ExistsAsync(0, GPU_FAN_ID).ConfigureAwait(false);
 

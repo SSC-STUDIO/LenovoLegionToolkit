@@ -17,8 +17,7 @@
     xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
     Title="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Scrollable="False"
-    Loaded="Page_Loaded">
+    Scrollable="False">
 
     <wpfui:UiPage.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -127,11 +126,6 @@
         <Style x:Key="CleanupActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource PrimaryActionButtonStyle}">
             <Setter Property="Visibility" Value="Collapsed" />
             <Setter Property="Margin" Value="0" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                    <Setter Property="Visibility" Value="Visible" />
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
     </wpfui:UiPage.Resources>
 
@@ -223,19 +217,19 @@
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Optimization}"
                             IsChecked="True"
-                            Checked="OptimizationNavButton_Checked" />
+                            Checked="NavButton_Checked" />
                         <RadioButton
                             x:Name="_cleanupNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
-                            Checked="CleanupNavButton_Checked" />
+                            Checked="NavButton_Checked" />
                         <RadioButton
                             x:Name="_driverDownloadNavButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
-                            Checked="DriverDownloadNavButton_Checked" />
+                            Checked="NavButton_Checked" />
 
                     </StackPanel>
                 </Border>
@@ -293,17 +287,17 @@
                                         <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
-                                                <Setter Property="ToolTip" Value="{Binding StartAllButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
-                                                <Setter Property="AutomationProperties.Name" Value="{Binding StartAllButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
+                                            <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
+                                                <Setter Property="ToolTip" Value="{Binding StartAllButtonText}" />
+                                                <Setter Property="AutomationProperties.Name" Value="{Binding StartAllButtonText}" />
                                             </DataTrigger>
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                    <Condition Binding="{Binding IsAnyDriverRunning, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
+                                                    <Condition Binding="{Binding IsDriverDownloadMode}" Value="True" />
+                                                    <Condition Binding="{Binding IsAnyDriverRunning}" Value="True" />
                                                 </MultiDataTrigger.Conditions>
-                                                <Setter Property="ToolTip" Value="{Binding PauseAllButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
-                                                <Setter Property="AutomationProperties.Name" Value="{Binding PauseAllButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" />
+                                                <Setter Property="ToolTip" Value="{Binding PauseAllButtonText}" />
+                                                <Setter Property="AutomationProperties.Name" Value="{Binding PauseAllButtonText}" />
                                             </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -313,13 +307,13 @@
                                         <Style TargetType="wpfui:SymbolIcon" BasedOn="{StaticResource {x:Type wpfui:SymbolIcon}}">
                                             <Setter Property="Symbol" Value="Delete24" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
                                                     <Setter Property="Symbol" Value="Play24" />
                                                 </DataTrigger>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                        <Condition Binding="{Binding IsAnyDriverRunning, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
+                                                        <Condition Binding="{Binding IsDriverDownloadMode}" Value="True" />
+                                                        <Condition Binding="{Binding IsAnyDriverRunning}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Symbol" Value="Pause24" />
                                                 </MultiDataTrigger>
@@ -352,7 +346,7 @@
                         <Style TargetType="ScrollViewer">
                             <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -442,7 +436,7 @@
                         <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -509,7 +503,7 @@
                                             Margin="8,0,0,0"
                                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                                             ClearButtonEnabled="False"
-                                            PlaceholderText="(eg. 82JQ)" />
+                                            PlaceholderText="例如: 82JQ" />
                                         <ComboBox
                                             x:Name="_driverOsComboBox"
                                             Grid.Row="1"
@@ -532,7 +526,7 @@
                                                 Grid.Column="0"
                                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                                 ClearButtonEnabled="False"
-                                                PlaceholderText="(eg. 82JQ)"
+                                                PlaceholderText="例如: 82JQ"
                                                 TextChanged="DriverDownloadToText_OnTextChanged" />
 
                                             <wpfui:Button
@@ -698,7 +692,7 @@
                                         </Grid>
                 </Grid>
                 <ScrollViewer
-                    Grid.Column="2"
+                    Grid.Column="1"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     CanContentScroll="False"
@@ -706,16 +700,17 @@
                     <ScrollViewer.Style>
                         <Style TargetType="ScrollViewer">
                             <Setter Property="MinWidth" Value="0" />
+                            <Setter Property="MaxWidth" Value="400" />
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsDriverDownloadMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                <DataTrigger Binding="{Binding IsCleanupMode}" Value="True">
                                     <Setter Property="MinWidth" Value="260" />
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding IsBeautificationMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                <DataTrigger Binding="{Binding IsBeautificationMode}" Value="True">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -727,7 +722,10 @@
                                 <Setter Property="Margin" Value="0,0,0,16" />
                                 <Setter Property="Padding" Value="20" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <DataTrigger Binding="{Binding IsCleanupMode}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -740,7 +738,7 @@
                             <Style x:Key="RightColumnCleanupCardStyle" TargetType="Border" BasedOn="{StaticResource RightColumnCardStyle}">
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                    <DataTrigger Binding="{Binding IsCleanupMode}" Value="True">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -882,13 +880,13 @@
                                 <TextBlock
                                     Margin="0,0,0,4"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{Binding CurrentOperationText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    Text="{Binding CurrentOperationText}"
                                     TextWrapping="Wrap">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -899,7 +897,7 @@
                                     x:Name="_estimatedCleanupText"
                                     Margin="0,0,0,4"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{Binding EstimatedCleanupSizeText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    Text="{Binding EstimatedCleanupSizeText}"
                                     TextWrapping="Wrap">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
@@ -907,8 +905,8 @@
                                             <Style.Triggers>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
-                                                        <Condition Binding="{Binding IsScanned, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
+                                                        <Condition Binding="{Binding IsBusy}" Value="False" />
+                                                        <Condition Binding="{Binding IsScanned}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </MultiDataTrigger>
@@ -923,7 +921,7 @@
                                     Margin="0,0,0,8"
                                     FontSize="12"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="{Binding PendingText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    Text="{Binding PendingText}"
                                     TextWrapping="Wrap">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
@@ -931,8 +929,8 @@
                                             <Style.Triggers>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsScanned, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
-                                                        <Condition Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
+                                                        <Condition Binding="{Binding IsScanned}" Value="False" />
+                                                        <Condition Binding="{Binding IsBusy}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </MultiDataTrigger>
@@ -945,14 +943,14 @@
                                     Margin="0,0,0,12"
                                     FontSize="12"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="{Binding CurrentDeletingFile, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                    Text="{Binding CurrentDeletingFile}"
                                     TextWrapping="Wrap"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                                 <Trigger Property="Text" Value="">
@@ -969,14 +967,14 @@
                                         <Style TargetType="StackPanel">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsCalculatingSize, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                <DataTrigger Binding="{Binding IsCalculatingSize}" Value="True">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </StackPanel.Style>
                                     <TextBlock 
-                                        Text="{Binding CurrentOperationText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" 
+                                        Text="{Binding CurrentOperationText}" 
                                         FontSize="12" 
                                         Margin="0,0,0,4" />
                                     <ProgressBar IsIndeterminate="True" Height="4" />
@@ -988,19 +986,19 @@
                                         MinWidth="120"
                                         Margin="0,0,8,0"
                                         HorizontalAlignment="Stretch"
-                                        ToolTip="{Binding ScanCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
-                                        AutomationProperties.Name="{Binding ScanCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                        ToolTip="{Binding ScanCleanupButtonText}"
+                                        AutomationProperties.Name="{Binding ScanCleanupButtonText}"
                                         Click="ScanCleanupButton_Click"
-                                        Content="{Binding ScanCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}">
+                                        Content="{Binding ScanCleanupButtonText}">
                                         <wpfui:Button.Style>
                                             <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                            <Condition Binding="{Binding IsScanned, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
-                                                            <Condition Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
+                                                            <Condition Binding="{Binding IsCleanupMode}" Value="True" />
+                                                            <Condition Binding="{Binding IsScanned}" Value="False" />
+                                                            <Condition Binding="{Binding IsBusy}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible" />
                                                     </MultiDataTrigger>
@@ -1013,22 +1011,23 @@
                                         MinWidth="120"
                                         Margin="0,0,0,0"
                                         HorizontalAlignment="Stretch"
-                                        ToolTip="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
-                                        AutomationProperties.Name="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}"
+                                        ToolTip="{Binding RunCleanupButtonText}"
+                                        AutomationProperties.Name="{Binding RunCleanupButtonText}"
                                         Click="RunCleanupButton_Click"
-                                        Content="{Binding RunCleanupButtonText, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}">
+                                        Content="{Binding RunCleanupButtonText}">
                                         <wpfui:Button.Style>
                                             <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                            <Condition Binding="{Binding IsScanned, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
+                                                            <Condition Binding="{Binding IsCleanupMode}" Value="True" />
+                                                            <Condition Binding="{Binding IsScanned}" Value="True" />
+                                                            <Condition Binding="{Binding IsBusy}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible" />
                                                     </MultiDataTrigger>
-                                                    <DataTrigger Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True">
+                                                    <DataTrigger Binding="{Binding IsCleaning}" Value="True">
                                                         <Setter Property="Visibility" Value="Visible" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -1047,9 +1046,9 @@
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding IsCleanupMode, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                            <Condition Binding="{Binding IsScanned, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="True" />
-                                                            <Condition Binding="{Binding IsBusy, RelativeSource={RelativeSource AncestorType=wpfui:UiPage}}" Value="False" />
+                                                            <Condition Binding="{Binding IsCleanupMode}" Value="True" />
+                                                            <Condition Binding="{Binding IsScanned}" Value="True" />
+                                                            <Condition Binding="{Binding IsBusy}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible" />
                                                     </MultiDataTrigger>

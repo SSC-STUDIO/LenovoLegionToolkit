@@ -1,8 +1,9 @@
+using System;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
-public interface ISensorsController
+public interface ISensorsController : IDisposable
 {
     Task<bool> IsSupportedAsync();
     Task PrepareAsync();

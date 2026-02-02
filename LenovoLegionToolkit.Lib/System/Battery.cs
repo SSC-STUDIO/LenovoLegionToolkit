@@ -18,6 +18,28 @@ public static class Battery
 
     private static double _totalTemp = 0;
     private static int _tempSampleCount = 0;
+
+    // Public method to test battery operations safely
+    public static bool TestBatterySupport()
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Testing battery support...");
+
+            var batteryTag = GetBatteryTag();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Battery support test successful, tag: {batteryTag}");
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Battery support test failed: {ex.Message}");
+            return false;
+        }
+    }
     
     public static void SetMinMaxDischargeRate(BATTERY_STATUS? status = null)
     {

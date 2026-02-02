@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -18,13 +18,13 @@ public class PowerModeAutomationStep(PowerModeState state)
         try
         {
             var (_, machineInformation) = await Compatibility.IsCompatibleAsync().ConfigureAwait(false);
+            var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(machineInformation);
             
-            if (!Compatibility.IsSupportedLegionMachine(machineInformation))
+            if (!isSupportedLegionMachine)
                 return false;
 
             // For backward compatibility, when SupportedPowerModes is null, allow Quiet, Balance, and Performance
-            // This matches the behavior in PowerModeFeature.GetAllStatesAsync() which always includes these three modes
-            if (machineInformation.SupportedPowerModes is null)
+            if (machineInformation.SupportedPowerModes is null || machineInformation.SupportedPowerModes.Length == 0)
             {
                 // Quiet, Balance, and Performance are always available when SupportedPowerModes is null (backward compatibility)
                 // GodMode requires explicit support check

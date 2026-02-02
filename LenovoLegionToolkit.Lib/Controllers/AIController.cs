@@ -122,6 +122,11 @@ public class AIController(
     private static async Task<bool> IsSupportedAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        
+        // Strictly disable specialized machine features on incompatible machines
+        if (!Compatibility.IsSupportedLegionMachine(mi))
+            return false;
+
         return mi.Properties.SupportsAIMode;
     }
 

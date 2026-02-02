@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,15 +33,12 @@ public class PowerModeFeature(
 
         var result = new List<PowerModeState>();
 
-        // Only include power modes for supported Legion machines
-        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
-        // to ensure consistency between advertised states and actually supported states
+        // Strictly disable specialized machine features on incompatible machines
         if (!isSupportedLegionMachine)
             return [.. result];
 
         // For backward compatibility, when SupportedPowerModes is null, include Quiet, Balance, and Performance
-        // This matches the behavior in PowerModeAutomationStep.IsSupportedAsync()
-        if (mi.SupportedPowerModes is null)
+        if (mi.SupportedPowerModes is null || mi.SupportedPowerModes.Length == 0)
         {
             result.Add(PowerModeState.Quiet);
             result.Add(PowerModeState.Balance);

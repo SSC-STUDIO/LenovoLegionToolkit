@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
 using LenovoLegionToolkit.WPF.Windows;
+using LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 using static LenovoLegionToolkit.WPF.Pages.WindowsOptimizationPage;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils

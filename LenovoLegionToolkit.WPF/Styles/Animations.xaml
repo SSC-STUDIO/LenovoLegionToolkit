@@ -7,67 +7,46 @@
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
             To="-2"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
             To="12"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
             To="0.15"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
     <Storyboard x:Key="CardHoverLeaveAnimation">
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
             To="0"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
             To="8"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
             To="0.1"
-            Duration="0:0:0.15">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
     <!-- Page Fade In Animation -->
     <Storyboard x:Key="PageFadeInAnimation">
         <DoubleAnimation
             Storyboard.TargetProperty="Opacity"
-            From="0"
-            To="1"
-            Duration="0:0:0.3">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            From="{StaticResource AnimationOpacityStart}"
+            To="{StaticResource AnimationOpacityEnd}"
+            Duration="{StaticResource AnimationDurationSlow}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
     <!-- Button Click Animation -->
@@ -75,56 +54,41 @@
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
             To="0.95"
-            Duration="0:0:0.1"
-            AutoReverse="True">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            AutoReverse="True"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <DoubleAnimation
             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
             To="0.95"
-            Duration="0:0:0.1"
-            AutoReverse="True">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="{StaticResource AnimationDurationFast}"
+            AutoReverse="True"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
     <!-- List Item Load Animation -->
     <Storyboard x:Key="ListItemLoadAnimation">
         <DoubleAnimation
             Storyboard.TargetProperty="Opacity"
-            From="0"
-            To="1"
-            Duration="0:0:0.2">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            From="{StaticResource AnimationOpacityStart}"
+            To="{StaticResource AnimationOpacityEnd}"
+            Duration="{StaticResource AnimationDurationMedium}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
         <ThicknessAnimation
             Storyboard.TargetProperty="Margin"
             From="0,10,0,0"
             To="0,0,0,0"
-            Duration="0:0:0.2">
-            <ThicknessAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </ThicknessAnimation.EasingFunction>
-        </ThicknessAnimation>
+            Duration="{StaticResource AnimationDurationMedium}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
     <!-- Section Expand/Collapse Animation -->
     <Storyboard x:Key="SectionExpandAnimation">
         <DoubleAnimation
             Storyboard.TargetProperty="Opacity"
-            From="0"
-            To="1"
-            Duration="0:0:0.2">
-            <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut" />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            From="{StaticResource AnimationOpacityStart}"
+            To="{StaticResource AnimationOpacityEnd}"
+            Duration="{StaticResource AnimationDurationMedium}"
+            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
 </ResourceDictionary>

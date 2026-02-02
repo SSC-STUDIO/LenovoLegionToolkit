@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
-public class SafePerformanceCounter(string categoryName, string counterName, string instanceName)
+public class SafePerformanceCounter(string categoryName, string counterName, string instanceName) : IDisposable
 {
     private PerformanceCounter? _performanceCounter;
+    private bool _disposed;
 
     public float NextValue()
     {
+        if (_disposed) return 0f;
+
         try
         {
             TryCreateIfNeeded();
@@ -22,8 +25,20 @@ public class SafePerformanceCounter(string categoryName, string counterName, str
 
     public void Reset()
     {
+        if (_disposed) return;
+
+        _performanceCounter?.Dispose();
         _performanceCounter = null;
         _ = NextValue();
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _performanceCounter?.Dispose();
+        _performanceCounter = null;
+        GC.SuppressFinalize(this);
     }
 
     private void TryCreateIfNeeded()

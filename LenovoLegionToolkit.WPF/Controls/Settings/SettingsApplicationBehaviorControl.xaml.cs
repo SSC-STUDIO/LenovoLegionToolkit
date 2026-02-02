@@ -51,16 +51,19 @@ public partial class SettingsApplicationBehaviorControl
             _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
         }
 
+        var mi = await Compatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+
         var vantageStatus = await _vantageDisabler.GetStatusAsync();
-        _vantageCard.Visibility = vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
+        _vantageCard.Visibility = isSupportedLegionMachine && vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _vantageToggle.IsChecked = vantageStatus == SoftwareStatus.Disabled;
 
         var legionZoneStatus = await _legionZoneDisabler.GetStatusAsync();
-        _legionZoneCard.Visibility = legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
+        _legionZoneCard.Visibility = isSupportedLegionMachine && legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _legionZoneToggle.IsChecked = legionZoneStatus == SoftwareStatus.Disabled;
 
         var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
-        _fnKeysCard.Visibility = fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
+        _fnKeysCard.Visibility = isSupportedLegionMachine && fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
 
         await loadingTask;

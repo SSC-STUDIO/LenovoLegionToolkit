@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -88,18 +88,71 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
     public Task StopAsync() => _mainThreadDispatcher.DispatchAsync(() =>
     {
-        PInvoke.UnhookWindowsHookEx(_kbHook);
+        try
+        {
+            PInvoke.UnhookWindowsHookEx(_kbHook);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unhook keyboard hook in NativeWindowsMessageListener: {ex.Message}", ex);
+        }
 
-        PInvoke.UnregisterDeviceNotification(_deviceNotificationHandle);
-        PInvoke.UnregisterPowerSettingNotification(_consoleDisplayStateNotificationHandle);
-        PInvoke.UnregisterPowerSettingNotification(_lidSwitchStateChangeNotificationHandle);
-        PInvoke.UnregisterPowerSettingNotification(_powerSavingStateChangeNotificationHandle);
+        try
+        {
+            PInvoke.UnregisterDeviceNotification(_deviceNotificationHandle);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unregister device notification: {ex.Message}", ex);
+        }
+
+        try
+        {
+            PInvoke.UnregisterPowerSettingNotification(_consoleDisplayStateNotificationHandle);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unregister console display state notification: {ex.Message}", ex);
+        }
+
+        try
+        {
+            PInvoke.UnregisterPowerSettingNotification(_lidSwitchStateChangeNotificationHandle);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unregister lid switch state notification: {ex.Message}", ex);
+        }
+
+        try
+        {
+            PInvoke.UnregisterPowerSettingNotification(_powerSavingStateChangeNotificationHandle);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unregister power saving state notification: {ex.Message}", ex);
+        }
 
         _kbHook = default;
         _deviceNotificationHandle = default;
         _consoleDisplayStateNotificationHandle = default;
+        _lidSwitchStateChangeNotificationHandle = default;
+        _powerSavingStateChangeNotificationHandle = default;
 
-        ReleaseHandle();
+        try
+        {
+            ReleaseHandle();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to release handle in NativeWindowsMessageListener: {ex.Message}", ex);
+        }
 
         return Task.CompletedTask;
     });

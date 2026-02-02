@@ -25,6 +25,7 @@ public class Log
     public static Log Instance => _instance.Value;
 
     private readonly object _lock = new();
+    private readonly object _fileLock = new();
     private readonly string _folderPath;
     private volatile string _currentLogPath = string.Empty;
     private readonly Queue<string> _logQueue = new();
@@ -260,12 +261,9 @@ public class Log
     {
         try
         {
-            // Capture the log path atomically with rotation check to prevent race conditions
-            // where another thread could rotate the log file between path retrieval and write
             string logPathToUse;
             lock (_lock)
             {
-                // Check rotation and get path while holding the lock
                 if (File.Exists(_currentLogPath))
                 {
                     try
@@ -274,21 +272,21 @@ public class Log
                         if (fileInfo.Length > _maxLogSizeBytes)
                             _currentLogPath = CreateNewLogFile();
                     }
-                    catch (Exception)
-                    {
-                        _currentLogPath = CreateNewLogFile();
-                    }
+                    catch { _currentLogPath = CreateNewLogFile(); }
                 }
-                else
-                {
-                    _currentLogPath = CreateNewLogFile();
-                }
+                else { _currentLogPath = CreateNewLogFile(); }
                 logPathToUse = _currentLogPath;
             }
 
-            // Append asynchronously to the captured log file path
-            // The path is captured while holding the lock, preventing rotation during write
-            await File.AppendAllLinesAsync(logPathToUse, lines).ConfigureAwait(false);
+            // Synchronize actual file I/O to prevent IOExceptions when multiple threads 
+            // try to write to the same file (e.g., during Flush and background processing)
+            await Task.Run(() =>
+            {
+                lock (_fileLock)
+                {
+                    File.AppendAllLines(logPathToUse, lines);
+                }
+            }).ConfigureAwait(false);
         }
         catch (Exception ex) 
         { 
@@ -314,12 +312,9 @@ public class Log
     {
         try
         {
-            // Capture the log path atomically with rotation check to prevent race conditions
-            // where another thread could rotate the log file between path retrieval and write
             string logPathToUse;
             lock (_lock)
             {
-                // Check rotation and get path while holding the lock
                 if (File.Exists(_currentLogPath))
                 {
                     try
@@ -328,21 +323,17 @@ public class Log
                         if (fileInfo.Length > _maxLogSizeBytes)
                             _currentLogPath = CreateNewLogFile();
                     }
-                    catch (Exception)
-                    {
-                        _currentLogPath = CreateNewLogFile();
-                    }
+                    catch { _currentLogPath = CreateNewLogFile(); }
                 }
-                else
-                {
-                    _currentLogPath = CreateNewLogFile();
-                }
+                else { _currentLogPath = CreateNewLogFile(); }
                 logPathToUse = _currentLogPath;
             }
 
-            // Append to the captured log file path
-            // The path is captured while holding the lock, preventing rotation during write
-            File.AppendAllLines(logPathToUse, lines);
+            // Use the same lock as background processing
+            lock (_fileLock)
+            {
+                File.AppendAllLines(logPathToUse, lines);
+            }
         }
         catch (Exception ex) 
         { 

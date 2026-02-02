@@ -808,8 +808,8 @@ public class CMDTests
             System.IO.File.WriteAllText(tempFile, "test content");
             var arguments = $"/c type \"{tempFile}\"";
 
-            // Act
-            var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        // Act
+        var (exitCode, output) = await CMD.RunAsync(file, arguments ?? "", waitForExit: true);
 
             // Assert
             exitCode.Should().Be(0);

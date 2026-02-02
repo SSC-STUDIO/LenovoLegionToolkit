@@ -19,6 +19,12 @@ public class SensorsController(
         await controller.PrepareAsync().ConfigureAwait(false);
     }
 
+    public void Dispose()
+    {
+        // No resources to dispose directly, injected controllers are managed by IoC
+        GC.SuppressFinalize(this);
+    }
+
     public async Task<SensorsData> GetDataAsync(bool detailed = false)
     {
         var controller = await GetControllerAsync().ConfigureAwait(false) ?? throw new InvalidOperationException("No supported controller found");

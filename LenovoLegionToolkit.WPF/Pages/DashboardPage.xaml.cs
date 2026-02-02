@@ -39,7 +39,7 @@ public partial class DashboardPage
         await RefreshAsync();
     }
 
-    private async void DashboardPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void DashboardPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (IsVisible)
         {
@@ -108,7 +108,13 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await Task.WhenAll(initializedTasks);
+        var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
+        var completedTask = await Task.WhenAny(Task.WhenAll(initializedTasks), timeoutTask);
+        
+        if (completedTask == timeoutTask)
+        {
+            Log.Instance.Warning($"Dashboard initialization timed out after 10 seconds");
+        }
 
         _loader.IsLoading = false;
     }

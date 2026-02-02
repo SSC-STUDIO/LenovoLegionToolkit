@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Common;
@@ -36,18 +38,31 @@ public partial class SettingsPage
         InitializeNavigationItems();
     }
 
-    private void InitializeNavigationItems()
+    private async void InitializeNavigationItems()
     {
+        var mi = await Compatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+
         var navigationItems = new List<NavigationItem>
         {
             new() { Key = "Appearance", Title = "外观", Icon = SymbolRegular.PaintBrush24 },
-            new() { Key = "Application", Title = "应用行为", Icon = SymbolRegular.Apps24 },
-            new() { Key = "SmartKeys", Title = "智能按键", Icon = SymbolRegular.Keyboard24 },
-            new() { Key = "Display", Title = "显示", Icon = SymbolRegular.Desktop24 },
-            new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 },
-            new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 },
-            new() { Key = "Integrations", Title = Resource.SettingsPage_Integrations_Title, Icon = SymbolRegular.PlugConnected24 }
+            new() { Key = "Application", Title = "应用行为", Icon = SymbolRegular.Apps24 }
         };
+
+        if (isSupportedLegionMachine)
+        {
+            navigationItems.Add(new() { Key = "SmartKeys", Title = "智能按键", Icon = SymbolRegular.Keyboard24 });
+            navigationItems.Add(new() { Key = "Display", Title = "显示", Icon = SymbolRegular.Desktop24 });
+        }
+
+        navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
+
+        if (isSupportedLegionMachine)
+        {
+            navigationItems.Add(new() { Key = "Power", Title = Resource.SettingsPage_Power_Title, Icon = SymbolRegular.Battery024 });
+        }
+
+        navigationItems.Add(new() { Key = "Integrations", Title = Resource.SettingsPage_Integrations_Title, Icon = SymbolRegular.PlugConnected24 });
 
         _navigationListBox.ItemsSource = navigationItems;
         _navigationListBox.SelectedIndex = 0;
@@ -84,6 +99,7 @@ public partial class SettingsPage
 
         // Show first item immediately (Appearance control) - don't wait for loading
         _contentControl.Content = _appearanceControl;
+        PlayTransitionAnimation();
 
         // Priority load: refresh the first visible control (Appearance) immediately
         await _appearanceControl.RefreshAsync();
@@ -139,7 +155,10 @@ public partial class SettingsPage
         };
 
         if (controlToShow != null)
+        {
             _contentControl.Content = controlToShow;
+            PlayTransitionAnimation();
+        }
 
         // Refresh the selected control immediately if it's not the first one (Appearance)
         if (selectedItem.Key != "Appearance")
@@ -171,6 +190,14 @@ public partial class SettingsPage
                         await _integrationsControl.RefreshAsync();
                     break;
             }
+        }
+    }
+
+    private void PlayTransitionAnimation()
+    {
+        if (Resources["ContentTransitionAnimation"] is Storyboard storyboard)
+        {
+            storyboard.Begin();
         }
     }
 

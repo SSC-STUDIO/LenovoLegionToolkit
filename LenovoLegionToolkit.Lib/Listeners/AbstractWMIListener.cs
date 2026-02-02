@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -13,6 +13,8 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
     private bool _isUnsupported;
 
     public event EventHandler<TEventArgs>? Changed;
+
+
 
     public Task StartAsync()
     {
@@ -36,13 +38,16 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
                 Log.Instance.Trace($"Starting... [listener={GetType().Name}]");
 
             _disposable = listen(Handler);
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Started successfully. [listener={GetType().Name}]");
         }
         catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
         {
             _isUnsupported = true;
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"WMI class or namespace not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]", ex);
+                Log.Instance.Trace($"WMI class or namespace not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]");
         }
         catch (Exception ex)
         {

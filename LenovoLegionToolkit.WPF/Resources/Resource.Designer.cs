@@ -10050,6 +10050,195 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Bulk Update Complete.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkUpdateComplete {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkUpdateComplete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All plugins have been processed.
+        /// </summary>
+        public static string PluginExtensionsPage_BulkUpdateCompleteMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_BulkUpdateCompleteMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Preparing download....
+        /// </summary>
+        public static string PluginExtensionsPage_PreparingDownload {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_PreparingDownload", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Updating All....
+        /// </summary>
+        public static string PluginExtensionsPage_UpdatingAll {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdatingAll", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download completed.
+        /// </summary>
+        public static string PluginExtensionsPage_DownloadCompleted {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_DownloadCompleted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading....
+        /// </summary>
+        public static string PluginExtensionsPage_Downloading {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Downloading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading... {0:F1} / {1:F1} MB ({2:F0}%).
+        /// </summary>
+        public static string PluginExtensionsPage_DownloadingWithProgress {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_DownloadingWithProgress", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open Folder.
+        /// </summary>
+        public static string PluginExtensionsPage_OpenFolder {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_OpenFolder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Plugin ID.
+        /// </summary>
+        public static string PluginExtensionsPage_CopyId {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CopyId", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Folder Not Found.
+        /// </summary>
+        public static string PluginExtensionsPage_FolderNotFound {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_FolderNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The plugin directory does not exist yet..
+        /// </summary>
+        public static string PluginExtensionsPage_FolderNotFoundMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_FolderNotFoundMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copied.
+        /// </summary>
+        public static string PluginExtensionsPage_Copied {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_Copied", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin ID &apos;{0}&apos; copied to clipboard..
+        /// </summary>
+        public static string PluginExtensionsPage_CopiedMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CopiedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Local.
+        /// </summary>
+        public static string PluginExtensionsPage_LocalBadge {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_LocalBadge", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New Version Available.
+        /// </summary>
+        public static string PluginExtensionsPage_NewVersionAvailable {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_NewVersionAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No plugins found matching your search..
+        /// </summary>
+        public static string PluginExtensionsPage_NoResults {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_NoResults", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Version: .
+        /// </summary>
+        public static string PluginExtensionsPage_VersionLabel {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_VersionLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Release Date: .
+        /// </summary>
+        public static string PluginExtensionsPage_ReleaseDateLabel {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ReleaseDateLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to What's New:.
+        /// </summary>
+        public static string PluginExtensionsPage_ChangelogLabel {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_ChangelogLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh plugin list.
+        /// </summary>
+        public static string PluginExtensionsPage_RefreshTooltip {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_RefreshTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update all available plugins.
+        /// </summary>
+        public static string PluginExtensionsPage_UpdateAllTooltip {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_UpdateAllTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Updating Plugin.
         /// </summary>
         public static string PluginExtensionsPage_UpdatingPlugin {

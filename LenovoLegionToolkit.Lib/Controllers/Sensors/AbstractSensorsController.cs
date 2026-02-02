@@ -55,6 +55,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 100;
 
+    private bool _disposed;
+
     public abstract Task<bool> IsSupportedAsync();
 
     public Task PrepareAsync()
@@ -62,7 +64,23 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         _percentProcessorPerformanceCounter.Reset();
         _percentProcessorUtilityCounter.Reset();
         
+        try { NVAPI.Initialize(); } catch { /* Ignored */ }
+
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+
+        _percentProcessorPerformanceCounter.Dispose();
+        _percentProcessorUtilityCounter.Dispose();
+        _cpuPowerCounter?.Dispose();
+
+        try { NVAPI.Unload(); } catch { /* Ignored */ }
+
+        GC.SuppressFinalize(this);
     }
 
     private double _cpuMinVoltage = double.MaxValue;
@@ -258,7 +276,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         }
     }
 
-    private static Task<int> GetCpuMaxCoreClockAsync() => WMI.LenovoGameZoneData.GetCPUFrequencyAsync();
+    /// <summary>
+    /// 异步获取 CPU 最大核心频率。
+    /// </summary>
+    /// <returns>CPU 最大核心频率（MHz）。</returns>
+    /// <remarks>
+    /// 在单元测试中可以重写此方法以避免实际的 WMI 调用。
+    /// </remarks>
+    protected virtual Task<int> GetCpuMaxCoreClockAsync() => WMI.LenovoGameZoneData.GetCPUFrequencyAsync();
 
     private static SafePerformanceCounter? TryCreatePowerCounter()
     {
@@ -438,8 +463,6 @@ var cpuPattern = "%CPU%";
 
         try
         {
-            NVAPI.Initialize();
-
             var gpu = NVAPI.GetGPU();
             if (gpu is null)
                 return GPUInfo.Empty;
@@ -547,7 +570,11 @@ var cpuPattern = "%CPU%";
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to get NVML data: {ex.Message}", ex);
+                }
             }
             
             // Try to get voltage via VoltageSensor property
@@ -693,7 +720,11 @@ var cpuPattern = "%CPU%";
                 }
             }
             
-            catch { }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get GPU info: {ex.Message}", ex);
+            }
 
             // Final fallback: nvidia-smi
             if (currentWattage < 0 || currentVoltage == 0)
@@ -728,10 +759,6 @@ var cpuPattern = "%CPU%";
         catch
         {
             return GPUInfo.Empty;
-        }
-        finally
-        {
-            try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
     }
 }

@@ -15,7 +15,9 @@ namespace LenovoLegionToolkit.Lib.Controllers;
 public class GPUController : IDisposable
 {
     private readonly AsyncLock _lock = new();
-    private bool _disposed = false;
+    private readonly IGPUProcessManager _processManager;
+    private readonly IGPUHardwareManager _hardwareManager;
+    private volatile bool _disposed = false;
 
     private Task? _refreshTask;
     private CancellationTokenSource? _refreshCancellationTokenSource;
@@ -33,10 +35,22 @@ public class GPUController : IDisposable
     public event EventHandler<GPUStatus>? Refreshed;
     public bool IsStarted { get => _refreshTask != null; }
 
+    public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager)
+    {
+        _processManager = processManager;
+        _hardwareManager = hardwareManager;
+    }
+
     public bool IsSupported()
     {
         try
         {
+            var mi = Compatibility.GetMachineInformationAsync().GetAwaiter().GetResult();
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             NVAPI.Initialize();
             return NVAPI.GetGPU() is not null;
         }
@@ -126,19 +140,13 @@ public class GPUController : IDisposable
     {
         using (await _lock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deactivating... [state={_state}, gpuInstanceId={_gpuInstanceId}]");
-
             if (_state is not GPUState.Active and not GPUState.Inactive)
                 return;
 
             if (string.IsNullOrEmpty(_gpuInstanceId))
                 return;
 
-            await CMD.RunAsync("pnputil", $"/restart-device \"{_gpuInstanceId}\"").ConfigureAwait(false);
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deactivating... [state= {_state}, gpuInstanceId={_gpuInstanceId}]");
+            await _hardwareManager.RestartGPUAsync(_gpuInstanceId).ConfigureAwait(false);
         }
     }
 
@@ -146,44 +154,13 @@ public class GPUController : IDisposable
     {
         using (await _lock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deactivating... [state= {_state}, gpuInstanceId={_gpuInstanceId}]");
-
             if (_state is not GPUState.Active)
                 return;
 
-            if (string.IsNullOrEmpty(_gpuInstanceId))
+            if (_processes.Count == 0)
                 return;
 
-            foreach (var process in _processes)
-            {
-                try
-                {
-                    process.Kill(true);
-                    await process.WaitForExitAsync().ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Couldn't kill process. [pid={process.Id}, name={process.ProcessName}]", ex);
-                }
-                finally
-                {
-                    // Ensure process resources are properly disposed
-                    try
-                    {
-                        process.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Couldn't dispose process. [pid={process.Id}, name={process.ProcessName}]", ex);
-                    }
-                }
-            }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Deactivating... [state=  {_state}, gpuInstanceId={_gpuInstanceId}]");
+            await _processManager.KillGPUProcessesAsync(_processes).ConfigureAwait(false);
         }
     }
 
@@ -428,10 +405,12 @@ public class GPUController : IDisposable
                 // Dispose managed resources
                 try
                 {
-                    // Stop any running refresh task
-                    if (_refreshTask != null)
+                    // Cancel refresh task
+                    if (_refreshCancellationTokenSource != null)
                     {
-                        StopAsync(true).Wait(2000); // Wait up to 2 seconds for graceful shutdown
+                        _refreshCancellationTokenSource.Cancel();
+                        _refreshCancellationTokenSource.Dispose();
+                        _refreshCancellationTokenSource = null;
                     }
 
                     // Dispose all processes in the list
@@ -439,39 +418,10 @@ public class GPUController : IDisposable
                     {
                         foreach (var process in _processes)
                         {
-                            try
-                            {
-                                if (!process.HasExited)
-                                {
-                                    process.Kill(true);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Couldn't kill process during dispose. [pid={process.Id}, name={process.ProcessName}]", ex);
-                            }
-                            finally
-                            {
-                                try
-                                {
-                                    process.Dispose();
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Couldn't dispose process during dispose. [pid={process.Id}, name={process.ProcessName}]", ex);
-                                }
-                            }
+                            try { process.Dispose(); } catch { /* Ignore */ }
                         }
                         _processes.Clear();
                     }
-
-                    // Dispose cancellation token source
-                    _refreshCancellationTokenSource?.Dispose();
-                    _refreshCancellationTokenSource = null;
-
-                    // AsyncLock doesn't need explicit disposal
                 }
                 catch (Exception ex)
                 {

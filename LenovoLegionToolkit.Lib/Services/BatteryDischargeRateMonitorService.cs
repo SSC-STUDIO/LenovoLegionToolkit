@@ -18,6 +18,13 @@ public class BatteryDischargeRateMonitorService
         if (_refreshTask != null)
             return;
 
+        // Check if battery operations are supported to avoid infinite loops
+        if (!Battery.TestBatterySupport())
+        {
+            // Don't start the monitoring service if battery operations fail
+            return;
+        }
+
         if (_cts is not null)
             await _cts.CancelAsync().ConfigureAwait(false);
 
@@ -30,24 +37,46 @@ public class BatteryDischargeRateMonitorService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Battery monitoring service started...");
 
+            var iterationCount = 0;
+            
             while (!token.IsCancellationRequested)
             {
                 try
                 {
+                    iterationCount++;
+                    
+                    // Add safety check to prevent infinite loops
+                    if (iterationCount > 1000)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Battery monitoring service exceeded safe iteration limit ({iterationCount}), stopping to prevent infinite loop");
+                        break;
+                    }
+
+                    if (Log.Instance.IsTraceEnabled && iterationCount % 10 == 0)
+                        Log.Instance.Trace($"Battery monitoring iteration: {iterationCount}");
+
                     Battery.SetMinMaxDischargeRate();
 
                     await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException) { }
+                catch (OperationCanceledException) 
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Battery monitoring service cancelled.");
+                }
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Battery monitoring service failed.", ex);
+                        Log.Instance.Trace($"Battery monitoring service failed at iteration {iterationCount}.", ex);
+                    
+                    // Break on exception to prevent error loops
+                    break;
                 }
             }
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery monitoring service stopped.");
+                Log.Instance.Trace($"Battery monitoring service stopped after {iterationCount} iterations.");
         }, token);
     }
 

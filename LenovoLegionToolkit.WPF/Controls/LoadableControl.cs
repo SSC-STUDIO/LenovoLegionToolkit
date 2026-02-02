@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,7 +13,7 @@ public class LoadableControl : UserControl
     private readonly ProgressRing _progressRing = new()
     {
         IsIndeterminate = true,
-        VerticalAlignment = VerticalAlignment.Top,
+        VerticalAlignment = VerticalAlignment.Center,
         HorizontalAlignment = HorizontalAlignment.Center,
         Width = 48,
         Height = 48,

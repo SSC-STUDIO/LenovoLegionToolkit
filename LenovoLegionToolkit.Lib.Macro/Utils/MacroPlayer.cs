@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -33,10 +33,22 @@ internal class MacroPlayer
         _cancellationTokenSource.Cancel();
     }
 
+    public void Stop()
+    {
+        try
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+        catch
+        {
+            // Ignore errors during cleanup
+        }
+    }
+
     public async Task StartPlayingAsync(MacroSequence sequence)
     {
-        await _cancellationTokenSource.CancelAsync();
-        try { await _playTask; }
+        await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+        try { await _playTask.ConfigureAwait(false); }
         catch (OperationCanceledException) { }
 
         _cancellationTokenSource = new();
