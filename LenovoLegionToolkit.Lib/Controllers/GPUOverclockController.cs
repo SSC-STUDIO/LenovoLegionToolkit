@@ -55,6 +55,12 @@ public class GPUOverclockController
 
         try
         {
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            
+            // Strictly disable specialized machine features on incompatible machines
+            if (!Compatibility.IsSupportedLegionMachine(mi))
+                return false;
+
             NVAPI.Initialize();
             isSupported = NVAPI.GetGPU() is not null;
         }

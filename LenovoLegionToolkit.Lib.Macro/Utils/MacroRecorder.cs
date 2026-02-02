@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -73,10 +74,35 @@ internal class MacroRecorder
 
         var wasInterrupted = _interrupted;
 
-        SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        try
+        {
+            SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unsubscribe from SystemEvents.SessionSwitch: {ex.Message}", ex);
+        }
 
-        PInvoke.UnhookWindowsHookEx(_kbHook);
-        PInvoke.UnhookWindowsHookEx(_mouseHook);
+        try
+        {
+            PInvoke.UnhookWindowsHookEx(_kbHook);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unhook keyboard hook: {ex.Message}", ex);
+        }
+
+        try
+        {
+            PInvoke.UnhookWindowsHookEx(_mouseHook);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unhook mouse hook: {ex.Message}", ex);
+        }
 
         _kbHook = default;
         _mouseHook = default;

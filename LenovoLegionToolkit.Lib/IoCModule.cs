@@ -114,6 +114,8 @@ public class IoCModule : Module
         builder.Register<GodModeController>();
         builder.Register<GodModeControllerV1>(true);
         builder.Register<GodModeControllerV2>(true);
+        builder.Register<GPUHardwareManager>().As<IGPUHardwareManager>();
+        builder.Register<GPUProcessManager>().As<IGPUProcessManager>();
         builder.Register<GPUController>();
         builder.Register<GPUOverclockController>();
         builder.Register<RGBKeyboardBacklightController>();
@@ -138,6 +140,7 @@ public class IoCModule : Module
         builder.Register<SunriseSunset>();
 
         builder.Register<BatteryDischargeRateMonitorService>();
+        builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
 
         // 注册插件管理器

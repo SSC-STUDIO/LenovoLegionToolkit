@@ -39,25 +39,40 @@ namespace LenovoLegionToolkit.WPF.Windows;
 
 public partial class MainWindow
 {
-    private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
-    private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
-    private readonly SpecialKeyListener _specialKeyListener = IoCContainer.Resolve<SpecialKeyListener>();
-    private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
-    private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
-    private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
-    private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
+    private readonly ApplicationSettings _applicationSettings;
+    private readonly IPluginManager _pluginManager;
+    private readonly SpecialKeyListener _specialKeyListener;
+    private readonly VantageDisabler _vantageDisabler;
+    private readonly LegionZoneDisabler _legionZoneDisabler;
+    private readonly FnKeysDisabler _fnKeysDisabler;
+    private readonly UpdateChecker _updateChecker;
 
     private TrayHelper? _trayHelper;
     private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
 
-    public bool TrayTooltipEnabled { get; init; } = true;
+    public bool TrayTooltipEnabled { get; set; } = true;
     public bool DisableConflictingSoftwareWarning { get; set; }
     public bool SuppressClosingEventHandler { get; set; }
 
     public Snackbar Snackbar => _snackbar;
 
-    public MainWindow()
+    public MainWindow(
+        ApplicationSettings applicationSettings,
+        IPluginManager pluginManager,
+        SpecialKeyListener specialKeyListener,
+        VantageDisabler vantageDisabler,
+        LegionZoneDisabler legionZoneDisabler,
+        FnKeysDisabler fnKeysDisabler,
+        UpdateChecker updateChecker)
     {
+        _applicationSettings = applicationSettings;
+        _pluginManager = pluginManager;
+        _specialKeyListener = specialKeyListener;
+        _vantageDisabler = vantageDisabler;
+        _legionZoneDisabler = legionZoneDisabler;
+        _fnKeysDisabler = fnKeysDisabler;
+        _updateChecker = updateChecker;
+
         InitializeComponent();
 
         Closing += MainWindow_Closing;
@@ -114,8 +129,23 @@ public partial class MainWindow
     {
         _contentGrid.Visibility = Visibility.Hidden;
 
-        if (!await KeyboardBacklightPage.IsSupportedAsync())
+        var mi = await Compatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+
+        if (!isSupportedLegionMachine)
+        {
+            _navigationStore.Items.Remove(_dashboardItem);
+            _navigationStore.Items.Remove(_automationItem);
             _navigationStore.Items.Remove(_keyboardItem);
+            _navigationStore.Items.Remove(_macroItem);
+
+            // If we removed the dashboard, we need to navigate to something else
+            _navigationStore.Navigate("windowsOptimization");
+        }
+        else if (!await KeyboardBacklightPage.IsSupportedAsync())
+        {
+            _navigationStore.Items.Remove(_keyboardItem);
+        }
 
         // Control WindowsOptimization navigation item visibility based on extension settings
         UpdateNavigationVisibility();
@@ -242,14 +272,19 @@ public partial class MainWindow
         ShowUpdateWindow();
     }
 
-    private void LoadDeviceInfo()
+    private async void LoadDeviceInfo()
     {
-        Task.Run(Compatibility.GetMachineInformationAsync)
-            .ContinueWith(mi =>
-            {
-                _deviceInfoIndicator.Content = mi.Result.Model;
-                _deviceInfoIndicator.Visibility = Visibility.Visible;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+        try
+        {
+            var mi = await Compatibility.GetMachineInformationAsync();
+            _deviceInfoIndicator.Content = mi.Model;
+            _deviceInfoIndicator.Visibility = Visibility.Visible;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to load device info: {ex.Message}", ex);
+        }
     }
 
     private void UpdateIndicators()
@@ -280,44 +315,50 @@ public partial class MainWindow
         });
     }
 
-    public void CheckForUpdates(bool manualCheck = false)
+    public async void CheckForUpdates(bool manualCheck = false)
     {
-        Task.Run(() => _updateChecker.CheckAsync(manualCheck))
-            .ContinueWith(async updatesAvailable =>
+        try
+        {
+            var result = await _updateChecker.CheckAsync(manualCheck);
+            if (result is null)
             {
-                var result = updatesAvailable.IsCompletedSuccessfully ? updatesAvailable.Result : null;
-                if (result is null || updatesAvailable.IsFaulted)
-                {
-                    _updateIndicator.Visibility = Visibility.Collapsed;
+                _updateIndicator.Visibility = Visibility.Collapsed;
 
-                    if (manualCheck && WindowState != WindowState.Minimized)
+                if (manualCheck && WindowState != WindowState.Minimized)
+                {
+                    switch (_updateChecker.Status)
                     {
-                        switch (_updateChecker.Status)
-                        {
-                            case UpdateCheckStatus.Success:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
-                                break;
-                            case UpdateCheckStatus.RateLimitReached:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
-                                break;
-                            case UpdateCheckStatus.Error:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
-                                break;
-                        }
+                        case UpdateCheckStatus.Success:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
+                            break;
+                        case UpdateCheckStatus.RateLimitReached:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
+                            break;
+                        case UpdateCheckStatus.Error:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
+                            break;
                     }
                 }
-                else
-                {
-                    var versionNumber = result.ToString(3);
+            }
+            else
+            {
+                var versionNumber = result.ToString(3);
 
-                    _updateIndicatorText.Text =
-                        string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
-                    _updateIndicator.Visibility = Visibility.Visible;
+                _updateIndicatorText.Text =
+                    string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
+                _updateIndicator.Visibility = Visibility.Visible;
 
-                    if (WindowState == WindowState.Minimized)
-                        MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                if (WindowState == WindowState.Minimized)
+                    MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Check for updates failed.", ex);
+            
+            _updateIndicator.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void RestoreSize()

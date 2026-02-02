@@ -14,5 +14,6 @@ public class PluginMetadata
     public string Version { get; set; } = "1.0.0";
     public string MinimumHostVersion { get; set; } = "1.0.0";
     public string? Author { get; set; }
+    public string? FilePath { get; set; }
 }
 

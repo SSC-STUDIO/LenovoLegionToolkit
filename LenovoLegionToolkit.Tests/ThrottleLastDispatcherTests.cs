@@ -71,7 +71,7 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(50));
         
         // Act & Assert
-        Func<Task> act = async () => await dispatcher.DispatchAsync(null);
+        Func<Task> act = async () => await dispatcher.DispatchAsync(null!);
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
     
