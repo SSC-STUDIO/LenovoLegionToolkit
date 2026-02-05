@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -237,70 +237,202 @@ public class AutomationProcessor(
 
     #region Listeners
 
-    private async void DisplayConfigurationListener_Changed(object? sender, DisplayConfigurationListener.ChangedEventArgs args)
+private async Task DisplayConfigurationListener_ChangedAsync(object? sender, DisplayConfigurationListener.ChangedEventArgs args)
     {
-        var e = new HDRAutomationEvent(args.HDR);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new HDRAutomationEvent(args.HDR);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in DisplayConfigurationListener_Changed: {ex.Message}", ex);
+        }
     }
 
-    private async void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs args)
+    private void DisplayConfigurationListener_Changed(object? sender, DisplayConfigurationListener.ChangedEventArgs args)
     {
-        var e = new NativeWindowsMessageEvent(args.Message, args.Data);
-        await ProcessEvent(e).ConfigureAwait(false);
+        _ = DisplayConfigurationListener_ChangedAsync(sender, args);
     }
 
-    private async void PowerStateListener_Changed(object? sender, PowerStateListener.ChangedEventArgs args)
+    private async Task NativeWindowsMessageListener_ChangedAsync(object? sender, NativeWindowsMessageListener.ChangedEventArgs args)
     {
-        var e = new PowerStateAutomationEvent(args.PowerStateEvent, args.PowerAdapterStateChanged);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new NativeWindowsMessageEvent(args.Message, args.Data);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in NativeWindowsMessageListener_Changed: {ex.Message}", ex);
+        }
     }
 
-    private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs args)
+    private void NativeWindowsMessageListener_Changed(object? sender, NativeWindowsMessageListener.ChangedEventArgs args)
     {
-        var e = new PowerModeAutomationEvent(args.State);
-        await ProcessEvent(e).ConfigureAwait(false);
+        _ = NativeWindowsMessageListener_ChangedAsync(sender, args);
     }
 
-    private async void GodModeController_PresetChanged(object? sender, Guid presetId)
+    private async Task PowerStateListener_ChangedAsync(object? sender, PowerStateListener.ChangedEventArgs args)
     {
-        var e = new CustomModePresetAutomationEvent(presetId);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new PowerStateAutomationEvent(args.PowerStateEvent, args.PowerAdapterStateChanged);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in PowerStateListener_Changed: {ex.Message}", ex);
+        }
     }
 
-    private async void GameAutoListener_Changed(object? sender, GameAutoListener.ChangedEventArgs args)
+    private void PowerStateListener_Changed(object? sender, PowerStateListener.ChangedEventArgs args)
     {
-        var e = new GameAutomationEvent(args.Running);
-        await ProcessEvent(e).ConfigureAwait(false);
+        _ = PowerStateListener_ChangedAsync(sender, args);
     }
 
-    private async void ProcessAutoListener_Changed(object? sender, ProcessAutoListener.ChangedEventArgs args)
+    private async Task PowerModeListener_ChangedAsync(object? sender, PowerModeListener.ChangedEventArgs args)
     {
-        var e = new ProcessAutomationEvent(args.Type, args.ProcessInfo);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new PowerModeAutomationEvent(args.State);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in PowerModeListener_Changed: {ex.Message}", ex);
+        }
     }
 
-    private async void SessionLockUnlockListener_Changed(object? sender, SessionLockUnlockListener.ChangedEventArgs args)
+    private void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs args)
     {
-        var e = new SessionLockUnlockAutomationEvent(args.Locked);
-        await ProcessEvent(e).ConfigureAwait(false);
+        _ = PowerModeListener_ChangedAsync(sender, args);
     }
 
-    private async void TimeAutoListener_Changed(object? sender, TimeAutoListener.ChangedEventArgs args)
+    private async Task GodModeController_PresetChangedAsync(object? sender, Guid presetId)
     {
-        var e = new TimeAutomationEvent(args.Time, args.Day);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new CustomModePresetAutomationEvent(presetId);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in GodModeController_PresetChanged: {ex.Message}", ex);
+        }
     }
 
-    private async void UserInactivityAutoListener_Changed(object? sender, UserInactivityAutoListener.ChangedEventArgs args)
+    private void GodModeController_PresetChanged(object? sender, Guid presetId)
     {
-        var e = new UserInactivityAutomationEvent(args.TimerResolution * args.TickCount);
-        await ProcessEvent(e).ConfigureAwait(false);
+        _ = GodModeController_PresetChangedAsync(sender, presetId);
     }
 
-    private async void WiFiAutoListener_Changed(object? sender, WiFiAutoListener.ChangedEventArgs args)
+    private async Task GameAutoListener_ChangedAsync(object? sender, GameAutoListener.ChangedEventArgs args)
     {
-        var e = new WiFiAutomationEvent(args.IsConnected, args.Ssid);
-        await ProcessEvent(e).ConfigureAwait(false);
+        try
+        {
+            var e = new GameAutomationEvent(args.Running);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in GameAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void GameAutoListener_Changed(object? sender, GameAutoListener.ChangedEventArgs args)
+    {
+        _ = GameAutoListener_ChangedAsync(sender, args);
+    }
+
+    private async Task ProcessAutoListener_ChangedAsync(object? sender, ProcessAutoListener.ChangedEventArgs args)
+    {
+        try
+        {
+            var e = new ProcessAutomationEvent(args.Type, args.ProcessInfo);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in ProcessAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void ProcessAutoListener_Changed(object? sender, ProcessAutoListener.ChangedEventArgs args)
+    {
+        _ = ProcessAutoListener_ChangedAsync(sender, args);
+    }
+
+    private async Task SessionLockUnlockListener_ChangedAsync(object? sender, SessionLockUnlockListener.ChangedEventArgs args)
+    {
+        try
+        {
+            var e = new SessionLockUnlockAutomationEvent(args.Locked);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in SessionLockUnlockListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void SessionLockUnlockListener_Changed(object? sender, SessionLockUnlockListener.ChangedEventArgs args)
+    {
+        _ = SessionLockUnlockListener_ChangedAsync(sender, args);
+    }
+
+    private async Task TimeAutoListener_ChangedAsync(object? sender, TimeAutoListener.ChangedEventArgs args)
+    {
+        try
+        {
+            var e = new TimeAutomationEvent(args.Time, args.Day);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in TimeAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void TimeAutoListener_Changed(object? sender, TimeAutoListener.ChangedEventArgs args)
+    {
+        _ = TimeAutoListener_ChangedAsync(sender, args);
+    }
+
+    private async Task UserInactivityAutoListener_ChangedAsync(object? sender, UserInactivityAutoListener.ChangedEventArgs args)
+    {
+        try
+        {
+            var e = new UserInactivityAutomationEvent(args.TimerResolution * args.TickCount);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in UserInactivityAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void UserInactivityAutoListener_Changed(object? sender, UserInactivityAutoListener.ChangedEventArgs args)
+    {
+        _ = UserInactivityAutoListener_ChangedAsync(sender, args);
+    }
+
+    private async Task WiFiAutoListener_ChangedAsync(object? sender, WiFiAutoListener.ChangedEventArgs args)
+    {
+        try
+        {
+            var e = new WiFiAutomationEvent(args.IsConnected, args.Ssid);
+            await ProcessEvent(e).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in WiFiAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void WiFiAutoListener_Changed(object? sender, WiFiAutoListener.ChangedEventArgs args)
+    {
+        _ = WiFiAutoListener_ChangedAsync(sender, args);
     }
 
     #endregion

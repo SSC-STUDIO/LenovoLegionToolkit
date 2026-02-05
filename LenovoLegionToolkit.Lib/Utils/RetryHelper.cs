@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Utils;
@@ -12,6 +13,7 @@ public static class RetryHelper
         int? maximumRetries = null,
         TimeSpan? timeout = null,
         Func<Exception, bool>? matchingException = null,
+        IDelayProvider? delayProvider = null,
         [CallerMemberName] string? tag = null)
     {
         maximumRetries ??= 3;
@@ -41,7 +43,10 @@ public static class RetryHelper
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Retrying {retries}/{maximumRetries}... [tag={tag}]");
 
-                await Task.Delay(timeout.Value).ConfigureAwait(false);
+                if (delayProvider is not null)
+                    await delayProvider.Delay(timeout.Value, CancellationToken.None).ConfigureAwait(false);
+                else
+                    await Task.Delay(timeout.Value).ConfigureAwait(false);
             }
         }
     }

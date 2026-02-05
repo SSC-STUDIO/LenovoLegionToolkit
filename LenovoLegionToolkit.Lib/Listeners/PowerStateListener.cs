@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
@@ -77,23 +77,36 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
         return Task.CompletedTask;
     }
 
-    private async void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeChangedEventArgs e)
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Event received: {e.Mode}");
-
-        var powerMode = e.Mode switch
+        try
         {
-            PowerModes.StatusChange => PowerStateEvent.StatusChange,
-            PowerModes.Resume => PowerStateEvent.Resume,
-            PowerModes.Suspend => PowerStateEvent.Suspend,
-            _ => PowerStateEvent.Unknown
-        };
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Event received: {e.Mode}");
 
-        if (powerMode is PowerStateEvent.Unknown)
-            return;
+            var powerMode = e.Mode switch
+            {
+                PowerModes.StatusChange => PowerStateEvent.StatusChange,
+                PowerModes.Resume => PowerStateEvent.Resume,
+                PowerModes.Suspend => PowerStateEvent.Suspend,
+                _ => PowerStateEvent.Unknown
+            };
 
-        await HandleAsync(powerMode).ConfigureAwait(false);
+            if (powerMode is PowerStateEvent.Unknown)
+                return;
+
+            await HandleAsync(powerMode).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in SystemEvents_PowerModeChanged: {ex.Message}", ex);
+        }
+    }
+
+    // Event handler wrapper that properly handles async task
+    private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    {
+        _ = SystemEvents_PowerModeChangedAsync(sender, e);
     }
 
     private unsafe uint Callback(void* context, uint type, void* setting)

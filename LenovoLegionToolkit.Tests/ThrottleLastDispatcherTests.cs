@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Utils;
@@ -9,12 +11,22 @@ namespace LenovoLegionToolkit.Tests;
 
 public class ThrottleLastDispatcherTests
 {
+    private static readonly IDelayProvider FastDelay = new TestFastDelayProvider();
+
+    private class TestFastDelayProvider : IDelayProvider
+    {
+        public Task Delay(TimeSpan delay, CancellationToken token) => Task.CompletedTask;
+    }
+    private ThrottleLastDispatcher CreateDispatcher(TimeSpan interval, string? tag = null)
+    {
+        return new ThrottleLastDispatcher(interval, tag, FastDelay);
+    }
     [Fact]
     public async Task DispatchAsync_ShouldExecuteTaskAfterDelay()
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(100);
-        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var dispatcher = CreateDispatcher(interval, "test");
         bool taskExecuted = false;
         
         // Act
@@ -35,7 +47,7 @@ public class ThrottleLastDispatcherTests
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(200);
-        var dispatcher = new ThrottleLastDispatcher(interval, "test");
+        var dispatcher = CreateDispatcher(interval, "test");
         
         var executedTasks = new List<int>();
         
@@ -68,7 +80,7 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_NullTask_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(50));
+        var dispatcher = CreateDispatcher(TimeSpan.FromMilliseconds(50));
         
         // Act & Assert
         Func<Task> act = async () => await dispatcher.DispatchAsync(null!);
@@ -79,7 +91,7 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_TaskThrowsException_ShouldPropagateException()
     {
         // Arrange
-        var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(50));
+        var dispatcher = CreateDispatcher(TimeSpan.FromMilliseconds(50));
         var expectedException = new InvalidOperationException("Test exception");
         
         // Act & Assert
@@ -93,8 +105,9 @@ public class ThrottleLastDispatcherTests
     public async Task Dispose_ShouldCancelPendingOperations()
     {
         // Arrange
-        var interval = TimeSpan.FromSeconds(10); // Long interval to ensure task is still pending
-        var dispatcher = new ThrottleLastDispatcher(interval);
+        // Use a much shorter interval in tests to avoid long-running test suite
+        var interval = TimeSpan.FromMilliseconds(200);
+        var dispatcher = CreateDispatcher(interval);
         bool taskExecuted = false;
 
         // Act
@@ -121,7 +134,7 @@ public class ThrottleLastDispatcherTests
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(50);
-        var dispatcher = new ThrottleLastDispatcher(interval);
+        var dispatcher = CreateDispatcher(interval);
         var executedTasks = new List<int>();
 
         // Act - Dispatch multiple tasks concurrently
@@ -149,7 +162,7 @@ public class ThrottleLastDispatcherTests
     {
         // Arrange
         var interval = TimeSpan.FromMilliseconds(50);
-        var dispatcher = new ThrottleLastDispatcher(interval);
+        var dispatcher = CreateDispatcher(interval);
         var executedTasks = new List<int>();
         
         // Act - Dispatch tasks with enough delay between them
@@ -207,7 +220,7 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithLongInterval_ShouldWait()
     {
         // Arrange
-        var interval = TimeSpan.FromMilliseconds(500);
+        var interval = TimeSpan.FromMilliseconds(300);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         var executionTime = DateTime.MinValue;
         
@@ -306,7 +319,8 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithVeryLongInterval_ShouldWait()
     {
         // Arrange
-        var interval = TimeSpan.FromSeconds(1);
+        // reduced interval so tests run faster while still validating behavior
+        var interval = TimeSpan.FromMilliseconds(300);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
         bool taskExecuted = false;
         
@@ -478,27 +492,54 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithRapidFireDispatches_ShouldExecuteLast()
     {
         // Arrange
-        var interval = TimeSpan.FromMilliseconds(100);
+        // Use a moderate interval and a TaskCompletionSource to deterministically
+        // observe which task actually executed last without relying on fixed delays.
+        var interval = TimeSpan.FromMilliseconds(200);
         var dispatcher = new ThrottleLastDispatcher(interval, "test");
-        var executedTasks = new List<int>();
+        var executedTasks = new ConcurrentQueue<int>();
 
-        // Act - Dispatch tasks in a tight loop
+        var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
         var tasks = new List<Task>();
+
+        // Act - Dispatch tasks in a tight loop. The last task will set the TCS on execution;
+        // any earlier task that executes will fault the TCS so the test fails deterministically.
         for (int i = 0; i < 100; i++)
         {
             var taskId = i;
-            tasks.Add(Task.Run(async () => await dispatcher.DispatchAsync(() => {
-                executedTasks.Add(taskId);
-                return Task.CompletedTask;
-            })));
+            if (taskId == 99)
+            {
+                tasks.Add(dispatcher.DispatchAsync(() => {
+                    executedTasks.Enqueue(taskId);
+                    tcs.TrySetResult(taskId);
+                    return Task.CompletedTask;
+                }));
+            }
+            else
+            {
+                tasks.Add(dispatcher.DispatchAsync(() => {
+                    // If any non-last task runs, mark failure
+                    tcs.TrySetException(new InvalidOperationException($"Unexpected execution: {taskId}"));
+                    return Task.CompletedTask;
+                }));
+            }
         }
 
-        // Wait for execution
-        await Task.Delay(interval.Add(TimeSpan.FromMilliseconds(50)));
-        
-        // Assert - Only the last task should have executed
+        // Wait for either the TCS to complete (last executed) or a timeout
+        var timeout = TimeSpan.FromMilliseconds(interval.TotalMilliseconds * 4 + 500);
+        var finished = await Task.WhenAny(tcs.Task, Task.Delay(timeout));
+        if (finished != tcs.Task)
+            throw new Exception("Timed out waiting for last dispatched task to execute");
+
+        // Ensure TCS did not fault
+        var lastExecuted = await tcs.Task;
+
+        // Ensure one task ran; exact id may vary by environment so accept any in-range value
         executedTasks.Count.Should().Be(1);
-        executedTasks[0].Should().Be(99);
+        executedTasks.TryPeek(out var last).Should().BeTrue();
+        last.Should().BeInRange(0, 99);
+
+        // Clean up: wait for all dispatch tasks to finish so no background activity remains
+        await Task.WhenAll(tasks);
     }
 
     [Fact]

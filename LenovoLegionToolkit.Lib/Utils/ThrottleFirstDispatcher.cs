@@ -4,13 +4,24 @@ using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
-public class ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
+public class ThrottleFirstDispatcher
 {
     private readonly AsyncLock _lock = new();
 
     private DateTime _lastEvent = DateTime.MinValue;
+    private readonly TimeSpan _interval;
+    private readonly string? _tag;
 
-    public TimeSpan Interval => interval;
+    public ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
+    {
+        if (interval < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(interval));
+
+        _interval = interval;
+        _tag = tag;
+    }
+
+    public TimeSpan Interval => _interval;
 
     public async Task DispatchAsync(Func<Task> task)
     {
@@ -20,16 +31,16 @@ public class ThrottleFirstDispatcher(TimeSpan interval, string? tag = null)
         {
             var diff = DateTime.UtcNow - _lastEvent;
 
-            if (diff < interval)
+            if (diff < _interval)
             {
-                if (tag is not null && Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Throttling... [tag={tag}, diff={diff.TotalMilliseconds}ms]");
+                if (_tag is not null && Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Throttling... [tag={_tag}, diff={diff.TotalMilliseconds}ms]");
 
                 return;
             }
 
-            if (tag is not null && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Allowing... [tag={tag}, diff={diff.TotalMilliseconds}ms]");
+            if (_tag is not null && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Allowing... [tag={_tag}, diff={diff.TotalMilliseconds}ms]");
 
             await task().ConfigureAwait(false);
 

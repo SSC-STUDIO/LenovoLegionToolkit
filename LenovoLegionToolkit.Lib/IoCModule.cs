@@ -139,6 +139,9 @@ public class IoCModule : Module
 
         builder.Register<SunriseSunset>();
 
+        // Register default delay provider for production code so IDelayProvider can be injected
+        builder.Register<DefaultDelayProvider>().As<IDelayProvider>().SingleInstance();
+
         builder.Register<BatteryDischargeRateMonitorService>();
         builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
