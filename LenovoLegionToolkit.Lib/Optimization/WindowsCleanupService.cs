@@ -298,7 +298,10 @@ public class WindowsCleanupService
                             {
                                 File.Delete(file);
                             }
-                            catch { }
+                            catch
+                            {
+                                // File may be locked or already deleted, continue with next file
+                            }
                         }
 
                         if (rule.Recursive)
@@ -452,7 +455,10 @@ public class WindowsCleanupService
                                 size += new FileInfo(file).Length;
                             }
                         }
-                        catch { }
+                        catch
+                        {
+                            // File may be inaccessible, skip it
+                        }
                     }
 
                     if (recursive)
@@ -463,7 +469,10 @@ public class WindowsCleanupService
                         }
                     }
                 }
-                catch { }
+                catch
+                {
+                    // Directory may be inaccessible, continue with other directories
+                }
             }
             return size;
         }, cancellationToken).ConfigureAwait(false);

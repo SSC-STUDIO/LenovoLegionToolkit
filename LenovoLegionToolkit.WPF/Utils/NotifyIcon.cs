@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -74,7 +74,7 @@ public class NotifyIcon : NativeWindow, IDisposable
         }
     }
 
-    public ContextMenu? ContextMenu { get; set; }
+    public System.Windows.Controls.ContextMenu? ContextMenu { get; set; }
 
     public event EventHandler? OnClick;
 

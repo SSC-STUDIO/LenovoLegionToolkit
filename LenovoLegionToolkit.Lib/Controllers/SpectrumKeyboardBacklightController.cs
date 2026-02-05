@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,7 +19,7 @@ using Windows.Win32;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
 
-public class SpectrumKeyboardBacklightController
+public class SpectrumKeyboardBacklightController : IDisposable
 {
     public interface ISpectrumScreenCapture
     {
@@ -68,34 +69,46 @@ public class SpectrumKeyboardBacklightController
         _listener.Changed += Listener_Changed;
     }
 
-    private async void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e)
+private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.ChangedEventArgs e)
     {
-        if (!await IsSupportedAsync().ConfigureAwait(false))
-            return;
-
-        if (await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
-            return;
-
-        switch (e.SpecialKey)
+        try
         {
-            case SpecialKey.SpectrumPreset1
-                or SpecialKey.SpectrumPreset2
-                or SpecialKey.SpectrumPreset3
-                or SpecialKey.SpectrumPreset4
-                or SpecialKey.SpectrumPreset5
-                or SpecialKey.SpectrumPreset6:
-                {
-                    await StartAuroraIfNeededAsync().ConfigureAwait(false);
-                    break;
-                }
+            if (!await IsSupportedAsync().ConfigureAwait(false))
+                return;
+
+            if (await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
+                return;
+
+            switch (e.SpecialKey)
+            {
+                case SpecialKey.SpectrumPreset1
+                    or SpecialKey.SpectrumPreset2
+                    or SpecialKey.SpectrumPreset3
+                    or SpecialKey.SpectrumPreset4
+                    or SpecialKey.SpectrumPreset5
+                    or SpecialKey.SpectrumPreset6:
+                    {
+                        await StartAuroraIfNeededAsync().ConfigureAwait(false);
+                        break;
+                    }
+            }
         }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in Listener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    // Event handler wrapper that properly handles async task
+    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e)
+    {
+        _ = Listener_ChangedAsync(sender, e);
     }
 
     public async Task<bool> IsSupportedAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        
-        // Strictly disable specialized machine features on incompatible machines
+
         if (!Compatibility.IsSupportedLegionMachine(mi))
             return false;
 
@@ -104,9 +117,6 @@ public class SpectrumKeyboardBacklightController
 
     public async Task<(SpectrumLayout, KeyboardLayout, HashSet<ushort>)> GetKeyboardLayoutAsync()
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Checking keyboard layout...");
-
         var (width, height, keys) = await ReadAllKeyCodesAsync().ConfigureAwait(false);
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
 
@@ -127,7 +137,7 @@ public class SpectrumKeyboardBacklightController
             keyboardLayout = KeyboardLayout.Ansi;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Layout is {spectrumLayout}, {keyboardLayout}.");
+            Log.Instance.Trace($"Keyboard layout: {spectrumLayout}, {keyboardLayout}");
 
         return (spectrumLayout, keyboardLayout, keys);
     }
@@ -140,15 +150,9 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Getting keyboard brightness...");
-
         var input = new LENOVO_SPECTRUM_GET_BRIGHTNESS_REQUEST();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_BRIGHTNESS_REQUEST, LENOVO_SPECTRUM_GET_BRIGHTNESS_RESPONSE>(handle, input).ConfigureAwait(false);
         var result = output.Brightness;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Keyboard brightness is {result}.");
 
         return result;
     }
@@ -164,14 +168,11 @@ public class SpectrumKeyboardBacklightController
         if (brightness is < 0 or > 9)
             throw new InvalidOperationException("Brightness must be between 0 and 9");
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Setting keyboard brightness to: {brightness}.");
-
         var input = new LENOVO_SPECTRUM_SET_BRIGHTNESS_REQUEST((byte)brightness);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Keyboard brightness set.");
+            Log.Instance.Trace($"Keyboard brightness set to {brightness}");
     }
 
     public async Task<bool> GetLogoStatusAsync()
@@ -182,15 +183,9 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Getting logo status...");
-
         var input = new LENOVO_SPECTRUM_GET_LOGO_STATUS();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_LOGO_STATUS, LENOVO_SPECTRUM_GET_LOGO_STATUS_RESPONSE>(handle, input).ConfigureAwait(false);
         var result = output.IsOn;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Logo status is {result}.");
 
         return result;
     }
@@ -203,14 +198,11 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Setting logo status to: {isOn}.");
-
         var input = new LENOVO_SPECTRUM_SET_LOGO_STATUS_REQUEST(isOn);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Logo status set.");
+            Log.Instance.Trace($"Logo status set to {isOn}");
     }
 
     public async Task<int> GetProfileAsync()
@@ -221,15 +213,9 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Getting keyboard profile...");
-
         var input = new LENOVO_SPECTRUM_GET_PROFILE_REQUEST();
         var output = await SetAndGetFeature<LENOVO_SPECTRUM_GET_PROFILE_REQUEST, LENOVO_SPECTRUM_GET_PROFILE_RESPONSE>(handle, input).ConfigureAwait(false);
         var result = output.Profile;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Keyboard profile is {result}.");
 
         return result;
     }
@@ -247,18 +233,15 @@ public class SpectrumKeyboardBacklightController
         if (profile is < 0 or > 6)
             throw new InvalidOperationException("Profile must be between 0 and 6");
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Setting keyboard profile to {profile}...");
-
         var input = new LENOVO_SPECTRUM_SET_PROFILE_REQUEST((byte)profile);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
 
         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Keyboard profile set to {profile}.");
-
         await StartAuroraIfNeededAsync(profile).ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Keyboard profile set to {profile}");
     }
 
     public async Task SetProfileDefaultAsync(int profile)
@@ -269,14 +252,11 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Setting keyboard profile {profile} to default...");
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Keyboard profile {profile} set to default.");
-
         var input = new LENOVO_SPECTRUM_SET_PROFILE_DEFAULT_REQUEST((byte)profile);
         await SetFeatureAsync(handle, input).ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Keyboard profile {profile} reset to default");
     }
 
     public async Task SetProfileDescriptionAsync(int profile, SpectrumKeyboardBacklightEffect[] effects)
@@ -287,17 +267,14 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Setting {effects.Length} effect to keyboard profile {profile}...");
-
         effects = Compress(effects);
         var bytes = Convert(profile, effects).ToBytes();
         await SetFeatureAsync(handle, bytes).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Set {effects.Length} effect to keyboard profile {profile}.");
-
         await StartAuroraIfNeededAsync(profile).ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Profile {profile} set with {effects.Length} effects");
     }
 
     public async Task<(int Profile, SpectrumKeyboardBacklightEffect[] Effects)> GetProfileDescriptionAsync(int profile)
@@ -308,17 +285,11 @@ public class SpectrumKeyboardBacklightController
         if (handle is null)
             throw new InvalidOperationException(nameof(handle));
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Getting effects for keyboard profile {profile}...");
-
         var input = new LENOVO_SPECTRUM_GET_EFFECT_REQUEST((byte)profile);
         var buffer = await SetAndGetFeature<LENOVO_SPECTRUM_GET_EFFECT_REQUEST>(handle, input, 960).ConfigureAwait(false);
 
         var description = LENOVO_SPECTRUM_EFFECT_DESCRIPTION.FromBytes(buffer);
         var result = Convert(description);
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Retrieved {result.Effects.Length} effects for keyboard profile {profile}...");
 
         return result;
     }
@@ -345,47 +316,47 @@ public class SpectrumKeyboardBacklightController
 
         await StopAuroraIfNeededAsync().ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting Aurora... [profile={profile}]");
-
         profile ??= await GetProfileAsync().ConfigureAwait(false);
         var (_, effects) = await GetProfileDescriptionAsync(profile.Value).ConfigureAwait(false);
 
         if (!effects.Any(e => e.Type == SpectrumKeyboardBacklightEffectType.AuroraSync))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora not needed. [profile={profile}]");
-
             return false;
-        }
 
         _auroraRefreshCancellationTokenSource = new();
         var token = _auroraRefreshCancellationTokenSource.Token;
         _auroraRefreshTask = Task.Run(() => AuroraRefreshAsync(profile.Value, token), token);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Aurora started. [profile={profile}]");
+            Log.Instance.Trace($"Aurora started (profile={profile})");
 
         return true;
     }
 
     public async Task StopAuroraIfNeededAsync()
     {
-        await ThrowIfVantageEnabled().ConfigureAwait(false);
+        try
+        {
+            var sw = global::System.Diagnostics.Stopwatch.StartNew();
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Stopping Aurora...");
+            await ThrowIfVantageEnabled().ConfigureAwait(false);
 
-        if (_auroraRefreshCancellationTokenSource is not null)
-            await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            if (_auroraRefreshCancellationTokenSource is not null)
+                await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
-        if (_auroraRefreshTask is not null)
-            await _auroraRefreshTask.ConfigureAwait(false);
+            // Immediately set task to null without waiting - let it run in background
+            // This prevents blocking the shutdown process
+            var orphanedTask = _auroraRefreshTask;
+            _auroraRefreshTask = null;
 
-        _auroraRefreshTask = null;
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Aurora stopped.");
+            sw.Stop();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Aurora stopped (orphaned task) in {sw.ElapsedMilliseconds}ms. Task status: {orphanedTask?.Status}");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping Aurora: {ex.Message}");
+        }
     }
 
     public async Task<Dictionary<ushort, RGBColor>> GetStateAsync(bool skipVantageCheck = false)
@@ -587,11 +558,11 @@ public class SpectrumKeyboardBacklightController
             {
                 if (_deviceHandle is not null && await IsReadyAsync(_deviceHandle).ConfigureAwait(false))
                     return _deviceHandle;
-
+ 
                 SafeFileHandle? newDeviceHandle = null;
 
-                const int RETRIES = 3;
-                const int DELAY = 50;
+                const int RETRIES = 1;
+                const int DELAY = 10;
 
                 for (var i = 0; i < RETRIES; i++)
                 {
@@ -605,7 +576,8 @@ public class SpectrumKeyboardBacklightController
                         break;
                     }
 
-                    await Task.Delay(DELAY).ConfigureAwait(false);
+                    if (i < RETRIES - 1)
+                        await Task.Delay(DELAY).ConfigureAwait(false);
                 }
 
                 if (newDeviceHandle is null)
@@ -993,7 +965,38 @@ public class SpectrumKeyboardBacklightController
         var header = new LENOVO_SPECTRUM_EFFECT_HEADER(effectType, speed, direction, clockwiseDirection, colorMode);
         var colors = effect.Colors.Select(c => new LENOVO_SPECTRUM_COLOR(c.R, c.G, c.B)).ToArray();
         var keys = effect.Type.IsAllLightsEffect() ? [0x65] : effect.Keys;
-        var result = new LENOVO_SPECTRUM_EFFECT(header, index + 1, colors, keys);
+var result = new LENOVO_SPECTRUM_EFFECT(header, index + 1, colors, keys);
         return result;
+    }
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    _auroraRefreshCancellationTokenSource?.Cancel();
+                    _auroraRefreshCancellationTokenSource?.Dispose();
+                    _auroraRefreshTask?.Dispose();
+                    _deviceHandle?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during SpectrumKeyboardBacklightController disposal", ex);
+                }
+            }
+            _disposed = true;
+        }
     }
 }

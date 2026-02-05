@@ -56,8 +56,7 @@ public class GPUOverclockController
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-            
-            // Strictly disable specialized machine features on incompatible machines
+
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 
@@ -205,13 +204,26 @@ public class GPUOverclockController
         return true;
     }
 
-    private async void NativeWindowsMessageListenerOnChanged(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
+private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
     {
-        if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
-            return;
+        try
+        {
+            if (e.Message != NativeWindowsMessage.OnDisplayDeviceArrival)
+                return;
 
-        if (await IsSupportedAsync().ConfigureAwait(false))
-            await ApplyStateAsync().ConfigureAwait(false);
+            if (await IsSupportedAsync().ConfigureAwait(false))
+                await ApplyStateAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in NativeWindowsMessageListenerOnChanged: {ex.Message}", ex);
+        }
+    }
+
+    // Event handler wrapper that properly handles async task
+    private void NativeWindowsMessageListenerOnChanged(object? sender, NativeWindowsMessageListener.ChangedEventArgs e)
+    {
+        _ = NativeWindowsMessageListenerOnChangedAsync(sender, e);
     }
 
     private static int GetMaxMemoryDeltaMhz(PhysicalGPU? gpu) => gpu?.MemoryInformation.RAMMaker switch

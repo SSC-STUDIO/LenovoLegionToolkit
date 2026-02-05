@@ -8,11 +8,12 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-    public partial class ActionDetailsWindow : UiWindow
+    public partial class ActionDetailsWindow : BaseWindow
     {
         private readonly string _actionKey;
         private readonly WindowsOptimizationActionDefinition? _actionDefinition;

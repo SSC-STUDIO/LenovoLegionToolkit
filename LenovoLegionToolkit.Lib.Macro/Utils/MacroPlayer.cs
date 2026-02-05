@@ -20,6 +20,7 @@ internal class MacroPlayer
 
     private Task _playTask = Task.CompletedTask;
     private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly IDelayProvider _delayProvider;
 
     public void InterruptIfNeeded(KBDLLHOOKSTRUCT kbStruct)
     {
@@ -45,6 +46,11 @@ internal class MacroPlayer
         }
     }
 
+    public MacroPlayer(IDelayProvider? delayProvider = null)
+    {
+        _delayProvider = delayProvider ?? new DefaultDelayProvider();
+    }
+
     public async Task StartPlayingAsync(MacroSequence sequence)
     {
         await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
@@ -63,7 +69,7 @@ internal class MacroPlayer
                 foreach (var macroEvent in sequence.Events ?? [])
                 {
                     if (!sequence.IgnoreDelays)
-                        await Task.Delay(macroEvent.Delay, token).ConfigureAwait(false);
+                        await _delayProvider.Delay(macroEvent.Delay, token).ConfigureAwait(false);
 
                     token.ThrowIfCancellationRequested();
 
