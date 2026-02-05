@@ -1,0 +1,52 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+  tests-fast:
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Run fast unit tests
+        run: |
+          # Run unit tests excluding integration/slow tests (mark slow tests with [Trait("Category","Integration")])
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
+
+  tests-slow:
+    needs: build
+    runs-on: windows-latest
+    if: ${{ always() }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Run slow/integration tests (optional)
+        run: |
+          # Run slow or integration tests separately. These are optional and can be run on schedule or manually.
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"

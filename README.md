@@ -24,6 +24,7 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 # Table of Contents
   - [Disclaimer](#disclaimer)
+  - [Quick Start](#quick-start)
   - [Download](#download)
   - [Compatibility](#compatibility)
   - [Features](#features)
@@ -32,6 +33,7 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
   - [FAQ](#faq)
   - [Arguments](#arguments)
   - [How to collect logs?](#how-to-collect-logs)
+  - [Documentation](#documentation)
   - [Contribution](#contribution)
 
 ## Disclaimer
@@ -75,6 +77,16 @@ LLT works best when it's running in the background, so go to Settings and enable
 > [!WARNING]
 > If you close LLT completely some functions will not work, like synchronizing Windows Power Modes or Windows Power Plans with current Power Mode, Macros or Actions. This is due to the fact that LLT does not run any background services and won't be able to respond to changes.
 
+## Quick Start
+
+1. **Install LLT** - Download from [Releases](https://github.com/Crs10259/LenovoLegionToolkit/releases/latest)
+2. **Configure Settings** - Enable "Autorun" and "Minimize on close" in Settings
+3. **Disable Conflicts** - Uninstall or disable Lenovo Vantage and Hotkeys
+4. **Explore Features** - Power modes, RGB lighting, fan curves, and more!
+
+> [!TIP]
+> First time? Check out the [User Guide](docs/ARCHITECTURE.md#quick-start) for detailed walkthroughs.
+
 #### Required drivers
 
 If you installed LLT on a clean Windows install, make sure to have necessary drivers installed. If drivers are missing, some options might not be available. Especially make sure that these two are installed on your system:
@@ -84,7 +96,7 @@ If you installed LLT on a clean Windows install, make sure to have necessary dri
 #### Problems with .NET?
 
 If for whatever reason LLT installer did not setup .NET properly:
-1. Go to https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+1. Go to https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 2. Find section ".NET Desktop Runtime"
 3. Download x64 Windows installer
 4. Run the installer
@@ -652,8 +664,31 @@ Make sure to include the following information in your issue:
 3. List of features that seem to not work.
 4. List of features that crash the app.
 
-The more info you add, the better the app will get over time. If anything seems off, write down precisely what was wrong and attach logs (`%LOCALAPPDATA%\LenovoLegionToolkit\log`). 
+The more info you add, the better the app will get over time. If anything seems off, write down precisely what was wrong and attach logs (`%LOCALAPPDATA%\LenovoLegionToolkit\log`).
 
+## Documentation
 
+Additional documentation is available in the `docs/` directory:
+
+| Document | Description |
+|----------|-------------|
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, components, and data flow |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Build, test, and deployment procedures |
+| [SECURITY.md](docs/SECURITY.md) | Security policy and best practices |
+| [CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) | Community guidelines and contribution standards |
+
+### Screenshots
+
+| File | Description |
+|------|-------------|
+| `assets/screenshot_main.png` | Main application interface |
+| `assets/screenshot_zh_hans.png` | Chinese localization interface |
+
+### Troubleshooting
+
+- **Application won't start?** Check [.NET 8.0 installation](#problems-with-net)
+- **Features not working?** See [compatibility](#compatibility) section
+- **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
+- **Still need help?** Join [Discord community](https://discord.com/invite/legionseries)
 
 Thanks in advance!

@@ -85,7 +85,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
     protected void RaiseChanged(TValue value) => Changed?.Invoke(this, GetEventArgs(value));
 
-    private async void Handler(TRawValue properties)
+private async Task HandlerAsync(TRawValue properties)
     {
         try
         {
@@ -102,5 +102,11 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to handle event.  [listener={GetType().Name}]", ex);
         }
+    }
+
+    // Event handler wrapper that properly handles async task
+    private void Handler(TRawValue properties)
+    {
+        _ = HandlerAsync(properties);
     }
 }

@@ -46,8 +46,7 @@ public class GPUController : IDisposable
         try
         {
             var mi = Compatibility.GetMachineInformationAsync().GetAwaiter().GetResult();
-            
-            // Strictly disable specialized machine features on incompatible machines
+
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 
@@ -64,9 +63,8 @@ public class GPUController : IDisposable
             {
                 NVAPI.Unload();
             }
-            catch (Exception ex) 
-            { 
-                // Log NVAPI unload failures but don't throw
+            catch (Exception ex)
+            {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"NVAPI unload failed: {ex.Message}", ex);
             }
@@ -83,7 +81,7 @@ public class GPUController : IDisposable
     {
         using (await _lock.LockAsync().ConfigureAwait(false))
         {
-            await RefreshLoopAsync(0, 0, CancellationToken.None).ConfigureAwait(false);
+            await RefreshStateAsync().ConfigureAwait(false);
             return new GPUStatus(_state, _performanceState, _processes);
         }
     }
@@ -94,7 +92,7 @@ public class GPUController : IDisposable
             return Task.CompletedTask;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting... [delay={delay}, interval={interval}]");
+            Log.Instance.Trace($"Starting GPU service [interval={interval}ms]");
 
         _currentInterval = interval;
         _refreshCancellationTokenSource = new CancellationTokenSource();
@@ -106,34 +104,25 @@ public class GPUController : IDisposable
     public async Task StopAsync(bool waitForFinish = false)
     {
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Stopping... [refreshTask.isNull={_refreshTask is null}, _refreshCancellationTokenSource.IsCancellationRequested={_refreshCancellationTokenSource?.IsCancellationRequested}]");
+            Log.Instance.Trace($"Stopping GPU service");
 
         if (_refreshCancellationTokenSource is not null)
             await _refreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
-        if (waitForFinish)
+        if (waitForFinish && _refreshTask is not null)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Waiting to finish...");
-
-            if (_refreshTask is not null)
+            try
             {
-                try
-                {
-                    await _refreshTask.ConfigureAwait(false);
-                }
-                catch (OperationCanceledException) { }
+                await _refreshTask.ConfigureAwait(false);
             }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Finished");
+            catch (OperationCanceledException) { }
         }
 
         _refreshCancellationTokenSource = null;
         _refreshTask = null;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Stopped");
+            Log.Instance.Trace($"GPU service stopped");
     }
 
     public async Task RestartGPUAsync()
@@ -169,12 +158,12 @@ public class GPUController : IDisposable
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Initializing NVAPI...");
+                Log.Instance.Trace($"Initializing NVAPI");
 
             NVAPI.Initialize();
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Initialized NVAPI");
+                Log.Instance.Trace($"NVAPI initialized");
 
             await Task.Delay(delay, token).ConfigureAwait(false);
 
@@ -184,15 +173,10 @@ public class GPUController : IDisposable
 
                 using (await _lock.LockAsync(token).ConfigureAwait(false))
                 {
-
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Will refresh...");
+                        Log.Instance.Trace($"Refreshing GPU state");
 
                     await RefreshStateAsync().ConfigureAwait(false);
-
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Refreshed");
-
                     Refreshed?.Invoke(this, new GPUStatus(_state, _performanceState, _processes));
                 }
 
@@ -206,19 +190,19 @@ public class GPUController : IDisposable
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Exception occurred", ex);
+                Log.Instance.Trace($"GPU controller exception", ex);
 
             throw;
         }
         finally
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unloading NVAPI...");
+                Log.Instance.Trace($"Unloading NVAPI");
 
             NVAPI.Unload();
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unloaded NVAPI");
+                Log.Instance.Trace($"NVAPI unloaded");
         }
     }
 
@@ -234,7 +218,7 @@ public class GPUController : IDisposable
                 if (_currentInterval != ActiveInterval)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Adjusting interval to active mode: {ActiveInterval}ms");
+                        Log.Instance.Trace($"Refresh interval: {ActiveInterval}ms (active)");
                     _currentInterval = ActiveInterval;
                 }
                 return ActiveInterval;
@@ -247,7 +231,7 @@ public class GPUController : IDisposable
                 if (_currentInterval != InactiveInterval)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Adjusting interval to inactive mode: {InactiveInterval}ms");
+                        Log.Instance.Trace($"Refresh interval: {InactiveInterval}ms (inactive)");
                     _currentInterval = InactiveInterval;
                 }
                 return InactiveInterval;
@@ -259,9 +243,6 @@ public class GPUController : IDisposable
 
     private async Task RefreshStateAsync()
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Refresh in progress...");
-
         var previousState = _state;
         ResetState();
 
@@ -297,7 +278,7 @@ public class GPUController : IDisposable
         _state = GPUState.NvidiaGpuNotFound;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"GPU present [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+            Log.Instance.Trace($"Nvidia GPU not found");
 
         CheckStateChange(previousState);
     }
@@ -317,7 +298,7 @@ public class GPUController : IDisposable
             _performanceState = Resource.GPUController_PoweredOff;
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Powered off [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+                Log.Instance.Trace($"GPU powered off");
 
             CheckStateChange(_state);
         }
@@ -352,7 +333,7 @@ public class GPUController : IDisposable
         _state = GPUState.MonitorConnected;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Monitor connected [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+            Log.Instance.Trace($"Monitor connected");
 
         CheckStateChange(previousState);
     }
@@ -364,7 +345,7 @@ public class GPUController : IDisposable
         _gpuInstanceId = gpuInstanceId;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Active [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}, pnpDeviceIdPart={pnpDeviceIdPart}]");
+            Log.Instance.Trace($"GPU active [{_processes.Count} processes]");
 
         CheckStateChange(previousState);
     }
@@ -375,7 +356,7 @@ public class GPUController : IDisposable
         _gpuInstanceId = gpuInstanceId;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Inactive [state={_state}, processes.Count={_processes.Count}, gpuInstanceId={_gpuInstanceId}]");
+            Log.Instance.Trace($"GPU inactive");
 
         CheckStateChange(previousState);
     }
@@ -402,10 +383,8 @@ public class GPUController : IDisposable
         {
             if (disposing)
             {
-                // Dispose managed resources
                 try
                 {
-                    // Cancel refresh task
                     if (_refreshCancellationTokenSource != null)
                     {
                         _refreshCancellationTokenSource.Cancel();
@@ -413,7 +392,6 @@ public class GPUController : IDisposable
                         _refreshCancellationTokenSource = null;
                     }
 
-                    // Dispose all processes in the list
                     if (_processes != null)
                     {
                         foreach (var process in _processes)
@@ -426,7 +404,7 @@ public class GPUController : IDisposable
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error during GPUController disposal", ex);
+                        Log.Instance.Trace($"GPUController disposal error", ex);
                 }
             }
 

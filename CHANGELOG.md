@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 新增
+- Created docs/ directory with comprehensive documentation including ARCHITECTURE.md (system architecture), DEPLOYMENT.md (build and deployment guide), SECURITY.md (security policy), and CODE_OF_CONDUCT.md (community guidelines) / 创建 docs/ 目录，包含完整文档体系：ARCHITECTURE.md（系统架构）、DEPLOYMENT.md（构建部署指南）、SECURITY.md（安全政策）、CODE_OF_CONDUCT.md（社区准则）
+- Improved: Inject `IDelayProvider` into `ThrottleLastDispatcher` to allow fast virtual delays in tests. / 改进：向 `ThrottleLastDispatcher` 注入 `IDelayProvider`，以便在测试中使用快速虚拟延迟。
+- Migrated core projects to target `net10.0-windows`. Update other project references/tests accordingly. / 将核心项目迁移到 `net10.0-windows`。请相应更新其它项目引用/测试。
+- Added quick start guide, troubleshooting section, and documentation links to README / 在 README 中添加快速入门指南、故障排查部分和文档链接
+- Improved README table of contents with new sections for Quick Start and Documentation / 优化 README 目录结构，新增"快速入门"和"文档"章节
 - Created dedicated plugins repository at https://github.com/Crs10259/LenovoLegionToolkit-Plugins / 在 https://github.com/Crs10259/LenovoLegionToolkit-Plugins 创建专用插件仓库
 - Added GitHub Actions workflow for automated plugin building and releasing / 添加 GitHub Actions 工作流实现插件自动化编译和发布
 - Updated ViveTool plugin to version 1.5.0 with improved compatibility and stability / 更新ViveTool插件至1.5.0版本，提升兼容性和稳定性
@@ -26,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 引入强制进程退出机制 (ExitProcess)，彻底解决在不兼容机器或极端情况下关闭软件后的进程残留和 CPU 占用问题 / Introduced forced process termination (ExitProcess) to completely resolve process residue and CPU usage issues upon exit on incompatible machines or in extreme cases
 - 优化 IoC 容器解析逻辑，防止在系统未完全初始化时因解析失败导致的退出过程挂起 / Optimized IoC container resolution to prevent shutdown hangs caused by resolution failures when the system is not fully initialized
 - Updated plugin store URL to point to separate plugin repository / 更新插件商店URL指向独立插件仓库
+
+### Improved / 改进
+- 优化关闭流程性能：将窗口大小保存改为异步执行，减少界面卡顿 / Optimized shutdown flow performance: changed window size saving to asynchronous execution to reduce UI lag
+- 减少插件关闭等待时间从500ms到200ms，提升关闭响应速度 / Reduced plugin shutdown wait time from 500ms to 200ms for faster shutdown response
+- 为关闭流程添加详细计时日志，便于后续性能分析和问题诊断 / Added detailed timing logs to shutdown flow for easier performance analysis and troubleshooting
 
 ### Improved / 改进
 - 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage
@@ -47,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed / 修复
 - 修复插件拓展和系统优化界面的 Snackbar 冲突重叠问题，统一通过 SnackbarHelper 进行队列管理 / Fixed Snackbar overlap conflict between Plugin Extensions and Windows Optimization by unifying notification queue management through SnackbarHelper
 - 引入了多级保障的进程终止机制（TerminateProcess + Environment.FailFast + 前台守护线程），彻底解决了在极端情况下（如驱动程序或 DLL 卸载挂起）程序退出后进程残留的问题 / Introduced a multi-level process termination mechanism (TerminateProcess + Environment.FailFast + Foreground Watchdog thread) to completely resolve the issue of process residue after exit under extreme conditions (such as driver or DLL unload hangs)
+- 修复了不兼容机器上关闭软件后的 CPU 占用残留问题：在所有退出路径（包括不兼容系统退出和异常退出）中正确停止宏控制器，释放键盘钩子，确保进程完全终止 / Fixed CPU usage residue after closing the software on incompatible machines: correctly stopped the MacroController in all exit paths (including incompatible system exit and exception exit) to release the keyboard hook and ensure the process terminates completely
 - 彻底解决了退出程序时进程残留的问题，通过强化强制退出机制（TerminateProcess + Watchdog 线程 + Foreground Thread 保障）确保进程在任何情况下都能完全终止 / Completely resolved process residue issue upon exit by strengthening the forced exit mechanism (TerminateProcess + Watchdog thread + Foreground thread protection) to ensure the process terminates under any circumstances
 - 修复了因错误的按钮类型检查导致本地插件卸载按钮无反应的问题 / Resolved an issue where the uninstall button for local plugins had no reaction due to incorrect button type checking
 - 修复了从商店获取插件时的 404 错误，将仓库分支从 main 更新为 master / Fixed 404 error when fetching plugins from store by updating the repository branch from main to master

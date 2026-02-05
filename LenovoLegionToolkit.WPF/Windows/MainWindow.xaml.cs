@@ -188,7 +188,16 @@ public partial class MainWindow
 
     private async void MainWindow_Closing(object? sender, CancelEventArgs e)
     {
-        SaveSize();
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Closing started...");
+
+        var stopwatch = Stopwatch.StartNew();
+
+        await SaveSizeAsync();
+
+        stopwatch.Stop();
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"SaveSize completed in {stopwatch.ElapsedMilliseconds}ms");
 
         if (SuppressClosingEventHandler)
             return;
@@ -387,6 +396,36 @@ public partial class MainWindow
             : new(Width, Height);
         _applicationSettings.SynchronizeStore();
     }
+
+    private async Task SaveSizeAsync()
+    {
+        _applicationSettings.Store.WindowSize = WindowState != WindowState.Normal
+            ? new(RestoreBounds.Width, RestoreBounds.Height)
+            : new(Width, Height);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Saving window size asynchronously...");
+
+        await _applicationSettings.SynchronizeStoreAsync().ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Window size saved asynchronously.");
+    }
+
+#if DEBUG
+    [Conditional("DEBUG")]
+    private void DebugBreakpoint(string location)
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"DEBUG BREAKPOINT: {location}");
+
+        if (Debugger.IsAttached)
+            Debugger.Break();
+    }
+#else
+    [Conditional("DEBUG")]
+    private void DebugBreakpoint(string location) { }
+#endif
 
     private void BringToForeground() => WindowExtensions.BringToForeground(this);
 

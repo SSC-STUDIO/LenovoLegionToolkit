@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Lib.AutoListeners;
 
-public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArgs> where TEventArgs : EventArgs
+public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArgs>, IDisposable where TEventArgs : EventArgs
 {
     private readonly AsyncLock _startStopLock = new();
 
@@ -87,5 +87,33 @@ public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArg
 
     protected abstract Task StopAsync();
 
-    protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
+protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    // AsyncLock doesn't require explicit disposal
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during AbstractAutoListener disposal", ex);
+                }
+            }
+            _disposed = true;
+        }
+    }
 }

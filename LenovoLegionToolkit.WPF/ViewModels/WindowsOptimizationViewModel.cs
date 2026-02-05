@@ -55,7 +55,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     {
         Optimization,
         Cleanup,
-        DriverDownload
+        DriverDownload,
+        Beautification
     }
 
     private PageMode _currentMode = PageMode.Optimization;
@@ -82,11 +83,13 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public bool IsCleanupMode => CurrentMode == PageMode.Cleanup;
     public bool IsDriverDownloadMode => CurrentMode == PageMode.DriverDownload;
+    public bool IsBeautificationMode => CurrentMode == PageMode.Beautification;
 
     public string ScanCleanupButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_Scan_Button") ?? "Scan";
     public string PauseAllButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_PauseAll_Button") ?? "Pause All";
     public string StartAllButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_StartAll_Button") ?? "Start All";
     public string PendingText => Resource.WindowsOptimizationPage_EstimatedCleanupSize_Pending;
+    public string SelectedActionsEmptyText => Resource.WindowsOptimizationPage_SelectedActions_Empty ?? "No actions selected yet.";
 
     private bool _isAnyDriverRunning;
     public bool IsAnyDriverRunning

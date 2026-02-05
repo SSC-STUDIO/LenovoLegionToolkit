@@ -16,6 +16,17 @@
 
 ### 项目结构
 ```
+
+## 升级到 .NET 10 的说明
+
+- 本仓库已完成对主要项目的迁移到 `net10.0-windows`（Lib, WPF, CLI, Macro 等），以利用最新的运行时和语言特性。
+- 为保证向后兼容，请同时将所有引用这些项目的子项目或测试项目也更新为 `net10.0-windows`。
+- 迁移过程中已引入 `IDelayProvider` 抽象以便替换生产中的 `Task.Delay`（可在测试中注入快速实现），请参阅 `LenovoLegionToolkit.Lib/Utils/IDelayProvider.cs` 和 `LenovoLegionToolkit.Lib/Utils/DelayProvider.cs`。
+
+迁移后注意事项：
+- 本地构建时请确保已安装支持 .NET 10 的 SDK（例如 `dotnet --list-sdks` 能看到 10.x 版本）。
+- 若 CI 或其它项目仍使用旧目标框架，请同步更新以避免项目引用冲突（NU1201）。
+
 LenovoLegionToolkit/
 ├── LenovoLegionToolkit.WPF/          # 主应用程序 (WPF UI)
 ├── LenovoLegionToolkit.Lib/          # 核心业务逻辑库
@@ -51,7 +62,7 @@ dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configurat
 ### 测试命令
 ```bash
 # 运行所有单元测试
-dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
+dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows
 
 # 运行测试并生成覆盖率报告
 dotnet test --collect:"XPlat Code Coverage"
@@ -741,6 +752,19 @@ git reset --hard HEAD~1               # 撤销最后一次提交（丢弃变更�
 git checkout -- file.txt              # 撤销文件修改
 ```
 
+## 📚 补充文档索引
+
+除本指南外，项目还提供以下补充文档：
+
+| 文档 | 说明 |
+|------|------|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统架构、组件说明、数据流程图 |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 构建、测试、CI/CD、发布流程 |
+| [docs/SECURITY.md](docs/SECURITY.md) | 安全政策、漏洞报告流程、最佳实践 |
+| [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) | 社区行为准则、贡献标准 |
+| [README.md](README.md) | 主用户文档（英文） |
+| [README_zh-hans.md](README_zh-hans.md) | 主用户文档（中文） |
+
 ---
 
-*本文档将随项目发展持续更新，最后更新时间: 2026-01-27*
+*本文档将随项目发展持续更新，最后更新时间: 2026-02-05*

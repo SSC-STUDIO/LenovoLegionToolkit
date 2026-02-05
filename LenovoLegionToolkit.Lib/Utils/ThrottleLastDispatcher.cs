@@ -15,6 +15,7 @@ public class ThrottleLastDispatcher : IDisposable
     private long _currentVersion;
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _disposed;
+    private readonly IDelayProvider? _delayProvider;
 
     /// <summary>
     /// 初始化 <see cref="ThrottleLastDispatcher"/> 类的新实例。
@@ -22,13 +23,14 @@ public class ThrottleLastDispatcher : IDisposable
     /// <param name="interval">节流的时间间隔。</param>
     /// <param name="tag">用于日志记录的可选标签。</param>
     /// <exception cref="ArgumentOutOfRangeException">当间隔时间小于零时抛出。</exception>
-    public ThrottleLastDispatcher(TimeSpan interval, string? tag = null)
+    public ThrottleLastDispatcher(TimeSpan interval, string? tag = null, IDelayProvider? delayProvider = null)
     {
         if (interval < TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(interval));
 
         _interval = interval;
         _tag = tag;
+        _delayProvider = delayProvider;
     }
 
     /// <summary>
@@ -62,7 +64,12 @@ public class ThrottleLastDispatcher : IDisposable
         try
         {
             if (_interval > TimeSpan.Zero)
-                await Task.Delay(_interval, cts.Token).ConfigureAwait(false);
+            {
+                if (_delayProvider is not null)
+                    await _delayProvider.Delay(_interval, cts.Token).ConfigureAwait(false);
+                else
+                    await Task.Delay(_interval, cts.Token).ConfigureAwait(false);
+            }
 
             lock (_lock)
             {

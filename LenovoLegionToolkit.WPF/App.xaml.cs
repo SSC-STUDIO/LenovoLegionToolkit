@@ -460,56 +460,12 @@ public partial class App
                 }
             }
 
-            // Stop the single instance thread
-            if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Stopping single instance thread...");
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
 
-                    // Signal the thread to stop by disposing the wait handle
-                    _singleInstanceWaitHandle?.Dispose();
-                    _singleInstanceWaitHandle = null;
-
-                    // Give the thread a moment to finish naturally
-                    if (!_singleInstanceThread.Join(500))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Single instance thread did not finish in time, continuing with shutdown...");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error stopping single instance thread during safe shutdown: {ex.Message}");
-                }
-            }
-
-            // Dispose the single instance mutex
-            try
-            {
-                _singleInstanceMutex?.ReleaseMutex();
-                _singleInstanceMutex?.Close();
-                _singleInstanceMutex = null;
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error disposing single instance mutex during safe shutdown: {ex.Message}");
-            }
-
-            // Dispose the wait handle if it's still available
-            try
-            {
-                _singleInstanceWaitHandle?.Dispose();
-                _singleInstanceWaitHandle = null;
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error disposing wait handle during safe shutdown: {ex.Message}");
-            }
+            // CRITICAL: Stop MacroController to release keyboard hook
+            // If the hook is not released, the process cannot exit cleanly
+            StopMacroControllerSafely();
 
             // Cancel and dispose the cancellation token source
             try
@@ -606,82 +562,11 @@ public partial class App
                 // Ignore mutex close errors
             }
 
-            // CRITICAL: Ensure MacroController is stopped even if shutdown sequence failed
-            // The keyboard hook MUST be released or the process cannot exit
-            try
-            {
-                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
-                {
-                    macroController.Stop();
-                }
-            }
-            catch
-            {
-                // Ignore errors - we're exiting anyway
-            }
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
 
-            // Force stop single instance thread if still alive
-            try
-            {
-                if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
-                {
-                    _singleInstanceWaitHandle?.Dispose();
-                    _singleInstanceWaitHandle = null;
-                }
-            }
-            catch
-            {
-                // Ignore errors
-            }
-
-            // CRITICAL: Force exit if we reach here
-            // On incompatible systems, Shutdown() may not actually exit the process
-            // This ensures the process terminates even if WPF shutdown hangs
-            // Use both ThreadPool.QueueUserWorkItem and a direct call as fallback
-            // Start the background exit task first
             var exitCode = (uint)e.ApplicationExitCode;
-            var exitTaskStarted = false;
-            try
-            {
-                ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    Thread.Sleep(500); // Give cleanup 500ms to complete
-                    try
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode}) (background task)...");
-                    }
-                    catch { }
-                    ExitProcess(exitCode);
-                    Environment.Exit((int)exitCode); // Fallback
-                });
-                exitTaskStarted = true;
-            }
-            catch
-            {
-                // ThreadPool may be shutting down, use direct exit as fallback
-            }
-
-            // If ThreadPool.QueueUserWorkItem failed, exit directly after a short delay
-            if (!exitTaskStarted)
-            {
-                // Use a new thread to ensure it executes even if thread pool is down
-                new Thread(() =>
-                {
-                    Thread.Sleep(500);
-                    try
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode}) (fallback thread)...");
-                    }
-                    catch { }
-                    ExitProcess(exitCode);
-                    Environment.Exit((int)exitCode); // Fallback
-                })
-                {
-                    IsBackground = true
-                }.Start();
-            }
+            ForceExit(exitCode);
         }
     }
 
@@ -707,7 +592,115 @@ public partial class App
         mainWindow.Show();
     }
 
-    // Optimized shutdown helper that stops services in parallel with unified error handling
+    /// <summary>
+    /// Stops MacroController safely with error handling
+    /// CRITICAL: The keyboard hook MUST be released or the process cannot exit
+    /// </summary>
+    private static void StopMacroControllerSafely()
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<MacroController>() is { } macroController)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Stopping MacroController...");
+                macroController.Stop();
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"MacroController stopped.");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping MacroController: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Stops the single instance thread safely with timeout
+    /// </summary>
+    private void StopSingleInstanceThreadSafely()
+    {
+        if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
+        {
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Stopping single instance thread...");
+
+                _singleInstanceWaitHandle?.Dispose();
+                _singleInstanceWaitHandle = null;
+
+                if (!_singleInstanceThread.Join(500))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Single instance thread did not finish in time.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping single instance thread: {ex.Message}", ex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Cleanup single instance resources (mutex and wait handle)
+    /// </summary>
+    private void CleanupSingleInstanceResources()
+    {
+        try
+        {
+            _singleInstanceMutex?.ReleaseMutex();
+            _singleInstanceMutex?.Close();
+            _singleInstanceMutex = null;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error disposing single instance mutex: {ex.Message}", ex);
+        }
+
+        try
+        {
+            _singleInstanceWaitHandle?.Dispose();
+            _singleInstanceWaitHandle = null;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error disposing wait handle: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Forces process exit after cleanup completes
+    /// CRITICAL: On incompatible systems, Shutdown() may not actually exit process
+    /// This ensures the process terminates even if WPF shutdown hangs
+    /// </summary>
+    private void ForceExit(uint exitCode)
+    {
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            Thread.Sleep(500);
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode})...");
+            }
+            catch { }
+            ExitProcess(exitCode);
+            Environment.Exit((int)exitCode);
+        });
+    }
+
+    /// <summary>
+    /// Stops a service with unified error handling
+    /// </summary>
+    /// <typeparam name="T">Service type</typeparam>
+    /// <param name="stopAction">Async stop action</param>
+    /// <param name="serviceName">Service name for logging</param>
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
@@ -726,7 +719,13 @@ public partial class App
         }
     }
 
-    // Service stop helper that verifies support before attempting to stop
+    /// <summary>
+    /// Stops a service with support verification and unified error handling
+    /// </summary>
+    /// <typeparam name="T">Service type</typeparam>
+    /// <param name="isSupportedAction">Async support check action</param>
+    /// <param name="stopAction">Async stop action</param>
+    /// <param name="serviceName">Service name for logging</param>
     private static async Task StopServiceWithSupportCheckAsync<T>(Func<T, Task<bool>> isSupportedAction, Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
@@ -778,25 +777,7 @@ public partial class App
 
         if (shouldInvokeShutdown)
         {
-            // CRITICAL: Stop MacroController BEFORE calling Shutdown()
-            // The keyboard hook MUST be released or the process cannot exit
-            // This must be done before Shutdown() to ensure it completes
-            try
-            {
-                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Stopping MacroController before Shutdown()...");
-                    macroController.Stop();
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"MacroController stopped before Shutdown().");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error stopping MacroController before Shutdown(): {ex.Message}", ex);
-            }
+            StopMacroControllerSafely();
 
             if (Dispatcher.CheckAccess())
                 Shutdown();
@@ -807,26 +788,41 @@ public partial class App
 
     private async Task PerformShutdownAsync()
     {
+        var totalStopwatch = Stopwatch.StartNew();
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Shutdown sequence started.");
+
         try
         {
             // Cancel background initialization first to prevent new work from starting
             _backgroundInitializationCancellationTokenSource?.Cancel();
 
+            var bgInitStopwatch = Stopwatch.StartNew();
             await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+            bgInitStopwatch.Stop();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization await completed in {bgInitStopwatch.ElapsedMilliseconds}ms.");
 
             // Stop all plugins first (they may depend on services)
+            var pluginStopwatch = Stopwatch.StartNew();
             await StopPluginsAsync().ConfigureAwait(false);
+            pluginStopwatch.Stop();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugin shutdown completed in {pluginStopwatch.ElapsedMilliseconds}ms.");
 
             // Stop all services in parallel to speed up shutdown, but with timeout
+            // Skip IsSupportedAsync checks during shutdown - no need to check if supported when stopping
+            var servicesStopwatch = Stopwatch.StartNew();
             var stopServicesTask = Task.WhenAll(
                 StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
-                StopServiceWithSupportCheckAsync<RGBKeyboardBacklightController>(
-                    controller => controller.IsSupportedAsync(),
+                StopServiceAsync<RGBKeyboardBacklightController>(
                     controller => controller.SetLightControlOwnerAsync(false),
                     "RGB keyboard controller"
                 ),
-                StopServiceWithSupportCheckAsync<SpectrumKeyboardBacklightController>(
-                    controller => controller.IsSupportedAsync(),
+                StopServiceAsync<SpectrumKeyboardBacklightController>(
                     controller => controller.StopAuroraIfNeededAsync(),
                     "Spectrum keyboard controller"
                 ),
@@ -835,7 +831,22 @@ public partial class App
                 StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
                 StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
                 StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service"),
-                Task.Run(() => HardwareMonitor.Instance.Dispose())
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        var hwStopwatch = Stopwatch.StartNew();
+                        HardwareMonitor.Instance.Dispose();
+                        hwStopwatch.Stop();
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"HardwareMonitor disposed in {hwStopwatch.ElapsedMilliseconds}ms.");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Error disposing HardwareMonitor: {ex.Message}");
+                    }
+                })
             );
 
             // Wait for services to stop with timeout
@@ -845,65 +856,17 @@ public partial class App
                     Log.Instance.Trace($"Service shutdown timeout exceeded, continuing with exit...");
             }
 
-            // CRITICAL: Ensure MacroController is stopped synchronously
-            // The keyboard hook MUST be released or the process cannot exit
-            // This must be done synchronously, not in a Task.Run, to ensure it completes
-            // Even if service stop task timed out, we must stop MacroController
-            try
-            {
-                if (IoCContainer.TryResolve<MacroController>() is { } macroController)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Stopping MacroController synchronously...");
-                    macroController.Stop();
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"MacroController stopped successfully.");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error stopping MacroController: {ex.Message}", ex);
-            }
+            servicesStopwatch.Stop();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Services shutdown completed in {servicesStopwatch.ElapsedMilliseconds}ms.");
 
-            // Stop the single instance thread to prevent it from keeping the process alive
-            if (_singleInstanceThread != null && _singleInstanceThread.IsAlive)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Stopping single instance thread...");
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
 
-                    // Signal the thread to stop by disposing the wait handle
-                    _singleInstanceWaitHandle?.Dispose();
-                    _singleInstanceWaitHandle = null;
-
-                    // Give the thread a moment to finish naturally
-                    if (!_singleInstanceThread.Join(500))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Single instance thread did not finish in time, continuing with shutdown...");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error stopping single instance thread: {ex.Message}");
-                }
-            }
-
-            // Dispose the single instance mutex
-            try
-            {
-                _singleInstanceMutex?.ReleaseMutex();
-                _singleInstanceMutex?.Close();
-                _singleInstanceMutex = null;
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error disposing single instance mutex: {ex.Message}");
-            }
+            totalStopwatch.Stop();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Total shutdown sequence completed in {totalStopwatch.ElapsedMilliseconds}ms.");
         }
         catch (Exception ex)
         {
@@ -957,7 +920,11 @@ public partial class App
 
             // Wait a bit to ensure all file handles are released
             // This is necessary because plugins might have background threads or resources that take time to clean up
-            await Task.Delay(500).ConfigureAwait(false);
+            // Reduced from 500ms to 200ms to improve shutdown responsiveness
+            await Task.Delay(200).ConfigureAwait(false);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugin shutdown delay completed.");
 
             // Perform pending plugin deletions after all plugins are stopped and file handles are released
             if (pluginManager is PluginManager manager)
@@ -1010,6 +977,9 @@ public partial class App
         }
         finally
         {
+            // CRITICAL: Stop MacroController to release keyboard hook before exit
+            StopMacroControllerSafely();
+
             // Force exit to prevent hanging
             try
             {
@@ -1060,6 +1030,9 @@ public partial class App
         }
         finally
         {
+            // CRITICAL: Stop MacroController to release keyboard hook before exit
+            StopMacroControllerSafely();
+
             // Force exit to prevent hanging
             try
             {

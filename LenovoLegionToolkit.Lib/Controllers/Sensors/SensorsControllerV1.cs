@@ -16,8 +16,7 @@ public class SensorsControllerV1(GPUController gpuController) : AbstractSensorsC
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-            
-            // Strictly disable specialized machine features on incompatible machines
+
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 

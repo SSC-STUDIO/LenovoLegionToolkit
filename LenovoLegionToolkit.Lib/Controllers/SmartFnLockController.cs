@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Settings;
@@ -10,7 +10,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
 
-public class SmartFnLockController(FnLockFeature feature, ApplicationSettings settings)
+public class SmartFnLockController(FnLockFeature feature, ApplicationSettings settings) : IDisposable
 {
     private readonly AsyncLock _lock = new();
 
@@ -95,9 +95,37 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
         if (flags.HasFlag(ModifierKey.Alt))
             result |= _altDepressed;
 
-        if (Log.Instance.IsTraceEnabled)
+if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Modifier key is depressed: {result} [ctrl={_ctrlDepressed}, shift={_shiftDepressed}, alt={_altDepressed}, flags={flags}]");
 
         return result;
+    }
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    // AsyncLock doesn't need explicit disposal
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during SmartFnLockController disposal", ex);
+                }
+            }
+            _disposed = true;
+        }
     }
 }

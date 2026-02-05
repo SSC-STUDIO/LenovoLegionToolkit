@@ -15,7 +15,7 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// <summary>
 /// Service for managing online plugin repository
 /// </summary>
-public class PluginRepositoryService
+public class PluginRepositoryService : IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly IPluginManager _pluginManager;
@@ -478,8 +478,36 @@ private const string GITHUB_API_URL = "https://api.github.com";
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
+if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error cleaning up temp files: {ex.Message}", ex);
+        }
+    }
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during PluginRepositoryService disposal", ex);
+                }
+            }
+            _disposed = true;
         }
     }
 }

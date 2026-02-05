@@ -18,7 +18,7 @@ using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
-public class NotificationsManager
+public class NotificationsManager : IDisposable
 {
     private static Dispatcher Dispatcher => Application.Current.Dispatcher;
 
@@ -314,12 +314,45 @@ public class NotificationsManager
         await tcs.Task;
     }
 
-    private static void UpdateAvailableAction()
+private static void UpdateAvailableAction()
     {
         if (App.Current.MainWindow is not MainWindow mainWindow)
             return;
 
         mainWindow.BringToForeground();
         mainWindow.ShowUpdateWindow();
+    }
+
+    private bool _disposed = false;
+    private readonly object _subscription = new();
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    foreach (var window in _windows)
+                    {
+                        window?.Close(true);
+                    }
+                    _windows.Clear();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during NotificationsManager disposal", ex);
+                }
+            }
+            _disposed = true;
+        }
     }
 }

@@ -19,7 +19,7 @@ public class AIController(
     PowerStateListener powerStateListener,
     GameAutoListener gameAutoListener,
     PowerModeFeature powerModeFeature,
-    BalanceModeSettings settings)
+    BalanceModeSettings settings) : IDisposable
 {
     private readonly ThrottleLastDispatcher _dispatcher = new(TimeSpan.FromSeconds(1), nameof(AIController));
 
@@ -43,11 +43,7 @@ public class AIController(
         await StopAsync().ConfigureAwait(false);
 
         if (!IsAIModeEnabled)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"AI Mode is not enabled.");
             return;
-        }
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
@@ -59,7 +55,7 @@ public class AIController(
             await RefreshAsync().ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Started.");
+                Log.Instance.Trace($"AI controller started");
         }
     }
 
@@ -79,13 +75,60 @@ public class AIController(
                 await DisableAsync().ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Stopped.");
+                Log.Instance.Trace($"AI controller stopped");
         }
     }
 
-    private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e) => await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
-    private async void PowerStateListener_Changed(object? sender, PowerStateListener.ChangedEventArgs e) => await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
-    private async void GameAutoListener_Changed(object? sender, GameAutoListener.ChangedEventArgs e) => await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
+    private async Task PowerModeListener_ChangedAsync(object? sender, PowerModeListener.ChangedEventArgs e)
+    {
+        try
+        {
+            await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in PowerModeListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e)
+    {
+        _ = PowerModeListener_ChangedAsync(sender, e);
+    }
+
+    private async Task PowerStateListener_ChangedAsync(object? sender, PowerStateListener.ChangedEventArgs e)
+    {
+        try
+        {
+            await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in PowerStateListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void PowerStateListener_Changed(object? sender, PowerStateListener.ChangedEventArgs e)
+    {
+        _ = PowerStateListener_ChangedAsync(sender, e);
+    }
+
+    private async Task GameAutoListener_ChangedAsync(object? sender, GameAutoListener.ChangedEventArgs e)
+    {
+        try
+        {
+            await _dispatcher.DispatchAsync(RefreshAsync).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error in GameAutoListener_Changed: {ex.Message}", ex);
+        }
+    }
+
+    private void GameAutoListener_Changed(object? sender, GameAutoListener.ChangedEventArgs e)
+    {
+        _ = GameAutoListener_ChangedAsync(sender, e);
+    }
 
     private async Task RefreshAsync()
     {
@@ -94,17 +137,11 @@ public class AIController(
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Refreshing...");
-
             if (await ShouldDisableAsync().ConfigureAwait(false))
                 await DisableAsync().ConfigureAwait(false);
 
             if (await ShouldEnableAsync().ConfigureAwait(false))
                 await EnableAsync().ConfigureAwait(false);
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Refreshed");
         }
     }
 
@@ -122,8 +159,7 @@ public class AIController(
     private static async Task<bool> IsSupportedAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        
-        // Strictly disable specialized machine features on incompatible machines
+
         if (!Compatibility.IsSupportedLegionMachine(mi))
             return false;
 
@@ -200,7 +236,7 @@ public class AIController(
                     continue;
 
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Found running process {processName}. [processId={process.Id}, subMode={subMode}]");
+                    Log.Instance.Trace($"Found running process {processName} (subMode={subMode})");
 
                 targetSubMode = subMode;
                 break;
@@ -209,7 +245,7 @@ public class AIController(
             await WMI.LenovoGameZoneData.SetIntelligentSubModeAsync(targetSubMode).ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Initial sub mode set.");
+                Log.Instance.Trace($"AI mode enabled (subMode={targetSubMode})");
         }
         catch (Exception ex)
         {
@@ -222,18 +258,43 @@ public class AIController(
     {
         try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Stopping...");
-
             await WMI.LenovoGameZoneData.SetIntelligentSubModeAsync(0).ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Stopped");
+                Log.Instance.Trace($"AI mode disabled");
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to stop.", ex);
+                Log.Instance.Trace($"Failed to disable AI mode", ex);
+        }
+    }
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    _dispatcher?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"AIController disposal error", ex);
+                }
+            }
+            _disposed = true;
         }
     }
 }

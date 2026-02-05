@@ -92,9 +92,10 @@ public class PluginInstallationService
                     Directory.Delete(tempDir, true);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore cleanup errors
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to cleanup temporary directory {tempDir}: {ex.Message}", ex);
             }
         }
     }
