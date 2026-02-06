@@ -9,9 +9,9 @@
 		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Autofac" Version="8.2.0" />
+        <PackageReference Include="Autofac" Version="9.0.0" />
 		<PackageReference Include="NeoSmart.AsyncLock" Version="3.2.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />
