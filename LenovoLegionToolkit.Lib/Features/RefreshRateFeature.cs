@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -33,7 +33,7 @@ public class RefreshRateFeature : IFeature<RefreshRate>
         var currentSettings = display.CurrentSetting;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Current built in display settings: {currentSettings.ToExtendedString()}");
+            Log.Instance.Trace("Current built in display settings: " + currentSettings.ToString());
 
         var result = display.GetPossibleSettings()
             .Where(dps => Match(dps, currentSettings))
