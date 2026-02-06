@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 新增
+- Integrated LenovoLegionToolkit-Plugins as part of main repository (removed submodule) / 将 LenovoLegionToolkit-Plugins 集成到主仓库中（移除子模块）
+- Implemented plugin version checking system with compatibility verification / 实现插件版本检查系统，支持兼容性验证
+- Implemented plugin update manager with three update strategies (startup, manual, background) / 实现插件更新管理器，支持三种更新策略（启动检查、手动检查、后台自动检查）
+- Added plugin update settings to ApplicationSettings (check on startup, auto-download, notification, frequency) / 在 ApplicationSettings 中添加插件更新设置（启动检查、自动下载、通知、频率）
+- Created comprehensive plugin test infrastructure with TestBase, MockFactory, and 38 unit tests / 创建完整的插件测试基础设施，包含 TestBase、MockFactory 和 38 个单元测试
+- Created Plugin Quick Start documentation for developers / 为开发者创建插件快速入门文档
+- Created plugin GitHub Actions workflow for automated building and releasing / 创建插件 GitHub Actions 工作流实现自动化构建和发布
+
 - Created docs/ directory with comprehensive documentation including ARCHITECTURE.md (system architecture), DEPLOYMENT.md (build and deployment guide), SECURITY.md (security policy), and CODE_OF_CONDUCT.md (community guidelines) / 创建 docs/ 目录，包含完整文档体系：ARCHITECTURE.md（系统架构）、DEPLOYMENT.md（构建部署指南）、SECURITY.md（安全政策）、CODE_OF_CONDUCT.md（社区准则）
 - Improved: Inject `IDelayProvider` into `ThrottleLastDispatcher` to allow fast virtual delays in tests. / 改进：向 `ThrottleLastDispatcher` 注入 `IDelayProvider`，以便在测试中使用快速虚拟延迟。
 - Migrated core projects to target `net10.0-windows`. Update other project references/tests accordingly. / 将核心项目迁移到 `net10.0-windows`。请相应更新其它项目引用/测试。
