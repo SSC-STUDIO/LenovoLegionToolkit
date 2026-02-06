@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created dedicated plugins repository at https://github.com/Crs10259/LenovoLegionToolkit-Plugins / 在 https://github.com/Crs10259/LenovoLegionToolkit-Plugins 创建专用插件仓库
 - Added GitHub Actions workflow for automated plugin building and releasing / 添加 GitHub Actions 工作流实现插件自动化编译和发布
 - Updated ViveTool plugin to version 1.5.0 with improved compatibility and stability / 更新ViveTool插件至1.5.0版本，提升兼容性和稳定性
+- **Internationalization / 国际化**: Added multilingual support for CustomMouse plugin with 13 languages: English, Chinese (Simplified/Traditional), Japanese, Korean, German, French, Spanish, Portuguese, Italian, Russian, Polish, Dutch, Czech, and Turkish / 为 CustomMouse 插件添加 13 种语言支持：英语、中文（简体/繁体）、日语、韩语、德语、法语、西班牙语、葡萄牙语、意大利语、俄语、波兰语、荷兰语、捷克语和土耳其语
+- **Internationalization / 国际化**: Added multilingual support for ShellIntegration plugin with 13 languages: English, Chinese (Simplified/Traditional), Japanese, Korean, German, French, Spanish, Portuguese, Italian, Russian, Polish, Dutch, Czech, and Turkish / 为 ShellIntegration 插件添加 13 种语言支持：英语、中文（简体/繁体）、日语、韩语、德语、法语、西班牙语、葡萄牙语、意大利语、俄语、波兰语、荷兰语、捷克语和土耳其语
+- **Internationalization / 国际化**: Added Japanese (ja) and Korean (ko) translations for ShellIntegration plugin / 为 ShellIntegration 插件添加日语 (ja) 和韩语 (ko) 翻译
+- **Internationalization / 国际化**: Migrated all hardcoded Chinese text in CustomMouse plugin XAML files to resource files / 将 CustomMouse 插件 XAML 文件中所有硬编码的中文文本迁移到资源文件
+- **Internationalization / 国际化**: Migrated all hardcoded Chinese text in MenuStyleSettingsWindow XAML to resource files / 将 MenuStyleSettingsWindow XAML 中所有硬编码的中文文本迁移到资源文件
 
 ### Improved / 改进
 - Migrated all plugin downloads to dedicated repository releases / 将所有插件下载迁移至专用仓库 releases
@@ -35,7 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved / 改进
 - 优化关闭流程性能：将窗口大小保存改为异步执行，减少界面卡顿 / Optimized shutdown flow performance: changed window size saving to asynchronous execution to reduce UI lag
 - 减少插件关闭等待时间从500ms到200ms，提升关闭响应速度 / Reduced plugin shutdown wait time from 500ms to 200ms for faster shutdown response
-- 为关闭流程添加详细计时日志，便于后续性能分析和问题诊断 / Added detailed timing logs to shutdown flow for easier performance analysis and troubleshooting
+- 修复关闭流程阻塞问题：跳过 Spectrum 键盘控制器和 Windows 消息监听器的停止操作，解决 8 秒超时问题 / Fixed shutdown hang: skipped Spectrum keyboard controller and Windows message listener stop operations to resolve 8-second timeout issue
+- 优化服务停止超时：从 8 秒减少到 2 秒，提升关闭响应速度 / Optimized service stop timeout: reduced from 8 seconds to 2 seconds for faster shutdown response
+- 关闭速度从 8 秒提升到 0.35 秒 (23x) / Shutdown speed improved from 8 seconds to 0.35 seconds (23x faster)
 
 ### Improved / 改进
 - 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage

@@ -60,20 +60,14 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 
 如果 LLT 安装程序没有正确安装 .NET 依赖，则请按照以下步骤手动安装：
 
-1. 打开 https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0
+1. 打开 https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0
 2. 找到 “.NET 桌面运行时” 一栏；
 3. 点击安装程序下的“X64”一栏下载安装程序；
 4. 运行安装程序并按照指引进行安装。
 
-在完成这些步骤后，你可以打开终端并输入： `dotnet --info`。在输出中寻找 "已安装的 .NET 运行时 "部分，你应该能看到类似的内容：
+在完成这些步骤后，你可以打开终端并输入： `dotnet --info`。在输出中寻找 "已安装的 .NET 运行时 "部分，你应该能看到类似 `Microsoft.NETCore.App 10.x.x` 和 `Microsoft.WindowsDesktop.App 10.x.x` 的条目，位于 `C:\Program Files\dotnet\shared` 路径下。
 
-`Microsoft.NETCore.App 8.0.0 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]`
-
-和
-
-`Microsoft.WindowsDesktop.App 8.0.0 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]`
-
-确切的版本号可能不同，但只要是`8.x.x`就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么就是你的机器或系统的问题，而不是 LLT 的问题。
+确切的版本号可能不同，但只要是 `10.x.x` 就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么问题很可能出在你的机器或系统配置上，而不是 LLT 本身。
 
 #### 想要帮助我们测试？
 

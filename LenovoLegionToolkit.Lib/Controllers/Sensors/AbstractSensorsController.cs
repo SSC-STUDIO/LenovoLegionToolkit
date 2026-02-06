@@ -198,7 +198,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()
     {
-        // Check if cache is valid, get fan speeds from cache if it is
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
@@ -208,7 +207,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             }
         }
 
-        // 缓存无效，重新获取数据
         var data = await GetDataAsync().ConfigureAwait(false);
         return (data.CPU.FanSpeed, data.GPU.FanSpeed);
     }
@@ -277,11 +275,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     }
 
     /// <summary>
-    /// 异步获取 CPU 最大核心频率。
+    /// Asynchronously gets the CPU maximum core clock frequency.
     /// </summary>
-    /// <returns>CPU 最大核心频率（MHz）。</returns>
+    /// <returns>CPU maximum core clock frequency in MHz.</returns>
     /// <remarks>
-    /// 在单元测试中可以重写此方法以避免实际的 WMI 调用。
+    /// This method can be overridden in unit tests to avoid actual WMI calls.
     /// </remarks>
     protected virtual Task<int> GetCpuMaxCoreClockAsync() => WMI.LenovoGameZoneData.GetCPUFrequencyAsync();
 

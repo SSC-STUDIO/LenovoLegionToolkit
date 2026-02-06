@@ -392,39 +392,15 @@ public partial class App
             var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS));
             if (completedTask != task)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Background initialization still running, cancelling and proceeding with shutdown.");
-
-                // Cancel the background initialization task to prevent race conditions during shutdown
                 _backgroundInitializationCancellationTokenSource?.Cancel();
-
-                try
-                {
-                    // Give the task a short time to respond to cancellation
-                    await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false);
-                }
-                catch
-                {
-                    // Ignore exceptions during cancellation wait
-                }
-
+                try { await Task.WhenAny(task, Task.Delay(500)); }
+                catch { }
                 return;
             }
         }
 
-        try
-        {
-            await task;
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected when cancellation is requested
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Background initialization failed before shutdown completed.", ex);
-        }
+        try { await task; }
+        catch { }
     }
 
     /// <summary>
@@ -524,50 +500,22 @@ public partial class App
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
-        try
-        {
-            // Mark that we're in the exit handler to prevent double Shutdown() call
-            // The flag is checked inside ShutdownAsync under lock, so we set it here under lock
-            // and ShutdownAsync will see it when it checks
-            lock (_shutdownLock)
-            {
-                _inExitHandler = true;
-            }
+        lock (_shutdownLock)
+            _inExitHandler = true;
 
-            // ShutdownAsync will check _inExitHandler under lock, so the race condition is resolved
-            ShutdownAsync(true).GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Shutdown sequence encountered an error.", ex);
-        }
-        finally
-        {
-            try
-            {
-                Log.Instance.Shutdown();
-            }
-            catch
-            {
-                // Ignore log shutdown errors
-            }
+        try { ShutdownAsync(true).GetAwaiter().GetResult(); }
+        catch { }
 
-            try
-            {
-                _singleInstanceMutex?.Close();
-            }
-            catch
-            {
-                // Ignore mutex close errors
-            }
+        try { Log.Instance.Shutdown(); }
+        catch { }
 
-            StopMacroControllerSafely();
-            StopSingleInstanceThreadSafely();
+        try { _singleInstanceMutex?.Close(); }
+        catch { }
 
-            var exitCode = (uint)e.ApplicationExitCode;
-            ForceExit(exitCode);
-        }
+        StopMacroControllerSafely();
+        StopSingleInstanceThreadSafely();
+
+        ForceExit((uint)e.ApplicationExitCode);
     }
 
     public void RestartMainWindow()
@@ -674,49 +622,27 @@ public partial class App
         }
     }
 
-    /// <summary>
-    /// Forces process exit after cleanup completes
-    /// CRITICAL: On incompatible systems, Shutdown() may not actually exit process
-    /// This ensures the process terminates even if WPF shutdown hangs
-    /// </summary>
     private void ForceExit(uint exitCode)
     {
         ThreadPool.QueueUserWorkItem(_ =>
         {
-            Thread.Sleep(500);
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Forcing process exit via ExitProcess({exitCode})...");
-            }
+            Thread.Sleep(100);
+            try { Environment.Exit((int)exitCode); }
             catch { }
             ExitProcess(exitCode);
-            Environment.Exit((int)exitCode);
         });
     }
 
-    /// <summary>
-    /// Stops a service with unified error handling
-    /// </summary>
-    /// <typeparam name="T">Service type</typeparam>
-    /// <param name="stopAction">Async stop action</param>
-    /// <param name="serviceName">Service name for logging</param>
     private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
     {
         try
         {
-            if (IoCContainer.TryResolve<T>() is { } service)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Stopping {serviceName}...");
-                await stopAction(service);
-            }
+            if (IoCContainer.TryResolve<T>() is not { } service)
+                return;
+
+            await stopAction(service);
         }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error stopping {serviceName}.", ex);
-        }
+        catch { }
     }
 
     /// <summary>
@@ -791,74 +717,30 @@ public partial class App
         var totalStopwatch = Stopwatch.StartNew();
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Shutdown sequence started.");
+            Log.Instance.Trace($"Shutdown started.");
 
         try
         {
-            // Cancel background initialization first to prevent new work from starting
             _backgroundInitializationCancellationTokenSource?.Cancel();
-
-            var bgInitStopwatch = Stopwatch.StartNew();
             await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
-            bgInitStopwatch.Stop();
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Background initialization await completed in {bgInitStopwatch.ElapsedMilliseconds}ms.");
-
-            // Stop all plugins first (they may depend on services)
-            var pluginStopwatch = Stopwatch.StartNew();
             await StopPluginsAsync().ConfigureAwait(false);
-            pluginStopwatch.Stop();
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin shutdown completed in {pluginStopwatch.ElapsedMilliseconds}ms.");
-
-            // Stop all services in parallel to speed up shutdown, but with timeout
-            // Skip IsSupportedAsync checks during shutdown - no need to check if supported when stopping
-            var servicesStopwatch = Stopwatch.StartNew();
             var stopServicesTask = Task.WhenAll(
                 StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
-                StopServiceAsync<RGBKeyboardBacklightController>(
-                    controller => controller.SetLightControlOwnerAsync(false),
-                    "RGB keyboard controller"
-                ),
-                StopServiceAsync<SpectrumKeyboardBacklightController>(
-                    controller => controller.StopAuroraIfNeededAsync(),
-                    "Spectrum keyboard controller"
-                ),
-                StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native windows message listener"),
+                StopServiceAsync<RGBKeyboardBacklightController>(controller => controller.SetLightControlOwnerAsync(false), "RGB keyboard controller"),
                 StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
                 StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
                 StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
-                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery discharge rate monitor service"),
+                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor"),
                 Task.Run(() =>
                 {
-                    try
-                    {
-                        var hwStopwatch = Stopwatch.StartNew();
-                        HardwareMonitor.Instance.Dispose();
-                        hwStopwatch.Stop();
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"HardwareMonitor disposed in {hwStopwatch.ElapsedMilliseconds}ms.");
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Error disposing HardwareMonitor: {ex.Message}");
-                    }
+                    try { HardwareMonitor.Instance.Dispose(); }
+                    catch { }
                 })
             );
 
-            // Wait for services to stop with timeout
-            if (!stopServicesTask.Wait(TimeSpan.FromSeconds(8)))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Service shutdown timeout exceeded, continuing with exit...");
-            }
-
-            servicesStopwatch.Stop();
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Services shutdown completed in {servicesStopwatch.ElapsedMilliseconds}ms.");
+            stopServicesTask.Wait(TimeSpan.FromSeconds(2));
 
             StopMacroControllerSafely();
             StopSingleInstanceThreadSafely();
@@ -866,12 +748,11 @@ public partial class App
 
             totalStopwatch.Stop();
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Total shutdown sequence completed in {totalStopwatch.ElapsedMilliseconds}ms.");
+                Log.Instance.Trace($"Shutdown completed in {totalStopwatch.ElapsedMilliseconds}ms.");
         }
-        catch (Exception ex)
+        catch (Exception ex) when (Log.Instance.IsTraceEnabled)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error during shutdown sequence.", ex);
+            Log.Instance.Trace($"Shutdown error: {ex.Message}");
         }
     }
 
@@ -882,61 +763,24 @@ public partial class App
             if (IoCContainer.TryResolve<IPluginManager>() is not { } pluginManager)
                 return;
 
-            // Get all registered plugins and call their OnShutdown method
             var registeredPlugins = pluginManager.GetRegisteredPlugins().ToList();
             if (registeredPlugins.Count == 0)
                 return;
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Shutting down {registeredPlugins.Count} plugin(s)...");
-
-            var shutdownTasks = new List<Task>();
-
-            foreach (var plugin in registeredPlugins)
+            var shutdownTasks = registeredPlugins.Select(plugin => Task.Run(() =>
             {
-                shutdownTasks.Add(Task.Run(() =>
-                {
-                    try
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Calling OnShutdown for plugin: {plugin.Id}");
-                        plugin.OnShutdown();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Error calling OnShutdown for plugin {plugin.Id}: {ex.Message}", ex);
-                    }
-                }));
-            }
+                try { plugin.OnShutdown(); }
+                catch { }
+            })).ToList();
 
-            if (shutdownTasks.Count > 0)
-            {
-                await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
-            }
+            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin shutdown completed.");
-
-            // Wait a bit to ensure all file handles are released
-            // This is necessary because plugins might have background threads or resources that take time to clean up
-            // Reduced from 500ms to 200ms to improve shutdown responsiveness
             await Task.Delay(200).ConfigureAwait(false);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin shutdown delay completed.");
-
-            // Perform pending plugin deletions after all plugins are stopped and file handles are released
             if (pluginManager is PluginManager manager)
-            {
                 manager.PerformPendingDeletions();
-            }
         }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error during plugin shutdown: {ex.Message}", ex);
-        }
+        catch { }
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

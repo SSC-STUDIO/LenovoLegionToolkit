@@ -8770,6 +8770,240 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("MenuStyleSettingsWindow_ConfigEditor_RestartNote", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to shell.nss Configuration File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ShellNssConfigFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ShellNssConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to shell.nss file is used to define the overall structure and behavior of the right-click menu.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ShellNssDescription {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ShellNssDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open shell.nss File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_OpenShellNssFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_OpenShellNssFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Modify shell.nss File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_OpenModifyNssFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_OpenModifyNssFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modify shell.nss File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ModifyNssConfigFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ModifyNssConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to shell.nss file for modifying menu structure and behavior.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ModifyNssDescription {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ModifyNssDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open images.nss File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_OpenImagesNssFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_OpenImagesNssFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to images.nss file is used to configure menu item images and icons.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ImagesNssDescription {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ImagesNssDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to images.nss Configuration File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ImagesNssConfigFile {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ImagesNssConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open in External Editor.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_OpenInExternalEditor {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_OpenInExternalEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Containing Folder.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_OpenContainingFolder {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_OpenContainingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load from File.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_LoadFromText {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_LoadFromText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update from UI.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_UpdateFromUI {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_UpdateFromUI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply Button.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_ApplyButton {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_ApplyButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Color.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_TextColor {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_TextColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Color.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_BackgroundColor {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_BackgroundColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Text.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_SelectedText {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_SelectedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Background.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_SelectedBackground {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_SelectedBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hover Text.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_HoverText {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_HoverText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hover Background.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_HoverBackground {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_HoverBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_Path {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Editor.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_TextEditor {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_TextEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Theme Settings.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_BasicThemeSettings {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_BasicThemeSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hover Effect Settings.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_HoverEffectSettings {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_HoverEffectSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Effect Settings.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_SelectedEffectSettings {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_SelectedEffectSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UI Settings.
+        /// </summary>
+        public static string MenuStyleSettingsWindow_UISettings {
+            get {
+                return ResourceManager.GetString("MenuStyleSettingsWindow_UISettings", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to Action Details.

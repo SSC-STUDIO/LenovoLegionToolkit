@@ -208,13 +208,13 @@
                             <!-- Shell.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="shell.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="shell.nss 文件用于定义右键菜单的整体结构和行为" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <wpfui:Button x:Name="_openShellNssBtn" Content="打开 shell.nss 文件" MinWidth="150" Click="OpenShellNssBtn_Click" Margin="0,0,12,0" />
-                                        <wpfui:Button x:Name="_openShellNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenShellNssFolderBtn_Click" />
+                                        <wpfui:Button x:Name="_openShellNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenShellNssFile}" MinWidth="150" Click="OpenShellNssBtn_Click" Margin="0,0,12,0" />
+                                        <wpfui:Button x:Name="_openShellNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenShellNssFolderBtn_Click" />
                                     </StackPanel>
-                                    <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Path}" FontSize="12" Margin="0,20,0,0" />
                                     <TextBox x:Name="_shellNssPathTextBox" IsReadOnly="True" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8" Height="30" />
                                 </StackPanel>
                             </Grid>
@@ -224,25 +224,25 @@
                                 <!-- Theme UI Settings -->
                                 <TabControl Width="750" Height="400" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                     <!-- UI Settings Tab -->
-                                    <TabItem Header="UI 设置" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                    <TabItem Header="{x:Static resources:Resource.MenuStyleSettingsWindow_UISettings}" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="8">
                                             <StackPanel Orientation="Vertical" Margin="0,0,0,16">
                                                 <!-- Basic Theme Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="基础主题设置" />
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_BasicThemeSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Background Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="背景颜色:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_BackgroundColor}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_backgroundColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
                                                             <Button x:Name="_backgroundColorPicker" Width="40" Height="24" Background="#ffffff" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="文本颜色:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_TextColor}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_textColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
                                                             <Button x:Name="_textColorPicker" Width="40" Height="24" Background="#000000" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
@@ -252,19 +252,19 @@
                                                 <!-- Hover Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="悬停效果设置" />
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_HoverEffectSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Hover Background Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="悬停背景:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_HoverBackground}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_hoverBackgroundColorTextBox" Width="100" Text="#f0f0f0" Margin="0,0,8,0" />
                                                             <Button x:Name="_hoverBackgroundColorPicker" Width="40" Height="24" Background="#f0f0f0" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Hover Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="悬停文本:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_HoverText}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_hoverTextColorTextBox" Width="100" Text="#000000" Margin="0,0,8,0" />
                                                             <Button x:Name="_hoverTextColorPicker" Width="40" Height="24" Background="#000000" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
@@ -274,19 +274,19 @@
                                                 <!-- Selected Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="选中效果设置" />
+                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_SelectedEffectSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Selected Background Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="选中背景:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_SelectedBackground}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_selectedBackgroundColorTextBox" Width="100" Text="#0078d4" Margin="0,0,8,0" />
                                                             <Button x:Name="_selectedBackgroundColorPicker" Width="40" Height="24" Background="#0078d4" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
                                                         
                                                         <!-- Selected Text Color -->
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                                            <TextBlock Width="150" Text="选中文本:" VerticalAlignment="Center" />
+                                                            <TextBlock Width="150" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_SelectedText}" VerticalAlignment="Center" />
                                                             <TextBox x:Name="_selectedTextColorTextBox" Width="100" Text="#ffffff" Margin="0,0,8,0" />
                                                             <Button x:Name="_selectedTextColorPicker" Width="40" Height="24" Background="#ffffff" BorderThickness="1" BorderBrush="#cccccc" />
                                                         </StackPanel>
@@ -295,19 +295,19 @@
                                                 
                                                 <!-- Update Button -->
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
-                                                    <wpfui:Button x:Name="_updateFromUIBtn" Content="从UI更新文本" MinWidth="120" Click="UpdateFromUIBtn_Click" />
-                                                    <wpfui:Button x:Name="_loadToUIBtn" Content="从文本加载" MinWidth="120" Click="LoadToUIBtn_Click" />
+                                                    <wpfui:Button x:Name="_updateFromUIBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_UpdateFromUI}" MinWidth="120" Click="UpdateFromUIBtn_Click" />
+                                                    <wpfui:Button x:Name="_loadToUIBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_LoadFromText}" MinWidth="120" Click="LoadToUIBtn_Click" />
                                                 </StackPanel>
                                             </StackPanel>
                                         </ScrollViewer>
                                     </TabItem>
                                     
                                     <!-- Text Editor Tab -->
-                                    <TabItem Header="文本编辑器" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                    <TabItem Header="{x:Static resources:Resource.MenuStyleSettingsWindow_TextEditor}" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                         <Grid Width="750" Height="400">
                                             <StackPanel Orientation="Vertical" Height="400">
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
-                                                    <wpfui:Button x:Name="_openThemeNssBtn" Content="在外部编辑器打开" MinWidth="150" Click="OpenThemeNssBtn_Click" />
+                                                    <wpfui:Button x:Name="_openThemeNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenInExternalEditor}" MinWidth="150" Click="OpenThemeNssBtn_Click" />
                                                 </StackPanel>
                                                 <TextBox
                                                     x:Name="_themeNssTextBox"
@@ -335,13 +335,13 @@
                             <!-- Images.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="images.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="images.nss 文件用于定义右键菜单的图标和图像" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <wpfui:Button x:Name="_openImagesNssBtn" Content="打开 images.nss 文件" MinWidth="150" Click="OpenImagesNssBtn_Click" Margin="0,0,12,0" />
-                                        <wpfui:Button x:Name="_openImagesNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenImagesNssFolderBtn_Click" />
+                                        <wpfui:Button x:Name="_openImagesNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenImagesNssFile}" MinWidth="150" Click="OpenImagesNssBtn_Click" Margin="0,0,12,0" />
+                                        <wpfui:Button x:Name="_openImagesNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenImagesNssFolderBtn_Click" />
                                     </StackPanel>
-                                    <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Path}" FontSize="12" Margin="0,20,0,0" />
                                     <TextBox x:Name="_imagesNssPathTextBox" IsReadOnly="True" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8" Height="30" />
                                 </StackPanel>
                             </Grid>
@@ -349,13 +349,13 @@
                             <!-- Modify.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="modify.nss 配置文件" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="modify.nss 文件用于修改和自定义右键菜单项" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <wpfui:Button x:Name="_openModifyNssBtn" Content="打开 modify.nss 文件" MinWidth="150" Click="OpenModifyNssBtn_Click" Margin="0,0,12,0" />
-                                        <wpfui:Button x:Name="_openModifyNssFolderBtn" Content="打开所在文件夹" MinWidth="150" Click="OpenModifyNssFolderBtn_Click" />
+                                        <wpfui:Button x:Name="_openModifyNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenModifyNssFile}" MinWidth="150" Click="OpenModifyNssBtn_Click" Margin="0,0,12,0" />
+                                        <wpfui:Button x:Name="_openModifyNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenModifyNssFolderBtn_Click" />
                                     </StackPanel>
-                                    <TextBlock Text="路径：" FontSize="12" Margin="0,20,0,0" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_Path}" FontSize="12" Margin="0,20,0,0" />
                                     <TextBox x:Name="_modifyNssPathTextBox" IsReadOnly="True" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Padding="8" Height="30" />
                                 </StackPanel>
                             </Grid>
@@ -375,7 +375,7 @@
                 MinWidth="120"
                 Margin="0,0,8,0"
                 Click="ApplyButton_Click"
-                Content="应用" />
+                Content="{x:Static resources:Resource.MenuStyleSettingsWindow_ApplyButton}" />
             <wpfui:Button
                 x:Name="_closeButton"
                 MinWidth="120"

@@ -15,7 +15,12 @@ public class ThrottleLastDispatcherTests
 
     private class TestFastDelayProvider : IDelayProvider
     {
-        public Task Delay(TimeSpan delay, CancellationToken token) => Task.CompletedTask;
+        public Task Delay(TimeSpan delay, CancellationToken token)
+        {
+            // Use an actual cancellable delay so tests observe correct cancellation behavior.
+            // Tests use small intervals; keeping the real delay ensures deterministic cancellation semantics.
+            return Task.Delay(delay, token);
+        }
     }
     private ThrottleLastDispatcher CreateDispatcher(TimeSpan interval, string? tag = null)
     {

@@ -19,8 +19,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-            
-            // Strictly disable specialized machine features on incompatible machines
+
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 

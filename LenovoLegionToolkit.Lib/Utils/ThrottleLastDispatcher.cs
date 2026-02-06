@@ -54,9 +54,11 @@ public class ThrottleLastDispatcher : IDisposable
             myVersion = ++_currentVersion;
             
             // Cancel previous delay
+            // Signal cancellation to the previous token source but do not dispose it here.
+            // Disposing a CancellationTokenSource while another task is awaiting its token
+            // can cause races on some runtimes. Disposal will be handled by Dispose().
             _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
-            
+
             _cancellationTokenSource = new CancellationTokenSource();
             cts = _cancellationTokenSource;
         }

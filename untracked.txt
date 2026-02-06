@@ -1,0 +1,2 @@
+LenovoLegionToolkit-Plugins/
+untracked.txt

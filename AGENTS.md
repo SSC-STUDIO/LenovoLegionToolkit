@@ -6,6 +6,7 @@
 - **项目名称**: Lenovo Legion Toolkit (LLT)
 - **项目类型**: Windows WPF 桌面应用程序
 - **开发语言**: C# (.NET 8.0)
+ - **开发语言**: C# (.NET 10)
 - **目标平台**: Windows (x64)
 - **主要功能**: 联想拯救者系列笔记本硬件控制和优化工具
 
@@ -765,6 +766,186 @@ git checkout -- file.txt              # 撤销文件修改
 | [README.md](README.md) | 主用户文档（英文） |
 | [README_zh-hans.md](README_zh-hans.md) | 主用户文档（中文） |
 
+--- 
+
+## 🔌 插件系统架构
+
+### 项目结构
+
+插件系统采用**独立仓库 + 插件市场**模式：
+
+```
+LenovoLegionToolkit/                          # 主项目仓库
+├── LenovoLegionToolkit.WPF/                  # 主应用程序 (WPF UI)
+├── LenovoLegionToolkit.Lib/                  # 核心业务逻辑库
+│   └── Plugins/                              # 插件管理模块
+│       ├── PluginLoader.cs                   # 插件加载器
+│       ├── VersionChecker.cs                  # 版本兼容性检查
+│       ├── StoreClient.cs                     # 插件市场客户端
+│       ├── UpdateManager.cs                   # 更新管理器
+│       ├── Models/                           # 数据模型
+│       └── Exceptions/                       # 自定义异常
+│
+LenovoLegionToolkit-Plugins/                  # 独立仓库 (插件)
+├── plugins/
+│   ├── SDK/                                  # 插件开发 SDK
+│   ├── CustomMouse/
+│   ├── NetworkAcceleration/
+│   ├── ShellIntegration/
+│   └── ViveTool/
+├── store.json                                # 插件市场元数据 (GitHub Pages)
+└── .github/workflows/
+    └── ci.yml                                # CI/CD 自动构建
+```
+
+### 仓库关系
+
+| 项目 | 仓库位置 | 远程地址 |
+|------|---------|---------|
+| **主项目** | `LenovoLegionToolkit/` | github.com/BartoszCiccarelli/LenovoLegionToolkit.git |
+| **插件项目** | `LenovoLegionToolkit-Plugins/` | github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins.git |
+
+### 核心设计原则
+
+1. **SDK 内置**: 主程序自带 SDK，插件只需实现 `IPlugin` 接口
+2. **独立发布**: 插件独立于主程序发布版本
+3. **版本兼容**: 插件声明最低支持的主程序版本 (`minLLTVersion`)
+4. **动态加载**: 运行时从 `%APPDATA%` 目录加载插件 DLL
+5. **自动更新**: 支持手动检查、启动时检查、自动后台检查三种更新策略
+
+### 存储路径
+
+```
+%APPDATA%\LenovoLegionToolkit\plugins\
+├── installed\                                 # 已安装插件
+│   ├── CustomMouse\
+│   │   ├── LenovoLegionToolkit.Plugins.CustomMouse.dll
+│   │   └── plugin.json
+│   └── ShellIntegration\
+│       ├── LenovoLegionToolkit.Plugins.ShellIntegration.dll
+│       └── plugin.json
+├── updates\                                   # 待安装更新
+└── store.json                                 # 缓存的市场元数据
+```
+
+### GitHub 资源结构
+
+```
+LenovoLegionToolkit-Plugins/
+├── store.json                                # 插件市场元数据 (GitHub Pages gh-pages 分支)
+├── plugins/
+│   ├── CustomMouse/
+│   │   ├── plugin.json
+│   │   └── LenovoLegionToolkit.Plugins.CustomMouse.dll
+│   └── ShellIntegration/
+│       ├── plugin.json
+│       └── LenovoLegionToolkit.Plugins.ShellIntegration.dll
+└── releases/                                 # GitHub Releases
+    ├── custom-mouse-v1.0.0.zip
+    └── shell-integration-v1.0.0.zip
+```
+
+### store.json 格式
+
+```json
+{
+  "lastUpdated": "2026-02-06T12:00:00Z",
+  "plugins": [
+    {
+      "id": "custom-mouse",
+      "name": "Custom Mouse",
+      "description": "Apply custom Windows 11 cursor styles",
+      "author": "LLT Team",
+      "version": "1.0.0",
+      "minLLTVersion": "2.14.0",
+      "downloadUrl": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
+      "changelog": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.0"
+    }
+  ]
+}
+```
+
+### plugin.json 格式 (每个插件内嵌)
+
+```json
+{
+  "id": "custom-mouse",
+  "name": "Custom Mouse",
+  "version": "1.0.0",
+  "minLLTVersion": "2.14.0",
+  "author": "LLT Team",
+  "repository": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/issues"
+}
+```
+
+### 更新策略
+
+| 策略 | 触发方式 | 实现方式 |
+|------|---------|---------|
+| **启动时检查** | 每次启动应用 | 后台异步检查，不阻塞 UI |
+| **手动更新** | 用户点击按钮 | 立即检查，显示更新列表 |
+| **自动更新** | 后台定时检查 | 每 24 小时或每周检查 |
+
+### 插件项目配置
+
+所有插件项目必须满足以下要求：
+
+1. **目标框架**: `net10.0-windows`
+2. **引用 SDK**: 引用 `LenovoLegionToolkit.Plugins.SDK` (PrivateAssets=All)
+3. **输出路径**: `build/plugins/{PluginName}/`
+4. **内嵌 plugin.json**: 设置为 EmbeddedResource 或 Copy to Output Directory
+5. **版本号格式**: `X.Y.Z` (语义化版本)
+
+### CI/CD 发布流程
+
+```yaml
+# .github/workflows/release.yml
+name: Release Plugins
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/**'
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      
+      - name: Build Plugins
+        run: |
+          dotnet build plugins/SDK --configuration Release
+          dotnet build plugins/CustomMouse --configuration Release
+          dotnet build plugins/ShellIntegration --configuration Release
+      
+      - name: Create Release ZIPs
+        run: |
+          # 为每个插件创建 zip 包
+          Compress-Archive -Path plugins/CustomMouse/build/* -DestinationPath releases/custom-mouse-v${{ steps.version.outputs.custom-mouse }}.zip
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: releases/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Update store.json
+        run: |
+          # 更新 store.json 版本信息
+          # 推送到 gh-pages 分支
+```
+
 ---
 
-*本文档将随项目发展持续更新，最后更新时间: 2026-02-05*
+*本文档将随项目发展持续更新，最后更新时间: 2026-02-06*

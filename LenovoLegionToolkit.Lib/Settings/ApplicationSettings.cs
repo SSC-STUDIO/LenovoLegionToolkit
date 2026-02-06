@@ -61,6 +61,13 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ExtensionsEnabled { get; set; } = false;
         public List<string> InstalledExtensions { get; set; } = [];
         public List<string> PendingDeletionExtensions { get; set; } = [];
+        
+        public bool CheckPluginUpdatesOnStartup { get; set; } = true;
+        public bool AutoDownloadPluginUpdates { get; set; } = false;
+        public bool NotifyOnPluginUpdate { get; set; } = true;
+        public int PluginUpdateCheckFrequencyHours { get; set; } = 24;
+        public DateTime? LastPluginUpdateCheckTime { get; set; }
+        public List<string> PendingPluginUpdates { get; set; } = [];
         public List<string>? SelectedCleanupActions { get; set; }
         public List<string>? SelectedOptimizationActions { get; set; }
         public int LastWindowsOptimizationPageMode { get; set; }

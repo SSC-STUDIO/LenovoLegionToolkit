@@ -33,7 +33,6 @@ public class PowerModeFeature(
 
         var result = new List<PowerModeState>();
 
-        // Strictly disable specialized machine features on incompatible machines
         if (!isSupportedLegionMachine)
             return [.. result];
 
