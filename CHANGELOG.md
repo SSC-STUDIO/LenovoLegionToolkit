@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Strengthened ApplicationSettings LoadStore test coverage for default values when settings are missing / 强化 ApplicationSettings LoadStore 在配置缺失时返回默认值的测试覆盖
 - Fixed workflow .NET SDK setup for build and release pipelines / 修复构建与发布流程中的 .NET SDK 配置
 - Added missing LenovoLegionToolkit-Plugins submodule metadata for CI checkout / 补充 LenovoLegionToolkit-Plugins 子模块信息以修复 CI 检出
+- Fixed CI tests workflow by adding artifact upload/download between build and test jobs / 修复 CI 测试工作流，在构建和测试作业之间添加 artifact 上传/下载
 - Removed obsolete ShellIntegration submodule entries after internalizing the code / 在代码内置后移除过时的 ShellIntegration 子模块配置
 
 ### Improved / 改进
