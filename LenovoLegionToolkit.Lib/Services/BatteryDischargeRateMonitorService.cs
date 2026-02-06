@@ -10,84 +10,130 @@ public class BatteryDischargeRateMonitorService : IDisposable
 {
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
+    private readonly object _lock = new();
+    private bool _disposed;
 
     public async Task StartStopIfNeededAsync()
     {
-        await StopAsync().ConfigureAwait(false);
-
-        if (_refreshTask != null)
-            return;
-
         if (!Battery.TestBatterySupport())
             return;
 
-        if (_cts is not null)
-            await _cts.CancelAsync().ConfigureAwait(false);
+        CancellationTokenSource? newCts = null;
+        Task? newTask = null;
 
-        _cts = new CancellationTokenSource();
-
-        var token = _cts.Token;
-
-        _refreshTask = Task.Run(async () =>
+        lock (_lock)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery monitoring service started");
+            if (_refreshTask != null)
+                return;
 
-            var iterationCount = 0;
-
-            while (!token.IsCancellationRequested)
+            if (_cts is not null)
             {
                 try
                 {
-                    iterationCount++;
-
-                    if (iterationCount > 1000)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Battery monitoring service exceeded safe iteration limit ({iterationCount})");
-                        break;
-                    }
-
-                    Battery.SetMinMaxDischargeRate();
-
-                    await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                    _cts.Cancel();
                 }
-                catch (OperationCanceledException)
+                catch (ObjectDisposedException)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Battery monitoring service cancelled");
                 }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Battery monitoring service failed at iteration {iterationCount}", ex);
-
-                    break;
-                }
+                _cts.Dispose();
             }
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Battery monitoring service stopped");
-        }, token);
+            newCts = new CancellationTokenSource();
+            _cts = newCts;
+
+            var token = newCts.Token;
+
+            newTask = Task.Run(async () =>
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Battery monitoring service started");
+
+                var iterationCount = 0;
+
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        iterationCount++;
+
+                        if (iterationCount > 1000)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Battery monitoring service exceeded safe iteration limit ({iterationCount})");
+                            break;
+                        }
+
+                        Battery.SetMinMaxDischargeRate();
+
+                        await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Battery monitoring service cancelled");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Battery monitoring service failed at iteration {iterationCount}", ex);
+
+                        break;
+                    }
+                }
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Battery monitoring service stopped");
+            }, token);
+
+            _refreshTask = newTask;
+        }
+
+        if (newTask is not null)
+            await newTask.ConfigureAwait(false);
     }
 
     public async Task StopAsync()
     {
-        if (_cts is not null)
-            await _cts.CancelAsync().ConfigureAwait(false);
+        CancellationTokenSource? ctsToDispose = null;
+        Task? taskToWait = null;
 
-        _cts = null;
+        lock (_lock)
+        {
+            if (_cts is not null)
+            {
+                try
+                {
+                    _cts.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+                ctsToDispose = _cts;
+                _cts = null;
+            }
 
-        if (_refreshTask is not null)
-            await _refreshTask.ConfigureAwait(false);
+            taskToWait = _refreshTask;
+            _refreshTask = null;
+        }
 
-        _refreshTask = null;
+        if (ctsToDispose is not null)
+        {
+            try
+            {
+                await ctsToDispose.CancelAsync().ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            ctsToDispose.Dispose();
+        }
+
+        if (taskToWait is not null)
+            await taskToWait.ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Battery monitoring service stopped");
     }
-
-    private bool _disposed = false;
 
     public void Dispose()
     {
@@ -97,25 +143,40 @@ public class BatteryDischargeRateMonitorService : IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposed)
+        if (_disposed)
+            return;
+
+        if (disposing)
         {
-            if (disposing)
+            CancellationTokenSource? ctsToDispose = null;
+            Task? taskToWait = null;
+
+            lock (_lock)
+            {
+                if (_cts is not null)
+                {
+                    ctsToDispose = _cts;
+                    _cts = null;
+                }
+                taskToWait = _refreshTask;
+                _refreshTask = null;
+            }
+
+            if (ctsToDispose is not null)
             {
                 try
                 {
-                    _cts?.Cancel();
-                    _cts?.Dispose();
-                    _cts = null;
-                    _refreshTask?.Dispose();
-                    _refreshTask = null;
+                    ctsToDispose.Cancel();
                 }
-                catch (Exception ex)
+                catch (ObjectDisposedException)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error during BatteryDischargeRateMonitorService disposal", ex);
                 }
+                ctsToDispose.Dispose();
             }
-            _disposed = true;
+
+            taskToWait?.Wait(TimeSpan.FromSeconds(5));
         }
+
+        _disposed = true;
     }
 }

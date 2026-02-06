@@ -19,16 +19,26 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     protected virtual T Default => new();
 
-    public T Store => _cachedStore ??= LoadStore() ?? Default;
+    public T Store
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _cachedStore ??= LoadStore() ?? Default;
+            }
+        }
+    }
 
     protected AbstractSettings(string filename)
     {
         JsonSerializerSettings = new()
         {
             Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.Auto,
+            TypeNameHandling = TypeNameHandling.None,
             ObjectCreationHandling = ObjectCreationHandling.Replace,
-            Converters = { new StringEnumConverter() }
+            Converters = { new StringEnumConverter() },
+            MaxDepth = 32
         };
 
         _fileName = filename;
@@ -53,7 +63,7 @@ public abstract class AbstractSettings<T> where T : class, new()
             settingsSerialized = JsonConvert.SerializeObject(_cachedStore ?? Default, JsonSerializerSettings);
             _lastLoadTime = DateTime.UtcNow;
         }
-        
+
         await File.WriteAllTextAsync(_settingsStorePath, settingsSerialized).ConfigureAwait(false);
     }
 
@@ -73,8 +83,10 @@ public abstract class AbstractSettings<T> where T : class, new()
                 if (store is null)
                     TryBackup();
             }
-            catch
+            catch (Exception ex)
             {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error loading settings for {_fileName}", ex);
                 TryBackup();
             }
 
@@ -86,13 +98,14 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     public virtual async Task<T?> LoadStoreAsync()
     {
+        T? store = null;
+
         lock (_lock)
         {
             if (_cachedStore != null && DateTime.UtcNow - _lastLoadTime < _cacheDuration)
                 return _cachedStore;
         }
 
-        T? store = null;
         try
         {
             var settingsSerialized = await File.ReadAllTextAsync(_settingsStorePath).ConfigureAwait(false);
@@ -101,8 +114,10 @@ public abstract class AbstractSettings<T> where T : class, new()
             if (store is null)
                 TryBackup();
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error loading settings for {_fileName}", ex);
             TryBackup();
         }
 

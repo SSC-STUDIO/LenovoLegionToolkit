@@ -130,6 +130,18 @@ public class Log
         LogInternal(LogLevel.Error, message, ex, file, lineNumber, caller);
     }
 
+    // Convenience overloads that accept plain strings. These are helpful for callers
+    // that pass string literals or non-interpolated strings so they don't need to
+    // create FormattableString instances explicitly.
+    public void Error(string message,
+        Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        LogInternal(LogLevel.Error, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+    }
+
     public void Warning(FormattableString message,
         Exception? ex = null,
         [CallerFilePath] string? file = null,
@@ -138,6 +150,16 @@ public class Log
     {
         if (CurrentLogLevel >= LogLevel.Warning)
             LogInternal(LogLevel.Warning, message, ex, file, lineNumber, caller);
+    }
+
+    public void Warning(string message,
+        Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (CurrentLogLevel >= LogLevel.Warning)
+            LogInternal(LogLevel.Warning, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
     }
 
     public void Info(FormattableString message,
@@ -150,6 +172,16 @@ public class Log
             LogInternal(LogLevel.Info, message, ex, file, lineNumber, caller);
     }
 
+    public void Info(string message,
+        Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (CurrentLogLevel >= LogLevel.Info)
+            LogInternal(LogLevel.Info, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+    }
+
     public void Debug(FormattableString message,
         Exception? ex = null,
         [CallerFilePath] string? file = null,
@@ -160,6 +192,16 @@ public class Log
             LogInternal(LogLevel.Debug, message, ex, file, lineNumber, caller);
     }
 
+    public void Debug(string message,
+        Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (CurrentLogLevel >= LogLevel.Debug)
+            LogInternal(LogLevel.Debug, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+    }
+
     public void Trace(FormattableString message,
         Exception? ex = null,
         [CallerFilePath] string? file = null,
@@ -168,6 +210,16 @@ public class Log
     {
         if (IsTraceEnabled || CurrentLogLevel >= LogLevel.Trace)
             LogInternal(LogLevel.Trace, message, ex, file, lineNumber, caller);
+    }
+
+    public void Trace(string message,
+        Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (IsTraceEnabled || CurrentLogLevel >= LogLevel.Trace)
+            LogInternal(LogLevel.Trace, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
     }
 
     private void LogInternal(LogLevel level,

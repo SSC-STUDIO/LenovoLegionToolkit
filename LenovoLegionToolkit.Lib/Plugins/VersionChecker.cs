@@ -174,7 +174,7 @@ public class VersionChecker
     {
         try
         {
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var assembly = global::System.Reflection.Assembly.GetExecutingAssembly();
             var version = assembly.GetName().Version;
             return version?.ToString() ?? "1.0.0";
         }

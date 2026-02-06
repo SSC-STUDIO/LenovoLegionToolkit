@@ -1,12 +1,11 @@
 # Lenovo Legion Toolkit 开发指南 (AGENTS.md)
-
+记住要尽可能使用能够用的skill
 ## 📋 项目概述
 
 ### 基本信息
 - **项目名称**: Lenovo Legion Toolkit (LLT)
 - **项目类型**: Windows WPF 桌面应用程序
-- **开发语言**: C# (.NET 8.0)
- - **开发语言**: C# (.NET 10)
+- **开发语言**: C# (.NET 10)
 - **目标平台**: Windows (x64)
 - **主要功能**: 联想拯救者系列笔记本硬件控制和优化工具
 
@@ -17,6 +16,42 @@
 
 ### 项目结构
 ```
+
+## 包依赖管理 (Central Package Management)
+
+本项目使用 **NuGet Central Package Management (CPM)** 来集中管理所有 NuGet 包版本。
+
+### 文件位置
+- `Directory.Packages.props` - 中央包版本定义文件（位于仓库根目录）
+
+### 工作原理
+- 所有包版本都在 `Directory.Packages.props` 中统一定义
+- 各 `.csproj` 文件中只声明 `PackageReference`，**不包含版本号**
+- 构建时 NuGet 自动从中央文件解析版本
+
+### 添加新包依赖的步骤
+
+1. **在 `Directory.Packages.props` 中添加包版本定义**：
+```xml
+<ItemGroup>
+  <PackageVersion Include="PackageName" Version="x.y.z" />
+</ItemGroup>
+```
+
+2. **在需要使用该包的项目 `.csproj` 中添加引用**（无需版本号）：
+```xml
+<ItemGroup>
+  <PackageReference Include="PackageName" />
+</ItemGroup>
+```
+
+3. **更新 CHANGELOG.md** 记录依赖变更
+
+### 好处
+✅ 避免版本冲突 - 所有项目使用统一版本  
+✅ 简化更新 - 只需修改一处即可更新所有项目的依赖版本  
+✅ 清晰透明 - 所有依赖版本一目了然  
+✅ 可传递性固定 - 自动解决传递依赖的版本冲突
 
 ## 升级到 .NET 10 的说明
 
@@ -36,12 +71,21 @@ LenovoLegionToolkit/
 ├── LenovoLegionToolkit.CLI/           # 命令行工具
 ├── LenovoLegionToolkit.CLI.Lib/       # CLI 核心库
 ├── LenovoLegionToolkit.Tests/         # 单元测试
-├── plugins/                           # 插件系统
+├── LenovoLegionToolkit.PerformanceTest/ # 性能测试
+├── LenovoLegionToolkit.SpectrumTester/  # RGB键盘测试
+├── LenovoLegionToolkit-Plugins/       # 插件系统（独立子模块）
 │   ├── SDK/                          # 插件开发SDK
-│   ├── NetworkAcceleration/         # 网络加速插件
-│   ├── ViveTool/                     # ViVeTool插件
-│   └── Tools/                        # 工具插件
-├── ShellIntegration/                  # Shell集成模块
+│   ├── plugins/                      # 插件集合
+│   │   ├── CustomMouse/              # 鼠标样式插件
+│   │   ├── ShellIntegration/         # Shell集成插件
+│   │   ├── NetworkAcceleration/      # 网络加速插件
+│   │   └── ViveTool/                 # ViVeTool插件
+│   └── build/                        # 构建输出
+├── docs/                             # 项目文档
+│   ├── ARCHITECTURE.md               # 系统架构文档
+│   ├── DEPLOYMENT.md                 # 构建部署指南
+│   ├── SECURITY.md                   # 安全政策
+│   └── CODE_OF_CONDUCT.md            # 社区行为准则
 └── assets/                           # 资源文件
 ```
 

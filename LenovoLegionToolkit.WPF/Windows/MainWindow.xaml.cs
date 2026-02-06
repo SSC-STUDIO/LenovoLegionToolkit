@@ -221,6 +221,22 @@ public partial class MainWindow
 
     private void MainWindow_Closed(object? sender, EventArgs args)
     {
+        // Unsubscribe from window events
+        Closing -= MainWindow_Closing;
+        Closed -= MainWindow_Closed;
+        IsVisibleChanged -= MainWindow_IsVisibleChanged;
+        Loaded -= MainWindow_Loaded;
+        SourceInitialized -= MainWindow_SourceInitialized;
+        StateChanged -= MainWindow_StateChanged;
+
+        // Unsubscribe from frame navigation events
+        if (_rootFrame is not null)
+            _rootFrame.Navigated -= RootFrame_Navigated;
+
+        // Unsubscribe from plugin manager events
+        if (_pluginManager is not null)
+            _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
+
         _trayHelper?.Dispose();
         _trayHelper = null;
     }
