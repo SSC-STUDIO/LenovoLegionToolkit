@@ -82,7 +82,7 @@ public class PluginUpdateManager : IDisposable
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("PluginUpdateManager: Checking for updates on startup...");
+                Log.Instance.Trace($"PluginUpdateManager: Checking for updates on startup...");
 
             var result = await CheckForUpdatesAsync();
 
@@ -96,7 +96,7 @@ public class PluginUpdateManager : IDisposable
             else
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("PluginUpdateManager: No updates found on startup");
+                    Log.Instance.Trace($"PluginUpdateManager: No updates found on startup");
             }
         }
         catch (Exception ex)
@@ -115,7 +115,7 @@ public class PluginUpdateManager : IDisposable
         try
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("PluginUpdateManager: Starting manual update check...");
+                Log.Instance.Trace($"PluginUpdateManager: Starting manual update check...");
 
             var store = _settings.Store;
             var installedPlugins = GetInstalledPluginVersions();
@@ -192,7 +192,7 @@ public class PluginUpdateManager : IDisposable
                     if (ShouldCheckForUpdates())
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace("PluginUpdateManager: Running background update check...");
+                            Log.Instance.Trace($"PluginUpdateManager: Running background update check...");
                         
                         var result = await CheckForUpdatesAsync();
                     }
@@ -280,7 +280,7 @@ public class PluginUpdateManager : IDisposable
                 try
                 {
                     var json = File.ReadAllText(pluginInfo);
-                    var manifest = System.Text.Json.JsonSerializer.Deserialize<PluginManifest>(json, new System.Text.Json.JsonSerializerOptions
+                    var manifest = global::System.Text.Json.JsonSerializer.Deserialize<PluginManifest>(json, new global::System.Text.Json.JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     });

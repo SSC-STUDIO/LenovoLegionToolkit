@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved / 改进
 - Migrated all plugin downloads to dedicated repository releases / 将所有插件下载迁移至专用仓库 releases
 - Removed plugin source code and compilation from main repository / 从主仓库移除插件源码和编译
+- Implemented Central Package Management (CPM) using Directory.Packages.props for centralized NuGet package version management / 使用 Directory.Packages.props 实现中央包管理 (CPM)，集中管理所有 NuGet 包版本
 - Plugin repository service now fetches plugins from LenovoLegionToolkit-Plugins / 插件仓库服务现在从 LenovoLegionToolkit-Plugins 获取插件
 
 ### Improved / 改进
@@ -43,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复关闭流程阻塞问题：跳过 Spectrum 键盘控制器和 Windows 消息监听器的停止操作，解决 8 秒超时问题 / Fixed shutdown hang: skipped Spectrum keyboard controller and Windows message listener stop operations to resolve 8-second timeout issue
 - 优化服务停止超时：从 8 秒减少到 2 秒，提升关闭响应速度 / Optimized service stop timeout: reduced from 8 seconds to 2 seconds for faster shutdown response
 - 关闭速度从 8 秒提升到 0.35 秒 (23x) / Shutdown speed improved from 8 seconds to 0.35 seconds (23x faster)
+- 移除 LibreHardwareMonitorLib 依赖，简化 CPU 电压读取逻辑，直接使用 WMI / Removed LibreHardwareMonitorLib dependency, simplified CPU voltage reading to use WMI directly
 
 ### Improved / 改进
 - 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage
@@ -62,6 +64,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved resource handling and localization for multi-language support / 提升资源管理和本地化，支持多语言
 
 ### Fixed / 修复
+- **Security Fix**: Fixed JSON deserialization vulnerability in AbstractSettings.cs by replacing TypeNameHandling.Auto with TypeNameHandling.None to prevent potential security attacks / 修复 AbstractSettings.cs 中的 JSON 反序列化安全漏洞：将 TypeNameHandling.Auto 替换为 TypeNameHandling.None 以防止潜在的安全攻击
+- **Thread Safety**: Fixed race conditions in AbstractSettings.cs Store property getter by adding proper locking to ensure thread-safe access / 修复 AbstractSettings.cs Store 属性 getter 中的竞态条件：添加适当的锁以确保线程安全访问
+- **Thread Safety**: Fixed race condition in BatteryDischargeRateMonitorService.cs by adding proper synchronization for CTS and Task management / 修复 BatteryDischargeRateMonitorService.cs 中的竞态条件：为 CTS 和任务管理添加适当的同步
+- **Resource Management**: Added IDisposable pattern to AutomationProcessor.cs with proper event handler unsubscription and resource cleanup / 为 AutomationProcessor.cs 添加 IDisposable 模式：正确取消事件处理程序订阅并清理资源
+- **Memory Leak Fix**: Fixed memory leaks in MainWindow.xaml.cs by unsubscribing event handlers in MainWindow_Closed / 修复 MainWindow.xaml.cs 中的内存泄漏：在 MainWindow_Closed 中取消事件处理程序订阅
+- **Plugin System**: Fixed plugin assembly file locking issue in PluginManager.cs by loading assemblies from bytes instead of file path, enabling plugin updates without restart / 修复 PluginManager.cs 中的插件程序集文件锁定问题：从字节加载程序集而非文件路径，支持无需重启即可更新插件
+- **Plugin System**: Added version compatibility checking for plugins to ensure plugin-host version compatibility / 为插件添加版本兼容性检查以确保插件与宿主版本兼容
+- **Exception Handling**: Added proper exception handling and logging throughout codebase to replace empty catch blocks / 在整个代码库中添加适当的异常处理和日志记录以替换空的 catch 块
+- **Dependencies**: Updated System.Management and System.ServiceProcess.ServiceController to version 10.0.1 for consistency / 更新 System.Management 和 System.ServiceProcess.ServiceController 到版本 10.0.1 以保持一致性
 - 修复插件拓展和系统优化界面的 Snackbar 冲突重叠问题，统一通过 SnackbarHelper 进行队列管理 / Fixed Snackbar overlap conflict between Plugin Extensions and Windows Optimization by unifying notification queue management through SnackbarHelper
 - 引入了多级保障的进程终止机制（TerminateProcess + Environment.FailFast + 前台守护线程），彻底解决了在极端情况下（如驱动程序或 DLL 卸载挂起）程序退出后进程残留的问题 / Introduced a multi-level process termination mechanism (TerminateProcess + Environment.FailFast + Foreground Watchdog thread) to completely resolve the issue of process residue after exit under extreme conditions (such as driver or DLL unload hangs)
 - 修复了不兼容机器上关闭软件后的 CPU 占用残留问题：在所有退出路径（包括不兼容系统退出和异常退出）中正确停止宏控制器，释放键盘钩子，确保进程完全终止 / Fixed CPU usage residue after closing the software on incompatible machines: correctly stopped the MacroController in all exit paths (including incompatible system exit and exception exit) to release the keyboard hook and ensure the process terminates completely

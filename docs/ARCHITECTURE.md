@@ -4,6 +4,23 @@
 
 Lenovo Legion Toolkit (LLT) is a lightweight Windows WPF desktop application designed to replace Lenovo Vantage for advanced hardware control on Legion series laptops. The application follows a modular architecture pattern with clear separation of concerns.
 
+## Quick Start
+
+### For Users
+
+1. **Download** the latest release from [GitHub Releases](https://github.com/BartoszCiccarelli/LenovoLegionToolkit/releases)
+2. **Install** the application by running the installer
+3. **Launch** LLT and configure your preferred settings
+4. **Enjoy** enhanced control over your Legion laptop hardware
+
+### For Developers
+
+1. **Prerequisites**: Install .NET 10 SDK and Visual Studio 2022
+2. **Clone** the repository: `git clone https://github.com/BartoszCiccarelli/LenovoLegionToolkit.git`
+3. **Build** the solution: `dotnet build LenovoLegionToolkit.sln`
+4. **Run** tests: `dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj`
+5. **Start** developing! See [AGENTS.md](../AGENTS.md) for detailed development guidelines.
+
 ## System Architecture
 
 ```

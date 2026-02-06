@@ -278,11 +278,12 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {pluginFilePath}");
 
-            // Load the assembly with reflection-only context first to check for types
+            // Load the assembly from bytes to avoid file locking (enables plugin updates without restart)
             Assembly? assembly = null;
             try
             {
-                assembly = Assembly.LoadFrom(pluginFilePath);
+                var assemblyBytes = File.ReadAllBytes(pluginFilePath);
+                assembly = Assembly.Load(assemblyBytes);
             }
             catch (Exception ex)
             {
@@ -351,8 +352,28 @@ public class PluginManager : IPluginManager
                         }
                     }
                     
+                    // Check version compatibility
+                    if (!IsVersionCompatible(minimumHostVersion))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
+                        continue;
+                    }
+                    
                     // Create an instance of the plugin
-                    if (Activator.CreateInstance(pluginType) is IPlugin plugin)
+                    IPlugin? plugin = null;
+                    try
+                    {
+                        plugin = Activator.CreateInstance(pluginType) as IPlugin;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Failed to create instance of plugin type {pluginType.Name}: {ex.Message}", ex);
+                        continue;
+                    }
+                    
+                    if (plugin is not null)
                     {
                         // Check if this plugin has the GetFeatureExtension method (SDK plugin)
                         var hasGetFeatureExtension = pluginType.GetMethod("GetFeatureExtension", 
@@ -1133,6 +1154,28 @@ public class PluginManager : IPluginManager
     protected virtual void OnPluginStateChanged(string pluginId, bool isInstalled)
     {
         PluginStateChanged?.Invoke(this, new PluginEventArgs(pluginId, isInstalled));
+    }
+
+    /// <summary>
+    /// Check if the current host version meets the plugin's minimum requirements
+    /// </summary>
+    private static bool IsVersionCompatible(string minimumHostVersion)
+    {
+        try
+        {
+            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            if (currentVersion == null)
+                return false;
+
+            if (!Version.TryParse(minimumHostVersion, out var minVersion))
+                return true; // If we can't parse, allow it (backward compatibility)
+
+            return currentVersion >= minVersion;
+        }
+        catch
+        {
+            return true; // Default to allowing if check fails
+        }
     }
 }
 

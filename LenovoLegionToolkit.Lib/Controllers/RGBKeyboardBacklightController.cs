@@ -72,6 +72,10 @@ namespace LenovoLegionToolkit.Lib.Controllers
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Can't take ownership.", ex);
 
+                    // If RGB keyboard is unsupported or Vantage prevents control, don't rethrow to avoid noisy errors
+                    if (ex is InvalidOperationException && (ex.Message.Contains("RGB Keyboard unsupported") || ex.Message.Contains("Can't manage RGB keyboard with Vantage enabled")))
+                        return;
+
                     throw;
                 }
             }

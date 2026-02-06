@@ -26,13 +26,14 @@ public class AutomationProcessor(
     SessionLockUnlockListener sessionLockUnlockListener,
     TimeAutoListener timeAutoListener,
     UserInactivityAutoListener userInactivityAutoListener,
-    WiFiAutoListener wifiAutoListener)
+    WiFiAutoListener wifiAutoListener) : IDisposable
 {
     private readonly AsyncLock _ioLock = new();
     private readonly AsyncLock _runLock = new();
 
     private List<AutomationPipeline> _pipelines = [];
     private CancellationTokenSource? _cts;
+    private bool _disposed;
 
     public bool IsEnabled => settings.Store.IsEnabled;
 
@@ -174,8 +175,24 @@ public class AutomationProcessor(
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Run starting...");
 
-            if (_cts is not null)
-                await _cts.CancelAsync().ConfigureAwait(false);
+            CancellationTokenSource? oldCts;
+            lock (_ioLock)
+            {
+                oldCts = _cts;
+                _cts = new CancellationTokenSource();
+            }
+
+            if (oldCts is not null)
+            {
+                try
+                {
+                    await oldCts.CancelAsync().ConfigureAwait(false);
+                    oldCts.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            }
 
             if (!IsEnabled)
                 return;
@@ -184,7 +201,6 @@ public class AutomationProcessor(
             using (await _ioLock.LockAsync().ConfigureAwait(false))
                 pipelines = _pipelines.ToList();
 
-            _cts = new CancellationTokenSource();
             var ct = _cts.Token;
 
             foreach (var pipeline in pipelines)
@@ -237,7 +253,7 @@ public class AutomationProcessor(
 
     #region Listeners
 
-private async Task DisplayConfigurationListener_ChangedAsync(object? sender, DisplayConfigurationListener.ChangedEventArgs args)
+    private async Task DisplayConfigurationListener_ChangedAsync(object? sender, DisplayConfigurationListener.ChangedEventArgs args)
     {
         try
         {
@@ -541,4 +557,58 @@ private async Task DisplayConfigurationListener_ChangedAsync(object? sender, Dis
 
     #endregion
 
+    #region IDisposable
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            try
+            {
+                displayConfigurationListener.Changed -= DisplayConfigurationListener_Changed;
+                nativeWindowsMessageListener.Changed -= NativeWindowsMessageListener_Changed;
+                powerStateListener.Changed -= PowerStateListener_Changed;
+                powerModeListener.Changed -= PowerModeListener_Changed;
+                godModeController.PresetChanged -= GodModeController_PresetChanged;
+                sessionLockUnlockListener.Changed -= SessionLockUnlockListener_Changed;
+
+                CancellationTokenSource? ctsToDispose;
+                lock (_ioLock)
+                {
+                    ctsToDispose = _cts;
+                    _cts = null;
+                }
+
+                if (ctsToDispose is not null)
+                {
+                    try
+                    {
+                        ctsToDispose.Cancel();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                    }
+                    ctsToDispose.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error during AutomationProcessor disposal", ex);
+            }
+        }
+
+        _disposed = true;
+    }
+
+    #endregion
 }

@@ -53,6 +53,7 @@ public partial class App
 
     private Mutex? _singleInstanceMutex;
     private EventWaitHandle? _singleInstanceWaitHandle;
+    private bool _singleInstanceMutexOwned;
     private Thread? _singleInstanceThread;
     private Task? _backgroundInitializationTask;
     private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
@@ -328,7 +329,6 @@ public partial class App
             () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
             () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
             () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync(),
-            () => Task.Run(() => HardwareMonitor.Instance.Initialize())
         };
 
         _backgroundInitializationTask = Task.Run(async () =>
@@ -645,34 +645,6 @@ public partial class App
         catch { }
     }
 
-    /// <summary>
-    /// Stops a service with support verification and unified error handling
-    /// </summary>
-    /// <typeparam name="T">Service type</typeparam>
-    /// <param name="isSupportedAction">Async support check action</param>
-    /// <param name="stopAction">Async stop action</param>
-    /// <param name="serviceName">Service name for logging</param>
-    private static async Task StopServiceWithSupportCheckAsync<T>(Func<T, Task<bool>> isSupportedAction, Func<T, Task> stopAction, string serviceName) where T : class
-    {
-        try
-        {
-            if (IoCContainer.TryResolve<T>() is { } service)
-            {
-                if (await isSupportedAction(service))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Stopping {serviceName}...");
-                    await stopAction(service);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error stopping {serviceName}.", ex);
-        }
-    }
-
     public async Task ShutdownAsync(bool exitApplication = false)
     {
         Task shutdownTask;
@@ -732,12 +704,7 @@ public partial class App
                 StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
                 StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
                 StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
-                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor"),
-                Task.Run(() =>
-                {
-                    try { HardwareMonitor.Instance.Dispose(); }
-                    catch { }
-                })
+                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor")
             );
 
             stopServicesTask.Wait(TimeSpan.FromSeconds(2));
@@ -896,6 +863,7 @@ public partial class App
             Log.Instance.Trace($"Checking for other instances...");
 
         _singleInstanceMutex = new Mutex(true, MUTEX_NAME, out var isOwned);
+        _singleInstanceMutexOwned = isOwned;
         _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, EVENT_NAME);
 
         if (!isOwned)

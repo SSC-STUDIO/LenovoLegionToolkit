@@ -120,9 +120,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         
         if (detailed)
         {
-            cpuVoltage = HardwareMonitor.Instance.GetCpuVoltage();
-            if (cpuVoltage <= 0)
-                cpuVoltage = await WMI.Win32.Processor.GetVoltageAsync().ConfigureAwait(false);
+            cpuVoltage = await WMI.Win32.Processor.GetVoltageAsync().ConfigureAwait(false);
             cpuWattage = await GetCpuWattageAsync().ConfigureAwait(false);
         }
 
