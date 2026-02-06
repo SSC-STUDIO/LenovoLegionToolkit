@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated deployment documentation to reflect .NET 10 requirements / 更新部署文档以反映 .NET 10 依赖要求
 - Strengthened ApplicationSettings LoadStore test coverage for default values when settings are missing / 强化 ApplicationSettings LoadStore 在配置缺失时返回默认值的测试覆盖
 - Fixed workflow .NET SDK setup for build and release pipelines / 修复构建与发布流程中的 .NET SDK 配置
+- Added missing LenovoLegionToolkit-Plugins submodule metadata for CI checkout / 补充 LenovoLegionToolkit-Plugins 子模块信息以修复 CI 检出
 
 ### Improved / 改进
 - 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
