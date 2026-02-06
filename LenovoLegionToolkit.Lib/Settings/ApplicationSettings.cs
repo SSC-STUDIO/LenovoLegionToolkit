@@ -92,11 +92,10 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
     public override ApplicationSettingsStore? LoadStore()
     {
         var store = base.LoadStore();
-        var settingsStorePath = Path.Combine(Folders.AppData, "settings.json");
-        
+
         if (store is null)
-            return null;
-        
+            return Default;
+
         return store;
     }
 }

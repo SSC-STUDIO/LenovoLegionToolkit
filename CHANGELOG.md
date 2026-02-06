@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed plugin source code and compilation from main repository / 从主仓库移除插件源码和编译
 - Implemented Central Package Management (CPM) using Directory.Packages.props for centralized NuGet package version management / 使用 Directory.Packages.props 实现中央包管理 (CPM)，集中管理所有 NuGet 包版本
 - Plugin repository service now fetches plugins from LenovoLegionToolkit-Plugins / 插件仓库服务现在从 LenovoLegionToolkit-Plugins 获取插件
+- Updated deployment documentation to reflect .NET 10 requirements / 更新部署文档以反映 .NET 10 依赖要求
+- Strengthened ApplicationSettings LoadStore test coverage for default values when settings are missing / 强化 ApplicationSettings LoadStore 在配置缺失时返回默认值的测试覆盖
+- Fixed workflow .NET SDK setup for build and release pipelines / 修复构建与发布流程中的 .NET SDK 配置
+- Added missing LenovoLegionToolkit-Plugins submodule metadata for CI checkout / 补充 LenovoLegionToolkit-Plugins 子模块信息以修复 CI 检出
+- Removed obsolete ShellIntegration submodule entries after internalizing the code / 在代码内置后移除过时的 ShellIntegration 子模块配置
 
 ### Improved / 改进
 - 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
@@ -82,6 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复了从商店获取插件时的 404 错误，将仓库分支从 main 更新为 master / Fixed 404 error when fetching plugins from store by updating the repository branch from main to master
 - 解决了退出程序时进程残留且无法结束的问题，通过引入更彻底的强制退出机制（TerminateProcess）确保进程完全终止 / Resolved issue where the process remained in the background and could not be terminated upon exit by introducing a more thorough forced exit mechanism (TerminateProcess)
 - Resolved `XamlParseException` in Plugin Extensions page caused by missing `TextToVisibilityConverter` / 修复插件扩展页面因缺失 `TextToVisibilityConverter` 导致的 `XamlParseException` 崩溃
+- Fixed ApplicationSettings LoadStore to return defaults when settings are missing / 修复 ApplicationSettings LoadStore 在缺失配置时返回默认值的问题
+- Corrected spelling in session lock/unlock logging / 修正会话锁定/解锁日志中的拼写错误
 
 ## [3.5.1] - 2026-01-29
 
@@ -1309,4 +1316,3 @@ Thanks to everyone who has contributed to this project!
 
 *This changelog follows the format established by [Keep a Changelog](https://keepachangelog.com/).*
 *此更新日志遵循 [Keep a Changelog](https://keepachangelog.com/) 建立的格式。*
-

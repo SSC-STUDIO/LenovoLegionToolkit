@@ -1,6 +1,3 @@
-[submodule "Plugins/ShellIntegration/third-party/ShellIntegration"]
-	path = Plugins/ShellIntegration/third-party/ShellIntegration
-	url = https://github.com/moudey/Shell.git
-[submodule "Plugins/ShellIntegration/third-party/ShellIntegration/src/lib/detours"]
-	path = Plugins/ShellIntegration/third-party/ShellIntegration/src/lib/detours
-	url = https://github.com/microsoft/Detours.git
+[submodule "LenovoLegionToolkit-Plugins"]
+	path = LenovoLegionToolkit-Plugins
+	url = https://github.com/Crs10259/LenovoLegionToolkit-Plugins
