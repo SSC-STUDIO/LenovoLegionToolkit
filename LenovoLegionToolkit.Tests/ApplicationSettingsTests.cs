@@ -1,6 +1,8 @@
+using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
 
 namespace LenovoLegionToolkit.Tests;
@@ -175,13 +177,34 @@ public class ApplicationSettingsTests
     public void LoadStore_ShouldReturnDefault_WhenFileNotFound()
     {
         // Arrange
+        var settingsPath = Path.Combine(Folders.AppData, "settings.json");
+        var backupPath = settingsPath + ".bak";
+        if (File.Exists(settingsPath))
+        {
+            File.Copy(settingsPath, backupPath, overwrite: true);
+            File.Delete(settingsPath);
+        }
+
         var settings = new ApplicationSettings();
 
-        // Act
-        var store = settings.LoadStore();
+        try
+        {
+            // Act
+            var store = settings.LoadStore();
 
-        // Assert
-        store.Should().NotBeNull();
+            // Assert
+            store.Should().NotBeNull();
+            store!.Notifications.UpdateAvailable.Should().BeTrue();
+            store.NotificationDuration.Should().Be(NotificationDuration.Normal);
+        }
+        finally
+        {
+            if (File.Exists(backupPath))
+            {
+                File.Copy(backupPath, settingsPath, overwrite: true);
+                File.Delete(backupPath);
+            }
+        }
     }
 
     [Fact]
@@ -197,4 +220,3 @@ public class ApplicationSettingsTests
         act.Should().NotThrow();
     }
 }
-
