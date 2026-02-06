@@ -9,16 +9,16 @@ This document describes the build, test, and deployment processes for Lenovo Leg
 ### Development Environment
 
 - **Operating System**: Windows 10 (1809+) or Windows 11
-- **.NET SDK**: .NET 8.0 or later
-- **Runtime**: .NET 8.0 Desktop Runtime (x64)
+- **.NET SDK**: .NET 10.0 or later
+- **Runtime**: .NET 10.0 Desktop Runtime (x64)
 - **IDE**: Visual Studio 2022 or VS Code
 - **Git**: Latest version with Git LFS support
 
 ### Required Tools
 
 ```bash
-# Install .NET 8.0 SDK
-winget install Microsoft.DotNet.SDK.8
+# Install .NET 10.0 SDK
+winget install Microsoft.DotNet.SDK.10
 
 # Verify installation
 dotnet --list-sdks
@@ -47,7 +47,7 @@ LenovoLegionToolkit.sln
 Key configurations in `Directory.Build.props`:
 
 ```xml
-<TargetFramework>net8.0-windows</TargetFramework>
+<TargetFramework>net10.0-windows</TargetFramework>
 <ImplicitUsings>enable</ImplicitUsings>
 <Nullable>enable</Nullable>
 <OutputType>WinExe</OutputType>
