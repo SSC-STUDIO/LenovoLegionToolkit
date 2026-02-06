@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
+    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Plugin version -->
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reverse proxy library for HTTPS interception -->
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
+    <!-- DNS client with DoH (DNS over HTTPS) support -->
+    <PackageReference Include="Ae.Dns.Client" Version="3.1.0" />
+    <!-- Logging for DNS client -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+    <!-- Windows API bindings for system proxy configuration -->
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <!-- Resource.zh-hans.resx is automatically included by .NET SDK and will generate satellite assembly -->
+  </ItemGroup>
+
+  <!-- Clean up all unwanted files and directories from plugin output directory -->
+  <Target Name="CleanupPluginFiles" AfterTargets="Build">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Plugins.SDK.*" />
+      <FilesToDelete Include="$(OutputPath)*.deps.json" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+    
+    <!-- Remove unwanted language directories, but keep plugin language folders (zh-hans, etc.) -->
+    <!-- Note: Plugin language folders will be created automatically during build for satellite assemblies -->
+    
+    <!-- Remove tools directory if it exists -->
+    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
+  </Target>
+
+</Project>
+
+
+
+
+
+

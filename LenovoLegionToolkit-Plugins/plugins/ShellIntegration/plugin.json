@@ -1,0 +1,9 @@
+{
+  "id": "shell-integration",
+  "name": "Shell Integration",
+  "version": "1.0.0",
+  "minLLTVersion": "2.14.0",
+  "author": "Lenovo Legion Toolkit Team",
+  "repository": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/issues"
+}
