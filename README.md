@@ -1,7 +1,6 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml)
-[![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)
 [![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
@@ -18,14 +17,13 @@ It runs no background services, uses less memory, uses virtually no CPU, and con
 
 _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
-<img src="assets/screenshot_main.png" width="700" />
+<img src="Assets/Screenshot_main.png" width="700" />
 
 &nbsp;
 
 # Table of Contents
   - [Disclaimer](#disclaimer)
   - [Quick Start](#quick-start)
-  - [Download](#download)
   - [Compatibility](#compatibility)
   - [Features](#features)
   - [Donate](#donate)
@@ -42,31 +40,6 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 Please be patient and read through this readme carefully - it contains important information.
 
-## Download
-
-You can download the program by the following ways:
-
-- Manually from the [Releases page](https://github.com/Crs10259/LenovoLegionToolkit/releases/latest)
-- Using [winget](https://github.com/microsoft/winget-cli):
-
-  ```sh
-  winget install BartoszCichecki.LenovoLegionToolkit
-  ```
-
-- Using [Scoop](https://scoop.sh):
-
-  ```sh
-  scoop bucket add versions
-  ```
-
-  ```sh
-  scoop bucket add extras
-  ```
-  
-  ```sh
-  scoop install extras/lenovolegiontoolkit
-  ```
-  
 > [!TIP]
 > If you are looking for a Vantage alternative for Linux, check [LenovoLegionLinux](https://github.com/johnfanv2/LenovoLegionLinux) project out.
 
@@ -673,12 +646,12 @@ Additional documentation is available in the `docs/` directory:
 
 | File | Description |
 |------|-------------|
-| `assets/screenshot_main.png` | Main application interface |
-| `assets/screenshot_zh_hans.png` | Chinese localization interface |
+| `Assets/Screenshot_main.png` | Main application interface |
+| `Assets/Screenshot_zh-hans.png` | Chinese localization interface |
 
 ### Troubleshooting
 
-- **Application won't start?** Check [.NET 8.0 installation](#problems-with-net)
+- **Application won't start?** Check [.NET 10.0 installation](#problems-with-net)
 - **Features not working?** See [compatibility](#compatibility) section
 - **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
 - **Still need help?** Join [Discord community](https://discord.com/invite/legionseries)

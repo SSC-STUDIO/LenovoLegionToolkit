@@ -7,7 +7,7 @@
 #define MyAppExeName "Lenovo Legion Toolkit.exe"
 
 #ifndef MyAppVersion
-  #define MyAppVersion "0.0.1"
+  #define MyAppVersion "0.0.0"
 #endif
 
 [Setup]
@@ -28,7 +28,7 @@ Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 UninstallDisplayIcon={app}\{#MyAppExeName}
-OutputDir=build_installer
+OutputDir=BuildInstaller
 ArchitecturesInstallIn64BitMode=x64compatible
 
 [Code]
@@ -47,7 +47,7 @@ begin
   
   // Uninstall Nilesoft Shell before uninstalling the main application
   // This releases file locks so files can be deleted
-  ShellExePath := ExpandConstant('{app}\shell.exe');
+  ShellExePath := ExpandConstant('{app}\Shell.exe');
   if FileExists(ShellExePath) then
   begin
     try
@@ -117,9 +117,9 @@ Type: filesandordirs; Name: "{app}"
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall
 
 [UninstallDelete]
-Type: files; Name: "{app}\shell.exe"
-Type: files; Name: "{app}\shell.dll" 
-Type: files; Name: "{app}\shell.nss"
+Type: files; Name: "{app}\Shell.exe"
+Type: files; Name: "{app}\Shell.dll" 
+Type: files; Name: "{app}\Shell.nss"
 Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 
 [UninstallRun]

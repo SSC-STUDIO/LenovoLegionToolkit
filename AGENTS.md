@@ -75,18 +75,18 @@ LenovoLegionToolkit/
 ├── LenovoLegionToolkit.SpectrumTester/  # RGB键盘测试
 ├── LenovoLegionToolkit-Plugins/       # 插件系统（独立子模块）
 │   ├── SDK/                          # 插件开发SDK
-│   ├── plugins/                      # 插件集合
+│   ├── Plugins/                      # 插件集合
 │   │   ├── CustomMouse/              # 鼠标样式插件
 │   │   ├── ShellIntegration/         # Shell集成插件
 │   │   ├── NetworkAcceleration/      # 网络加速插件
 │   │   └── ViveTool/                 # ViVeTool插件
-│   └── build/                        # 构建输出
-├── docs/                             # 项目文档
+│   └── Build/                        # 构建输出
+├── Docs/                             # 项目文档
 │   ├── ARCHITECTURE.md               # 系统架构文档
 │   ├── DEPLOYMENT.md                 # 构建部署指南
 │   ├── SECURITY.md                   # 安全政策
 │   └── CODE_OF_CONDUCT.md            # 社区行为准则
-└── assets/                           # 资源文件
+└── Assets/                           # 资源文件
 ```
 
 ## 🔧 构建命令
@@ -135,7 +135,7 @@ dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj `
 # 1. 更新 CHANGELOG.md（在 [Unreleased] 部分添加变更）
 # 2. 提交变更
 git add CHANGELOG.md
-git commit -m "feat: [功能描述] / [功能描述英文]"
+git commit -m "feat: [功能描述] / [功能描述英文和中文双语]"
 
 # 3. 继续开发其他功能...
 ```

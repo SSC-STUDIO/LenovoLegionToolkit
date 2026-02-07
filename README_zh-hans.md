@@ -3,7 +3,6 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/build.yml)
-[![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)
 [![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
@@ -17,7 +16,7 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 **中文用户可加入[LLT QQ 频道](https://pd.qq.com/s/jj0737)，频道内推送正式版/测试版更新并附带国内镜像加速下载链接。**
 
-<img src="assets/screenshot_zh_hans.png" width="700" />
+<img src="Assets/Screenshot_zh-hans.png" width="700" />
 
 &nbsp;
 

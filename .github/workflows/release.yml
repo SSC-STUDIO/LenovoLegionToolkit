@@ -43,7 +43,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        files: build_installer/LenovoLegionToolkitSetup.exe
+        files: BuildInstaller/LenovoLegionToolkitSetup.exe
         fail_on_unmatched_files: true
         prerelease: ${{ contains(github.ref, '-') }}
 
@@ -51,4 +51,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: installer
-        path: build_installer/LenovoLegionToolkitSetup.exe
+        path: BuildInstaller/LenovoLegionToolkitSetup.exe
