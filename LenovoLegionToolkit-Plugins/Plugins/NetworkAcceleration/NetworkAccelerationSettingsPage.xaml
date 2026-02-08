@@ -1,0 +1,90 @@
+<wpfui:UiPage
+    x:Class="LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:plugin="clr-namespace:LenovoLegionToolkit.Plugins.NetworkAcceleration"
+    Scrollable="False">
+    <StackPanel Margin="0,0,0,16">
+        <!-- Connection Timeout -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="{x:Static plugin:Resource.NetworkAcceleration_ConnectionTimeout}"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:NumberBox
+                Grid.Column="1"
+                x:Name="_connectionTimeoutNumberBox"
+                Minimum="5"
+                Maximum="300"
+                ValueChanged="ConnectionTimeoutNumberBox_ValueChanged" />
+        </Grid>
+        <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            TextWrapping="Wrap"
+            LineHeight="18"
+            Margin="0,0,0,20"
+            Text="{x:Static plugin:Resource.NetworkAcceleration_ConnectionTimeoutDescription}" />
+        
+        <!-- Proxy Address -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="{x:Static plugin:Resource.NetworkAcceleration_ProxyAddress}"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:TextBox
+                Grid.Column="1"
+                x:Name="_proxyAddressTextBox"
+                PlaceholderText="{x:Static plugin:Resource.NetworkAcceleration_ProxyAddressPlaceholder}"
+                TextChanged="ProxyAddressTextBox_TextChanged" />
+        </Grid>
+        
+        <!-- Proxy Port -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="14"
+                FontWeight="Medium"
+                Text="{x:Static plugin:Resource.NetworkAcceleration_ProxyPort}"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+            <wpfui:NumberBox
+                Grid.Column="1"
+                x:Name="_proxyPortNumberBox"
+                Minimum="1024"
+                Maximum="65535"
+           
+                ValueChanged="ProxyPortNumberBox_ValueChanged" />
+        </Grid>
+        <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            TextWrapping="Wrap"
+            LineHeight="18"
+            Text="{x:Static plugin:Resource.NetworkAcceleration_ProxySettingsDescription}" />
+    </StackPanel>
+</wpfui:UiPage>
+
+
+
+
+

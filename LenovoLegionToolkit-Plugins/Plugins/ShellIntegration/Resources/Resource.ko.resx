@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- General -->
+  <data name="ShellIntegration_Name" xml:space="preserve">
+    <value>Shell 통합</value>
+  </data>
+  <data name="ShellIntegration_Description" xml:space="preserve">
+    <value>우클릭 메뉴 확장 및 파일 관리 도구를 갖춘 확장 Windows Shell 통합</value>
+  </data>
+
+  <!-- Main Page -->
+  <data name="ServiceStatus_Title" xml:space="preserve">
+    <value>서비스 상태</value>
+  </data>
+  <data name="Installation_Label" xml:space="preserve">
+    <value>설치 상태：</value>
+  </data>
+  <data name="Service_Label" xml:space="preserve">
+    <value>서비스：</value>
+  </data>
+  <data name="Version_Label" xml:space="preserve">
+    <value>버전：</value>
+  </data>
+  <data name="QuickActions_Title" xml:space="preserve">
+    <value>빠른 작업</value>
+  </data>
+  <data name="MenuSettings_Button" xml:space="preserve">
+    <value>메뉴 설정</value>
+  </data>
+  <data name="ExtensionSettings_Button" xml:space="preserve">
+    <value>확장 기능 설정</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Shell 통합 정보</value>
+  </data>
+
+  <!-- Actions -->
+  <data name="Install_Button" xml:space="preserve">
+    <value>설치</value>
+  </data>
+  <data name="Uninstall_Button" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="Start_Button" xml:space="preserve">
+    <value>시작</value>
+  </data>
+  <data name="Stop_Button" xml:space="preserve">
+    <value>중지</value>
+  </data>
+  <data name="Refresh_Button" xml:space="preserve">
+    <value>새로고침</value>
+  </data>
+
+  <!-- Settings Page -->
+  <data name="ContextMenuItems_Title" xml:space="preserve">
+    <value>우클릭 메뉴 항목</value>
+  </data>
+  <data name="ShellExtensions_Title" xml:space="preserve">
+    <value>Shell 확장 기능</value>
+  </data>
+  <data name="ResetToDefaults_Button" xml:space="preserve">
+    <value>기본값으로 재설정</value>
+  </data>
+
+  <!-- Column Headers -->
+  <data name="Name_Column" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="Category_Column" xml:space="preserve">
+    <value>범주</value>
+  </data>
+  <data name="Command_Column" xml:space="preserve">
+    <value>명령</value>
+  </data>
+  <data name="Type_Column" xml:space="preserve">
+    <value>유형</value>
+  </data>
+  <data name="Version_Column" xml:space="preserve">
+    <value>버전</value>
+  </data>
+  <data name="System_Column" xml:space="preserve">
+    <value>시스템</value>
+  </data>
+  <data name="Status_Column" xml:space="preserve">
+    <value>상태</value>
+  </data>
+
+  <!-- Status Messages -->
+  <data name="Status_Installed" xml:space="preserve">
+    <value>설치됨</value>
+  </data>
+  <data name="Status_NotInstalled" xml:space="preserve">
+    <value>설치되지 않음</value>
+  </data>
+  <data name="Status_Running" xml:space="preserve">
+    <value>실행 중</value>
+  </data>
+  <data name="Status_Stopped" xml:space="preserve">
+    <value>중지됨</value>
+  </data>
+  <data name="Status_Error" xml:space="preserve">
+    <value>오류</value>
+  </data>
+
+  <!-- Success Messages -->
+  <data name="Success_Installed" xml:space="preserve">
+    <value>Shell 통합이 설치되었습니다</value>
+  </data>
+  <data name="Success_Uninstalled" xml:space="preserve">
+    <value>Shell 통합이 제거되었습니다</value>
+  </data>
+  <data name="Success_Started" xml:space="preserve">
+    <value>Shell 통합이 시작되었습니다</value>
+  </data>
+  <data name="Success_Stopped" xml:space="preserve">
+    <value>Shell 통합이 중지되었습니다</value>
+  </data>
+  <data name="Success_MenuItemToggled" xml:space="preserve">
+    <value>메뉴 항목 {0} 이{1}</value>
+  </data>
+  <data name="Success_ExtensionToggled" xml:space="preserve">
+    <value>확장 기능 {0} 이{1}</value>
+  </data>
+  <data name="Success_ResetToDefaults" xml:space="preserve">
+    <value>메뉴 항목이 기본값으로 재설정되었습니다</value>
+  </data>
+
+  <!-- Error Messages -->
+  <data name="Error_InstallationFailed" xml:space="preserve">
+    <value>Shell 통합 설치 실패</value>
+  </data>
+  <data name="Error_UninstallationFailed" xml:space="preserve">
+    <value>Shell 통합 제거 실패</value>
+  </data>
+  <data name="Error_StartFailed" xml:space="preserve">
+    <value>Shell 통합 시작 실패</value>
+  </data>
+  <data name="Error_StopFailed" xml:space="preserve">
+    <value>Shell 통합 중지 실패</value>
+  </data>
+  <data name="Error_MenuItemToggleFailed" xml:space="preserve">
+    <value>메뉴 항목 전환 실패</value>
+  </data>
+  <data name="Error_ExtensionToggleFailed" xml:space="preserve">
+    <value>확장 기능 전환 실패</value>
+  </data>
+  <data name="Error_ResetFailed" xml:space="preserve">
+    <value>메뉴 항목 재설정 실패</value>
+  </data>
+
+  <!-- Confirmation Messages -->
+  <data name="Confirm_Uninstall" xml:space="preserve">
+    <value>Shell 통합을 제거하시겠습니까? 이렇게 하면 모든 우클릭 메뉴 확장 기능이 제거됩니다.</value>
+  </data>
+  <data name="Confirm_Reset" xml:space="preserve">
+    <value>모든 메뉴 항목을 기본값으로 재설정하시겠습니까? 이렇게 하면 추가한 모든 사용자 정의 메뉴 항목이 제거됩니다.</value>
+  </data>
+
+  <!-- Tooltips -->
+  <data name="Tooltip_MenuSettings" xml:space="preserve">
+    <value>우클릭 메뉴 항목 구성</value>
+  </data>
+  <data name="Tooltip_ExtensionSettings" xml:space="preserve">
+    <value>Shell 확장 기능 관리</value>
+  </data>
+
+  <!-- About Text -->
+  <data name="About_Introduction" xml:space="preserve">
+    <value>Shell 통합은 확장된 Windows 우클릭 메뉴 기능을 제공합니다:</value>
+  </data>
+  <data name="About_Feature1" xml:space="preserve">
+    <value>• 사용자 정의 우클릭 메뉴 항목</value>
+  </data>
+  <data name="About_Feature2" xml:space="preserve">
+    <value>• 빠른 파일 작업</value>
+  </data>
+  <data name="About_Feature3" xml:space="preserve">
+    <value>• 확장된 탐색 옵션</value>
+  </data>
+  <data name="About_Feature4" xml:space="preserve">
+    <value>• 시스템 도구 통합</value>
+  </data>
+  <data name="About_Feature5" xml:space="preserve">
+    <value>• 구성 가능한 메뉴 항목 및 확장 기능</value>
+  </data>
+  <data name="About_Note" xml:space="preserve">
+    <value>참고: 일부 기능이 제대로 작동하려면 관리자 권한이 필요할 수 있습니다.</value>
+  </data>
+
+  <!-- Menu Item Categories -->
+  <data name="Category_Navigation" xml:space="preserve">
+    <value>탐색</value>
+  </data>
+  <data name="Category_Utilities" xml:space="preserve">
+    <value>유틸리티</value>
+  </data>
+  <data name="Category_System" xml:space="preserve">
+    <value>시스템</value>
+  </data>
+
+  <!-- Default Menu Items -->
+  <data name="MenuItem_OpenTerminalHere" xml:space="preserve">
+    <value>여기에서 터미널 열기</value>
+  </data>
+  <data name="MenuItem_OpenTerminalHere_Desc" xml:space="preserve">
+    <value>현재 디렉터리에서 Windows 터미널 열기</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere" xml:space="preserve">
+    <value>여기에서 PowerShell 열기</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere_Desc" xml:space="preserve">
+    <value>현재 디렉터리에서 PowerShell 열기</value>
+  </data>
+  <data name="MenuItem_CopyFilePath" xml:space="preserve">
+    <value>파일 경로 복사</value>
+  </data>
+  <data name="MenuItem_CopyFilePath_Desc" xml:space="preserve">
+    <value>전체 파일 경로를 클립보드에 복사</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin" xml:space="preserve">
+    <value>관리자 권한으로 실행</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin_Desc" xml:space="preserve">
+    <value>선택한 프로그램을 관리자 권한으로 실행</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation" xml:space="preserve">
+    <value>파일 위치 열기</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation_Desc" xml:space="preserve">
+    <value>파일이 포함된 폴더 열기</value>
+  </data>
+
+  <!-- Optimization Category -->
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 통합</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>우클릭 메뉴美化 및 마우스 스타일 사용자 정의를 갖춘 확장 Windows Shell 통합</value>
+  </data>
+
+  <!-- Optimization Actions -->
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>모던 우클릭 메뉴 활성화</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>모던 스타일로 Windows 우클릭 메뉴를美化하기 위해 Nilesoft Shell 활성화</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>모던 우클릭 메뉴 비활성화</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Nilesoft Shell 등록 취소 및 Windows 기본 우클릭 메뉴 복원</value>
+  </data>
+
+  <!-- Additional Optimization Actions -->
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Title" xml:space="preserve">
+    <value>우클릭 메뉴 애니메이션 비활성화</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Description" xml:space="preserve">
+    <value>애니메이션 비활성화로 우클릭 메뉴 표시 가속화</value>
+  </data>
+
+  <data name="ShellIntegration_Action_ShowFileExtensions_Title" xml:space="preserve">
+    <value>파일 확장자 표시</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowFileExtensions_Description" xml:space="preserve">
+    <value>파일 탐색기에서 모든 파일의 확장자 표시</value>
+  </data>
+
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Title" xml:space="preserve">
+    <value>숨김 파일 표시</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Description" xml:space="preserve">
+    <value>파일 탐색기에서 숨김 파일 및 폴더 표시</value>
+  </data>
+
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>빠른 접근 사용</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>파일 탐색기를 기본적으로 빠른 접근으로 열기</value>
+  </data>
+
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>미리보기 창 활성화</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>파일 탐색기에서 파일 미리보기 표시</value>
+  </data>
+
+  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+    <value>투명도</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
+    <value>메뉴 투명도 활성화 또는 비활성화</value>
+  </data>
+
+  <data name="ShellIntegration_Action_RoundedCorners_Title" xml:space="preserve">
+    <value>둥근 모서리</value>
+  </data>
+  <data name="ShellIntegration_Action_RoundedCorners_Description" xml:space="preserve">
+    <value>둥근 모서리 활성화 또는 비활성화</value>
+  </data>
+
+  <data name="ShellIntegration_Action_Shadows_Title" xml:space="preserve">
+    <value>그림자</value>
+  </data>
+  <data name="ShellIntegration_Action_Shadows_Description" xml:space="preserve">
+    <value>메뉴 그림자 활성화 또는 비활성화</value>
+  </data>
+
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>Windows 11 커서 스타일 적용</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>고 DPI 지원을 갖춘 Windows 11 스타일 커서 테마 적용</value>
+  </data>
+
+  <!-- System Optimizations Settings -->
+  <data name="SystemOptimizations_Title" xml:space="preserve">
+    <value>시스템 최적화</value>
+  </data>
+  <data name="ContextMenuAnimations_Title" xml:space="preserve">
+    <value>우클릭 메뉴 애니메이션</value>
+  </data>
+  <data name="ContextMenuAnimations_Description" xml:space="preserve">
+    <value>우클릭 메뉴 애니메이션 활성화 또는 비활성화</value>
+  </data>
+  <data name="ShowFileExtensions_Title" xml:space="preserve">
+    <value>파일 확장자 표시</value>
+  </data>
+  <data name="ShowFileExtensions_Description" xml:space="preserve">
+    <value>파일 탐색기에서 파일 확장자 표시 또는 숨기기</value>
+  </data>
+  <data name="ShowHiddenFiles_Title" xml:space="preserve">
+    <value>숨김 파일 표시</value>
+  </data>
+  <data name="ShowHiddenFiles_Description" xml:space="preserve">
+    <value>파일 탐색기에서 숨김 파일 표시 또는 숨기기</value>
+  </data>
+  <data name="QuickAccess_Title" xml:space="preserve">
+    <value>빠른 접근</value>
+  </data>
+  <data name="QuickAccess_Description" xml:space="preserve">
+    <value>파일 탐색기에서 빠른 접근 활성화 또는 비활성화</value>
+  </data>
+  <data name="PreviewPane_Title" xml:space="preserve">
+    <value>미리보기 창</value>
+  </data>
+  <data name="PreviewPane_Description" xml:space="preserve">
+    <value>파일 탐색기 미리보기 창 활성화 또는 비활성화</value>
+  </data>
+  <data name="Transparency_Title" xml:space="preserve">
+    <value>투명도</value>
+  </data>
+  <data name="Transparency_Description" xml:space="preserve">
+    <value>메뉴 투명도 활성화 또는 비활성화</value>
+  </data>
+  <data name="RoundedCorners_Title" xml:space="preserve">
+    <value>둥근 모서리</value>
+  </data>
+  <data name="RoundedCorners_Description" xml:space="preserve">
+    <value>둥근 모서리 활성화 또는 비활성화</value>
+  </data>
+  <data name="Shadows_Title" xml:space="preserve">
+    <value>그림자</value>
+  </data>
+  <data name="Shadows_Description" xml:space="preserve">
+    <value>메뉴 그림자 활성화 또는 비활성화</value>
+  </data>
+</root>

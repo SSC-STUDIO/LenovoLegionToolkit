@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  
+  <!-- General -->
+  <data name="ShellIntegration_Name" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="ShellIntegration_Description" xml:space="preserve">
+    <value>增强的 Windows Shell 集成，包含右键菜单扩展和文件管理工具</value>
+  </data>
+  
+  <!-- Main Page -->
+  <data name="ServiceStatus_Title" xml:space="preserve">
+    <value>服务状态</value>
+  </data>
+  <data name="Installation_Label" xml:space="preserve">
+    <value>安装状态：</value>
+  </data>
+  <data name="Service_Label" xml:space="preserve">
+    <value>服务：</value>
+  </data>
+  <data name="Version_Label" xml:space="preserve">
+    <value>版本：</value>
+  </data>
+  <data name="QuickActions_Title" xml:space="preserve">
+    <value>快速操作</value>
+  </data>
+  <data name="MenuSettings_Button" xml:space="preserve">
+    <value>菜单设置</value>
+  </data>
+  <data name="ExtensionSettings_Button" xml:space="preserve">
+    <value>扩展设置</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>关于 Shell 集成</value>
+  </data>
+  
+  <!-- Actions -->
+  <data name="Install_Button" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="Uninstall_Button" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="Start_Button" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="Stop_Button" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Refresh_Button" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  
+  <!-- Settings Page -->
+  <data name="ContextMenuItems_Title" xml:space="preserve">
+    <value>右键菜单项</value>
+  </data>
+  <data name="ShellExtensions_Title" xml:space="preserve">
+    <value>Shell 扩展</value>
+  </data>
+  <data name="ResetToDefaults_Button" xml:space="preserve">
+    <value>重置为默认</value>
+  </data>
+  
+  <!-- Column Headers -->
+  <data name="Name_Column" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Category_Column" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="Command_Column" xml:space="preserve">
+    <value>命令</value>
+  </data>
+  <data name="Type_Column" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="Version_Column" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="System_Column" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="Status_Column" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  
+  <!-- Status Messages -->
+  <data name="Status_Installed" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="Status_NotInstalled" xml:space="preserve">
+    <value>未安装</value>
+  </data>
+  <data name="Status_Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="Status_Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="Status_Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  
+  <!-- Success Messages -->
+  <data name="Success_Installed" xml:space="preserve">
+    <value>Shell 集成安装成功</value>
+  </data>
+  <data name="Success_Uninstalled" xml:space="preserve">
+    <value>Shell 集成卸载成功</value>
+  </data>
+  <data name="Success_Started" xml:space="preserve">
+    <value>Shell 集成启动成功</value>
+  </data>
+  <data name="Success_Stopped" xml:space="preserve">
+    <value>Shell 集成停止成功</value>
+  </data>
+  <data name="Success_MenuItemToggled" xml:space="preserve">
+    <value>菜单项 {0} 已{1}</value>
+  </data>
+  <data name="Success_ExtensionToggled" xml:space="preserve">
+    <value>扩展 {0} 已{1}</value>
+  </data>
+  <data name="Success_ResetToDefaults" xml:space="preserve">
+    <value>菜单项已重置为默认</value>
+  </data>
+  
+  <!-- Error Messages -->
+  <data name="Error_InstallationFailed" xml:space="preserve">
+    <value>安装 Shell 集成失败</value>
+  </data>
+  <data name="Error_UninstallationFailed" xml:space="preserve">
+    <value>卸载 Shell 集成失败</value>
+  </data>
+  <data name="Error_StartFailed" xml:space="preserve">
+    <value>启动 Shell 集成失败</value>
+  </data>
+  <data name="Error_StopFailed" xml:space="preserve">
+    <value>停止 Shell 集成失败</value>
+  </data>
+  <data name="Error_MenuItemToggleFailed" xml:space="preserve">
+    <value>切换菜单项失败</value>
+  </data>
+  <data name="Error_ExtensionToggleFailed" xml:space="preserve">
+    <value>切换扩展失败</value>
+  </data>
+  <data name="Error_ResetFailed" xml:space="preserve">
+    <value>重置菜单项失败</value>
+  </data>
+  
+  <!-- Confirmation Messages -->
+  <data name="Confirm_Uninstall" xml:space="preserve">
+    <value>确定要卸载 Shell 集成吗？这将移除所有右键菜单增强功能。</value>
+  </data>
+  <data name="Confirm_Reset" xml:space="preserve">
+    <value>确定要将所有菜单项重置为默认吗？这将移除您已添加的任何自定义菜单项。</value>
+  </data>
+  
+  <!-- Tooltips -->
+  <data name="Tooltip_MenuSettings" xml:space="preserve">
+    <value>配置右键菜单项</value>
+  </data>
+  <data name="Tooltip_ExtensionSettings" xml:space="preserve">
+    <value>管理 Shell 扩展</value>
+  </data>
+  
+  <!-- About Text -->
+  <data name="About_Introduction" xml:space="preserve">
+    <value>Shell 集成提供增强的 Windows 右键菜单功能：</value>
+  </data>
+  <data name="About_Feature1" xml:space="preserve">
+    <value>• 自定义右键菜单项</value>
+  </data>
+  <data name="About_Feature2" xml:space="preserve">
+    <value>• 快速文件操作</value>
+  </data>
+  <data name="About_Feature3" xml:space="preserve">
+    <value>• 增强的导航选项</value>
+  </data>
+  <data name="About_Feature4" xml:space="preserve">
+    <value>• 与系统工具集成</value>
+  </data>
+  <data name="About_Feature5" xml:space="preserve">
+    <value>• 可配置的菜单项和扩展</value>
+  </data>
+  <data name="About_Note" xml:space="preserve">
+    <value>注意：某些功能可能需要管理员权限才能正常运行。</value>
+  </data>
+  
+  <!-- Menu Item Categories -->
+  <data name="Category_Navigation" xml:space="preserve">
+    <value>导航</value>
+  </data>
+  <data name="Category_Utilities" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="Category_System" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  
+  <!-- Default Menu Items -->
+  <data name="MenuItem_OpenTerminalHere" xml:space="preserve">
+    <value>在此处打开终端</value>
+  </data>
+  <data name="MenuItem_OpenTerminalHere_Desc" xml:space="preserve">
+    <value>在当前目录中打开 Windows 终端</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere" xml:space="preserve">
+    <value>在此处打开 PowerShell</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere_Desc" xml:space="preserve">
+    <value>在当前目录中打开 PowerShell</value>
+  </data>
+  <data name="MenuItem_CopyFilePath" xml:space="preserve">
+    <value>复制文件路径</value>
+  </data>
+  <data name="MenuItem_CopyFilePath_Desc" xml:space="preserve">
+    <value>复制完整文件路径到剪贴板</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin" xml:space="preserve">
+    <value>以管理员身份运行</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin_Desc" xml:space="preserve">
+    <value>以管理员身份运行选定的程序</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation" xml:space="preserve">
+    <value>打开文件位置</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation_Desc" xml:space="preserve">
+    <value>打开包含文件的文件夹</value>
+  </data>
+  
+  <!-- Optimization Category -->
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>增强的 Windows Shell 集成，包含右键菜单美化和鼠标样式自定义</value>
+  </data>
+  
+  <!-- Optimization Actions -->
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>启用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>启用 Nilesoft Shell 以美化 Windows 右键菜单，使用现代风格</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>禁用现代右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>注销 Nilesoft Shell 并恢复默认的 Windows 右键菜单</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>应用 Windows 11 光标样式</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>应用 Windows 11 风格的光标主题，支持高 DPI</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Title" xml:space="preserve">
+    <value>禁用上下文菜单动画</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Description" xml:space="preserve">
+    <value>通过禁用动画加速上下文菜单显示</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowFileExtensions_Title" xml:space="preserve">
+    <value>显示文件扩展名</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowFileExtensions_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示所有文件的扩展名</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Title" xml:space="preserve">
+    <value>显示隐藏文件</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示隐藏的文件和文件夹</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>使用快速访问</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>设置文件资源管理器默认打开快速访问</value>
+  </data>
+  
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>启用预览窗格</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示文件预览</value>
+  </data>
+
+  <!-- System Optimizations Settings -->
+  <data name="SystemOptimizations_Title" xml:space="preserve">
+    <value>系统优化</value>
+  </data>
+  <data name="ContextMenuAnimations_Title" xml:space="preserve">
+    <value>右键菜单动画</value>
+  </data>
+  <data name="ContextMenuAnimations_Description" xml:space="preserve">
+    <value>启用或禁用右键菜单动画</value>
+  </data>
+  <data name="ShowFileExtensions_Title" xml:space="preserve">
+    <value>显示文件扩展名</value>
+  </data>
+  <data name="ShowFileExtensions_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示或隐藏文件扩展名</value>
+  </data>
+  <data name="ShowHiddenFiles_Title" xml:space="preserve">
+    <value>显示隐藏文件</value>
+  </data>
+  <data name="ShowHiddenFiles_Description" xml:space="preserve">
+    <value>在文件资源管理器中显示或隐藏隐藏文件</value>
+  </data>
+  <data name="QuickAccess_Title" xml:space="preserve">
+    <value>快速访问</value>
+  </data>
+  <data name="QuickAccess_Description" xml:space="preserve">
+    <value>启用或禁用文件资源管理器中的快速访问</value>
+  </data>
+  <data name="PreviewPane_Title" xml:space="preserve">
+    <value>预览窗格</value>
+  </data>
+  <data name="PreviewPane_Description" xml:space="preserve">
+    <value>启用或禁用文件资源管理器预览窗格</value>
+  </data>
+  <data name="Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="Transparency_Description" xml:space="preserve">
+    <value>启用或禁用菜单透明度</value>
+  </data>
+  <data name="RoundedCorners_Title" xml:space="preserve">
+    <value>圆角</value>
+  </data>
+  <data name="RoundedCorners_Description" xml:space="preserve">
+    <value>启用或禁用圆角</value>
+  </data>
+  <data name="Shadows_Title" xml:space="preserve">
+    <value>阴影</value>
+  </data>
+  <data name="Shadows_Description" xml:space="preserve">
+    <value>启用或禁用菜单阴影</value>
+  </data>
+</root>

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a named value and typed value. The row 
+    also contains a type or mimetype. Type corresponds to a .NET 
+    class that support text/value conversion through the 
+    TypeConverter architecture. Classes that don't support this are 
+    serialized and stored with the mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- CustomMouse Plugin -->
+  <data name="CustomMouse_PluginName" xml:space="preserve">
+    <value>Custom Mouse</value>
+    <comment>Plugin name displayed in the UI</comment>
+  </data>
+  <data name="CustomMouse_PluginDescription" xml:space="preserve">
+    <value>Custom mouse cursor plugin with smart color detection and multiple cursor themes</value>
+    <comment>Plugin description shown in the plugin store</comment>
+  </data>
+  <data name="CustomMouse_ExtensionTitle" xml:space="preserve">
+    <value>Mouse Style Extension</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_PageTitle" xml:space="preserve">
+    <value>Custom Mouse Styles</value>
+    <comment>Main page title</comment>
+  </data>
+  <data name="CustomMouse_PageDescription" xml:space="preserve">
+    <value>Customize mouse cursor styles with smart theme switching and multiple preset styles</value>
+    <comment>Main page description</comment>
+  </data>
+  <data name="CustomMouse_SettingsTitle" xml:space="preserve">
+    <value>Mouse Settings</value>
+    <comment>Settings page title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyle" xml:space="preserve">
+    <value>Current Style</value>
+    <comment>Current cursor style label</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection" xml:space="preserve">
+    <value>Auto Color Detection</value>
+    <comment>Auto color detection setting</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection_Description" xml:space="preserve">
+    <value>Automatically select appropriate mouse cursor theme based on background color</value>
+    <comment>Auto color detection description</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode" xml:space="preserve">
+    <value>Theme Mode</value>
+    <comment>Theme mode setting</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Auto" xml:space="preserve">
+    <value>Auto</value>
+    <comment>Auto theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Light" xml:space="preserve">
+    <value>Light</value>
+    <comment>Light theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Dark" xml:space="preserve">
+    <value>Dark</value>
+    <comment>Dark theme mode</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold" xml:space="preserve">
+    <value>Brightness Threshold</value>
+    <comment>Brightness threshold setting</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold_Description" xml:space="preserve">
+    <value>Threshold for determining background color brightness (0.0-1.0)</value>
+    <comment>Brightness threshold description</comment>
+  </data>
+  <data name="CustomMouse_PluginMode" xml:space="preserve">
+    <value>Plugin Mode</value>
+    <comment>Plugin mode setting</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Extension" xml:space="preserve">
+    <value>Extension Mode</value>
+    <comment>Extension mode option</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Independent" xml:space="preserve">
+    <value>Independent Mode</value>
+    <comment>Independent mode option</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview" xml:space="preserve">
+    <value>Enable Preview</value>
+    <comment>Enable preview setting</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview_Description" xml:space="preserve">
+    <value>Show real-time preview of mouse styles</value>
+    <comment>Enable preview description</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup" xml:space="preserve">
+    <value>Auto Apply on Startup</value>
+    <comment>Auto apply on startup setting</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup_Description" xml:space="preserve">
+    <value>Automatically apply current mouse style when application starts</value>
+    <comment>Auto apply description</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications" xml:space="preserve">
+    <value>Show Notifications</value>
+    <comment>Show notifications setting</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications_Description" xml:space="preserve">
+    <value>Show notification messages when mouse style changes</value>
+    <comment>Show notifications description</comment>
+  </data>
+  <data name="CustomMouse_ApplyStyle" xml:space="preserve">
+    <value>Apply Style</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_RestoreDefault" xml:space="preserve">
+    <value>Restore Default</value>
+    <comment>Restore default button</comment>
+  </data>
+  <data name="CustomMouse_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Refresh button</comment>
+  </data>
+  <data name="CustomMouse_AvailableStyles" xml:space="preserve">
+    <value>Available Styles</value>
+    <comment>Available styles label</comment>
+  </data>
+  <data name="CustomMouse_NoStylesFound" xml:space="preserve">
+    <value>No available mouse styles found</value>
+    <comment>No styles found message</comment>
+  </data>
+  <data name="CustomMouse_StyleApplied" xml:space="preserve">
+    <value>Mouse style applied</value>
+    <comment>Style applied success message</comment>
+  </data>
+  <data name="CustomMouse_StyleRestored" xml:space="preserve">
+    <value>Default mouse style restored</value>
+    <comment>Style restored success message</comment>
+  </data>
+  <data name="CustomMouse_ApplyError" xml:space="preserve">
+    <value>Error applying mouse style</value>
+    <comment>Apply error message</comment>
+  </data>
+  <data name="CustomMouse_DetectingTheme" xml:space="preserve">
+    <value>Detecting theme...</value>
+    <comment>Detecting theme message</comment>
+  </data>
+  <data name="CustomMouse_LightThemeDetected" xml:space="preserve">
+    <value>Light theme detected</value>
+    <comment>Light theme detected message</comment>
+  </data>
+  <data name="CustomMouse_DarkThemeDetected" xml:space="preserve">
+    <value>Dark theme detected</value>
+    <comment>Dark theme detected message</comment>
+  </data>
+  <data name="CustomMouse_ExtensionMode_Description" xml:space="preserve">
+    <value>Extension Mode: Integrate mouse style functionality into the system optimization interface</value>
+    <comment>Extension mode description</comment>
+  </data>
+  <data name="CustomMouse_IndependentMode_Description" xml:space="preserve">
+    <value>Independent Mode: Provides a dedicated mouse style management interface</value>
+    <comment>Independent mode description</comment>
+  </data>
+
+  <!-- Extension Page -->
+  <data name="CustomMouse_ExtensionPage_Title" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI Mouse Style</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_StatusNotApplied" xml:space="preserve">
+    <value>Not Applied</value>
+    <comment>Status when style is not applied</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_ApplyStyle" xml:space="preserve">
+    <value>Apply Style</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_RemoveStyle" xml:space="preserve">
+    <value>Remove Style</value>
+    <comment>Remove style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_FeatureDescription" xml:space="preserve">
+    <value>Features:</value>
+    <comment>Feature description header</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature1" xml:space="preserve">
+    <value>• Windows 11 style HD mouse cursor</value>
+    <comment>Feature 1 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature2" xml:space="preserve">
+    <value>• Automatic light and dark theme switching</value>
+    <comment>Feature 2 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature3" xml:space="preserve">
+    <value>• High DPI display optimization</value>
+    <comment>Feature 3 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature4" xml:space="preserve">
+    <value>• Multiple cursor styles available</value>
+    <comment>Feature 4 description</comment>
+  </data>
+
+  <!-- Page Settings -->
+  <data name="CustomMouse_SmartSettings" xml:space="preserve">
+    <value>Smart Settings</value>
+    <comment>Smart settings section title</comment>
+  </data>
+  <data name="CustomMouse_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
+    <comment>Advanced settings section title</comment>
+  </data>
+  <data name="CustomMouse_DebugInfo" xml:space="preserve">
+    <value>Debug Info</value>
+    <comment>Debug information section title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyleLabel" xml:space="preserve">
+    <value>Current Style:</value>
+    <comment>Current style label</comment>
+  </data>
+  <data name="CustomMouse_ThemeModeLabel" xml:space="preserve">
+    <value>Theme Mode:</value>
+    <comment>Theme mode label</comment>
+  </data>
+  <data name="CustomMouse_PluginModeLabel" xml:space="preserve">
+    <value>Plugin Mode:</value>
+    <comment>Plugin mode label</comment>
+  </data>
+  <data name="CustomMouse_LastDetectionLabel" xml:space="preserve">
+    <value>Last Detection:</value>
+    <comment>Last detection label</comment>
+  </data>
+  <data name="CustomMouse_ExtensionModeRadio" xml:space="preserve">
+    <value>Extension Mode</value>
+    <comment>Extension mode radio button</comment>
+  </data>
+  <data name="CustomMouse_IndependentModeRadio" xml:space="preserve">
+    <value>Independent Mode</value>
+    <comment>Independent mode radio button</comment>
+  </data>
+  <data name="CustomMouse_ResetSettings" xml:space="preserve">
+    <value>Reset Settings</value>
+    <comment>Reset settings button</comment>
+  </data>
+  <data name="CustomMouse_SaveSettings" xml:space="preserve">
+    <value>Save Settings</value>
+    <comment>Save settings button</comment>
+  </data>
+  <data name="CustomMouse_Ready" xml:space="preserve">
+    <value>Ready</value>
+    <comment>Ready status</comment>
+  </data>
+  <data name="CustomMouse_ThemeAuto" xml:space="preserve">
+    <value>Theme: Auto</value>
+    <comment>Auto theme indicator</comment>
+  </data>
+  <data name="CustomMouse_StyleW11CC" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI</value>
+    <comment>Default style name</comment>
+  </data>
+</root>

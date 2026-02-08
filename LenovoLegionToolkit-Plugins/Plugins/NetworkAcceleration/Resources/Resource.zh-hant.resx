@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NetworkAcceleration_PageTitle" xml:space="preserve">
+    <value>網路加速</value>
+  </data>
+  <data name="NetworkAcceleration_PageDescription" xml:space="preserve">
+    <value>即時網路加速和最佳化功能，包括 DNS 最佳化、請求攔截和代理加速等特性。</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatus" xml:space="preserve">
+    <value>服務狀態</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusDescription" xml:space="preserve">
+    <value>網路加速服務的運行狀態</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunning" xml:space="preserve">
+    <value>運行中</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStopped" xml:space="preserve">
+    <value>未運行</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunningDescription" xml:space="preserve">
+    <value>網路加速服務正在運行，為您提供加速服務</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStoppedDescription" xml:space="preserve">
+    <value>網路加速服務當前未運行</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimization" xml:space="preserve">
+    <value>DNS 最佳化</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationDescription" xml:space="preserve">
+    <value>根據網路狀況智能解析最佳域名 IP 位址，解決 DNS 汙染問題</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationEnabledDescription" xml:space="preserve">
+    <value>啟用後會自動選擇最快的 DNS 伺服器進行域名解析，提升訪問速度。</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterception" xml:space="preserve">
+    <value>請求攔截</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionDescription" xml:space="preserve">
+    <value>攔截無法訪問的網站，代理到加速鏡像站點</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionEnabledDescription" xml:space="preserve">
+    <value>啟用後會自動將無法訪問的網站請求代理到可用的加速鏡像站點。</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAcceleration" xml:space="preserve">
+    <value>GitHub 加速</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationDescription" xml:space="preserve">
+    <value>GitHub 直連加速，包括 Release、Clone、Raw 等下載加速</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
+    <value>啟用 GitHub 加速功能，提升 GitHub 訪問速度，包括代碼克隆、檔案下載等。</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>加速 GitHub 代碼倉庫和資源下載</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
+    <value>代理設定</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettingsDescription" xml:space="preserve">
+    <value>配置網路代理伺服器設定</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddress" xml:space="preserve">
+    <value>代理位址：</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressPlaceholder" xml:space="preserve">
+    <value>例如：127.0.0.1:7890</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressDescription" xml:space="preserve">
+    <value>配置本地代理伺服器位址和埠號。留空則使用預設設定。</value>
+  </data>
+  <data name="NetworkAcceleration_AcceleratedTraffic" xml:space="preserve">
+    <value>加速流量</value>
+  </data>
+  <data name="NetworkAcceleration_Downloaded" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="NetworkAcceleration_Uploaded" xml:space="preserve">
+    <value>上傳</value>
+  </data>
+  <data name="NetworkAcceleration_TotalTraffic" xml:space="preserve">
+    <value>總流量</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatistics" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailed" xml:space="preserve">
+    <value>證書設定失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailedDescription" xml:space="preserve">
+    <value>無法設定根證書，請檢查權限</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailed" xml:space="preserve">
+    <value>代理服務啟動失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailedDescription" xml:space="preserve">
+    <value>無法啟動反向代理服務</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailed" xml:space="preserve">
+    <value>啟動失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailedDescription" xml:space="preserve">
+    <value>啟動服務時發生錯誤: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailed" xml:space="preserve">
+    <value>停止失敗</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailedDescription" xml:space="preserve">
+    <value>停止服務時發生錯誤: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
+    <value>速度圖表</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>即時流量統計與趨勢分析</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>即時顯示下載和上傳速度變化</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>重置統計</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>平台加速</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>為以下平台啟用網路加速，提升訪問速度和穩定性</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steam 加速</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>加速 Steam 商店、社群和下載</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discord 加速</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>加速 Discord 應用程式和 CDN 資源</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPM 加速</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>加速 npm 套件管理器下載</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Python 加速</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>加速 Python 套件索引下載</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>加速 Steam 商店、社群和下載</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>加速 Discord 應用程式和 CDN 資源</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>加速 npm 套件管理器下載</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>加速 Python 套件索引下載</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>連接超時（秒）</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>設定網路請求的超時時間，單位為秒</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>代理埠號</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>例如: 7890</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>：</value>
+  </data>
+</root>

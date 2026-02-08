@@ -1,0 +1,176 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.CustomMouse.CustomMouseSettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:LenovoLegionToolkit.Plugins.CustomMouse.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0" Text="{x:Static properties:Resource.CustomMouse_SettingsTitle}" 
+                  FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <!-- 设置选项 -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- 插件模式 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{x:Static properties:Resource.CustomMouse_PluginMode}" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <RadioButton x:Name="ExtensionModeRadio" Content="{x:Static properties:Resource.CustomMouse_PluginMode_Extension}" 
+                                         Margin="0,0,0,5" Checked="PluginMode_Checked" Tag="extension"/>
+                            <RadioButton x:Name="IndependentModeRadio" Content="{x:Static properties:Resource.CustomMouse_PluginMode_Independent}" 
+                                         Checked="PluginMode_Checked" Tag="independent"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="PluginModeDescription" FontSize="12" Opacity="0.7" TextWrapping="Wrap" 
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 智能设置 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resource.CustomMouse_SmartSettings}" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <!-- 启动时自动应用 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_AutoApplyOnStartup}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_AutoApplyOnStartup_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <CheckBox x:Name="AutoApplyOnStartupCheckBox" Grid.Column="1" VerticalAlignment="Center" Checked="Setting_Checked" Unchecked="Setting_Unchecked"/>
+                        </Grid>
+
+                        <!-- 显示通知 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ShowNotifications}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ShowNotifications_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <CheckBox x:Name="ShowNotificationsCheckBox" Grid.Column="1" VerticalAlignment="Center" Checked="Setting_Checked" Unchecked="Setting_Unchecked"/>
+                        </Grid>
+
+                        <!-- 启用预览 -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_EnablePreview}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_EnablePreview_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <CheckBox x:Name="EnablePreviewCheckBox" Grid.Column="1" VerticalAlignment="Center" Checked="Setting_Checked" Unchecked="Setting_Unchecked"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 高级设置 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resource.CustomMouse_AdvancedSettings}" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <!-- 亮度阈值 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_BrightnessThreshold}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_BrightnessThreshold_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <StackPanel Grid.Column="1">
+                                <Slider x:Name="BrightnessThresholdSlider" Minimum="0" Maximum="1" 
+                                        Value="0.5" TickFrequency="0.1" IsSnapToTickEnabled="True" 
+                                        ValueChanged="AdvancedSetting_ValueChanged"/>
+                                <TextBlock x:Name="BrightnessThresholdValue" Text="0.5" HorizontalAlignment="Center" 
+                                         FontSize="12" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 调试信息 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resource.CustomMouse_DebugInfo}" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resource.CustomMouse_CurrentStyleLabel}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DebugCurrentStyle" Text="-"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resource.CustomMouse_ThemeModeLabel}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DebugThemeMode" Text="-"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resource.CustomMouse_PluginModeLabel}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="DebugPluginMode" Text="-"/>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static properties:Resource.CustomMouse_LastDetectionLabel}" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="DebugLastDetected" Text="-"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 操作按钮 -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button x:Name="ResetSettingsButton" Content="{x:Static properties:Resource.CustomMouse_ResetSettings}" Margin="0,0,10,0" Click="ResetSettingsButton_Click"/>
+            <Button x:Name="SaveSettingsButton" Content="{x:Static properties:Resource.CustomMouse_SaveSettings}" Style="{StaticResource AccentButtonStyle}" 
+                   Click="SaveSettingsButton_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
