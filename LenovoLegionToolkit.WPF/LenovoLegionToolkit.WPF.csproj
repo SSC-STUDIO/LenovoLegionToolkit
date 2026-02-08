@@ -4,7 +4,7 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
-		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
+		<ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
 		<AssemblyName>Lenovo Legion Toolkit</AssemblyName>
 		<Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
 		<Nullable>enable</Nullable>
@@ -45,13 +45,13 @@
 		<!-- Plugins are now in separate repository: https://github.com/Crs10259/LenovoLegionToolkit-Plugins -->
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\icon.ico" />
-		<None Remove="Assets\default_exe.png" />
+		<None Remove="Assets\Icon.ico" />
+		<None Remove="Assets\Default_exe.png" />
 
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="Assets\default_exe.png" />
-		<Resource Include="Assets\icon.ico" />
+		<Resource Include="Assets\Default_exe.png" />
+		<Resource Include="Assets\Icon.ico" />
 
 	</ItemGroup>
 	<ItemGroup>

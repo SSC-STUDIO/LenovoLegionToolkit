@@ -46,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed obsolete ShellIntegration submodule entries after internalizing the code / 在代码内置后移除过时的 ShellIntegration 子模块配置
 
 ### Improved / 改进
+- 修复 Assets 资源文件路径大小写不一致问题，统一使用正确的大写首字母 (Icon.ico, Default_exe.png, Logo.png) / Fixed case sensitivity issues in Assets resource file paths,统一使用 correct case for filenames (Icon.ico, Default_exe.png, Logo.png)
+- 修复 README_zh-hans.md 中 logo.png 路径大小写问题 / Fixed case sensitivity issue for logo.png path in README_zh-hans.md
 - 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
 - 优化了不兼容机器上的设置页面：在非支持机型上隐藏所有硬件相关的设置分类（性能、显示、智能按键）及相关软件禁用选项，仅保留通用的外观、应用行为和更新设置 / Optimized Settings page on incompatible machines: hidden all hardware-related categories (Power, Display, Smart Keys) and relevant software disablers on unsupported models, keeping only generic Appearance, Application behavior, and Update settings
 - 引入强制进程退出机制 (ExitProcess)，彻底解决在不兼容机器或极端情况下关闭软件后的进程残留和 CPU 占用问题 / Introduced forced process termination (ExitProcess) to completely resolve process residue and CPU usage issues upon exit on incompatible machines or in extreme cases

@@ -1,4 +1,4 @@
-<img height="128" align="left" src="assets/logo.png" alt="Logo">
+<img height="128" align="left" src="Assets/Logo.png" alt="Logo">
 
 # Lenovo Legion Toolkit
 
