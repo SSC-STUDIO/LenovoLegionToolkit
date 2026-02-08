@@ -3,8 +3,12 @@ name: CI Tests
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - 'plugins/**'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - 'plugins/**'
 
 jobs:
   build:
@@ -22,9 +26,10 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.run_id }}
           path: |
             **/bin/Release/**
+          retention-days: 1
 
   tests-fast:
     needs: build
@@ -40,7 +45,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.run_id }}
           path: .
       - name: Run fast unit tests
         run: |
@@ -60,7 +65,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.run_id }}
           path: .
       - name: Run slow/integration tests (optional)
         run: |
