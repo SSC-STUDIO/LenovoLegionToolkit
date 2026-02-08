@@ -1,4 +1,9 @@
 ###############################################################################
+# Enable case sensitivity for file paths (important for cross-platform consistency)
+###############################################################################
+* case=force
+
+###############################################################################
 # Set default behavior to normalize line endings to LF on checkout and conversion on commit
 ###############################################################################
 * text=auto eol=lf
