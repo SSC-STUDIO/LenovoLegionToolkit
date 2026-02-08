@@ -55,6 +55,6 @@ GOTO END
 :END
 echo.
 echo Build completed! Exiting in 5 seconds...
-timeout /t 5 /nobreak >nul
+ping -n 6 127.0.0.1 >nul 2>&1
 endlocal
 exit /b 0
