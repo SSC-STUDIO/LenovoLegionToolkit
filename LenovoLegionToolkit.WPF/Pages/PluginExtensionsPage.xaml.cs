@@ -671,12 +671,20 @@ private string _currentSearchText = string.Empty;
     private void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
         LocalizationHelper.SetPluginResourceCultures();
-        UpdateAllPluginsUI();
+        
+        // Only show loading indicator first, don't show "no plugins" message until loaded
+        var loadingIndicator = this.FindName("_loadingIndicator") as StackPanel;
+        var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
+        
+        if (loadingIndicator != null)
+            loadingIndicator.Visibility = Visibility.Visible;
+        if (noPluginsMessage != null)
+            noPluginsMessage.Visibility = Visibility.Collapsed;
         
         // Auto-fetch online plugins in background
         _ = Task.Run(async () =>
         {
-            await Task.Delay(1000); // Small delay to let UI render first
+            await Task.Delay(100); // Small delay to let UI render first
             await Dispatcher.InvokeAsync(async () =>
             {
                 await FetchOnlinePluginsAsync();

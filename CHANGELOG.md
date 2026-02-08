@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 调慢动画速度：Fast(0.167s) Medium(0.333s) Slow(0.5s) / Slowed down animation speeds: Fast(0.167s) Medium(0.333s) Slow(0.5s)
 - 将构建目录 build 重命名为 Build，保持命名一致性 / Renamed build directory to Build for naming consistency
 - 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller
+- 修复插件页面加载逻辑：先显示加载动画，刷新完成后再显示内容或"没有插件"提示 / Fixed plugin page loading logic: show loading indicator first, then show content or "no plugins" message after refresh completes
+- 为设置页面选中项目添加阴影效果 / Added shadow effect to selected items on Settings page
 - 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
 - 优化了不兼容机器上的设置页面：在非支持机型上隐藏所有硬件相关的设置分类（性能、显示、智能按键）及相关软件禁用选项，仅保留通用的外观、应用行为和更新设置 / Optimized Settings page on incompatible machines: hidden all hardware-related categories (Power, Display, Smart Keys) and relevant software disablers on unsupported models, keeping only generic Appearance, Application behavior, and Update settings
 - 引入强制进程退出机制 (ExitProcess)，彻底解决在不兼容机器或极端情况下关闭软件后的进程残留和 CPU 占用问题 / Introduced forced process termination (ExitProcess) to completely resolve process residue and CPU usage issues upon exit on incompatible machines or in extreme cases
