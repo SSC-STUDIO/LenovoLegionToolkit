@@ -92,14 +92,14 @@ dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
 # Framework-dependent deployment (requires .NET runtime)
 dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj \
     --configuration Release \
-    --output ./publish/framework-dependent
+    --output ./Build/framework-dependent
 
 # Self-contained deployment (no runtime required)
 dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj \
     --configuration Release \
     --runtime win-x64 \
     --self-contained true \
-    --output ./publish/self-contained
+    --output ./Build/self-contained
 ```
 
 ## Testing

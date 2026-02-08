@@ -123,7 +123,7 @@ dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj `
     --configuration Release `
     --runtime win-x64 `
     --self-contained false `
-    --output ./publish
+    --output ./Build
 
 # 创建安装包（如果有相关脚本）
 # 需要检查是否有相关的构建脚本或CI/CD配置
