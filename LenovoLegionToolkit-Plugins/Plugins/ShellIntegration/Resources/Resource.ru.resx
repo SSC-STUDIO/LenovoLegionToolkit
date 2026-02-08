@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- General -->
+  <data name="ShellIntegration_Name" xml:space="preserve">
+    <value>Shell 統合</value>
+  </data>
+  <data name="ShellIntegration_Description" xml:space="preserve">
+    <value>右クリックメニュー拡張とファイル管理ツールを備えた拡張Windows Shell統合</value>
+  </data>
+
+  <!-- Main Page -->
+  <data name="ServiceStatus_Title" xml:space="preserve">
+    <value>サービスステータス</value>
+  </data>
+  <data name="Installation_Label" xml:space="preserve">
+    <value>インストール状況：</value>
+  </data>
+  <data name="Service_Label" xml:space="preserve">
+    <value>サービス：</value>
+  </data>
+  <data name="Version_Label" xml:space="preserve">
+    <value>バージョン：</value>
+  </data>
+  <data name="QuickActions_Title" xml:space="preserve">
+    <value>クイックアクション</value>
+  </data>
+  <data name="MenuSettings_Button" xml:space="preserve">
+    <value>メニュー設定</value>
+  </data>
+  <data name="ExtensionSettings_Button" xml:space="preserve">
+    <value>拡張機能設定</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Shell 統合について</value>
+  </data>
+
+  <!-- Actions -->
+  <data name="Install_Button" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Uninstall_Button" xml:space="preserve">
+    <value>アンインストール</value>
+  </data>
+  <data name="Start_Button" xml:space="preserve">
+    <value>開始</value>
+  </data>
+  <data name="Stop_Button" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Refresh_Button" xml:space="preserve">
+    <value>更新</value>
+  </data>
+
+  <!-- Settings Page -->
+  <data name="ContextMenuItems_Title" xml:space="preserve">
+    <value>右クリックメニュー項目</value>
+  </data>
+  <data name="ShellExtensions_Title" xml:space="preserve">
+    <value>Shell 拡張機能</value>
+  </data>
+  <data name="ResetToDefaults_Button" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+  </data>
+
+  <!-- Column Headers -->
+  <data name="Name_Column" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="Category_Column" xml:space="preserve">
+    <value>カテゴリー</value>
+  </data>
+  <data name="Command_Column" xml:space="preserve">
+    <value>コマンド</value>
+  </data>
+  <data name="Type_Column" xml:space="preserve">
+    <value>タイプ</value>
+  </data>
+  <data name="Version_Column" xml:space="preserve">
+    <value>バージョン</value>
+  </data>
+  <data name="System_Column" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="Status_Column" xml:space="preserve">
+    <value>ステータス</value>
+  </data>
+
+  <!-- Status Messages -->
+  <data name="Status_Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Status_NotInstalled" xml:space="preserve">
+    <value>未インストール</value>
+  </data>
+  <data name="Status_Running" xml:space="preserve">
+    <value>実行中</value>
+  </data>
+  <data name="Status_Stopped" xml:space="preserve">
+    <value>停止済み</value>
+  </data>
+  <data name="Status_Error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+
+  <!-- Success Messages -->
+  <data name="Success_Installed" xml:space="preserve">
+    <value>Shell 統合をインストールしました</value>
+  </data>
+  <data name="Success_Uninstalled" xml:space="preserve">
+    <value>Shell 統合をアンインストールしました</value>
+  </data>
+  <data name="Success_Started" xml:space="preserve">
+    <value>Shell 統合を開始しました</value>
+  </data>
+  <data name="Success_Stopped" xml:space="preserve">
+    <value>Shell 統合を停止しました</value>
+  </data>
+  <data name="Success_MenuItemToggled" xml:space="preserve">
+    <value>メニュー項目 {0} が{1}</value>
+  </data>
+  <data name="Success_ExtensionToggled" xml:space="preserve">
+    <value>拡張機能 {0} が{1}</value>
+  </data>
+  <data name="Success_ResetToDefaults" xml:space="preserve">
+    <value>メニュー項目をデフォルトにリセットしました</value>
+  </data>
+
+  <!-- Error Messages -->
+  <data name="Error_InstallationFailed" xml:space="preserve">
+    <value>Shell 統合のインストールに失敗しました</value>
+  </data>
+  <data name="Error_UninstallationFailed" xml:space="preserve">
+    <value>Shell 統合のアンインストールに失敗しました</value>
+  </data>
+  <data name="Error_StartFailed" xml:space="preserve">
+    <value>Shell 統合の開始に失敗しました</value>
+  </data>
+  <data name="Error_StopFailed" xml:space="preserve">
+    <value>Shell 統合の停止に失敗しました</value>
+  </data>
+  <data name="Error_MenuItemToggleFailed" xml:space="preserve">
+    <value>メニュー項目の切り替えに失敗しました</value>
+  </data>
+  <data name="Error_ExtensionToggleFailed" xml:space="preserve">
+    <value>拡張機能の切り替えに失敗しました</value>
+  </data>
+  <data name="Error_ResetFailed" xml:space="preserve">
+    <value>メニュー項目のリセットに失敗しました</value>
+  </data>
+
+  <!-- Confirmation Messages -->
+  <data name="Confirm_Uninstall" xml:space="preserve">
+    <value>Shell 統合をアンインストールしてもよろしいですか？これによりすべての右クリックメニュー拡張機能が削除されます。</value>
+  </data>
+  <data name="Confirm_Reset" xml:space="preserve">
+    <value>すべてのメニュー項目をデフォルトにリセットしてもよろしいですか？これにより追加したカスタムメニュー項目が削除されます。</value>
+  </data>
+
+  <!-- Tooltips -->
+  <data name="Tooltip_MenuSettings" xml:space="preserve">
+    <value>右クリックメニュー項目を設定</value>
+  </data>
+  <data name="Tooltip_ExtensionSettings" xml:space="preserve">
+    <value>Shell 拡張機能を管理</value>
+  </data>
+
+  <!-- About Text -->
+  <data name="About_Introduction" xml:space="preserve">
+    <value>Shell 統合は拡張Windows右クリックメニュー機能を提供します：</value>
+  </data>
+  <data name="About_Feature1" xml:space="preserve">
+    <value>• カスタム右クリックメニュー項目</value>
+  </data>
+  <data name="About_Feature2" xml:space="preserve">
+    <value>• クイックファイル操作</value>
+  </data>
+  <data name="About_Feature3" xml:space="preserve">
+    <value>• 拡張ナビゲーションオプション</value>
+  </data>
+  <data name="About_Feature4" xml:space="preserve">
+    <value>• システムツールとの統合</value>
+  </data>
+  <data name="About_Feature5" xml:space="preserve">
+    <value>• 設定可能なメニュー項目と拡張機能</value>
+  </data>
+  <data name="About_Note" xml:space="preserve">
+    <value>注意：一部の機能には正常に動作するために管理者権限が必要な場合があります。</value>
+  </data>
+
+  <!-- Menu Item Categories -->
+  <data name="Category_Navigation" xml:space="preserve">
+    <value>ナビゲーション</value>
+  </data>
+  <data name="Category_Utilities" xml:space="preserve">
+    <value>ユーティリティ</value>
+  </data>
+  <data name="Category_System" xml:space="preserve">
+    <value>システム</value>
+  </data>
+
+  <!-- Default Menu Items -->
+  <data name="MenuItem_OpenTerminalHere" xml:space="preserve">
+    <value>ここでターミナルを開く</value>
+  </data>
+  <data name="MenuItem_OpenTerminalHere_Desc" xml:space="preserve">
+    <value>現在のディレクトリでWindowsターミナルを開く</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere" xml:space="preserve">
+    <value>ここでPowerShellを開く</value>
+  </data>
+  <data name="MenuItem_OpenPowerShellHere_Desc" xml:space="preserve">
+    <value>現在のディレクトリでPowerShellを開く</value>
+  </data>
+  <data name="MenuItem_CopyFilePath" xml:space="preserve">
+    <value>ファイルパスをコピー</value>
+  </data>
+  <data name="MenuItem_CopyFilePath_Desc" xml:space="preserve">
+    <value>完全なファイルパスをクリップボードにコピー</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin" xml:space="preserve">
+    <value>管理者として実行</value>
+  </data>
+  <data name="MenuItem_RunAsAdmin_Desc" xml:space="preserve">
+    <value>選択したプログラムを管理者として実行</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation" xml:space="preserve">
+    <value>ファイルの場所を開く</value>
+  </data>
+  <data name="MenuItem_OpenFileLocation_Desc" xml:space="preserve">
+    <value>ファイルを含むフォルダーを開く</value>
+  </data>
+
+  <!-- Optimization Category -->
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 統合</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>右クリックメニューの美化とマウススタイルカスタマイズを備えた拡張Windows Shell統合</value>
+  </data>
+
+  <!-- Optimization Actions -->
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>モダン右クリックメニューを有効化</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>モダンスタイルでWindows右クリックメニューを美化するためにNilesoft Shellを有効化</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>モダン右クリックメニューを無効化</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>Nilesoft Shellの登録を解除し、Windowsデフォルトの右クリックメニューを復元</value>
+  </data>
+
+  <!-- Additional Optimization Actions -->
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Title" xml:space="preserve">
+    <value>右クリックメニューアニメーションを無効化</value>
+  </data>
+  <data name="ShellIntegration_Action_ContextMenuAnimations_Description" xml:space="preserve">
+    <value>アニメーションを無効化して右クリックメニュー表示を高速化</value>
+  </data>
+
+  <data name="ShellIntegration_Action_ShowFileExtensions_Title" xml:space="preserve">
+    <value>ファイル拡張子を表示</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowFileExtensions_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーですべてのファイルの拡張子を表示</value>
+  </data>
+
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Title" xml:space="preserve">
+    <value>隠しファイルを表示</value>
+  </data>
+  <data name="ShellIntegration_Action_ShowHiddenFiles_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーで隠しファイルとフォルダーを表示</value>
+  </data>
+
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>クイックアクセスを使用</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーをデフォルトでクイックアクセスに設定</value>
+  </data>
+
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>プレビューパネルを有効化</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーでファイルプレビューを表示</value>
+  </data>
+
+  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
+    <value>メニューの透明度を有効化または無効化</value>
+  </data>
+
+  <data name="ShellIntegration_Action_RoundedCorners_Title" xml:space="preserve">
+    <value>丸み</value>
+  </data>
+  <data name="ShellIntegration_Action_RoundedCorners_Description" xml:space="preserve">
+    <value>丸みを有効化または無効化</value>
+  </data>
+
+  <data name="ShellIntegration_Action_Shadows_Title" xml:space="preserve">
+    <value>影</value>
+  </data>
+  <data name="ShellIntegration_Action_Shadows_Description" xml:space="preserve">
+    <value>メニューの影を有効化または無効化</value>
+  </data>
+
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>Windows 11 カーソルスタイルを適用</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>高DPI対応のWindows 11スタイルカーソルテーマを適用</value>
+  </data>
+
+  <!-- System Optimizations Settings -->
+  <data name="SystemOptimizations_Title" xml:space="preserve">
+    <value>システム最適化</value>
+  </data>
+  <data name="ContextMenuAnimations_Title" xml:space="preserve">
+    <value>右クリックメニューアニメーション</value>
+  </data>
+  <data name="ContextMenuAnimations_Description" xml:space="preserve">
+    <value>右クリックメニューアニメーションを有効化または無効化</value>
+  </data>
+  <data name="ShowFileExtensions_Title" xml:space="preserve">
+    <value>ファイル拡張子を表示</value>
+  </data>
+  <data name="ShowFileExtensions_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーでファイル拡張子を表示または非表示</value>
+  </data>
+  <data name="ShowHiddenFiles_Title" xml:space="preserve">
+    <value>隠しファイルを表示</value>
+  </data>
+  <data name="ShowHiddenFiles_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーで隠しファイルを表示または非表示</value>
+  </data>
+  <data name="QuickAccess_Title" xml:space="preserve">
+    <value>クイックアクセス</value>
+  </data>
+  <data name="QuickAccess_Description" xml:space="preserve">
+    <value>ファイルエクスプローラーでクイックアクセスを有効化または無効化</value>
+  </data>
+  <data name="PreviewPane_Title" xml:space="preserve">
+    <value>プレビューパネル</value>
+  </data>
+  <data name="PreviewPane_Description" xml:space="preserve">
+    <value>ファイルエクスプローラープレビューパネルを有効化または無効化</value>
+  </data>
+  <data name="Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="Transparency_Description" xml:space="preserve">
+    <value>メニューの透明度を有効化または無効化</value>
+  </data>
+  <data name="RoundedCorners_Title" xml:space="preserve">
+    <value>丸み</value>
+  </data>
+  <data name="RoundedCorners_Description" xml:space="preserve">
+    <value>丸みを有効化または無効化</value>
+  </data>
+  <data name="Shadows_Title" xml:space="preserve">
+    <value>影</value>
+  </data>
+  <data name="Shadows_Description" xml:space="preserve">
+    <value>メニューの影を有効化または無効化</value>
+  </data>
+</root>
