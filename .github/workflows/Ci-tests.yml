@@ -26,7 +26,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-output-${{ github.run_id }}
+          name: ci-build-output
           path: |
             **/bin/Release/**
           retention-days: 1
@@ -37,19 +37,17 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-build-output
+          path: .
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-${{ github.run_id }}
-          path: .
       - name: Run fast unit tests
         run: |
-          # Run unit tests excluding integration/slow tests (mark slow tests with [Trait("Category","Integration")])
           dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-restore --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
 
   tests-slow:
@@ -57,17 +55,15 @@ jobs:
     runs-on: windows-latest
     if: ${{ always() }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-build-output
+          path: .
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-${{ github.run_id }}
-          path: .
       - name: Run slow/integration tests (optional)
         run: |
-          # Run slow or integration tests separately. These are optional and can be run on schedule or manually.
           dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-restore --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
