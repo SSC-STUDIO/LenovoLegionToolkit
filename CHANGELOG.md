@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复 README_zh-hans.md 中 logo.png 路径大小写问题 / Fixed case sensitivity issue for logo.png path in README_zh-hans.md
 - 修复 SettingsPage 动画为从下往上滑动，与其他页面保持一致 / Fixed SettingsPage animation to slide up from bottom, consistent with other pages
 - 修复文档中 workflow 文件路径大小写不一致问题 / Fixed case sensitivity issues for workflow file paths in documentation
+- 修复 LenovoLegionToolkit-Plugins/README.md 中的 workflow 路径大小写问题 / Fixed workflow path case sensitivity issues in LenovoLegionToolkit-Plugins/README.md
 - 调慢动画速度：Fast(0.167s) Medium(0.333s) Slow(0.5s) / Slowed down animation speeds: Fast(0.167s) Medium(0.333s) Slow(0.5s)
 - 将构建目录 build 重命名为 Build，保持命名一致性 / Renamed build directory to Build for naming consistency
 - 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller

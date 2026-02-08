@@ -148,7 +148,7 @@ LenovoLegionToolkit-Plugins/
 │   └── PLUGIN_QUICKSTART.md         # Quick start guide
 ├── build/                            # Build output
 ├── .github/
-│   └── workflows/
+│   └── Workflows/
 │       └── build.yml                # CI/CD pipeline
 ├── store.json                        # Plugin store metadata
 ├── make.bat                          # Windows build script
@@ -170,7 +170,7 @@ This repository uses GitHub Actions for continuous integration and deployment:
 
 ### Manual Trigger
 
-Navigate to [Actions > Build Plugins](https://github.com/Crs10259/LenovoLegionToolkit-Plugins/actions/workflows/build.yml):
+Navigate to [Actions > Build Plugins](https://github.com/Crs10259/LenovoLegionToolkit-Plugins/actions/workflows/Build.yml):
 
 1. Click **Run workflow**
 2. Select specific plugin (optional)
