@@ -937,7 +937,7 @@ LenovoLegionToolkit-Plugins/
 
 1. **目标框架**: `net10.0-windows`
 2. **引用 SDK**: 引用 `LenovoLegionToolkit.Plugins.SDK` (PrivateAssets=All)
-3. **输出路径**: `build/plugins/{PluginName}/`
+3. **输出路径**: `Build/plugins/{PluginName}/`
 4. **内嵌 plugin.json**: 设置为 EmbeddedResource 或 Copy to Output Directory
 5. **版本号格式**: `X.Y.Z` (语义化版本)
 

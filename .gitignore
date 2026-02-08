@@ -36,7 +36,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-build/
+Build/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -579,7 +579,7 @@ obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,dotnetcore,csharp
 
-build_installer
+BuildInstaller
 
 # AGENTS.md - Development guide file (prevent accidental commits)
 AGENTS.md

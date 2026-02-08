@@ -239,13 +239,13 @@ public class PluginManager : IPluginManager
         // Try to find the plugins directory relative to the application base directory
         var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
         
-        // Check for build/plugins directory (development/build scenario)
+        // Check for Build/plugins directory (development/build scenario)
         // Try multiple relative paths to handle different build configurations
         var possiblePaths = new[]
         {
-            Path.Combine(appBaseDir, "build", "plugins"),  // Direct build/plugins
-            Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),  // Relative to bin
-            Path.Combine(appBaseDir, "..", "build", "plugins"),  // One level up
+            Path.Combine(appBaseDir, "Build", "plugins"),  // Direct Build/plugins
+            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),  // Relative to bin
+            Path.Combine(appBaseDir, "..", "Build", "plugins"),  // One level up
             Path.Combine(appBaseDir, "Plugins"),  // Same directory as executable (release, legacy)
             Path.Combine(appBaseDir, "plugins"),  // Same directory as executable (release)
         };
@@ -261,8 +261,8 @@ public class PluginManager : IPluginManager
             }
         }
 
-        // Default to build/plugins relative to app base directory (will be created if needed)
-        var defaultPath = Path.Combine(appBaseDir, "build", "plugins");
+        // Default to Build/plugins relative to app base directory (will be created if needed)
+        var defaultPath = Path.Combine(appBaseDir, "Build", "plugins");
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
         return defaultPath;

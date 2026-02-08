@@ -348,7 +348,7 @@ LLT supports a comprehensive plugin system that allows extending the functionali
 
 ### Core Features
 
-- **Dynamic Loading**: Plugins are loaded at runtime from the `build/plugins` directory
+- **Dynamic Loading**: Plugins are loaded at runtime from the `Build/plugins` directory
 - **Online Plugin Repository**: Browse and install plugins from an online repository
 - **Dependency Management**: Automatic installation and checking of plugin dependencies
 - **UI Integration**: Plugins can provide custom UI pages and settings
@@ -393,7 +393,7 @@ Plugins can be installed in two ways:
 
 2. **Manual Installation**:
    - Download the plugin DLL file
-   - Place it in the `build/plugins` directory
+   - Place it in the `Build/plugins` directory
    - Restart LLT, or use the plugin manager UI to scan for new plugins
 
 ### Plugin Development
