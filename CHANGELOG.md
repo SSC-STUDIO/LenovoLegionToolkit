@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复文档中 workflow 文件路径大小写不一致问题 / Fixed case sensitivity issues for workflow file paths in documentation
 - 修复 LenovoLegionToolkit-Plugins/README.md 中的 workflow 路径大小写问题 / Fixed workflow path case sensitivity issues in LenovoLegionToolkit-Plugins/README.md
 - 修复 GitHub Actions CI workflow artifact 名称冲突问题，使用唯一名称 build-output-${{ github.run_id }} / Fixed GitHub Actions CI workflow artifact name conflict, using unique name build-output-${{ github.run_id }}
+- 修复 GitHub Actions CI workflow artifact 下载失败问题，简化 artifact 传递逻辑 / Fixed GitHub Actions CI workflow artifact download failure, simplified artifact transfer logic
 - 调慢动画速度：Fast(0.167s) Medium(0.333s) Slow(0.5s) / Slowed down animation speeds: Fast(0.167s) Medium(0.333s) Slow(0.5s)
 - 将构建目录 build 重命名为 Build，保持命名一致性 / Renamed build directory to Build for naming consistency
 - 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller
