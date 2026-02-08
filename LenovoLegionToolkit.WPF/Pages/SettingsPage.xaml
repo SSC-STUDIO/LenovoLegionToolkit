@@ -22,7 +22,7 @@
                 EasingFunction="{StaticResource AnimationEasingCubicOut}" />
             <DoubleAnimation
                 Storyboard.TargetName="_contentControl"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
                 From="{StaticResource AnimationTranslationOffset}"
                 To="0"
                 Duration="{StaticResource AnimationDurationMedium}"

@@ -141,9 +141,9 @@ dotnet run --project LenovoLegionToolkit.PerformanceTest/ \
 
 ### GitHub Actions Workflow
 
-Located in `.github/workflows/`:
+Located in `.github/Workflows/`:
 
-#### Build Pipeline (`build.yml`)
+#### Build Pipeline (`Build.yml`)
 
 ```yaml
 # Triggers

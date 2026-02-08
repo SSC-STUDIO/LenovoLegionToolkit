@@ -838,7 +838,7 @@ LenovoLegionToolkit-Plugins/                  # 独立仓库 (插件)
 │   ├── ShellIntegration/
 │   └── ViveTool/
 ├── store.json                                # 插件市场元数据 (GitHub Pages)
-└── .github/workflows/
+└── .github/Workflows/
     └── ci.yml                                # CI/CD 自动构建
 ```
 
@@ -944,7 +944,7 @@ LenovoLegionToolkit-Plugins/
 ### CI/CD 发布流程
 
 ```yaml
-# .github/workflows/release.yml
+# .github/Workflows/release.yml
 name: Release Plugins
 
 on:
