@@ -104,6 +104,9 @@
                                         BorderThickness="0"
                                         Padding="16,12,12,12"
                                         CornerRadius="8">
+                                        <Border.Effect>
+                                            <DropShadowEffect x:Name="ShadowEffect" BlurRadius="0" ShadowDepth="0" Opacity="0" />
+                                        </Border.Effect>
                                         <Grid>
                                             <!-- Blue indicator rectangle - matches main navigation bar style -->
                                             <Rectangle
@@ -134,13 +137,31 @@
                                                             Storyboard.TargetName="ActiveRectangle"
                                                             Storyboard.TargetProperty="Opacity"
                                                             To="1.0"
-                                                            Duration="{StaticResource AnimationDurationFast}"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
                                                             EasingFunction="{StaticResource AnimationEasingCubicOut}" />
                                                         <ColorAnimation
                                                             Storyboard.TargetName="Bd"
                                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
                                                             To="#26000000"
-                                                            Duration="{StaticResource AnimationDurationFast}"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.BlurRadius)"
+                                                            To="8"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.ShadowDepth)"
+                                                            To="2"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.Opacity)"
+                                                            To="0.15"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
                                                             EasingFunction="{StaticResource AnimationEasingCubicOut}" />
                                                     </Storyboard>
                                                 </BeginStoryboard>
@@ -152,13 +173,31 @@
                                                             Storyboard.TargetName="ActiveRectangle"
                                                             Storyboard.TargetProperty="Opacity"
                                                             To="0.0"
-                                                            Duration="{StaticResource AnimationDurationFast}"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
                                                             EasingFunction="{StaticResource AnimationEasingCubicOut}" />
                                                         <ColorAnimation
                                                             Storyboard.TargetName="Bd"
                                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
                                                             To="Transparent"
-                                                            Duration="{StaticResource AnimationDurationFast}"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.BlurRadius)"
+                                                            To="0"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.ShadowDepth)"
+                                                            To="0"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
+                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ShadowEffect"
+                                                            Storyboard.TargetProperty="(DropShadowEffect.Opacity)"
+                                                            To="0"
+                                                            Duration="{StaticResource AnimationDurationMedium}"
                                                             EasingFunction="{StaticResource AnimationEasingCubicOut}" />
                                                     </Storyboard>
                                                 </BeginStoryboard>
