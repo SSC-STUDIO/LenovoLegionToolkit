@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,189 +44,74 @@ public class GodModeControllerV1(
         var fanTable = preset.FanTable ?? await GetDefaultFanTableAsync().ConfigureAwait(false);
         var fanFullSpeed = preset.FanFullSpeed ?? false;
 
-        if (cpuLongTermPowerLimit is not null)
+        var powerLimitSettings = new (string Name, int? Value, Func<int, Task> Setter)[]
         {
+            ("cpuLongTermPowerLimit", cpuLongTermPowerLimit?.Value, SetCPULongTermPowerLimitAsync),
+            ("cpuShortTermPowerLimit", cpuShortTermPowerLimit?.Value, SetCPUShortTermPowerLimitAsync),
+            ("cpuPeakPowerLimit", cpuPeakPowerLimit?.Value, SetCPUPeakPowerLimitAsync),
+            ("cpuCrossLoadingPowerLimit", cpuCrossLoadingPowerLimit?.Value, SetCPUCrossLoadingPowerLimitAsync),
+            ("apuSPPTPowerLimit", apuSPPTPowerLimit?.Value, SetAPUSPPTPowerLimitAsync),
+            ("cpuTemperatureLimit", cpuTemperatureLimit?.Value, SetCPUTemperatureLimitAsync),
+        };
+
+        foreach (var (name, value, setter) in powerLimitSettings)
+        {
+            if (value is null) continue;
+
             try
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying CPU Long Term Power Limit: {cpuLongTermPowerLimit}");
-
-                await SetCPULongTermPowerLimitAsync(cpuLongTermPowerLimit.Value.Value).ConfigureAwait(false);
+                    Log.Instance.Trace($"Applying {name}: {value}");
+                await setter(value.Value).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=cpuLongTermPowerLimit]", ex);
+                    Log.Instance.Trace($"Apply failed. [setting={name}]", ex);
                 throw;
             }
         }
 
-        if (cpuShortTermPowerLimit is not null)
+        var gpuSettings = new (string Name, int? Value, Func<int, Task> Setter)[]
         {
+            ("gpuPowerBoost", gpuPowerBoost?.Value, SetGPUPowerBoostAsync),
+            ("gpuConfigurableTgp", gpuConfigurableTgp?.Value, SetGPUConfigurableTGPAsync),
+            ("gpuTemperatureLimit", gpuTemperatureLimit?.Value, SetGPUTemperatureLimitAsync),
+        };
+
+        foreach (var (name, value, setter) in gpuSettings)
+        {
+            if (value is null) continue;
+
             try
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying CPU Short Term Power Limit: {cpuShortTermPowerLimit}");
-
-                await SetCPUShortTermPowerLimitAsync(cpuShortTermPowerLimit.Value.Value).ConfigureAwait(false);
+                    Log.Instance.Trace($"Applying {name}: {value}");
+                await setter(value.Value).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=cpuShortTermPowerLimit]", ex);
-                throw;
+                    Log.Instance.Trace($"Apply failed. [setting={name}]", ex);
             }
         }
 
-        if (cpuPeakPowerLimit is not null)
+        try
         {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying CPU Peak Power Limit: {cpuPeakPowerLimit}");
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Applying Fan Full Speed {fanFullSpeed}...");
 
-                await SetCPUPeakPowerLimitAsync(cpuPeakPowerLimit.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=cpuPeakPowerLimit]", ex);
-                throw;
-            }
+            await SetFanFullSpeedAsync(fanFullSpeed).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Apply failed. [setting=fanFullSpeed]", ex);
+            throw;
         }
 
-        if (cpuCrossLoadingPowerLimit is not null)
+        if (!fanFullSpeed)
         {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying CPU Cross Loading Power Limit: {cpuCrossLoadingPowerLimit}");
-
-                await SetCPUCrossLoadingPowerLimitAsync(cpuCrossLoadingPowerLimit.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=cpuCrossLoadingPowerLimit]", ex);
-                throw;
-            }
-        }
-
-        if (apuSPPTPowerLimit is not null)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying APU sPPT Power Limit: {apuSPPTPowerLimit}");
-
-                await SetAPUSPPTPowerLimitAsync(apuSPPTPowerLimit.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=apuSPPTPowerLimit]", ex);
-                throw;
-            }
-        }
-
-        if (cpuTemperatureLimit is not null)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying CPU Temperature Limit: {cpuTemperatureLimit}");
-
-                await SetCPUTemperatureLimitAsync(cpuTemperatureLimit.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=cpuTemperatureLimit]", ex);
-                throw;
-            }
-        }
-
-        if (gpuPowerBoost is not null)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying GPU Power Boost: {gpuPowerBoost}");
-
-                await SetGPUPowerBoostAsync(gpuPowerBoost.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=gpuPowerBoost]", ex);
-            }
-        }
-
-        if (gpuConfigurableTgp is not null)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying GPU Configurable TGP: {gpuConfigurableTgp}");
-
-                await SetGPUConfigurableTGPAsync(gpuConfigurableTgp.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=gpuConfigurableTgp]", ex);
-            }
-        }
-
-        if (gpuTemperatureLimit is not null)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying GPU Temperature Limit: {gpuTemperatureLimit}");
-
-                await SetGPUTemperatureLimitAsync(gpuTemperatureLimit.Value.Value).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=gpuTemperatureLimit]", ex);
-            }
-        }
-
-        if (fanFullSpeed)
-        {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Applying Fan Full Speed {fanFullSpeed}...");
-
-                await SetFanFullSpeedAsync(fanFullSpeed).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=fanFullSpeed]", ex);
-                throw;
-            }
-        }
-        else
-        {
-
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Making sure Fan Full Speed is false...");
-
-                await SetFanFullSpeedAsync(false).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Apply failed. [setting=fanFullSpeed]", ex);
-                throw;
-            }
-
             try
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -305,138 +190,32 @@ public class GodModeControllerV1(
                 return;
             }
 
-            if (defaults.CPULongTermPowerLimit is not null)
+            var settings = new (string Name, int? Value, Func<int, Task> Setter)[]
             {
+                ("cpuLongTermPowerLimit", defaults.CPULongTermPowerLimit, SetCPULongTermPowerLimitAsync),
+                ("cpuShortTermPowerLimit", defaults.CPUShortTermPowerLimit, SetCPUShortTermPowerLimitAsync),
+                ("cpuPeakPowerLimit", defaults.CPUPeakPowerLimit, SetCPUPeakPowerLimitAsync),
+                ("cpuCrossLoadingPowerLimit", defaults.CPUCrossLoadingPowerLimit, SetCPUCrossLoadingPowerLimitAsync),
+                ("apuSPPTPowerLimit", defaults.APUsPPTPowerLimit, SetAPUSPPTPowerLimitAsync),
+                ("cpuTemperatureLimit", defaults.CPUTemperatureLimit, SetCPUTemperatureLimitAsync),
+                ("gpuPowerBoost", defaults.GPUPowerBoost, SetGPUPowerBoostAsync),
+                ("gpuConfigurableTGP", defaults.GPUConfigurableTGP, SetGPUConfigurableTGPAsync),
+            };
+
+            foreach (var (name, value, setter) in settings)
+            {
+                if (value is null) continue;
+
                 try
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying CPU Long Term Power Limit: {defaults.CPULongTermPowerLimit}");
-
-                    await SetCPULongTermPowerLimitAsync(defaults.CPULongTermPowerLimit.Value).ConfigureAwait(false);
+                        Log.Instance.Trace($"Applying {name}: {value}");
+                    await setter(value.Value).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=cpuLongTermPowerLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.CPUShortTermPowerLimit is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying CPU Short Term Power Limit: {defaults.CPUShortTermPowerLimit}");
-
-                    await SetCPUShortTermPowerLimitAsync(defaults.CPUShortTermPowerLimit.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=cpuShortTermPowerLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.CPUPeakPowerLimit is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying CPU Peak Power Limit: {defaults.CPUPeakPowerLimit}");
-
-                    await SetCPUPeakPowerLimitAsync(defaults.CPUPeakPowerLimit.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=cpuPeakPowerLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.CPUCrossLoadingPowerLimit is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying CPU Cross Loading Power Limit: {defaults.CPUCrossLoadingPowerLimit}");
-
-                    await SetCPUCrossLoadingPowerLimitAsync(defaults.CPUCrossLoadingPowerLimit.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=cpuCrossLoadingPowerLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.APUsPPTPowerLimit is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying APU sPPT Power Limit: {defaults.APUsPPTPowerLimit}");
-
-                    await SetAPUSPPTPowerLimitAsync(defaults.APUsPPTPowerLimit.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=apuSPPTPowerLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.CPUTemperatureLimit is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying CPU Temperature Limit: {defaults.CPUTemperatureLimit}");
-
-                    await SetCPUTemperatureLimitAsync(defaults.CPUTemperatureLimit.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=cpuTemperatureLimit]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.GPUPowerBoost is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying GPU Power Boost: {defaults.GPUPowerBoost}");
-
-                    await SetGPUPowerBoostAsync(defaults.GPUPowerBoost.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=gpuPowerBoost]", ex);
-                    throw;
-                }
-            }
-
-            if (defaults.GPUConfigurableTGP is not null)
-            {
-                try
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Applying GPU Configurable TGP: {defaults.GPUConfigurableTGP}");
-
-                    await SetGPUConfigurableTGPAsync(defaults.GPUConfigurableTGP.Value).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Apply failed. [setting=gpuConfigurableTgp]", ex);
+                        Log.Instance.Trace($"Apply failed. [setting={name}]", ex);
                     throw;
                 }
             }

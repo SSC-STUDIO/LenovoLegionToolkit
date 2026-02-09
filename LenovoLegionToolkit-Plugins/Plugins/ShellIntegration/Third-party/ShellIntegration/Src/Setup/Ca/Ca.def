@@ -1,9 +1,0 @@
-;LIBRARY "ca"
-
-EXPORTS
-	Install
-	Uninstall
-	Update
-	;ShellExecute
-	ValidatePath
-
