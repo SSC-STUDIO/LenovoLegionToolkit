@@ -1,28 +1,27 @@
 @echo off
 
+rem Remove Visual Studio and ReSharper cache
 rmdir /s /q .vs
 rmdir /s /q _ReSharper.Caches
 
+rem Remove build output directories
 rmdir /s /q Build
 rmdir /s /q BuildInstaller
 
-rmdir /s /q LenovoLegionToolkit.CLI\bin
-rmdir /s /q LenovoLegionToolkit.CLI\obj
+rem Remove all project bin and obj directories
+for %%p in (
+    LenovoLegionToolkit.CLI
+    LenovoLegionToolkit.CLI.Lib
+    LenovoLegionToolkit.Lib
+    LenovoLegionToolkit.Lib.Automation
+    LenovoLegionToolkit.Lib.Macro
+    LenovoLegionToolkit.WPF
+    LenovoLegionToolkit.SpectrumTester
+    LenovoLegionToolkit.PerformanceTest
+    LenovoLegionToolkit.Tests
+) do (
+    if exist "%%p\bin" rmdir /s /q "%%p\bin"
+    if exist "%%p\obj" rmdir /s /q "%%p\obj"
+)
 
-rmdir /s /q LenovoLegionToolkit.Lib\bin
-rmdir /s /q LenovoLegionToolkit.Lib\obj
-
-rmdir /s /q LenovoLegionToolkit.Lib.Automation\bin
-rmdir /s /q LenovoLegionToolkit.Lib.Automation\obj
-
-rmdir /s /q LenovoLegionToolkit.Lib.CLI\bin
-rmdir /s /q LenovoLegionToolkit.Lib.CLI\obj
-
-rmdir /s /q LenovoLegionToolkit.Lib.Macro\bin
-rmdir /s /q LenovoLegionToolkit.Lib.Macro\obj
-
-rmdir /s /q LenovoLegionToolkit.WPF\bin
-rmdir /s /q LenovoLegionToolkit.WPF\obj
-
-rmdir /s /q LenovoLegionToolkit.SpectrumTester\bin
-rmdir /s /q LenovoLegionToolkit.SpectrumTester\obj
+echo Clean completed!
