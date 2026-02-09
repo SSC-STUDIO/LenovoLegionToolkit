@@ -17,7 +17,11 @@ dotnet publish LenovoLegionToolkit.WPF -c release -o Build /p:DebugType=None /p:
 dotnet publish LenovoLegionToolkit.SpectrumTester -c release -o Build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 dotnet publish LenovoLegionToolkit.CLI -c release -o Build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION% || exit /b
 
-iscc MakeInstaller.iss /DMyAppVersion=%VERSION% || exit /b
+iscc MakeInstaller.iss /DMyAppVersion=%VERSION%
+IF %ERRORLEVEL% NEQ 0 (
+    echo Inno Setup failed, skipping installer creation.
+)
+
 GOTO END
 
 :BUILD_DEBUG
