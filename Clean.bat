@@ -25,3 +25,5 @@ for %%p in (
 )
 
 echo Clean completed!
+echo Exiting in 5 seconds...
+ping -n 6 127.0.0.1 >nul 2>&1
