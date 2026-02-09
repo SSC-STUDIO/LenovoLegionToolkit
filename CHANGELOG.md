@@ -34,6 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Internationalization / 国际化**: Migrated all hardcoded Chinese text in MenuStyleSettingsWindow XAML to resource files / 将 MenuStyleSettingsWindow XAML 中所有硬编码的中文文本迁移到资源文件
 
 ### Improved / 改进
+- Removed unused LenovoLegionToolkit.Plugins.Common project (was not registered in solution and had no references) / 移除未使用的 LenovoLegionToolkit.Plugins.Common 项目（未在解决方案中注册，也无任何引用）
+- Refactored GPU info reflection code from AbstractSensorsController into new GPUInfoHelper class for better maintainability / 重构 AbstractSensorsController 中的 GPU 信息反射代码到独立的 GPUInfoHelper 类，提升可维护性
+- Refactored GodModeControllerV1 to use dictionary + loop pattern instead of repetitive try-catch blocks / 重构 GodModeControllerV1，使用字典+循环模式替代重复的 try-catch 代码块
+- Improved LocalizationHelper.cs code readability and removed HACK comment for Karakalpak language workaround / 改进 LocalizationHelper.cs 代码可读性，移除 Karakalpak 语言临时解决方案的 HACK 注释
 - Migrated all plugin downloads to dedicated repository releases / 将所有插件下载迁移至专用仓库 releases
 - Removed plugin source code and compilation from main repository / 从主仓库移除插件源码和编译
 - Implemented Central Package Management (CPM) using Directory.Packages.props for centralized NuGet package version management / 使用 Directory.Packages.props 实现中央包管理 (CPM)，集中管理所有 NuGet 包版本

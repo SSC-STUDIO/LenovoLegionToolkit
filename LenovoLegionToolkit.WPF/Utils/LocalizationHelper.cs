@@ -49,7 +49,7 @@ public static class LocalizationHelper
         new("vi"),
         new("zh-hans"),
         new("zh-hant"),
-        new("uz-latn-uz") // HACK: Karakalpak is not a recognized culture by msbuild, so we use this one as workaround instead.
+        new("uz-latn-uz"),
     ];
 
     public static FlowDirection Direction => Resource.Culture?.TextInfo.IsRightToLeft ?? false
@@ -75,7 +75,9 @@ public static class LocalizationHelper
         var name = culture.NativeName.Transform(culture, To.TitleCase);
 
         if (culture.IetfLanguageTag.Equals("uz-latn-uz", StringComparison.InvariantCultureIgnoreCase))
+        {
             name = "Karakalpak";
+        }
 
         return ForceLeftToRight(name);
     }
@@ -93,7 +95,7 @@ public static class LocalizationHelper
 
         if (interactive && await GetLanguageFromFile() is null)
         {
-            // 在显示语言选择窗口之前，先应用系统主题
+            // Apply system theme before showing language selection window
             try
             {
                 var isDarkMode = SystemTheme.IsDarkMode();
