@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
-    Title="{x:Static resources:Resource.Application_Error}"
+    Title="{x:Static resources:Resource.UnexpectedException}"
     Width="600"
     Height="450"
     WindowStartupLocation="CenterOwner"
@@ -25,7 +25,7 @@
             <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="32" Foreground="{DynamicResource SystemFillColorCriticalBrush}" />
             <TextBlock
                 x:Name="_titleText"
-                Text="{x:Static resources:Resource.Application_Error}"
+                Text="{x:Static resources:Resource.UnexpectedException}"
                 FontSize="20"
                 FontWeight="SemiBold"
                 Margin="12,0,0,0"
