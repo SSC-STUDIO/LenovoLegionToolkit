@@ -62,6 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller
 - 更新 make.bat：添加构建完成后 5 秒延迟退出，修复拼写错误 Bebug 为 Debug / Updated make.bat: added 5-second delay before exit, fixed typo Bebug to Debug
 - 修复 make.bat：移除 iscc 的 || exit /b，确保无论 Inno Setup 是否成功都会等待 5 秒 / Fixed make.bat: removed || exit /b from iscc to ensure 5-second delay regardless of Inno Setup result
+- 修复 make.bat：重构脚本逻辑，确保无论构建成功或失败都会执行 5 秒延迟退出 / Fixed make.bat: refactored script logic to ensure 5-second delay exit regardless of build result
+- 修复 ErrorDialogWindow.xaml：将不存在的 Resource.Application_Error 键改为 Resource.UnexpectedException / Fixed ErrorDialogWindow.xaml: changed non-existent Resource.Application_Error to Resource.UnexpectedException
 - 更新 Clean.bat：简化脚本逻辑，添加更多项目目录支持，添加 5 秒延迟退出 / Updated Clean.bat: simplified script logic, added more project directories, added 5-second delay before exit
 - 修复插件页面加载逻辑：先显示加载动画，刷新完成后再显示内容或"没有插件"提示 / Fixed plugin page loading logic: show loading indicator first, then show content or "no plugins" message after refresh completes
 - 为设置页面选中项目添加阴影效果 / Added shadow effect to selected items on Settings page
