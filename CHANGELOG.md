@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 新增
+- **Testing Infrastructure / 测试基础设施**: Added MSTest framework support alongside existing xUnit for comprehensive test coverage / 在现有 xUnit 基础上添加 MSTest 框架支持，实现更全面的测试覆盖
+- **Testing Infrastructure / 测试基础设施**: Created new test files for PowerModeFeature, BatteryFeature, and AIController (15 new tests) / 为 PowerModeFeature、BatteryFeature 和 AIController 创建新测试文件（新增 15 个测试）
+- **Testing Infrastructure / 测试基础设施**: Added comprehensive enum state tests for all feature states (PowerModeState, BatteryState, HybridModeState, etc.) / 为所有功能状态添加全面的枚举状态测试
+- **Testing Infrastructure / 测试基础设施**: Total test count increased from 330 to 345 test methods / 测试方法总数从 330 增加到 345 个
+- Added XML documentation comments for core controllers (IGodModeController, GodModeController, ISensorsController, GPUController) / 为核心控制器添加 XML 文档注释（IGodModeController、GodModeController、ISensorsController、GPUController）
+- Added unit tests for GPUController, GodModeController, SensorsController, and Features / 为 GPUController、GodModeController、SensorsController 和 Features 添加单元测试
+- Created ReflectionCache utility class for caching PropertyInfo to reduce reflection overhead / 创建 ReflectionCache 工具类，缓存 PropertyInfo 以减少反射开销
+- Created GPUPowerInfoCache class for caching nvidia-smi call results and failure states / 创建 GPUPowerInfoCache 类，缓存 nvidia-smi 调用结果和失败状态
+- Added PluginState enum and PluginStateChangedEventArgs for plugin state management / 添加 PluginState 枚举和 PluginStateChangedEventArgs 用于插件状态管理
+- Created IPluginConfiguration interface and PluginConfiguration implementation for plugin settings persistence / 创建 IPluginConfiguration 接口和 PluginConfiguration 实现用于插件设置持久化
+- Added Configuration property to PluginBase for easy access to plugin settings / 在 PluginBase 中添加 Configuration 属性，方便访问插件设置
+- Created PLUGIN_DEVELOPMENT.md documentation with comprehensive plugin development guide / 创建 PLUGIN_DEVELOPMENT.md 文档，提供完整的插件开发指南
+- Added unit tests for PluginConfiguration and PluginState / 为 PluginConfiguration 和 PluginState 添加单元测试
 - Integrated LenovoLegionToolkit-Plugins as part of main repository (removed submodule) / 将 LenovoLegionToolkit-Plugins 集成到主仓库中（移除子模块）
 - Implemented plugin version checking system with compatibility verification / 实现插件版本检查系统，支持兼容性验证
 - Implemented plugin update manager with three update strategies (startup, manual, background) / 实现插件更新管理器，支持三种更新策略（启动检查、手动检查、后台自动检查）
