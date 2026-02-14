@@ -197,14 +197,14 @@ Automatic Actions Execution
 
 | Layer | Technology/Framework |
 |-------|---------------------|
-| UI Framework | WPF (.NET 8.0) |
+| UI Framework | WPF (.NET 10.0) |
 | Architecture | MVVM, Clean Architecture |
 | DI Container | Autofac |
 | Hardware Access | HID Sharp, WMI, ACPI |
 | Monitoring | LibreHardwareMonitorLib |
 | Settings | JSON file storage |
 | Updates | GitHub Releases API |
-| Localization | Crowdin (20+ languages) |
+| Localization | Crowdin (27+ languages) |
 
 ## Key Design Decisions
 
@@ -218,7 +218,7 @@ Automatic Actions Execution
 
 - **Windows**: 10 (1809+), 11 (x64 only)
 - **Hardware**: Legion Gen 6-9, Ideapad Gaming, LOQ series
-- **Dependencies**: .NET 8.0 Desktop Runtime, Lenovo drivers
+- **Dependencies**: .NET 10.0 Desktop Runtime, Lenovo drivers
 
 ## Performance Characteristics
 
