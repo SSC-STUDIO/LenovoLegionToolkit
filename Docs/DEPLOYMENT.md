@@ -168,7 +168,7 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: Publish
-        run: dotем publish artifacts
+        run: dotnet publish artifacts
 ```
 
 #### Release Pipeline

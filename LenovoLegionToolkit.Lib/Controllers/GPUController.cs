@@ -12,6 +12,23 @@ using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
 
+/// <summary>
+/// GPU控制器，用于监控和管理NVIDIA独立GPU状态。
+/// </summary>
+/// <remarks>
+/// <para>
+/// 此控制器提供以下功能：
+/// </para>
+/// <list type="bullet">
+///   <item><description>GPU状态监控（激活、非激活、已关机等）</description></item>
+///   <item><description>GPU进程管理</description></item>
+///   <item><description>GPU重启和进程终止</description></item>
+///   <item><description>自适应刷新间隔（活跃时2秒，非活跃时10秒）</description></item>
+/// </list>
+/// <para>
+/// 使用NVAPI与NVIDIA驱动通信，需要NVIDIA GPU支持。
+/// </para>
+/// </remarks>
 public class GPUController : IDisposable
 {
     private readonly AsyncLock _lock = new();
@@ -32,9 +49,21 @@ public class GPUController : IDisposable
     private const int InactiveInterval = 10000;
     private const int StabilizationDelay = 5000;
 
+    /// <summary>
+    /// 当GPU状态刷新时触发的事件。
+    /// </summary>
     public event EventHandler<GPUStatus>? Refreshed;
+    
+    /// <summary>
+    /// 获取GPU监控服务是否已启动。
+    /// </summary>
     public bool IsStarted { get => _refreshTask != null; }
 
+    /// <summary>
+    /// 初始化GPUController的新实例。
+    /// </summary>
+    /// <param name="processManager">GPU进程管理器。</param>
+    /// <param name="hardwareManager">GPU硬件管理器。</param>
     public GPUController(IGPUProcessManager processManager, IGPUHardwareManager hardwareManager)
     {
         _processManager = processManager;
