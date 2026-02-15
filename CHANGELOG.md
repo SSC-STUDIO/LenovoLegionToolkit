@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Internationalization / 国际化**: Migrated all hardcoded Chinese text in MenuStyleSettingsWindow XAML to resource files / 将 MenuStyleSettingsWindow XAML 中所有硬编码的中文文本迁移到资源文件
 
 ### Improved / 改进
+- Added a dedicated potential issues audit document with prioritized risks and remediation suggestions for plugin update cadence, event lifecycle, and delay abstraction consistency / 新增潜在问题审计文档，针对插件更新节奏、事件生命周期与延迟抽象一致性提供风险分级与修复建议
 - Removed unused LenovoLegionToolkit.Plugins.Common project (was not registered in solution and had no references) / 移除未使用的 LenovoLegionToolkit.Plugins.Common 项目（未在解决方案中注册，也无任何引用）
 - Refactored GPU info reflection code from AbstractSensorsController into new GPUInfoHelper class for better maintainability / 重构 AbstractSensorsController 中的 GPU 信息反射代码到独立的 GPUInfoHelper 类，提升可维护性
 - Refactored GodModeControllerV1 to use dictionary + loop pattern instead of repetitive try-catch blocks / 重构 GodModeControllerV1，使用字典+循环模式替代重复的 try-catch 代码块
@@ -70,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复 LenovoLegionToolkit-Plugins/README.md 中的 workflow 路径大小写问题 / Fixed workflow path case sensitivity issues in LenovoLegionToolkit-Plugins/README.md
 - 修复 GitHub Actions CI workflow artifact 名称冲突问题，使用唯一名称 build-output-${{ github.run_id }} / Fixed GitHub Actions CI workflow artifact name conflict, using unique name build-output-${{ github.run_id }}
 - 修复 GitHub Actions CI workflow artifact 下载失败问题，简化 artifact 传递逻辑 / Fixed GitHub Actions CI workflow artifact download failure, simplified artifact transfer logic
+- 修复 CI Tests 工作流在测试作业缺少源码检出导致 `dotnet test --no-build` 失败的问题，改为在测试作业中检出源码并恢复测试依赖 / Fixed CI Tests workflow failures caused by missing source checkout in test jobs when running `dotnet test --no-build` by adding checkout and test-project restore steps
 - 调慢动画速度：Fast(0.167s) Medium(0.333s) Slow(0.5s) / Slowed down animation speeds: Fast(0.167s) Medium(0.333s) Slow(0.5s)
 - 将构建目录 build 重命名为 Build，保持命名一致性 / Renamed build directory to Build for naming consistency
 - 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller
