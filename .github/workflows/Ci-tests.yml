@@ -37,6 +37,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
+      - uses: actions/checkout@v4
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -46,15 +47,18 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - name: Restore test dependencies
+        run: dotnet restore LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
       - name: Run fast unit tests
         run: |
-          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-restore --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
 
   tests-slow:
     needs: build
     runs-on: windows-latest
     if: ${{ always() }}
     steps:
+      - uses: actions/checkout@v4
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -64,6 +68,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - name: Restore test dependencies
+        run: dotnet restore LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
       - name: Run slow/integration tests (optional)
         run: |
-          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-restore --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
