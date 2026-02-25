@@ -11,7 +11,7 @@ on:
       - 'plugins/**'
 
 jobs:
-  build:
+  build-and-test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,34 +23,9 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
-  tests-fast:
-    needs: build
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      - name: Restore
-        run: dotnet restore
       - name: Run fast unit tests
         run: |
           dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
-
-  tests-slow:
-    needs: build
-    runs-on: windows-latest
-    if: ${{ always() }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      - name: Restore
-        run: dotnet restore
-      - name: Run slow/integration tests (optional)
+      - name: Run slow/integration tests
         run: |
           dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
