@@ -25,7 +25,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Run fast unit tests
         run: |
-          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=fast-tests.trx" --filter "TestCategory!=Integration"
       - name: Run slow/integration tests
         run: |
-          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=slow-tests.trx" --filter "TestCategory=Integration"
