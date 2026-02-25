@@ -19,14 +19,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules: false
         fetch-depth: 0
-    - name: Checkout submodules
-      shell: bash
-      run: |
-        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-        git submodule sync --recursive
-        git -c "http.extraheader=$auth_header" submodule update --init --recursive --force --depth=1
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
