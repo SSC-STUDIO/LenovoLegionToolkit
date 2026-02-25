@@ -75,7 +75,7 @@ public class UpdateChecker
                 var githubClient = new GitHubClient(connection);
                 
                 // Get update repository from settings, fallback to default if not configured
-                const string DefaultUpdateRepositoryOwner = "Crs10259";
+                const string DefaultUpdateRepositoryOwner = "SSC-STUDIO";
                 const string DefaultUpdateRepositoryName = "LenovoLegionToolkit";
                 var repositoryOwner = !string.IsNullOrWhiteSpace(_updateCheckSettings.Store.UpdateRepositoryOwner) 
                     ? _updateCheckSettings.Store.UpdateRepositoryOwner 

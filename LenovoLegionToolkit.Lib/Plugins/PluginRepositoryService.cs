@@ -23,8 +23,8 @@ public class PluginRepositoryService : IDisposable
     private readonly string _tempDownloadDirectory;
 private const string GITHUB_API_URL = "https://api.github.com";
     // For local development, use local store.json file
-    private const string PLUGIN_STORE_URL = "https://raw.githubusercontent.com/Crs10259/LenovoLegionToolkit-Plugins/master/store.json";
-    private const string PLUGIN_RELEASES_URL = "https://api.github.com/repos/Crs10259/LenovoLegionToolkit-Plugins/releases";
+    private const string PLUGIN_STORE_URL = "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json";
+    private const string PLUGIN_RELEASES_URL = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases";
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -403,7 +403,7 @@ private const string GITHUB_API_URL = "https://api.github.com";
         }
         
 // Fall back to GitHub URL
-        return $"https://github.com/Crs10259/LenovoLegionToolkit-Plugins/releases/download/{manifest.Id}-v{manifest.Version}/{manifest.Id}.zip";
+        return $"https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/{manifest.Id}-v{manifest.Version}/{manifest.Id}.zip";
     }
 
     /// <summary>
