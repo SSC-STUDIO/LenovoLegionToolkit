@@ -1,0 +1,9 @@
+{
+  "id": "ViveTool",
+  "name": "ViveTool",
+  "version": "1.0.0",
+  "minLLTVersion": "2.14.0",
+  "author": "Crs10259",
+  "repository": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/issues"
+}

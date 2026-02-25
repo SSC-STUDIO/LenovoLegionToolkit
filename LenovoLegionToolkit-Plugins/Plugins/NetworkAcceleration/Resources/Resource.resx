@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NetworkAcceleration_PageTitle" xml:space="preserve">
+    <value>Network Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_PageDescription" xml:space="preserve">
+    <value>Real-time network acceleration and optimization features, including DNS optimization, request interception, and proxy acceleration.</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatus" xml:space="preserve">
+    <value>Service Status</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusDescription" xml:space="preserve">
+    <value>Running status of network acceleration service</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunning" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunningDescription" xml:space="preserve">
+    <value>Network acceleration service is running, providing you with acceleration services</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStoppedDescription" xml:space="preserve">
+    <value>Network acceleration service is currently not running</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimization" xml:space="preserve">
+    <value>DNS Optimization</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationDescription" xml:space="preserve">
+    <value>Intelligently resolves optimal domain IP addresses based on network conditions, solving DNS pollution issues</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationEnabledDescription" xml:space="preserve">
+    <value>Automatically selects the fastest DNS server for domain name resolution, improving access speed.</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterception" xml:space="preserve">
+    <value>Request Interception</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionDescription" xml:space="preserve">
+    <value>Intercepts inaccessible websites and proxies to accelerated mirror sites</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionEnabledDescription" xml:space="preserve">
+    <value>Automatically proxies inaccessible website requests to available accelerated mirror sites.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAcceleration" xml:space="preserve">
+    <value>GitHub Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationDescription" xml:space="preserve">
+    <value>GitHub direct connection acceleration, including Release, Clone, Raw downloads, etc.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
+    <value>Enable GitHub acceleration to improve GitHub access speed, including code cloning, file downloads, etc.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate GitHub code repository and resource downloads</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
+    <value>Proxy Settings</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettingsDescription" xml:space="preserve">
+    <value>Configure network proxy server settings</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddress" xml:space="preserve">
+    <value>Proxy Address:</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressPlaceholder" xml:space="preserve">
+    <value>e.g., 127.0.0.1:7890</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressDescription" xml:space="preserve">
+    <value>Configure local proxy server address and port. Leave blank for default settings.</value>
+  </data>
+  <data name="NetworkAcceleration_AcceleratedTraffic" xml:space="preserve">
+    <value>Accelerated Traffic</value>
+  </data>
+  <data name="NetworkAcceleration_Downloaded" xml:space="preserve">
+    <value>Downloaded</value>
+  </data>
+  <data name="NetworkAcceleration_Uploaded" xml:space="preserve">
+    <value>Uploaded</value>
+  </data>
+  <data name="NetworkAcceleration_TotalTraffic" xml:space="preserve">
+    <value>Total Traffic</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatistics" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailed" xml:space="preserve">
+    <value>Certificate Setup Failed</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailedDescription" xml:space="preserve">
+    <value>Unable to setup root certificate, please check permissions</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailed" xml:space="preserve">
+    <value>Proxy Service Startup Failed</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailedDescription" xml:space="preserve">
+    <value>Unable to start reverse proxy service</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailed" xml:space="preserve">
+    <value>Startup Failed</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailedDescription" xml:space="preserve">
+    <value>Error occurred while starting service: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailed" xml:space="preserve">
+    <value>Stop Failed</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailedDescription" xml:space="preserve">
+    <value>Error occurred while stopping service: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
+    <value>Speed Chart</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>Real-time Traffic Statistics and Trend Analysis</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>Real-time display of download and upload speed changes</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>Reset Statistics</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>Platform Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>Enable network acceleration for the following platforms to improve access speed and stability</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steam Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Steam store, community, and downloads</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discord Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Discord app and CDN resources</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPM Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>Accelerate npm package manager downloads</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Python Acceleration</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>Accelerate Python package index downloads</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Steam store, community, and downloads</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Discord app and CDN resources</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate npm package manager downloads</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>Accelerate Python package index downloads</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>Connection Timeout (seconds)</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>Set the timeout for network requests in seconds</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>Proxy Port</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>e.g., 7890</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>:</value>
+  </data>
+</root>

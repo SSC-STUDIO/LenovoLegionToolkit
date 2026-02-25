@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViveTool_PageTitle" xml:space="preserve">
+    <value>ViVeTool</value>
+  </data>
+  <data name="ViveTool_PageDescription" xml:space="preserve">
+    <value>Windows-Feature-Flags mit ViVeTool verwalten. Experimentelle Windows-Funktionen aktivieren oder deaktivieren.</value>
+  </data>
+  <data name="ViveTool_WarningTitle" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="ViveTool_WarningMessage" xml:space="preserve">
+    <value>Das Ändern von Windows-Feature-Flags kann die Systemstabilität beeinträchtigen. Mit Vorsicht verwenden. Einige Änderungen erfordern möglicherweise einen Systemneustart, um wirksam zu werden.</value>
+  </data>
+  <data name="ViveTool_ViveToolStatus" xml:space="preserve">
+    <value>ViVeTool-Status</value>
+  </data>
+  <data name="ViveTool_ViveToolFound" xml:space="preserve">
+    <value>ViVeTool gefunden unter: {0}</value>
+  </data>
+  <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
+    <value>ViVeTool nicht gefunden. Bitte vivetool.exe herunterladen und im Plugin-Verzeichnis oder im System-PATH platzieren.</value>
+  </data>
+  <data name="ViveTool_ViveToolError" xml:space="preserve">
+    <value>Fehler beim Überprüfen des ViVeTool-Status</value>
+  </data>
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+    <value>Herunterladen: {0} / {1} ({2}%)</value>
+  </data>
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+    <value>Download abgeschlossen</value>
+  </data>
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+    <value>ViVeTool wurde nach {0} heruntergeladen</value>
+  </data>
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+    <value>Download fehlgeschlagen</value>
+  </data>
+  <data name="ViveTool_Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="ViveTool_SearchFeatures" xml:space="preserve">
+    <value>Features suchen</value>
+  </data>
+  <data name="ViveTool_SearchPlaceholder" xml:space="preserve">
+    <value>Feature-ID oder Namen eingeben zum Suchen...</value>
+  </data>
+  <data name="ViveTool_Search" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="ViveTool_FeatureFlags" xml:space="preserve">
+    <value>Feature-Flags</value>
+  </data>
+  <data name="ViveTool_RefreshList" xml:space="preserve">
+    <value>Liste aktualisieren</value>
+  </data>
+  <data name="ViveTool_Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="ViveTool_FeatureId" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ViveTool_FeatureName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ViveTool_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ViveTool_Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="ViveTool_Enable" xml:space="preserve">
+    <value>Aktivieren</value>
+  </data>
+  <data name="ViveTool_Disable" xml:space="preserve">
+    <value>Deaktivieren</value>
+  </data>
+  <data name="ViveTool_NoFeaturesFound" xml:space="preserve">
+    <value>Keine Features gefunden</value>
+  </data>
+  <data name="ViveTool_FeatureEnabled" xml:space="preserve">
+    <value>Feature aktiviert</value>
+  </data>
+  <data name="ViveTool_FeatureEnabledMessage" xml:space="preserve">
+    <value>Feature {0} wurde erfolgreich aktiviert</value>
+  </data>
+  <data name="ViveTool_FeatureDisabled" xml:space="preserve">
+    <value>Feature deaktiviert</value>
+  </data>
+  <data name="ViveTool_FeatureDisabledMessage" xml:space="preserve">
+    <value>Feature {0} wurde erfolgreich deaktiviert</value>
+  </data>
+  <data name="ViveTool_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="ViveTool_EnableFeatureFailed" xml:space="preserve">
+    <value>Feature {0} konnte nicht aktiviert werden. Bitte Administratorberechtigungen überprüfen.</value>
+  </data>
+  <data name="ViveTool_DisableFeatureFailed" xml:space="preserve">
+    <value>Feature {0} konnte nicht deaktiviert werden. Bitte Administratorberechtigungen überprüfen.</value>
+  </data>
+  <data name="ViveTool_Import" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="ViveTool_ImportFromFile" xml:space="preserve">
+    <value>Aus Datei importieren</value>
+  </data>
+  <data name="ViveTool_ImportFromUrl" xml:space="preserve">
+    <value>Aus URL importieren</value>
+  </data>
+  <data name="ViveTool_ImportDescription" xml:space="preserve">
+    <value>Feature-Flags aus Datei oder URL importieren. Unterstützte Formate: JSON, CSV oder Klartext (eine ID pro Zeile).</value>
+  </data>
+  <data name="ViveTool_ImportUrlDescription" xml:space="preserve">
+    <value>URL zum Importieren von Feature-Flags eingeben:</value>
+  </data>
+  <data name="ViveTool_ImportSuccess" xml:space="preserve">
+    <value>Import erfolgreich</value>
+  </data>
+  <data name="ViveTool_ImportSuccessMessage" xml:space="preserve">
+    <value>{0} Feature-Flag(s) erfolgreich importiert</value>
+  </data>
+  <data name="ViveTool_ImportFailed" xml:space="preserve">
+    <value>Importieren der Features fehlgeschlagen: {0}</value>
+  </data>
+  <data name="ViveTool_InvalidUrl" xml:space="preserve">
+    <value>Ungültige URL. Bitte eine gültige URL eingeben.</value>
+  </data>
+  <data name="ViveTool_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ViveTool_Browse" xml:space="preserve">
+    <value>Durchsuchen</value>
+  </data>
+  <data name="ViveTool_SelectViveTool" xml:space="preserve">
+    <value>vivetool.exe auswählen</value>
+  </data>
+  <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
+    <value>Bitte vivetool.exe-Datei auswählen</value>
+  </data>
+  <data name="ViveTool_PathSet" xml:space="preserve">
+    <value>Pfad gesetzt</value>
+  </data>
+  <data name="ViveTool_PathSetMessage" xml:space="preserve">
+    <value>ViVeTool-Pfad wurde gesetzt auf: {0}</value>
+  </data>
+  <data name="ViveTool_SetPathFailed" xml:space="preserve">
+    <value>Fehler beim Setzen des ViVeTool-Pfades: {0}</value>
+  </data>
+  <data name="ViveTool_Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
+    <value>ViVeTool.exe-Pfad</value>
+  </data>
+  <data name="ViveTool_PathDescription" xml:space="preserve">
+    <value>Pfad zur ViVeTool.exe-Datei auswählen. Falls nicht angegeben, wird der integrierte Download oder die Version im System-PATH verwendet.</value>
+  </data>
+  <data name="ViveTool_BrowseError" xml:space="preserve">
+    <value>Fehler beim Durchsuchen von Dateien: {0}</value>
+  </data>
+  <data name="ViveTool_Downloading" xml:space="preserve">
+    <value>ViVeTool wird heruntergeladen...</value>
+  </data>
+  <data name="ViveTool_StatusEnabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="ViveTool_StatusDisabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="ViveTool_StatusDefault" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="ViveTool_StatusUnknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+</root>

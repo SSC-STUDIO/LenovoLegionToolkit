@@ -1,0 +1,18 @@
+{
+  "id": "custom-mouse",
+  "name": "Custom Mouse",
+  "version": "1.0.0",
+  "author": "LenovoLegionToolkit Team",
+  "description": "Customize mouse settings including DPI, polling rate, and button mappings",
+  "repositoryUrl": "https://github.com/Crs10259/LenovoLegionToolkit-Plugins",
+  "minLLTVersion": "3.6.0",
+  "isSystemPlugin": false,
+  "dependencies": [],
+  "permissions": [
+    "SystemInformation",
+    "HardwareAccess"
+  ],
+  "entryPoint": "LenovoLegionToolkit.Plugins.CustomMouse.CustomMousePlugin",
+  "stateful": true,
+  "stateVersion": 1
+}

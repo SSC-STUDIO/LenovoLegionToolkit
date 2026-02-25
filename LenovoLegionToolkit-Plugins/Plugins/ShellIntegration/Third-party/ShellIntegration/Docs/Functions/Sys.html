@@ -1,0 +1,166 @@
+﻿<h5>SYS (SYSTEM)</h5>
+
+<section id="sys.name" class="my-5">
+	<h5>sys.name</h5>
+	<p>Returns Windows name.</p>
+	<p>Syntax</p>
+	<code>sys.name</code>
+</section>
+
+<section id="sys.type" class="my-5">
+	<h5>sys.type</h5>
+	<p>Returns system architecture.</p>
+	<p>Syntax</p>
+	<code>sys.type == 64</code><br>
+	<code>sys.type == 32</code>
+</section>
+
+<section id="sys.is64" class="my-5">
+	<h5>sys.is64</h5>
+	<p>Returns if system architecture is x64.</p>
+	<p>Syntax</p>
+	<code>sys.is64</code>
+</section>
+
+<section id="sys.dark" class="my-5">
+	<h5>sys.dark</h5>
+	<p>Check if dark mode is enabled.</p>
+	<p>Syntax</p>
+	<code>sys.dark</code>
+</section>
+
+<section id="sys.var" class="my-5">
+	<h5>sys.var</h5>
+	<p>Retrieves the value of an environment variable.</p>
+	<p>Syntax</p>
+	<code>sys.var('WINDIR')</code>
+</section>
+
+<section id="sys.version" class="my-5">
+	<h5>sys.version (sys.ver)</h5>
+	<p>Windows version.</p>
+	<p>Syntax</p>
+	<pre><code>sys.version
+sys.version.build
+sys.version.major
+sys.version.minor
+sys.version.name
+sys.version.type</code></pre>
+</section>
+
+<section id="sys.datetime" class="my-5">
+	<h5>sys.datetime (system.datetime)</h5>
+	<p>Date and time format</p>
+	<p>Syntax</p>
+	<pre><code>sys.datetime                                   // the date and time in a short format (Format: YYYY.MM.DD-HH.MM.SS).
+sys.datetime.short                             // the date and time in a short format (Format: YYYY.MM.DD-HH.MM.SS).
+sys.datetime.dayofweek (sys.datetime.dw)       // the day of the week as a number (Sunday as 1)
+
+sys.datetime.date                              // the full date in a long format (Format: YYYY.MM.DD).
+sys.datetime.yy                                // the year part of the current date as a two-digit number.
+sys.datetime.year (sys.datetime.y)             // the year part of the current date as a four-digit number.
+sys.datetime.month (sys.datetime.m)            // the month part of the current date.
+sys.datetime.day (sys.datetime.d)              // the day part of the current date.
+
+sys.datetime.time                              // the full time in hours, minutes, and seconds (Format: HH.MM.SS).
+sys.datetime.pm                                // "AM" or "PM" based on the current time.
+sys.datetime.hour (sys.datetime.h)             // the hour part of the current time (24-hour format).
+sys.datetime.minute (sys.datetime.min)         // the minutes part of the current time.
+sys.datetime.second (sys.datetime.s)           // the seconds part of the current time.
+sys.datetime.milliseconds (sys.datetime.ms)    // the milliseconds part of the current time as a three-digit number.
+
+sys.datetime("D")                              // the full date in a short format (Format: DD/MM/YYYY).
+sys.datetime("Y")                              // the year part of the current date as a four-digit number.
+sys.datetime("y")                              // the year part of the current date as a two-digit number.
+sys.datetime("m")                              // the month part of the current date as a two-digit number.
+sys.datetime("d")                              // the day part of the current date as a two-digit number.
+sys.datetime("P") (sys.datetime("p"))          // "AM" or "PM" based on the current time.
+sys.datetime("h")                              // the hour part of the current time as a two-digit number (12-hour format).
+sys.datetime("H")                              // the hour part of the current time as a two-digit number (24-hour format).
+sys.datetime("M")                              // the minute part of the current time as a two-digit number.
+sys.datetime("S")                              // the second part of the current time as a two-digit number.
+sys.datetime("s")                              // the milliseconds part of the current time as a three-digit number.
+
+datetime("y/m/d")                              // the date in a short format (Format: YYYY/MM/DD).
+datetime("h:M P")                              // the time in a short format (Format: HH:MM AM/PM).
+datetime("H.M.S.s")                            // the time in a long format (Format: HH.MM.SS.MS).</code></pre>
+</section>
+
+<section id="sys.paths" class="my-5">
+	<h5>Windows paths</h5>
+	<pre><code>sys                                            // %WINDIR%
+
+sys.root                                       // %SYSTEMDRIVE%
+
+sys.programdata                                // %PROGRAMDATA%
+sys.prog                                       // %PROGRAMFILES%
+sys.prog32                                     // %PROGRAMFILES(x86)%
+sys.templates
+
+sys.users
+sys.appdata                                    // %APPDATA%
+sys.temp                                       // %TEMP%
+
+sys.directory (sys.dir)                        // %WINDIR%
+sys.path                                       // %WINDIR%
+sys.bin                                        // %WINDIR%\system32
+sys.bin32
+sys.bin64
+sys.wow</code></pre>
+</section>
+
+<section id="sys.is_primary_monitor" class="my-5">
+	<h5>sys.is_primary_monitor</h5>
+	<p>Returns true if the current monitor is the primary</p>
+	<p>Syntax</p>
+	<code>sys.is_primary_monitor</code><br>
+</section>
+
+<section id="sys.langid" class="my-5">
+	<h5>sys.langid</h5>
+	<p>Returns the language ID</p>
+	<p>Syntax</p>
+	<code>sys.langid</code><br>
+</section>
+
+<section id="sys.extended" class="my-5">
+	<h5>sys.extended</h5>
+	<p>Returns whether the Shift key is currently pressed</p>
+	<p>Syntax</p>
+	<code>sys.extended</code><br>
+</section>
+
+<section id="sys.is11" class="my-5">
+	<h5>sys.is11</h5>
+	<p>Returns whether the Windows version is 11</p>
+	<p>Syntax</p>
+	<code>sys.is11</code><br>
+</section>
+
+<section id="sys.is10" class="my-5">
+	<h5>sys.is10</h5>
+	<p>Returns whether the Windows version is 10</p>
+	<p>Syntax</p>
+	<code>sys.is10</code><br>
+</section>
+
+<section id="sys.is81" class="my-5">
+	<h5>sys.is81</h5>
+	<p>Returns whether the Windows version is 8.1</p>
+	<p>Syntax</p>
+	<code>sys.is81</code><br>
+</section>
+
+<section id="sys.is8" class="my-5">
+	<h5>sys.is8</h5>
+	<p>Returns whether the Windows version is 8</p>
+	<p>Syntax</p>
+	<code>sys.is8</code><br>
+</section>
+
+<section id="sys.is7" class="my-5">
+	<h5>sys.is7</h5>
+	<p>Returns whether the Windows version is 7</p>
+	<p>Syntax</p>
+	<code>sys.is7</code><br>
+</section>
