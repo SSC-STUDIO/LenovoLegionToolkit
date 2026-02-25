@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("© 2025 Lenovo Legion Toolkit Contributors")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d0c252dd5953cf28a45edb21b662cbb18df29db")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d44cf4c4eecda573e48fd9ac41f4a83b44a5c710")]
 [assembly: System.Reflection.AssemblyProductAttribute("LenovoLegionToolkit.Plugins.SDK")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LenovoLegionToolkit.Plugins.SDK")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

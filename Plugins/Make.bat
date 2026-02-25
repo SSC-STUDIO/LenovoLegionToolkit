@@ -65,8 +65,8 @@ ECHO ============================================================
 GOTO END
 
 :BUILD_PLUGIN
-SET PLUGIN_NAME=%1
-SET CONFIG=%2
+SET PLUGIN_NAME=%~1
+SET CONFIG=%~2
 SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
 SET PLUGIN_PROJECT=%PLUGIN_DIR%\LenovoLegionToolkit.Plugins.%PLUGIN_NAME%.csproj
 
@@ -108,7 +108,7 @@ ECHO ============================================================
 GOTO END
 
 :CREATE_ZIP
-SET PLUGIN_NAME=%1
+SET PLUGIN_NAME=%~1
 SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
 SET OUTPUT_DIR=build\plugins\%PLUGIN_NAME%
 SET ZIP_NAME=%PLUGIN_NAME%.zip
@@ -123,7 +123,7 @@ REM Create output directory
 MKDIR "%OUTPUT_DIR%"
 
 REM Copy plugin files
-XCOPY /E /I /Y "%PLUGIN_DIR%\bin\Release\net8.0-windows\win-x64\*" "%OUTPUT_DIR%\" >nul 2>&1
+XCOPY /E /I /Y "%PLUGIN_DIR%\bin\Release\net10.0-windows\win-x64\*" "%OUTPUT_DIR%\" >nul 2>&1
 
 REM Remove SDK DLL to avoid conflicts
 IF EXIST "%OUTPUT_DIR%\LenovoLegionToolkit.Plugins.SDK.dll" (

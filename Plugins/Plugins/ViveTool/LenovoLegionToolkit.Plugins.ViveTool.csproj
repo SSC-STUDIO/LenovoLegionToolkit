@@ -13,26 +13,28 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Plugin version -->
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0</FileVersion>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <Version>1.1.0</Version>
+    <FileVersion>1.1.0</FileVersion>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <!-- Output DLL name matching plugin ID -->
+    <AssemblyName>vive-tool</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

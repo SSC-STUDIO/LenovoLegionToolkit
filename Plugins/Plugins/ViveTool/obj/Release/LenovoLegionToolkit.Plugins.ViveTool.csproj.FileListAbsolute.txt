@@ -1,0 +1,41 @@
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\Lenovo Legion Toolkit.deps.json
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\Lenovo Legion Toolkit.runtimeconfig.json
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\Lenovo Legion Toolkit.exe
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\vive-tool.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\de\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\ja\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\ko\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\zh-hans\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\zh-hant\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.csproj.AssemblyReference.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ViveToolPage.g.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ViveToolSettingsPage.g.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\vive-tool_MarkupCompile.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\vive-tool_MarkupCompile.lref
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ViveToolPage.baml
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ViveToolSettingsPage.baml
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\vive-tool.g.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.de.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.ja.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.ko.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.zh-hans.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource.zh-hant.resources
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.csproj.GenerateResource.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLegionToolkit.Plugins.ViveTool.csproj.CoreCompileInputs.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\de\vive-tool.resources.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\de\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ja\vive-tool.resources.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ja\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ko\vive-tool.resources.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ko\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\zh-hans\vive-tool.resources.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\zh-hans\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\zh-hant\vive-tool.resources.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\zh-hant\vive-tool.resources.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\LenovoLe.40377616.Up2Date
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\vive-tool.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\refint\vive-tool.dll
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\Plugins\ViveTool\obj\Release\ref\vive-tool.dll

@@ -1,20 +1,18 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj": {}
+    "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj": {}
   },
   "projects": {
-    "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj": {
+    "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj",
+        "projectUniqueName": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj",
         "projectName": "LenovoLegionToolkit.Plugins.SDK",
-        "projectPath": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj",
+        "projectPath": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit-Plugins\\SDK\\SDK.csproj",
         "packagesPath": "C:\\Users\\96152\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit\\LenovoLegionToolkit-Plugins\\SDK\\obj\\",
+        "outputPath": "C:\\Users\\96152\\My-Project\\Application_Project\\LenovoLegionToolkit-Plugins\\SDK\\obj\\",
         "projectStyle": "PackageReference",
-        "centralPackageVersionsManagementEnabled": true,
-        "CentralPackageTransitivePinningEnabled": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
@@ -52,38 +50,6 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "centralPackageVersions": {
-            "Autofac": "9.0.0",
-            "Ben.Demystifier": "0.4.1",
-            "CoordinateSharp": "3.1.1.1",
-            "coverlet.collector": "6.0.2",
-            "FluentAssertions": "7.0.0",
-            "Humanizer": "2.14.1",
-            "ManagedNativeWifi": "2.7.0",
-            "Markdig": "0.40.0",
-            "Markdig.Wpf": "0.5.0.1",
-            "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
-            "Microsoft.NET.Test.Sdk": "17.12.0",
-            "Microsoft.Windows.CsWin32": "0.3.183",
-            "Moq": "4.20.72",
-            "MSTest.TestAdapter": "3.6.3",
-            "MSTest.TestFramework": "3.6.3",
-            "NAudio.Wasapi": "2.2.1",
-            "NeoSmart.AsyncLock": "3.2.1",
-            "Newtonsoft.Json": "13.0.4",
-            "NvAPIWrapper.Net": "0.8.1.101",
-            "Octokit": "14.0.0",
-            "PixiEditor.ColorPicker": "3.4.2",
-            "PubSub": "4.0.2",
-            "System.CommandLine": "2.0.0-beta4.22272.1",
-            "System.Management": "10.0.1",
-            "System.ServiceProcess.ServiceController": "10.0.1",
-            "TaskScheduler": "2.12.1",
-            "WindowsDisplayAPI": "1.3.0.13",
-            "WPF-UI": "2.1.0",
-            "xunit": "2.9.2",
-            "xunit.runner.visualstudio": "2.8.2"
-          },
           "imports": [
             "net461",
             "net462",
