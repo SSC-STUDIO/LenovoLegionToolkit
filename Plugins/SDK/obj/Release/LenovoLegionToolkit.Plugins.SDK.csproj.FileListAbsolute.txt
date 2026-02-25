@@ -1,0 +1,5 @@
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\SDK\obj\Release\LenovoLegionToolkit.Plugins.SDK.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\SDK\obj\Release\LenovoLegionToolkit.Plugins.SDK.AssemblyInfoInputs.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\SDK\obj\Release\LenovoLegionToolkit.Plugins.SDK.AssemblyInfo.cs
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\SDK\obj\Release\LenovoLegionToolkit.Plugins.SDK.csproj.CoreCompileInputs.cache
+C:\Users\96152\My-Project\Application_Project\LenovoLegionToolkit-Plugins\SDK\obj\Release\LenovoLegionToolkit.Plugins.SDK.sourcelink.json

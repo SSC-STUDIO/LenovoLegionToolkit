@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViveTool_PageTitle" xml:space="preserve">
+    <value>ViVeTool</value>
+  </data>
+  <data name="ViveTool_PageDescription" xml:space="preserve">
+    <value>使用 ViVeTool 管理 Windows 功能標誌。啟用或停用實驗性 Windows 功能。</value>
+  </data>
+  <data name="ViveTool_WarningTitle" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="ViveTool_WarningMessage" xml:space="preserve">
+    <value>修改 Windows 功能標誌可能影響系統穩定性。請謹慎使用。某些變更可能需要系統重新啟動才能生效。</value>
+  </data>
+  <data name="ViveTool_ViveToolStatus" xml:space="preserve">
+    <value>ViVeTool 狀態</value>
+  </data>
+  <data name="ViveTool_ViveToolFound" xml:space="preserve">
+    <value>找到 ViVeTool：{0}</value>
+  </data>
+  <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
+    <value>未找到 ViVeTool。請下載 vivetool.exe 並將其放置在插件目錄或系統 PATH 中。</value>
+  </data>
+  <data name="ViveTool_ViveToolError" xml:space="preserve">
+    <value>檢查 ViVeTool 狀態時發生錯誤</value>
+  </data>
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+    <value>下載中：{0} / {1} ({2}%)</value>
+  </data>
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+    <value>下載完成</value>
+  </data>
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+    <value>ViVeTool 已下載至 {0}</value>
+  </data>
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+    <value>下載失敗</value>
+  </data>
+  <data name="ViveTool_Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="ViveTool_SearchFeatures" xml:space="preserve">
+    <value>搜尋功能</value>
+  </data>
+  <data name="ViveTool_SearchPlaceholder" xml:space="preserve">
+    <value>輸入功能 ID 或名稱進行搜尋...</value>
+  </data>
+  <data name="ViveTool_Search" xml:space="preserve">
+    <value>搜尋</value>
+  </data>
+  <data name="ViveTool_FeatureFlags" xml:space="preserve">
+    <value>功能標誌</value>
+  </data>
+  <data name="ViveTool_RefreshList" xml:space="preserve">
+    <value>重新整理清單</value>
+  </data>
+  <data name="ViveTool_Loading" xml:space="preserve">
+    <value>載入中...</value>
+  </data>
+  <data name="ViveTool_FeatureId" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ViveTool_FeatureName" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="ViveTool_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="ViveTool_Actions" xml:space="preserve">
+    <value>動作</value>
+  </data>
+  <data name="ViveTool_Enable" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="ViveTool_Disable" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="ViveTool_NoFeaturesFound" xml:space="preserve">
+    <value>未找到任何功能</value>
+  </data>
+  <data name="ViveTool_FeatureEnabled" xml:space="preserve">
+    <value>功能已啟用</value>
+  </data>
+  <data name="ViveTool_FeatureEnabledMessage" xml:space="preserve">
+    <value>功能 {0} 已成功啟用</value>
+  </data>
+  <data name="ViveTool_FeatureDisabled" xml:space="preserve">
+    <value>功能已停用</value>
+  </data>
+  <data name="ViveTool_FeatureDisabledMessage" xml:space="preserve">
+    <value>功能 {0} 已成功停用</value>
+  </data>
+  <data name="ViveTool_Error" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="ViveTool_EnableFeatureFailed" xml:space="preserve">
+    <value>啟用功能 {0} 失敗。請檢查管理員權限。</value>
+  </data>
+  <data name="ViveTool_DisableFeatureFailed" xml:space="preserve">
+    <value>停用功能 {0} 失敗。請檢查管理員權限。</value>
+  </data>
+  <data name="ViveTool_Import" xml:space="preserve">
+    <value>匯入</value>
+  </data>
+  <data name="ViveTool_ImportFromFile" xml:space="preserve">
+    <value>從檔案匯入</value>
+  </data>
+  <data name="ViveTool_ImportFromUrl" xml:space="preserve">
+    <value>從 URL 匯入</value>
+  </data>
+  <data name="ViveTool_ImportDescription" xml:space="preserve">
+    <value>從檔案或 URL 匯入功能標誌。支援格式：JSON、CSV 或純文字（每行一個 ID）。</value>
+  </data>
+  <data name="ViveTool_ImportUrlDescription" xml:space="preserve">
+    <value>輸入要匯入功能標誌的 URL：</value>
+  </data>
+  <data name="ViveTool_ImportSuccess" xml:space="preserve">
+    <value>匯入成功</value>
+  </data>
+  <data name="ViveTool_ImportSuccessMessage" xml:space="preserve">
+    <value>成功匯入 {0} 個功能標誌</value>
+  </data>
+  <data name="ViveTool_ImportFailed" xml:space="preserve">
+    <value>匯入功能失敗：{0}</value>
+  </data>
+  <data name="ViveTool_InvalidUrl" xml:space="preserve">
+    <value>無效的 URL。請輸入有效的 URL。</value>
+  </data>
+  <data name="ViveTool_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ViveTool_Browse" xml:space="preserve">
+    <value>瀏覽</value>
+  </data>
+  <data name="ViveTool_SelectViveTool" xml:space="preserve">
+    <value>選擇 vivetool.exe</value>
+  </data>
+  <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
+    <value>請選擇 vivetool.exe 檔案</value>
+  </data>
+  <data name="ViveTool_PathSet" xml:space="preserve">
+    <value>路徑已設定</value>
+  </data>
+  <data name="ViveTool_PathSetMessage" xml:space="preserve">
+    <value>ViVeTool 路徑已設定為：{0}</value>
+  </data>
+  <data name="ViveTool_SetPathFailed" xml:space="preserve">
+    <value>設定 ViVeTool 路徑失敗：{0}</value>
+  </data>
+  <data name="ViveTool_Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
+    <value>ViVeTool.exe 路徑</value>
+  </data>
+  <data name="ViveTool_PathDescription" xml:space="preserve">
+    <value>選擇 ViVeTool.exe 檔案的路徑。如果未指定，將使用內建下載或系統 PATH 中的版本。</value>
+  </data>
+  <data name="ViveTool_BrowseError" xml:space="preserve">
+    <value>瀏覽檔案時發生錯誤：{0}</value>
+  </data>
+  <data name="ViveTool_Downloading" xml:space="preserve">
+    <value>正在下載 ViVeTool...</value>
+  </data>
+  <data name="ViveTool_StatusEnabled" xml:space="preserve">
+    <value>已啟用</value>
+  </data>
+  <data name="ViveTool_StatusDisabled" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="ViveTool_StatusDefault" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="ViveTool_StatusUnknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="ViveTool_MissingToolMessage" xml:space="preserve">
+    <value>未找到 ViVeTool。請前往設定頁面進行設定。</value>
+  </data>
+  <data name="ViveTool_GoToSettings" xml:space="preserve">
+    <value>前往設定</value>
+  </data>
+</root>

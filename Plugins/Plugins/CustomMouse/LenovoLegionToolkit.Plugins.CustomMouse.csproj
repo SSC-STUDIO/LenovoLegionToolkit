@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
+    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="CleanupPluginFiles" AfterTargets="Build">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Plugins.SDK.*" />
+      <FilesToDelete Include="$(OutputPath)*.deps.json" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
+  </Target>
+
+</Project>

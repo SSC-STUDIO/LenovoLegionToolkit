@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViveTool_PageTitle" xml:space="preserve">
+    <value>ViVeTool</value>
+  </data>
+  <data name="ViveTool_PageDescription" xml:space="preserve">
+    <value>ViVeToolを使用してWindows機能フラグを管理します。実験的なWindows機能を有効または無効にします。</value>
+  </data>
+  <data name="ViveTool_WarningTitle" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="ViveTool_WarningMessage" xml:space="preserve">
+    <value>Windows機能フラグを変更するとシステムの安定性に影響する可能性があります。慎重に使用してください。一部の変更にはシステムの再起動が必要な場合があります。</value>
+  </data>
+  <data name="ViveTool_ViveToolStatus" xml:space="preserve">
+    <value>ViVeTool状態</value>
+  </data>
+  <data name="ViveTool_ViveToolFound" xml:space="preserve">
+    <value>ViVeToolが見つかりました: {0}</value>
+  </data>
+  <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
+    <value>ViVeToolが見つかりません。vivetool.exeをダウンロードし、プラグインディレクトリまたはシステムPATHに配置してください。</value>
+  </data>
+  <data name="ViveTool_ViveToolError" xml:space="preserve">
+    <value>ViVeTool状態のチェック中にエラーが発生しました</value>
+  </data>
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+    <value>ダウンロード中: {0} / {1} ({2}%)</value>
+  </data>
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+    <value>ダウンロード完了</value>
+  </data>
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+    <value>ViVeToolが{0}にダウンロードされました</value>
+  </data>
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+    <value>ダウンロード失敗</value>
+  </data>
+  <data name="ViveTool_Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="ViveTool_SearchFeatures" xml:space="preserve">
+    <value>機能を検索</value>
+  </data>
+  <data name="ViveTool_SearchPlaceholder" xml:space="preserve">
+    <value>機能IDまたは名前を入力して検索...</value>
+  </data>
+  <data name="ViveTool_Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="ViveTool_FeatureFlags" xml:space="preserve">
+    <value>機能フラグ</value>
+  </data>
+  <data name="ViveTool_RefreshList" xml:space="preserve">
+    <value>リストを更新</value>
+  </data>
+  <data name="ViveTool_Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="ViveTool_FeatureId" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ViveTool_FeatureName" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="ViveTool_Status" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="ViveTool_Actions" xml:space="preserve">
+    <value>アクション</value>
+  </data>
+  <data name="ViveTool_Enable" xml:space="preserve">
+    <value>有効化</value>
+  </data>
+  <data name="ViveTool_Disable" xml:space="preserve">
+    <value>無効化</value>
+  </data>
+  <data name="ViveTool_NoFeaturesFound" xml:space="preserve">
+    <value>機能が見つかりません</value>
+  </data>
+  <data name="ViveTool_FeatureEnabled" xml:space="preserve">
+    <value>機能が有効化されました</value>
+  </data>
+  <data name="ViveTool_FeatureEnabledMessage" xml:space="preserve">
+    <value>機能{0}が正常に有効化されました</value>
+  </data>
+  <data name="ViveTool_FeatureDisabled" xml:space="preserve">
+    <value>機能が無効化されました</value>
+  </data>
+  <data name="ViveTool_FeatureDisabledMessage" xml:space="preserve">
+    <value>機能{0}が正常に無効化されました</value>
+  </data>
+  <data name="ViveTool_Error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="ViveTool_EnableFeatureFailed" xml:space="preserve">
+    <value>機能{0}の有効化に失敗しました。管理者権限を確認してください。</value>
+  </data>
+  <data name="ViveTool_DisableFeatureFailed" xml:space="preserve">
+    <value>機能{0}の無効化に失敗しました。管理者権限を確認してください。</value>
+  </data>
+  <data name="ViveTool_Import" xml:space="preserve">
+    <value>インポート</value>
+  </data>
+  <data name="ViveTool_ImportFromFile" xml:space="preserve">
+    <value>ファイルからインポート</value>
+  </data>
+  <data name="ViveTool_ImportFromUrl" xml:space="preserve">
+    <value>URLからインポート</value>
+  </data>
+  <data name="ViveTool_ImportDescription" xml:space="preserve">
+    <value>ファイルまたはURLから機能フラグをインポートします。サポートされている形式: JSON、CSV、またはプレーンテキスト（1行に1つのID）。</value>
+  </data>
+  <data name="ViveTool_ImportUrlDescription" xml:space="preserve">
+    <value>機能フラグをインポートするURLを入力してください:</value>
+  </data>
+  <data name="ViveTool_ImportSuccess" xml:space="preserve">
+    <value>インポート成功</value>
+  </data>
+  <data name="ViveTool_ImportSuccessMessage" xml:space="preserve">
+    <value>{0}個の機能フラグを正常にインポートしました</value>
+  </data>
+  <data name="ViveTool_ImportFailed" xml:space="preserve">
+    <value>機能のインポートに失敗しました: {0}</value>
+  </data>
+  <data name="ViveTool_InvalidUrl" xml:space="preserve">
+    <value>無効なURLです。有効なURLを入力してください。</value>
+  </data>
+  <data name="ViveTool_Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="ViveTool_Browse" xml:space="preserve">
+    <value>参照</value>
+  </data>
+  <data name="ViveTool_SelectViveTool" xml:space="preserve">
+    <value>vivetool.exeを選択</value>
+  </data>
+  <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
+    <value>vivetool.exeファイルを選択してください</value>
+  </data>
+  <data name="ViveTool_PathSet" xml:space="preserve">
+    <value>パスが設定されました</value>
+  </data>
+  <data name="ViveTool_PathSetMessage" xml:space="preserve">
+    <value>ViVeToolパスが{0}に設定されました</value>
+  </data>
+  <data name="ViveTool_SetPathFailed" xml:space="preserve">
+    <value>ViVeToolパスの設定に失敗しました: {0}</value>
+  </data>
+  <data name="ViveTool_Download" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
+    <value>ViVeTool.exeパス</value>
+  </data>
+  <data name="ViveTool_PathDescription" xml:space="preserve">
+    <value>ViVeTool.exeファイルのパスを選択します。指定されていない場合、内蔵ダウンロードまたはシステムPATHのバージョンが使用されます。</value>
+  </data>
+  <data name="ViveTool_BrowseError" xml:space="preserve">
+    <value>ファイル参照中にエラーが発生しました: {0}</value>
+  </data>
+  <data name="ViveTool_Downloading" xml:space="preserve">
+    <value>ViVeToolをダウンロード中...</value>
+  </data>
+  <data name="ViveTool_StatusEnabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="ViveTool_StatusDisabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="ViveTool_StatusDefault" xml:space="preserve">
+    <value>デフォルト</value>
+  </data>
+  <data name="ViveTool_StatusUnknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+</root>

@@ -1,0 +1,47 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.CustomMouse.CustomMouseExtensionPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:LenovoLegionToolkit.Plugins.CustomMouse.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="400">
+    
+    <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+            CornerRadius="8" Padding="20" Margin="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <TextBlock Grid.Row="0" Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_Title}" 
+                      FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Status -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                <Ellipse x:Name="StatusIndicator" Width="12" Height="12" Fill="Gray" Margin="0,0,8,0"/>
+                <TextBlock x:Name="StatusText" Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_StatusNotApplied}" FontSize="14" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Action Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
+                <Button x:Name="ApplyButton" Content="{x:Static properties:Resource.CustomMouse_ExtensionPage_ApplyStyle}" Click="ApplyButton_Click" 
+                       Style="{StaticResource AccentButtonStyle}" Margin="0,0,10,0"/>
+                <Button x:Name="RemoveButton" Content="{x:Static properties:Resource.CustomMouse_ExtensionPage_RemoveStyle}" Click="RemoveButton_Click"/>
+            </StackPanel>
+
+            <!-- Description -->
+            <StackPanel Grid.Row="3">
+                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_FeatureDescription}" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_Feature1}" FontSize="12" Margin="0,0,0,3"/>
+                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_Feature2}" FontSize="12" Margin="0,0,0,3"/>
+                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_Feature3}" FontSize="12" Margin="0,0,0,3"/>
+                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ExtensionPage_Feature4}" FontSize="12"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,231 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+   <PropertyGroup>
+     <TargetFramework>net10.0-windows</TargetFramework>
+     <UseWPF>true</UseWPF>
+     <Platforms>x64</Platforms>
+     <Nullable>enable</Nullable>
+     <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+     <NeutralLanguage>en</NeutralLanguage>
+     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+     <GenerateDependencyFile>false</GenerateDependencyFile>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="third-party\**" />
+    <EmbeddedResource Remove="third-party\**" />
+    <None Remove="third-party\**" />
+    <Page Remove="third-party\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="System.CodeDom" Version="10.0.1" />
+    <PackageReference Include="WPF-UI" Version="2.1.0" />
+  </ItemGroup>
+
+   <ItemGroup>
+   </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\Resource.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.zh-hans.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.zh-hans.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.zh-hant.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.zh-hant.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.de.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.de.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.es.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.es.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.fr.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.fr.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.it.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.it.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.ja.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.ja.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.ko.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.ko.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.nl-nl.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.nl-nl.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.pl.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.pl.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.pt.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.pt.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.ru.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.ru.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Resource.tr.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resource.tr.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Resource.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.zh-hans.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.zh-hans.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.zh-hant.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.zh-hant.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.de.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.es.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.es.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.fr.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.fr.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.it.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.it.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.ja.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.ja.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.ko.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.ko.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.nl-nl.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.nl-nl.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.pl.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.pl.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.pt.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.pt.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.ru.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.ru.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Resource.tr.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.tr.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+   <!-- Copy shell files from ShellIntegration build output to build directory -->
+  <Target Name="CopyShellFiles" AfterTargets="Build">
+    <PropertyGroup>
+      <ShellSourceDir>$(MSBuildProjectDirectory)\..\..\..\..\Shell\src\bin</ShellSourceDir>
+      <ShellTargetDir>$(TargetDir)..\</ShellTargetDir> <!-- Go up one level to build/ directory -->
+    </PropertyGroup>
+    
+    <Message Text="Copying shell files from $(ShellSourceDir) to $(ShellTargetDir)" Importance="high" />
+    
+    <!-- Check if source directory exists -->
+    <PropertyGroup>
+      <ShellSourceDirExists>false</ShellSourceDirExists>
+      <ShellSourceDirExists Condition="Exists('$(ShellSourceDir)')">true</ShellSourceDirExists>
+    </PropertyGroup>
+    
+    <!-- Copy shell.dll -->
+    <Copy SourceFiles="$(ShellSourceDir)\shell.dll"
+          DestinationFiles="$(ShellTargetDir)\shell.dll"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and Exists('$(ShellSourceDir)\shell.dll')" />
+    
+    <!-- Copy shell.nss -->
+    <Copy SourceFiles="$(ShellSourceDir)\shell.nss"
+          DestinationFiles="$(ShellTargetDir)\shell.nss"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and Exists('$(ShellSourceDir)\shell.nss')" />
+    
+    <!-- Copy imports directory recursively -->
+    <ItemGroup Condition="'$(ShellSourceDirExists)' == 'true'">
+      <ImportsFiles Include="$(ShellSourceDir)\imports\**\*.*" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(ImportsFiles)"
+          DestinationFiles="$(ShellTargetDir)\imports\%(ImportsFiles.RecursiveDir)%(ImportsFiles.Filename)%(ImportsFiles.Extension)"
+          SkipUnchangedFiles="true"
+          Condition="'$(ShellSourceDirExists)' == 'true' and '@(ImportsFiles)' != ''" />
+    
+    <Message Text="Shell files copied successfully" Importance="high" Condition="'$(ShellSourceDirExists)' == 'true'" />
+    <Warning Text="ShellIntegration source directory not found at $(ShellSourceDir), skipping shell files copy" 
+             Condition="'$(ShellSourceDirExists)' == 'false'" />
+  </Target>
+
+</Project>

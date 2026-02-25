@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 插件标识 - 替换为你的插件ID -->
+    <PluginId>myplugin</PluginId>
+    <!-- 插件名称 -->
+    <PluginName>My Plugin</PluginName>
+    <!-- 插件描述 -->
+    <PluginDescription>My custom plugin for Lenovo Legion Toolkit</PluginDescription>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- 覆盖 Directory.Build.props 中的设置 -->
+    <OutputPath>..\..\build\plugins\$(PluginId)\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 引用 SDK -->
+    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <!-- 引用主项目 -->
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resource.zh-hans.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.zh-hans.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

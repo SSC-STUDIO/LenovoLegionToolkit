@@ -1,0 +1,89 @@
+<Project>
+  <!--
+    Lenovo Legion Toolkit - Plugins Directory.Build.props
+    Unified build configuration for all plugin projects
+  -->
+
+  <!-- Version Control - Plugin projects only -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <InformationalVersion>1.0.0</InformationalVersion>
+  </PropertyGroup>
+
+  <!-- Framework Configuration - WPF plugin projects only -->
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- SDK Projects Use Default Framework -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.SDK'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Output Configuration - Plugin Projects -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <!-- Project Settings - Plugin Projects Only -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Authors>Lenovo Legion Toolkit Contributors</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <!-- WPF Specific Configuration - WPF Projects Only -->
+  <PropertyGroup Condition="'$(UseWPF)' == 'true'">
+    <UseCommonControls>true</UseCommonControls>
+  </PropertyGroup>
+
+  <!-- Dependency Management - Plugin Projects Only -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Enable Unsafe Code (Required by some plugins) -->
+  <PropertyGroup>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- Localization Configuration - WPF Projects Only -->
+  <PropertyGroup Condition="'$(UseWPF)' == 'true'">
+    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!-- NuGet Package Version Management -->
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- Cleanup Target: Remove Unnecessary Files - Plugin Projects Only -->
+  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK'">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)*.deps.json" />
+      <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
+      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Plugins.SDK.*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
+  </Target>
+
+</Project>

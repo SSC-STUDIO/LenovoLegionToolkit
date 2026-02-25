@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- CustomMouse Plugin -->
+  <data name="CustomMouse_PluginName" xml:space="preserve">
+    <value>사용자 정의 마우스</value>
+    <comment>Plugin name displayed in the UI</comment>
+  </data>
+  <data name="CustomMouse_PluginDescription" xml:space="preserve">
+    <value>스마트 색상 감지와 다양한 커서 테마를 지원하는 사용자 정의 마우스 커서 플러그인</value>
+    <comment>Plugin description shown in the plugin store</comment>
+  </data>
+  <data name="CustomMouse_ExtensionTitle" xml:space="preserve">
+    <value>마우스 스타일 확장</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_PageTitle" xml:space="preserve">
+    <value>사용자 정의 마우스 스타일</value>
+    <comment>Main page title</comment>
+  </data>
+  <data name="CustomMouse_PageDescription" xml:space="preserve">
+    <value>스마트 테마 전환 및 다양한 프리셋 스타일로 마우스 커서 스타일 커스터마이즈</value>
+    <comment>Main page description</comment>
+  </data>
+  <data name="CustomMouse_SettingsTitle" xml:space="preserve">
+    <value>마우스 설정</value>
+    <comment>Settings page title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyle" xml:space="preserve">
+    <value>현재 스타일</value>
+    <comment>Current cursor style label</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection" xml:space="preserve">
+    <value>자동 색상 감지</value>
+    <comment>Auto color detection setting</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection_Description" xml:space="preserve">
+    <value>배경색에 따라 적절한 마우스 커서 테마를 자동으로 선택</value>
+    <comment>Auto color detection description</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode" xml:space="preserve">
+    <value>테마 모드</value>
+    <comment>Theme mode setting</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Auto" xml:space="preserve">
+    <value>자동</value>
+    <comment>Auto theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Light" xml:space="preserve">
+    <value>라이트</value>
+    <comment>Light theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Dark" xml:space="preserve">
+    <value>다크</value>
+    <comment>Dark theme mode</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold" xml:space="preserve">
+    <value>밝기 임계값</value>
+    <comment>Brightness threshold setting</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold_Description" xml:space="preserve">
+    <value>배경색 밝기를 판단하기 위한 임계값 (0.0-1.0)</value>
+    <comment>Brightness threshold description</comment>
+  </data>
+  <data name="CustomMouse_PluginMode" xml:space="preserve">
+    <value>플러그인 모드</value>
+    <comment>Plugin mode setting</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Extension" xml:space="preserve">
+    <value>확장 모드</value>
+    <comment>Extension mode option</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Independent" xml:space="preserve">
+    <value>독립 모드</value>
+    <comment>Independent mode option</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview" xml:space="preserve">
+    <value>미리보기 활성화</value>
+    <comment>Enable preview setting</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview_Description" xml:space="preserve">
+    <value>마우스 스타일 실시간 미리보기 표시</value>
+    <comment>Enable preview description</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup" xml:space="preserve">
+    <value>시작 시 자동 적용</value>
+    <comment>Auto apply on startup setting</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup_Description" xml:space="preserve">
+    <value>애플리케이션 시작 시 현재 설정된 마우스 스타일을 자동으로 적용</value>
+    <comment>Auto apply description</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications" xml:space="preserve">
+    <value>알림 표시</value>
+    <comment>Show notifications setting</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications_Description" xml:space="preserve">
+    <value>마우스 스타일 변경 시 알림 메시지 표시</value>
+    <comment>Show notifications description</comment>
+  </data>
+  <data name="CustomMouse_ApplyStyle" xml:space="preserve">
+    <value>스타일 적용</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_RestoreDefault" xml:space="preserve">
+    <value>기본값 복원</value>
+    <comment>Restore default button</comment>
+  </data>
+  <data name="CustomMouse_Refresh" xml:space="preserve">
+    <value>새로고침</value>
+    <comment>Refresh button</comment>
+  </data>
+  <data name="CustomMouse_AvailableStyles" xml:space="preserve">
+    <value>사용 가능한 스타일</value>
+    <comment>Available styles label</comment>
+  </data>
+  <data name="CustomMouse_NoStylesFound" xml:space="preserve">
+    <value>사용 가능한 마우스 스타일을 찾을 수 없습니다</value>
+    <comment>No styles found message</comment>
+  </data>
+  <data name="CustomMouse_StyleApplied" xml:space="preserve">
+    <value>마우스 스타일이 적용되었습니다</value>
+    <comment>Style applied success message</comment>
+  </data>
+  <data name="CustomMouse_StyleRestored" xml:space="preserve">
+    <value>기본 마우스 스타일이 복원되었습니다</value>
+    <comment>Style restored success message</comment>
+  </data>
+  <data name="CustomMouse_ApplyError" xml:space="preserve">
+    <value>마우스 스타일 적용 중 오류 발생</value>
+    <comment>Apply error message</comment>
+  </data>
+  <data name="CustomMouse_DetectingTheme" xml:space="preserve">
+    <value>테마 감지 중...</value>
+    <comment>Detecting theme message</comment>
+  </data>
+  <data name="CustomMouse_LightThemeDetected" xml:space="preserve">
+    <value>라이트 테마 감지됨</value>
+    <comment>Light theme detected message</comment>
+  </data>
+  <data name="CustomMouse_DarkThemeDetected" xml:space="preserve">
+    <value>다크 테마 감지됨</value>
+    <comment>Dark theme detected message</comment>
+  </data>
+  <data name="CustomMouse_ExtensionMode_Description" xml:space="preserve">
+    <value>확장 모드: 마우스 스타일 기능을 시스템 최적화 인터페이스에 통합</value>
+    <comment>Extension mode description</comment>
+  </data>
+  <data name="CustomMouse_IndependentMode_Description" xml:space="preserve">
+    <value>독립 모드: 전용 마우스 스타일 관리 인터페이스 제공</value>
+    <comment>Independent mode description</comment>
+  </data>
+
+  <!-- Extension Page -->
+  <data name="CustomMouse_ExtensionPage_Title" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI 마우스 스타일</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_StatusNotApplied" xml:space="preserve">
+    <value>미적용</value>
+    <comment>Status when style is not applied</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_ApplyStyle" xml:space="preserve">
+    <value>스타일 적용</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_RemoveStyle" xml:space="preserve">
+    <value>스타일 제거</value>
+    <comment>Remove style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_FeatureDescription" xml:space="preserve">
+    <value>기능:</value>
+    <comment>Feature description header</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature1" xml:space="preserve">
+    <value>• Windows 11 스타일 HD 마우스 커서</value>
+    <comment>Feature 1 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature2" xml:space="preserve">
+    <value>• 라이트/다크 테마 자동 전환</value>
+    <comment>Feature 2 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature3" xml:space="preserve">
+    <value>• 고 DPI 표시 최적화</value>
+    <comment>Feature 3 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature4" xml:space="preserve">
+    <value>• 다양한 커서 스타일 선택</value>
+    <comment>Feature 4 description</comment>
+  </data>
+
+  <!-- Page Settings -->
+  <data name="CustomMouse_SmartSettings" xml:space="preserve">
+    <value>스마트 설정</value>
+    <comment>Smart settings section title</comment>
+  </data>
+  <data name="CustomMouse_AdvancedSettings" xml:space="preserve">
+    <value>고급 설정</value>
+    <comment>Advanced settings section title</comment>
+  </data>
+  <data name="CustomMouse_DebugInfo" xml:space="preserve">
+    <value>디버그 정보</value>
+    <comment>Debug information section title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyleLabel" xml:space="preserve">
+    <value>현재 스타일:</value>
+    <comment>Current style label</comment>
+  </data>
+  <data name="CustomMouse_ThemeModeLabel" xml:space="preserve">
+    <value>테마 모드:</value>
+    <comment>Theme mode label</comment>
+  </data>
+  <data name="CustomMouse_PluginModeLabel" xml:space="preserve">
+    <value>플러그인 모드:</value>
+    <comment>Plugin mode label</comment>
+  </data>
+  <data name="CustomMouse_LastDetectionLabel" xml:space="preserve">
+    <value>최종 감지:</value>
+    <comment>Last detection label</comment>
+  </data>
+  <data name="CustomMouse_ExtensionModeRadio" xml:space="preserve">
+    <value>확장 모드</value>
+    <comment>Extension mode radio button</comment>
+  </data>
+  <data name="CustomMouse_IndependentModeRadio" xml:space="preserve">
+    <value>독립 모드</value>
+    <comment>Independent mode radio button</comment>
+  </data>
+  <data name="CustomMouse_ResetSettings" xml:space="preserve">
+    <value>설정 재설정</value>
+    <comment>Reset settings button</comment>
+  </data>
+  <data name="CustomMouse_SaveSettings" xml:space="preserve">
+    <value>설정 저장</value>
+    <comment>Save settings button</comment>
+  </data>
+  <data name="CustomMouse_Ready" xml:space="preserve">
+    <value>준비 완료</value>
+    <comment>Ready status</comment>
+  </data>
+  <data name="CustomMouse_ThemeAuto" xml:space="preserve">
+    <value>테마: 자동</value>
+    <comment>Auto theme indicator</comment>
+  </data>
+  <data name="CustomMouse_StyleW11CC" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI</value>
+    <comment>Default style name</comment>
+  </data>
+</root>

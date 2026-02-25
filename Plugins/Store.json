@@ -1,0 +1,91 @@
+{
+  "plugins": [
+    {
+      "icon": "Apps24",
+      "iconBackground": "#FF6B35",
+      "fileSize": 845618,
+      "name": "ViveTool",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit-Plugins/releases/download/ViveTool-v1.0.0/ViveTool.zip",
+      "isSystemPlugin": false,
+      "description": "ViveTool functionality for Lenovo Legion Toolkit / 为联想拯救者工具包提供ViveTool功能",
+      "version": "1.0.0",
+      "changelog": "Version 1.0.0 (2026-02-05)\n- Initial release\n- ViveTool functionality for Windows feature management",
+      "releaseDate": "2026-02-05T00:00:00Z",
+      "fileHash": "",
+      "author": "Crs10259",
+      "dependencies": null,
+      "id": "ViveTool",
+      "tags": [
+        "utility"
+      ],
+      "minimumHostVersion": "2.0.0"
+    },
+    {
+      "icon": "ContextMenu24",
+      "iconBackground": "#9C27B0",
+"fileSize": 0,
+      "name": "ShellIntegration",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit-Plugins/releases/download/ShellIntegration-v1.0.0/ShellIntegration.zip",
+      "isSystemPlugin": true,
+      "description": "Enhanced Windows Shell integration with context menu extensions and file management tools / 增强的Windows Shell集成，包含右键菜单扩展和文件管理工具",
+      "version": "1.0.0",
+      "changelog": "Version 1.0.0 (2026-02-05)\n- Initial release\n- Enhanced Windows context menu with custom commands\n- Configurable menu items and shell extensions\n- Integration with system optimization features\n- Multi-language support (English and Chinese)\n- Administrator privilege management for system operations",
+      "releaseDate": "2026-02-05T00:00:00Z",
+      "fileHash": "",
+      "author": "LenovoLegionToolkit Team",
+      "dependencies": null,
+      "id": "shell-integration",
+      "tags": [
+        "system",
+        "utility",
+        "context-menu"
+      ],
+      "minimumHostVersion": "2.0.0"
+    },
+    {
+      "icon": "Apps24",
+      "iconBackground": "#00BCF4",
+      "version": "1.0.0",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit-Plugins/releases/download/NetworkAcceleration-v1.0.0/NetworkAcceleration.zip",
+      "description": "NetworkAcceleration functionality for Lenovo Legion Toolkit / 为联想拯救者工具包提供网络加速功能",
+      "releaseDate": "2026-02-05T00:00:00Z",
+      "changelog": "Version 1.0.0 (2026-02-05)\n- Initial release\n- Network acceleration functionality with DNS over HTTPS support",
+      "author": "LenovoLegionToolkit Team",
+      "fileSize": 0,
+      "isSystemPlugin": false,
+      "id": "NetworkAcceleration",
+      "tags": [
+        "utility"
+      ],
+      "dependencies": null,
+      "minimumHostVersion": "2.0.0",
+      "name": "NetworkAcceleration",
+      "fileHash": "4e5686e09c88ce49ba7b7cc2de3bfb19aa7e90ffa8178af253424866e8f6850e"
+    },
+    {
+      "icon": "Cursor24",
+      "iconBackground": "#FF6F00",
+      "fileSize": 0,
+      "name": "CustomMouse",
+      "downloadUrl": "https://github.com/Crs10259/LenovoLegionToolkit-Plugins/releases/download/CustomMouse-v1.0.0/CustomMouse.zip",
+      "isSystemPlugin": false,
+      "description": "Custom mouse plugin with intelligent color detection and cursor customization / 自定义鼠标插件，支持智能颜色检测和光标自定义",
+      "version": "1.0.0",
+      "changelog": "Version 1.0.0 (2026-02-05)\n- Initial release\n- Custom mouse functionality with intelligent color detection",
+      "releaseDate": "2026-02-05T00:00:00Z",
+      "fileHash": "",
+      "author": "LenovoLegionToolkit Team",
+      "dependencies": null,
+      "id": "custom-mouse",
+      "tags": [
+        "utility",
+        "mouse",
+        "cursor",
+        "customization"
+      ],
+"minimumHostVersion": "2.0.0"
+    }
+  ],
+  "lastUpdated": "2026-02-05T00:00:00Z",
+  "storeVersion": "1.0.0"
+}

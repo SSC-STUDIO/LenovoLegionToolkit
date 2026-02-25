@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>LenovoLegionToolkit.Plugins.SDK</RootNamespace>
+    <AssemblyName>LenovoLegionToolkit.Plugins.SDK</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>LenovoLegionToolkit.Plugins.SDK</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>LenovoLegionToolkit Team</Authors>
+    <Description>SDK for developing Lenovo Legion Toolkit plugins</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Crs10259/LenovoLegionToolkit-Plugins</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Crs10259/LenovoLegionToolkit-Plugins</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>lenovo;legion;toolkit;plugin;sdk</PackageTags>
+  </PropertyGroup>
+
+</Project>

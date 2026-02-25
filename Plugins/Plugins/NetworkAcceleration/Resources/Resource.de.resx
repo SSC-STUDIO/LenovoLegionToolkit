@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata" />
+          <xsd:element name="assembly" />
+          <xsd:element name="data" />
+          <xsd:element name="resheader" />
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NetworkAcceleration_PageTitle" xml:space="preserve">
+    <value>Netzwerkbeschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_PageDescription" xml:space="preserve">
+    <value>Echtzeit-Netzwerkbeschleunigung und Optimierungsfunktionen, einschließlich DNS-Optimierung, Request-Interception und Proxy-Beschleunigung.</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatus" xml:space="preserve">
+    <value>Dienststatus</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusDescription" xml:space="preserve">
+    <value>Laufstatus des Netzwerkbeschleunigungsdienstes</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunning" xml:space="preserve">
+    <value>Läuft</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStopped" xml:space="preserve">
+    <value>Gestoppt</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusRunningDescription" xml:space="preserve">
+    <value>Netzwerkbeschleunigungsdienst läuft und stellt Ihnen Beschleunigungsdienste zur Verfügung</value>
+  </data>
+  <data name="NetworkAcceleration_ServiceStatusStoppedDescription" xml:space="preserve">
+    <value>Netzwerkbeschleunigungsdienst läuft derzeit nicht</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimization" xml:space="preserve">
+    <value>DNS-Optimierung</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationDescription" xml:space="preserve">
+    <value>Intelligente Auflösung optimaler Domain-IP-Adressen basierend auf Netzwerkbedingungen, Lösung von DNS-Verschmutzungsproblemen</value>
+  </data>
+  <data name="NetworkAcceleration_DnsOptimizationEnabledDescription" xml:space="preserve">
+    <value>Wählt automatisch den schnellsten DNS-Server für die Domain-Namensauflösung aus und verbessert die Zugriffsgeschwindigkeit.</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterception" xml:space="preserve">
+    <value>Request-Interception</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionDescription" xml:space="preserve">
+    <value>Interceptiert nicht erreichbare Webseiten und leitet sie an beschleunigte Mirror-Seiten weiter</value>
+  </data>
+  <data name="NetworkAcceleration_RequestInterceptionEnabledDescription" xml:space="preserve">
+    <value>Leitet nicht erreichbare Webseitenanfragen automatisch an verfügbare beschleunigte Mirror-Seiten weiter.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAcceleration" xml:space="preserve">
+    <value>GitHub-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationDescription" xml:space="preserve">
+    <value>GitHub-Direktverbindungsbeschleunigung, einschließlich Release, Clone, Raw-Downloads etc.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationEnabledDescription" xml:space="preserve">
+    <value>Aktiviert GitHub-Beschleunigung zur Verbesserung der GitHub-Zugriffsgeschwindigkeit, einschließlich Code-Klonen, Datei-Downloads etc.</value>
+  </data>
+  <data name="NetworkAcceleration_GithubAccelerationShortDescription" xml:space="preserve">
+    <value>Beschleunigt GitHub-Code-Repository und Ressourcen-Downloads</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettings" xml:space="preserve">
+    <value>Proxy-Einstellungen</value>
+  </data>
+  <data name="NetworkAcceleration_ProxySettingsDescription" xml:space="preserve">
+    <value>Netzwerk-Proxy-Server-Einstellungen konfigurieren</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddress" xml:space="preserve">
+    <value>Proxy-Adresse:</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressPlaceholder" xml:space="preserve">
+    <value>z.B. 127.0.0.1:7890</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyAddressDescription" xml:space="preserve">
+    <value>Lokale Proxy-Server-Adresse und Port konfigurieren. Leer lassen für Standardeinstellungen.</value>
+  </data>
+  <data name="NetworkAcceleration_AcceleratedTraffic" xml:space="preserve">
+    <value>Beschleunigter Verkehr</value>
+  </data>
+  <data name="NetworkAcceleration_Downloaded" xml:space="preserve">
+    <value>Heruntergeladen</value>
+  </data>
+  <data name="NetworkAcceleration_Uploaded" xml:space="preserve">
+    <value>Hochgeladen</value>
+  </data>
+  <data name="NetworkAcceleration_TotalTraffic" xml:space="preserve">
+    <value>Gesamtverkehr</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatistics" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailed" xml:space="preserve">
+    <value>Zertifikat-Setup fehlgeschlagen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_CertificateSetupFailedDescription" xml:space="preserve">
+    <value>Root-Zertifikat kann nicht eingerichtet werden, bitte Berechtigungen überprüfen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailed" xml:space="preserve">
+    <value>Proxy-Dienst-Start fehlgeschlagen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_ProxyServiceStartupFailedDescription" xml:space="preserve">
+    <value>Reverse-Proxy-Dienst kann nicht gestartet werden</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailed" xml:space="preserve">
+    <value>Start fehlgeschlagen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StartupFailedDescription" xml:space="preserve">
+    <value>Fehler beim Starten des Dienstes: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailed" xml:space="preserve">
+    <value>Stopp fehlgeschlagen</value>
+  </data>
+  <data name="NetworkAcceleration_Error_StopFailedDescription" xml:space="preserve">
+    <value>Fehler beim Stoppen des Dienstes: {0}</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChart" xml:space="preserve">
+    <value>Geschwindigkeitsdiagramm</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficStatistics" xml:space="preserve">
+    <value>Echtzeit-Verkehrsstatistiken und Trendanalyse</value>
+  </data>
+  <data name="NetworkAcceleration_TrafficChartDescription" xml:space="preserve">
+    <value>Echtzeitanzeige der Download- und Upload-Geschwindigkeitsänderungen</value>
+  </data>
+  <data name="NetworkAcceleration_ResetStatisticsButton" xml:space="preserve">
+    <value>Statistiken zurücksetzen</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAcceleration" xml:space="preserve">
+    <value>Plattform-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_PlatformAccelerationDescription" xml:space="preserve">
+    <value>Netzwerkbeschleunigung für die folgenden Plattformen aktivieren, um Zugriffsgeschwindigkeit und -stabilität zu verbessern</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAcceleration" xml:space="preserve">
+    <value>Steam-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationDescription" xml:space="preserve">
+    <value>Steam-Store, Community und Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAcceleration" xml:space="preserve">
+    <value>Discord-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationDescription" xml:space="preserve">
+    <value>Discord-App und CDN-Ressourcen beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAcceleration" xml:space="preserve">
+    <value>NPM-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationDescription" xml:space="preserve">
+    <value>npm-Paket-Manager-Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAcceleration" xml:space="preserve">
+    <value>Python-Beschleunigung</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationDescription" xml:space="preserve">
+    <value>Python-Paket-Index-Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_SteamAccelerationShortDescription" xml:space="preserve">
+    <value>Steam-Store, Community und Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_DiscordAccelerationShortDescription" xml:space="preserve">
+    <value>Discord-App und CDN-Ressourcen beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_NpmAccelerationShortDescription" xml:space="preserve">
+    <value>npm-Paket-Manager-Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_PythonAccelerationShortDescription" xml:space="preserve">
+    <value>Python-Paket-Index-Downloads beschleunigen</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeout" xml:space="preserve">
+    <value>Verbindungs-Timeout (Sekunden)</value>
+  </data>
+  <data name="NetworkAcceleration_ConnectionTimeoutDescription" xml:space="preserve">
+    <value>Timeout für Netzwerkanfragen in Sekunden einstellen</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPort" xml:space="preserve">
+    <value>Proxy-Port</value>
+  </data>
+  <data name="NetworkAcceleration_ProxyPortPlaceholder" xml:space="preserve">
+    <value>z.B. 7890</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Steam" xml:space="preserve">
+    <value>Steam</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_Npm" xml:space="preserve">
+    <value>npm</value>
+  </data>
+  <data name="NetworkAcceleration_Platform_PyPI" xml:space="preserve">
+    <value>PyPI</value>
+  </data>
+  <data name="NetworkAcceleration_Colon" xml:space="preserve">
+    <value>:</value>
+  </data>
+</root>
