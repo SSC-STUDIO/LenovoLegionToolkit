@@ -8,13 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
-## [Unreleased]
+## [3.6.0] - 2026-02-25
 
 ### Added / 新增
+- **Plugin System Enhancement / 插件系统增强**: Implemented plugin dependency resolution system with topological sorting and circular dependency detection / 实现插件依赖解析系统，支持拓扑排序和循环依赖检测
+- **Plugin System Enhancement / 插件系统增强**: Created plugin sandboxing framework using AssemblyLoadContext for security isolation / 创建插件沙箱框架，使用 AssemblyLoadContext 实现安全隔离
+- **Plugin System Enhancement / 插件系统增强**: Implemented plugin hot-reload support with state persistence across reloads / 实现插件热重载支持，支持重载时状态持久化
+- **Plugin System Enhancement / 插件系统增强**: Added plugin event bus system for inter-plugin communication / 添加插件事件总线系统，支持插件间通信
+- **Plugin System Enhancement / 插件系统增强**: Created comprehensive plugin test infrastructure with 16 unit tests / 创建完整的插件测试基础设施，包含 16 个单元测试
+- **Plugin System Enhancement / 插件系统增强**: Implemented automated CI/CD workflows for plugin sub-repository / 实现插件子仓库的自动化 CI/CD 工作流
+- **Plugin System Enhancement / 插件系统增强**: Created working plugin examples (CustomMouse, ShellIntegration) with full functionality / 创建可用的插件示例（CustomMouse、ShellIntegration），功能完整
 - **Testing Infrastructure / 测试基础设施**: Added MSTest framework support alongside existing xUnit for comprehensive test coverage / 在现有 xUnit 基础上添加 MSTest 框架支持，实现更全面的测试覆盖
-- **Testing Infrastructure / 测试基础设施**: Created new test files for PowerModeFeature, BatteryFeature, and AIController (15 new tests) / 为 PowerModeFeature、BatteryFeature 和 AIController 创建新测试文件（新增 15 个测试）
+- **Testing Infrastructure / 测试基础设施**: Created new test files for PowerModeFeature and BatteryFeature (9 new tests) / 为 PowerModeFeature 和 BatteryFeature 创建新测试文件（新增 9 个测试）
 - **Testing Infrastructure / 测试基础设施**: Added comprehensive enum state tests for all feature states (PowerModeState, BatteryState, HybridModeState, etc.) / 为所有功能状态添加全面的枚举状态测试
-- **Testing Infrastructure / 测试基础设施**: Total test count increased from 330 to 345 test methods / 测试方法总数从 330 增加到 345 个
+- **Testing Infrastructure / 测试基础设施**: Total test count increased from 330 to 353 test methods / 测试方法总数从 330 增加到 353 个
 - Added XML documentation comments for core controllers (IGodModeController, GodModeController, ISensorsController, GPUController) / 为核心控制器添加 XML 文档注释（IGodModeController、GodModeController、ISensorsController、GPUController）
 - Added unit tests for GPUController, GodModeController, SensorsController, and Features / 为 GPUController、GodModeController、SensorsController 和 Features 添加单元测试
 - Created ReflectionCache utility class for caching PropertyInfo to reduce reflection overhead / 创建 ReflectionCache 工具类，缓存 PropertyInfo 以减少反射开销
