@@ -1,88 +1,40 @@
 {
   "plugins": [
     {
-      "icon": "Apps24",
-      "iconBackground": "#FF6B35",
-      "fileSize": 1231098,
-      "name": "ViVeTool",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.0/vive-tool-v1.1.0.zip",
-      "isSystemPlugin": false,
-      "description": "ViVeTool functionality for Lenovo Legion Toolkit / 为联想拯救者工具包提供ViveTool功能",
-      "version": "1.1.0",
-      "changelog": "Version 1.1.0 (2026-02-25)\n- Updated for LLT v3.6.0\n- ViveTool functionality for Windows feature management",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "fileHash": "",
-      "author": "LenovoLegionToolkit Team",
-      "dependencies": null,
-      "id": "vive-tool",
-      "tags": [
-        "utility"
-      ],
-      "minimumHostVersion": "3.6.0"
-    },
-    {
-      "icon": "ContextMenu24",
-      "iconBackground": "#9C27B0",
-      "fileSize": 1175123,
-      "name": "ShellIntegration",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.0/shell-integration-v1.0.0.zip",
-      "isSystemPlugin": true,
-      "description": "Shell Integration plugin for Windows shell context menu / Windows Shell右键菜单集成插件",
-      "version": "1.0.0",
-      "changelog": "Version 1.0.0 (2026-02-25)\n- Initial release\n- Windows context menu integration",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "fileHash": "",
-      "author": "LenovoLegionToolkit Team",
-      "dependencies": null,
-      "id": "shell-integration",
-      "tags": [
-        "system",
-        "utility"
-      ],
-      "minimumHostVersion": "3.6.0"
-    },
-    {
-      "icon": "Apps24",
-      "iconBackground": "#00BCF4",
-      "version": "1.0.0",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.0.0/network-acceleration-v1.0.0.zip",
-      "description": "Network Acceleration plugin for real-time network optimization / 网络加速插件",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "changelog": "Version 1.0.0 (2026-02-25)\n- Initial release\n- Network acceleration functionality",
-      "author": "LenovoLegionToolkit Team",
-      "fileSize": 1175103,
-      "isSystemPlugin": false,
-      "id": "network-acceleration",
-      "tags": [
-        "utility"
-      ],
-      "dependencies": null,
-      "minimumHostVersion": "3.6.0",
-      "name": "NetworkAcceleration",
-      "fileHash": ""
-    },
-    {
-      "icon": "Cursor24",
-      "iconBackground": "#FF6F00",
-      "fileSize": 1177539,
-      "name": "CustomMouse",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
-      "isSystemPlugin": false,
-      "description": "Custom Mouse plugin for customizing mouse settings / 自定义鼠标插件",
-      "version": "1.0.0",
-      "changelog": "Version 1.0.0 (2026-02-25)\n- Initial release\n- Custom mouse functionality",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "fileHash": "",
-      "author": "LenovoLegionToolkit Team",
-      "dependencies": null,
       "id": "custom-mouse",
-      "tags": [
-        "utility",
-        "mouse"
-      ],
-      "minimumHostVersion": "3.6.0"
+      "name": "Custom Mouse",
+      "version": "1.0.0",
+      "description": "Customize mouse settings including DPI, polling rate, and button mappings",
+      "author": "LenovoLegionToolkit Team",
+      "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/custom-mouse.zip",
+      "icon": "",
+      "isSystemPlugin": false,
+      "dependencies": [],
+      "minLLTVersion": "3.6.0",
+      "releaseDate": "2026-02-25T00:00:00Z",
+      "fileSize": 16384,
+      "tags": ["mouse", "customization", "gaming"],
+      "supportedLanguages": ["en-US", "zh-CN", "zh-Hans", "ja-JP", "ko-KR", "de-DE", "fr-FR", "es-ES", "it-IT", "pt-BR", "ru-RU", "ar-SA", "hi-IN"]
+    },
+    {
+      "id": "shell-integration",
+      "name": "Shell Integration",
+      "version": "1.0.0",
+      "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+      "author": "LenovoLegionToolkit Team",
+      "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/shell-integration.zip",
+      "icon": "",
+      "isSystemPlugin": true,
+      "dependencies": [],
+      "minLLTVersion": "3.6.0",
+      "releaseDate": "2026-02-25T00:00:00Z",
+      "fileSize": 12288,
+      "tags": ["system", "shell", "integration"],
+      "supportedLanguages": ["en-US", "zh-CN", "zh-Hans", "ja-JP", "ko-KR", "de-DE", "fr-FR", "es-ES", "it-IT", "pt-BR", "ru-RU", "ar-SA", "hi-IN"]
     }
   ],
-  "lastUpdated": "2026-02-25T00:00:00Z",
-  "storeVersion": "1.0.0"
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-25T00:00:00Z"
 }
