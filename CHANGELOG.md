@@ -8,139 +8,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [3.6.1] - 2026-02-25
+
+### Added / 新增
+- **Dashboard / 控制台**: Added Dashboard navigation item preservation in compatibility mode (--skip-compat-check), allowing users to access CPU/GPU/Battery monitoring on unsupported machines / 在兼容模式（--skip-compat-check）下保留 Dashboard 导航项，允许用户在不支持的机器上访问 CPU/GPU/电池监控
+
+### Fixed / 修复
+- **Plugin Store / 插件商店**: Fixed plugin store URLs and file sizes (Crs10259 → SSC-STUDIO, correct file sizes) / 修复插件商店 URL 和文件大小（Crs10259 → SSC-STUDIO，正确的文件大小）
+- **Localization / 本地化**: Fixed hardcoded "Recommended" text in Windows Optimization view to use localized resource / 修复 Windows 优化视图中硬编码的 "Recommended" 文本，改为使用本地化资源
+
 ## [3.6.0] - 2026-02-25
 
 ### Added / 新增
-- **Plugin System Enhancement / 插件系统增强**: Implemented plugin dependency resolution system with topological sorting and circular dependency detection / 实现插件依赖解析系统，支持拓扑排序和循环依赖检测
-- **Plugin System Enhancement / 插件系统增强**: Created plugin sandboxing framework using AssemblyLoadContext for security isolation / 创建插件沙箱框架，使用 AssemblyLoadContext 实现安全隔离
-- **Plugin System Enhancement / 插件系统增强**: Implemented plugin hot-reload support with state persistence across reloads / 实现插件热重载支持，支持重载时状态持久化
-- **Plugin System Enhancement / 插件系统增强**: Added plugin event bus system for inter-plugin communication / 添加插件事件总线系统，支持插件间通信
-- **Plugin System Enhancement / 插件系统增强**: Created comprehensive plugin test infrastructure with 16 unit tests / 创建完整的插件测试基础设施，包含 16 个单元测试
-- **Plugin System Enhancement / 插件系统增强**: Implemented automated CI/CD workflows for plugin sub-repository / 实现插件子仓库的自动化 CI/CD 工作流
-- **Plugin System Enhancement / 插件系统增强**: Created working plugin examples (CustomMouse, ShellIntegration) with full functionality / 创建可用的插件示例（CustomMouse、ShellIntegration），功能完整
-- **Testing Infrastructure / 测试基础设施**: Added MSTest framework support alongside existing xUnit for comprehensive test coverage / 在现有 xUnit 基础上添加 MSTest 框架支持，实现更全面的测试覆盖
-- **Testing Infrastructure / 测试基础设施**: Created new test files for PowerModeFeature and BatteryFeature (9 new tests) / 为 PowerModeFeature 和 BatteryFeature 创建新测试文件（新增 9 个测试）
-- **Testing Infrastructure / 测试基础设施**: Added comprehensive enum state tests for all feature states (PowerModeState, BatteryState, HybridModeState, etc.) / 为所有功能状态添加全面的枚举状态测试
-- **Testing Infrastructure / 测试基础设施**: Total test count increased from 330 to 353 test methods / 测试方法总数从 330 增加到 353 个
-- Added XML documentation comments for core controllers (IGodModeController, GodModeController, ISensorsController, GPUController) / 为核心控制器添加 XML 文档注释（IGodModeController、GodModeController、ISensorsController、GPUController）
-- Added unit tests for GPUController, GodModeController, SensorsController, and Features / 为 GPUController、GodModeController、SensorsController 和 Features 添加单元测试
-- Created ReflectionCache utility class for caching PropertyInfo to reduce reflection overhead / 创建 ReflectionCache 工具类，缓存 PropertyInfo 以减少反射开销
-- Created GPUPowerInfoCache class for caching nvidia-smi call results and failure states / 创建 GPUPowerInfoCache 类，缓存 nvidia-smi 调用结果和失败状态
-- Added PluginState enum and PluginStateChangedEventArgs for plugin state management / 添加 PluginState 枚举和 PluginStateChangedEventArgs 用于插件状态管理
-- Created IPluginConfiguration interface and PluginConfiguration implementation for plugin settings persistence / 创建 IPluginConfiguration 接口和 PluginConfiguration 实现用于插件设置持久化
-- Added Configuration property to PluginBase for easy access to plugin settings / 在 PluginBase 中添加 Configuration 属性，方便访问插件设置
-- Created PLUGIN_DEVELOPMENT.md documentation with comprehensive plugin development guide / 创建 PLUGIN_DEVELOPMENT.md 文档，提供完整的插件开发指南
-- Added unit tests for PluginConfiguration and PluginState / 为 PluginConfiguration 和 PluginState 添加单元测试
-- Integrated LenovoLegionToolkit-Plugins as part of main repository (removed submodule) / 将 LenovoLegionToolkit-Plugins 集成到主仓库中（移除子模块）
-- Implemented plugin version checking system with compatibility verification / 实现插件版本检查系统，支持兼容性验证
-- Implemented plugin update manager with three update strategies (startup, manual, background) / 实现插件更新管理器，支持三种更新策略（启动检查、手动检查、后台自动检查）
-- Added plugin update settings to ApplicationSettings (check on startup, auto-download, notification, frequency) / 在 ApplicationSettings 中添加插件更新设置（启动检查、自动下载、通知、频率）
-- Created comprehensive plugin test infrastructure with TestBase, MockFactory, and 38 unit tests / 创建完整的插件测试基础设施，包含 TestBase、MockFactory 和 38 个单元测试
-- Created Plugin Quick Start documentation for developers / 为开发者创建插件快速入门文档
-- Created plugin GitHub Actions workflow for automated building and releasing / 创建插件 GitHub Actions 工作流实现自动化构建和发布
-
-- Created docs/ directory with comprehensive documentation including ARCHITECTURE.md (system architecture), DEPLOYMENT.md (build and deployment guide), SECURITY.md (security policy), and CODE_OF_CONDUCT.md (community guidelines) / 创建 docs/ 目录，包含完整文档体系：ARCHITECTURE.md（系统架构）、DEPLOYMENT.md（构建部署指南）、SECURITY.md（安全政策）、CODE_OF_CONDUCT.md（社区准则）
-- Improved: Inject `IDelayProvider` into `ThrottleLastDispatcher` to allow fast virtual delays in tests. / 改进：向 `ThrottleLastDispatcher` 注入 `IDelayProvider`，以便在测试中使用快速虚拟延迟。
-- Migrated core projects to target `net10.0-windows`. Update other project references/tests accordingly. / 将核心项目迁移到 `net10.0-windows`。请相应更新其它项目引用/测试。
-- Added quick start guide, troubleshooting section, and documentation links to README / 在 README 中添加快速入门指南、故障排查部分和文档链接
-- Improved README table of contents with new sections for Quick Start and Documentation / 优化 README 目录结构，新增"快速入门"和"文档"章节
-- Created dedicated plugins repository at https://github.com/Crs10259/LenovoLegionToolkit-Plugins / 在 https://github.com/Crs10259/LenovoLegionToolkit-Plugins 创建专用插件仓库
-- Added GitHub Actions workflow for automated plugin building and releasing / 添加 GitHub Actions 工作流实现插件自动化编译和发布
-- Updated ViveTool plugin to version 1.5.0 with improved compatibility and stability / 更新ViveTool插件至1.5.0版本，提升兼容性和稳定性
-- **Internationalization / 国际化**: Added multilingual support for CustomMouse plugin with 13 languages: English, Chinese (Simplified/Traditional), Japanese, Korean, German, French, Spanish, Portuguese, Italian, Russian, Polish, Dutch, Czech, and Turkish / 为 CustomMouse 插件添加 13 种语言支持：英语、中文（简体/繁体）、日语、韩语、德语、法语、西班牙语、葡萄牙语、意大利语、俄语、波兰语、荷兰语、捷克语和土耳其语
-- **Internationalization / 国际化**: Added multilingual support for ShellIntegration plugin with 13 languages: English, Chinese (Simplified/Traditional), Japanese, Korean, German, French, Spanish, Portuguese, Italian, Russian, Polish, Dutch, Czech, and Turkish / 为 ShellIntegration 插件添加 13 种语言支持：英语、中文（简体/繁体）、日语、韩语、德语、法语、西班牙语、葡萄牙语、意大利语、俄语、波兰语、荷兰语、捷克语和土耳其语
-- **Internationalization / 国际化**: Added Japanese (ja) and Korean (ko) translations for ShellIntegration plugin / 为 ShellIntegration 插件添加日语 (ja) 和韩语 (ko) 翻译
-- **Internationalization / 国际化**: Migrated all hardcoded Chinese text in CustomMouse plugin XAML files to resource files / 将 CustomMouse 插件 XAML 文件中所有硬编码的中文文本迁移到资源文件
-- **Internationalization / 国际化**: Migrated all hardcoded Chinese text in MenuStyleSettingsWindow XAML to resource files / 将 MenuStyleSettingsWindow XAML 中所有硬编码的中文文本迁移到资源文件
+- **Plugin System / 插件系统**: Implemented plugin dependency resolution, sandboxing, hot-reload, and event bus system / 实现插件依赖解析、沙箱、热重载和事件总线系统
+- **Plugin System / 插件系统**: Created working plugin examples (CustomMouse, ShellIntegration) with full functionality / 创建可用的插件示例（CustomMouse、ShellIntegration），功能完整
+- **Plugin System / 插件系统**: Implemented plugin version checking and update manager with three update strategies / 实现插件版本检查和更新管理器，支持三种更新策略
+- **Plugin System / 插件系统**: Added plugin configuration management with user preferences / 添加插件配置管理，支持用户偏好设置
+- **Plugin System / 插件系统**: Added plugin update settings (check on startup, auto-download, notification, frequency) / 添加插件更新设置（启动检查、自动下载、通知、频率）
+- **Plugin System / 插件系统**: Integrated plugins repository and migrated downloads to releases / 集成插件仓库并将下载迁移到 releases
+- **Internationalization / 国际化**: Added multilingual support for CustomMouse and ShellIntegration plugins (13 languages) / 为 CustomMouse 和 ShellIntegration 插件添加多语言支持（13种语言）
+- **Internationalization / 国际化**: Migrated hardcoded Chinese text in XAML files to resource files / 将 XAML 文件中硬编码的中文文本迁移到资源文件
+- **Documentation / 文档**: Created comprehensive documentation (ARCHITECTURE.md, DEPLOYMENT.md, SECURITY.md, CODE_OF_CONDUCT.md) / 创建完整文档（ARCHITECTURE.md、DEPLOYMENT.md、SECURITY.md、CODE_OF_CONDUCT.md）
+- **Documentation / 文档**: Added quick start guide, troubleshooting section to README / 在 README 中添加快速入门指南、故障排查部分
+- **Testing Infrastructure / 测试基础设施**: Added comprehensive test coverage for PowerModeFeature, BatteryFeature, and plugin features / 为 PowerModeFeature、BatteryFeature 和插件功能添加全面测试覆盖
 
 ### Improved / 改进
-- Removed unused LenovoLegionToolkit.Plugins.Common project (was not registered in solution and had no references) / 移除未使用的 LenovoLegionToolkit.Plugins.Common 项目（未在解决方案中注册，也无任何引用）
-- Refactored GPU info reflection code from AbstractSensorsController into new GPUInfoHelper class for better maintainability / 重构 AbstractSensorsController 中的 GPU 信息反射代码到独立的 GPUInfoHelper 类，提升可维护性
-- Refactored GodModeControllerV1 to use dictionary + loop pattern instead of repetitive try-catch blocks / 重构 GodModeControllerV1，使用字典+循环模式替代重复的 try-catch 代码块
-- Improved LocalizationHelper.cs code readability and removed HACK comment for Karakalpak language workaround / 改进 LocalizationHelper.cs 代码可读性，移除 Karakalpak 语言临时解决方案的 HACK 注释
-- Migrated all plugin downloads to dedicated repository releases / 将所有插件下载迁移至专用仓库 releases
-- Removed plugin source code and compilation from main repository / 从主仓库移除插件源码和编译
-- Implemented Central Package Management (CPM) using Directory.Packages.props for centralized NuGet package version management / 使用 Directory.Packages.props 实现中央包管理 (CPM)，集中管理所有 NuGet 包版本
-- Plugin repository service now fetches plugins from LenovoLegionToolkit-Plugins / 插件仓库服务现在从 LenovoLegionToolkit-Plugins 获取插件
-- Updated deployment documentation to reflect .NET 10 requirements / 更新部署文档以反映 .NET 10 依赖要求
-- Strengthened ApplicationSettings LoadStore test coverage for default values when settings are missing / 强化 ApplicationSettings LoadStore 在配置缺失时返回默认值的测试覆盖
-- Fixed workflow .NET SDK setup for build and release pipelines / 修复构建与发布流程中的 .NET SDK 配置
-- Added missing LenovoLegionToolkit-Plugins submodule metadata for CI checkout / 补充 LenovoLegionToolkit-Plugins 子模块信息以修复 CI 检出
-- Fixed CI tests workflow by adding artifact upload/download between build and test jobs / 修复 CI 测试工作流，在构建和测试作业之间添加 artifact 上传/下载
-- Removed obsolete ShellIntegration submodule entries after internalizing the code / 在代码内置后移除过时的 ShellIntegration 子模块配置
-
-### Improved / 改进
-- 修复 Assets 资源文件路径大小写不一致问题，统一使用正确的大写首字母 (Icon.ico, Default_exe.png, Logo.png) / Fixed case sensitivity issues in Assets resource file paths,统一使用 correct case for filenames (Icon.ico, Default_exe.png, Logo.png)
-- 修复 README_zh-hans.md 中 logo.png 路径大小写问题 / Fixed case sensitivity issue for logo.png path in README_zh-hans.md
-- 修复 SettingsPage 动画为从下往上滑动，与其他页面保持一致 / Fixed SettingsPage animation to slide up from bottom, consistent with other pages
-- 修复文档中 workflow 文件路径大小写不一致问题 / Fixed case sensitivity issues for workflow file paths in documentation
-- 修复 LenovoLegionToolkit-Plugins/README.md 中的 workflow 路径大小写问题 / Fixed workflow path case sensitivity issues in LenovoLegionToolkit-Plugins/README.md
-- 修复 GitHub Actions CI workflow artifact 名称冲突问题，使用唯一名称 build-output-${{ github.run_id }} / Fixed GitHub Actions CI workflow artifact name conflict, using unique name build-output-${{ github.run_id }}
-- 修复 GitHub Actions CI workflow artifact 下载失败问题，简化 artifact 传递逻辑 / Fixed GitHub Actions CI workflow artifact download failure, simplified artifact transfer logic
-- 调慢动画速度：Fast(0.167s) Medium(0.333s) Slow(0.5s) / Slowed down animation speeds: Fast(0.167s) Medium(0.333s) Slow(0.5s)
-- 将构建目录 build 重命名为 Build，保持命名一致性 / Renamed build directory to Build for naming consistency
-- 将构建目录 build_installer 重命名为 BuildInstaller / Renamed build_installer directory to BuildInstaller
-- 更新 make.bat：添加构建完成后 5 秒延迟退出，修复拼写错误 Bebug 为 Debug / Updated make.bat: added 5-second delay before exit, fixed typo Bebug to Debug
-- 修复 make.bat：移除 iscc 的 || exit /b，确保无论 Inno Setup 是否成功都会等待 5 秒 / Fixed make.bat: removed || exit /b from iscc to ensure 5-second delay regardless of Inno Setup result
-- 修复 make.bat：重构脚本逻辑，确保无论构建成功或失败都会执行 5 秒延迟退出 / Fixed make.bat: refactored script logic to ensure 5-second delay exit regardless of build result
-- 修复 ErrorDialogWindow.xaml：将不存在的 Resource.Application_Error 键改为 Resource.UnexpectedException / Fixed ErrorDialogWindow.xaml: changed non-existent Resource.Application_Error to Resource.UnexpectedException
-- 更新 Clean.bat：简化脚本逻辑，添加更多项目目录支持，添加 5 秒延迟退出 / Updated Clean.bat: simplified script logic, added more project directories, added 5-second delay before exit
-- 修复插件页面加载逻辑：先显示加载动画，刷新完成后再显示内容或"没有插件"提示 / Fixed plugin page loading logic: show loading indicator first, then show content or "no plugins" message after refresh completes
-- 为设置页面选中项目添加阴影效果 / Added shadow effect to selected items on Settings page
-- 强化了不兼容机器上的功能限制：在非支持机型上直接从导航栏移除控制台、自动化及键盘灯光入口，并严格禁用所有定制化硬件功能（电源、灯光、性能模式、GPU 监控和传感器轮询等），即使选择继续运行也无法访问这些功能 / Strengthened feature restrictions on incompatible machines: directly removed Dashboard, Automation, and Keyboard lighting entries from navigation on unsupported models, and strictly disabled all customized hardware features (power, lighting, performance modes, GPU monitoring, sensor polling, etc.), making them inaccessible even if overridden
-- 优化了不兼容机器上的设置页面：在非支持机型上隐藏所有硬件相关的设置分类（性能、显示、智能按键）及相关软件禁用选项，仅保留通用的外观、应用行为和更新设置 / Optimized Settings page on incompatible machines: hidden all hardware-related categories (Power, Display, Smart Keys) and relevant software disablers on unsupported models, keeping only generic Appearance, Application behavior, and Update settings
-- 引入强制进程退出机制 (ExitProcess)，彻底解决在不兼容机器或极端情况下关闭软件后的进程残留和 CPU 占用问题 / Introduced forced process termination (ExitProcess) to completely resolve process residue and CPU usage issues upon exit on incompatible machines or in extreme cases
-- 优化 IoC 容器解析逻辑，防止在系统未完全初始化时因解析失败导致的退出过程挂起 / Optimized IoC container resolution to prevent shutdown hangs caused by resolution failures when the system is not fully initialized
-- Updated plugin store URL to point to separate plugin repository / 更新插件商店URL指向独立插件仓库
-
-### Improved / 改进
-- 优化关闭流程性能：将窗口大小保存改为异步执行，减少界面卡顿 / Optimized shutdown flow performance: changed window size saving to asynchronous execution to reduce UI lag
-- 减少插件关闭等待时间从500ms到200ms，提升关闭响应速度 / Reduced plugin shutdown wait time from 500ms to 200ms for faster shutdown response
-- 修复关闭流程阻塞问题：跳过 Spectrum 键盘控制器和 Windows 消息监听器的停止操作，解决 8 秒超时问题 / Fixed shutdown hang: skipped Spectrum keyboard controller and Windows message listener stop operations to resolve 8-second timeout issue
-- 优化服务停止超时：从 8 秒减少到 2 秒，提升关闭响应速度 / Optimized service stop timeout: reduced from 8 seconds to 2 seconds for faster shutdown response
-- 关闭速度从 8 秒提升到 0.35 秒 (23x) / Shutdown speed improved from 8 seconds to 0.35 seconds (23x faster)
-- 移除 LibreHardwareMonitorLib 依赖，简化 CPU 电压读取逻辑，直接使用 WMI / Removed LibreHardwareMonitorLib dependency, simplified CPU voltage reading to use WMI directly
-
-### Improved / 改进
-- 重构依赖注入架构：将 MainWindow 和 GPUController 改为构造函数注入，减少对 Service Locator 的依赖 / Refactored DI architecture: switched MainWindow and GPUController to constructor injection, reducing Service Locator usage
-- 优化 GPUController 职责：拆分出 GPUProcessManager 和 GPUHardwareManager，提升代码内聚性 / Optimized GPUController responsibilities: split into GPUProcessManager and GPUHardwareManager for better cohesion
-- 完善 PluginManager 资源管理：实现 IDisposable 接口并正确反订阅 AssemblyResolve 事件，防止内存泄漏 / Improved PluginManager resource management: implemented IDisposable and correctly unsubscribed AssemblyResolve event to prevent memory leaks
-- 增强 IDisposable 模式实现：为关键控制器添加 volatile 标志和完整的释放逻辑 / Enhanced IDisposable pattern implementation: added volatile flags and complete disposal logic for key controllers
-- 优化异常处理与日志记录：统一日志格式，减少空 catch 块，提升可维护性 / Optimized exception handling and logging: unified log formats, reduced empty catch blocks, and improved maintainability
-- Enhanced plugin management UI: added hover effects, plugin author display, and a modern "No Results" search state / 增强插件管理界面：添加悬停效果、插件作者显示以及现代化的“无搜索结果”状态
-- Added context menu for plugins: easily open plugin folders, copy plugin IDs, or uninstall plugins / 为插件添加右键菜单：可轻松打开插件文件夹、复制插件 ID 或卸载插件
-- Improved search experience in plugin page with a built-in clear button / 改进插件页面的搜索体验，增加了内置的清除按钮
-- Simplified plugin categorization logic: plugins directly under the root `plugins` directory are treated as remote, while those in any other subdirectory (e.g., `local`) are treated as local / 进一步简化插件分类逻辑：根 `plugins` 目录下的插件视为远程，而位于任何其他子目录（如 `local`）下的插件则视为本地
-- Fully localized the plugin management interface, including update status, tooltips, and action buttons / 插件管理界面现已全面支持多语言，包括更新状态、工具提示和操作按钮
-- 优化设置界面的 UI 切换动画，统一动画参数体系（时长、缓动函数等），并默认开启高性能动画效果 / Optimized UI transition animations in Settings, unified animation parameters (duration, easing, etc.), and enabled high-performance animations by default
-- 调慢设置页面的切换动画速度，与其他界面保持一致 / Slowed down Settings page transition animation speed to be consistent with other pages
-- 修复系统优化界面的布局列索引错误并限制其最大宽度，防止内容溢出遮挡左侧区域 / Fixed layout column index error and restricted maximum width of the details panel in Windows Optimization to prevent content from obscuring the left-side area
-- 增加系统优化界面的选择状态和模式记忆功能 / Added persistence for selection state and page mode in Windows Optimization
-- Enhanced plugin build system for better dependency management / 增强插件构建系统，改善依赖项管理
-- Improved resource handling and localization for multi-language support / 提升资源管理和本地化，支持多语言
-- 补全冷门语言翻译：添加 Driver Download、Extensions、Plugin Extensions 等缺失翻译 / Added missing translations for less common languages: Driver Download, Extensions, Plugin Extensions, etc.
+- Migrated core projects to target `net10.0-windows` / 将核心项目迁移到 `net10.0-windows`
+- Implemented Central Package Management (CPM) for centralized NuGet package version management / 使用中央包管理 (CPM) 集中管理 NuGet 包版本
+- Optimized shutdown performance from 8 seconds to 0.35 seconds (23x faster) / 优化关闭性能从 8 秒提升到 0.35 秒（提升23倍）
+- Reduced plugin shutdown wait time from 500ms to 200ms / 将插件关闭等待时间从 500ms 减少到 200ms
+- Optimized service stop timeout from 8 seconds to 2 seconds / 将服务停止超时从 8 秒优化到 2 秒
+- Removed LibreHardwareMonitorLib dependency, simplified CPU voltage reading using WMI / 移除 LibreHardwareMonitorLib 依赖，使用 WMI 简化 CPU 电压读取
+- Enhanced plugin management UI with hover effects, author display, and modern "No Results" state / 增强插件管理 UI：悬停效果、作者显示、现代化"无结果"状态
+- Added context menu for plugins (open folder, copy ID, uninstall) / 为插件添加右键菜单（打开文件夹、复制 ID、卸载）
+- Improved search experience with built-in clear button / 改进搜索体验，增加清除按钮
+- Optimized UI transition animations and enabled high-performance animations by default / 优化 UI 切换动画，默认启用高性能动画
+- Redesigned plugin item UI with checkmark badge on installed plugins / 重新设计插件列表项 UI，已安装插件显示勾选角标
 
 ### Fixed / 修复
-- **Security Fix**: Fixed JSON deserialization vulnerability in AbstractSettings.cs by replacing TypeNameHandling.Auto with TypeNameHandling.None to prevent potential security attacks / 修复 AbstractSettings.cs 中的 JSON 反序列化安全漏洞：将 TypeNameHandling.Auto 替换为 TypeNameHandling.None 以防止潜在的安全攻击
-- **Thread Safety**: Fixed race conditions in AbstractSettings.cs Store property getter by adding proper locking to ensure thread-safe access / 修复 AbstractSettings.cs Store 属性 getter 中的竞态条件：添加适当的锁以确保线程安全访问
-- **Thread Safety**: Fixed race condition in BatteryDischargeRateMonitorService.cs by adding proper synchronization for CTS and Task management / 修复 BatteryDischargeRateMonitorService.cs 中的竞态条件：为 CTS 和任务管理添加适当的同步
-- **Resource Management**: Added IDisposable pattern to AutomationProcessor.cs with proper event handler unsubscription and resource cleanup / 为 AutomationProcessor.cs 添加 IDisposable 模式：正确取消事件处理程序订阅并清理资源
-- **Memory Leak Fix**: Fixed memory leaks in MainWindow.xaml.cs by unsubscribing event handlers in MainWindow_Closed / 修复 MainWindow.xaml.cs 中的内存泄漏：在 MainWindow_Closed 中取消事件处理程序订阅
-- **Plugin System**: Fixed plugin assembly file locking issue in PluginManager.cs by loading assemblies from bytes instead of file path, enabling plugin updates without restart / 修复 PluginManager.cs 中的插件程序集文件锁定问题：从字节加载程序集而非文件路径，支持无需重启即可更新插件
-- **Plugin System**: Added version compatibility checking for plugins to ensure plugin-host version compatibility / 为插件添加版本兼容性检查以确保插件与宿主版本兼容
-- **Exception Handling**: Added proper exception handling and logging throughout codebase to replace empty catch blocks / 在整个代码库中添加适当的异常处理和日志记录以替换空的 catch 块
-- **Bug Fix**: Fixed FormatException in ResolutionFeature.cs and RefreshRateFeature.cs by converting FormattableString to regular string concatenation, preventing format parsing errors in logger / 修复 ResolutionFeature.cs 和 RefreshRateFeature.cs 中的 FormatException：将 FormattableString 转换为普通字符串连接，防止日志记录器中的格式解析错误
-- **Dependencies**: Updated System.Management and System.ServiceProcess.ServiceController to version 10.0.1 for consistency / 更新 System.Management 和 System.ServiceProcess.ServiceController 到版本 10.0.1 以保持一致性
-- 修复插件拓展和系统优化界面的 Snackbar 冲突重叠问题，统一通过 SnackbarHelper 进行队列管理 / Fixed Snackbar overlap conflict between Plugin Extensions and Windows Optimization by unifying notification queue management through SnackbarHelper
-- 引入了多级保障的进程终止机制（TerminateProcess + Environment.FailFast + 前台守护线程），彻底解决了在极端情况下（如驱动程序或 DLL 卸载挂起）程序退出后进程残留的问题 / Introduced a multi-level process termination mechanism (TerminateProcess + Environment.FailFast + Foreground Watchdog thread) to completely resolve the issue of process residue after exit under extreme conditions (such as driver or DLL unload hangs)
-- 修复了不兼容机器上关闭软件后的 CPU 占用残留问题：在所有退出路径（包括不兼容系统退出和异常退出）中正确停止宏控制器，释放键盘钩子，确保进程完全终止 / Fixed CPU usage residue after closing the software on incompatible machines: correctly stopped the MacroController in all exit paths (including incompatible system exit and exception exit) to release the keyboard hook and ensure the process terminates completely
-- 彻底解决了退出程序时进程残留的问题，通过强化强制退出机制（TerminateProcess + Watchdog 线程 + Foreground Thread 保障）确保进程在任何情况下都能完全终止 / Completely resolved process residue issue upon exit by strengthening the forced exit mechanism (TerminateProcess + Watchdog thread + Foreground thread protection) to ensure the process terminates under any circumstances
-- 修复了因错误的按钮类型检查导致本地插件卸载按钮无反应的问题 / Resolved an issue where the uninstall button for local plugins had no reaction due to incorrect button type checking
-- 修复了从商店获取插件时的 404 错误，将仓库分支从 main 更新为 master / Fixed 404 error when fetching plugins from store by updating the repository branch from main to master
-- 解决了退出程序时进程残留且无法结束的问题，通过引入更彻底的强制退出机制（TerminateProcess）确保进程完全终止 / Resolved issue where the process remained in the background and could not be terminated upon exit by introducing a more thorough forced exit mechanism (TerminateProcess)
-- Resolved `XamlParseException` in Plugin Extensions page caused by missing `TextToVisibilityConverter` / 修复插件扩展页面因缺失 `TextToVisibilityConverter` 导致的 `XamlParseException` 崩溃
-- Fixed ApplicationSettings LoadStore to return defaults when settings are missing / 修复 ApplicationSettings LoadStore 在缺失配置时返回默认值的问题
-- Corrected spelling in session lock/unlock logging / 修正会话锁定/解锁日志中的拼写错误
+- **Security**: Fixed JSON deserialization vulnerability in AbstractSettings.cs / 修复 AbstractSettings.cs 中的 JSON 反序列化安全漏洞
+- **Thread Safety**: Fixed race conditions in AbstractSettings.cs and BatteryDischargeRateMonitorService.cs / 修复 AbstractSettings.cs 和 BatteryDischargeRateMonitorService.cs 中的竞态条件
+- **Memory**: Fixed memory leaks in MainWindow.xaml.cs and implemented proper IDisposable / 修复 MainWindow.xaml.cs 内存泄漏，实现正确的 IDisposable
+- **Plugin System**: Fixed plugin assembly file locking issue enabling updates without restart / 修复插件程序集文件锁定问题，支持无需重启更新
+- Fixed Snackbar overlap conflict between Plugin Extensions and Windows Optimization / 修复插件扩展和系统优化界面的 Snackbar 冲突
+- Fixed process residue after exit with forced termination mechanism / 修复退出后进程残留问题，引入强制终止机制
+- Fixed 404 error when fetching plugins from store / 修复从商店获取插件时的 404 错误
+- Fixed XamlParseException in Plugin Extensions page / 修复插件扩展页面的 XamlParseException
 
 ## [3.5.1] - 2026-01-29
 
@@ -149,27 +62,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New cleanup items: App leftovers, Chrome/Edge/Firefox browser cache / 新增清理项：应用残留文件、Chrome/Edge/Firefox 浏览器缓存
 - Registry redundancy cleanup for recent documents and app usage / 注册表冗余项清理（最近文档、应用使用记录等）
 - Large file scanning in user profile folders with customizable size filters / 用户个人文件夹中的大文件扫描功能，支持自定义大小筛选
-- One-click "Start All" interaction for driver downloads in System Optimization / 系统优化驱动下载新增“开始安装全部”一键操作
+- One-click "Start All" interaction for driver downloads in System Optimization / 系统优化驱动下载新增"开始安装全部"一键操作
 
 ### Improved / 改进
-- Redesigned icons for "Select Recommended" and "Clear Selection" in Windows Optimization / 重新设计系统优化页面“选择推荐”和“清除全部”图标
+- Redesigned icons for "Select Recommended" and "Clear Selection" in Windows Optimization / 重新设计系统优化页面"选择推荐"和"清除全部"图标
 - Instant execution mechanism for optimization items upon checking / 系统优化项勾选后即时生效机制
 - Batched Snackbar notifications for multiple optimization actions / 优化批量应用项时的 Snackbar 消息提示，合并显示
 - Expanded system cleanup algorithm for better efficiency and coverage / 扩展系统清理算法，提升效率与覆盖范围
 - Refactored Cleanup UI: Categories are now always visible, and Scan process is more transparent with a progress bar / 重构清理界面：项目列表始终可见，扫描过程配合进度条更透明
-- Enhanced Driver Download UI: Dual-state toggle button (Start/Pause) for better control / 增强驱动下载 UI：采用“开始/暂停”双态切换按钮，提升控制体验
-- 增强崩溃报告，增加内存状态和进程树记录 / Enhanced crash reports with memory state and process tree logging
-- 引入 `ProcessWatcher` 自动管理子进程生命周期 / Introduced `ProcessWatcher` for automatic child process lifecycle management
-- 优化启动时的残留进程检测与清理 / Improved detection and cleanup of residual processes during startup
-- 优化了Vivetool工具 / Optimized ViveTool plugin
-- Redesigned plugin item UI: replaced "Installed" button with a checkmark badge on the plugin icon / 重新设计插件列表项 UI：将“已安装”按钮替换为图标上的已安装角标
-- Removed Ctrl+Shift+R reset functionality and related UI tips / 移除了 Ctrl+Shift+R 重置功能及相关的 UI 提示
+- Enhanced Driver Download UI: Dual-state toggle button (Start/Pause) for better control / 增强驱动下载 UI：采用"开始/暂停"双态切换按钮，提升控制体验
+- Enhanced crash reports with memory state and process tree logging / 增强崩溃报告，增加内存状态和进程树记录
+- Introduced `ProcessWatcher` for automatic child process lifecycle management / 引入 `ProcessWatcher` 自动管理子进程生命周期
+- Optimized detection and cleanup of residual processes during startup / 优化启动时的残留进程检测与清理
+- Redesigned plugin item UI with checkmark badge on installed plugins / 重新设计插件列表项 UI：将"已安装"按钮替换为图标上的已安装角标
 
 ### Fixed / 修复
 - Scan button hover visibility issue in Cleanup page / 修复清理页面扫描按钮悬停时的显示问题
 - ShellIntegration plugin compilation errors and namespace conflicts / 修复 ShellIntegration 插件编译错误及命名空间冲突
 - Plugin SDK reference issues in ShellIntegration project / 修复 ShellIntegration 项目中的插件 SDK 引用问题
-- 解决了 UI 崩溃后的进程残留问题，引入强制退出机制 / Resolved process residue after UI crash with a forced exit mechanism
+- Resolved process residue after UI crash with a forced exit mechanism / 解决 UI 崩溃后的进程残留问题，引入强制退出机制
 
 ## [3.5.0] - 2026-01-28
 

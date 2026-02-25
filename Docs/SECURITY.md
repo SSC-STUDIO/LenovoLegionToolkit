@@ -89,7 +89,7 @@ Plugins operate under strict restrictions:
 
 | Dependency | Purpose | Security Note |
 |------------|---------|---------------|
-| .NET 8.0 | Runtime | Microsoft security updates |
+| .NET 10 | Runtime | Microsoft security updates |
 | Autofac | DI Container | Mature, well-audited |
 | HID Sharp | Hardware access | Low-level, verified |
 | LibreHardwareMonitorLib | Monitoring | Open source, reviewed |
