@@ -21,4 +21,4 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Run tests (exclude hardware-dependent tests)
         run: |
-          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --verbosity minimal --logger "trx;LogFileName=tests.trx" --filter "TestCategory!=Integration&FullyQualifiedName!~GodModeControllerTests&FullyQualifiedName!~AIControllerTests&FullyQualifiedName!~GPUControllerTests&FullyQualifiedName!~SensorsControllerTests&FullyQualifiedName!~PowerModeFeatureTests&FullyQualifiedName!~ReflectionCacheTests&FullyQualifiedName!~CMDTests"
+          dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --configuration Release --verbosity minimal --logger "trx;LogFileName=tests.trx" --filter "TestCategory!=Integration&FullyQualifiedName!~GodModeControllerTests&FullyQualifiedName!~AIControllerTests&FullyQualifiedName!~GPUControllerTests&FullyQualifiedName!~SensorsControllerTests&FullyQualifiedName!~PowerModeFeatureTests&FullyQualifiedName!~ReflectionCacheTests&FullyQualifiedName!~SensorDataTests"
