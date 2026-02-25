@@ -3,7 +3,7 @@
     {
       "icon": "Apps24",
       "iconBackground": "#FF6B35",
-      "fileSize": 1231561,
+      "fileSize": 1231098,
       "name": "ViVeTool",
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.0/vive-tool-v1.1.0.zip",
       "isSystemPlugin": false,
@@ -23,7 +23,7 @@
     {
       "icon": "ContextMenu24",
       "iconBackground": "#9C27B0",
-      "fileSize": 1164579,
+      "fileSize": 1175123,
       "name": "ShellIntegration",
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.0/shell-integration-v1.0.0.zip",
       "isSystemPlugin": true,
@@ -50,7 +50,7 @@
       "releaseDate": "2026-02-25T00:00:00Z",
       "changelog": "Version 1.0.0 (2026-02-25)\n- Initial release\n- Network acceleration functionality",
       "author": "LenovoLegionToolkit Team",
-      "fileSize": 1164641,
+      "fileSize": 1175103,
       "isSystemPlugin": false,
       "id": "network-acceleration",
       "tags": [
@@ -64,7 +64,7 @@
     {
       "icon": "Cursor24",
       "iconBackground": "#FF6F00",
-      "fileSize": 1165818,
+      "fileSize": 1177539,
       "name": "CustomMouse",
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
       "isSystemPlugin": false,
