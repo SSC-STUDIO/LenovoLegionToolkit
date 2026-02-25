@@ -41,7 +41,6 @@
             <TextBlock
                 x:Name="_promptText"
                 Grid.Row="0"
-                Text="{x:Static resources:Resource.UnexpectedException_ExitPrompt}"
                 FontSize="14"
                 Margin="0,0,0,12"
                 TextWrapping="Wrap"
