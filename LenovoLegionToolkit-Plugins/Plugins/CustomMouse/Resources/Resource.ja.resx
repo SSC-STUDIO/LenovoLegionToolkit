@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- CustomMouse Plugin -->
+  <data name="CustomMouse_PluginName" xml:space="preserve">
+    <value>カスタムマウス</value>
+    <comment>Plugin name displayed in the UI</comment>
+  </data>
+  <data name="CustomMouse_PluginDescription" xml:space="preserve">
+    <value>スマートカラー検出と複数のカーソルテーマに対応したカスタムマウスカーソルプラグイン</value>
+    <comment>Plugin description shown in the plugin store</comment>
+  </data>
+  <data name="CustomMouse_ExtensionTitle" xml:space="preserve">
+    <value>マウススタイル拡張</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_PageTitle" xml:space="preserve">
+    <value>カスタムマウススタイル</value>
+    <comment>Main page title</comment>
+  </data>
+  <data name="CustomMouse_PageDescription" xml:space="preserve">
+    <value>スマートテーマ切り替えと複数のプリセットスタイルでマウスカーソルスタイルをカスタマイズ</value>
+    <comment>Main page description</comment>
+  </data>
+  <data name="CustomMouse_SettingsTitle" xml:space="preserve">
+    <value>マウス設定</value>
+    <comment>Settings page title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyle" xml:space="preserve">
+    <value>現在のスタイル</value>
+    <comment>Current cursor style label</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection" xml:space="preserve">
+    <value>自動色検出</value>
+    <comment>Auto color detection setting</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection_Description" xml:space="preserve">
+    <value>背景色に基づいて適切なマウスカーソルテーマを自動的に選択</value>
+    <comment>Auto color detection description</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode" xml:space="preserve">
+    <value>テーマモード</value>
+    <comment>Theme mode setting</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Auto" xml:space="preserve">
+    <value>自動</value>
+    <comment>Auto theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Light" xml:space="preserve">
+    <value>ライト</value>
+    <comment>Light theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Dark" xml:space="preserve">
+    <value>ダーク</value>
+    <comment>Dark theme mode</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold" xml:space="preserve">
+    <value>亮度閾値</value>
+    <comment>Brightness threshold setting</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold_Description" xml:space="preserve">
+    <value>背景色の明るさを判断するための閾値（0.0-1.0）</value>
+    <comment>Brightness threshold description</comment>
+  </data>
+  <data name="CustomMouse_PluginMode" xml:space="preserve">
+    <value>プラグインモード</value>
+    <comment>Plugin mode setting</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Extension" xml:space="preserve">
+    <value>拡張モード</value>
+    <comment>Extension mode option</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Independent" xml:space="preserve">
+    <value>独立モード</value>
+    <comment>Independent mode option</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview" xml:space="preserve">
+    <value>プレビューを有効化</value>
+    <comment>Enable preview setting</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview_Description" xml:space="preserve">
+    <value>マウススタイルのリアルタイムプレビューを表示</value>
+    <comment>Enable preview description</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup" xml:space="preserve">
+    <value>起動時に自動適用</value>
+    <comment>Auto apply on startup setting</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup_Description" xml:space="preserve">
+    <value>アプリケーション起動時に現在設定されているマウススタイルを自動的に適用</value>
+    <comment>Auto apply description</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications" xml:space="preserve">
+    <value>通知を表示</value>
+    <comment>Show notifications setting</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications_Description" xml:space="preserve">
+    <value>マウススタイル変更時に通知メッセージを表示</value>
+    <comment>Show notifications description</comment>
+  </data>
+  <data name="CustomMouse_ApplyStyle" xml:space="preserve">
+    <value>スタイルを適用</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_RestoreDefault" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+    <comment>Restore default button</comment>
+  </data>
+  <data name="CustomMouse_Refresh" xml:space="preserve">
+    <value>更新</value>
+    <comment>Refresh button</comment>
+  </data>
+  <data name="CustomMouse_AvailableStyles" xml:space="preserve">
+    <value>利用可能なスタイル</value>
+    <comment>Available styles label</comment>
+  </data>
+  <data name="CustomMouse_NoStylesFound" xml:space="preserve">
+    <value>利用可能なマウススタイルが見つかりません</value>
+    <comment>No styles found message</comment>
+  </data>
+  <data name="CustomMouse_StyleApplied" xml:space="preserve">
+    <value>マウススタイルが適用されました</value>
+    <comment>Style applied success message</comment>
+  </data>
+  <data name="CustomMouse_StyleRestored" xml:space="preserve">
+    <value>デフォルトのマウススタイルに復元されました</value>
+    <comment>Style restored success message</comment>
+  </data>
+  <data name="CustomMouse_ApplyError" xml:space="preserve">
+    <value>マウススタイルの適用中にエラーが発生しました</value>
+    <comment>Apply error message</comment>
+  </data>
+  <data name="CustomMouse_DetectingTheme" xml:space="preserve">
+    <value>テーマを検出中...</value>
+    <comment>Detecting theme message</comment>
+  </data>
+  <data name="CustomMouse_LightThemeDetected" xml:space="preserve">
+    <value>ライトテーマが検出されました</value>
+    <comment>Light theme detected message</comment>
+  </data>
+  <data name="CustomMouse_DarkThemeDetected" xml:space="preserve">
+    <value>ダークテーマが検出されました</value>
+    <comment>Dark theme detected message</comment>
+  </data>
+  <data name="CustomMouse_ExtensionMode_Description" xml:space="preserve">
+    <value>拡張モード：マウススタイル機能をシステム最適化インターフェースに統合</value>
+    <comment>Extension mode description</comment>
+  </data>
+  <data name="CustomMouse_IndependentMode_Description" xml:space="preserve">
+    <value>独立モード：専用のマウススタイル管理インターフェースを提供</value>
+    <comment>Independent mode description</comment>
+  </data>
+
+  <!-- Extension Page -->
+  <data name="CustomMouse_ExtensionPage_Title" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI マウススタイル</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_StatusNotApplied" xml:space="preserve">
+    <value>未適用</value>
+    <comment>Status when style is not applied</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_ApplyStyle" xml:space="preserve">
+    <value>スタイルを適用</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_RemoveStyle" xml:space="preserve">
+    <value>スタイルを削除</value>
+    <comment>Remove style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_FeatureDescription" xml:space="preserve">
+    <value>機能:</value>
+    <comment>Feature description header</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature1" xml:space="preserve">
+    <value>• Windows 11スタイルのHDマウスカーソル</value>
+    <comment>Feature 1 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature2" xml:space="preserve">
+    <value>• ライト/ダークテーマの自動切り替え</value>
+    <comment>Feature 2 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature3" xml:space="preserve">
+    <value>• 高DPI表示最適化</value>
+    <comment>Feature 3 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature4" xml:space="preserve">
+    <value>• 複数のカーソルスタイルから選択</value>
+    <comment>Feature 4 description</comment>
+  </data>
+
+  <!-- Page Settings -->
+  <data name="CustomMouse_SmartSettings" xml:space="preserve">
+    <value>スマート設定</value>
+    <comment>Smart settings section title</comment>
+  </data>
+  <data name="CustomMouse_AdvancedSettings" xml:space="preserve">
+    <value>詳細設定</value>
+    <comment>Advanced settings section title</comment>
+  </data>
+  <data name="CustomMouse_DebugInfo" xml:space="preserve">
+    <value>デバッグ情報</value>
+    <comment>Debug information section title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyleLabel" xml:space="preserve">
+    <value>現在のスタイル:</value>
+    <comment>Current style label</comment>
+  </data>
+  <data name="CustomMouse_ThemeModeLabel" xml:space="preserve">
+    <value>テーマモード:</value>
+    <comment>Theme mode label</comment>
+  </data>
+  <data name="CustomMouse_PluginModeLabel" xml:space="preserve">
+    <value>プラグインモード:</value>
+    <comment>Plugin mode label</comment>
+  </data>
+  <data name="CustomMouse_LastDetectionLabel" xml:space="preserve">
+    <value>最終検出:</value>
+    <comment>Last detection label</comment>
+  </data>
+  <data name="CustomMouse_ExtensionModeRadio" xml:space="preserve">
+    <value>拡張モード</value>
+    <comment>Extension mode radio button</comment>
+  </data>
+  <data name="CustomMouse_IndependentModeRadio" xml:space="preserve">
+    <value>独立モード</value>
+    <comment>Independent mode radio button</comment>
+  </data>
+  <data name="CustomMouse_ResetSettings" xml:space="preserve">
+    <value>設定をリセット</value>
+    <comment>Reset settings button</comment>
+  </data>
+  <data name="CustomMouse_SaveSettings" xml:space="preserve">
+    <value>設定を保存</value>
+    <comment>Save settings button</comment>
+  </data>
+  <data name="CustomMouse_Ready" xml:space="preserve">
+    <value>準備完了</value>
+    <comment>Ready status</comment>
+  </data>
+  <data name="CustomMouse_ThemeAuto" xml:space="preserve">
+    <value>テーマ: 自動</value>
+    <comment>Auto theme indicator</comment>
+  </data>
+  <data name="CustomMouse_StyleW11CC" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI</value>
+    <comment>Default style name</comment>
+  </data>
+</root>

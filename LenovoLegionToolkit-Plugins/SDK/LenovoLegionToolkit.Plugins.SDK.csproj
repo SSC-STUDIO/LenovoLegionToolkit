@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
+    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+  </PropertyGroup>
+
+  <!-- SDK is only needed during compilation, not as a standalone output -->
+  <PropertyGroup>
+    <OutputPath>..\..\..\build\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <ExcludeAssets>All</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Exclude all unwanted files from output -->
+  <ItemGroup>
+    <None Remove="**\*.resources.dll" />
+    <None Remove="LenovoLegionToolkit.Lib.dll" />
+  </ItemGroup>
+
+  <Target Name="CleanUnwantedFiles" AfterTargets="Build">
+    <RemoveDir Directories="$(OutputPath)\ar;$(OutputPath)\bg;$(OutputPath)\bs;$(OutputPath)\ca;$(OutputPath)\cs;$(OutputPath)\de;$(OutputPath)\el;$(OutputPath)\es;$(OutputPath)\fr;$(OutputPath)\hu;$(OutputPath)\it;$(OutputPath)\ja;$(OutputPath)\ko;$(OutputPath)\lv;$(OutputPath)\nl-nl;$(OutputPath)\pl;$(OutputPath)\pt;$(OutputPath)\pt-br;$(OutputPath)\ro;$(OutputPath)\ru;$(OutputPath)\sk;$(OutputPath)\tr;$(OutputPath)\uk;$(OutputPath)\uz-latn-uz;$(OutputPath)\vi;$(OutputPath)\zh-hans;$(OutputPath)\zh-hant" />
+    <Delete Files="$(OutputPath)\LenovoLegionToolkit.Lib.dll" />
+  </Target>
+
+</Project>
+
+
+
+
+

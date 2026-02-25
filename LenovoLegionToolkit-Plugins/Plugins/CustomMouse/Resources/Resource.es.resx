@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- CustomMouse Plugin -->
+  <data name="CustomMouse_PluginName" xml:space="preserve">
+    <value>Mouse Personalizado</value>
+    <comment>Plugin name displayed in the UI</comment>
+  </data>
+  <data name="CustomMouse_PluginDescription" xml:space="preserve">
+    <value>Plugin de cursor de ratón personalizado con detección inteligente de color y múltiples temas de cursor</value>
+    <comment>Plugin description shown in the plugin store</comment>
+  </data>
+  <data name="CustomMouse_ExtensionTitle" xml:space="preserve">
+    <value>Extensión de Estilo de Mouse</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_PageTitle" xml:space="preserve">
+    <value>Estilos de Mouse Personalizados</value>
+    <comment>Main page title</comment>
+  </data>
+  <data name="CustomMouse_PageDescription" xml:space="preserve">
+    <value>Personaliza los estilos de cursor de ratón con cambio inteligente de tema y múltiples estilos preestablecidos</value>
+    <comment>Main page description</comment>
+  </data>
+  <data name="CustomMouse_SettingsTitle" xml:space="preserve">
+    <value>Configuración de Mouse</value>
+    <comment>Settings page title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyle" xml:space="preserve">
+    <value>Estilo Actual</value>
+    <comment>Current cursor style label</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection" xml:space="preserve">
+    <value>Detección Automática de Color</value>
+    <comment>Auto color detection setting</comment>
+  </data>
+  <data name="CustomMouse_AutoColorDetection_Description" xml:space="preserve">
+    <value>Seleccionar automáticamente el tema de cursor apropiado según el color de fondo</value>
+    <comment>Auto color detection description</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode" xml:space="preserve">
+    <value>Modo de Tema</value>
+    <comment>Theme mode setting</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Auto" xml:space="preserve">
+    <value>Automático</value>
+    <comment>Auto theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Light" xml:space="preserve">
+    <value>Claro</value>
+    <comment>Light theme mode</comment>
+  </data>
+  <data name="CustomMouse_ThemeMode_Dark" xml:space="preserve">
+    <value>Oscuro</value>
+    <comment>Dark theme mode</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold" xml:space="preserve">
+    <value>Umbral de Brillo</value>
+    <comment>Brightness threshold setting</comment>
+  </data>
+  <data name="CustomMouse_BrightnessThreshold_Description" xml:space="preserve">
+    <value>Umbral para determinar el brillo del color de fondo (0.0-1.0)</value>
+    <comment>Brightness threshold description</comment>
+  </data>
+  <data name="CustomMouse_PluginMode" xml:space="preserve">
+    <value>Modo de Plugin</value>
+    <comment>Plugin mode setting</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Extension" xml:space="preserve">
+    <value>Modo de Extensión</value>
+    <comment>Extension mode option</comment>
+  </data>
+  <data name="CustomMouse_PluginMode_Independent" xml:space="preserve">
+    <value>Modo Independiente</value>
+    <comment>Independent mode option</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview" xml:space="preserve">
+    <value>Habilitar Vista Previa</value>
+    <comment>Enable preview setting</comment>
+  </data>
+  <data name="CustomMouse_EnablePreview_Description" xml:space="preserve">
+    <value>Mostrar vista previa en tiempo real de los estilos de ratón</value>
+    <comment>Enable preview description</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup" xml:space="preserve">
+    <value>Aplicación Automática al Iniciar</value>
+    <comment>Auto apply on startup setting</comment>
+  </data>
+  <data name="CustomMouse_AutoApplyOnStartup_Description" xml:space="preserve">
+    <value>Aplicar automáticamente el estilo de ratón actual al iniciar la aplicación</value>
+    <comment>Auto apply description</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications" xml:space="preserve">
+    <value>Mostrar Notificaciones</value>
+    <comment>Show notifications setting</comment>
+  </data>
+  <data name="CustomMouse_ShowNotifications_Description" xml:space="preserve">
+    <value>Mostrar mensajes de notificación al cambiar el estilo de ratón</value>
+    <comment>Show notifications description</comment>
+  </data>
+  <data name="CustomMouse_ApplyStyle" xml:space="preserve">
+    <value>Aplicar Estilo</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_RestoreDefault" xml:space="preserve">
+    <value>Restaurar Predeterminado</value>
+    <comment>Restore default button</comment>
+  </data>
+  <data name="CustomMouse_Refresh" xml:space="preserve">
+    <value>Actualizar</value>
+    <comment>Refresh button</comment>
+  </data>
+  <data name="CustomMouse_AvailableStyles" xml:space="preserve">
+    <value>Estilos Disponibles</value>
+    <comment>Available styles label</comment>
+  </data>
+  <data name="CustomMouse_NoStylesFound" xml:space="preserve">
+    <value>No se encontraron estilos de ratón disponibles</value>
+    <comment>No styles found message</comment>
+  </data>
+  <data name="CustomMouse_StyleApplied" xml:space="preserve">
+    <value>Estilo de ratón aplicado</value>
+    <comment>Style applied success message</comment>
+  </data>
+  <data name="CustomMouse_StyleRestored" xml:space="preserve">
+    <value>Estilo de ratón predeterminado restaurado</value>
+    <comment>Style restored success message</comment>
+  </data>
+  <data name="CustomMouse_ApplyError" xml:space="preserve">
+    <value>Error al aplicar el estilo de ratón</value>
+    <comment>Apply error message</comment>
+  </data>
+  <data name="CustomMouse_DetectingTheme" xml:space="preserve">
+    <value>Detectando tema...</value>
+    <comment>Detecting theme message</comment>
+  </data>
+  <data name="CustomMouse_LightThemeDetected" xml:space="preserve">
+    <value>Tema claro detectado</value>
+    <comment>Light theme detected message</comment>
+  </data>
+  <data name="CustomMouse_DarkThemeDetected" xml:space="preserve">
+    <value>Tema oscuro detectado</value>
+    <comment>Dark theme detected message</comment>
+  </data>
+  <data name="CustomMouse_ExtensionMode_Description" xml:space="preserve">
+    <value>Modo de Extensión: Integrar la funcionalidad de estilo de ratón en la interfaz de optimización del sistema</value>
+    <comment>Extension mode description</comment>
+  </data>
+  <data name="CustomMouse_IndependentMode_Description" xml:space="preserve">
+    <value>Modo Independiente: Proporciona una interfaz dedicada para la gestión de estilos de ratón</value>
+    <comment>Independent mode description</comment>
+  </data>
+
+  <!-- Extension Page -->
+  <data name="CustomMouse_ExtensionPage_Title" xml:space="preserve">
+    <value>Estilo de Mouse W11-CC-V2.2-HDPI</value>
+    <comment>Extension page title</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_StatusNotApplied" xml:space="preserve">
+    <value>No Aplicado</value>
+    <comment>Status when style is not applied</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_ApplyStyle" xml:space="preserve">
+    <value>Aplicar Estilo</value>
+    <comment>Apply style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_RemoveStyle" xml:space="preserve">
+    <value>Eliminar Estilo</value>
+    <comment>Remove style button</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_FeatureDescription" xml:space="preserve">
+    <value>Características:</value>
+    <comment>Feature description header</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature1" xml:space="preserve">
+    <value>• Cursor de ratón HD estilo Windows 11</value>
+    <comment>Feature 1 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature2" xml:space="preserve">
+    <value>• Cambio automático entre temas claro y oscuro</value>
+    <comment>Feature 2 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature3" xml:space="preserve">
+    <value>• Optimización de pantalla de alta DPI</value>
+    <comment>Feature 3 description</comment>
+  </data>
+  <data name="CustomMouse_ExtensionPage_Feature4" xml:space="preserve">
+    <value>• Múltiples estilos de cursor disponibles</value>
+    <comment>Feature 4 description</comment>
+  </data>
+
+  <!-- Page Settings -->
+  <data name="CustomMouse_SmartSettings" xml:space="preserve">
+    <value>Configuración Inteligente</value>
+    <comment>Smart settings section title</comment>
+  </data>
+  <data name="CustomMouse_AdvancedSettings" xml:space="preserve">
+    <value>Configuración Avanzada</value>
+    <comment>Advanced settings section title</comment>
+  </data>
+  <data name="CustomMouse_DebugInfo" xml:space="preserve">
+    <value>Información de Depuración</value>
+    <comment>Debug information section title</comment>
+  </data>
+  <data name="CustomMouse_CurrentStyleLabel" xml:space="preserve">
+    <value>Estilo Actual:</value>
+    <comment>Current style label</comment>
+  </data>
+  <data name="CustomMouse_ThemeModeLabel" xml:space="preserve">
+    <value>Modo de Tema:</value>
+    <comment>Theme mode label</comment>
+  </data>
+  <data name="CustomMouse_PluginModeLabel" xml:space="preserve">
+    <value>Modo de Plugin:</value>
+    <comment>Plugin mode label</comment>
+  </data>
+  <data name="CustomMouse_LastDetectionLabel" xml:space="preserve">
+    <value>Última Detección:</value>
+    <comment>Last detection label</comment>
+  </data>
+  <data name="CustomMouse_ExtensionModeRadio" xml:space="preserve">
+    <value>Modo de Extensión</value>
+    <comment>Extension mode radio button</comment>
+  </data>
+  <data name="CustomMouse_IndependentModeRadio" xml:space="preserve">
+    <value>Modo Independiente</value>
+    <comment>Independent mode radio button</comment>
+  </data>
+  <data name="CustomMouse_ResetSettings" xml:space="preserve">
+    <value>Restablecer Configuración</value>
+    <comment>Reset settings button</comment>
+  </data>
+  <data name="CustomMouse_SaveSettings" xml:space="preserve">
+    <value>Guardar Configuración</value>
+    <comment>Save settings button</comment>
+  </data>
+  <data name="CustomMouse_Ready" xml:space="preserve">
+    <value>Listo</value>
+    <comment>Ready status</comment>
+  </data>
+  <data name="CustomMouse_ThemeAuto" xml:space="preserve">
+    <value>Tema: Automático</value>
+    <comment>Auto theme indicator</comment>
+  </data>
+  <data name="CustomMouse_StyleW11CC" xml:space="preserve">
+    <value>W11-CC-V2.2-HDPI</value>
+    <comment>Default style name</comment>
+  </data>
+</root>

@@ -1,0 +1,254 @@
+<wpfui:UiPage
+    x:Class="LenovoLegionToolkit.Plugins.ViveTool.ViveToolPage"
+    x:Name="PageRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:plugin="clr-namespace:LenovoLegionToolkit.Plugins.ViveTool"
+    xmlns:pluginRes="clr-namespace:LenovoLegionToolkit.Plugins.ViveTool.Resources"
+    xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:utils="clr-namespace:LenovoLegionToolkit.Plugins.ViveTool.Utils"
+    UseLayoutRounding="True"
+    SnapsToDevicePixels="True"
+    TextOptions.TextFormattingMode="Display"
+    TextOptions.TextRenderingMode="Auto"
+    FlowDirection="LeftToRight"
+    Scrollable="False"
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded">
+    
+    <wpfui:UiPage.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
+    </wpfui:UiPage.Resources>
+
+    <Grid Margin="0,0,16,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Content -->
+        <ScrollViewer 
+            x:Name="_contentScrollViewer"
+            Grid.Row="0" 
+            Grid.RowSpan="2" 
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled"
+            PanningMode="VerticalOnly">
+            <StackPanel Margin="0,0,0,0">
+                
+                <!-- Header with Description -->
+                <StackPanel Margin="0,16,0,28">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock
+                            AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                            Focusable="True"
+                            FontSize="28"
+                            FontWeight="Medium"
+                            Text="{x:Static pluginRes:Resource.ViveTool_PageTitle}" />
+                        <TextBlock
+                            Margin="0,6,0,0"
+                            FontSize="14"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="Wrap"
+                            Text="{x:Static pluginRes:Resource.ViveTool_PageDescription}"
+                            LineHeight="20" />
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Missing Tool Message -->
+                <Border
+                    Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+                    BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="24"
+                    Margin="0,0,0,24"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <wpfui:SymbolIcon Symbol="Warning24" 
+                                          FontSize="32" 
+                                          Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                          Margin="0,0,0,16" />
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            TextAlignment="Center"
+                            Margin="0,0,0,8"
+                            Text="{x:Static pluginRes:Resource.ViveTool_MissingToolMessage}" />
+                        <wpfui:Button
+                            Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
+                            Appearance="Primary"
+                            Click="GoToSettingsButton_Click"
+                            HorizontalAlignment="Center"
+                            Padding="24,8"
+                            Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Feature Flags List with Search -->
+                <Border
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="24"
+                    Margin="0,0,0,20"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            Color="Black"
+                            Direction="270"
+                            ShadowDepth="2"
+                            Opacity="0.08"
+                            BlurRadius="8" />
+                    </Border.Effect>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                FontSize="17"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{x:Static pluginRes:Resource.ViveTool_FeatureFlags}" />
+                            <wpfui:Button
+                                Grid.Column="1"
+                                x:Name="_importButton"
+                                Content="{x:Static pluginRes:Resource.ViveTool_Import}"
+                                Click="ImportButton_Click"
+                                Padding="12,6"
+                                Margin="0,0,8,0" />
+                            <wpfui:Button
+                                Grid.Column="2"
+                                x:Name="_refreshListButton"
+                                Content="{x:Static pluginRes:Resource.ViveTool_RefreshList}"
+                                Click="RefreshListButton_Click"
+                                Padding="12,6" />
+                        </Grid>
+                        
+                        <!-- Feature Flags DataGrid with Search -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Search Box in Header -->
+                            <Border
+                                Grid.Row="0"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="0,0,0,1"
+                                Padding="12,8,12,8"
+                                CornerRadius="8,8,0,0">
+                                <wpfui:TextBox
+                                    x:Name="_searchTextBox"
+                                    PlaceholderText="{x:Static pluginRes:Resource.ViveTool_SearchPlaceholder}"
+                                    TextChanged="SearchTextBox_TextChanged"
+                                    FontSize="13" />
+                            </Border>
+                            
+                            <!-- Content Area -->
+                            <Grid Grid.Row="1">
+                                <!-- Loading Indicator -->
+                                <StackPanel
+                                    x:Name="_loadingPanel"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0,16,0,40"
+                                    Visibility="Collapsed">
+                                    <wpfui:ProgressRing
+                                        IsIndeterminate="True"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="0,0,12,0" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{x:Static pluginRes:Resource.ViveTool_Loading}" />
+                                </StackPanel>
+
+                                <!-- Feature Flags DataGrid -->
+                                <DataGrid
+                                    x:Name="_featuresDataGrid"
+                                    AutoGenerateColumns="False"
+                                    IsReadOnly="True"
+                                    SelectionMode="Single"
+                                    HeadersVisibility="Column"
+                                    GridLinesVisibility="Horizontal"
+                                    RowHeight="40"
+                                    MaxHeight="600"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    CanUserReorderColumns="False"
+                                    ItemsSource="{Binding Features}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Header="{x:Static pluginRes:Resource.ViveTool_FeatureId}"
+                                            Binding="{Binding Id}"
+                                            Width="100" />
+                                        <DataGridTextColumn
+                                            Header="{x:Static pluginRes:Resource.ViveTool_FeatureName}"
+                                            Binding="{Binding Name}"
+                                            Width="*" />
+                                        <DataGridTextColumn
+                                            Header="{x:Static pluginRes:Resource.ViveTool_Status}"
+                                            Binding="{Binding Status, Converter={StaticResource FeatureStatusConverter}}"
+                                            Width="120" />
+                                        <DataGridTemplateColumn
+                                            Header="{x:Static pluginRes:Resource.ViveTool_Actions}"
+                                            Width="200">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                        <wpfui:Button
+                                                            Content="{x:Static pluginRes:Resource.ViveTool_Enable}"
+                                                            Click="EnableFeatureButton_Click"
+                                                            Tag="{Binding Id}"
+                                                            Padding="8,4"
+                                                            Margin="0,0,8,0"
+                                                            FontSize="12" />
+                                                        <wpfui:Button
+                                                            Content="{x:Static pluginRes:Resource.ViveTool_Disable}"
+                                                            Click="DisableFeatureButton_Click"
+                                                            Tag="{Binding Id}"
+                                                            Padding="8,4"
+                                                            FontSize="12" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Empty State -->
+                                <StackPanel
+                                    x:Name="_emptyStatePanel"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0,40,0,40"
+                                    Visibility="Collapsed">
+                                    <TextBlock
+                                        FontSize="16"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        TextAlignment="Center"
+                                        Text="{x:Static pluginRes:Resource.ViveTool_NoFeaturesFound}" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+</wpfui:UiPage>

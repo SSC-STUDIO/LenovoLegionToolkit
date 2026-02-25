@@ -1,0 +1,166 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.CustomMouse.CustomMousePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:LenovoLegionToolkit.Plugins.CustomMouse.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题和描述 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="{x:Static properties:Resource.CustomMouse_PageTitle}" 
+                      FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock Text="{x:Static properties:Resource.CustomMouse_PageDescription}" 
+                      FontSize="14" Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- 分类标签 -->
+        <Border Grid.Row="1" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+               CornerRadius="8" Padding="10" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="ExtensionModeRadio" Content="{x:Static properties:Resource.CustomMouse_ExtensionModeRadio}" Margin="0,0,20,0" 
+                             Checked="ModeRadioButton_Checked" Tag="extension"/>
+                <RadioButton x:Name="IndependentModeRadio" Content="{x:Static properties:Resource.CustomMouse_IndependentModeRadio}" Margin="0,0,20,0" 
+                             IsChecked="True" Checked="ModeRadioButton_Checked" Tag="independent"/>
+                <TextBlock x:Name="ModeDescriptionText" FontSize="12" Opacity="0.7" 
+                          VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 主要内容区域 -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- 当前状态 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{x:Static properties:Resource.CustomMouse_CurrentStyle}" 
+                                     FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="CurrentStyleText" Text="{x:Static properties:Resource.CustomMouse_StyleW11CC}" FontSize="14"/>
+                            <TextBlock x:Name="CurrentThemeText" Text="{x:Static properties:Resource.CustomMouse_ThemeAuto}" 
+                                     FontSize="12" Opacity="0.7" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="ApplyButton" Content="{x:Static properties:Resource.CustomMouse_ApplyStyle}" 
+                                   Click="ApplyButton_Click" Margin="0,0,10,0" 
+                                   Style="{StaticResource AccentButtonStyle}"/>
+                            <Button x:Name="RestoreButton" Content="{x:Static properties:Resource.CustomMouse_RestoreDefault}" 
+                                   Click="RestoreButton_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 设置选项 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resource.CustomMouse_SmartSettings}" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <!-- 自动颜色检测 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_AutoColorDetection}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_AutoColorDetection_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <CheckBox x:Name="AutoColorDetectionCheckBox" Grid.Column="1" 
+                                    VerticalAlignment="Center" Checked="AutoColorDetectionCheckBox_Checked" Unchecked="AutoColorDetectionCheckBox_Unchecked"/>
+                        </Grid>
+
+                        <!-- 主题模式 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_ThemeMode}" FontWeight="Bold"/>
+                            </StackPanel>
+                            
+                            <ComboBox x:Name="ThemeModeComboBox" Grid.Column="1" Width="120" 
+                                     SelectionChanged="ThemeModeComboBox_SelectionChanged">
+                                <ComboBoxItem Content="{x:Static properties:Resource.CustomMouse_ThemeMode_Auto}" Tag="auto"/>
+                                <ComboBoxItem Content="{x:Static properties:Resource.CustomMouse_ThemeMode_Light}" Tag="light"/>
+                                <ComboBoxItem Content="{x:Static properties:Resource.CustomMouse_ThemeMode_Dark}" Tag="dark"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- 亮度阈值 -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_BrightnessThreshold}" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Static properties:Resource.CustomMouse_BrightnessThreshold_Description}" 
+                                         FontSize="12" Opacity="0.7" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            
+                            <StackPanel Grid.Column="1">
+                                <Slider x:Name="BrightnessThresholdSlider" Minimum="0" Maximum="1" 
+                                        Value="0.5" TickFrequency="0.1" IsSnapToTickEnabled="True" 
+                                        ValueChanged="BrightnessThresholdSlider_ValueChanged"/>
+                                <TextBlock x:Name="BrightnessThresholdValue" Text="0.5" HorizontalAlignment="Center" 
+                                         FontSize="12" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 可用样式列表 -->
+                <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                       CornerRadius="8" Padding="20">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Text="{x:Static properties:Resource.CustomMouse_AvailableStyles}" 
+                                     FontWeight="Bold" FontSize="16"/>
+                            
+                            <Button Grid.Column="1" x:Name="RefreshButton" Content="{x:Static properties:Resource.CustomMouse_Refresh}" 
+                                   Click="RefreshButton_Click" Style="{StaticResource DefaultButtonStyle}"/>
+                        </Grid>
+                        
+                        <ListBox x:Name="StylesListBox" Height="200" SelectionChanged="StylesListBox_SelectionChanged"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部状态栏 -->
+        <Border Grid.Row="3" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+               CornerRadius="8" Padding="10" Margin="0,20,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="StatusText" Text="{x:Static properties:Resource.CustomMouse_Ready}" FontSize="12" Opacity="0.7"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

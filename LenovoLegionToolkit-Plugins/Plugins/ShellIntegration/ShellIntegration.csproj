@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>LenovoLegionToolkit.Plugins.ShellIntegration</RootNamespace>
+    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Plugin Metadata -->
+  <PropertyGroup>
+    <PluginId>shell-integration</PluginId>
+    <PluginName>Shell Integration</PluginName>
+    <PluginVersion>1.0.0</PluginVersion>
+    <PluginAuthor>LenovoLegionToolkit Team</PluginAuthor>
+    <PluginDescription>Integrate Lenovo Legion Toolkit with Windows shell context menu</PluginDescription>
+    <MinLLTVersion>3.6.0</MinLLTVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\SDK.csproj" />
+  </ItemGroup>
+
+  <!-- Package the plugin -->
+  <Target Name="PackagePlugin" AfterTargets="Build">
+    <PropertyGroup>
+      <PluginOutputDir>$(SolutionDir)..\..\Build\plugins\$(PluginId)</PluginOutputDir>
+    </PropertyGroup>
+    
+    <MakeDir Directories="$(PluginOutputDir)" />
+    
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginOutputDir)" />
+    <Copy SourceFiles="$(ProjectDir)plugin.json" DestinationFolder="$(PluginOutputDir)" Condition="Exists('$(ProjectDir)plugin.json')" />
+    
+    <Message Text="Packaged plugin: $(PluginId) to $(PluginOutputDir)" Importance="high" />
+  </Target>
+
+</Project>
