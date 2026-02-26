@@ -4,9 +4,25 @@ on:
   push:
     branches: [main, master]
     paths:
-      - 'plugins/**'
-      - '!plugins/**/obj/**'
-      - '!plugins/**/bin/**'
+      - 'Plugins/**'
+      - 'SDK/**'
+      - 'scripts/**'
+      - 'store.json'
+      - 'Directory.Build.props'
+      - '.github/workflows/build.yml'
+      - '!Plugins/**/obj/**'
+      - '!Plugins/**/bin/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'Plugins/**'
+      - 'SDK/**'
+      - 'scripts/**'
+      - 'store.json'
+      - 'Directory.Build.props'
+      - '.github/workflows/build.yml'
+      - '!Plugins/**/obj/**'
+      - '!Plugins/**/bin/**'
   workflow_dispatch:
     inputs:
       plugin:
@@ -37,7 +53,42 @@ permissions:
   security-events: read
 
 jobs:
+  validate-completion:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run plugin completion checker
+        shell: pwsh
+        run: |
+          $reportPath = "artifacts/plugin-completion-report.json"
+          $pluginInput = "${{ github.event.inputs.plugin }}"
+          if ($pluginInput) {
+            $pluginIds = $pluginInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+            & .\scripts\plugin-completion-check.ps1 -PluginIds $pluginIds -JsonReportPath $reportPath
+          } else {
+            & .\scripts\plugin-completion-check.ps1 -JsonReportPath $reportPath
+          }
+
+      - name: Upload plugin completion report
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-completion-report
+          path: artifacts/plugin-completion-report.json
+          if-no-files-found: error
+          retention-days: 7
+
   build:
+    needs: validate-completion
     runs-on: windows-latest
 
     steps:
@@ -60,7 +111,7 @@ jobs:
             Write-Host "Building specific plugin: $input"
             Write-Host "plugins=$input" >> $env:GITHUB_OUTPUT
           } else {
-            $plugins = Get-ChildItem -Path plugins -Directory -Name | Where-Object { $_ -ne 'SDK' -and $_ -ne 'template' -and $_ -ne 'src' }
+            $plugins = Get-ChildItem -Path Plugins -Directory -Name | Where-Object { $_ -ne 'Template' -and $_ -notlike '*.Tests' }
             $pluginsStr = $plugins -join ","
             Write-Host "Building all plugins: $pluginsStr"
             Write-Host "plugins=$pluginsStr" >> $env:GITHUB_OUTPUT
@@ -74,7 +125,7 @@ jobs:
             $plugin = $plugin.Trim()
             if (-not $plugin) { continue }
             
-            $csproj = Get-ChildItem -Path "plugins/$plugin" -Filter *.csproj -Recurse | Select-Object -First 1
+            $csproj = Get-ChildItem -Path "Plugins/$plugin" -Filter *.csproj -Recurse | Select-Object -First 1
             if ($csproj) {
               Write-Host "Building $plugin..."
               dotnet build $csproj.FullName -c Release --nologo -v q
@@ -96,7 +147,7 @@ jobs:
             $plugin = $plugin.Trim()
             if (-not $plugin) { continue }
             
-            $pluginDir = "plugins/$plugin"
+            $pluginDir = "Plugins/$plugin"
             $buildDir = "$pluginDir/build"
             
             # Ensure build directory exists
