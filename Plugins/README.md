@@ -50,17 +50,59 @@ Integrate Lenovo Legion Toolkit with Windows shell context menu.
 - .NET 10.0 SDK
 - Visual Studio 2022 or VS Code
 
+### Independent Build Model
+
+This repository can be built independently from the main `LenovoLegionToolkit` source repository.
+
+- Plugin SDK/contracts compile against vendored host references in `Dependencies/Host`.
+- No plugin project should use `ProjectReference` to `..\\..\\..\\LenovoLegionToolkit`.
+- To refresh host references after host updates:
+
+```powershell
+# from LenovoLegionToolkit-Plugins repo root
+powershell -ExecutionPolicy Bypass -File .\scripts\refresh-host-references.ps1 -UseSiblingRepoBuild
+
+# or provide an explicit LLT build output folder
+powershell -ExecutionPolicy Bypass -File .\scripts\refresh-host-references.ps1 -SourceDir "C:\path\to\Lenovo Legion Toolkit build output"
+```
+
 ### Building
 ```bash
 # Build all plugins
 dotnet build LenovoLegionToolkit-Plugins.sln
 
 # Build specific plugin
-dotnet build plugins/CustomMouse/CustomMouse.csproj
+dotnet build Plugins/CustomMouse/LenovoLegionToolkit.Plugins.CustomMouse.csproj
 
 # Build in Release mode
 dotnet build -c Release
 ```
+
+### Plugin Completion Test Tool
+
+Use the independent completion checker to validate plugin release readiness without launching the main app:
+
+```powershell
+# check all plugins listed in store.json
+powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1
+
+# check specific plugin(s)
+powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -PluginIds custom-mouse,network-acceleration
+
+# skip build/tests when doing metadata-only checks
+powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -SkipBuild -SkipTests
+
+# write machine-readable report (for CI/release gates)
+powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -JsonReportPath .\artifacts\plugin-completion-report.json
+```
+
+Checks include:
+- `store.json` ↔ `plugin.json` version / min host version consistency
+- Plugin project build (`dotnet build`)
+- Expected output artifacts (`<assembly>.dll`, `plugin.json`)
+- Plugin changelog presence
+- Optional plugin test project execution (`*.Tests`)
+- Optional JSON report output (`-JsonReportPath`)
 
 ### Creating a New Plugin
 
@@ -115,6 +157,7 @@ This repository uses GitHub Actions for:
 
 - **Build:** Automatically builds all plugins on push/PR
 - **Test:** Runs unit and integration tests
+- **Validation:** Runs plugin completion checker and uploads `plugin-completion-report` JSON artifact
 - **Release:** Creates releases from git tags
 
 ### Tag Format
