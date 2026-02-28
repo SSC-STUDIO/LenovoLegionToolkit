@@ -130,10 +130,113 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     public ViveToolPage()
     {
-        InitializeComponent();
+        var initialized = TryInitializeComponent();
         DataContext = this;
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
+
+        if (!initialized)
+        {
+            Loaded += Page_Loaded;
+            Unloaded += Page_Unloaded;
+        }
+    }
+
+    private bool TryInitializeComponent()
+    {
+        try
+        {
+            InitializeComponent();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveToolPage InitializeComponent fallback: {ex.Message}", ex);
+
+            BuildFallbackUi();
+            return false;
+        }
+    }
+
+    private void BuildFallbackUi()
+    {
+        _searchTextBox = new Wpf.Ui.Controls.TextBox
+        {
+            PlaceholderText = Resource.ViveTool_SearchPlaceholder
+        };
+        _searchTextBox.TextChanged += SearchTextBox_TextChanged;
+
+        _importButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_Import
+        };
+        _importButton.Click += ImportButton_Click;
+
+        _refreshListButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_RefreshList
+        };
+        _refreshListButton.Click += RefreshListButton_Click;
+
+        _loadingPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Visibility = Visibility.Collapsed
+        };
+        _loadingPanel.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_Loading,
+            Margin = new Thickness(0, 0, 0, 8)
+        });
+
+        _featuresDataGrid = new System.Windows.Controls.DataGrid
+        {
+            AutoGenerateColumns = false,
+            IsReadOnly = true
+        };
+
+        _emptyStatePanel = new StackPanel
+        {
+            Visibility = Visibility.Collapsed
+        };
+        _emptyStatePanel.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_NoFeaturesFound,
+            TextWrapping = TextWrapping.Wrap
+        });
+
+        var buttonRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        buttonRow.Children.Add(_importButton);
+        buttonRow.Children.Add(_refreshListButton);
+
+        var root = new StackPanel
+        {
+            Margin = new Thickness(16)
+        };
+        root.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PageTitle,
+            FontSize = 24,
+            FontWeight = FontWeights.Medium
+        });
+        root.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PageDescription,
+            Margin = new Thickness(0, 8, 0, 12),
+            TextWrapping = TextWrapping.Wrap
+        });
+        root.Children.Add(buttonRow);
+        root.Children.Add(_searchTextBox);
+        root.Children.Add(_loadingPanel);
+        root.Children.Add(_featuresDataGrid);
+        root.Children.Add(_emptyStatePanel);
+
+        Content = root;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)

@@ -20,6 +20,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 public class ViveToolService : IViveToolService
 {
     public const string ViveToolExeName = "ViVeTool.exe";
+    private const string BundledViveToolDirectoryName = "Bundled";
     // Official ViVeTool release asset (ZIP file containing ViVeTool.exe)
     private const string DefaultViveToolDownloadUrl = "https://github.com/thebookisclosed/ViVe/releases/latest/download/ViVeTool-v0.3.4-IntelAmd.zip";
     private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
@@ -54,6 +55,14 @@ public class ViveToolService : IViveToolService
         if (!string.IsNullOrEmpty(userSpecifiedPath) && File.Exists(userSpecifiedPath))
         {
             _cachedViveToolPath = userSpecifiedPath;
+            return _cachedViveToolPath;
+        }
+
+        // Then check bundled runtime shipped with plugin package.
+        var bundledPath = GetBundledViveToolPath();
+        if (File.Exists(bundledPath))
+        {
+            _cachedViveToolPath = bundledPath;
             return _cachedViveToolPath;
         }
 
@@ -98,10 +107,23 @@ public class ViveToolService : IViveToolService
         return Path.Combine(Folders.AppData, "ViveTool", ViveToolExeName);
     }
 
+    private string GetBundledViveToolPath()
+    {
+        var assemblyDirectory = Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location) ?? AppContext.BaseDirectory;
+        return Path.Combine(assemblyDirectory, BundledViveToolDirectoryName, ViveToolExeName);
+    }
+
     private async Task<bool> EnsureBuiltInViveToolAsync()
     {
         try
         {
+            var bundledPath = GetBundledViveToolPath();
+            if (File.Exists(bundledPath))
+            {
+                _cachedViveToolPath = bundledPath;
+                return true;
+            }
+
             var builtInPath = GetBuiltInViveToolPath();
             if (File.Exists(builtInPath))
                 return true;
@@ -887,6 +909,13 @@ public class ViveToolService : IViveToolService
     {
         try
         {
+            var bundledPath = GetBundledViveToolPath();
+            if (File.Exists(bundledPath))
+            {
+                _cachedViveToolPath = bundledPath;
+                return true;
+            }
+
             var builtInPath = GetBuiltInViveToolPath();
             if (File.Exists(builtInPath))
                 return true;

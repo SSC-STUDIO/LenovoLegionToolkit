@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>LenovoLegionToolkit.Plugins.CustomMouse.Tests</RootNamespace>
     <AssemblyName>LenovoLegionToolkit.Plugins.CustomMouse.Tests</AssemblyName>
     <Nullable>enable</Nullable>
@@ -9,6 +9,12 @@
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- Override plugin-output settings imported from Directory.Build.props -->
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +31,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CustomMouse\CustomMouse.csproj" />
-    <ProjectReference Include="..\..\SDK\SDK.csproj" />
+    <ProjectReference Include="..\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj" />
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <Reference Include="LenovoLegionToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
+
+  <!-- Prevent plugin cleanup target from deleting test runtime assets -->
+  <Target Name="CleanupPluginOutput" />
 
 </Project>

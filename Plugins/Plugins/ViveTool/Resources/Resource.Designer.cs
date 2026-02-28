@@ -608,6 +608,24 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub.
+        /// </summary>
+        public static string ViveTool_GitHub {
+            get {
+                return ResourceManager.GetString("ViveTool_GitHub", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ViVeTool Binary Path.
+        /// </summary>
+        public static string ViveTool_BinaryPathTitle {
+            get {
+                return ResourceManager.GetString("ViveTool_BinaryPathTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import Config.
         /// </summary>
         public static string ViveTool_ImportConfig {

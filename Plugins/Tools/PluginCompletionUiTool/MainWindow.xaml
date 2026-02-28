@@ -1,0 +1,214 @@
+<Window x:Class="PluginCompletionUiTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        AutomationProperties.AutomationId="PluginCompletionMainWindow"
+        Title="Plugin Completion UI Tool"
+        Height="860"
+        Width="1280"
+        MinHeight="700"
+        MinWidth="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="220" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Padding="12"
+                BorderBrush="#FFD0D0D0"
+                BorderThickness="1"
+                CornerRadius="8"
+                Background="#FFF8F8F8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,8"
+                           Text="Repository root:" />
+                <TextBox x:Name="RepositoryPathTextBox"
+                         AutomationProperties.AutomationId="RepositoryPathTextBox"
+                         Grid.Row="0"
+                         Grid.Column="1"
+                         Margin="0,0,8,8"
+                         VerticalContentAlignment="Center"
+                         MinWidth="500" />
+                <Button x:Name="BrowseButton"
+                        AutomationProperties.AutomationId="BrowseButton"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="0,0,8,8"
+                        Padding="12,4"
+                        Click="BrowseButton_Click"
+                        Content="Browse..." />
+                <Button x:Name="OpenRepositoryButton"
+                        AutomationProperties.AutomationId="OpenRepositoryButton"
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Margin="0,0,8,8"
+                        Padding="12,4"
+                        Click="OpenRepositoryButton_Click"
+                        Content="Open Repo" />
+                <Button x:Name="OpenReportButton"
+                        AutomationProperties.AutomationId="OpenReportButton"
+                        Grid.Row="0"
+                        Grid.Column="4"
+                        Margin="0,0,0,8"
+                        Padding="12,4"
+                        Click="OpenReportButton_Click"
+                        IsEnabled="False"
+                        Content="Open Report" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,8"
+                           Text="Plugin IDs:" />
+                <TextBox x:Name="PluginIdsTextBox"
+                         AutomationProperties.AutomationId="PluginIdsTextBox"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="4"
+                         Margin="0,0,0,8"
+                         VerticalContentAlignment="Center"
+                         ToolTip="Comma/space/newline separated plugin IDs. Empty means all plugins in store.json." />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"
+                           Text="Configuration:" />
+                <ComboBox x:Name="ConfigurationComboBox"
+                          AutomationProperties.AutomationId="ConfigurationComboBox"
+                          Grid.Row="2"
+                          Grid.Column="1"
+                          Width="160"
+                          HorizontalAlignment="Left"
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="Release" />
+                    <ComboBoxItem Content="Debug" />
+                </ComboBox>
+                <CheckBox x:Name="SkipBuildCheckBox"
+                          AutomationProperties.AutomationId="SkipBuildCheckBox"
+                          Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="180,0,0,0"
+                          VerticalAlignment="Center"
+                          Content="Skip Build" />
+                <CheckBox x:Name="SkipTestsCheckBox"
+                          AutomationProperties.AutomationId="SkipTestsCheckBox"
+                          Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="300,0,0,0"
+                          VerticalAlignment="Center"
+                          Content="Skip Tests" />
+                <Button x:Name="RunButton"
+                        AutomationProperties.AutomationId="RunButton"
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        HorizontalAlignment="Right"
+                        Padding="16,4"
+                        Click="RunButton_Click"
+                        Content="Run Completion Check" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1"
+                Margin="0,12,0,12"
+                Padding="10"
+                CornerRadius="6"
+                BorderBrush="#FFD0D0D0"
+                BorderThickness="1"
+                Background="White">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Status: " FontWeight="SemiBold" />
+                <TextBlock x:Name="StatusTextBlock"
+                           AutomationProperties.AutomationId="StatusTextBlock"
+                           Text="Idle" />
+                <TextBlock Text="    " />
+                <TextBlock Text="Summary: " FontWeight="SemiBold" />
+                <TextBlock x:Name="SummaryTextBlock"
+                           AutomationProperties.AutomationId="SummaryTextBlock"
+                           Text="No run yet." />
+            </StackPanel>
+        </Border>
+
+        <TabControl Grid.Row="2">
+            <TabItem Header="Plugins">
+                <DataGrid x:Name="PluginResultsDataGrid"
+                          AutomationProperties.AutomationId="PluginResultsDataGrid"
+                          Margin="0,8,0,0"
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Plugin ID" Binding="{Binding PluginId}" Width="3*" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                        <DataGridTextColumn Header="Failures" Binding="{Binding Failures}" Width="*" />
+                        <DataGridTextColumn Header="Warnings" Binding="{Binding Warnings}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Steps">
+                <DataGrid x:Name="StepLogsDataGrid"
+                          AutomationProperties.AutomationId="StepLogsDataGrid"
+                          Margin="0,8,0,0"
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="2*" />
+                        <DataGridTextColumn Header="Plugin ID" Binding="{Binding PluginId}" Width="2*" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                        <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="5*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="3"
+                Margin="0,12,0,0"
+                Padding="8"
+                CornerRadius="6"
+                BorderBrush="#FFD0D0D0"
+                BorderThickness="1"
+                Background="#FF0D1117">
+            <TextBox x:Name="LogTextBox"
+                     AutomationProperties.AutomationId="LogTextBox"
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     Foreground="#FFE6EDF3"
+                     Background="#FF0D1117"
+                     BorderThickness="0"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     AcceptsReturn="True"
+                     AcceptsTab="True" />
+        </Border>
+    </Grid>
+</Window>

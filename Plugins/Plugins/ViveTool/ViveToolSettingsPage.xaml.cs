@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,10 +22,134 @@ public partial class ViveToolSettingsPage
 
     public ViveToolSettingsPage()
     {
-        InitializeComponent();
+        TryInitializeComponent();
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
         Loaded += ViveToolSettingsPage_Loaded;
+    }
+
+    private void TryInitializeComponent()
+    {
+        try
+        {
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveToolSettingsPage InitializeComponent fallback: {ex.Message}", ex);
+
+            BuildFallbackUi();
+        }
+    }
+
+    private void BuildFallbackUi()
+    {
+        _statusTextBlock = new TextBlock
+        {
+            Margin = new Thickness(0, 6, 0, 12),
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(96, 96, 96))
+        };
+
+        _viveToolPathTextBox = new Wpf.Ui.Controls.TextBox
+        {
+            IsReadOnly = true,
+            Margin = new Thickness(0, 0, 8, 0)
+        };
+
+        _downloadProgressBar = new ProgressBar
+        {
+            Height = 8,
+            Margin = new Thickness(0, 0, 0, 0)
+        };
+        _downloadProgressText = new TextBlock
+        {
+            Margin = new Thickness(0, 12, 0, 0)
+        };
+        _downloadProgressGrid = new Grid
+        {
+            Visibility = Visibility.Collapsed
+        };
+        _downloadProgressGrid.Children.Add(_downloadProgressBar);
+        _downloadProgressGrid.Children.Add(_downloadProgressText);
+
+        _gitHubButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_GitHub, Margin = new Thickness(0, 0, 8, 0) };
+        _gitHubButton.Click += GitHubButton_Click;
+        _downloadViveToolButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Download, Margin = new Thickness(0, 0, 8, 0) };
+        _downloadViveToolButton.Click += DownloadViveToolButton_Click;
+        _refreshStatusButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Refresh };
+        _refreshStatusButton.Click += RefreshStatusButton_Click;
+        _browseViveToolButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Browse, Margin = new Thickness(0, 0, 8, 0) };
+        _browseViveToolButton.Click += BrowseViveToolButton_Click;
+        _importConfigButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_ImportConfig };
+        _importConfigButton.Click += ImportConfigButton_Click;
+
+        var actionRow = new WrapPanel();
+        actionRow.Children.Add(_gitHubButton);
+        actionRow.Children.Add(_downloadViveToolButton);
+        actionRow.Children.Add(_refreshStatusButton);
+
+        var pathRow = new Grid();
+        pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        Grid.SetColumn(_viveToolPathTextBox, 0);
+        Grid.SetColumn(_browseViveToolButton, 1);
+        Grid.SetColumn(_importConfigButton, 2);
+        pathRow.Children.Add(_viveToolPathTextBox);
+        pathRow.Children.Add(_browseViveToolButton);
+        pathRow.Children.Add(_importConfigButton);
+
+        var statusCard = new Border
+        {
+            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(14),
+            Margin = new Thickness(0, 0, 0, 12)
+        };
+        var statusStack = new StackPanel();
+        statusStack.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_ViveToolStatus,
+            FontSize = 16,
+            FontWeight = FontWeights.Medium
+        });
+        statusStack.Children.Add(_statusTextBlock);
+        statusStack.Children.Add(_downloadProgressGrid);
+        statusStack.Children.Add(actionRow);
+        statusCard.Child = statusStack;
+
+        var pathCard = new Border
+        {
+            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(14)
+        };
+        var pathStack = new StackPanel();
+        pathStack.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_BinaryPathTitle,
+            FontSize = 16,
+            FontWeight = FontWeights.Medium,
+            Margin = new Thickness(0, 0, 0, 10)
+        });
+        pathStack.Children.Add(pathRow);
+        pathStack.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PathDescription,
+            Margin = new Thickness(0, 10, 0, 0),
+            TextWrapping = TextWrapping.Wrap
+        });
+        pathCard.Child = pathStack;
+
+        var root = new StackPanel { Margin = new Thickness(16) };
+        root.Children.Add(statusCard);
+        root.Children.Add(pathCard);
+
+        Content = root;
     }
 
     private async void ViveToolSettingsPage_Loaded(object sender, RoutedEventArgs e)
@@ -81,7 +206,7 @@ public partial class ViveToolSettingsPage
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = Resource.ViveTool_SelectViveTool,
-                Filter = "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*",
+                Filter = GetExecutableDialogFilter(),
                 FilterIndex = 1,
                 CheckFileExists = true,
                 CheckPathExists = true
@@ -228,7 +353,7 @@ public partial class ViveToolSettingsPage
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = Resource.ViveTool_ImportConfigTitle,
-                Filter = "JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+                Filter = GetImportConfigDialogFilter(),
                 FilterIndex = 1,
                 CheckFileExists = true,
                 CheckPathExists = true
@@ -256,5 +381,42 @@ public partial class ViveToolSettingsPage
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
+    }
+
+    private static string GetExecutableDialogFilter()
+    {
+        return GetLocalizedFilter(
+            "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*",
+            "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*",
+            "可執行檔案 (*.exe)|*.exe|所有檔案 (*.*)|*.*");
+    }
+
+    private static string GetImportConfigDialogFilter()
+    {
+        return GetLocalizedFilter(
+            "JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            "JSON 文件 (*.json)|*.json|CSV 文件 (*.csv)|*.csv|文本文件 (*.txt)|*.txt|所有文件 (*.*)|*.*",
+            "JSON 檔案 (*.json)|*.json|CSV 檔案 (*.csv)|*.csv|文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*");
+    }
+
+    private static string GetLocalizedFilter(string en, string zhHans, string zhHant)
+    {
+        var culture = CultureInfo.CurrentUICulture.Name;
+        if (culture.StartsWith("zh-hans", StringComparison.OrdinalIgnoreCase) ||
+            culture.Equals("zh-cn", StringComparison.OrdinalIgnoreCase) ||
+            culture.Equals("zh-sg", StringComparison.OrdinalIgnoreCase))
+        {
+            return zhHans;
+        }
+
+        if (culture.StartsWith("zh-hant", StringComparison.OrdinalIgnoreCase) ||
+            culture.Equals("zh-tw", StringComparison.OrdinalIgnoreCase) ||
+            culture.Equals("zh-hk", StringComparison.OrdinalIgnoreCase) ||
+            culture.Equals("zh-mo", StringComparison.OrdinalIgnoreCase))
+        {
+            return zhHant;
+        }
+
+        return en;
     }
 }

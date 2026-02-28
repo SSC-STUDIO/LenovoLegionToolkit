@@ -1,0 +1,72 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.CustomMouse.CustomMouseSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:text="clr-namespace:LenovoLegionToolkit.Plugins.CustomMouse"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="500"
+             d:DesignWidth="760">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="{x:Static text:CustomMouseText.SettingsSubtitle}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,16" />
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <TextBlock Text="{x:Static text:CustomMouseText.PointerSpeedLabel}" Margin="0,0,0,4" />
+            <Slider x:Name="_pointerSpeedSlider"
+                    Minimum="1"
+                    Maximum="20"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True" />
+        </StackPanel>
+
+        <CheckBox Grid.Row="2"
+                  x:Name="_swapButtonsCheckBox"
+                  Content="{x:Static text:CustomMouseText.SwapButtonsLabel}"
+                  Margin="0,16,0,0" />
+
+        <CheckBox Grid.Row="3"
+                  x:Name="_autoThemeCursorCheckBox"
+                  Content="{x:Static text:CustomMouseText.AutoThemeLabel}"
+                  Margin="0,12,0,0" />
+
+        <TextBlock Grid.Row="4"
+                   Text="{x:Static text:CustomMouseText.CursorHint}"
+                   Margin="0,12,0,0"
+                   Foreground="#FF6A6A6A" />
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,16,0,0">
+            <Button Content="{x:Static text:CustomMouseText.ApplyToWindowsButton}"
+                    Width="130"
+                    Click="ApplyButton_Click" />
+            <Button Content="{x:Static text:CustomMouseText.ApplyCursorThemeNowButton}"
+                    Width="170"
+                    Margin="8,0,0,0"
+                    Click="ApplyCursorThemeNowButton_Click" />
+            <Button Content="{x:Static text:CustomMouseText.ReloadButton}"
+                    Width="90"
+                    Margin="8,0,0,0"
+                    Click="ReloadButton_Click" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="6"
+                   x:Name="_statusTextBlock"
+                   Margin="0,12,0,0"
+                   TextWrapping="Wrap"
+                   Foreground="#FF2E7D32" />
+    </Grid>
+
+</UserControl>

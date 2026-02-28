@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -13,28 +13,45 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Plugin version -->
-    <Version>1.1.0</Version>
-    <FileVersion>1.1.0</FileVersion>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <Version>1.1.4</Version>
+    <FileVersion>1.1.4</FileVersion>
+    <AssemblyVersion>1.1.4</AssemblyVersion>
     <!-- Output DLL name matching plugin ID -->
-    <AssemblyName>vive-tool</AssemblyName>
+    <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+    <Reference Include="Lenovo Legion Toolkit">
+      <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NeoSmart.AsyncLock" Version="3.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>plugin.json</TargetPath>
+    </None>
+    <None Include="Bundled\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Bundled\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

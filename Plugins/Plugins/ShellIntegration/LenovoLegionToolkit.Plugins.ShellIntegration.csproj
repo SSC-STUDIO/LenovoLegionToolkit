@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -11,27 +11,35 @@
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0</FileVersion>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <AssemblyName>shell-integration</AssemblyName>
+    <Version>1.0.3</Version>
+    <FileVersion>1.0.3</FileVersion>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+    <Reference Include="Lenovo Legion Toolkit">
+      <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">

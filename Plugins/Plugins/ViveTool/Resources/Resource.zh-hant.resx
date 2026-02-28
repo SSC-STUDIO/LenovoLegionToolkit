@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -179,7 +179,7 @@
     <value>ViVeTool.exe 路徑</value>
   </data>
   <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>選擇 ViVeTool.exe 檔案的路徑。如果未指定，將使用內建下載或系統 PATH 中的版本。</value>
+    <value>外掛預設已內建 ViVeTool 執行環境。你仍可自訂 ViVeTool.exe 路徑；若未指定自訂路徑，將自動使用內建版本並回退到系統 PATH。</value>
   </data>
   <data name="ViveTool_BrowseError" xml:space="preserve">
     <value>瀏覽檔案時發生錯誤：{0}</value>
@@ -204,5 +204,11 @@
   </data>
   <data name="ViveTool_GoToSettings" xml:space="preserve">
     <value>前往設定</value>
+  </data>
+  <data name="ViveTool_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
+    <value>ViVeTool 二進位路徑</value>
   </data>
 </root>

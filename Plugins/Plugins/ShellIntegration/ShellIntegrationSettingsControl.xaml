@@ -1,0 +1,50 @@
+<UserControl x:Class="LenovoLegionToolkit.Plugins.ShellIntegration.ShellIntegrationSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:text="clr-namespace:LenovoLegionToolkit.Plugins.ShellIntegration"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="420"
+             d:DesignWidth="760">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="{x:Static text:ShellIntegrationText.Subtitle}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,16" />
+
+        <TextBlock Grid.Row="1"
+                   x:Name="_statusTextBlock"
+                   TextWrapping="Wrap"
+                   Foreground="#FF2E7D32" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,16,0,0">
+            <Button Content="{x:Static text:ShellIntegrationText.EnableButton}"
+                    Width="90"
+                    Click="EnableButton_Click" />
+            <Button Content="{x:Static text:ShellIntegrationText.DisableButton}"
+                    Width="90"
+                    Margin="8,0,0,0"
+                    Click="DisableButton_Click" />
+            <Button Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
+                    Width="160"
+                    Margin="8,0,0,0"
+                    Click="OpenStyleButton_Click" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="3"
+                   Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
+                   Margin="0,12,0,0"
+                   Foreground="#FF6A6A6A" />
+    </Grid>
+
+</UserControl>

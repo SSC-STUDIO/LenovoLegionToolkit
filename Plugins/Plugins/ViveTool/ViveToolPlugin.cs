@@ -1,7 +1,5 @@
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Plugins.SDK;
+﻿using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
-using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;
 
@@ -9,17 +7,17 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
 /// ViVeTool plugin for managing Windows feature flags
 /// </summary>
 [Plugin(
-    id: PluginConstants.ViveTool,
+    id: "vive-tool",
     name: "ViVeTool",
-    version: "1.1.0",
+    version: "1.1.4",
     description: "Manage Windows feature flags using ViVeTool",
     author: "LenovoLegionToolkit Team",
-    MinimumHostVersion = "1.0.0",
+    MinimumHostVersion = "3.6.1",
     Icon = "Code24"
 )]
 public class ViveToolPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 {
-    public override string Id => PluginConstants.ViveTool;
+    public override string Id => "vive-tool";
     public override string Name => Resource.ViveTool_PageTitle;
     public override string Description => Resource.ViveTool_PageDescription;
     public override string Icon => "Code24";

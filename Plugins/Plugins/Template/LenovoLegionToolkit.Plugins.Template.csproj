@@ -11,21 +11,12 @@
 
   <PropertyGroup>
     <!-- 覆盖 Directory.Build.props 中的设置 -->
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\$(PluginId)\</OutputPath>
+    <OutputPath>..\..\Build\plugins\$(PluginId)\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- 引用 SDK -->
-    <ProjectReference Include="..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <!-- 引用主项目 -->
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
-      <PrivateAssets>All</PrivateAssets>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj">
-      <PrivateAssets>All</PrivateAssets>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
   </ItemGroup>
 
   <ItemGroup>

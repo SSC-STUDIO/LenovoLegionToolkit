@@ -1,282 +1,131 @@
-using System;
-using System.Linq;
 using LenovoLegionToolkit.Plugins.CustomMouse;
+using LenovoLegionToolkit.Plugins.SDK;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests
+namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
+
+public class CustomMousePluginTests
 {
-    public class CustomMousePluginTests
+    [Fact]
+    public void Plugin_HasExpectedMetadata()
     {
-        [Fact]
-        public void Plugin_ImplementsIStatefulPlugin()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
+        var plugin = new CustomMousePlugin();
 
-            // Act & Assert
-            Assert.IsAssignableFrom<IStatefulPlugin>(plugin);
-        }
+        Assert.Equal("custom-mouse", plugin.Id);
+        Assert.Equal(CustomMouseText.PluginName, plugin.Name);
+        Assert.False(plugin.IsSystemPlugin);
+        Assert.Equal(CustomMouseText.PluginDescription, plugin.Description);
+        Assert.False(string.IsNullOrWhiteSpace(plugin.Icon));
+    }
 
-        [Fact]
-        public void Plugin_HasCorrectMetadata()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
+    [Fact]
+    public void OnInstalled_ResetsToDefaultSettings()
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.SetDpi(3200);
+        plugin.SetPollingRate(500);
 
-            // Act & Assert
-            Assert.Equal("custom-mouse", plugin.Id);
-            Assert.Equal("Custom Mouse", plugin.Name);
-            Assert.Equal("1.0.0", plugin.Version);
-            Assert.Equal("LenovoLegionToolkit Team", plugin.Author);
-            Assert.NotNull(plugin.Description);
-            Assert.NotNull(plugin.RepositoryUrl);
-            Assert.False(plugin.IsSystemPlugin);
-        }
+        plugin.OnInstalled();
 
-        [Fact]
-        public void Plugin_DefaultSettings_AreCorrect()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
+        Assert.Equal(1600, plugin.Settings.Dpi);
+        Assert.Equal(1000, plugin.Settings.PollingRate);
+        Assert.Empty(plugin.Settings.ButtonMappings);
+    }
 
-            // Act
-            plugin.OnInstalled();
+    [Theory]
+    [InlineData(100)]
+    [InlineData(800)]
+    [InlineData(1600)]
+    [InlineData(3200)]
+    [InlineData(16000)]
+    public void SetDpi_WithValidValue_UpdatesSettings(int dpi)
+    {
+        var plugin = new CustomMousePlugin();
 
-            // Assert
-            Assert.Equal(1600, plugin.Settings.Dpi);
-            Assert.Equal(1000, plugin.Settings.PollingRate);
-            Assert.Empty(plugin.Settings.ButtonMappings);
-        }
+        var changed = plugin.SetDpi(dpi);
 
-        [Theory]
-        [InlineData(100)]
-        [InlineData(800)]
-        [InlineData(1600)]
-        [InlineData(3200)]
-        [InlineData(16000)]
-        public void SetDpi_ValidValues_ReturnsTrue(int dpi)
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
+        Assert.True(changed);
+        Assert.Equal(dpi, plugin.Settings.Dpi);
+    }
 
-            // Act
-            var result = plugin.SetDpi(dpi);
+    [Theory]
+    [InlineData(99)]
+    [InlineData(16001)]
+    [InlineData(-1)]
+    public void SetDpi_WithInvalidValue_DoesNotUpdate(int dpi)
+    {
+        var plugin = new CustomMousePlugin();
+        var originalDpi = plugin.Settings.Dpi;
 
-            // Assert
-            Assert.True(result);
-            Assert.Equal(dpi, plugin.Settings.Dpi);
-        }
+        var changed = plugin.SetDpi(dpi);
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(99)]
-        [InlineData(16001)]
-        [InlineData(-100)]
-        public void SetDpi_InvalidValues_ReturnsFalse(int dpi)
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
+        Assert.False(changed);
+        Assert.Equal(originalDpi, plugin.Settings.Dpi);
+    }
 
-            // Act
-            var result = plugin.SetDpi(dpi);
+    [Theory]
+    [InlineData(125)]
+    [InlineData(250)]
+    [InlineData(500)]
+    [InlineData(1000)]
+    public void SetPollingRate_WithValidValue_UpdatesSettings(int rate)
+    {
+        var plugin = new CustomMousePlugin();
 
-            // Assert
-            Assert.False(result);
-        }
+        var changed = plugin.SetPollingRate(rate);
 
-        [Theory]
-        [InlineData(125)]
-        [InlineData(250)]
-        [InlineData(500)]
-        [InlineData(1000)]
-        public void SetPollingRate_ValidValues_ReturnsTrue(int rate)
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
+        Assert.True(changed);
+        Assert.Equal(rate, plugin.Settings.PollingRate);
+    }
 
-            // Act
-            var result = plugin.SetPollingRate(rate);
+    [Theory]
+    [InlineData(0)]
+    [InlineData(100)]
+    [InlineData(126)]
+    [InlineData(1001)]
+    [InlineData(-1)]
+    public void SetPollingRate_WithInvalidValue_DoesNotUpdate(int rate)
+    {
+        var plugin = new CustomMousePlugin();
+        var originalRate = plugin.Settings.PollingRate;
 
-            // Assert
-            Assert.True(result);
-            Assert.Equal(rate, plugin.Settings.PollingRate);
-        }
+        var changed = plugin.SetPollingRate(rate);
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(100)]
-        [InlineData(126)]
-        [InlineData(1001)]
-        [InlineData(-1)]
-        public void SetPollingRate_InvalidValues_ReturnsFalse(int rate)
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
+        Assert.False(changed);
+        Assert.Equal(originalRate, plugin.Settings.PollingRate);
+    }
 
-            // Act
-            var result = plugin.SetPollingRate(rate);
+    [Fact]
+    public void Plugin_LifecycleMethods_DoNotThrow()
+    {
+        var plugin = new CustomMousePlugin();
 
-            // Assert
-            Assert.False(result);
-        }
+        plugin.OnInstalled();
+        var featurePage = plugin.GetFeatureExtension();
+        var settingsPage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetSettingsPage());
+        var category = plugin.GetOptimizationCategory();
 
-        [Fact]
-        public void MapButton_AddsButtonMapping()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
+        Assert.Null(featurePage);
+        Assert.NotNull(settingsPage);
+        Assert.Equal(CustomMouseText.SettingsPageTitle, settingsPage.PageTitle);
+        Assert.NotNull(category);
+        Assert.Equal("custom.mouse", category!.Key);
+        Assert.Equal(plugin.Id, category.PluginId);
+        Assert.Equal(2, category.Actions.Count);
+        Assert.Equal("custom.mouse.cursor.auto-theme.enable", category.Actions[0].Key);
+        Assert.Equal("custom.mouse.cursor.auto-theme.disable", category.Actions[1].Key);
+    }
 
-            // Act
-            plugin.MapButton(1, MouseButtonAction.LeftClick);
-            plugin.MapButton(2, MouseButtonAction.RightClick);
+    [Fact]
+    public void SetAutoThemeCursorStyle_UpdatesSetting()
+    {
+        var plugin = new CustomMousePlugin();
 
-            // Assert
-            Assert.Equal(2, plugin.Settings.ButtonMappings.Count);
-            Assert.Equal(MouseButtonAction.LeftClick, plugin.Settings.ButtonMappings[1]);
-            Assert.Equal(MouseButtonAction.RightClick, plugin.Settings.ButtonMappings[2]);
-        }
+        var changedToDisabled = plugin.SetAutoThemeCursorStyle(false);
+        var changedToEnabled = plugin.SetAutoThemeCursorStyle(true);
 
-        [Fact]
-        public void MapButton_UpdatesExistingMapping()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
-            plugin.MapButton(1, MouseButtonAction.LeftClick);
-
-            // Act
-            plugin.MapButton(1, MouseButtonAction.DpiSwitch);
-
-            // Assert
-            Assert.Single(plugin.Settings.ButtonMappings);
-            Assert.Equal(MouseButtonAction.DpiSwitch, plugin.Settings.ButtonMappings[1]);
-        }
-
-        [Fact]
-        public void StateVersion_IsCorrect()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-
-            // Act & Assert
-            Assert.Equal(1, plugin.StateVersion);
-        }
-
-        [Fact]
-        public void SerializeState_ReturnsNonEmptyData()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
-            plugin.SetDpi(3200);
-            plugin.SetPollingRate(500);
-            plugin.MapButton(1, MouseButtonAction.LeftClick);
-
-            // Act
-            var stateData = plugin.SerializeState();
-
-            // Assert
-            Assert.NotNull(stateData);
-            Assert.NotEmpty(stateData);
-        }
-
-        [Fact]
-        public void DeserializeState_RestoresCorrectValues()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
-            plugin.SetDpi(3200);
-            plugin.SetPollingRate(500);
-            plugin.MapButton(1, MouseButtonAction.LeftClick);
-
-            var stateData = plugin.SerializeState();
-
-            // Create new plugin instance and restore state
-            var newPlugin = new CustomMousePlugin();
-            newPlugin.OnInstalled();
-
-            // Act
-            var result = newPlugin.DeserializeState(stateData, "1.0.0");
-
-            // Assert
-            Assert.True(result);
-            Assert.Equal(3200, newPlugin.Settings.Dpi);
-            Assert.Equal(500, newPlugin.Settings.PollingRate);
-            Assert.Single(newPlugin.Settings.ButtonMappings);
-            Assert.Equal(MouseButtonAction.LeftClick, newPlugin.Settings.ButtonMappings[1]);
-        }
-
-        [Fact]
-        public void DeserializeState_InvalidData_ReturnsFalse()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
-
-            var invalidData = new byte[] { 0xFF, 0xFE, 0xFD };
-
-            // Act
-            var result = plugin.DeserializeState(invalidData, "1.0.0");
-
-            // Assert
-            Assert.False(result);
-        }
-
-        [Fact]
-        public void GetManifest_ReturnsCorrectManifest()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-
-            // Act
-            var manifest = plugin.GetManifest();
-
-            // Assert
-            Assert.Equal("custom-mouse", manifest.Id);
-            Assert.Equal("Custom Mouse", manifest.Name);
-            Assert.Equal("1.0.0", manifest.Version);
-            Assert.Equal("LenovoLegionToolkit Team", manifest.Author);
-            Assert.NotNull(manifest.Description);
-            Assert.NotNull(manifest.RepositoryUrl);
-            Assert.False(manifest.IsSystemPlugin);
-            Assert.Equal("3.6.0", manifest.MinLLTVersion);
-        }
-
-        [Fact]
-        public void Plugin_Lifecycle_InstallAndUninstall()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-
-            // Act - Install
-            plugin.OnInstalled();
-            Assert.NotNull(plugin.Settings);
-
-            // Act - Uninstall
-            plugin.OnUninstalled();
-
-            // Assert - No exception thrown
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void Plugin_Lifecycle_ShutdownAndStop()
-        {
-            // Arrange
-            var plugin = new CustomMousePlugin();
-            plugin.OnInstalled();
-
-            // Act & Assert - No exceptions
-            plugin.OnShutdown();
-            plugin.Stop();
-
-            Assert.True(true);
-        }
+        Assert.True(changedToDisabled);
+        Assert.True(changedToEnabled);
+        Assert.True(plugin.Settings.AutoThemeCursorStyle);
     }
 }

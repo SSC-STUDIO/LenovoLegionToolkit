@@ -13,16 +13,16 @@
 
   <!-- SDK is only needed during compilation, not as a standalone output -->
   <PropertyGroup>
-    <OutputPath>..\..\LenovoLegionToolkit\Build\</OutputPath>
+    <OutputPath>..\Build\SDK\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj">
-      <PrivateAssets>All</PrivateAssets>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
+    <Reference Include="LenovoLegionToolkit.Lib">
+      <HintPath>..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
   <!-- Exclude all unwanted files from output -->
@@ -37,7 +37,6 @@
   </Target>
 
 </Project>
-
 
 
 

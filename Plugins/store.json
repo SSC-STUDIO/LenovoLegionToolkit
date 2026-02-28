@@ -1,40 +1,161 @@
-{
-  "plugins": [
-    {
-      "id": "custom-mouse",
-      "name": "Custom Mouse",
-      "version": "1.0.0",
-      "description": "Customize mouse settings including DPI, polling rate, and button mappings",
-      "author": "LenovoLegionToolkit Team",
-      "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/custom-mouse.zip",
-      "icon": "",
-      "isSystemPlugin": false,
-      "dependencies": [],
-      "minLLTVersion": "3.6.0",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "fileSize": 16384,
-      "tags": ["mouse", "customization", "gaming"],
-      "supportedLanguages": ["en-US", "zh-CN", "zh-Hans", "ja-JP", "ko-KR", "de-DE", "fr-FR", "es-ES", "it-IT", "pt-BR", "ru-RU", "ar-SA", "hi-IN"]
-    },
-    {
-      "id": "shell-integration",
-      "name": "Shell Integration",
-      "version": "1.0.0",
-      "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
-      "author": "LenovoLegionToolkit Team",
-      "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/shell-integration.zip",
-      "icon": "",
-      "isSystemPlugin": true,
-      "dependencies": [],
-      "minLLTVersion": "3.6.0",
-      "releaseDate": "2026-02-25T00:00:00Z",
-      "fileSize": 12288,
-      "tags": ["system", "shell", "integration"],
-      "supportedLanguages": ["en-US", "zh-CN", "zh-Hans", "ja-JP", "ko-KR", "de-DE", "fr-FR", "es-ES", "it-IT", "pt-BR", "ru-RU", "ar-SA", "hi-IN"]
-    }
-  ],
-  "version": "1.0.0",
-  "lastUpdated": "2026-02-25T00:00:00Z"
+﻿{
+    "plugins":  [
+                    {
+                        "id":  "custom-mouse",
+                        "name":  "Custom Mouse",
+                        "version":  "1.0.6",
+                        "description":  "Customize mouse cursor style behavior and mouse settings",
+                        "author":  "LenovoLegionToolkit Team",
+                        "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/custom-mouse.zip",
+                        "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.6",
+                        "icon":  "",
+                        "iconBackground":  "#2563EB",
+                        "isSystemPlugin":  false,
+                        "dependencies":  [
+
+                                         ],
+                        "minLLTVersion":  "3.6.1",
+                        "releaseDate":  "2026-02-28T00:00:00Z",
+                        "fileSize":  16384,
+                        "tags":  [
+                                     "mouse",
+                                     "customization",
+                                     "gaming"
+                                 ],
+                        "supportedLanguages":  [
+                                                   "en-US",
+                                                   "zh-CN",
+                                                   "zh-Hans",
+                                                   "ja-JP",
+                                                   "ko-KR",
+                                                   "de-DE",
+                                                   "fr-FR",
+                                                   "es-ES",
+                                                   "it-IT",
+                                                   "pt-BR",
+                                                   "ru-RU",
+                                                   "ar-SA",
+                                                   "hi-IN"
+                                               ]
+                    },
+                    {
+                        "id":  "shell-integration",
+                        "name":  "Shell Integration",
+                        "version":  "1.0.3",
+                        "description":  "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+                        "author":  "LenovoLegionToolkit Team",
+                        "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/shell-integration.zip",
+                        "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.3",
+                        "icon":  "",
+                        "iconBackground":  "#0F766E",
+                        "isSystemPlugin":  true,
+                        "dependencies":  [
+
+                                         ],
+                        "minLLTVersion":  "3.6.1",
+                        "releaseDate":  "2026-02-26T00:00:00Z",
+                        "fileSize":  12288,
+                        "tags":  [
+                                     "system",
+                                     "shell",
+                                     "integration"
+                                 ],
+                        "supportedLanguages":  [
+                                                   "en-US",
+                                                   "zh-CN",
+                                                   "zh-Hans",
+                                                   "ja-JP",
+                                                   "ko-KR",
+                                                   "de-DE",
+                                                   "fr-FR",
+                                                   "es-ES",
+                                                   "it-IT",
+                                                   "pt-BR",
+                                                   "ru-RU",
+                                                   "ar-SA",
+                                                   "hi-IN"
+                                               ]
+                    },
+                    {
+                        "id":  "network-acceleration",
+                        "name":  "Network Acceleration",
+                        "version":  "1.0.4",
+                        "description":  "Real-time network acceleration and optimization features",
+                        "author":  "LenovoLegionToolkit Team",
+                        "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/network-acceleration.zip",
+                        "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.0.4",
+                        "icon":  "",
+                        "iconBackground":  "#DC2626",
+                        "isSystemPlugin":  false,
+                        "dependencies":  [
+
+                                         ],
+                        "minLLTVersion":  "3.6.1",
+                        "releaseDate":  "2026-02-28T00:00:00Z",
+                        "fileSize":  16384,
+                        "tags":  [
+                                     "network",
+                                     "optimization"
+                                 ],
+                        "supportedLanguages":  [
+                                                   "en-US",
+                                                   "zh-CN",
+                                                   "zh-Hans",
+                                                   "ja-JP",
+                                                   "ko-KR",
+                                                   "de-DE",
+                                                   "fr-FR",
+                                                   "es-ES",
+                                                   "it-IT",
+                                                   "pt-BR",
+                                                   "ru-RU",
+                                                   "ar-SA",
+                                                   "hi-IN"
+                                               ]
+                    },
+                    {
+                        "id":  "vive-tool",
+                        "name":  "ViVeTool",
+                        "version":  "1.1.4",
+                        "description":  "Manage Windows feature flags using ViVeTool",
+                        "author":  "LenovoLegionToolkit Team",
+                        "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/vive-tool.zip",
+                        "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.4",
+                        "icon":  "",
+                        "iconBackground":  "#7C3AED",
+                        "isSystemPlugin":  false,
+                        "dependencies":  [
+
+                                         ],
+                        "minLLTVersion":  "3.6.1",
+                        "releaseDate":  "2026-02-28T00:00:00Z",
+                        "fileSize":  16384,
+                        "tags":  [
+                                     "windows",
+                                     "feature-flags",
+                                     "vivetool"
+                                 ],
+                        "supportedLanguages":  [
+                                                   "en-US",
+                                                   "zh-CN",
+                                                   "zh-Hans",
+                                                   "ja-JP",
+                                                   "ko-KR",
+                                                   "de-DE",
+                                                   "fr-FR",
+                                                   "es-ES",
+                                                   "it-IT",
+                                                   "pt-BR",
+                                                   "ru-RU",
+                                                   "ar-SA",
+                                                   "hi-IN"
+                                               ]
+                    }
+                ],
+    "version":  "1.0.8",
+    "lastUpdated":  "2026-02-28T14:30:00Z"
 }

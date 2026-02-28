@@ -104,6 +104,38 @@ Checks include:
 - Optional plugin test project execution (`*.Tests`)
 - Optional JSON report output (`-JsonReportPath`)
 
+### Plugin Completion UI Tool
+
+For a visual workflow, use the standalone WPF tool:
+
+```bash
+# from LenovoLegionToolkit-Plugins repo root
+dotnet run --project Tools/PluginCompletionUiTool/PluginCompletionUiTool.csproj
+```
+
+UI capabilities:
+- Select repository root folder
+- Filter plugin IDs (optional)
+- Toggle `Skip Build` / `Skip Tests`
+- Run completion checker and stream live logs
+- View plugin-level results and step-level details
+- Open generated JSON report (`artifacts/plugin-completion-ui-report.json`)
+
+Desktop UI smoke automation (simulated click flow) is also available:
+
+```bash
+# build the UI tool first, then run smoke
+dotnet build Tools/PluginCompletionUiTool/PluginCompletionUiTool.csproj -c Release
+dotnet run --project Tools/PluginCompletionUiTool.Smoke/PluginCompletionUiTool.Smoke.csproj -c Release --no-build -- .
+```
+
+The smoke runner uses Windows UI Automation to:
+- launch the UI tool
+- set repository path
+- enable `Skip Build` and `Skip Tests`
+- click `Run Completion Check`
+- wait for completion and verify generated report integrity
+
 ### Creating a New Plugin
 
 1. Create a new folder under `plugins/`

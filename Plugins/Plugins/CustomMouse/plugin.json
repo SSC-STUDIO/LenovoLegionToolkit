@@ -1,0 +1,9 @@
+﻿{
+  "id": "custom-mouse",
+  "name": "Custom Mouse",
+  "version": "1.0.6",
+  "minLLTVersion": "3.6.1",
+  "author": "LenovoLegionToolkit Team",
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
+}

@@ -1,9 +1,9 @@
-{
-  "id": "ViveTool",
+﻿{
+  "id": "vive-tool",
   "name": "ViveTool",
-  "version": "1.0.0",
-  "minLLTVersion": "2.14.0",
-  "author": "Crs10259",
-  "repository": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/issues"
+  "version": "1.1.4",
+  "minLLTVersion": "3.6.1",
+  "author": "LenovoLegionToolkit Team",
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
 }

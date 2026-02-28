@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -11,27 +11,37 @@
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0</FileVersion>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <AssemblyName>custom-mouse</AssemblyName>
+    <Version>1.0.6</Version>
+    <FileVersion>1.0.6</FileVersion>
+    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <AssemblyName>LenovoLegionToolkit.Plugins.CustomMouse</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\..\LenovoLegionToolkit\Build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.CustomMouse\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
-    <ProjectReference Include="..\..\..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">

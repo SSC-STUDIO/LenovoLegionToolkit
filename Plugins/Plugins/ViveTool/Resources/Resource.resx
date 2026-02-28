@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -179,7 +179,7 @@
     <value>ViVeTool.exe Path</value>
   </data>
   <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>Select the path to the ViVeTool.exe file. If not specified, the built-in download or the version in the system PATH will be used.</value>
+    <value>The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, bundled/runtime PATH fallback will be used.</value>
   </data>
   <data name="ViveTool_BrowseError" xml:space="preserve">
     <value>Error browsing files: {0}</value>
@@ -225,5 +225,11 @@
   </data>
   <data name="ViveTool_ConfigImportFailedMessage" xml:space="preserve">
     <value>Failed to import configuration: {0}</value>
+  </data>
+  <data name="ViveTool_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
+    <value>ViVeTool Binary Path</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -167,7 +167,7 @@
     <value>ViVeTool.exe 路径</value>
   </data>
   <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>选择 ViVeTool.exe 文件的路径。如果未指定，将使用内置下载或系统 PATH 中的版本。</value>
+    <value>插件默认已内置 ViVeTool 运行时。你仍可自定义 ViVeTool.exe 路径；若未指定自定义路径，将自动使用内置版本并回退到系统 PATH。</value>
   </data>
   <data name="ViveTool_BrowseError" xml:space="preserve">
     <value>浏览文件时出错: {0}</value>
@@ -213,5 +213,11 @@
   </data>
   <data name="ViveTool_ConfigImportFailedMessage" xml:space="preserve">
     <value>导入配置失败：{0}</value>
+  </data>
+  <data name="ViveTool_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
+    <value>ViVeTool 二进制路径</value>
   </data>
 </root>
