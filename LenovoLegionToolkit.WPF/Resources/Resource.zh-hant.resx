@@ -375,7 +375,7 @@
     <value>取消</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>??</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>關閉</value>
@@ -582,7 +582,7 @@
     <value>關於 GPU 運作模式</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>??</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>中央處理器</value>
@@ -705,13 +705,13 @@
 警告：如果已關閉內部顯示器，則此功能將無法正確地執行。</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>《人類發展報告》</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>啟用高動態範圍（HDR）顯示。</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>《人類發展報告》</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Windows 設定已阻擋 HDR 啟用。</value>
@@ -1779,10 +1779,10 @@
     <value>開啟或關閉筆記型電腦的背蓋背光。</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>GHz</value>
+    <value>千兆赫</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>MHz</value>
+    <value>兆赫</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
     <value>最大：{0}</value>
@@ -3011,16 +3011,16 @@
     <value>配置檔案編輯器</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
-    <value>shell.nss</value>
+    <value>shell。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
-    <value>theme.nss</value>
+    <value>主題。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve">
-    <value>images.nss</value>
+    <value>圖像。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve">
-    <value>modify.nss</value>
+    <value>修改。nss</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>正在執行 {0}%</value>

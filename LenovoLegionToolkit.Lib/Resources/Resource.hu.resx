@@ -449,10 +449,10 @@
     <value>Váltás</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+    <value>A számítógép ctrl billentyűje</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>Közepes hang</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
     <value>Be</value>
@@ -496,4 +496,4 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Hetente</value>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>MacOS</value></data></root>
+<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows operációs rendszer</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>MacOS</value></data></root>

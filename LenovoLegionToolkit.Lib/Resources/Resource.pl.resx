@@ -449,7 +449,7 @@
     <value>zmiana</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+    <value>Naciśnij klawisz ctrl na komputerze</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
     <value>alt</value>

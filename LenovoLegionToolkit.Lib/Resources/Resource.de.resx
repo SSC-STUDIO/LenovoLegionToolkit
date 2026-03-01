@@ -181,7 +181,7 @@
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
-    <value>dGPU</value>
+    <value>Der dGPU</value>
   </data>
   <data name="HybridModeState_On" xml:space="preserve">
     <value>Hybridantrieb.</value>
@@ -190,7 +190,7 @@
     <value>Hybrid-Fahrzeuge</value>
   </data>
   <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
-    <value>Hybrid-iGPU</value>
+    <value>Gemischte iGPU</value>
   </data>
   <data name="MicrophoneState_Off" xml:space="preserve">
     <value>Aus</value>
@@ -452,7 +452,7 @@
     <value>Strg</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>Mittlerer Klang</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
     <value>An</value>

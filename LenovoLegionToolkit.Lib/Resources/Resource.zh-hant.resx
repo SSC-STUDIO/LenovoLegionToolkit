@@ -446,13 +446,13 @@
     <value>短</value>
   </data>
   <data name="ModifierKey_Shift" xml:space="preserve">
-    <value>Shift</value>
+    <value>轉變</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
     <value>Ctrl</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>高音</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
     <value>開啟</value>
@@ -496,4 +496,4 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>每週</value>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data></root>
+<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>窗戶</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data></root>

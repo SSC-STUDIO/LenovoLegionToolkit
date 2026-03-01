@@ -181,7 +181,7 @@
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
-    <value>dGPU</value>
+    <value>-Ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne, ne</value>
   </data>
   <data name="HybridModeState_On" xml:space="preserve">
     <value>Hybride</value>
@@ -451,7 +451,7 @@
     <value>overgang</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+    <value>Ctrl-toets op de computer</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
     <value>alt</value>
@@ -498,4 +498,4 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Wekelijks</value>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ramen</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data></root>
+<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ramen</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>-Marcus</value></data></root>

@@ -765,3 +765,67 @@ eleaseDate, and add clickable changelog URL action from update icon.
 - Operational constraint observed repeatedly:
   - Long batch runs were frequently interrupted by network/provider startup failures or timeout windows.
   - Mitigation used: per-locale resume strategy + mixed provider modes, and periodic structural revalidation to avoid hidden drift.
+
+
+## 2026-03-01 Translation Continuation Sprint II Findings (Phase 27 complete)
+- Added locale-compatibility adjustment in continuation script:
+  - `.tmp/translate_resx_remaining_multi_provider.py`
+  - `pt` target mapping changed from `pt-PT` to `pt`, significantly improving provider success.
+- High-yield locale batches completed with provider routing (`yandex,reverso,translateCom,argos,sogou`):
+  - major reductions observed in `pt`, `nl-nl`, `pt-br`, `hu`, `vi`, `de`, `ko`, `ja`, `pl`, `ru`.
+- Residual-English metric progression for this wave:
+  - before Phase 27: `total_identical_alpha=486`
+  - after Phase 27: `total_identical_alpha=291`
+  - wave delta: `-195`
+- Structural integrity final state remained clean:
+  - `total_missing=0`
+  - `total_extra=0`
+  - `total_placeholder_mismatch=0`
+- zh-Hans -> zh-Hant sync recheck:
+  - no additional syncable entries found in this wave (`entries_updated=0`).
+- Remaining residuals are now concentrated in locales/providers with limited language support and technical/proper-noun terms:
+  - highest residual locales: `bs`, `ca`, `uz-latn-uz`, `lv`, `sk`, `cs`, `ro`.
+
+## 2026-03-01 Translation Manual Finalization Pass (Phase 33 complete)
+- Continued from Phase 27 residual baseline and switched to manual/key-targeted localization.
+- Applied manual translations to `LenovoLegionToolkit.WPF/Resources/Resource.<locale>.resx` for 25 locales on high-impact command detail keys:
+  - `ActionDetailsWindow_DISMCommand`
+  - `ActionDetailsWindow_NetworkFlushDNS`
+  - `ActionDetailsWindow_NetworkResetWinsock`
+  - `ActionDetailsWindow_NetworkResetTCPIP`
+- Added manual quality pass for high-residual locales:
+  - `bs`: translated CustomMouse category/actions plus model/status wording.
+  - `uz-latn-uz`: translated CustomMouse category/actions plus model wording.
+  - `ca`: translated model wording keys.
+  - `sk`/`cs`/`ro`: translated `BasicCompatibilityCheck_Model` wording.
+- Semantic residual result:
+  - before pass: `total_identical_alpha=291` (historic pass6 artifact) / `292` (fresh recompute)
+  - after pass: `total_identical_alpha=164`
+  - delta: `-127` (`-128` vs fresh recompute baseline)
+- XML node structural audit result (authoritative):
+  - `locale_files=107`
+  - `total_missing=0`
+  - `total_extra=0`
+  - `total_placeholder_mismatch=0`
+  - `nonzero_files=0`
+- Build verification:
+  - `dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj -c Release --no-restore` => PASS (`0 errors`, `0 warnings`)
+- Note:
+  - Existing regex-only audit script reported false positives on compact/minified-resx layout; final acceptance used XML-parsed audit metrics above.
+
+## 2026-03-01 Translation Manual Finalization Pass IV (Phase 34 complete)
+- Continued manual localization from Phase 33.
+- Main updates in `LenovoLegionToolkit.WPF/Resources`:
+  - `Resource.ca.resx`: translated remaining generic labels (macro/sensors/extensions/mode/arguments/color set) and temperature unit labels.
+  - `Resource.bg.resx`, `Resource.bs.resx`, `Resource.lv.resx`, `Resource.ro.resx`, `Resource.sk.resx`, `Resource.tr.resx`, `Resource.uk.resx`, `Resource.uz-latn-uz.resx`, `Resource.zh-hans.resx`, `Resource.zh-hant.resx`: localized `Celsius` / `Fahrenheit` labels.
+  - `Resource.de.resx`: localized `PluginExtensionsPage_VersionLabel`.
+- Additional CA keys (`BatteryState_Normal`, `NotificationDuration_Normal`) were updated in `LenovoLegionToolkit.Lib/Resources/Resource.ca.resx`.
+- Semantic residual result:
+  - before pass: `total_identical_alpha=164`
+  - after pass: `total_identical_alpha=130`
+  - delta: `-34`
+- Residual profile after pass-IV is now mostly technical/proper nouns or cross-language same-form words.
+- XML node structural audit remains clean:
+  - `locale_files=107`, `total_missing=0`, `total_extra=0`, `total_placeholder_mismatch=0`, `nonzero_files=0`
+- Build verification:
+  - `dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj -c Release --no-restore` => PASS (`0 errors`, `0 warnings`)
