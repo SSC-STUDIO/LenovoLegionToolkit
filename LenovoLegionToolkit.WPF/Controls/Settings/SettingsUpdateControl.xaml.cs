@@ -38,7 +38,7 @@ public partial class SettingsUpdateControl
         _updateCheckFrequencyComboBox.SetItems(Enum.GetValues<UpdateCheckFrequency>(), _updateCheckSettings.Store.UpdateCheckFrequency, t => t.GetDisplayName());
 
         // Load update repository settings only when update checking is enabled
-        _updateRepositoryOwnerTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryOwner ?? string.Empty;
+        _updateRepositoryOwnerTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryOwner ?? Constants.UpdateRepositoryOwner;
         _updateRepositoryNameTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryName ?? string.Empty;
 
         _isRefreshing = false;

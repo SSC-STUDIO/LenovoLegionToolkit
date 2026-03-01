@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Інструментарій Lenovo Legion</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Збірка</value>
@@ -105,7 +105,7 @@
     <value>Завжди увімкнені USB</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Інструментарій Lenovo Legion</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Застосувати</value>
@@ -644,13 +644,13 @@
 УВАГА: Ця дія може спрацювати некоректно, якщо вбудований дисплей вимкнено.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>HDR-зображення</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Увімкнути HDR на вбудованому дисплеї.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>HDR-зображення</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Використання HDR заблоковано налаштуваннями Windows.</value>
@@ -840,7 +840,7 @@
     <value>Блокування тачпаду</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>ОК</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Відкрити</value>
@@ -849,13 +849,13 @@
     <value>Покращити час відгуку вбудованого дисплея.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Овердрайв</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Покращити час відгуку вбудованого дисплея.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Овердрайв</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} завантажено!</value>
@@ -1410,13 +1410,13 @@
 УВАГА: Ця дія може спрацювати некоректно, якщо вбудований дисплей вимкнено.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>ТОЧОК НА ДЮЙМ</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>Змінити масштаб вбудованого дисплея.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>ТОЧОК НА ДЮЙМ</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>Змінити масштаб вбудованого дисплея.
@@ -2196,10 +2196,10 @@
     <value>Запустити збережену швидку дію.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Рекомендовано</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>Вибрано {0} з дій {1}</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Очищення кешу</value>
@@ -2247,104 +2247,104 @@
     <value>Оптимізація системи</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Максимальна ємність заряджання батареї.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Стан батареї</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Максимальна швидкість заряджання батареї ( ), або розрядження (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Максимальна швидкість розрядження</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Мінімальна швидкість заряджання батареї ( ), або розрядження (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Мінімальна швидкість розрядження</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Згорнути все</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Компактний вигляд</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Оглянути…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Будь ласка, введіть хоча б одне розширення файлу.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Будь ласка, оберіть папку.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Розділяйте кілька розширень комами (приклад: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Розширення</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Папка</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Включати підпапки</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Користувацьке правило очищення</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Розгорнути все</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Оптимізація системи</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>Завжди розміщуйте повідомлення у верхній частині. 
+ Це не вплине на інші повноекранні вікна, але ви не зможете натискати на повідомлення.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>Сповіщення завжди зверху</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Сховати попередження про несумісні пристрої, яке з’являється під час запуску.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Вимкнути попередження про несумісні пристрої</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Запустити очищення</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Не вдалося виконати очищення.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Очищення завершено.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Застосувати рекомендовані налаштування продуктивності та очистити тимчасові файли.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Застосувати налаштування продуктивності та сервісу</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Не вдалося застосувати оптимізації продуктивності.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Оптимізації продуктивності застосовано.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Оптимізація системи</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Максимальна швидкість розряду</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Мінімальна швидкість розряду</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2356,43 +2356,43 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Закруглені кути</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Тіні</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Зовнішній вигляд</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Застосувати</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Класичний</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Темна</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Світла</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>Сучасний</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Тема</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Налаштування стилю меню</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2401,7 +2401,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Встановити</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2425,507 +2425,507 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Видалити</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Прикраса Windows</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Ви можете вимкнути це попередження в будь-який час у Налаштуваннях.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Дії</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Застосувати вибрані дії</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Не вдалося виконати вибрані дії.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Вибрані дії успішно виконано.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Виберіть передвстановлені додатки Microsoft Store для видалення для всіх користувачів.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Додатки для видалення не вибрані.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Управління AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Не вдалося завантажити: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Завантаження додатків, будь ласка, зачекайте...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Видавець: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Видалення вибраних додатків...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Видалити вибрані додатки</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Не вдалося видалити вибрані додатки.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Вибрані додатки заплановано для видалення.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Налаштуйте зовнішній вигляд контекстного меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Не вдалося застосувати налаштування стилю.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Файл конфігурації не знайдено. Переконайтеся, що Nilesoft Shell встановлено.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Не вдалося увімкнути класичне меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Не вдалося встановити оболонку.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Не вдалося відновити стандартне меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe не знайдено. Переконайтеся, що Nilesoft Shell встановлено.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Виберіть тему для контекстного меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Увімкнути ефекти прозорості для контекстного меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Не вдалося видалити оболонку.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Звільнено {0} у {1}s</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Скасувати вибір</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Додати правило</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Очистити все</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Виберіть папки та розширення файлів, які слід видаляти під час очищення.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редагувати</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Немає налаштованих користувацьких правил очищення.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Користувацькі правила очищення</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Включати підпапки</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Видалити</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Будь ласка, оберіть хоча б одну дію.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Орієнтовний розмір очищення: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Ці дії змінюють системні служби та файли. Можливе вимагання прав адміністратора.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Виконати дії очищення</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Біг: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Виділити усі</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Вибрати рекомендоване</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Прикрашення</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Видаліть вибрані попередньо встановлені програми UWP для всіх користувачів.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Видалити вбудовані додатки Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Видаліть кеш та файли cookie Internet Explorer та Edge.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Очистьте кеш браузера</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Виконати очищення DISM та видалити тимчасові файли WinSxS.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Сховище компонентів служби</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Видаліть файли дампів пам'яті, залишені після аварій системи.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Видалити дампи аварій</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Видалити файли, що відповідають налаштованим розширенням, з вибраних папок.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Очистити власні файли</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Видалення історії та кешів сканування Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Очистити сканування Defender</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Видаліть кешовані .NET Native зображення, щоб звільнити місце на диску.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Очистьте .NET native images</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Видаляйте журнали Windows, звіти про помилки та діагностичні сліди.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Видаліть журнали та діагностичні дані</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Видаліть дані попереднього завантаження Windows для генерації нових слідів.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Очистити дані попереднього завантаження</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Видалення файлів, що зберігаються у кошику.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Очистити кошик</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Очистити загальні списки останніх реєстрацій користувача (Run MRU, RecentDocs, діалогові вікна Відкрити/Зберегти, TypedPaths). Це не видаляє критично важливі для системи записи.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Очищення реєстру MRU/історії</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Видаліть кешовані файли, створені клієнтом Remote Desktop.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Очистьте кеш Remote Desktop</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Очистити тимчасові каталоги Windows та користувача.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Очистити тимчасові файли</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Видаліть бази даних ескізів Explorer та кеш шейдерів Direct3D.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Очистьте кеш ескізів</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Видаліть завантажені файли оновлень та кеш Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Очистьте кеш Windows Update</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Зменшити затримки меню, швидше закривати завислі програми та за замовчуванням відкривати цей ПК.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Покращити відгук Провідника</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Повністю вимкнути меню Пуск. Коли ви натискаєте клавішу Win, замість меню Пуск відкриватиметься пошук.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Вимкнути меню Пуск та відкривати пошук за допомогою клавіші Win</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Вимкнути хмарні пропозиції вмісту та банери рекомендацій.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Вимкнути пропозиції Провідника</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Сховати поле пошуку та кнопку Перегляд завдань, вимкнути групування панелі завдань та завжди показувати значки у треї.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Розташування панелі завдань і меню «Пуск»</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Показувати розширення файлів та приховані файли у Провіднику.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Параметри видимості файлів</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Відновлює стандартний стиль та перезапускає Провідник.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Переключитися на стандартне контекстне меню правої кнопки</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Застосовує класичний стиль та перезапускає Провідник.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Перейти на сучасне меню</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Повністю видалити shell.exe та пов'язані файли</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Застосувати сучасне контекстне меню</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Тримайте системний кеш у пам'яті та уникайте підкачки драйверів ядра.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Покращення управління пам'яттю</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Видалити обмеження мережі та зменшити затримку відгуку системи.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Оптимізувати планування мультимедіа</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Видаліть акрилові ефекти під час входу та сховайте центр сповіщень Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Вимкніть акрилові ефекти та центр сповіщень</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Активуйте план живлення високої продуктивності та вимкніть режим гібернації.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Примусовий режим високої продуктивності</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Вимкніть рекламний ідентифікатор, функції Spotlight та автоматичні пропозиції.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Зменште телеметрію та підказки</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Зупиніть і вимкніть служби Connected User Experiences, Diagnostics Hub та Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Вимкніть діагностичні служби</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Зупиніть Windows Error Reporting від збору та відправки даних про збої.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Вимкніть повідомлення про помилки</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Забезпечте безпеку системи, вимкнувши віддалений доступ до реєстру.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Вимкніть віддалений реєстр</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Зупиніть службу Windows Search, щоб запобігти оновленню індексу.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Вимкніть індексацію пошуку Windows</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Вимкніть Superfetch/SysMain, щоб зменшити активність диска у фоновому режимі.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Вимкніть SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Змінити поведінку клавіші Windows, щоб відкривати пошук замість меню Пуск.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Змінити клавішу Windows для відкриття пошуку</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Видалити кеші, тимчасові файли та інші залишки.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Очищення</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Налаштувати панель завдань, Провідник файлів та поведінку інтерфейсу користувача.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Провідник та інтерфейс</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Змініть стиль контекстного меню правої кнопки миші.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Прикраса Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Налаштувати продуктивність системи та швидкодію.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Продуктивність</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Вимкнути фонові служби, що споживають ресурси.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Служби</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Поліпшення зовнішнього вигляду системи</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Реєстрація COM-компонента   Файл конфігурації</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Тип реалізації:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Закрити</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Реєструючи Nilesoft Shell як COM-обробник для контекстних меню Windows, він перехоплює створення та відображення системних контекстних меню. Коли користувачі натискають правою кнопкою миші на файли або папки, Shell читає файл конфігурації shell.nss і застосовує користувацьку тему, прозорість, закруглені кути та тіні, щоб досягти ефекту покращеного меню при натисканні правою кнопкою миші.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Файл конфігурації не знайдено. Переконайтеся, що Nilesoft Shell встановлено.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Файл конфігурації не знайдено</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Налаштування успішно застосовано. Зміни набудуть чинності після перезапуску Провідника файлів.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Налаштування застосовано</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Не вдалося застосувати налаштування: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Помилка</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Реєстрація COM-компонента:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Шлях: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Файл конфігурації (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Шлях до файлу конфігурації: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Використовує синтаксис, подібний до CSS, для визначення стилів меню</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Приклад формату файлу конфігурації:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        background-color: #2d2d2d; 
+        text-color: #ffffff; 
+        corner-radius: 5px; 
+        shadow: true; 
+        transparency: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Принцип роботи:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll зареєстровано як COM-компонент у системі</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Реалізує інтерфейс IContextMenu для перехоплення створення контекстного меню правою кнопкою миші</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Зчитує файл конфігурації shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Застосовує власні стилі (тему, закруглені кути, тіні тощо)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Відображає вдосконалене контекстне меню</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Опис ефекту:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Автотема: відповідає темі системи (світла/темна)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Прозорість: Дозволяє ефект прозорості фону меню</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Закруглені кути: Додає закруглені краї до пунктів меню</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Тіні: Додає ефекти тіней до меню, покращуючи сприйняття глибини</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Виконується {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Операцію скасовано</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Деталі помилки: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Показати приховані завантаження</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Показати приховані завантаження</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Вибрати мову</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Не підключено</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Синхронізувати зони</value>
   </data>
 
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
@@ -2965,4 +2965,37 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Обробка {0}...</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Розширення плагінів</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Налаштування елементів навігації</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Налаштуйте, які елементи навігації відображаються у бічній панелі. Панель керування та Налаштування завжди будуть видимі.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Показати або приховати елемент навігації Клавіатура</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Показати або приховати елемент навігації Батарея</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Показати або приховати елемент навігації Автоматизація</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Показати або приховати елемент навігації Макрос</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Показати або приховати елемент навігації Оптимізація системи</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Показати або приховати пункт навігації Розширення плагіна</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Показати або приховати пункт навігації Про програму</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Пункти навігації</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Налаштуйте, які пункти навігації відображаються в бічній панелі</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Виконується пошук доступних пакетів драйверів, будь ласка, зачекайте...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Сталася помилка мережі. Повторна спроба автоматично...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Повторна спроба завантаження пакетів драйверів...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Інформація про очищення</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Переглянути прогрес операції очищення та очікуваний розмір.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Запуск у згорнутому вигляді у трей при вході в Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Сканувати</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Завантаження драйверів</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Підтвердження безпеки</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Очищення системи назавжди видалить тимчасові файли та кеш. Зазвичай це безпечно, але рекомендується переконатися, що у вас є резервні копії важливих даних. Бажаєте продовжити?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Розширення</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Керувати розширеннями та інструментами оптимізації системи</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Розширення відсутні</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Встановлюйте розширення із сторінки Плагіни, щоб розширити функціональність оптимізації системи.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Скоро буде</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Маркетплейс розширень буде доступний у майбутньому оновленні.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Завантаження плагінів...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Інтеграція оболонки</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Покращена інтеграція оболонки Windows з прикрасою контекстного меню та налаштуванням стилю миші</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Увімкнути сучасне контекстне меню</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Увімкнути Nilesoft Shell для покращення контекстного меню Windows у сучасному стилі</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Вимкнути сучасне контекстне меню</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Скасувати реєстрацію Nilesoft Shell та відновити стандартне контекстне меню Windows</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Застосувати стиль курсора Windows 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Застосувати тему курсора у стилі Windows 11 з підтримкою високого DPI</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Прискорення мережі</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Оптимізувати налаштування мережі для покращення швидкості та реагування.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Оптимізація TCP/IP та DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Оптимізувати параметри TCP/IP та кеш DNS для підвищення швидкості з’єднання та реагування.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Скидання налаштувань мережі</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Очистити кеш DNS та скинути налаштування Winsock і стек TCP/IP для усунення проблем з підключенням до мережі.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Очистжує тимчасові файли та журнали, залишені різними додатками.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Залишки додатків</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Сканує великий обсяг файлів на вашому системному диску, які можуть займати значний простір.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Сканування великих файлів</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Виявляйте та керуйте великими файлами на вашій системі.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Великі файли</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Увімкнути розширення</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Увімкнути систему розширень для доступу до ринку плагінів на сторінці Інструменти.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Налаштувати параметри зовнішнього вигляду, поведінки та функціоналу додатка.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Рекомендовано</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Завантаження</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Встановлення</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Завершено</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Визначення дії не знайдено</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Технічна реалізація цієї дії недоступна</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Не вдалося завантажити</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Невідомо</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Виконання команди</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Зміни в реєстрі</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Управління службами</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Скрипт PowerShell для зміни реєстру</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Очищення реєстру</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe не знайдено</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Шлях до конфігураційного файлу: не знайдено</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Час використання</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Встановити</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Видалити</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Не вдалося встановити</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Файл не знайдено, будь ласка, спершу завантажте його</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Встановлення розпочато</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Запуск інсталятора: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Помилка перевірки сумісності</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Програма не змогла прочитати інформацію про пристрій під час запуску. Будь ласка, перевірте деталі помилки нижче та спробуйте виконати кроки для усунення неполадок, якщо це необхідно.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Кроки для усунення неполадок</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Переконайтеся, що служба Windows Management Instrumentation (WMI) запущена: Відкрийте Служби (services.msc) та перевірте, чи запущено "Windows Management Instrumentation".</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Запустіть програму від імені Адміністратора, щоб мати достатні права для доступу до реєстру системи та WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Перевірте системні ресурси: Закрийте інші ресурсоємні програми та спробуйте ще раз.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Перегляньте файл журналу для отримання детальної інформації про помилку, натиснувши нижче "Відкрити журнал".</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Відкрити файл журналу</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Оновити репозиторій</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Налаштуйте репозиторій GitHub для перевірки оновлень. Залиште порожнім, щоб використовувати значення за замовчуванням.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Власник репозиторію</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>наприклад, SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Назва репозиторію</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>наприклад, LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Призупинити все</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Принципи реалізації та ефекту</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Тип реалізації:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Редактор конфігурацій</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>оболонка.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>тема.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>зображення.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>змінивши.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Деталі дії</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Технічні деталі впровадження</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Використання вбудованої функції очищення реєстру Windows</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Розширення плагінів</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Встановлюйте та управляйте плагінами для розширення функціональності</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Встановити</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Неможливо видалити</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Налаштування плагіна</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Назва плагіна</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Опис плагіна</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Цей плагін не має налаштовуваних параметрів.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Закрити</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Плагін не знайдено: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Помилка</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Налаштування</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Автор: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Формат інтерфейсу конфігурації плагіна некоректний.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Помилка завантаження налаштувань плагіна: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Пошук плагінів...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Усі</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Плагіни відсутні</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Магазин плагінів наразі порожній. Слідкуйте за майбутніми оновленнями плагінів.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Налаштування</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Видалити</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Відкрити</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Мова:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Використовувати налаштування за замовчуванням додатка</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Знайдено плагін(и) {0}</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Плагін успішно встановлено</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Плагін успішно встановлено</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Не вдалося встановити</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Не вдалося встановити плагін: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Плагін успішно видалено</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Плагін успішно видалено</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Не вдалося видалити</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Не вдалося видалити плагін: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Не вдалося відкрити плагін</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Не вдалося відкрити плагін: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Не вдалося відкрити плагін: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Плагін не встановлено</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Плагін не встановлено і його неможливо відкрити</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Потрібна мінімальна версія хосту {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Плагін буде видалено назавжди</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Оновлення не вдалося</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Оновлення плагіна не вдалося, будь ласка, перевірте підключення до мережі та спробуйте пізніше.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Оновлення успішне</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Плагін успішно оновлено</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Оновлення плагіна</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Завантаження та оновлення плагіна...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Оновити все</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Запустити плагін</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Плагін запущено</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Плагін видалено</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Плагін буде видалено після закриття програми.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Видалення не вдалося</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Сталася помилка під час видалення плагіна</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Налаштування не вдалося</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Плагін встановлено, але не завантажено. Будь ласка, спробуйте перезапустити програму.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Немає налаштувань</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Плагін не має жодних опцій налаштування.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Налаштування не підтримується</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Плагін не підтримує налаштування.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Стан плагінів скинуто</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Всі стани встановлення плагінів були очищені</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Масове оновлення завершено</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Всі плагіни вже оброблені.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Підготовка до завантаження...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Місцеві</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Доступна нова версія</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Версія:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Дата виходу:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Що нового:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Список плагінів оновлення</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Жодних плагінів, які відповідали б вашому пошуку, не знайшли.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Оновити всі доступні плагіни</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Встановити все</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Встановіть усі доступні плагіни</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Встановлюємо всіх...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Встановлення {0} плагін(ів)...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Масове встановлення завершено</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Встановив {0} плагін(и).</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Масова установка невдала</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Не вдалося встановити плагіни: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Оновлення всього...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Оновлення...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Відкрита папка</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Копіювання ідентифікатора плагіна</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Папка не знайдена</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Папка плагінів поки що не існує.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Скопійовано</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>Ідентифікатор плагіна '{0}' скопійовано в буфер обміну.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Завантаження завершено</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Завантаження...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Завантаження... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Прискорення мережі</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>Живий інструмент</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Інструменти</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Функції прискорення та оптимізації мережі в реальному часі</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Керування прапорцями функцій Windows за допомогою ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Інструменти оптимізації системи та утиліти</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Використання</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Цей редактор використовується для прямого редагування конфігураційного файлу shell.nss. Після внесення змін натисніть</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Застосувати</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>кнопку, щоб зберегти всі зміни та перезапустити Провідник файлів для застосування конфігурації.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Шлях до конфігураційного файлу:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Після внесення змін у конфігурацію потрібно перезапустити Провідник файлів (Explorer), щоб зміни набрали чинності.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Застосувати</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>Конфігураційний файл shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Файл shell.nss використовується для визначення загальної структури та поведінки контекстного меню</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Відкрити файл shell.nss</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Відкрити папку, що містить</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Шлях:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Налаштування інтерфейсу</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Основні налаштування теми</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Колір фону:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Колір тексту:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Налаштування ефекту при наведенні</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Фон при наведенні:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Текст при наведенні:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Налаштування вибраного ефекту</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Фон вибраного елемента:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Текст вибраного елемента:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Оновити текст з інтерфейсу</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Завантажити з тексту</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Текстовий редактор</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Відкрити у зовнішньому редакторі</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Файл конфігурації images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Файл images.nss використовується для визначення значків та зображень для контекстного меню</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Відкрити файл images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Файл конфігурації modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Файл modify.nss використовується для зміни та налаштування пунктів контекстного меню</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Відкрити файл modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Інструменти відсутні. Будь ласка, додайте інструменти в папку tools у директорії програми.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Інструменти з'являться тут, як тільки вони будуть доступні у директорії tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Базова директорія: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Директорія файлу конфігурації не знайдена</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Файл не знайдено</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Не вдається прочитати файл конфігурації: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Цей файл використовується для визначення стилів, пов'язаних з темою</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Визначення кольору теми</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Базовий колір</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Колір при наведенні</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Вибраний колір</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Для отримання додаткових параметрів конфігурації теми, будь ласка, зверніться до офіційної документації Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Ви впевнені, що хочете застосувати конфігурацію? 
+  
+ Це зробить: 
+ 1. Збереже всі файли конфігурації 
+ 2. Перезапустить Провідник, щоб застосувати конфігурацію 
+  
+ Примітка: Перезапуск закриє всі відкриті вікна папок та панель завдань, а потім автоматично їх перезапустить.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Підтвердити застосування конфігурації</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Неможливо зберегти файл конфігурації: 
+ {0} 
+  
+ Будь ласка, перевірте дозволи файлу та спробуйте ще раз.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Не вдалося зберегти</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Файли успішно збережені: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Не вдалося зберегти файли: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>Провідник було перезапущено, конфігурація тепер застосована!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Застосовано частково</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Застосовано успішно</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Помилка застосування конфігурації: 
+ {0} 
+  
+ Ви можете вручну зберегти файли та перезапустити процес Explorer у Диспетчері завдань.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Застосування не вдалося</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Файл не існує або шлях недійсний</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Не вдалося відкрити файл</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Використовувати програму за замовчуванням системи для відкриття файлу</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Не вдалося відкрити файл: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Не вдалося відкрити файл</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Папка не існує або шлях недійсний</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Не вдалося відкрити папку</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Не вдалося відкрити папку: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Не вдалося відкрити папку</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Модель</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Споживання електроенергії</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Заряд</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Стан здоров’я</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Рівень</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Мінімальний рівень</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Максимальний рівень</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Цикли</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Ємність</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Повна ємність</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Проєктна ємність</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Дата</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Тактові частоти ядра / пам’яті</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Напруга ядра</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Діапазон напруги</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Середня температура</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Бічна панель</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Системний</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Діапазон рівня</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Будь ласка, виберіть хоча б одну опцію очищення.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Пуск Все</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>наприклад, 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>наприклад, C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Увімкнути прозорість</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Увімкнути ефекти прозорості для контекстного меню</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Показати розширення файлів</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Показувати розширення файлів у Провіднику</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Показати приховані файли</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Показувати приховані файли та папки у Провіднику</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Відкрити в Швидкому доступі</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Відкривати Провідник у Швидкому доступі замість Цього ПК</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Показати панель попереднього перегляду</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Показувати панель попереднього перегляду у Провіднику</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Будь ласка, виберіть хоча б один елемент для очищення.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

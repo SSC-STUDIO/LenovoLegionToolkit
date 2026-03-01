@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>ovo je moj dugi niz</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime kodirani serijalizovani .NET Framework objekat]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 mime kodirani niz koji predstavlja bajt niz forme .NET Framework objekta]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -228,4 +228,4 @@
   <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
     <value>Isključeno</value>
   </data>
-</root>
+<data name="AccentColorSource_Custom" xml:space="preserve"><value>Prilagođen</value></data><data name="AccentColorSource_System" xml:space="preserve"><value>Sistemska</value></data><data name="AutorunState_Disabled" xml:space="preserve"><value>Onemogućeno</value></data><data name="AutorunState_Enabled" xml:space="preserve"><value>Omogućeno</value></data><data name="AutorunState_EnabledDelayed" xml:space="preserve"><value>Omogućeno, odgođeno</value></data><data name="FlipToStartState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="FlipToStartState_On" xml:space="preserve"><value>Na</value></data><data name="FnLockState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="FnLockState_On" xml:space="preserve"><value>Na</value></data><data name="HDRState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="HDRState_On" xml:space="preserve"><value>Na</value></data><data name="MicrophoneState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="MicrophoneState_On" xml:space="preserve"><value>Na</value></data><data name="NotificationPosition_BottomCenter" xml:space="preserve"><value>Donji centar</value></data><data name="NotificationPosition_BottomLeft" xml:space="preserve"><value>Donji lijevi dio</value></data><data name="NotificationPosition_BottomRight" xml:space="preserve"><value>Donji desni dio</value></data><data name="NotificationPosition_Center" xml:space="preserve"><value>Centar</value></data><data name="NotificationPosition_CenterLeft" xml:space="preserve"><value>Centar-lijevo</value></data><data name="NotificationPosition_CenterRight" xml:space="preserve"><value>Desno u sredini</value></data><data name="NotificationPosition_TopCenter" xml:space="preserve"><value>Gornji centar</value></data><data name="NotificationPosition_TopLeft" xml:space="preserve"><value>Gore lijevo</value></data><data name="NotificationPosition_TopRight" xml:space="preserve"><value>Gore desno</value></data><data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="OverdriveState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="OverdriveState_On" xml:space="preserve"><value>Na</value></data><data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve"><value>Visoko</value></data><data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve"><value>Nisko</value></data><data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve"><value>Srednjeg intenziteta</value></data><data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve"><value>Od dna do vrha</value></data><data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve"><value>U smjeru kazaljke na satu</value></data><data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve"><value>Suprotno od kazaljke na satu</value></data><data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve"><value>S lijeva na desno</value></data><data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve"><value>S desna na lijevo</value></data><data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve"><value>Od vrha do dna</value></data><data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve"><value>Uvijek</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>Odbijanje zvuka</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>Audio Talas</value></data><data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>Aurora Sinhronizacija</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve"><value>Promjena boje</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>Puls Boje</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>Talas boja</value></data><data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve"><value>Kiša</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>Dugin vijak</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>Duga Talas</value></data><data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>Ripl</value></data><data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve"><value>Glatko</value></data><data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve"><value>Tip</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve"><value>Sporo</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve"><value>Srednjeg intenziteta</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve"><value>Brzo</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data><data name="TouchpadLockState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="TouchpadLockState_On" xml:space="preserve"><value>Na</value></data><data name="WinKeyState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="WinKeyState_On" xml:space="preserve"><value>Na</value></data><data name="PortsBacklightState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="PortsBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="PanelLogoBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="PanelLogoBacklightState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="InstantBootState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="InstantBootState_AcAdapter" xml:space="preserve"><value>AC adapter</value></data><data name="InstantBootState_UsbPowerDelivery" xml:space="preserve"><value>USB napajanje</value></data><data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve"><value>AC i USB PD</value></data><data name="NotificationDuration_Long" xml:space="preserve"><value>Dugo</value></data><data name="NotificationDuration_Normal" xml:space="preserve"><value>Normalno</value></data><data name="NotificationDuration_Short" xml:space="preserve"><value>Kratko</value></data><data name="ModifierKey_Shift" xml:space="preserve"><value>Shift</value></data><data name="ModifierKey_Ctrl" xml:space="preserve"><value>Ctrl</value></data><data name="ModifierKey_Alt" xml:space="preserve"><value>Alt</value></data><data name="BatteryNightChargeState_On" xml:space="preserve"><value>Na</value></data><data name="BatteryNightChargeState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="SpeakerState_Mute" xml:space="preserve"><value>Isključi zvuk</value></data><data name="SpeakerState_Unmute" xml:space="preserve"><value>Uključi zvuk</value></data><data name="PowerModeMappingMode_Disabled" xml:space="preserve"><value>Onemogućeno</value></data><data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve"><value>Windows način napajanja</value></data><data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve"><value>Windows plan napajanja</value></data><data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve"><value>Predefinisani 4</value></data><data name="UpdateCheckFrequency_PerDay" xml:space="preserve"><value>Dnevno</value></data><data name="UpdateCheckFrequency_PerHour" xml:space="preserve"><value>Svaki sat</value></data><data name="UpdateCheckFrequency_PerMonth" xml:space="preserve"><value>Mjesečno</value></data><data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve"><value>Svaka 3 sata</value></data><data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve"><value>Svaka 12 sati</value></data><data name="UpdateCheckFrequency_PerWeek" xml:space="preserve"><value>Sedmično</value></data></root>

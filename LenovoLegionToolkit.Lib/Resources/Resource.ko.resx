@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>이것은 나의 긴 문자열입니다</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 MIME 인코딩된 직렬화된 .NET Framework 객체]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[바이트 배열 형식의 .NET Framework 객체를 나타내는 base64 MIME 인코딩 문자열]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,4 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-</root>
+<data name="AccentColorSource_Custom" xml:space="preserve"><value>사용자 지정</value></data><data name="AccentColorSource_System" xml:space="preserve"><value>시스템</value></data><data name="AlwaysOnUSBState_Off" xml:space="preserve"><value>끔</value></data><data name="AlwaysOnUSBState_OnAlways" xml:space="preserve"><value>항상 켬</value></data><data name="AlwaysOnUSBState_OnWhenSleeping" xml:space="preserve"><value>절전 모드 시 켬</value></data><data name="AutorunState_Disabled" xml:space="preserve"><value>비활성화</value></data><data name="AutorunState_Enabled" xml:space="preserve"><value>활성화</value></data><data name="AutorunState_EnabledDelayed" xml:space="preserve"><value>활성화, 지연됨</value></data><data name="BatteryState_Conservation" xml:space="preserve"><value>절약 모드</value></data><data name="BatteryState_Normal" xml:space="preserve"><value>일반</value></data><data name="BatteryState_RapidCharge" xml:space="preserve"><value>급속 충전</value></data><data name="FlipToStartState_Off" xml:space="preserve"><value>끔</value></data><data name="FlipToStartState_On" xml:space="preserve"><value>켜짐</value></data><data name="FnLockState_Off" xml:space="preserve"><value>끔</value></data><data name="FnLockState_On" xml:space="preserve"><value>켜짐</value></data><data name="GPUController_PoweredOff" xml:space="preserve"><value>전원 꺼짐</value></data><data name="GPUController_PoweredOn" xml:space="preserve"><value>전원 켜짐</value></data><data name="HDRState_Off" xml:space="preserve"><value>끔</value></data><data name="HDRState_On" xml:space="preserve"><value>켜짐</value></data><data name="HybridModeState_Off" xml:space="preserve"><value>외장 GPU</value></data><data name="HybridModeState_On" xml:space="preserve"><value>하이브리드</value></data><data name="HybridModeState_OnAuto" xml:space="preserve"><value>하이브리드-자동</value></data><data name="HybridModeState_OnIGPUOnly" xml:space="preserve"><value>하이브리드-iGPU</value></data><data name="MicrophoneState_Off" xml:space="preserve"><value>끔</value></data><data name="MicrophoneState_On" xml:space="preserve"><value>켜짐</value></data><data name="NotificationPosition_BottomCenter" xml:space="preserve"><value>하단 중앙</value></data><data name="NotificationPosition_BottomLeft" xml:space="preserve"><value>하단 왼쪽</value></data><data name="NotificationPosition_BottomRight" xml:space="preserve"><value>하단 오른쪽</value></data><data name="NotificationPosition_Center" xml:space="preserve"><value>중앙</value></data><data name="NotificationPosition_CenterLeft" xml:space="preserve"><value>중앙 왼쪽</value></data><data name="NotificationPosition_CenterRight" xml:space="preserve"><value>중앙 오른쪽</value></data><data name="NotificationPosition_TopCenter" xml:space="preserve"><value>상단 중앙</value></data><data name="NotificationPosition_TopLeft" xml:space="preserve"><value>상단 왼쪽</value></data><data name="NotificationPosition_TopRight" xml:space="preserve"><value>상단 오른쪽</value></data><data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve"><value>끔</value></data><data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve"><value>켜짐</value></data><data name="OverdriveState_Off" xml:space="preserve"><value>끔</value></data><data name="OverdriveState_On" xml:space="preserve"><value>켜짐</value></data><data name="PowerModeState_Balance" xml:space="preserve"><value>균형</value></data><data name="PowerModeState_GodMode" xml:space="preserve"><value>사용자 지정</value></data><data name="PowerModeState_Performance" xml:space="preserve"><value>성능</value></data><data name="PowerModeState_Quiet" xml:space="preserve"><value>조용함</value></data><data name="RGBKeyboardBacklightSpeed_Fast" xml:space="preserve"><value>빠름</value></data><data name="RGBKeyboardBacklightSpeed_Fastest" xml:space="preserve"><value>가장 빠름</value></data><data name="RGBKeyboardBacklightSpeed_Slow" xml:space="preserve"><value>느림</value></data><data name="RGBKeyboardBacklightSpeed_Slowest" xml:space="preserve"><value>가장 느림</value></data><data name="RGBKeyboardBacklightBrightness_High" xml:space="preserve"><value>높음</value></data><data name="RGBKeyboardBacklightBrightness_Low" xml:space="preserve"><value>낮음</value></data><data name="RGBKeyboardBacklightEffect_Breath" xml:space="preserve"><value>호흡</value></data><data name="RGBKeyboardBacklightEffect_Smooth" xml:space="preserve"><value>부드럽게</value></data><data name="RGBKeyboardBacklightEffect_Static" xml:space="preserve"><value>정적</value></data><data name="RGBKeyboardBacklightEffect_WaveLTR" xml:space="preserve"><value>왼쪽으로 웨이브</value></data><data name="RGBKeyboardBacklightEffect_WaveRTL" xml:space="preserve"><value>오른쪽으로 웨이브</value></data><data name="RGBKeyboardBacklightPreset_Off" xml:space="preserve"><value>끔</value></data><data name="RGBKeyboardBacklightPreset_One" xml:space="preserve"><value>프리셋 1</value></data><data name="RGBKeyboardBacklightPreset_Three" xml:space="preserve"><value>프리셋 3</value></data><data name="RGBKeyboardBacklightPreset_Two" xml:space="preserve"><value>프리셋 2</value></data><data name="SpectrumKeyboardBacklightBrightness_High" xml:space="preserve"><value>높음</value></data><data name="SpectrumKeyboardBacklightBrightness_Low" xml:space="preserve"><value>낮음</value></data><data name="SpectrumKeyboardBacklightBrightness_Medium" xml:space="preserve"><value>중간</value></data><data name="SpectrumKeyboardBacklightBrightness_Off" xml:space="preserve"><value>끔</value></data><data name="SpectrumKeyboardBacklightDirection_BottomToTop" xml:space="preserve"><value>하단에서 상단으로</value></data><data name="SpectrumKeyboardBacklightDirection_Clockwise" xml:space="preserve"><value>시계 방향</value></data><data name="SpectrumKeyboardBacklightDirection_CounterClockwise" xml:space="preserve"><value>반시계 방향</value></data><data name="SpectrumKeyboardBacklightDirection_LeftToRight" xml:space="preserve"><value>왼쪽에서 오른쪽으로</value></data><data name="SpectrumKeyboardBacklightDirection_RightToLeft" xml:space="preserve"><value>오른쪽에서 왼쪽으로</value></data><data name="SpectrumKeyboardBacklightDirection_TopToBottom" xml:space="preserve"><value>상단에서 하단으로</value></data><data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve"><value>항상</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>오디오 바운스</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>오디오 리플</value></data><data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>오로라 싱크</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorChange" xml:space="preserve"><value>색상 변경</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>색상 펄스</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>색상 물결</value></data><data name="SpectrumKeyboardBacklightEffectType_Rain" xml:space="preserve"><value>비</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>무지개 나사</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>무지개 물결</value></data><data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>리플</value></data><data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve"><value>부드럽게</value></data><data name="SpectrumKeyboardBacklightEffectType_Type" xml:space="preserve"><value>유형</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed1" xml:space="preserve"><value>느림</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed2" xml:space="preserve"><value>중간</value></data><data name="SpectrumKeyboardBacklightSpeed_Speed3" xml:space="preserve"><value>빠름</value></data><data name="Theme_Dark" xml:space="preserve"><value>다크</value></data><data name="Theme_Light" xml:space="preserve"><value>라이트</value></data><data name="Theme_System" xml:space="preserve"><value>시스템</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>윈도우</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>마코스</value></data><data name="TouchpadLockState_Off" xml:space="preserve"><value>끔</value></data><data name="TouchpadLockState_On" xml:space="preserve"><value>켜짐</value></data><data name="WhiteKeyboardBacklightState_High" xml:space="preserve"><value>높음</value></data><data name="WhiteKeyboardBacklightState_Low" xml:space="preserve"><value>낮음</value></data><data name="WhiteKeyboardBacklightState_Off" xml:space="preserve"><value>끔</value></data><data name="WinKeyState_Off" xml:space="preserve"><value>끔</value></data><data name="WinKeyState_On" xml:space="preserve"><value>켜짐</value></data><data name="PortsBacklightState_Off" xml:space="preserve"><value>끔</value></data><data name="PortsBacklightState_On" xml:space="preserve"><value>켜짐</value></data><data name="PanelLogoBacklightState_On" xml:space="preserve"><value>켜짐</value></data><data name="PanelLogoBacklightState_Off" xml:space="preserve"><value>끔</value></data><data name="InstantBootState_Off" xml:space="preserve"><value>끔</value></data><data name="InstantBootState_AcAdapter" xml:space="preserve"><value>AC 어댑터</value></data><data name="InstantBootState_UsbPowerDelivery" xml:space="preserve"><value>USB 전원 공급</value></data><data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve"><value>AC 및 USB PD</value></data><data name="NotificationDuration_Long" xml:space="preserve"><value>긴</value></data><data name="NotificationDuration_Normal" xml:space="preserve"><value>일반</value></data><data name="NotificationDuration_Short" xml:space="preserve"><value>짧은</value></data><data name="ModifierKey_Shift" xml:space="preserve"><value>쉬프트</value></data><data name="ModifierKey_Ctrl" xml:space="preserve"><value>컨트롤</value></data><data name="ModifierKey_Alt" xml:space="preserve"><value>대체</value></data><data name="BatteryNightChargeState_On" xml:space="preserve"><value>켜짐</value></data><data name="BatteryNightChargeState_Off" xml:space="preserve"><value>끔</value></data><data name="SpeakerState_Mute" xml:space="preserve"><value>음소거</value></data><data name="SpeakerState_Unmute" xml:space="preserve"><value>음소거 해제</value></data><data name="PowerModeMappingMode_Disabled" xml:space="preserve"><value>비활성화</value></data><data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve"><value>윈도우 전원 모드</value></data><data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve"><value>윈도우 전원 계획</value></data><data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve"><value>프리셋 4</value></data><data name="UpdateCheckFrequency_PerDay" xml:space="preserve"><value>매일</value></data><data name="UpdateCheckFrequency_PerHour" xml:space="preserve"><value>매시간</value></data><data name="UpdateCheckFrequency_PerMonth" xml:space="preserve"><value>매월</value></data><data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve"><value>3시간마다</value></data><data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve"><value>12시간마다</value></data><data name="UpdateCheckFrequency_PerWeek" xml:space="preserve"><value>매주</value></data></root>

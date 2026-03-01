@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="PluginPageWrapperRoot"
+    AutomationProperties.AutomationId="PluginPageWrapperRoot"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Scrollable="False">
     <Grid>
@@ -28,16 +30,31 @@
             <TextBlock
                 x:Name="_pluginTitle"
                 VerticalAlignment="Center"
-                FontSize="26"
-                FontWeight="Medium"
+                FontSize="24"
+                FontWeight="Normal"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
         </StackPanel>
         
         <!-- Plugin Content -->
         <Frame 
             x:Name="_pluginContentFrame"
+            AutomationProperties.AutomationId="PluginPageContentFrame"
             Grid.Row="1"
             NavigationUIVisibility="Hidden"
             BorderThickness="0" />
+
+        <Border
+            x:Name="_emptyStateBorder"
+            AutomationProperties.AutomationId="PluginPageEmptyState"
+            Grid.Row="1"
+            CornerRadius="8"
+            Padding="24"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+            Visibility="Collapsed">
+            <TextBlock
+                x:Name="_emptyStateTextBlock"
+                TextWrapping="Wrap"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Border>
     </Grid>
 </wpfui:UiPage>

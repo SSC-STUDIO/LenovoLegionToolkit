@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>toto je můj dlouhý řetězec</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 MIME kódovaný serializovaný objekt .NET Framework]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 MIME kódovaný řetězec představující formu pole bytů objektu .NET Framework]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -157,16 +157,16 @@
     <value>Zapnut</value>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
-    <value>dGPU</value>
+    <value>dedikovaná grafická karta</value>
   </data>
   <data name="HybridModeState_On" xml:space="preserve">
-    <value>Hybrid</value>
+    <value>Hybridní</value>
   </data>
   <data name="HybridModeState_OnAuto" xml:space="preserve">
-    <value>Hybrid-Auto</value>
+    <value>Hybridní auto</value>
   </data>
   <data name="HybridModeState_OnIGPUOnly" xml:space="preserve">
-    <value>Hybrid-iGPU</value>
+    <value>Hybridní iGPU</value>
   </data>
   <data name="NotificationPosition_BottomCenter" xml:space="preserve">
     <value>Dole uprostřed</value>
@@ -348,4 +348,4 @@
   <data name="WhiteKeyboardBacklightState_Off" xml:space="preserve">
     <value>Vypnut</value>
   </data>
-</root>
+<data name="FlipToStartState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="FlipToStartState_On" xml:space="preserve"><value>Na</value></data><data name="FnLockState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="FnLockState_On" xml:space="preserve"><value>Na</value></data><data name="HDRState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="HDRState_On" xml:space="preserve"><value>Na</value></data><data name="MicrophoneState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="MicrophoneState_On" xml:space="preserve"><value>Na</value></data><data name="OneLevelWhiteKeyboardBacklightState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="OneLevelWhiteKeyboardBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="OverdriveState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="OverdriveState_On" xml:space="preserve"><value>Na</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Okna</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>OS</value></data><data name="TouchpadLockState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="TouchpadLockState_On" xml:space="preserve"><value>Na</value></data><data name="WinKeyState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="WinKeyState_On" xml:space="preserve"><value>Na</value></data><data name="PortsBacklightState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="PortsBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="PanelLogoBacklightState_On" xml:space="preserve"><value>Na</value></data><data name="PanelLogoBacklightState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="InstantBootState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="InstantBootState_AcAdapter" xml:space="preserve"><value>AC nabíječka</value></data><data name="InstantBootState_UsbPowerDelivery" xml:space="preserve"><value>USB napájení</value></data><data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve"><value>AC a USB PD</value></data><data name="NotificationDuration_Long" xml:space="preserve"><value>Dlouhý</value></data><data name="NotificationDuration_Normal" xml:space="preserve"><value>Normální</value></data><data name="NotificationDuration_Short" xml:space="preserve"><value>Krátké</value></data><data name="ModifierKey_Shift" xml:space="preserve"><value>Posun</value></data><data name="ModifierKey_Ctrl" xml:space="preserve"><value>Ctrl</value></data><data name="ModifierKey_Alt" xml:space="preserve"><value>ALT</value></data><data name="BatteryNightChargeState_On" xml:space="preserve"><value>Na</value></data><data name="BatteryNightChargeState_Off" xml:space="preserve"><value>Vypnut</value></data><data name="SpeakerState_Mute" xml:space="preserve"><value>Tlumení</value></data><data name="SpeakerState_Unmute" xml:space="preserve"><value>Ztlumit</value></data><data name="PowerModeMappingMode_Disabled" xml:space="preserve"><value>Zakázán</value></data><data name="PowerModeMappingMode_WindowsPowerMode" xml:space="preserve"><value>Režim napájení Windows</value></data><data name="PowerModeMappingMode_WindowsPowerPlan" xml:space="preserve"><value>Napájecí plán Windows</value></data><data name="RGBKeyboardBacklightPreset_Four" xml:space="preserve"><value>Přednastavení 4</value></data><data name="UpdateCheckFrequency_PerDay" xml:space="preserve"><value>Denní</value></data><data name="UpdateCheckFrequency_PerHour" xml:space="preserve"><value>Každou hodinu</value></data><data name="UpdateCheckFrequency_PerMonth" xml:space="preserve"><value>Měsíční</value></data><data name="UpdateCheckFrequency_PerThreeHours" xml:space="preserve"><value>Každé 3 hodiny</value></data><data name="UpdateCheckFrequency_PerTwelveHours" xml:space="preserve"><value>Každých 12 hodin</value></data><data name="UpdateCheckFrequency_PerWeek" xml:space="preserve"><value>Týdenní</value></data></root>

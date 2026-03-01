@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -403,7 +403,7 @@ VAROVANIE: Táto akcia neprebehne správne, ak je displej notebooku vypnutý, al
     <value>Výrobca</value>
   </data>
   <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
-    <value>Model</value>
+    <value>Vzor</value>
   </data>
   <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
     <value>Sériové číslo</value>
@@ -484,7 +484,7 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
     <value>Ukončiť</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportovať</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
     <value>Pri napájaní z batérie použiť len integrovanú GPU a obe, integrovanú aj dedikovanú GPU, pri napájaní sieťovým adaptérom. Pri napájaní z neštandardného adaptéru systém prepne na režim len Hybrid-iGPU.</value>
@@ -523,7 +523,7 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
     <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>PROCESOR</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>CPU senzor</value>
@@ -594,7 +594,7 @@ Niektoré notebooky môžu prijímať vyššie hodnoty ako uvádzajú, ale buďt
     <value>Teplotný limit CPU</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>PROCESOR</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>Nemožno uplatniť nastavenia</value>
@@ -826,7 +826,7 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
     <value>Zámok touchpadu</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>DOBRE</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Otvor</value>
@@ -835,13 +835,13 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
     <value>Zlepši čas odozvy zabudovaného displeja.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Prevod nad rámec</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Zlepši čas odozvy zabudovaného displeja.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Prevod nad rámec</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} stiahnutý!</value>
@@ -890,7 +890,7 @@ Vždy sa uistite, že inštalujete správne balíky.</value>
     <value>Prebieha sťahovanie</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filter...</value>
+    <value>Filtrovať...</value>
   </data>
   <data name="PackagesPage_MachineType" xml:space="preserve">
     <value>Typ zariadenia</value>
@@ -1300,7 +1300,7 @@ Ak sa rozhodnete pokračovať záznam chýb bude automaticky zapnutý.</value>
     <value>Lenovo Legion Toolkit nebol testovaný na vašom zariadenia.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
-    <value>Model</value>
+    <value>Vzor</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
     <value>Nepodporované zariadenie</value>
@@ -1675,10 +1675,10 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
     <value>Aktualizácie</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Odporúčané</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} z {1} vybraných akcií</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Čistenie vyrovnávacej pamäte</value>
@@ -1726,585 +1726,585 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
     <value>Optimalizácia systému</value>
   </data>
 <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
-    <value>Third-party libraries</value>
+    <value>Knižnice tretích strán</value>
   </data>
   <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Vymazať</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Predvoľba</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Keď je povolené, toto zariadenie sa počas nočného nabíjania nabije na 80 % a dokončí nabíjanie na 100 % do rána, keď zariadenie použijete.</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Nočné nabíjanie batérie</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Keď je povolené, toto zariadenie sa počas nočného nabíjania nabije na 80 % a dokončí nabíjanie na 100 % do rána, keď zariadenie použijete.</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Nočné nabíjanie batérie</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Maximálna kapacita nabitia batérie.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Stav batérie</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Maximálna rýchlosť nabíjania batérie ( ), alebo vybíjania (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Maximálna rýchlosť vybíjania</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Minimálna rýchlosť nabíjania batérie ( ), alebo vybíjania (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Minimálna rýchlosť vybíjania</value>
   </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
-    <value>Custom Boot Logo is set</value>
+    <value>Vlastné Boot logo je nastavené</value>
   </data>
   <data name="BootLogoWindow_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>Prispôsobiť</value>
   </data>
   <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
-    <value>Default Boot Logo is set</value>
+    <value>Predvolené Boot logo je nastavené</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Custom boot logo must be exactly {0} pixels large.
-Supported formats are: {1}.</value>
+    <value>Vlastné boot logo musí mať presne {0} pixelov. 
+ Podporované formáty sú: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
-    <value>Custom logo could not be set: {0}</value>
+    <value>Nepodarilo sa nastaviť vlastné logo: {0}</value>
   </data>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
-    <value>Custom boot logo set.</value>
+    <value>Vlastné bootovacie logo nastavené.</value>
   </data>
   <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
-    <value>Default logo could not be set: {0}</value>
+    <value>Nepodarilo sa nastaviť predvolené logo: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
-    <value>Default boot logo set.</value>
+    <value>Predvolené bootovacie logo nastavené.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Cannot mount EFI partition.</value>
+    <value>Nie je možné pripojiť EFI oddiel.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
-    <value>Cannot set UEFI privilege.</value>
+    <value>Nie je možné nastaviť oprávnenie UEFI.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
-    <value>Invalid image format.</value>
+    <value>Neplatný formát obrázka.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Invalid image size.</value>
+    <value>Neplatná veľkosť obrázka.</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Not enough free space on EFI partition.</value>
+    <value>Na EFI oddiele nie je dosť voľného miesta.</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Stav</value>
   </data>
   <data name="BootLogoWindow_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Boot logo</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Vymazať</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Zbaliť všetko</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>Výber prevádzkového režimu GPU na základe použitia počítača a podmienok napájania.
+Prepínanie režimov môže vyžadovať reštart.</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>Prevádzkový režim GPU</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Kompaktný zobrazenie</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Error occured when reading device information.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Prehliadať…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Prosím zadajte aspoň jednu príponu súboru.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Prosím vyberte zložku.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Oddelte viacero prípon čiarkami (príklad: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Rozšírenia</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Zložka</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Zahrnúť podsložky</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Vlastné pravidlo čistenia</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
-    <value>dGPU connected</value>
+    <value>dGPU pripojené</value>
   </data>
   <data name="DGPU_Disconnected_Title" xml:space="preserve">
-    <value>dGPU disconnected</value>
+    <value>dGPU odpojené</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Deselect all</value>
+    <value>Zrušiť výber všetkého</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
-    <value>Show connected devices only</value>
+    <value>Zobraziť iba pripojené zariadenia</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
-    <value>Show removable devices only</value>
+    <value>Zobraziť iba odnímateľné zariadenia</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
-    <value>Show selected devices only</value>
+    <value>Zobraziť iba vybrané zariadenia</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Obnoviť</value>
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
-    <value>Devices</value>
+    <value>Zariadenia</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
-    <value>Sensors</value>
+    <value>Senzory</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Rozbaliť všetko</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU č. 2</value>
   </data>
   <data name="GHz" xml:space="preserve">
     <value>GHz</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
-    <value>GPU to CPU Dynamic Boost</value>
+    <value>Dynamické zvýšenie výkonu GPU na CPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+    <value>Toto je maximálna dodatočná energia, ktorá môže byť priradená CPU z GPU na základe využitia CPU. Čím vyššia je hodnota, tým lepší je výkon aplikácií, ktoré používajú CPU.</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+    <value>Nastavenia Vlastného režimu nebudú správne použité, keď je spustený Legion Zone alebo jeho služby.</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+    <value>Nastavenia Vlastného režimu nebudú správne použité, keď je spustený Lenovo Vantage alebo jeho služby.</value>
   </data>
   <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+    <value>Skryť</value>
   </data>
   <data name="HideAll" xml:space="preserve">
-    <value>Hide all</value>
+    <value>Skryť všetko</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
-If dGPU does not respond at all, please restart your laptop.</value>
+    <value>Skúste režim zmeniť znova o niekoľko sekúnd, ak nevidíte očakávaný výsledok. 
+ Ak dGPU vôbec nereaguje, reštartujte prosím laptop.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+    <value>dGPU sa automaticky odpojí, keď sa nepoužíva a laptop je napájaný z batérie.</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use.</value>
+    <value>dGPU sa automaticky odpojí, keď sa nepoužíva.</value>
   </data>
   <data name="IGPUModeChangeException_Title" xml:space="preserve">
-    <value>Could not change GPU Working Mode</value>
+    <value>Nepodarilo sa zmeniť pracovný režim GPU</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU is currently in use or laptop is not on battery power</value>
+    <value>dGPU je momentálne používané alebo laptop nie je napájaný z batérie</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU is currently in use</value>
+    <value>dGPU je momentálne používané</value>
   </data>
   <data name="Information" xml:space="preserve">
-    <value>Information</value>
+    <value>Informácie</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Zapnite laptop, keď je pripojená nabíjačka.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Okamžité spustenie</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Zapnite laptop, keď je pripojená nabíjačka.</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Okamžité spustenie</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.</value>
+    <value>Podsvietenie klávesnice sa tu nedá ovládať, ak sú spustené Lenovo Vantage alebo jeho služby.</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage or its services are running</value>
+    <value>Lenovo Vantage alebo jeho služby sú spustené</value>
   </data>
   <data name="MHz" xml:space="preserve">
     <value>MHz</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable or disable macros.</value>
+    <value>Povoliť alebo zakázať makrá.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Lenovo Legion Toolkit must be running for macros to work.</value>
+    <value>Pretože Lenovo Legion Toolkit musí bežať, aby makrá fungovali.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
-    <value>Enable</value>
+    <value>Zapnúť</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>You can record series of key presses and invoke them using the number pad on your keyboard.</value>
+    <value>Môžete zaznamenať sériu stlačení klávesov a spustiť ich pomocou numerickej klávesnice na klávesnici.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
-    <value>Recording will start in 3 seconds...</value>
+    <value>Nahrávanie sa spustí za 3 sekundy...</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
-    <value>Press ESC to stop.</value>
+    <value>Stlačte ESC na zastavenie.</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
-    <value>Recording...</value>
+    <value>Nahrávanie...</value>
   </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
-    <value>Don't repeat</value>
+    <value>Neopakovať</value>
   </data>
   <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
-    <value>Ignore delays</value>
+    <value>Ignorovať oneskorenia</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
-    <value>Interrupt if another key was pressed</value>
+    <value>Prerušiť, ak bol stlačený iný kláves</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Keyboard only</value>
+    <value>Iba klávesnica</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Keyboard keys and mouse buttons</value>
+    <value>Klávesy klávesnice a tlačidlá myši</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
-    <value>All inputs</value>
+    <value>Všetky vstupy</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
-    <value>Record</value>
+    <value>Zaznamenať</value>
   </data>
   <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
-    <value>Recording options</value>
+    <value>Možnosti nahrávania</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
-    <value>Repeat</value>
+    <value>Opakovať</value>
   </data>
   <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Stop recording</value>
+    <value>Zastaviť nahrávanie</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API rate limit reached, please try again later.</value>
+    <value>Dosiahnutý limit API, skúste to prosím neskôr.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
-    <value>Failed to check for updates</value>
+    <value>Nepodarilo sa skontrolovať aktualizácie</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Something went wrong, please try again later.</value>
+    <value>Niečo sa pokazilo, skúste to neskôr znova.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
-    <value>No updates found</value>
+    <value>Nenašli sa žiadne aktualizácie</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone is running in the background.</value>
+    <value>Legion Zone beží na pozadí.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimalizácia systému</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys is running in the background.</value>
+    <value>Lenovo Hotkeys beží na pozadí.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController is running in the background.</value>
+    <value>Lenovo Vantage a/alebo ImController beží na pozadí.</value>
   </data>
   <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
-    <value>Notification Text</value>
+    <value>Text oznámenia</value>
   </data>
   <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
-    <value>Show notification</value>
+    <value>Zobraziť oznámenie</value>
   </data>
   <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
-    <value>Actions</value>
+    <value>Akcie</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Disables notification for Fn keys actions like microphone mute.
-Enable this option if you have conflicts with full screen applications.</value>
+    <value>Zakazuje oznámenia pre akcie kláves Fn ako stlmenie mikrofónu. 
+ Povoliť túto možnosť, ak máte konflikty s aplikáciami na celú obrazovku.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>Vždy umiestniť notifikáciu navrchu. 
+ Neovplyvní to iné okná na celú obrazovku, ale nebudete môcť kliknúť na notifikácie.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>Notifikácia vždy navrchu</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
-    <value>Duration</value>
+    <value>Trvanie</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Show notification on all screens connected to your device.</value>
+    <value>Zobraziť oznámenie na všetkých obrazovkách pripojených k vášmu zariadeniu.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
-    <value>Notification on all screens</value>
+    <value>Oznámenie na všetkých obrazovkách</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Vypnutá</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Stiahnuť</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Open README</value>
+    <value>Otvoriť README</value>
   </data>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
-    <value>Download folder</value>
+    <value>Zložka na stiahnutie</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>Skontrolujte vaše internetové pripojenie.</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Niečo sa pokazilo</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
-    <value>Open Download folder</value>
+    <value>Otvoriť priečinok na stiahnutie</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
+    <value>Skúste získať aktualizácie z iného zdroja.</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
+    <value>Katalóg aktualizácií nenájdený</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
-    <value>Period (minutes)</value>
+    <value>Perióda (minúty)</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Common music formats like wav or mp3 are supported.</value>
+    <value>Podporované sú bežné hudobné formáty ako wav alebo mp3.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
-    <value>Play sound</value>
+    <value>Prehrať zvuk</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} power mode is not available without AC power.</value>
+    <value>Režim napájania {0} nie je dostupný bez pripojenia na AC napájanie.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Cannot change Power Mode</value>
+    <value>Nie je možné zmeniť režim napájania</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a saved quick action.</value>
+    <value>Spustiť uloženú rýchlu akciu.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
-    <value>Quick Action</value>
+    <value>Rýchla akcia</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
-    <value>Preset 4</value>
+    <value>Prednastavenie 4</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
-    <value>Revert to default</value>
+    <value>Obnoviť predvolené</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Run silently</value>
+    <value>Spustiť potichu</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Execute console applications, without creating a console window.</value>
+    <value>Spúšťať konzolové aplikácie bez vytvorenia konzolového okna.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
-    <value>Wait until finished</value>
+    <value>Počkať až do dokončenia</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Wait until program or script finishes executing</value>
+    <value>Počkať, kým program alebo skript nedokončí vykonávanie</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Vyberte všetko</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>PROCESOR</value>
   </data>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
-    <value>Core Clock</value>
+    <value>Hodiny jadra</value>
   </data>
   <data name="SensorsControl_Fan_Title" xml:space="preserve">
-    <value>Fan</value>
+    <value>Ventilátor</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
     <value>GPU</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maximálne: {0}</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
-    <value>Memory Clock</value>
+    <value>Hodiny pamäte</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
-    <value>Refresh interval</value>
+    <value>Interval obnovovania</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Teplota</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
-    <value>Utilization</value>
+    <value>Využitie</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavenia</value>
   </data>
   <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
-    <value>Customize Boot Logo image, visible during system startup.</value>
+    <value>Prispôsobte obrázok Boot loga, viditeľný počas spúšťania systému.</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Boot logo</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Add CLI to user's PATH environment variable.</value>
+    <value>Pridať CLI do používateľskej premennej prostredia PATH.</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>Add CLI to PATH</value>
+    <value>Pridať CLI do PATH</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>Enable Command Line Interface that allows control from command line.</value>
+    <value>Povoliť príkazový riadok, ktorý umožňuje ovládanie z príkazového riadku.</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
     <value>CLI</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
-    <value>Check</value>
+    <value>Skontrolovať</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
-    <value>Checking for updates...</value>
+    <value>Prebieha kontrola aktualizácií...</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
-    <value>Check for updates</value>
+    <value>Skontrolovať aktualizácie</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Skryť varovanie o nekompatibilnom zariadení, ktoré sa zobrazuje pri spustení.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Vypnúť varovanie o nekompatibilnom zariadení</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been disabled correctly</value>
+    <value>Lenovo Vantage a/alebo ImController nemuseli byť správne vypnuté</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Vantage and/or ImController</value>
+    <value>Nepodarilo sa vypnúť Lenovo Vantage a/alebo ImController</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been enabled correctly</value>
+    <value>Lenovo Vantage a/alebo ImController nemuseli byť správne zapnuté</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Vantage and/or ImController</value>
+    <value>Nepodarilo sa zapnúť Lenovo Vantage a/alebo ImController</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+    <value>Zdieľajte otáčky ventilátora, teplotu batérie a ďalšie s HWiNFO64. Po zmene tejto možnosti môže byť potrebné reštartovať HWiNFO64.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
     <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
-    <value>Integrations</value>
+    <value>Integrácie</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>Always minimize to tray instead of taskbar.</value>
+    <value>Vždy minimalizovať do zásobníka namiesto panela úloh.</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
-    <value>Minimize to tray</value>
+    <value>Minimalizovať do zásobníka</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+    <value>Pri reštarte systému sa v sekcii batérie resetuje čítač pre „Na batérii od“.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Reset "On battery since" at startup</value>
+    <value>Resetovať „Na batérii od“ pri štarte</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.</value>
+    <value>Automaticky zmeniť plán napájania Windows alebo režim napájania Windows pri zmene režimov napájania.</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
-    <value>Power Mode Synchronization</value>
+    <value>Synchronizácia režimu napájania</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.</value>
+    <value>Fn Lock bude dočasne deaktivovaný, keď je stlačený kláves Alt, Ctrl alebo Shift.</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
-    <value>Smart Fn Lock</value>
+    <value>Inteligentné uzamknutie Fn</value>
   </data>
   <data name="SettingsPage_Temperature_Message" xml:space="preserve">
-    <value>Select units for temperature sensors.</value>
+    <value>Vyberte jednotky pre teplotné senzory.</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Teplota</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
-    <value>Automatically check for updates</value>
+    <value>Automaticky kontrolovať aktualizácie</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
-    <value>Update</value>
+    <value>Aktualizovať</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Spustiť čistenie</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Čistenie zlyhalo.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Čistenie dokončené.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Použiť odporúčané vylepšenia výkonu a vyčistiť dočasné súbory.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Použiť vylepšenia výkonu a služby</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Nepodarilo sa použiť optimalizácie výkonu.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Optimalizácie výkonu boli použité.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimalizácia systému</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Select Windows Power Mode to apply when Power Mode changes.</value>
+    <value>Vyberte režim napájania Windows, ktorý sa má použiť pri zmene režimu napájania.</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Režimy napájania Windows</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
-    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+    <value>Umožniť rýchle prepínanie na vlastný režim pomocou Fn Q.</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
-    <value>Switch to Custom Mode with Fn+Q</value>
+    <value>Prepnúť na vlastný režim pomocou Fn Q</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>When mute, all active audio output devices will be muted.</value>
+    <value>Keď je stlmené, všetky aktívne zvukové výstupy budú stlmené.</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Speaker</value>
+    <value>Reproduktor</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Predvoľba</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Maximálna miera vybíjania</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Minimálna miera vybíjania</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2316,43 +2316,43 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Zaoblené rohy</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Tiene</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Vzhľad</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Použiť</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Klasické</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tmavý</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Svetlý</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>Moderné</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Motív</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Nastavenia štýlu menu</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2361,7 +2361,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Inštalovať</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2385,548 +2385,581 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Odinštalovať</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Skrášľovanie Windows</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>Umožniť prepínanie medzi integrovanou a dedikovanou GPU.
+Vyžaduje reštart.</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>Hybridný režim</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off Wi-Fi</value>
+    <value>Vypnúť Wi-Fi</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn on Wi-Fi</value>
+    <value>Zapnúť Wi-Fi</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Unexpected exception occurred:
-{0}</value>
+    <value>Vyskytla sa neočakávaná výnimka: 
+ {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Toto varovanie môžete kedykoľvek vypnúť v Nastaveniach.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
-    <value>Copy current network name</value>
+    <value>Kopírovať aktuálny názov siete</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Leave empty for any Wi-Fi network.</value>
+    <value>Nechajte prázdne pre akúkoľvek Wi-Fi sieť.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
+    <value>Názov siete (SSID)</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable Windows key on built-in keyboard.</value>
+    <value>Zakázať kláves Windows na zabudovanej klávesnici.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>Zámok Windows klávesy</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Akcie</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Použiť vybrané akcie</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Nepodarilo sa dokončiť vybrané akcie.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Vybrané akcie boli úspešne dokončené.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Vyberte predinštalované aplikácie Microsoft Store, ktoré chcete odstrániť pre všetkých používateľov.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Žiadne aplikácie neboli vybrané na odstránenie.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Správa AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Nepodarilo sa načítať: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Načítavajú sa aplikácie, prosím čakajte...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Vydavateľ: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Odinštalovanie vybraných aplikácií...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Odinštalovať vybrané aplikácie</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Nepodarilo sa odstrániť vybrané aplikácie.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Vybrané aplikácie naplánované na odstránenie.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Prispôsobte vzhľad kontextového menu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Nepodarilo sa použiť nastavenia štýlu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfiguračný súbor sa nenašiel. Uistite sa, že Nilesoft Shell je nainštalovaný.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Nepodarilo sa povoliť klasické menu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Nepodarilo sa nainštalovať shell.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Nepodarilo sa obnoviť predvolené menu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe sa nenašiel. Uistite sa, že Nilesoft Shell je nainštalovaný.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Vyberte tému pre kontextové menu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Povoľte efekty priehľadnosti pre kontextové menu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Nepodarilo sa odinštalovať shell.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Uvoľnených {0} v {1}</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Zrušiť výber</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Pridať pravidlo</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Všetko vyčistite</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Vyberte priečinky a prípony súborov, ktoré by sa mali vymazať počas čistenia.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Upraviť</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Nemám nastavené žiadne vlastné pravidlá upratovania.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Vlastné pravidlá čistenia</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Zahrnúť podsložky</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Odstrániť</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Prosím, vyberte aspoň jednu akciu.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Odhadovaná veľkosť vyčistenia: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Tieto akcie menia systémové služby a súbory. Môžu byť vyžadované administrátorské práva.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Spustiť čistiace akcie</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Prebieha: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Vyberte všetko</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Vybrať odporúčané</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Skrášlenie</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Odinštalujte vybrané predinštalované aplikácie UWP pre všetkých používateľov.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Odstrániť predinštalované aplikácie Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Odstráňte vyrovnávaciu pamäť a súbory cookie pre Internet Explorer a Edge.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Vyčistite vyrovnávaciu pamäť prehliadača</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Spustite čistenie DISM a odstráňte dočasné súbory WinSxS.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Služobná komponenta úložiska</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Odstráňte súbory výpisov pamäte zostávajúce po zlyhaniach systému.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Odstrániť výpisy havárií</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Odstrániť súbory zodpovedajúce nakonfigurovaným príponám z vybraných priečinkov.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Vyčistiť vlastné súbory</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Odstrániť históriu skenovania a vyrovnávacie pamäte programu Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Vyčistiť skeny Defendera</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Odstráňte uložené natívne obrázky .NET, aby ste uvoľnili miesto na disku.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Vymažte natívne obrázky .NET</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Odstráňte denníky Windows, hlásenia o chybách a diagnostické stopy.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Odstráňte záznamy a diagnostické údaje</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Odstráňte dáta prednačítania Windows, aby sa vygenerovali nové stopy.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Vymazať dáta prednačítania (prefetch)</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Odstrániť súbory zmazané a uložené v Kôši.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Vyprázdniť Kôš</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Vymazať bežné používateľské histórie registrov (Spustiť MRU, Nedávne dokumenty, dialógy Otvoriť/Uložiť, Zadané cesty). Toto neodstraňuje kritické systémové položky.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Vyčistenie registrov MRU/historie</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Odstráňte uložené súbory vytvorené klientom Remote Desktop.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Vymažte vyrovnávaciu pamäť Remote Desktop</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Vyprázdnite dočasné priečinky Windows a používateľa.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Vyčistiť dočasné súbory</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Odstráňte databázy miniatur Explorer a vyrovnávaciu pamäť Direct3D shaderov.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Vyčistite vyrovnávacie pamäte miniatur</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Vymažte stiahnuté aktualizačné súbory a vyrovnávaciu pamäť Optimalizácie doručovania.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Vyčistite vyrovnávaciu pamäť Windows Update</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Znížiť oneskorenie menu, rýchlejšie zatvárať zaseknuté aplikácie a predvolene otvárať Tento počítač.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Zlepšiť odozvu Prieskumníka</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Úplne zakázať ponuku Štart. Keď stlačíte kláves Win, otvorí sa vyhľadávanie namiesto ponuky Štart.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Zakážte ponuku Štart a otváranie vyhľadávania pomocou klávesu Win</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Vypnúť návrhy obsahu v cloude a odporúčacie bannery.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Zakázať návrhy Prieskumníka</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Skryte vyhľadávacie pole a tlačidlo Zobrazenia úloh, zakážte zoskupovanie na paneli úloh a vždy zobrazujte ikony na systémovej lište.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Rozloženie panela úloh a ponuky Štart</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Zobraziť prípony súborov a skryté súbory v Prieskumníkovi.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Možnosti viditeľnosti súborov</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Obnoví predvolený štýl a reštartuje Prieskumník.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Prepnúť na predvolené kontextové menu pravého kliknutia</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Používa klasický štýl a reštartuje Prieskumník.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Prepnúť na moderné menu</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Úplne odinštalovať shell.exe a súvisiace súbory</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Použiť Moderné Kontextové Menu</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Udržiavať systémovú cache v pamäti a vyhnúť sa stránkovaniu ovládačov jadra.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Zlepšiť správu pamäte</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Odstrániť obmedzovanie siete a znížiť latenciu odozvy systému.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Optimalizovať plánovanie multimédií</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Odstrániť akrylové efekty pri prihlasovaní a skryť centrum upozornení Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Zakázať acrylic a centrum oznámení</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Aktivovať plán napájania s vysokým výkonom a vypnúť režim hibernácie.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Vynútiť plán vysokej výkonnosti</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Vypnúť reklamné ID, funkcie Spotlight a automatické návrhy.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Znížiť telemetriu a tipy</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Zastaviť a vypnúť služby Connected User Experiences, Diagnostics Hub a Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Vypnúť diagnostické služby</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Zastavte Windows Error Reporting, aby nezhromažďoval a neodosielal údaje o zlyhaniach.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Vypnúť hlásenie chýb</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Zabezpečiť systém vypnutím prístupu k vzdialenému registru.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Vypnúť vzdialený register</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Zastaviť službu Windows Search, aby sa zabránilo aktualizáciám indexu.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Vypnúť indexovanie vyhľadávania Windows</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Vypnúť Superfetch/SysMain na zníženie aktivity disku na pozadí.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Vypnúť SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Upraviť správanie klávesu Windows tak, aby otvoril vyhľadávanie namiesto ponuky Štart.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Zmeniť kláves Windows na otvorenie vyhľadávania</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Odstráňte cache, dočasné súbory a ďalšie zvyšky.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Čistenie</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Ladte panel úloh, Správcu súborov a správanie používateľského rozhrania.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Prieskumník a rozhranie</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Zmeniť štýl kontextového menu po kliknutí pravým tlačidlom.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Skrášľovanie Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Upravte nastavenia výkonu a odozvy systému.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Výkonný</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Zakážte služby na pozadí, ktoré spotrebúvajú prostriedky.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Služby</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Zkrášlenie systému</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Režimy napájania Windows</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
-    <value>Default</value>
+    <value>Predvolený</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Plány napájania</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Registrácia COM komponentu   Konfiguračný súbor</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Typ implementácie:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Zavrieť</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Registráciou Nilesoft Shell ako COM spracovateľa pre kontextové ponuky Windows zachytáva vytváranie a zobrazovanie systémových kontextových ponúk po kliknutí pravým tlačidlom. Keď používatelia kliknú pravým tlačidlom na súbory alebo priečinky, Shell načíta konfiguračný súbor shell.nss a aplikuje vlastnú tému, priehľadnosť, zaoblené rohy a tieňové efekty, aby dosiahol estetický efekt kontextovej ponuky po kliknutí pravým tlačidlom.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfiguračný súbor sa nenašiel. Uistite sa, že Nilesoft Shell je nainštalovaný.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Konfiguračný súbor sa nenašiel</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Nastavenia boli úspešne aplikované. Zmeny sa prejavia po reštarte Prieskumníka súborov.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Nastavenia aplikované</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Nepodarilo sa aplikovať nastavenia: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Chyba</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Registrácia COM komponentu:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Cesta: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Konfiguračný súbor (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Cesta ku konfiguračnému súboru: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Používa syntaxi podobnú CSS na definovanie štýlov menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Príklad formátu konfiguračného súboru:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>téma 
+    { 
+        farba pozadia: #2d2d2d; 
+        farba textu: #ffffff; 
+        zaoblenie rohov: 5px; 
+        tieň: true; 
+        priehľadnosť: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Princíp fungovania:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll je zaregistrovaný ako COM komponent v systéme</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Implementuje rozhranie IContextMenu na zachytávanie vytvárania kontextového menu pravým tlačidlom</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Číta konfiguračný súbor shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Aplikuje vlastné štýly (tému, zaoblené rohy, tiene atď.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Zobrazí upravené kontextové menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Popis efektu:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Automatická téma: Nasleduje systémovú tému (svetlú/tmavú)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Priehľadnosť: Umožňuje efekt priehľadnosti pozadia menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Zaoblené rohy: Pridáva zaoblené rohy k položkám menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Tiene: Pridáva tieňové efekty k menu, čím zlepšuje vnímanie hĺbky</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Vykonáva sa {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Operácia zrušená</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Podrobnosti chyby: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Zobraziť skryté stiahnuté súbory</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Zobraziť skryté stiahnuté súbory</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Vyberte jazyk</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Nie je pripojené</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Synchronizovať zóny</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Rozšírenia pluginov</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Nastavenia položiek navigácie</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Konfigurujte, ktoré navigačné položky sa zobrazia v bočnom paneli. Panel s nástrojmi a Nastavenia budú vždy viditeľné.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Klávesnica</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Batéria</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Automatizácia</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Makro</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Optimalizácia systému</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku Rozšírenia pluginov</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Zobraziť alebo skryť navigačnú položku O programe</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Navigačné položky</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Konfigurujte, ktoré navigačné položky sa zobrazia v bočnom paneli</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Skenovanie dostupných balíkov ovládačov, prosím počkajte...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Vyskytla sa sieťová chyba. Automatické opakovanie pokusu...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Opakovaný pokus o načítanie balíkov ovládačov...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Informácie o čistení</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Zobraziť priebeh čistiacej operácie a odhadovanú veľkosť.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Spustiť minimalizované na systémovej lište pri prihlásení do Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Skenovať</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Stiahnuť ovládač</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Potvrdenie bezpečnosti</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Čistenie systému trvalo vymaže dočasné súbory a cache. Aj keď je to zvyčajne bezpečné, odporúča sa mať zálohy dôležitých dát. Chceš pokračovať?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Rozšírenia</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Spravovať rozšírenia a nástroje na optimalizáciu systému</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Nie sú k dispozícii žiadne rozšírenia</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Nainštalujte rozšírenia zo stránky Rozšírenia pluginov na zlepšenie funkčnosti optimalizácie systému.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Čoskoro</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Marketplace rozšírení bude dostupný v budúcej aktualizácii.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Načítavajú sa pluginy...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Integrácia shellu</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Vylepšená integrácia Windows Shell s krásnym kontextovým menu a prispôsobením štýlu myši</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Povoliť Moderné Kontextové Menu</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Povoliť Nilesoft Shell a vylepšiť kontextové menu Windows moderným štýlom</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Zakázať Moderné Kontextové Menu</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Odregistrujte Nilesoft Shell a obnovte predvolené kontextové menu Windows</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Použiť štýl kurzora Windows 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Použiť kurzorovú tému Windows 11 s podporou vysokého DPI</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Zrýchlenie siete</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Optimalizujte nastavenia siete pre zlepšenie rýchlosti a odozvy siete.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Optimalizácia TCP/IP a DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Optimalizujte parametre TCP/IP a nastavenia DNS cache pre zlepšenie rýchlosti a odozvy pripojenia.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Resetovať konfiguráciu siete</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Vyprázdnite DNS cache a resetujte konfiguráciu Winsock a TCP/IP zásobníka na opravu problémov s pripojením.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Odstráni dočasné súbory a záznamy zanechané rôznymi aplikáciami.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Zvyšky aplikácií</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Skenuje veľké súbory na systémovom disku, ktoré môžu zaberať značné miesto.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Skenovanie veľkých súborov</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Identifikujte a spravujte veľké súbory vo svojom systéme.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Veľké súbory</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Povoliť rozšírenia</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Povoliť systém rozšírení na prístup k trhu s pluginmi na stránke Nástroje.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Konfigurovať vzhľad, správanie a funkčnosť aplikácie.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Odporúčané</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Sťahovanie</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Inštalácia</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Dokončené</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Definícia akcie nenájdená</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Technické implementačné detaily pre túto akciu nie sú k dispozícii</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Načítanie zlyhalo</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Neznámy</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Vykonanie príkazu</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Úprava registra</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Správa služby</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Úprava registra   PowerShell skript</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Vyčistenie registra</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe nenájdený</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Cesta ku konfiguračnému súboru: Nenájdená</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Čas používania</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Inštalovať</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Odinštalovať</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Inštalácia zlyhala</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Súbor sa nenašiel, najprv ho prosím stiahnite</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Spustila sa inštalácia</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Spúšťam inštalátor: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Chyba kontroly kompatibility</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Aplikácia sa nepodarilo počas spustenia získať informácie o zariadení. Skontrolujte podrobnosti o chybe nižšie a v prípade potreby vyskúšajte kroky riešenia problémov.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Kroky riešenia problémov</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Uistite sa, že služba Windows Management Instrumentation (WMI) je spustená: Otvorte Služby (services.msc) a skontrolujte, či je služba "Windows Management Instrumentation" spustená.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Spustite aplikáciu ako správca, aby ste mali dostatočné oprávnenia na prístup k systémovému registru a WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Skontrolujte systémové zdroje: Zatvorte ostatné aplikácie náročné na zdroje a skúste to znova.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Pre podrobné informácie o chybe si prezrite súbor denníka kliknutím na "Otvoriť denník" nižšie.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Otvoriť súbor denníka</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Aktualizovať repozitár</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Konfigurujte repozitár GitHub na kontrolu aktualizácií. Nechajte prázdne, ak chcete použiť predvolené hodnoty.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Majiteľ repozitára</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>napr., SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Názov repozitára</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>napr., LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Pozastaviť všetko</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Principy implementácie a efektu</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Typ implementácie:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Editor konfigurácie</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>plášť.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>téma.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>obrázky.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>upraviť.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Detaily akcie</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Technické detaily implementácie</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Používanie vstavaného nástroja Windows na čistenie registrov</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Rozšírenia pluginov</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Inštalovať a spravovať pluginy na rozšírenie funkcií</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Inštalovať</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Nie je možné odinštalovať</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Nastavenia pluginu</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Názov pluginu</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Popis pluginu</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Tento plugin nemá žiadne nastaviteľné možnosti.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Zavrieť</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Plugin nenájdený: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Chyba</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Nastavenia</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Autor: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Formát konfiguračného rozhrania pluginu je nesprávny.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Chyba pri načítavaní nastavení pluginu: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Hľadať pluginy...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Všetko</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Žiadne dostupné pluginy</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Obchod s pluginmi je momentálne prázdny. Sledujte budúce aktualizácie pluginov.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Konfigurovať</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Odinštalovať</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Otvor</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Jazyk:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Použiť predvolený jazyk aplikácie</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Nájdené pluginy {0}</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Hromadný import</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Importovať pluginy z lokálnych súborov ZIP</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Importovať zo súborov</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Vyberte súbory doplnku (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>Pluginy {0} boli úspešne importované</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>Pluginy {0} boli úspešne importované a sú k dispozícii</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Hromadný import zlyhal</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>Nepodarilo sa importovať pluginy: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Importovanie zásuvných modulov...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>Importovanie {0}...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>Spracovávanie {0}...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Plugin bol úspešne nainštalovaný</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Plugin bol úspešne nainštalovaný</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Inštalácia zlyhala</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Nie je možné nainštalovať plugin: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Plugin bol úspešne odinštalovaný</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Plugin bol úspešne odinštalovaný</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Odstránenie sa nepodarilo</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Nie je možné odinštalovať plugin: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Nepodarilo sa otvoriť doplnok</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Nie je možné otvoriť doplnok: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Nie je možné otvoriť doplnok: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Plugin nie je nainštalovaný</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Plugin nie je nainštalovaný a nemožno ho otvoriť</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Je vyžadovaná minimálna verzia hostiteľa {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Plugin bude trvalo odstránený</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>Plugin bude trvalo odstránený. Táto akcia sa nedá vrátiť späť.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Aktualizácia zlyhala</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Aktualizácia pluginu zlyhala, skontrolujte sieťové pripojenie a skúste to neskôr.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Aktualizácia úspešná</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Plugin bol úspešne aktualizovaný</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Aktualizácia pluginu</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Sťahovanie a aktualizácia pluginu...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Aktualizovať všetko</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Spustiť plugin</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Plugin spustený</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Plugin odinštalovaný</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Plugin bude odstránený po zatvorení programu.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Odstránenie zlyhalo</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Pri odstraňovaní pluginu došlo k chybe</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Konfigurácia zlyhala</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Plugin je nainštalovaný, ale nie je načítaný. Skúste reštartovať aplikáciu.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Žiadna konfigurácia</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Plugin nemá žiadne možnosti konfigurácie.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Konfigurácia nie je podporovaná</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Plugin nepodporuje konfiguráciu.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Stavy pluginov obnovené</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Všetky stavy inštalácie pluginov boli vymazané</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Hromadná aktualizácia dokončená</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Všetky pluginy boli spracované.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Príprava na stiahnutie...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Lokálne</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Nová verzia dostupná</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Verzia:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Dátum vydania:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Novinky:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Obnoviť zoznam pluginov</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Nenašli sa žiadne pluginy zodpovedajúce vášmu vyhľadávaniu.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Aktualizovať všetky dostupné pluginy</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Nainštalovať všetky</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Nainštalovať všetky dostupné pluginy</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Inštalácia všetkých...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Inštalácia pluginu {0}...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Hromadná inštalácia dokončená</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Nainštalované pluginy {0}.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Hromadná inštalácia zlyhala</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Nepodarilo sa nainštalovať pluginy: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Aktualizácia všetkého...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Aktualizuje sa...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Otvoriť priečinok</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Kopírovať ID pluginu</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Priečinok nebol nájdený</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Adresár s pluginmi ešte neexistuje.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Skopírované</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>ID pluginu '{0}' skopírované do schránky.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Sťahovanie dokončené</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Sťahuje sa...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Sťahuje sa... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Zrýchlenie siete</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>ViveTool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Nástroje</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Funkcie zrýchlenia a optimalizácie siete v reálnom čase</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Spravujte Windows funkčné vlajky pomocou ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Nástroje na optimalizáciu systému a utility</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Použitie</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Tento editor slúži na priamu úpravu súboru konfigurácie shell.nss. Po úprave kliknite</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Použiť</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>tlačidlo na uloženie všetkých zmien a reštart Prieskumníka súborov na aplikáciu konfigurácie.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Cesta k konfiguračnému súboru:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Po úprave konfigurácie je potrebné reštartovať Prieskumníka súborov, aby sa zmeny prejavili.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Použiť</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>shell.nss konfiguračný súbor</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Súbor shell.nss sa používa na definovanie celkovej štruktúry a správania menu pravým kliknutím</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Open shell.nss súbor</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Otvoriť obsahujúci priečinok</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Cesta:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Nastavenia používateľského rozhrania</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Základné nastavenia témy</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Farba pozadia:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Farba textu:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Nastavenia efektu vznášania</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Pozadie pohybu myšou:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Prechod myšou:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Vybrané nastavenia efektu</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Vybrané pozadie:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Vybraný text:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Text aktualizácie z používateľského rozhrania</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Načítať z textu</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Textový editor</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Otvoriť v externom editore</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Konfiguračný súbor images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Súbor images.nss sa používa na definovanie ikon a obrázkov pre kontextové menu (pravé tlačidlo myši)</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Otvoriť súbor images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Konfiguračný súbor modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Súbor modify.nss sa používa na úpravu a prispôsobenie položiek kontextového menu</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Otvoriť súbor modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Nástroje nie sú k dispozícii. Prosím pridajte nástroje do priečinka tools v adresári aplikácie.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Nástroje sa tu zobrazia, keď budú k dispozícii v adresári tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Základný adresár: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Adresár konfiguračného súboru nebol nájdený</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Súbor nenájdený</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Nie je možné prečítať konfiguračný súbor: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Tento súbor sa používa na definovanie nastavení štýlu súvisiacich s témou</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Definícia farby témy</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Základná farba</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Farba pri prejdení myšou</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Vybraná farba</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Pre viac možností konfigurácie témy sa, prosím, pozrite do oficiálnej dokumentácie Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Ste si istí, že chcete použiť konfiguráciu? 
+  
+ Toto bude: 
+ 1. Uložiť všetky konfiguračné súbory 
+ 2. Reštartovať Prieskumníka súborov, aby sa konfigurácia aplikovala 
+  
+ Poznámka: Reštartovanie zatvorí všetky otvorené okná priečinkov a panel úloh a potom sa automaticky reštartuje.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Potvrdiť použitie konfigurácie</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Nie je možné uložiť konfiguračný súbor: 
+ {0} 
+  
+ Skontrolujte prosím oprávnenia súboru a skúste to znova.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Ukladanie zlyhalo</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Úspešne uložené nasledovné súbory: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Nepodarilo sa uložiť súbory: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>Prieskumník súborov bol reštartovaný, konfigurácia je teraz aktívna!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Čiastočne použité</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Úspešne použité</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Chyba pri aplikovaní konfigurácie: 
+ {0} 
+  
+ Môžete manuálne uložiť súbory a reštartovať proces Prieskumníka v Správcovi úloh.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Použitie zlyhalo</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Súbor neexistuje alebo je cesta neplatná</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Nepodarilo sa otvoriť súbor</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Použiť predvolený systémový program na otvorenie súboru</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Nie je možné otvoriť súbor: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Nepodarilo sa otvoriť súbor</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Zložka neexistuje alebo je cesta neplatná</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Nepodarilo sa otvoriť zložku</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Nie je možné otvoriť zložku: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Nepodarilo sa otvoriť zložku</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Vzor</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Spotreba energie</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Nabíjanie</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Stav batérie</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Rýchlosť</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Minimálna rýchlosť</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Maximálna rýchlosť</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Počet cyklov</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Kapacita</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Úplná kapacita</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Návrh</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Dátum</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Frekvencia jadra / pamäte</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Napätie jadra</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Rozsah napätia</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Priemerná teplota</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Postranný panel</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Systém</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Rozsah sadzby</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Vyberte aspoň jednu možnosť čistenia.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Spustiť všetko</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>napr. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>napr. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Povoliť priehľadnosť</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Povoliť efekty priehľadnosti pre kontextové menu</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Zobraziť prípony súborov</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Zobraziť prípony súborov v Prieskumníkovi súborov</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Zobraziť skryté súbory</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Zobraziť skryté súbory a priečinky v Prieskumníkovi</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Otvoriť pre rýchly prístup</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Otvoriť Prieskumníka v Rýchlom prístupe namiesto tohto počítača</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Zobraziť tablu náhľadu</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Zobraziť tablu náhľadu v Prieskumníkovi</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Vyberte aspoň jednu položku, ktorú chcete vyčistiť.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

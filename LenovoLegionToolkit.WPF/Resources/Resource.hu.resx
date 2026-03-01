@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -317,7 +317,7 @@ Ez az idő nem biztos, hogy pontos, ha a laptopot alvó vagy kikapcsolt állapot
     <value>Mégsem</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>° C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Bezárás</value>
@@ -523,7 +523,7 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző 
     <value>A GPU-munkamódokról</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>° F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>Processzor</value>
@@ -538,10 +538,10 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző 
     <value>Videókártya</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU # 2</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>FORDULATSZÁM</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
     <value>Kapcsolja be a laptopot, amikor kinyitja a fedelet.</value>
@@ -559,13 +559,13 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha a belső kijelző 
     <value>Az F1-F12 billentyűk másodlagos funkcióinak használata az Fn billentyű lenyomva tartása nélkül.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zárolás</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
     <value>Az F1-F12 billentyűk másodlagos funkcióinak használata az Fn billentyű lenyomva tartása nélkül.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zárolás</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
     <value>FIGYELEM!
@@ -600,7 +600,7 @@ Egyes laptopok nagyobb értékeket is elfogadnak, mint amennyit jeleznek, de leg
     <value>CPU hőmérséklet-határ</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>Processzor</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>Nem sikerült alkalmazni a beállítást</value>
@@ -815,7 +815,7 @@ Engedélyezze ezt az opciót, ha konfliktusok vannak a teljes képernyős alkalm
     <value>Ne jelenítsen meg értesítéseket</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zárolás</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>Billentyűzet háttérvilágítás</value>
@@ -842,7 +842,7 @@ Engedélyezze ezt az opciót, ha konfliktusok vannak a teljes képernyős alkalm
     <value>Touchpad zár</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>Rendben</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Megnyitás</value>
@@ -851,13 +851,13 @@ Engedélyezze ezt az opciót, ha konfliktusok vannak a teljes képernyős alkalm
     <value>A beépített kijelző válaszidejének gyorsítása.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Túlpörgés</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>A beépített kijelző válaszidejének gyorsítása.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Túlpörgés</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} letöltve!</value>
@@ -1724,10 +1724,10 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>MHz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maximális: {0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>Processzor</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
     <value>Kihasználtság</value>
@@ -1742,7 +1742,7 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>Ventilátor</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>Videókártya</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Memória órajel</value>
@@ -1751,13 +1751,13 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>Frissítési gyakoriság</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Azonnali indítás</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
     <value>Kapcsolja be a laptopot, ha a töltő csatlakoztatva van.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Azonnali indítás</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
     <value>Kapcsolja be a laptopot, ha a töltő csatlakoztatva van.</value>
@@ -2205,10 +2205,10 @@ A támogatott formátumok a következők: {1}.</value>
 Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani az értesítésekre.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Ajánlott</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} {1} akció kiválasztása</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Gyorsítótár tisztítása</value>
@@ -2250,103 +2250,103 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Kiválasztott elemek</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Takarítás</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>System optimization</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Az akkumulátor maximális töltőkapacitása.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Akkumulátor állapota</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Maximális ráta, amellyel az akkumulátor töltődik ( ), vagy ürül (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Maximális kisütési ráta</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Minimum ráta, amellyel az akkumulátor töltődik ( ), vagy ürül (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Minimális kisütési ráta</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Összes összecsukása</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Kompakt nézet</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Tallózás…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Kérjük, adjon meg legalább egy fájlkiterjesztést.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Kérjük, válasszon egy mappát.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Több kiterjesztést vesszővel válasszon el (példa: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Kiterjesztések</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Mappa</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Almappák bevonása</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Egyéni tisztítási szabály</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Összes kibontása</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Rendszeroptimalizálás</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Az indításkor megjelenő inkompatibilis eszköz figyelmeztetés elrejtése.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Inkompatibilis eszköz figyelmeztetés letiltása</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Futtassa a takarítást</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>A takarítás sikertelen.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Takarítás befejezve.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Alkalmazza a javasolt teljesítményjavításokat és tisztítsa meg az ideiglenes fájlokat.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Alkalmazza a teljesítmény- és szolgáltatási javításokat</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Nem sikerült alkalmazni a teljesítményoptimalizálásokat.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Teljesítményoptimalizálások alkalmazva.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Rendszeroptimalizálás</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Maximális kisütési arány</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Minimális kisütési arány</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2358,43 +2358,43 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Lekerekített kangók</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Árnyékok</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Megjelenés</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Alkalmaz</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Klasszikus</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Sötét</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Világos</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
     <value>Modern</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Téma</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Menü stílus beállítások</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2403,7 +2403,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Telepítés</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2427,507 +2427,540 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Eltávolítás</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Windows Szépítés</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Ezt a figyelmeztetést bármikor letilthatja a Beállításokban.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Műveletek</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>A kiválasztott műveletek alkalmazása</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>A kiválasztott műveletek végrehajtása sikertelen volt.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>A kiválasztott műveletek sikeresen befejeződtek.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Válassza ki az előtelepített Microsoft Store alkalmazásokat, amelyeket minden felhasználó számára el kell távolítani.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Nincs kiválasztott alkalmazás eltávolításra.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>AppX kezelés</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Betöltés sikertelen: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Alkalmazások betöltése, kérem várjon...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Kiadó: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Kiválasztott alkalmazások eltávolítása...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Kiválasztott alkalmazások eltávolítása</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>A kiválasztott alkalmazások eltávolítása sikertelen.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>A kiválasztott alkalmazások eltávolítása ütemezve.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Testreszabhatja a kontextus menü megjelenését.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Sikertelen a stílusbeállítások alkalmazása.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfigurációs fájl nem található. Kérjük, győződjön meg róla, hogy a Nilesoft Shell telepítve van.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Sikertelen a klasszikus menü engedélyezése.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Sikertelen a shell telepítése.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Sikertelen az alapértelmezett menü visszaállítása.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>A shell.exe nem található. Kérjük, győződjön meg róla, hogy a Nilesoft Shell telepítve van.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Válassza ki a kontextus menü témáját.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Engedélyezze az átlátszósági effekteket a kontextus menüben.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Sikertelen a shell eltávolítása.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Felszabadított {0} a {1}-kban</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Kiválasztás törlése</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Szabály hozzáadása</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Összes törlése</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Válassza ki azokat a mappákat és fájlformátumokat, amelyeket a takarítás során törölni kell.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Szerkesztés</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Nincsenek beállított egyedi takarítási szabályok.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Egyedi takarítási szabályok</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Almappák bevonása</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Eltávolítás</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Kérjük, válasszon legalább egy műveletet.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Becsült takarítási méret: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Ezek a műveletek módosítják a rendszer szolgáltatásait és fájljait. Rendszergazdai jogosultságok szükségesek lehetnek.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Takarítási műveletek végrehajtása</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Futás: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Összes kijelölése</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Ajánlott kiválasztása</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Szépítés</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Távolítsa el a kiválasztott előre telepített UWP-alkalmazásokat minden felhasználó számára.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Beépített Windows-alkalmazások eltávolítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Távolítsa el az Internet Explorer és az Edge gyorsítótár és sütifájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Böngésző gyorsítótár tisztítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Futtassa a DISM takarítást és ürítse ki a WinSxS ideiglenes fájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Szolgáltatás-összetevőtár</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Távolítsa el a rendszerösszeomlások után keletkező memóriadump-fájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Memóriaterhelések törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>A kiválasztott mappákból törölje a konfigurált kiterjesztésnek megfelelő fájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Egyéni fájlok tisztítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Törölje a Windows Defender vizsgálati előzményeit és gyorsítótárait.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Defender vizsgálatok tisztítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Távolítsa el a gyorsítótárazott .NET Native képeket a lemezterület felszabadításához.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>.NET natív képek törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Windows-naplók, hibajelentések és diagnosztikai nyomok törlése.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Naplók és diagnosztikai adatok törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Törölje a Windows prefetch adatait, hogy új nyomokat generáljon.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Prefetch adatok törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Távolítsa el a Lomtárban tárolt törölt fájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Ürítse ki a Lomtárat</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Törölje a közös felhasználói nyilvántartási előzményeket (Futtatás MRU, RecentDocs, Megnyitás/Mentés párbeszédablakok, Begépelt elérési utak). Ez nem távolítja el a rendszerkritikus bejegyzéseket.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>A rendszerleíró MRU/történelem takarítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Távolítsa el a Távoli asztal kliens által létrehozott gyorsítótár fájlokat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Távoli asztali gyorsítótár törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Ürítse ki a Windows és a felhasználói ideiglenes könyvtárakat.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Ideiglenes fájlok tisztítása</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Törölje a Fájlkezelő thumbnail-adatbázisait és a Direct3D shader-cache-t.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Thumbnail-cache-ek törlése</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Törölje a letöltött frissítési fájlokat és a Szállítás-optimalizálás gyorsítótárát.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Windows Update gyorsítótár tisztítása</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Menü késleltetések csökkentése, a lefagyott alkalmazások gyorsabb bezárása és alapértelmezettként a „Ez a gép” megnyitása.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Az Intéző válaszkészségének javítása</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>A Start menü teljes letiltása. Ha megnyomod a Win gombot, a Start menü helyett a keresés nyílik meg.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Start menü letiltása és keresés megnyitása a Win gombbal</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Felhőalapú tartalom javaslatok és ajánló bannerek kikapcsolása.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Intéző javaslatainak letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Keresőmező és Feladatnézet gomb elrejtése, tálcacsoportosítás letiltása és a tálcaikonok mindig történő megjelenítése.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Tálca és Start menü elrendezése</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Fájlkiterjesztések és rejtett fájlok megjelenítése a Fájlkezelőben.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Fájl megjelenítési beállítások</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Visszaállítja az alapértelmezett stílust és újraindítja az Explorert.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Váltás alapértelmezett jobb gombos menüre</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Alkalmazza a klasszikus stílust és újraindítja az Explorert.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Váltás modern menüre</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Teljesen távolítsa el a shell.exe-t és a kapcsolódó fájlokat</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Modern helyi menü alkalmazása</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>A rendszer gyorsítótárának memória megtartása és a kernel illesztőprogramok lapozásának elkerülése.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>A memória kezelés javítása</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>A hálózati korlátozások eltávolítása és a rendszer válaszidejének csökkentése.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>A multimédia ütemezés optimalizálása</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Az akril efektek eltávolítása a bejelentkezéskor és a Windows értesítési központ elrejtése.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>A akril és értesítési központ letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>A nagy teljesítményű energiaellátási terv aktiválása és a hibernálás letiltása.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>A nagy teljesítményű energiaellátási séma kényszerítése</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>A hirdetési azonosító, Spotlight funkciók és automatikus javaslatok letiltása.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>A telemetria és tippek csökkentése</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>A Connected User Experiences, a Diagnostics Hub és a Delivery Optimisation szolgáltatások leállítása és letiltása.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>A diagnosztikai szolgáltatások letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Állítsa le a Windows Hibajelentést, hogy az ne gyűjtsön és küldjön összeomlási adatokat.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Hibajelentés letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Biztonságosítsa a rendszert a távoli nyilvántartáshoz való hozzáférés letiltásával.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Távoli Nyilvántartás letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Állítsa le a Windows Keresés szolgáltatást az indexfrissítések megakadályozására.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Windows keresés indexelésének letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Kapcsolja ki a Superfetch/SysMain szolgáltatást a háttérben zajló lemeztevékenység csökkentése érdekében.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>SysMain letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>A Windows billentyű viselkedésének módosítása úgy, hogy a keresést nyissa meg a Start menü helyett.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>A Windows billentyű módosítása a keresés megnyitásához</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Gyorsítótárak, ideiglenes fájlok és egyéb maradványok eltávolítása.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Takarítás</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Feladatbar, Fájlkezelő és felhasználói felület viselkedésének finomhangolása.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Felfedező és felület</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Módosítsa a jobb gombos menü stílusát.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Windows Szépítés</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>A rendszer teljesítmény- és válaszkészség beállításainak módosítása.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Teljesítménycentrikus</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>A rendszererőforrást fogyasztó háttérszolgáltatások letiltása.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Szolgáltatások</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Rendszer szépítése</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>COM komponens regisztráció   Konfigurációs fájl</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Megvalósítás típusa:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Bezárás</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>A Nilesoft Shell COM-kezelőként történő regisztrálásával a Windows helyi menüihez a rendszer jobbklikk menük létrehozását és megjelenítését elfogja. Amikor a felhasználók jobbklikkelnek fájlokra vagy mappákra, a Shell olvassa a shell.nss konfigurációs fájlt, és alkalmazza az egyedi témát, átlátszóságot, lekerekített sarkokat és árnyékbeállításokat a szépített jobbklikk menü hatás eléréséhez.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfigurációs fájl nem található. Kérjük, győződjön meg róla, hogy a Nilesoft Shell telepítve van.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Konfigurációs fájl nem található</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Beállítások sikeresen alkalmazva. A módosítások a Fájlkezelő újraindítása után lépnek életbe.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Beállítások alkalmazva</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Beállítások alkalmazása sikertelen: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Hiba</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. COM komponens regisztráció:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Útvonal: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Konfigurációs fájl (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Konfigurációs fájl útvonala: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>CSS-szerű szintaxist használ a menüstílusok meghatározásához</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Konfigurációs fájl formátumának példája:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        háttérszín: #2d2d2d; 
+        szövegszín: #ffffff; 
+        sarokrádiusz: 5px; 
+        árnyék: true; 
+        átlátszóság: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Működési elv:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- A Shell.dll COM komponensként van regisztrálva a rendszerben</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Az IContextMenu felületet valósítja meg a jobbklikkes menü létrehozásának elfogásához</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Beolvassa a shell.nss konfigurációs fájlt</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Alkalmaz egyéni stílusokat (téma, lekerekített sarkok, árnyékok stb.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Megjeleníti a szépített kontextus menüt</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Hatás leírása:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Auto Theme: Követi a rendszer témáját (világos/sötét)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Átláthatóság: Lehetővé teszi a menü háttér átlátszóságának hatását</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Lekerekített sarkok: Lekerekített sarokkereteket ad az étlapokhoz</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Árnyékok: Árnyékhatásokat adnak a menükbe, javítva a mélységérzékelést</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>{0}% végrehajtása</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Művelet megszakítva</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Hiba részletei: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Rejtett letöltések megjelenítése</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Rejtett letöltések megjelenítése</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Nyelv kiválasztása</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Nem csatlakoztatva</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Zónák szinkronizálása</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Bővítménykiterjesztések</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Navigációs elemek beállításai</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Állítsa be, mely navigációs elemek jelenjenek meg az oldalsávban. A Műszerfal és a Beállítások mindig láthatóak lesznek.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Navigációs elem megjelenítése vagy elrejtése a Billentyűzet számára</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Navigációs elem megjelenítése vagy elrejtése az Akkumulátor számára</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Navigációs elem megjelenítése vagy elrejtése az Automatizálás számára</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Navigációs elem megjelenítése vagy elrejtése a Makrók számára</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Mutassa vagy rejtse el a Rendszeroptimalizálás navigációs elemét</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Mutassa vagy rejtse el a Bővítmény kiterjesztések navigációs elemét</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Mutassa vagy rejtse el a Névjegy navigációs elemét</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Navigációs elemek</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Állítsa be, mely navigációs elemek jelenjenek meg az oldalsávon</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Elérhető illesztőprogram-csomagok keresése, kérem várjon...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Hálózati hiba történt. Automatikus újrapróbálkozás...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Újrapróbálkozás az illesztőprogram-csomagok lekéréséhez...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Tisztítási információ</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>A tisztítási művelet előrehaladásának és becsült méretének megtekintése.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Windows-bejelentkezéskor indítás a tálcára minimalizálva.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Letapogatás</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Illesztőprogram letöltés</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Biztonsági megerősítés</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>A rendszer takarítása véglegesen törli a ideiglenes fájlokat és a gyorsítótárat. Bár általában biztonságos, ajánlott ellenőrizni, hogy rendelkezel biztonsági mentéssel a fontos adatokról. Folytatni szeretnéd?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Kiterjesztések</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Rendszeroptimalizálási kiterjesztések és eszközök kezelése</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Nincsenek elérhető kiterjesztések</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Telepíts kiterjesztéseket a Bővítmények kiterjesztések oldaláról a rendszeroptimalizálás funkcióinak bővítéséhez.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Hamarosan</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>A bővítmények piactér a jövőbeni frissítésben lesz elérhető.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Bővítmények betöltése...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Shell integráció</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Fokozott Windows Shell integráció a kontextus menü szépítésével és az egér stílus testreszabásával</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Modern kontextus menü engedélyezése</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Engedélyezze a Nilesoft Shell-t a Windows kontextus menü modern stílusú szépítéséhez</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Modern kontextus menü letiltása</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Regisztráció törlése a Nilesoft Shell-ből és az alapértelmezett Windows kontextus menü visszaállítása</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Windows 11 kurzorstílus alkalmazása</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Windows 11 stílusú kurzortéma alkalmazása nagy DPI támogatással</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Hálózat gyorsítása</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>A hálózati beállítások optimalizálása a hálózati sebesség és a válaszkészség javítása érdekében.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>TCP/IP és DNS optimalizálás</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>A TCP/IP paraméterek és a DNS gyorsítótár beállításainak optimalizálása a kapcsolat sebességének és válaszkészségének javítására.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Hálózati konfiguráció visszaállítása</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>DNS gyorsítótár törlése és a Winsock és TCP/IP verem konfigurációjának visszaállítása a hálózati kapcsolati problémák javításához.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Tisztítja az ideiglenes fájlokat és a különböző alkalmazások által hagyott naplókat.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Alkalmazásmaradványok</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Keressen nagy fájlokat a rendszermeghajtón, amelyek jelentős helyet foglalhatnak.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Nagy fájlok keresése</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Azonosítsa és kezelje a rendszerén található nagy fájlokat.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Nagy fájlok</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Bővítmények engedélyezése</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Engedélyezze a bővítményrendszert a Plugin-piac eléréséhez az Eszközök oldalon.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Az alkalmazás megjelenésének, viselkedésének és funkcióinak beállítása.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Ajánlott</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Letöltés</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Telepítés</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Befejezve</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Műveletdefiníció nem található</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>A művelet technikai részletei nem állnak rendelkezésre</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Betöltés sikertelen</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Ismeretlen</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Parancs végrehajtása</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Registry módosítás</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Szolgáltatás kezelése</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Registry módosítás   PowerShell szkript</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Registry tisztítás</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe nem található</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Konfigurációs fájl elérési útja: Nem található</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Használati idő</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Telepítés</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Eltávolítás</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>A telepítés nem sikerült</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Fájl nem található, kérjük, először töltse le</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Telepítés megkezdve</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>A telepítő indítása: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Kompatibilitás ellenőrzési hiba</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Az alkalmazás nem tudta beolvasni az eszközinformációkat indításkor. Kérjük, ellenőrizze az alábbi hibainformációkat, és szükség esetén próbálja meg a hibaelhárítási lépéseket.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Hibaelhárítási lépések</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Győződjön meg róla, hogy a Windows Management Instrumentation (WMI) szolgáltatás fut: Nyissa meg a Szolgáltatásokat (services.msc), és ellenőrizze, hogy a "Windows Management Instrumentation" fut.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Futtassa az alkalmazást rendszergazdaként, hogy megfelelő jogosultságokkal rendelkezzen a rendszerleíró adatbázis és a WMI eléréséhez.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Ellenőrizze a rendszer erőforrásait: Zárjon be más, erőforrásigényes alkalmazásokat, és próbálja újra.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Tekintse át a naplófájlt a részletes hibainformációkért az alábbi "Napló megnyitása" gombra kattintva.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Naplófájl megnyitása</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Tároló frissítése</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Konfigurálja a GitHub-tárolót a frissítések ellenőrzéséhez. Hagyja üresen az alapértelmezett használatához.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Tároló tulajdonosa</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>pl. SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Tároló neve</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>pl. LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Minden szüneteltetése</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Megvalósítási és hatáselvek</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Megvalósítás típusa:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Konfigurációszerkesztő</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>héj.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>téma.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>képek.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>módosít.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Akció részletei</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Műszaki megvalósítási részletek</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>A Windows beépített rendszerleíró adatbázis-tisztító funkciójának használata</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Bővítménykiterjesztések</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Bővítmények telepítése és kezelése a funkcionalitás bővítéséhez</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Telepítés</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Nem távolítható el</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Bővítmény beállításai</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Bővítmény neve</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Bővítmény leírása</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Ennek a bővítménynek nincs konfigurálható beállítása.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Bezárás</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Bővítmény nem található: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Hiba</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Beállítások</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Szerző: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>A bővítmény konfigurációs felületének formátuma helytelen.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Hiba a bővítmény beállításainak betöltésekor: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Bővítmények keresése...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Mind</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Nincsenek elérhető bővítmények</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>A bővítménytár jelenleg üres. Maradj velünk a jövőbeli bővítményfrissítésekért.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Beállítás</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Eltávolítás</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Megnyitás</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Nyelv:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Alkalmazás alapértelmezett használata</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>{0} bővítmények megtalálva</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Tömeges importálás</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Bővítmények importálása helyi ZIP fájlokból</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Fájlokból importálás</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Válassza ki a bővítmény fájlokat (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>Sikeresen importált {0} bővítményeket</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>A {0} bővítmények sikeresen importálva, és elérhetőek</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Tömeges importálás sikertelen</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>A bővítmények importálása sikertelen: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Bővítmények importálása...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>{0} importálása...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>{0} feldolgozása...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Bővítmény sikeresen telepítve</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>A bővítmény sikeresen telepítve lett</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>A telepítés nem sikerült</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Nem sikerült telepíteni a bővítményt: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Bővítmény sikeresen eltávolítva</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>A bővítmény sikeresen eltávolításra került</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Telepítés eltávolítása sikertelen</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Nem sikerült eltávolítani a plugint: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Plugin megnyitása sikertelen</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Nem sikerült megnyitni a plugint: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Nem sikerült megnyitni a plugint: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Plugin nincs telepítve</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>A plugin nincs telepítve, ezért nem nyitható meg</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>A minimum hoszt verzió szükséges: {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>A plugin véglegesen törlésre kerül</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>A plugin véglegesen törlésre kerül. Ez a művelet nem visszavonható.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Frissítés sikertelen</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>A plugin frissítése sikertelen volt, kérjük, ellenőrizze a hálózati kapcsolatot, és próbálja újra később.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Frissítés sikeres</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>A plugin sikeresen frissítve lett</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Plugin frissítése</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>A plugin letöltése és frissítése folyamatban...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Összes frissítése</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Plugin futtatása</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>A plugin elindult</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Plugin eltávolítva</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>A plugin a program bezárásakor törlésre kerül.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Törlés sikertelen</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Hiba történt a bővítmény törlése közben</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>A konfiguráció sikertelen</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>A bővítmény telepítve van, de nem töltődött be. Kérjük, próbálja újraindítani az alkalmazást.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Nincs konfiguráció</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>A bővítménynek nincsenek konfigurációs beállításai.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Konfiguráció nem támogatott</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>A bővítmény nem támogatja a konfigurációt.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>A bővítmény állapotának visszaállítása</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Az összes bővítmény telepítési állapotát töröltük</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Tömeges frissítés befejezve</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Az összes bővítmény feldolgozásra került.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Letöltés előkészítése...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Helyi</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Új verzió érhető el</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Verzió:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Kiadás dátuma:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Újdonságok:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Bővítménylista frissítése</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Nincs a keresésnek megfelelő bővítmény.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Minden elérhető bővítmény frissítése</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Mindet telepít</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Az összes elérhető bővítmény telepítése</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Minden telepítése...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>{0} plugin(ok) telepítése...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Tömeges telepítés befejezve</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>{0} plugin(ok) telepítve.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Tömeges telepítés sikertelen</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>A pluginok telepítése sikertelen: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Minden frissítése...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Frissítés...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Mappa megnyitása</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Plugin azonosító másolása</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Mappa nem található</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>A plugin könyvtár még nem létezik.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Másolva</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>A '{0}' plugin azonosító a vágólapra másolva.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Letöltés befejezve</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Letöltés...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Letöltés... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Hálózat gyorsítása</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>Vivetool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Eszközök</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Valós idejű hálózati gyorsítás és optimalizáló funkciók</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>A Windows funkciózászászók kezelése ViVeTool segítségével</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Rendszeroptimalizálási és segédprogramok</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Használat</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Ez a szerkesztő a shell.nss konfigurációs fájl közvetlen szerkesztésére szolgál. Módosítás után kattintson a</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Alkalmaz</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>gombra az összes változtatás mentéséhez és a Fájlkezelő újraindításához a konfiguráció alkalmazásához.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Konfigurációs fájl elérési útja:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• A konfiguráció módosítása után a Fájlkezelőt (Explorer) újra kell indítani a változások érvénybe lépéséhez.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Alkalmaz</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>shell.nss konfigurációs fájl</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>A shell.nss fájl a jobb egérgombos menü teljes struktúráját és működését határozza meg</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>shell.nss fájl megnyitása</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>A tartalmazó mappa megnyitása</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Elérési út:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Felhasználói felület beállításai</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Alap témabeállítások</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Háttérszín:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Szövegszín:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Áttűnési effekt beállítások</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Hover háttér:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Hover szöveg:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Kiválasztott effekt beállítások</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Kiválasztott háttér:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Kiválasztott szöveg:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Frissítse a szöveget a felületen</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Betöltés szövegből</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Szövegszerkesztő</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Megnyitás külső szerkesztőben</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>images.nss konfigurációs fájl</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Az images.nss fájl az ikonok és képek jobb kattintásos menühöz való definiálására szolgál</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Megnyitás images.nss fájl</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>modify.nss konfigurációs fájl</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>A modify.nss fájl a jobb kattintásos menüpontok módosítására és testreszabására szolgál</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Megnyitás modify.nss fájl</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Nincsenek elérhető eszközök. Kérjük, adjon hozzá eszközöket az alkalmazás könyvtárában lévő tools mappába.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Az eszközök itt fognak megjelenni, amikor elérhetővé válnak a tools könyvtárban.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Alapértelmezett könyvtár: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Konfigurációs fájl könyvtár nem található</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Fájl nem található</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Nem lehet olvasni a konfigurációs fájlt: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Ezt a fájlt a témával kapcsolatos stílusbeállítások definiálására használják</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Téma szín definíció</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Alapszín</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Lebegő szín</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Kiválasztott szín</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>A témabeállítások további lehetőségeihez kérjük, olvassa el a Nilesoft Shell hivatalos dokumentációját</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Biztosan alkalmazni szeretné a konfigurációt? 
+  
+ Ez a következőket teszi: 
+ 1. Minden konfigurációs fájl mentése 
+ 2. A Fájlkezelő újraindítása a konfiguráció alkalmazásához 
+  
+ Megjegyzés: Az újraindítás bezárja az összes nyitott mappát és a tálcát, majd automatikusan újraindítja azokat.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Konfiguráció alkalmazásának megerősítése</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Nem lehet menteni a konfigurációs fájlt: 
+ {0} 
+  
+ Kérjük, ellenőrizze a fájlengedélyeket, és próbálja újra.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Mentés sikertelen</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Sikeresen mentett fájlok: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Nem sikerült menteni a fájlokat: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>A Fájlkezelő újraindult, a konfiguráció mostantól érvényben van!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Részben érvényesítve</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Sikeresen alkalmazva</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Hiba a konfiguráció alkalmazása közben: 
+ {0} 
+  
+ Manuálisan is elmentheti a fájlokat, és újraindíthatja az Explorer folyamatot a Feladatkezelőben.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Alkalmazás sikertelen</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>A fájl nem létezik, vagy az útvonal érvénytelen</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Fájl megnyitása sikertelen</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>A fájl megnyitásához a rendszer alapértelmezett programját használja</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>A fájl megnyitása sikertelen: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Fájl megnyitása sikertelen</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>A mappa nem létezik, vagy az útvonal érvénytelen</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Mappa megnyitása sikertelen</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Nem lehet megnyitni a mappát: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Mappa megnyitása sikertelen</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Modell</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Energiafelhasználás</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Töltés</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Állapot</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Arány</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Minimális arány</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Maximális arány</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Ciklusok</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Kapacitás</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Teljes kapacitás</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Tervezett</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Dátum</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Mag / Memória órajel</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Magfeszültség</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Feszültségtartomány</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Átlaghőmérséklet</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Oldalsáv</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Rendszer</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Sebességtartomány</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Kérjük, válasszon legalább egy tisztítási lehetőséget.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Mindent indít</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>pl. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>pl. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Átlátszóság engedélyezése</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Engedélyezze a kontextus menü átlátszósági effektusait</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Fájlkiterjesztések megjelenítése</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>A fájlkezelőben a fájlnevek kiterjesztéseinek megjelenítése</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Rejtett fájlok megjelenítése</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Rejtett fájlok és mappák megjelenítése a Fájlkezelőben</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Gyors elérés megnyitása</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>A Fájlkezelőt a Gyors elérésre nyitja a "Ez a gép" helyett</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Előnézeti panel megjelenítése</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Előnézeti panel megjelenítése a Fájlkezelőben</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Kérjük, válasszon legalább egy elemet a tisztításhoz.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

@@ -77,11 +77,11 @@ public class SensorDataTests : UnitTestBase
     {
         var empty = SensorData.Empty;
 
-        empty.Utilization.Should().Be(0);
-        empty.CoreClock.Should().Be(0);
-        empty.Temperature.Should().Be(0);
-        empty.FanSpeed.Should().Be(0);
-        empty.Wattage.Should().Be(0);
+        empty.Utilization.Should().Be(-1);
+        empty.CoreClock.Should().Be(-1);
+        empty.Temperature.Should().Be(-1);
+        empty.FanSpeed.Should().Be(-1);
+        empty.Wattage.Should().Be(-1);
     }
 
     [TestMethod]
@@ -175,14 +175,15 @@ public class ISensorsControllerTests : UnitTestBase
             nameof(ISensorsController.IsSupportedAsync),
             nameof(ISensorsController.PrepareAsync),
             nameof(ISensorsController.GetDataAsync),
-            nameof(ISensorsController.GetFanSpeedsAsync),
-            nameof(ISensorsController.Dispose)
+            nameof(ISensorsController.GetFanSpeedsAsync)
         };
 
         foreach (var methodName in methodNames)
         {
             typeof(ISensorsController).GetMethod(methodName).Should().NotBeNull();
         }
+
+        typeof(IDisposable).IsAssignableFrom(typeof(ISensorsController)).Should().BeTrue();
     }
 
     [TestMethod]

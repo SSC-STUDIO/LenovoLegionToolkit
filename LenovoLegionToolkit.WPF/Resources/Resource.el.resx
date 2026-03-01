@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>αυτό είναι το μακρύ μου κείμενο</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime κωδικοποιημένο σειριοποιημένο αντικείμενο .NET Framework]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 mime κωδικοποιημένο κείμενο που αντιπροσωπεύει έναν πίνακα byte του αντικειμένου .NET Framework]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Εργαλειοθήκη</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Κατασκευή</value>
@@ -164,7 +164,7 @@
     <value>Πάντα ενεργά USB</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Εργαλειοθήκη</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Εφαρμογή</value>
@@ -376,7 +376,7 @@
     <value>Ακύρωση</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>°Γ</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Κλείσιμο</value>
@@ -582,10 +582,10 @@
     <value>Σχετικά με τις καταστάσεις λειτουργίας GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>°Φ</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>ΚΜΕ</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>Αισθητήρας CPU</value>
@@ -594,10 +594,10 @@
     <value>Ταχύτητα Ανεμιστήρα</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPU</value>
+    <value>Κάρτα γραφικών</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>Κάρτα γραφικών #2</value>
   </data>
   <data name="RPM" xml:space="preserve">
     <value>σ.α.λ.</value>
@@ -618,13 +618,13 @@
     <value>Χρησιμοποιήστε τις δευτερεύουσες λειτουργίες των πλήκτρων F1-F12 χωρίς να κρατάτε πατημένο το πλήκτρο Fn.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Κλείδωμα Fn</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
     <value>Χρησιμοποιήστε τις δευτερεύουσες λειτουργίες των πλήκτρων F1-F12 χωρίς να κρατάτε πατημένο το πλήκτρο Fn.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Κλείδωμα Fn</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
     <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ:
@@ -659,7 +659,7 @@
     <value>Όριο Θερμοκρασίας CPU</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>ΚΜΕ</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>Αδυναμία εφαρμογής ρυθμίσεων</value>
@@ -694,7 +694,7 @@
     <value>Όριο Θερμοκρασίας GPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>Κάρτα γραφικών</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>Ρυθμίσεις Προσαρμοσμένης Λειτουργίας</value>
@@ -705,13 +705,13 @@
 ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η δράση δε θα εκτελεστεί σωστά εάν η ενσωματωμένη οθόνη είναι ανενεργή.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>ΥΨΗΛΟ ΔΥΝΑΜΙΚΟ ΕΥΡΟΣ</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>Ενεργοποίηση υψηλού δυναμικού εύρους (HDR) στην ενσωματωμένη οθόνη.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>ΥΨΗΛΟ ΔΥΝΑΜΙΚΟ ΕΥΡΟΣ</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Η χρήση HDR εμποδίζεται από ρυθμίσεις των Windows.</value>
@@ -874,7 +874,7 @@
     <value>Να μην εμφανίζονται ειδοποιήσεις</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Κλείδωμα Fn</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>Φωτισμός Πληκτρολογίου</value>
@@ -910,13 +910,13 @@
     <value>Βελτίωση χρόνου απόκρισης της ενσωματωμένης οθόνης.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Υπερκίνηση</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Βελτίωση χρόνου απόκρισης της ενσωματωμένης οθόνης.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Υπερκίνηση</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} κατέβηκαν!</value>
@@ -1071,7 +1071,7 @@
     <value>Ταχύτητα</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>Ανάγνωση</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Ανανέωση</value>
@@ -1471,13 +1471,13 @@
 ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτή η δράση δε θα εκτελεστεί σωστά εάν η εσωτερική οθόνη είναι απενεργοποιημένη.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>ΤΜΔ</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>Αλλαγή κλίμακας της ενσωματωμένης οθόνης.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>ΤΜΔ</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>Αλλαγή κλίμακας της ενσωματωμένης οθόνης.
@@ -1778,16 +1778,16 @@
     <value>Άναμμα ή σβήσιμο του φωτισμού στο καπάκι του υπολογιστή.</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>GHz</value>
+    <value>Γκμ</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>MHz</value>
+    <value>ΜΧζ</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
     <value>Μέγιστο: {0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>ΚΜΕ</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
     <value>Χρήση</value>
@@ -1802,7 +1802,7 @@
     <value>Ανεμιστήρας</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>Κάρτα γραφικών</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>Ρολόι Μνήμης</value>
@@ -2175,7 +2175,7 @@
     <value>Εμφάνιση μόνο συνδεδεμένων συσκευών</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>CLI</value>
+    <value>ΔΓΓ</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
     <value>Ενεργοποίηση Διεπαφής Γραμμής Εντολών που επιτρέπει έλεγχο από τη γραμμή εντολών.</value>
@@ -2266,10 +2266,10 @@
 Δεν επηρεάζει άλλα παράθυρα πλήρους οθόνης, όμως δε θα είναι εφικτό το κλικ στις ειδοποιήσεις.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Συνιστώμενο</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} των επιλεγμένων ενεργειών {1}</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Καθαρισμός κρυφής μνήμης</value>
@@ -2311,103 +2311,103 @@
     <value>Επιλεγμένα στοιχεία</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Καθαρισμός</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>System optimization</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Μέγιστη χωρητικότητα φόρτισης της μπαταρίας.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Κατάσταση μπαταρίας</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Μέγιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία ( ), ή εκφορτίζεται (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Μέγιστος ρυθμός εκφόρτισης</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Ελάχιστος ρυθμός με τον οποίο φορτίζεται η μπαταρία ( ), ή εκφορτίζεται (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Ελάχιστος ρυθμός εκφόρτισης</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Σύμπτυξη όλων</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Συμπαγής προβολή</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Περιήγηση…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Παρακαλώ εισάγετε τουλάχιστον μία επέκταση αρχείου.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Παρακαλώ επιλέξτε έναν φάκελο.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Διαχωρίστε πολλαπλές επεκτάσεις με κόμματα (παράδειγμα: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Επεκτάσεις</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Φάκελος</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Συμπερίληψη υποφακέλων</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Προσαρμοσμένος κανόνας εκκαθάρισης</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Ανάπτυξη όλων</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Βελτιστοποίηση συστήματος</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Αποκρύψτε την προειδοποίηση ασύμβατης συσκευής που εμφανίζεται κατά την εκκίνηση.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Απενεργοποιήστε την προειδοποίηση ασύμβατης συσκευής</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Εκτέλεση καθαρισμού</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Ο καθαρισμός απέτυχε.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Ο καθαρισμός ολοκληρώθηκε.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Εφαρμόστε συνιστώμενες βελτιώσεις απόδοσης και καθαρισμό προσωρινών αρχείων.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Εφαρμόστε βελτιώσεις απόδοσης &amp; υπηρεσιών</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Δεν ήταν δυνατή η εφαρμογή των βελτιστοποιήσεων απόδοσης.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Οι βελτιστοποιήσεις απόδοσης εφαρμόστηκαν.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Βελτιστοποίηση συστήματος</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Μέγιστος ρυθμός εκφόρτισης</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Ελάχιστος ρυθμός εκφόρτισης</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2419,43 +2419,43 @@
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Στρογγυλεμένες γωνίες</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Σκιές</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Εμφάνιση</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Εφαρμογή</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Κλασικό</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Σκοτεινό</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Φωτεινό</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>Μοντέρνο</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Θέμα</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Ρυθμίσεις στυλ μενού</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2464,7 +2464,7 @@
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Εγκατάσταση</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2488,507 +2488,540 @@
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Απεγκατάσταση</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Ομορφιά των Windows</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Μπορείτε να απενεργοποιήσετε αυτήν την προειδοποίηση οποιαδήποτε στιγμή στις Ρυθμίσεις.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Δράσεις</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Εφαρμόστε τις επιλεγμένες ενέργειες</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Αποτυχία ολοκλήρωσης των επιλεγμένων ενεργειών.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Οι επιλεγμένες ενέργειες ολοκληρώθηκαν με επιτυχία.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Επιλέξτε προεγκατεστημένες εφαρμογές του Microsoft Store για κατάργηση για όλους τους χρήστες.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Δεν έχουν επιλεγεί εφαρμογές για κατάργηση.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Διαχείριση AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Αποτυχία φόρτωσης: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Φόρτωση εφαρμογών, παρακαλώ περιμένετε...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Εκδότης: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Απεγκατάσταση επιλεγμένων εφαρμογών...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Απεγκατάσταση επιλεγμένων εφαρμογών</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Αποτυχία κατάργησης των επιλεγμένων εφαρμογών.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Οι επιλεγμένες εφαρμογές έχουν προγραμματιστεί για κατάργηση.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Προσαρμόστε την εμφάνιση του μενού περιβάλλοντος.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Αποτυχία εφαρμογής ρυθμίσεων στυλ.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Το αρχείο διαμόρφωσης δεν βρέθηκε. Βεβαιωθείτε ότι το Nilesoft Shell είναι εγκατεστημένο.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Αποτυχία ενεργοποίησης του κλασικού μενού.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Αποτυχία εγκατάστασης του shell.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Αποτυχία επαναφοράς του προεπιλεγμένου μενού.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe δεν βρέθηκε. Βεβαιωθείτε ότι το Nilesoft Shell είναι εγκατεστημένο.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Επιλέξτε το θέμα για το μενού περιβάλλοντος.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Ενεργοποίηση εφέ διαφάνειας για το μενού περιβάλλοντος.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Αποτυχία απεγκατάστασης του shell.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Απελευθερώθηκαν {0} σε {1}s</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Κατάργηση επιλογής</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Προσθήκη κανόνα</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Καθαρισμός όλων</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Επιλέξτε φακέλους και τύπους αρχείων που θα πρέπει να διαγραφούν κατά τον καθαρισμό.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Επεξεργασία</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Δεν έχουν ρυθμιστεί προσαρμοσμένοι κανόνες καθαρισμού.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Προσαρμοσμένοι κανόνες καθαρισμού</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Συμπερίληψη υποφακέλων</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Αφαίρεση</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Παρακαλώ επιλέξτε τουλάχιστον μία ενέργεια.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Εκτιμώμενο μέγεθος καθαρισμού: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Αυτές οι ενέργειες τροποποιούν υπηρεσίες και αρχεία του συστήματος. Ενδέχεται να απαιτούνται δικαιώματα διαχειριστή.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Εκτέλεση ενεργειών καθαρισμού</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Τρέχει: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Επιλογή όλων</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Επιλογή συνιστώμενων</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Βελτίωση εμφάνισης</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Απεγκαταστήστε επιλεγμένες προεγκατεστημένες εφαρμογές UWP για όλους τους χρήστες.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Αφαιρέστε τις ενσωματωμένες εφαρμογές των Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Αφαιρέστε τα αρχεία προσωρινής μνήμης και cookies του Internet Explorer και του Edge.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Καθαρίστε την προσωρινή μνήμη του προγράμματος περιήγησης</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Εκτελέστε καθαρισμό DISM και διαγράψτε προσωρινά αρχεία WinSxS.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Αποθήκη συστατικών υπηρεσιών</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Αφαιρέστε αρχεία dump μνήμης που αφήνονται μετά από συστήματα που παρουσιάζουν σφάλματα.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Διαγραφή αρχείων σύγκρουσης</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Διαγράψτε αρχεία που ταιριάζουν με τις ρυθμισμένες επεκτάσεις από επιλεγμένους φακέλους.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Καθαρίστε προσαρμοσμένα αρχεία</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Διαγράψτε το ιστορικό σάρωσης και την προσωρινή μνήμη του Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Καθαρισμός σαρώσεων του Defender</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Αφαιρέστε τις προσωρινές .NET Native εικόνες για να ελευθερώσετε χώρο στο δίσκο.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Καθαρίστε τις .NET native εικόνες</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Διαγράψτε αρχεία καταγραφής των Windows, αναφορές σφαλμάτων και διαγνωστικά αρχεία.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Αφαιρέστε αρχεία καταγραφής και διαγνωστικά δεδομένα</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Διαγράψτε τα δεδομένα προφόρτωσης των Windows για να δημιουργηθούν νέα ίχνη.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Καθαρίστε τα δεδομένα προφόρτωσης (prefetch)</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Αφαιρέστε τα διαγραμμένα αρχεία που βρίσκονται στον Κάδο Ανακύκλωσης.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Αδειάστε τον Κάδο Ανακύκλωσης</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Καθαρίστε τα κοινά ιστορικά χρήστη του μητρώου (Run MRU, RecentDocs, παράθυρα Ανοίγματος/Αποθήκευσης, Πληκτρολογημένες Διαδρομές). Αυτό δεν αφαιρεί κρίσιμες για το σύστημα εγγραφές.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Εκκαθάριση MRU/ιστορικού μητρώου</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Καταργήστε τα προσωρινά αποθηκευμένα αρχεία που δημιουργήθηκαν από το πρόγραμμα-πελάτη απομακρυσμένης επιφάνειας εργασίας.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Εκκαθάριση προσωρινής μνήμης απομακρυσμένης επιφάνειας εργασίας</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Αδειάστε τους προσωρινούς φακέλους των Windows και του χρήστη.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Καθαρίστε τα προσωρινά αρχεία</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Διαγράψτε τις βάσεις δεδομένων μικρογραφιών του Explorer και την κρυφή μνήμη shader Direct3D.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Καθαρίστε τις προσωρινές εικόνες μικρογραφιών</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Διαγράψτε τα ληφθέντα αρχεία ενημέρωσης και το cache βελτιστοποίησης παράδοσης.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Καθαρίστε την προσωρινή μνήμη του Windows Update</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Μειώστε τις καθυστερήσεις μενού, κλείστε πιο γρήγορα τις εφαρμογές που έχουν κολλήσει και ανοίξτε Αυτός ο υπολογιστής από προεπιλογή.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Βελτιώστε την απόκριση του Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Απενεργοποιήστε εντελώς το μενού έναρξης. Όταν πατήσετε το πλήκτρο Win, θα ανοίξει η αναζήτηση αντί για το μενού έναρξης.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Απενεργοποιήστε το μενού έναρξης και ανοίξτε την αναζήτηση με το πλήκτρο Win</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Απενεργοποιήστε τις προτάσεις περιεχομένου στο cloud και τις μπάνερ προτάσεων.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Απενεργοποίηση προτάσεων του Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Απόκρυψη του πλαισίου αναζήτησης και του κουμπιού Προβολή εργασιών, απενεργοποιήστε την ομαδοποίηση της γραμμής εργασιών και εμφανίζετε πάντα τα εικονίδια του δίσκου.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Γραμμή εργασιών και διάταξη μενού έναρξης</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Εμφάνιση επεκτάσεων αρχείων και κρυφών αρχείων στην Εξερεύνηση αρχείων.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Επιλογές ορατότητας αρχείων</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Επαναφέρει το προεπιλεγμένο στυλ και επανεκκινεί τον Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Μεταβείτε στο προεπιλεγμένο μενού δεξιού κλικ</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Εφαρμόζει το κλασικό στυλ και επανεκκινεί τον Εξερευνητή.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Μεταβείτε σε μοντέρνο μενού</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Απεγκατάσταση του shell.exe και των σχετικών αρχείων</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Εφαρμογή Σύγχρονου Μενού Περιβάλλοντος</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Διατηρήστε την cache του συστήματος στη μνήμη και αποφύγετε το paging των οδηγών πυρήνα.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Βελτίωση διαχείρισης μνήμης</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Καταργήστε τον περιορισμό δικτύου και μειώστε την καθυστέρηση απόκρισης του συστήματος.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Βελτιστοποίηση προγραμματισμού πολυμέσων</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Καταργήστε τα ακρυλικά εφέ κατά την είσοδο και κρύψτε το κέντρο ειδοποιήσεων των Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Απενεργοποίηση εφέ ακρυλικού και κέντρου ειδοποιήσεων</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Ενεργοποιήστε το σχέδιο τροφοδοσίας υψηλής απόδοσης και απενεργοποιήστε την αδρανοποίηση.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Ενεργοποίηση σχεδίου υψηλής απόδοσης</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Απενεργοποιήστε το ID διαφήμισης, τις δυνατότητες Spotlight και τις αυτόματες προτάσεις.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Μείωση τηλεμετρίας και συμβουλών</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Διακόψτε και απενεργοποιήστε τις υπηρεσίες Connected User Experiences, Diagnostics Hub και Delivery Optimization.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Απενεργοποίηση διαγνωστικών υπηρεσιών</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Σταματήστε την Αναφορά σφαλμάτων των Windows από τη συλλογή και αποστολή δεδομένων σφαλμάτων.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Απενεργοποίηση αναφοράς σφαλμάτων</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Ασφαλίστε το σύστημα απενεργοποιώντας την απομακρυσμένη πρόσβαση στο μητρώο.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Απενεργοποίηση απομακρυσμένου μητρώου</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Διακόψτε την υπηρεσία αναζήτησης των Windows για να αποτρέψετε τις ενημερώσεις ευρετηρίου.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Απενεργοποιήστε την ευρετηρίαση της Αναζήτησης των Windows</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Απενεργοποιήστε το Superfetch/SysMain για να μειώσετε τη δραστηριότητα του δίσκου στο παρασκήνιο.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Απενεργοποιήστε το SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Τροποποιήστε τη συμπεριφορά του πλήκτρου Windows ώστε να ανοίγει την αναζήτηση αντί για το μενού Έναρξη.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Αλλαγή της λειτουργίας του πλήκτρου Windows για άνοιγμα αναζήτησης</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Αφαιρέστε κρυφές μνήμες, προσωρινά αρχεία και άλλα υπολείμματα.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Καθαρισμός</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Ρυθμίστε τη γραμμή εργασιών, το File Explorer και τη συμπεριφορά του περιβάλλοντος χρήστη.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Εξερευνητής &amp; διεπαφή</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Αλλάξτε το στυλ μενού δεξιού κλικ.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Ομορφιά των Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Ρυθμίστε τις ρυθμίσεις απόδοσης και ανταπόκρισης του συστήματος.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Υψηλή απόδοση</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Απενεργοποιήστε τις υπηρεσίες παρασκηνίου που καταναλώνουν πόρους.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Υπηρεσίες</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Ομορφιά του συστήματος</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Καταχώρηση Συστατικού COM   Αρχείο Διαμόρφωσης</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Τύπος Υλοποίησης:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Κλείσιμο</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Με την καταχώρηση του Nilesoft Shell ως διαχειριστή COM για τα μενού περιβάλλοντος των Windows, παρεμβαίνει στη δημιουργία και εμφάνιση των συστημικών μενού δεξί κλικ. Όταν οι χρήστες κάνουν δεξί κλικ σε αρχεία ή φακέλους, το Shell διαβάζει το αρχείο διαμόρφωσης shell.nss και εφαρμόζει προσαρμοσμένο θέμα, διαφάνεια, στρογγυλεμένες γωνίες και ρυθμίσεις σκιάς για να επιτύχει ένα αισθητικά βελτιωμένο μενού δεξί κλικ.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Το αρχείο διαμόρφωσης δεν βρέθηκε. Βεβαιωθείτε ότι το Nilesoft Shell είναι εγκατεστημένο.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Αρχείο Διαμόρφωσης Δεν Βρέθηκε</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Οι ρυθμίσεις εφαρμόστηκαν με επιτυχία. Οι αλλαγές θα ισχύσουν μετά την επανεκκίνηση του File Explorer.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Ρυθμίσεις εφαρμοσμένες</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Αποτυχία εφαρμογής ρυθμίσεων: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Σφάλμα</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Καταχώρηση COM Component:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Διαδρομή: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Αρχείο Ρυθμίσεων (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Διαδρομή αρχείου ρυθμίσεων: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Χρησιμοποιεί σύνταξη παρόμοια με CSS για τον καθορισμό στυλ μενού</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Παράδειγμα Μορφής Αρχείου Ρυθμίσεων:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        background-color: #2d2d2d; 
+        text-color: #ffffff; 
+        corner-radius: 5px; 
+        shadow: true; 
+        transparency: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Αρχή Λειτουργίας:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Το Shell.dll είναι καταχωρημένο ως COM component στο σύστημα</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Υλοποιεί τη διεπαφή IContextMenu για να παρεμποδίσει τη δημιουργία μενού δεξιού κλικ</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Διαβάζει το αρχείο ρυθμίσεων shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Εφαρμόζει προσαρμοσμένα στυλ (θέμα, στρογγυλεμένες γωνίες, σκιές, κ.λπ.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Αποδίδει το βελτιωμένο μενού περιβάλλοντος</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Περιγραφή Εφέ:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Αυτόματο Θέμα: Ακολουθεί το θέμα του συστήματος (ανοιχτό/σκούρο)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Διαφάνεια: Επιτρέπει το εφέ διαφάνειας στο φόντο του μενού</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Στρογγυλεμένες γωνίες: Προσθέτει στεφάνες με στρογγυλεμένες γωνίες στα στοιχεία του μενού</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Σκιές: Προσθέτει εφέ σκιάς στα μενού, ενισχύοντας την αντίληψη του βάθους</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Εκτέλεση {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Η λειτουργία ακυρώθηκε</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Λεπτομέρειες σφάλματος: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Εμφάνιση κρυφών λήψεων</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Εμφάνιση κρυφών λήψεων</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Επιλέξτε γλώσσα</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Μη συνδεδεμένο</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Συγχρονισμός ζωνών</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Επεκτάσεις πρόσθετων (Plugin Extensions)</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Ρυθμίσεις στοιχείων πλοήγησης</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Ρυθμίστε ποια στοιχεία πλοήγησης εμφανίζονται στη πλαϊνή γραμμή. Ο Πίνακας Ελέγχου και οι Ρυθμίσεις θα είναι πάντα ορατά.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Πληκτρολόγιο</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Μπαταρία</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Αυτοματισμός</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Μακροεντολή</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Βελτιστοποίηση Συστήματος</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Επεκτάσεις Προσθηκών</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Εμφάνιση ή απόκρυψη του στοιχείου πλοήγησης Σχετικά</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Στοιχεία Πλοήγησης</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Διαμορφώστε ποια στοιχεία πλοήγησης εμφανίζονται στη γραμμή πλοήγησης</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Σάρωση για διαθέσιμα πακέτα προγραμμάτων οδήγησης, παρακαλώ περιμένετε...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Παρουσιάστηκε σφάλμα δικτύου. Προσπάθεια επανάληψης αυτόματα...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Προσπάθεια ανανέωσης λήψης πακέτων προγραμμάτων οδήγησης...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Πληροφορίες Καθαρισμού</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Δείτε την πρόοδο της λειτουργίας καθαρισμού και το εκτιμώμενο μέγεθος.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Έναρξη σε ελάχιστο μέγεθος στο δίσκο όταν συνδέεστε στα Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Σάρωση</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Λήψη προγραμμάτων οδήγησης</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Επιβεβαίωση ασφαλείας</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Ο καθαρισμός του συστήματος θα διαγράψει μόνιμα προσωρινά αρχεία και cache. Αν και συνήθως είναι ασφαλές, συνιστάται να βεβαιωθείτε ότι έχετε αντίγραφα ασφαλείας σημαντικών δεδομένων. Θέλετε να συνεχίσετε;</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Επεκτάσεις</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Διαχείριση επεκτάσεων και εργαλείων βελτιστοποίησης συστήματος</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Δεν υπάρχουν διαθέσιμες επεκτάσεις</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Εγκαταστήστε επεκτάσεις από τη σελίδα Επεκτάσεων Πρόσθετων για να βελτιώσετε τη λειτουργικότητα βελτιστοποίησης του συστήματος.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Σύντομα διαθέσιμο</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Η αγορά επεκτάσεων θα είναι διαθέσιμη σε μια μελλοντική ενημέρωση.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Φόρτωση προσθηκών...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Ενσωμάτωση Shell</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Βελτιωμένη ενσωμάτωση του Windows Shell με καλλωπισμό μενού περιβάλλοντος και προσαρμογή στυλ ποντικιού</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Ενεργοποίηση Σύγχρονου Μενού Περιβάλλοντος</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Ενεργοποίηση του Nilesoft Shell για να καλλωπίσετε το μενού περιβάλλοντος των Windows με σύγχρονο στυλ</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Απενεργοποίηση Σύγχρονου Μενού Περιβάλλοντος</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Απεγγραφή του Nilesoft Shell και επαναφορά του προεπιλεγμένου μενού περιβάλλοντος των Windows</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Εφαρμογή Στυλ Δείκτη Windows 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Εφαρμογή θέματος δείκτη στυλ Windows 11 με υποστήριξη υψηλής DPI</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Επιτάχυνση Δικτύου</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Βελτιστοποιήστε τις ρυθμίσεις δικτύου για να βελτιώσετε την ταχύτητα και την απόκριση του δικτύου.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Βελτιστοποίηση TCP/IP και DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Βελτιστοποιήστε τις παραμέτρους TCP/IP και τις ρυθμίσεις προσωρινής μνήμης DNS για να βελτιώσετε την ταχύτητα σύνδεσης και την απόκριση.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Επαναφορά διαμόρφωσης δικτύου</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Ξεπλύνετε την προσωρινή μνήμη DNS και επαναφέρετε τη διαμόρφωση στοίβας Winsock και TCP/IP για να επιδιορθώσετε προβλήματα συνδεσιμότητας δικτύου.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Καθαρίζει προσωρινά αρχεία και αρχεία καταγραφής που έχουν αφήσει διάφορες εφαρμογές.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Υπόλοιπα εφαρμογών</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Σαρώνει για μεγάλα αρχεία στον δίσκο του συστήματός σας που μπορεί να καταλαμβάνουν σημαντικό χώρο.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Σάρωση για μεγάλα αρχεία</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Εντοπίστε και διαχειριστείτε μεγάλα αρχεία στο σύστημά σας.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Μεγάλα αρχεία</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Ενεργοποιήστε τις Επεκτάσεις</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Ενεργοποιήστε το σύστημα επεκτάσεων για να αποκτήσετε πρόσβαση στην αγορά προσθηκών στη σελίδα Εργαλεία.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Διαμορφώστε τις επιλογές εμφάνισης, συμπεριφοράς και λειτουργικότητας της εφαρμογής.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Συνιστώμενο</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Λήψη</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Εγκατάσταση</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Ολοκληρώθηκε</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Ορισμός ενέργειας δεν βρέθηκε</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Τεχνικές λεπτομέρειες υλοποίησης δεν είναι διαθέσιμες για αυτήν την ενέργεια</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Η φόρτωση απέτυχε</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Άγνωστο</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Εκτέλεση εντολής</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Τροποποίηση μητρώου</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Διαχείριση υπηρεσίας</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Τροποποίηση μητρώου   PowerShell script</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Καθαρισμός μητρώου</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe δεν βρέθηκε</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Διαδρομή αρχείου διαμόρφωσης: Δεν βρέθηκε</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Χρόνος χρήσης</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Εγκατάσταση</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Απεγκατάσταση</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Η εγκατάσταση απέτυχε</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Το αρχείο δεν βρέθηκε, παρακαλώ κατεβάστε το πρώτα</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Η εγκατάσταση ξεκίνησε</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Ξεκινώντας τον εγκαταστάτη: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Σφάλμα Ελέγχου Συμβατότητας</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Η εφαρμογή απέτυχε να διαβάσει τις πληροφορίες της συσκευής κατά την εκκίνηση. Παρακαλώ ελέγξτε τα παρακάτω στοιχεία σφάλματος και δοκιμάστε τα βήματα αντιμετώπισης προβλημάτων αν χρειαστεί.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Βήματα Αντιμετώπισης Προβλημάτων</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Βεβαιωθείτε ότι η υπηρεσία Windows Management Instrumentation (WMI) λειτουργεί: Ανοίξτε τις Υπηρεσίες (services.msc) και ελέγξτε ότι η "Windows Management Instrumentation" λειτουργεί.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Τρέξτε την εφαρμογή ως Διαχειριστής για να εξασφαλίσετε επαρκή δικαιώματα πρόσβασης στο μητρώο του συστήματος και στο WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Ελέγξτε τους πόρους του συστήματος: Κλείστε άλλες εφαρμογές που καταναλώνουν πολλούς πόρους και δοκιμάστε ξανά.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Ελέγξτε το αρχείο καταγραφής για λεπτομερείς πληροφορίες σφάλματος κάνοντας κλικ στο "Άνοιγμα Καταγραφής" παρακάτω.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Άνοιγμα Αρχείου Καταγραφής</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Ενημέρωση αποθετηρίου</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Διαμόρφωση του αποθετηρίου GitHub για έλεγχο ενημερώσεων. Αφήστε κενό για χρήση της προεπιλογής.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Κάτοχος Αποθετηρίου</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>π.χ., SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Όνομα Αποθετηρίου</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>π.χ., LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Παύση όλων</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Αρχές Υλοποίησης και Επιδράσεων</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Τύπος Υλοποίησης:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Επεξεργαστής Ρυθμίσεων</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>κέλυφος.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>θέμα.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>εικόνες.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>τροποποίηση.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Λεπτομέρειες Δράσης</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Τεχνικές Λεπτομέρειες Υλοποίησης</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Χρήση ενσωματωμένης λειτουργίας καθαρισμού μητρώου των Windows</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Επεκτάσεις πρόσθετων (Plugin Extensions)</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Εγκαταστήστε και διαχειριστείτε πρόσθετα για επέκταση της λειτουργικότητας</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Εγκατάσταση</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Δεν μπορεί να απεγκατασταθεί</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Ρυθμίσεις πρόσθετων</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Όνομα πρόσθετου</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Περιγραφή πρόσθετου</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Αυτό το πρόσθετο δεν έχει ρυθμίσεις παραμετροποίησης.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Κλείσιμο</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Δεν βρέθηκε πρόσθετο: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Σφάλμα</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Ρυθμίσεις</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Συγγραφέας: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Η μορφή της διεπαφής ρύθμισης του προσθέτου είναι λανθασμένη.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Σφάλμα κατά τη φόρτωση των ρυθμίσεων του προσθέτου: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Αναζήτηση προσθέτων...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Όλα</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Δεν υπάρχουν διαθέσιμα πρόσθετα</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Το κατάστημα προσθέτων είναι αυτήν τη στιγμή άδειο. Μείνετε συντονισμένοι για μελλοντικές ενημερώσεις προσθέτων.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Ρύθμιση</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Απεγκατάσταση</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Άνοιγμα</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Γλώσσα:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Χρήση προεπιλογής εφαρμογής</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Βρέθηκαν προσθήκες {0}</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Μαζική εισαγωγή</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Εισαγωγή προσθέτων από τοπικά αρχεία ZIP</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Εισαγωγή από αρχεία</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Επιλέξτε αρχεία προσθέτων (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>Τα πρόσθετα {0} εισήχθησαν με επιτυχία</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>Τα πρόσθετα {0} εισήχθησαν με επιτυχία και είναι διαθέσιμα</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Η μαζική εισαγωγή απέτυχε</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>Απέτυχε η εισαγωγή προσθέτων: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Γίνεται εισαγωγή προσθέτων...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>Γίνεται εισαγωγή {0}...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>Επεξεργασία {0}...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Το πρόσθετο εγκαταστάθηκε με επιτυχία</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Το plugin εγκαταστάθηκε με επιτυχία</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Η εγκατάσταση απέτυχε</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Αδυναμία εγκατάστασης plugin: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Το plugin απεγκαταστάθηκε με επιτυχία</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Το plugin απεγκαταστάθηκε με επιτυχία</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Η απεγκατάσταση απέτυχε</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Αδυναμία απεγκατάστασης plugin: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Αποτυχία ανοίγματος plugin</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Αδυναμία ανοίγματος plugin: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Αδυναμία ανοίγματος plugin: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Το plugin δεν είναι εγκατεστημένο</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Το plugin δεν είναι εγκατεστημένο και δεν μπορεί να ανοιχτεί</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Απαιτείται η ελάχιστη έκδοση του host {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Το plugin θα διαγραφεί μόνιμα</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>Το plugin θα διαγραφεί μόνιμα. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Η ενημέρωση απέτυχε</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Η ενημέρωση του plugin απέτυχε, ελέγξτε τη σύνδεση δικτύου και προσπαθήστε ξανά αργότερα.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Επιτυχημένη ενημέρωση</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Το plugin ενημερώθηκε με επιτυχία</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Ενημέρωση plugin</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Λήψη και ενημέρωση του plugin...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Ενημέρωση Όλων</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Εκτέλεση Plugin</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Το plugin ξεκίνησε</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Το plugin απεγκαταστάθηκε</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Το plugin θα διαγραφεί όταν κλείσει το πρόγραμμα.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Η διαγραφή απέτυχε</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Παρουσιάστηκε σφάλμα κατά τη διαγραφή του plugin</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Η ρύθμιση απέτυχε</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Το plugin είναι εγκατεστημένο αλλά δεν έχει φορτωθεί. Παρακαλώ δοκιμάστε να επανεκκινήσετε την εφαρμογή.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Καμία Ρύθμιση</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Το plugin δεν έχει καμία επιλογή ρύθμισης.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Η ρύθμιση δεν υποστηρίζεται</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Το plugin δεν υποστηρίζει ρύθμιση.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Οι καταστάσεις του plugin επαναφέρθηκαν</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Όλες οι καταστάσεις εγκατάστασης plugin έχουν διαγραφεί</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Η μαζική ενημέρωση ολοκληρώθηκε</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Όλα τα plugins έχουν υποβληθεί σε επεξεργασία.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Προετοιμασία λήψης...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Τοπικό</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Διαθέσιμη Νέα Έκδοση</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Έκδοση:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Ημερομηνία κυκλοφορίας:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Τι νέο υπάρχει:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Ανανέωση λίστας προσθέτων</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Δεν βρέθηκαν πρόσθετα που να ταιριάζουν με την αναζήτησή σας.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Ενημέρωση όλων των διαθέσιμων προσθέτων</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Εγκατάσταση όλων</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Εγκατάσταση όλων των διαθέσιμων προσθέτων</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Εγκατάσταση όλων...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Εγκατάσταση πρόσθετου/ων {0}...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Ομαδική εγκατάσταση ολοκληρώθηκε</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Εγκαταστάθηκαν τα πρόσθετα {0}.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Αποτυχία ομαδικής εγκατάστασης</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Αποτυχία εγκατάστασης προσθέτων: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Ενημέρωση όλων...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Ενημέρωση...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Άνοιγμα φακέλου</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Αντιγραφή ID προσθέτου</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Φάκελος δεν βρέθηκε</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Ο φάκελος των προσθέτων δεν υπάρχει ακόμα.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Αντιγράφηκε</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>Το ID πρόσθετου '{0}' αντιγράφηκε στο πρόχειρο.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Η λήψη ολοκληρώθηκε</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Λήψη...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Λήψη... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Επιτάχυνση Δικτύου</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>Βιβετόλη</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Εργαλεία</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Χαρακτηριστικά επιτάχυνσης και βελτιστοποίησης δικτύου σε πραγματικό χρόνο</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Διαχείριση σημαιών λειτουργιών των Windows χρησιμοποιώντας το ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Εργαλεία βελτιστοποίησης συστήματος και βοηθητικά προγράμματα</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Χρήση</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Αυτός ο επεξεργαστής χρησιμοποιείται για την άμεση επεξεργασία του αρχείου ρυθμίσεων shell.nss. Μετά την τροποποίηση, κάντε κλικ</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Εφαρμογή</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>στο κουμπί για να αποθηκεύσετε όλες τις αλλαγές και να επανεκκινήσετε τον Εξερευνητή Αρχείων για να εφαρμοστεί η ρύθμιση.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Διαδρομή αρχείου ρύθμισης:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Μετά την τροποποίηση της ρύθμισης, ο Εξερευνητής Αρχείων (Explorer) χρειάζεται επανεκκίνηση για να τεθούν σε ισχύ οι αλλαγές.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Εφαρμογή</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>Αρχείο Ρυθμίσεων shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Το αρχείο shell.nss χρησιμοποιείται για να ορίσει τη συνολική δομή και συμπεριφορά του μενού δεξί κλικ</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Άνοιγμα αρχείου shell.nss</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Άνοιγμα φάκελου που το περιέχει</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Διαδρομή:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Ρυθμίσεις Διεπαφής Χρήστη</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Βασικές Ρυθμίσεις Θέματος</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Χρώμα Φόντου:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Χρώμα Κειμένου:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Ρυθμίσεις Εφέ Hover</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Φόντο Hover:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Κείμενο Hover:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Ρυθμίσεις Επιλεγμένου Εφέ</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Επιλεγμένο Φόντο:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Επιλεγμένο Κείμενο:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Ενημέρωση Κειμένου από το UI</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Φόρτωση από Κείμενο</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Επεξεργαστής Κειμένου</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Άνοιγμα σε Εξωτερικό Επεξεργαστή</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Αρχείο Διαμόρφωσης images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Το αρχείο images.nss χρησιμοποιείται για τον ορισμό εικονιδίων και εικόνων για το μενού δεξί κλικ</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Άνοιγμα αρχείου images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Αρχείο Διαμόρφωσης modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Το αρχείο modify.nss χρησιμοποιείται για τη τροποποίηση και προσαρμογή των στοιχείων του μενού δεξί κλικ</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Άνοιγμα αρχείου modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Δεν υπάρχουν διαθέσιμα εργαλεία. Παρακαλώ προσθέστε εργαλεία στον φάκελο tools στον κατάλογο της εφαρμογής.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Τα εργαλεία θα εμφανιστούν εδώ μόλις είναι διαθέσιμα στον κατάλογο tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Βασικός Κατάλογος: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Δεν βρέθηκε κατάλογος αρχείων διαμόρφωσης</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Αρχείο δεν βρέθηκε</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Δεν είναι δυνατόν να διαβαστεί το αρχείο ρυθμίσεων: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Αυτό το αρχείο χρησιμοποιείται για τον ορισμό ρυθμίσεων στυλ σχετικών με το θέμα</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Ορισμός χρώματος θέματος</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Βασικό χρώμα</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Χρώμα κατά το πέρασμα του ποντικιού</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Χρώμα επιλεγμένου</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Για περισσότερες επιλογές ρύθμισης θέματος, ανατρέξτε στην επίσημη τεκμηρίωση του Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Είστε σίγουροι ότι θέλετε να εφαρμόσετε τη ρύθμιση; 
+  
+ Αυτό θα: 
+ 1. Αποθηκεύσει όλα τα αρχεία ρυθμίσεων 
+ 2. Επανεκκινήσει τον Εξερευνητή Αρχείων για να εφαρμοστεί η ρύθμιση 
+  
+ Σημείωση: Η επανεκκίνηση θα κλείσει όλα τα ανοιχτά παράθυρα φακέλων και τη γραμμή εργασιών και στη συνέχεια θα επανεκκινήσει αυτόματα.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Επιβεβαίωση εφαρμογής ρύθμισης</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Δεν είναι δυνατή η αποθήκευση του αρχείου ρυθμίσεων: 
+ {0} 
+  
+ Ελέγξτε τα δικαιώματα του αρχείου και προσπαθήστε ξανά.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Αποτυχία Αποθήκευσης</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Τα ακόλουθα αρχεία αποθηκεύτηκαν με επιτυχία: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Αποτυχία αποθήκευσης αρχείων: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>Ο Εξερευνητής Αρχείων έχει επανεκκινηθεί, η διαμόρφωση ισχύει τώρα!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Μερικώς εφαρμοσμένο</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Εφαρμόστηκε με επιτυχία</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Σφάλμα κατά την εφαρμογή της διαμόρφωσης: 
+ {0} 
+  
+ Μπορείτε να αποθηκεύσετε τα αρχεία χειροκίνητα και να επανεκκινήσετε τη διαδικασία του Explorer στον Διαχείριση Εργασιών.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Αποτυχία Εφαρμογής</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Το αρχείο δεν υπάρχει ή η διαδρομή δεν είναι έγκυρη</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Αποτυχία Άνοιγμα Αρχείου</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Χρησιμοποιήστε την προεπιλεγμένη εφαρμογή του συστήματος για να ανοίξετε το αρχείο</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Αδύνατο να ανοιχτεί το αρχείο: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Αποτυχία Άνοιγμα Αρχείου</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Ο φάκελος δεν υπάρχει ή η διαδρομή δεν είναι έγκυρη</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Αποτυχία Άνοιγμα Φακέλου</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Αδύνατο να ανοιχτεί ο φάκελος: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Αποτυχία Άνοιγμα Φακέλου</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Μοντέλο</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Χρήση ενέργειας</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Φόρτιση</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Υγεία</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Ρυθμός</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Ελάχιστος Ρυθμός</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Μέγιστος Ρυθμός</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Κύκλοι</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Χωρητικότητα</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Πλήρης Χωρητικότητα</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Σχέδιο</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Ημερομηνία</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Ταχύτητα Πύρης / Μνήμης</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Τάση Πύρης</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Εύρος Τάσης</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Μέση Θερμοκρασία</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Πλευρικό Πλαίσιο</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Συστήματος</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Εύρος Ρυθμού</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Παρακαλώ επιλέξτε τουλάχιστον μία επιλογή καθαρισμού.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Εκκίνηση Όλων</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>π.χ. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>π.χ. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Ενεργοποίηση Διαφάνειας</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Ενεργοποιήστε τα εφέ διαφάνειας για το μενού περιβάλλοντος</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Εμφάνιση Επεκτάσεων Αρχείων</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Εμφάνιση επεκτάσεων αρχείων στον Εξερευνητή Αρχείων</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Εμφάνιση Κρυφών Αρχείων</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Εμφανίστε κρυφά αρχεία και φακέλους στον Εξερευνητή Αρχείων</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Άνοιγμα στο Quick Access</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Ανοίξτε τον Εξερευνητή Αρχείων στο Quick Access αντί για Αυτόν τον Υπολογιστή</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Εμφάνιση Παραθύρου Προεπισκόπησης</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Εμφάνιση παραθύρου προεπισκόπησης στον Εξερευνητή Αρχείων</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Παρακαλώ επιλέξτε τουλάχιστον ένα στοιχείο για καθαρισμό.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Εμφάνιση ποντικιού</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Εφαρμόστε προσαρμοσμένα στυλ δρομέα και ακολουθήστε το ανοιχτό/σκοτεινό θέμα του συστήματος.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Ενεργοποιήστε το στυλ δρομέα που ακολουθεί το θέμα</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Εντοπίστε την τρέχουσα λειτουργία Windows light/dark και εφαρμόστε το αντίστοιχο προσαρμοσμένο σχήμα δρομέα.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Απενεργοποιήστε το στυλ δρομέα που ακολουθεί το θέμα</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Επαναφέρετε το εφεδρικό σχήμα δρομέα και σταματήστε την προσαρμοσμένη εναλλαγή δρομέα με βάση το θέμα.</value>
+  </data>
 </root>

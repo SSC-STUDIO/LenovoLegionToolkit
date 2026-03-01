@@ -751,6 +751,79 @@ docs(readme): 更新安装说明
 - [ ] 社区通知（Discord、QQ频道等）
 - [ ] 监控用户反馈
 
+## 📦 Release 发布物标准（强制）
+
+### 1) 主程序仓库 `LenovoLegionToolkit` 每个新版本必须携带
+
+#### 仓库内必须更新的文件
+- `Directory.Build.props`：版本号必须更新为目标版本（`X.Y.Z`）。
+- `CHANGELOG.md`：将本次发布内容从 `[Unreleased]` 归档到 `## [X.Y.Z] - YYYY-MM-DD`。
+- `README.md` / `README_zh-hans.md`：若功能入口、安装方式或兼容性发生变化必须同步更新。
+
+#### GitHub Release 必须附带的资产文件
+- 主程序安装包或压缩包（至少一种）：
+  - `LenovoLegionToolkit_vX.Y.Z_win-x64.zip` 或
+  - `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
+- 校验文件：
+  - `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`
+- 可选调试符号（仅调试发布需要）：
+  - `LenovoLegionToolkit_vX.Y.Z_symbols.zip`
+
+#### 标签规范
+- Git Tag 必须使用：`vX.Y.Z`
+- GitHub Release 标题必须包含同版本号：`Lenovo Legion Toolkit vX.Y.Z`
+
+### 2) 插件仓库 `LenovoLegionToolkit-Plugins` 每个新版本必须携带
+
+#### 仓库内必须更新的文件
+- `store.json`：必须更新 `lastUpdated`、插件 `version`、`downloadUrl`、`changelog`。
+- `plugins/<PluginName>/plugin.json`：`version` 与 `minLLTVersion` 必须与发布一致。
+- `plugins/<PluginName>/CHANGELOG.md`：必须新增本插件本次发布条目。
+
+#### GitHub Release 必须附带的资产文件
+- 每个插件一个 zip 包，命名必须稳定：
+  - `<plugin-id>-vX.Y.Z.zip`
+- zip 内必须至少包含：
+  - 主插件 DLL
+  - `plugin.json`
+
+### 3) Release 正文格式（中英双语，必须）
+
+使用以下模板：
+
+```markdown
+# Lenovo Legion Toolkit vX.Y.Z
+
+Release date: YYYY-MM-DD
+
+## Added / 新增
+- 中文描述 / English description
+
+## Fixed / 修复
+- 中文描述 / English description
+
+## Improved / 改进
+- 中文描述 / English description
+
+## Downloads / 下载
+- LenovoLegionToolkit_vX.Y.Z_win-x64.zip
+- LenovoLegionToolkit_vX.Y.Z_SHA256.txt
+
+## Compatibility / 兼容性
+- Minimum LLT Version: X.Y.Z（插件发布时必须写）
+- OS: Windows 10/11 x64
+
+## Verification / 校验
+- `CertUtil -hashfile <file> SHA256`
+```
+
+### 4) 发版前最终核对（必须全部满足）
+- [ ] Tag 为 `vX.Y.Z` 且指向正确提交
+- [ ] Release 资产文件齐全且命名符合规范
+- [ ] `CHANGELOG.md` 与 Release 正文内容一致
+- [ ] 主程序/插件版本号与元数据一致（`Directory.Build.props`、`store.json`、`plugin.json`）
+- [ ] 下载链接可访问，SHA256 可校验
+
 ## ⚡ 开发者日常工作流程 (快速参考)
 
 ### 🔄 每日开发循环
@@ -871,8 +944,8 @@ LenovoLegionToolkit-Plugins/                  # 独立仓库 (插件)
 
 | 项目 | 仓库位置 | 远程地址 |
 |------|---------|---------|
-| **主项目** | `LenovoLegionToolkit/` | github.com/BartoszCiccarelli/LenovoLegionToolkit.git |
-| **插件项目** | `LenovoLegionToolkit-Plugins/` | github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins.git |
+| **主项目** | `LenovoLegionToolkit/` | github.com/SSC-STUDIO/LenovoLegionToolkit.git |
+| **插件项目** | `LenovoLegionToolkit-Plugins/` | github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins.git |
 
 ### 核心设计原则
 
@@ -927,8 +1000,8 @@ LenovoLegionToolkit-Plugins/
       "author": "LLT Team",
       "version": "1.0.0",
       "minLLTVersion": "2.14.0",
-      "downloadUrl": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
-      "changelog": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.0"
+      "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
+      "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.0"
     }
   ]
 }
@@ -943,8 +1016,8 @@ LenovoLegionToolkit-Plugins/
   "version": "1.0.0",
   "minLLTVersion": "2.14.0",
   "author": "LLT Team",
-  "repository": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/BartoszCiccarelli/LenovoLegionToolkit-Plugins/issues"
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
 }
 ```
 

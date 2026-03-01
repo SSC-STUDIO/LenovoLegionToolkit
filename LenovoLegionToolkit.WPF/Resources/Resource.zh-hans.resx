@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>这是我的长字符串</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 MIME 编码的序列化 .NET 框架对象]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[以字节数组形式表示 .NET 框架对象的 base64 MIME 编码字符串]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>联想拯救者工具箱</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>Build</value>
+    <value>版本</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
     <value>在 GitHub 上查看最新版本</value>
@@ -166,7 +166,7 @@
     <value>保持 USB 供电</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>联想拯救者工具箱</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>应用</value>
@@ -589,7 +589,7 @@
     <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>处理器</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>CPU 传感器</value>
@@ -598,7 +598,7 @@
     <value>风扇转速</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPU</value>
+    <value>显卡</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>显卡 #2</value>
@@ -665,7 +665,7 @@
     <value>CPU 温度限制</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>处理器</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>无法应用设置</value>
@@ -711,13 +711,13 @@
 警告：如内置屏幕关闭则本项无法正常运行。</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>《人类发展报告》</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>为内置屏幕启用高动态范围显示（HDR）。</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>《人类发展报告》</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Windows 设置已阻止启用 HDR。</value>
@@ -939,7 +939,7 @@
     <value>刷新率</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>???</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>提示弹窗</value>
@@ -1153,7 +1153,7 @@
     <value>速度</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>自述文件</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>刷新</value>
@@ -1178,13 +1178,7 @@
   <data name="RestartLater" xml:space="preserve">
     <value>稍后自行重启</value>
   </data>
-  <data name="WindowsOptimization_Action_MouseStyle_W11CC_Title" xml:space="preserve">
-    <value>W11-CC-V2.2-HDPI 鼠标样式</value>
-  </data>
-  <data name="WindowsOptimization_Action_MouseStyle_W11CC_Description" xml:space="preserve">
-    <value>应用 Windows 11 风格的高清鼠标指针样式</value>
-  </data>
-  <data name="RestartNow" xml:space="preserve">
+<data name="RestartNow" xml:space="preserve">
     <value>立刻重启</value>
   </data>
   <data name="Revert" xml:space="preserve">
@@ -1230,6 +1224,9 @@
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>开机启动</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>登录 Windows 后最小化到系统托盘。</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone 可能没有被正确禁用。</value>
@@ -1579,13 +1576,13 @@
 警告！当内置屏幕关闭时此选项无法生效。</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>新闻部</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>切换内置屏幕缩放。</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>新闻部</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>切换内置屏幕缩放。
@@ -1748,10 +1745,10 @@
     <value>应用数据文件夹</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
-    <value>Data</value>
+    <value>??</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temp</value>
+    <value>??</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>固定显示亮度</value>
@@ -1937,16 +1934,16 @@
     <value>打开或关闭位于设备后方的拯救者 LOGO 灯。</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>GHz</value>
+    <value>千兆赫</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>MHz</value>
+    <value>兆赫</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
     <value>最大：{0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>处理器</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
     <value>利用率</value>
@@ -1961,7 +1958,7 @@
     <value>风扇</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>显卡</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>显存频率</value>
@@ -2426,7 +2423,7 @@
     <value>仓库所有者</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
-    <value>例如：Crs10259</value>
+    <value>例如：SSC-STUDIO</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
     <value>仓库名称</value>
@@ -2552,13 +2549,7 @@
   <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
     <value>从插件扩展页面安装扩展以增强系统优化功能。</value>
   </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
-    <value>即将推出</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
-    <value>扩展市场将在未来的更新中提供。</value>
-  </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+<data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
     <value>全选</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
@@ -2893,20 +2884,7 @@
     <value>为所有用户卸载部分预装 UWP 应用程序。</value>
 
   </data>
-
-  <data name="WindowsOptimization_Category_CleanupAppx_Title" xml:space="preserve">
-
-    <value>Appx软件包</value>
-
-  </data>
-
-  <data name="WindowsOptimization_Category_CleanupAppx_Description" xml:space="preserve">
-
-    <value>卸载选中的Appx软件包（预装软件）。</value>
-
-  </data>
-
-  <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+<data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
     <value>清空回收站</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
@@ -2952,101 +2930,101 @@
     <value>通过注册Nilesoft Shell作为Windows上下文菜单的COM处理程序，拦截系统右键菜单的创建和显示。当用户右键点击文件或文件夹时，Shell会读取shell.nss配置文件并应用自定义的主题、透明度、圆角和阴影等样式设置，实现美化的右键菜单效果。</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>?????????????? Nilesoft Shell?</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>???????</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>?????????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>???????{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>??</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. COM ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>   ???{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. ?????shell.nss??</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>   ???????{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>   ???? CSS ?????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. ?????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
+    <value>theme 
    {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
+       background-color: # 2d2d2d;
+       text-color: # ffffff;
        corner-radius: 5px;
        shadow: true;
-       transparency: true;
-   }</value>
+       透明度: true;
+}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>   - Shell.dll ?? COM ????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>   - ?? IContextMenu ???????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>   - ?? shell.nss ????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>   - ??????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>   - ??????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>   - ??????????????/???</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>   - ??????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>   - ?????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>   - ??????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
     <value>配置文件编辑器</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
-    <value>shell.nss</value>
+    <value>shell。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
-    <value>theme.nss</value>
+    <value>主题。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve">
-    <value>images.nss</value>
+    <value>图像。nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve">
-    <value>modify.nss</value>
+    <value>修改。nss</value>
   </data>
   <data name="ActionDetailsWindow_Title" xml:space="preserve">
     <value>操作详情</value>
@@ -3153,6 +3131,24 @@
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>恢复默认样式并重启资源管理器。</value>
   </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>鼠标外观</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>应用自定义光标样式，并可跟随系统明暗主题。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>启用主题跟随光标样式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>根据当前 Windows 明暗模式自动应用对应的自定义光标方案。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>禁用主题跟随光标样式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>恢复备份的光标方案，并停止按系统主题自动切换。</value>
+  </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>应用新式右键菜单</value>
   </data>
@@ -3182,9 +3178,6 @@
   </data>
   <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
     <value>应用 Windows 11 风格的光标主题，支持高 DPI</value>
-  </data>
-  <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
-    <value>正在删除: {0}</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>电池最大充电容量。</value>
@@ -3494,10 +3487,7 @@
   <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
     <value>插件需要先安装才能使用</value>
   </data>
-  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
-    <value>无法打开插件: {0}</value>
-  </data>
-  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+<data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
     <value>最低兼容版本: {0}</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
@@ -3601,6 +3591,30 @@
   </data>
   <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
     <value>更新所有可用插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>一键安装</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>安装所有可用插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>正在安装全部...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>正在安装 {0} 个插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>一键安装完成</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>已安装 {0} 个插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>一键安装失败</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>安装插件失败：{0}</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
     <value>正在更新全部...</value>
@@ -3959,25 +3973,7 @@
   <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
     <value>例如: C:\Drivers</value>
   </data>
-  <data name="WindowsOptimization_Category_Downloads" xml:space="preserve">
-    <value>下载文件夹</value>
-  </data>
-  <data name="WindowsOptimization_Category_RecycleBin" xml:space="preserve">
-    <value>回收站</value>
-  </data>
-  <data name="WindowsOptimization_Category_Temp" xml:space="preserve">
-    <value>临时文件</value>
-  </data>
-  <data name="WindowsOptimization_Category_WindowsUpdate" xml:space="preserve">
-    <value>Windows 更新缓存</value>
-  </data>
-  <data name="WindowsOptimization_Category_BrowserCache" xml:space="preserve">
-    <value>浏览器缓存</value>
-  </data>
-  <data name="WindowsOptimization_Category_Thumbnails" xml:space="preserve">
-    <value>缩略图缓存</value>
-  </data>
-  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+<data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
     <value>启用透明效果</value>
   </data>
   <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
@@ -4010,4 +4006,4 @@
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>请至少选择一个要清理的项目。</value>
   </data>
-</root>
+<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>????</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>??????????????</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>???????{0}</value></data></root>

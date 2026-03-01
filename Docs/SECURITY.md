@@ -62,19 +62,19 @@ LLT does NOT collect:
 
 | Component | Security Measure |
 |-----------|-----------------|
-| Plugin System | Sandboxed execution environment |
-| Settings Storage | Encrypted configuration files |
+| Plugin System | Isolated plugin load contexts + manifest/hash validation pipeline |
+| Settings Storage | Local JSON files under user profile (no cloud sync) |
 | Network Requests | HTTPS-only, certificate validation |
 | Hardware Access | Minimal required permissions |
-| Auto-Updates | Signature verification required |
+| Auto-Updates | HTTPS transport + integrity checks when hashes are provided |
 
 ### Plugin Security
 
-Plugins operate under strict restrictions:
-- Limited filesystem access
-- No network access by default
-- Required permissions manifest
-- Code signing recommended
+Plugins run in dedicated load contexts and should be treated as trusted code:
+- Validate plugin source before installation
+- Prefer plugins with explicit manifest metadata and checksums
+- Keep plugins updated and remove unused plugins
+- Use least-privilege Windows account for daily usage
 
 ## Dependencies Security
 
@@ -91,8 +91,8 @@ Plugins operate under strict restrictions:
 |------------|---------|---------------|
 | .NET 10 | Runtime | Microsoft security updates |
 | Autofac | DI Container | Mature, well-audited |
-| HID Sharp | Hardware access | Low-level, verified |
-| LibreHardwareMonitorLib | Monitoring | Open source, reviewed |
+| System.Management | WMI/management APIs | Microsoft-maintained package |
+| Octokit | GitHub API integration | Mature and widely used |
 
 ## Hardening Guidelines
 
@@ -199,5 +199,5 @@ Security updates are:
 
 ---
 
-**Last Updated**: February 2025
+**Last Updated**: February 2026
 **Version**: 1.0

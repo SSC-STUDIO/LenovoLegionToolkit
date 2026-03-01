@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
@@ -23,6 +25,9 @@ namespace LenovoLegionToolkit.WPF.Pages;
 
 public partial class WindowsOptimizationPage : UiPage
 {
+    private static readonly object FocusRequestLock = new();
+    private static string? _pendingFocusPluginId;
+
     private readonly WindowsOptimizationViewModel _viewModel;
     public WindowsOptimizationViewModel ViewModel => _viewModel;
 
@@ -43,7 +48,22 @@ public partial class WindowsOptimizationPage : UiPage
 
         ViewModel.Initialize();
         
+        Loaded += WindowsOptimizationPage_Loaded;
         Unloaded += WindowsOptimizationPage_Unloaded;
+    }
+
+    public static void RequestPluginCategoryFocus(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        lock (FocusRequestLock)
+            _pendingFocusPluginId = pluginId;
+    }
+
+    private void WindowsOptimizationPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        TryApplyPendingPluginFocusRequest();
     }
 
     private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
@@ -54,6 +74,69 @@ public partial class WindowsOptimizationPage : UiPage
         
         // Clean up CancellationTokenSource instances to prevent memory leaks
         CleanupCancellationTokenSources();
+    }
+
+    private void TryApplyPendingPluginFocusRequest()
+    {
+        string? pluginId;
+        lock (FocusRequestLock)
+        {
+            pluginId = _pendingFocusPluginId;
+            _pendingFocusPluginId = null;
+        }
+
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        FocusPluginCategory(pluginId);
+    }
+
+    private void FocusPluginCategory(string pluginId)
+    {
+        ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.Optimization;
+        var targetCategory = ViewModel.OptimizationCategories.FirstOrDefault(category =>
+            string.Equals(category.PluginId, pluginId, StringComparison.OrdinalIgnoreCase));
+
+        if (targetCategory == null)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace((FormattableString)$"Windows optimization category not found for plugin '{pluginId}'.");
+            return;
+        }
+
+        foreach (var category in ViewModel.OptimizationCategories)
+            category.IsExpanded = ReferenceEquals(category, targetCategory);
+
+        Dispatcher.BeginInvoke(() =>
+        {
+            _categoriesList?.UpdateLayout();
+            var expander = FindCategoryExpander(targetCategory);
+            expander?.BringIntoView();
+            expander?.Focus();
+        }, DispatcherPriority.Loaded);
+    }
+
+    private Expander? FindCategoryExpander(OptimizationCategoryViewModel categoryVm)
+    {
+        if (_categoriesList == null)
+            return null;
+
+        return EnumerateVisualDescendants<Expander>(_categoriesList)
+            .FirstOrDefault(expander => ReferenceEquals(expander.DataContext, categoryVm));
+    }
+
+    private static IEnumerable<T> EnumerateVisualDescendants<T>(DependencyObject root) where T : DependencyObject
+    {
+        var childrenCount = VisualTreeHelper.GetChildrenCount(root);
+        for (var i = 0; i < childrenCount; i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is T match)
+                yield return match;
+
+            foreach (var nested in EnumerateVisualDescendants<T>(child))
+                yield return nested;
+        }
     }
 
     private void CleanupCancellationTokenSources()

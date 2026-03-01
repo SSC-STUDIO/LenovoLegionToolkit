@@ -21,24 +21,25 @@ public static class RetryHelper
         matchingException ??= (_) => true;
 
         var retries = 0;
-        var success = false;
-
-        while (!success)
+        while (true)
         {
             try
             {
-                if (retries >= maximumRetries)
-                    throw new MaximumRetriesReachedException();
-
                 await action().ConfigureAwait(false);
-                success = true;
+                return;
             }
             catch (Exception ex)
             {
+                if (ex is MaximumRetriesReachedException)
+                    throw;
+
                 if (!matchingException(ex))
                     throw;
 
                 retries++;
+
+                if (retries >= maximumRetries)
+                    throw new MaximumRetriesReachedException();
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Retrying {retries}/{maximumRetries}... [tag={tag}]");

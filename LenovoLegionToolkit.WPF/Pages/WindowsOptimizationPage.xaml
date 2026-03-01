@@ -213,6 +213,7 @@
                         VerticalAlignment="Center">
                         <RadioButton
                             x:Name="_optimizationNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationOptimizationTabButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Optimization}"
@@ -220,12 +221,14 @@
                             Checked="NavButton_Checked" />
                         <RadioButton
                             x:Name="_cleanupNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationCleanupTabButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
                             Checked="NavButton_Checked" />
                         <RadioButton
                             x:Name="_driverDownloadNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationDriverTabButton"
                             Style="{StaticResource NavRadioButtonStyle}"
                             GroupName="OptimizationCleanupBeautificationNav"
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
@@ -336,6 +339,7 @@
                 <!-- Category list for optimization, cleanup, and beautification modes -->
                 <ScrollViewer
                     x:Name="_categoriesList"
+                    AutomationProperties.AutomationId="WindowsOptimizationCategoryList"
                     Grid.Column="0"
                     Margin="0,0,16,0"
                     VerticalScrollBarVisibility="Auto"
@@ -356,6 +360,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Expander
+                                    AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationCategory_{0}}"
                                     IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
                                     Margin="0,0,0,8">
                                     <Expander.Header>
@@ -379,6 +384,7 @@
                                             <wpfui:Button
                                                 Grid.Column="1"
                                                 x:Name="_categorySettingsButton"
+                                                AutomationProperties.AutomationId="{Binding PluginId, StringFormat=WindowsOptimizationCategorySettings_{0}}"
                                                 Margin="12,0,8,0"
                                                 VerticalAlignment="Center"
                                                 Appearance="Transparent"
@@ -405,6 +411,7 @@
                 </Grid.ColumnDefinitions>
                                                     <CheckBox
                                                         Grid.Column="0"
+                                                        AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationAction_{0}}"
                                                         VerticalAlignment="Center"
                                                         IsChecked="{Binding IsSelected, Mode=TwoWay}" />
                                                     <TextBlock
@@ -1191,4 +1198,3 @@
         </Grid>
     </Grid>
 </wpfui:UiPage>
-

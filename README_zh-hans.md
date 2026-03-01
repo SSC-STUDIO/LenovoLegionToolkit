@@ -2,7 +2,7 @@
 
 # Lenovo Legion Toolkit
 
-[![Build](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/Build.yml)
+[![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
 [![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
@@ -28,6 +28,8 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
   - [贡献者](#贡献者)
   - [FAQ](#faq)
   - [如何开启记录Log](#如何开启记录Log)
+  - [本地化翻译](#本地化翻译)
+  - [文档索引](#文档索引)
   - [贡献此项目](#贡献此项目)
 
 ## 免责声明
@@ -78,7 +80,7 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 
 LLT 适配 2020 款及其之后的拯救者机型。
 
-一些功能在 2020 款之前发布的机型和 Ideapad Gaming 3 笔记本可以正常工作（或者说大部分工作），但可能会遇到一些小问题。这里是测试过支持的型号列表 [Compatibility.cs](https://github.com/Crs10259/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
+一些功能在 2020 款之前发布的机型和 Ideapad Gaming 3 笔记本可以正常工作（或者说大部分工作），但可能会遇到一些小问题。这里是测试过支持的型号列表 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
 
 如果你在启动时看到不兼容弹窗，你可以查看底部的*贡献*部分，查看你能否帮助我适配你的机型。谨记我没有那么多的笔记本型号，所以一些功能我无法适配。
 
@@ -647,5 +649,42 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 4. 会导致崩溃闪退的功能
 
 你提交的信息越多，随着时间的推进，LLT 就会变得越来越好！如果有什么出错的地方请准确写下问题并附上日志。(日志保存地址 `%LOCALAPPDATA%\LenovoLegionToolkit\log`). 
+
+## 本地化翻译
+
+LLT 的本地化通过 Crowdin 管理，仓库配置文件为 `crowdin.yml`。
+
+- 源文件：4 个模块下的中立资源 `Resource.resx`
+  - `LenovoLegionToolkit.WPF/Resources`
+  - `LenovoLegionToolkit.Lib/Resources`
+  - `LenovoLegionToolkit.Lib.Automation/Resources`
+  - `LenovoLegionToolkit.Lib.Macro/Resources`
+- 目标文件：与源文件同目录的 `Resource.<locale>.resx`
+- 语言映射：在 `crowdin.yml` 内定义（例如 `zh-CN -> zh-hans`、`zh-TW -> zh-hant`、`pt-BR -> pt-br`）。
+
+常用命令：
+
+```bash
+# 上传源字符串
+crowdin upload sources --config crowdin.yml
+
+# 上传现有翻译
+crowdin upload translations --config crowdin.yml
+
+# 下载翻译结果
+crowdin download --config crowdin.yml
+```
+
+## 文档索引
+
+更多技术文档位于 `Docs/` 目录：
+
+| 文档 | 说明 |
+|------|------|
+| [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | 系统架构、组件与数据流 |
+| [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
+| [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
+| [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
+| [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
 
 **万分感谢！**

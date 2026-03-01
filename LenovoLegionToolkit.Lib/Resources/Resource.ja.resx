@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>これが私の長い紐です</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime encoded serialized .NET Framework オブジェクト]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 MIME でエンコードされた .NET Framework オブジェクトのバイト配列形式の文字列]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -181,7 +181,7 @@
     <comment>Informs the user that HDR is or will be turned on.</comment>
   </data>
   <data name="HybridModeState_Off" xml:space="preserve">
-    <value>dGPU</value>
+    <value>dGPUの特長</value>
   </data>
   <data name="HybridModeState_On" xml:space="preserve">
     <value>ハイブリッド</value>
@@ -407,7 +407,7 @@
     <value>ACアダプタ</value>
   </data>
   <data name="InstantBootState_UsbPowerDelivery" xml:space="preserve">
-    <value>USB Power Delivery</value>
+    <value>USB電源供給</value>
   </data>
   <data name="InstantBootState_AcAdapterAndUsbPowerDelivery" xml:space="preserve">
     <value>AC と USB PD</value>
@@ -422,13 +422,13 @@
     <value>短い</value>
   </data>
   <data name="ModifierKey_Shift" xml:space="preserve">
-    <value>Shift</value>
+    <value>シフト</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+    <value>ctrl</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>代替</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
     <value>オン</value>
@@ -472,4 +472,4 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>毎週</value>
   </data>
-</root>
+<data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>オーディオバウンス</value></data><data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>オーディオリップル</value></data><data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>オーロラ同期</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>カラーパルス</value></data><data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>カラウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>レインボースクリュー</value></data><data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>レインボーウェーブ</value></data><data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>リップル</value></data><data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ウィンドウズ</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>maco</value></data></root>

@@ -21,6 +21,8 @@ namespace LenovoLegionToolkit.WPF.Pages
         private string _pluginId = string.Empty;
         private bool _isInstalled;
         private bool _supportsConfiguration;
+        private bool _supportsFeaturePage;
+        private bool _supportsOptimizationCategory;
         private bool _isInstalling;
         private double _installProgress;
         private string _installStatusText = string.Empty;
@@ -55,6 +57,7 @@ namespace LenovoLegionToolkit.WPF.Pages
                 {
                     _releaseDate = value;
                     OnPropertyChanged(nameof(ReleaseDate));
+                    OnPropertyChanged(nameof(HasReleaseDate));
                 }
             }
         }
@@ -68,9 +71,20 @@ namespace LenovoLegionToolkit.WPF.Pages
                 {
                     _changelog = value;
                     OnPropertyChanged(nameof(Changelog));
+                    OnPropertyChanged(nameof(HasChangelog));
+                    OnPropertyChanged(nameof(HasChangelogUrl));
                 }
             }
         }
+
+        public bool HasReleaseDate => !string.IsNullOrWhiteSpace(_releaseDate);
+
+        public bool HasChangelog => !string.IsNullOrWhiteSpace(_changelog);
+
+        public bool HasChangelogUrl =>
+            Uri.TryCreate(_changelog, UriKind.Absolute, out var uri) &&
+            (uri.Scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
+             uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
 
         public string Author
         {
@@ -218,12 +232,17 @@ public string PluginId
                 {
                     _isInstalled = value;
                     OnPropertyChanged(nameof(IsInstalled));
+                    OnPropertyChanged(nameof(UpdateInfoVisible));
                     
                     // Update button text when installation status changes
                     UpdateInstallButtonText();
                 }
             }
         }
+
+        public bool UpdateAvailable => _updateAvailable;
+
+        public bool UpdateInfoVisible => _isInstalled && _updateAvailable;
 
         public bool SupportsConfiguration
         {
@@ -237,6 +256,36 @@ public string PluginId
                 }
             }
         }
+
+        public bool SupportsFeaturePage
+        {
+            get => _supportsFeaturePage;
+            set
+            {
+                if (_supportsFeaturePage != value)
+                {
+                    _supportsFeaturePage = value;
+                    OnPropertyChanged(nameof(SupportsFeaturePage));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                }
+            }
+        }
+
+        public bool SupportsOptimizationCategory
+        {
+            get => _supportsOptimizationCategory;
+            set
+            {
+                if (_supportsOptimizationCategory != value)
+                {
+                    _supportsOptimizationCategory = value;
+                    OnPropertyChanged(nameof(SupportsOptimizationCategory));
+                    OnPropertyChanged(nameof(SupportsOpenAction));
+                }
+            }
+        }
+
+        public bool SupportsOpenAction => _supportsFeaturePage || _supportsOptimizationCategory;
 
         public bool IsInstalling
         {
@@ -342,8 +391,21 @@ public string PluginId
             if (_updateAvailable != updateAvailable)
             {
                 _updateAvailable = updateAvailable;
+                OnPropertyChanged(nameof(UpdateAvailable));
+                OnPropertyChanged(nameof(UpdateInfoVisible));
                 UpdateInstallButtonText();
             }
+        }
+
+        public void SetIconBackgroundFromStore(string? iconBackgroundValue)
+        {
+            if (TryParseColor(iconBackgroundValue, out var parsed))
+            {
+                IconBackground = new SolidColorBrush(parsed);
+                return;
+            }
+
+            ApplyDeterministicIconBackground();
         }
 
         private void UpdateIconLetter()
@@ -376,13 +438,66 @@ public string PluginId
                 }
 
                 IconLetter = new string(letters.Take(2).ToArray());
-                
-                // Generate background color based on plugin ID
-                var hash = PluginId.GetHashCode();
-                var hue = Math.Abs(hash % 360);
-                IconBackground = new SolidColorBrush(HsvToRgb(hue, 0.7, 0.8));
+                ApplyDeterministicIconBackground();
             }
         }
+
+        private void ApplyDeterministicIconBackground()
+        {
+            var hash = GetDeterministicHash(PluginId);
+            var hue = Math.Abs(hash % 360);
+            IconBackground = new SolidColorBrush(HsvToRgb(hue, 0.7, 0.8));
+        }
+
+        private static int GetDeterministicHash(string value)
+        {
+            unchecked
+            {
+                var hash = 17;
+                foreach (var ch in value)
+                {
+                    hash = hash * 31 + char.ToUpperInvariant(ch);
+                }
+
+                return hash;
+            }
+        }
+
+        private static bool TryParseColor(string? raw, out Color color)
+        {
+            color = default;
+            if (string.IsNullOrWhiteSpace(raw))
+                return false;
+
+            var candidate = raw.Trim();
+            if (!candidate.StartsWith("#", StringComparison.Ordinal) &&
+                (candidate.Length == 3 || candidate.Length == 4 || candidate.Length == 6 || candidate.Length == 8) &&
+                candidate.All(IsHexDigit))
+            {
+                candidate = $"#{candidate}";
+            }
+
+            try
+            {
+                var converted = ColorConverter.ConvertFromString(candidate);
+                if (converted is Color parsed)
+                {
+                    color = parsed;
+                    return true;
+                }
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        private static bool IsHexDigit(char c) =>
+            (c >= '0' && c <= '9') ||
+            (c >= 'a' && c <= 'f') ||
+            (c >= 'A' && c <= 'F');
 
         private static Color HsvToRgb(double h, double s, double v)
         {

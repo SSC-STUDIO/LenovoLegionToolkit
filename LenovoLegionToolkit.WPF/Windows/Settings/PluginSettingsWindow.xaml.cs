@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.WPF.Resources;
@@ -70,7 +71,27 @@ public partial class PluginSettingsWindow : BaseWindow
                     if (getSettingsPage != null)
                     {
                         var settingsPage = getSettingsPage.Invoke(plugin, null);
-                        if (settingsPage is System.Windows.Controls.Page page)
+
+                        if (settingsPage is IPluginPage pluginPage)
+                        {
+                            var pageObject = pluginPage.CreatePage();
+                            if (pageObject is Page generatedPage)
+                            {
+                                hasSettingsPage = true;
+                                if (_pluginSettingsContainer != null)
+                                    _pluginSettingsContainer.Visibility = Visibility.Visible;
+                                _pluginSettingsFrame?.Navigate(generatedPage);
+                            }
+                            else if (pageObject is UIElement generatedElement)
+                            {
+                                hasSettingsPage = true;
+                                if (_pluginSettingsContainer != null)
+                                    _pluginSettingsContainer.Visibility = Visibility.Visible;
+                                if (_pluginSettingsFrame != null)
+                                    _pluginSettingsFrame.Content = generatedElement;
+                            }
+                        }
+                        else if (settingsPage is Page page)
                         {
                             hasSettingsPage = true;
                             
@@ -85,6 +106,14 @@ public partial class PluginSettingsWindow : BaseWindow
                             {
                                 _pluginSettingsFrame.Navigate(page);
                             }
+                        }
+                        else if (settingsPage is UIElement element)
+                        {
+                            hasSettingsPage = true;
+                            if (_pluginSettingsContainer != null)
+                                _pluginSettingsContainer.Visibility = Visibility.Visible;
+                            if (_pluginSettingsFrame != null)
+                                _pluginSettingsFrame.Content = element;
                         }
                     }
                 }

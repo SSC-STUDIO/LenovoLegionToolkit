@@ -2,10 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Listeners;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -15,21 +12,6 @@ namespace LenovoLegionToolkit.Tests.Features;
 [TestCategory(TestCategories.Controller)]
 public class PowerModeFeatureTests : UnitTestBase
 {
-    private Mock<GodModeController> _godModeControllerMock = null!;
-    private Mock<WindowsPowerModeController> _windowsPowerModeControllerMock = null!;
-    private Mock<WindowsPowerPlanController> _windowsPowerPlanControllerMock = null!;
-    private Mock<ThermalModeListener> _thermalModeListenerMock = null!;
-    private Mock<PowerModeListener> _powerModeListenerMock = null!;
-
-    protected override void Setup()
-    {
-        _godModeControllerMock = new Mock<GodModeController>(null!, null!);
-        _windowsPowerModeControllerMock = new Mock<WindowsPowerModeController>(null!, null!);
-        _windowsPowerPlanControllerMock = new Mock<WindowsPowerPlanController>(null!, null!);
-        _thermalModeListenerMock = new Mock<ThermalModeListener>(null!);
-        _powerModeListenerMock = new Mock<PowerModeListener>(null!);
-    }
-
     [TestMethod]
     public void PowerModeState_ShouldHaveFourStates()
     {

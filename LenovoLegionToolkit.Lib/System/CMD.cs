@@ -11,7 +11,7 @@ namespace LenovoLegionToolkit.Lib.System;
 
 public static class CMD
 {
-    public static async Task<(int, string)> RunAsync(string file, string arguments, bool createNoWindow = true, bool waitForExit = true, Dictionary<string, string?>? environment = null, CancellationToken token = default)
+    public static async Task<(int, string)> RunAsync(string file, string? arguments, bool createNoWindow = true, bool waitForExit = true, Dictionary<string, string?>? environment = null, CancellationToken token = default)
     {
         // Input validation to prevent command injection
         if (!IsValidFileName(file))
@@ -76,10 +76,29 @@ public static class CMD
             return (-1, string.Empty);
         }
 
+        Task<string>? standardOutputTask = null;
+        Task<string>? standardErrorTask = null;
+        if (createNoWindow)
+        {
+            // Start draining redirected streams before waiting for process exit to avoid deadlocks
+            // when the child process writes enough data to fill stdout/stderr buffers.
+            standardOutputTask = cmd.StandardOutput.ReadToEndAsync(token);
+            standardErrorTask = cmd.StandardError.ReadToEndAsync(token);
+        }
+
         await cmd.WaitForExitAsync(token).ConfigureAwait(false);
 
         var exitCode = cmd.ExitCode;
-        var output = createNoWindow ? await cmd.StandardOutput.ReadToEndAsync(token).ConfigureAwait(false) : string.Empty;
+        var output = string.Empty;
+        if (createNoWindow)
+        {
+            await Task.WhenAll(standardOutputTask!, standardErrorTask!).ConfigureAwait(false);
+
+            output = standardOutputTask!.Result;
+            var error = standardErrorTask!.Result;
+            if (!string.IsNullOrWhiteSpace(error))
+                output = string.IsNullOrWhiteSpace(output) ? error : $"{output}{Environment.NewLine}{error}";
+        }
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");

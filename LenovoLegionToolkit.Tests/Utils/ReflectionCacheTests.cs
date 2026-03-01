@@ -83,16 +83,30 @@ public class ReflectionCacheTests : UnitTestBase
     [TestMethod]
     public void ClearCache_ShouldClearAllCaches()
     {
-        var properties1 = ReflectionCache.GetCachedProperties(typeof(TestClass));
-        var property1 = ReflectionCache.GetCachedProperty(typeof(TestClass), nameof(TestClass.PublicProperty));
+        _ = ReflectionCache.GetCachedProperties(typeof(TestClass));
+        _ = ReflectionCache.GetCachedProperty(typeof(TestClass), nameof(TestClass.PublicProperty));
+
+        GetCacheCount("_propertyCache").Should().BeGreaterThan(0);
+        GetCacheCount("_propertyByNameCache").Should().BeGreaterThan(0);
 
         ReflectionCache.ClearCache();
 
-        var properties2 = ReflectionCache.GetCachedProperties(typeof(TestClass));
-        var property2 = ReflectionCache.GetCachedProperty(typeof(TestClass), nameof(TestClass.PublicProperty));
+        GetCacheCount("_propertyCache").Should().Be(0);
+        GetCacheCount("_propertyByNameCache").Should().Be(0);
+    }
 
-        properties2.Should().NotBeSameAs(properties1);
-        property2.Should().NotBeSameAs(property1);
+    private static int GetCacheCount(string fieldName)
+    {
+        var field = typeof(ReflectionCache).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+        field.Should().NotBeNull();
+
+        var value = field!.GetValue(null);
+        value.Should().NotBeNull();
+
+        var countProperty = value!.GetType().GetProperty("Count");
+        countProperty.Should().NotBeNull();
+
+        return (int)countProperty!.GetValue(value)!;
     }
 
     [TestCleanup]

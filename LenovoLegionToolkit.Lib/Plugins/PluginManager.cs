@@ -179,7 +179,7 @@ public class PluginManager : IPluginManager
 
     private List<string> GetPluginDllFiles(string pluginsDirectory)
     {
-        var allDllFiles = new List<string>();
+        var candidates = new List<(string FilePath, string? ParentDirectoryName)>();
         var subdirectories = Directory.GetDirectories(pluginsDirectory);
         var cultureFolders = GetCultureFolders();
         
@@ -195,33 +195,101 @@ public class PluginManager : IPluginManager
                 var localSubDirs = Directory.GetDirectories(subdir);
                 foreach (var localSubDir in localSubDirs)
                 {
-                    allDllFiles.AddRange(Directory.GetFiles(localSubDir, "*.dll", SearchOption.TopDirectoryOnly));
+                    var localDirName = Path.GetFileName(localSubDir);
+                    candidates.AddRange(
+                        Directory.GetFiles(localSubDir, "*.dll", SearchOption.TopDirectoryOnly)
+                            .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)localDirName)));
                 }
                 continue;
             }
                 
-            allDllFiles.AddRange(Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly));
+            candidates.AddRange(
+                Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly)
+                    .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)dirName)));
         }
         
-        allDllFiles.AddRange(Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly));
+        candidates.AddRange(
+            Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+                .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)null)));
         
-        return allDllFiles
-            .Where(IsPluginDll)
+        return candidates
+            .Where(candidate => IsPluginDll(candidate.FilePath, candidate.ParentDirectoryName))
+            .Select(candidate => candidate.FilePath)
             .Distinct()
             .ToList();
     }
 
-    private bool IsPluginDll(string filePath)
+    private bool IsPluginDll(string filePath, string? parentDirectoryName = null)
     {
         var fileName = Path.GetFileName(filePath);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+        var fullPath = Path.GetFullPath(filePath);
         var fileInfo = new FileInfo(filePath);
         
-        if (_pluginFileCache.TryGetValue(fileName, out var cachedTime) && fileInfo.LastWriteTime <= cachedTime)
+        if (_pluginFileCache.TryGetValue(fullPath, out var cachedTime) && fileInfo.LastWriteTimeUtc <= cachedTime)
             return false;
-        
-        return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
-               !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-               !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
+
+        if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (string.IsNullOrWhiteSpace(parentDirectoryName))
+            return false;
+
+        var normalizedDllName = NormalizePluginToken(fileNameWithoutExtension);
+        var normalizedParentName = NormalizePluginToken(parentDirectoryName);
+        var normalizedParentShortName = NormalizePluginToken(parentDirectoryName.Replace("LenovoLegionToolkit.Plugins.", string.Empty, StringComparison.OrdinalIgnoreCase));
+
+        if (string.IsNullOrWhiteSpace(normalizedDllName))
+            return false;
+
+        return normalizedDllName.Equals(normalizedParentName, StringComparison.OrdinalIgnoreCase) ||
+               normalizedDllName.Equals(normalizedParentShortName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string NormalizePluginToken(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value.Where(char.IsLetterOrDigit).ToArray()).ToLowerInvariant();
+    }
+
+    private static string[] GetMainPluginDllNameCandidates(string pluginId)
+    {
+        var normalized = NormalizePluginToken(pluginId);
+        var pascalCase = ToPascalCasePluginId(pluginId);
+
+        var candidates = new[]
+        {
+            $"{pluginId}.dll",
+            $"LenovoLegionToolkit.Plugins.{pluginId}.dll",
+            $"{normalized}.dll",
+            $"LenovoLegionToolkit.Plugins.{normalized}.dll",
+            $"LenovoLegionToolkit.Plugins.{pascalCase}.dll"
+        };
+
+        return candidates
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static string ToPascalCasePluginId(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return string.Empty;
+
+        var segments = pluginId
+            .Split(new[] { '-', '_', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(segment => char.ToUpperInvariant(segment[0]) + segment[1..].ToLowerInvariant());
+
+        return string.Concat(segments);
     }
 
     private HashSet<string> GetCultureFolders() => new(StringComparer.OrdinalIgnoreCase)
@@ -325,6 +393,8 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Found {validPluginTypes.Count} plugin type(s) in {pluginFilePath}");
 
+            var loadedPluginFromFile = false;
+
             foreach (var pluginType in validPluginTypes)
             {
                 try
@@ -405,11 +475,30 @@ public class PluginManager : IPluginManager
                                 metadata.Author = authorProp.GetValue(pluginAttribute)?.ToString();
                             }
                         }
+
+                        if (_pluginMetadataCache.TryGetValue(plugin.Id, out var existingMetadata))
+                        {
+                            var versionComparison = ComparePluginVersions(pluginVersion, existingMetadata.Version);
+                            if (versionComparison < 0)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Skipping plugin {plugin.Id} v{pluginVersion} from {pluginFilePath} because newer version {existingMetadata.Version} is already loaded from {existingMetadata.FilePath}.");
+                                continue;
+                            }
+
+                            if (versionComparison == 0 && _registeredPlugins.ContainsKey(plugin.Id))
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
+                                continue;
+                            }
+                        }
                         
                         _pluginMetadataCache[plugin.Id] = metadata;
 
                         // Register the plugin (both SDK and direct IPlugin implementations)
                         RegisterPlugin(plugin);
+                        loadedPluginFromFile = true;
                         
                         if (Log.Instance.IsTraceEnabled)
                         {
@@ -428,6 +517,11 @@ public class PluginManager : IPluginManager
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Failed to create instance of plugin type {pluginType.Name}: {ex.Message}", ex);
                 }
+            }
+
+            if (loadedPluginFromFile)
+            {
+                _pluginFileCache[Path.GetFullPath(pluginFilePath)] = new FileInfo(pluginFilePath).LastWriteTimeUtc;
             }
         }
         catch (Exception ex)
@@ -527,10 +621,10 @@ public class PluginManager : IPluginManager
                 else
                 {
                     // Check for root level DLLs (backward compatibility)
-                    var rootDllPath1 = Path.Combine(pluginsDirectory, $"{pluginId}.dll");
-                    var rootDllPath2 = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.dll");
-                    
-                    if (File.Exists(rootDllPath1) || File.Exists(rootDllPath2))
+                    var rootDllCandidates = GetMainPluginDllNameCandidates(pluginId)
+                        .Select(fileName => Path.Combine(pluginsDirectory, fileName));
+
+                    if (rootDllCandidates.Any(File.Exists))
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"IsInstalled({pluginId}): Found as root level DLL");
@@ -557,11 +651,8 @@ public class PluginManager : IPluginManager
             }
             
             // Check for the main plugin DLL (either pluginId.dll or LenovoLegionToolkit.Plugins.{pluginId}.dll)
-            var mainDllName1 = $"{pluginId}.dll";
-            var mainDllName2 = $"LenovoLegionToolkit.Plugins.{pluginId}.dll";
-            var hasMainDll = dllFiles.Any(f => 
-                Path.GetFileName(f).Equals(mainDllName1, StringComparison.OrdinalIgnoreCase) ||
-                Path.GetFileName(f).Equals(mainDllName2, StringComparison.OrdinalIgnoreCase));
+            var mainDllNameCandidates = GetMainPluginDllNameCandidates(pluginId);
+            var hasMainDll = dllFiles.Any(f => mainDllNameCandidates.Contains(Path.GetFileName(f), StringComparer.OrdinalIgnoreCase));
             
             if (!hasMainDll)
             {
@@ -1177,5 +1268,12 @@ public class PluginManager : IPluginManager
             return true; // Default to allowing if check fails
         }
     }
-}
 
+    private static int ComparePluginVersions(string? left, string? right)
+    {
+        if (Version.TryParse(left, out var leftVersion) && Version.TryParse(right, out var rightVersion))
+            return leftVersion.CompareTo(rightVersion);
+
+        return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
+    }
+}

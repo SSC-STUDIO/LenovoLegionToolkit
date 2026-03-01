@@ -33,6 +33,20 @@ public class PluginManifest
     [JsonPropertyName("minimumHostVersion")]
     public string MinimumHostVersion { get; set; } = "1.0.0";
 
+    // Backward compatibility: some store manifests still use minLLTVersion.
+    [JsonPropertyName("minLLTVersion")]
+    public string? LegacyMinimumHostVersion
+    {
+        get => null;
+        set
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                MinimumHostVersion = value;
+            }
+        }
+    }
+
     [JsonPropertyName("dependencies")]
     public string[]? Dependencies { get; set; }
 
