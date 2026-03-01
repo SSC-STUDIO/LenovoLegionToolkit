@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -134,13 +135,14 @@ public partial class MainWindow
 
         if (!isSupportedLegionMachine)
         {
-            _navigationStore.Items.Remove(_dashboardItem);
+            // Keep dashboard visible in compatibility mode for basic functionality
+            // _navigationStore.Items.Remove(_dashboardItem);
             _navigationStore.Items.Remove(_automationItem);
             _navigationStore.Items.Remove(_keyboardItem);
             _navigationStore.Items.Remove(_macroItem);
 
-            // If we removed the dashboard, we need to navigate to something else
-            _navigationStore.Navigate("windowsOptimization");
+            // Navigate to dashboard instead of windowsOptimization for better UX
+            _navigationStore.Navigate("dashboard");
         }
         else if (!await KeyboardBacklightPage.IsSupportedAsync())
         {
@@ -590,15 +592,33 @@ public partial class MainWindow
     {
         try
         {
-            // Get all installed plugins (excluding system plugins like Tools and SystemOptimization)
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"UpdateInstalledPluginsNavigationItems started");
+            }
+
+            // Get all installed plugin IDs
             var installedPluginIds = _pluginManager.GetInstalledPluginIds().ToList();
+            // Get all registered plugins
             var registeredPlugins = _pluginManager.GetRegisteredPlugins().ToList();
             
-            // Filter out system plugins
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"  - Installed plugin IDs: [{string.Join(", ", installedPluginIds)}]");
+                Log.Instance.Trace($"  - Registered plugins: [{string.Join(", ", registeredPlugins.Select(p => p.Id))}]");
+            }
+            
+            // Only show installed plugins that actually provide a feature page.
+            // This prevents blank plugin pages in sidebar navigation.
             var pluginsToShow = registeredPlugins
-                .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase)
-                    && !p.IsSystemPlugin)
+                .Where(p => installedPluginIds.Contains(p.Id, StringComparer.OrdinalIgnoreCase))
+                .Where(ProvidesFeaturePage)
                 .ToList();
+
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"  - Plugins to show: [{string.Join(", ", pluginsToShow.Select(p => p.Id))}]");
+            }
 
             // Remove navigation items for uninstalled plugins
             var pluginIdsToRemove = _pluginNavigationItems.Keys
@@ -611,6 +631,10 @@ public partial class MainWindow
                 {
                     _navigationStore.Items.Remove(navItem);
                     _pluginNavigationItems.Remove(pluginId);
+                    if (Log.Instance.IsTraceEnabled)
+                    {
+                        Log.Instance.Trace($"  - Removed navigation item for plugin: {pluginId}");
+                    }
                 }
             }
 
@@ -619,6 +643,11 @@ public partial class MainWindow
             {
                 if (!_pluginNavigationItems.ContainsKey(plugin.Id))
                 {
+                    if (Log.Instance.IsTraceEnabled)
+                    {
+                        Log.Instance.Trace($"  - Adding navigation item for plugin: {plugin.Id} (Name: {plugin.Name}, IsSystemPlugin: {plugin.IsSystemPlugin})");
+                    }
+
                     // Get plugin metadata for version info
                     var pluginMetadata = _pluginManager.GetPluginMetadata(plugin.Id);
                     var pluginDisplayName = plugin.Name;
@@ -642,6 +671,8 @@ public partial class MainWindow
                         // Default icon if plugin doesn't specify one
                         navItem.Icon = SymbolRegular.Apps24;
                     }
+
+                    AutomationProperties.SetAutomationId(navItem, $"PluginNavItem_{plugin.Id}");
 
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
@@ -674,6 +705,11 @@ public partial class MainWindow
                     _pluginNavigationItems[plugin.Id] = navItem;
                 }
             }
+
+            if (Log.Instance.IsTraceEnabled)
+            {
+                Log.Instance.Trace($"UpdateInstalledPluginsNavigationItems completed. Total plugin navigation items: {_pluginNavigationItems.Count}");
+            }
         }
         catch (Exception ex)
         {
@@ -692,6 +728,30 @@ public partial class MainWindow
             return symbol;
         }
         return SymbolRegular.Apps24;
+    }
+
+    private static bool ProvidesFeaturePage(IPlugin plugin)
+    {
+        try
+        {
+            var featureExtension = (plugin as PluginBase)?.GetFeatureExtension();
+            if (featureExtension is IPluginPage)
+                return true;
+
+            var getFeatureExtensionMethod = plugin.GetType().GetMethod(
+                "GetFeatureExtension",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (getFeatureExtensionMethod == null)
+                return false;
+
+            return getFeatureExtensionMethod.Invoke(plugin, null) is IPluginPage;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve feature-page capability for plugin {plugin.Id}", ex);
+            return false;
+        }
     }
 
 

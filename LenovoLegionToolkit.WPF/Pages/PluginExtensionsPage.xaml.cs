@@ -83,6 +83,12 @@ private string _currentSearchText = string.Empty;
         {
             descriptionTextBlock.Text = Resource.ResourceManager.GetString("PluginExtensionsPage_Description", Resource.Culture) ?? "Install and manage plugins to extend functionality";
         }
+
+        if (_bulkInstallButton != null)
+        {
+            _bulkInstallButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
+            _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
+        }
     }
     
     private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -129,6 +135,32 @@ private string _currentSearchText = string.Empty;
                 refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowClockwise24;
             }
         }
+    }
+
+    private int GetInstallableOnlinePluginCount() =>
+        _onlinePlugins.Count(plugin => !_pluginManager.IsInstalled(plugin.Id));
+
+    private void UpdateBulkActionButtonsVisibility()
+    {
+        if (_bulkUpdateButton != null)
+            _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
+
+        if (_bulkInstallButton != null)
+        {
+            _bulkInstallButton.Visibility = GetInstallableOnlinePluginCount() > 0 ? Visibility.Visible : Visibility.Collapsed;
+            _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
+        }
+    }
+
+    private static string FormatReleaseDate(string releaseDateRaw)
+    {
+        if (string.IsNullOrWhiteSpace(releaseDateRaw))
+            return string.Empty;
+
+        if (!DateTimeOffset.TryParse(releaseDateRaw, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var releaseDate))
+            return releaseDateRaw;
+
+        return releaseDate.ToLocalTime().ToString(LocalizationHelper.ShortDateFormat);
     }
 
     // private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
@@ -505,17 +537,18 @@ private string _currentSearchText = string.Empty;
                     Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - IsInstalled check returned {isInstalled}");
                 }
                 
-                var updateAvailable = _availableUpdates.Any(au => au.Id == plugin.Id);
+                var updateAvailable = isInstalled && _availableUpdates.Any(au => au.Id == plugin.Id);
                 var updatePlugin = updateAvailable ? _availableUpdates.FirstOrDefault(au => au.Id == plugin.Id) : null;
                 
                 // Get changelog info
-                var changelog = updatePlugin?.Changelog ?? string.Empty;
-                var releaseDate = updatePlugin?.ReleaseDate ?? string.Empty;
-                var newVersion = updatePlugin?.Version ?? string.Empty;
+                var changelog = updateAvailable ? (updatePlugin?.Changelog ?? string.Empty) : string.Empty;
+                var releaseDate = updateAvailable ? FormatReleaseDate(updatePlugin?.ReleaseDate ?? string.Empty) : string.Empty;
+                var newVersion = updateAvailable ? (updatePlugin?.Version ?? string.Empty) : string.Empty;
 
                 // Get version information
                 var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
                 var onlinePlugin = _onlinePlugins.FirstOrDefault(op => op.Id == plugin.Id);
+                var iconBackground = updatePlugin?.IconBackground ?? onlinePlugin?.IconBackground ?? string.Empty;
                 
                 string version = "1.0.0";
                 if (!string.IsNullOrWhiteSpace(newVersion))
@@ -542,11 +575,13 @@ private string _currentSearchText = string.Empty;
                     isLocal = onlinePlugin == null;
                 }
                 
+                var capabilities = ResolvePluginCapabilities(plugin, isInstalled);
+
                 // Determine location
                 string location = string.Empty;
                 if (isInstalled)
                 {
-                    if (plugin.IsSystemPlugin)
+                    if (plugin.IsSystemPlugin || !capabilities.SupportsFeaturePage)
                     {
                         location = Resource.PluginExtensionsPage_LocationSystem;
                     }
@@ -571,39 +606,17 @@ private string _currentSearchText = string.Empty;
                     existingViewModel.ReleaseDate = releaseDate;
                     existingViewModel.Changelog = changelog;
                     existingViewModel.Author = metadata?.Author ?? string.Empty;
-                    
-                    // Check if plugin supports configuration (using reflection for dynamic plugins)
-                    var supportsConfig = false;
-                    if (isInstalled)
-                    {
-                        try
-                        {
-                            var pluginType = plugin.GetType();
-                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                            if (getFeatureExtension != null)
-                            {
-                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
-                                if (featureExtension != null)
-                                {
-                                    var featureType = featureExtension.GetType();
-                                    supportsConfig = featureType.Name.Contains("IPluginPage") || 
-                                                   featureType.GetProperty("Page") != null ||
-                                                   featureType.GetProperty("SettingsPage") != null;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            supportsConfig = false;
-                        }
-                    }
+                    existingViewModel.SetIconBackgroundFromStore(iconBackground);
                     
                     if (Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
-                        Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsConfig={supportsConfig}");
+                        Lib.Utils.Log.Instance.Trace(
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
                     }
                     
-                    existingViewModel.SupportsConfiguration = supportsConfig;
+                    existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                    existingViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
+                    existingViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                 }
                 else
                 {
@@ -614,39 +627,17 @@ private string _currentSearchText = string.Empty;
                     pluginViewModel.ReleaseDate = releaseDate;
                     pluginViewModel.Changelog = changelog;
                     pluginViewModel.Author = metadata?.Author ?? string.Empty;
-                    
-                    // Check if plugin supports configuration (using reflection for dynamic plugins)
-                    var supportsConfig = false;
-                    if (isInstalled)
-                    {
-                        try
-                        {
-                            var pluginType = plugin.GetType();
-                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                            if (getFeatureExtension != null)
-                            {
-                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
-                                if (featureExtension != null)
-                                {
-                                    var featureType = featureExtension.GetType();
-                                    supportsConfig = featureType.Name.Contains("IPluginPage") || 
-                                                   featureType.GetProperty("Page") != null ||
-                                                   featureType.GetProperty("SettingsPage") != null;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            supportsConfig = false;
-                        }
-                    }
+                    pluginViewModel.SetIconBackgroundFromStore(iconBackground);
                     
                     if (Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
-                        Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsConfig={supportsConfig}");
+                        Lib.Utils.Log.Instance.Trace(
+                            $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}");
                     }
                     
-                    pluginViewModel.SupportsConfiguration = supportsConfig;
+                    pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                    pluginViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
+                    pluginViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                     
                     _pluginViewModels.Add(pluginViewModel);
                 }
@@ -801,11 +792,7 @@ private string _currentSearchText = string.Empty;
             
             _allPlugins = allPluginsList;
             
-            // Update bulk update button visibility
-            if (_bulkUpdateButton != null)
-            {
-                _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
-            }
+            UpdateBulkActionButtonsVisibility();
             
             // Apply current filters and search
             ApplyFilters();
@@ -1084,6 +1071,60 @@ private string _currentSearchText = string.Empty;
         return Wpf.Ui.Common.SymbolRegular.Apps24;
     }
 
+    private readonly struct PluginUiCapabilities
+    {
+        public bool SupportsSettingsPage { get; init; }
+        public bool SupportsFeaturePage { get; init; }
+        public bool SupportsOptimizationCategory { get; init; }
+    }
+
+    private PluginUiCapabilities ResolvePluginCapabilities(IPlugin plugin, bool isInstalled)
+    {
+        if (!isInstalled)
+            return default;
+
+        var supportsSettingsPage = false;
+        var supportsFeaturePage = false;
+        var supportsOptimizationCategory = false;
+
+        try
+        {
+            var pluginType = plugin.GetType();
+            var getSettingsPage = pluginType.GetMethod("GetSettingsPage", BindingFlags.Public | BindingFlags.Instance);
+            if (getSettingsPage != null)
+            {
+                var settingsPage = getSettingsPage.Invoke(plugin, null);
+                supportsSettingsPage = settingsPage != null;
+            }
+
+            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", BindingFlags.Public | BindingFlags.Instance);
+            if (getFeatureExtension != null)
+            {
+                var featureExtension = getFeatureExtension.Invoke(plugin, null);
+                supportsFeaturePage = featureExtension is IPluginPage;
+            }
+
+            var getOptimizationCategory = pluginType.GetMethod("GetOptimizationCategory", BindingFlags.Public | BindingFlags.Instance);
+            if (getOptimizationCategory != null)
+            {
+                var optimizationCategory = getOptimizationCategory.Invoke(plugin, null);
+                supportsOptimizationCategory = optimizationCategory != null;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Failed to resolve plugin capability for {plugin.Id}", ex);
+        }
+
+        return new PluginUiCapabilities
+        {
+            SupportsSettingsPage = supportsSettingsPage,
+            SupportsFeaturePage = supportsFeaturePage,
+            SupportsOptimizationCategory = supportsOptimizationCategory,
+        };
+    }
+
     private void UpdatePluginUI(string pluginId)
     {
         // Toolbox and system optimization are now default apps, no longer need updates here
@@ -1107,7 +1148,7 @@ private string _currentSearchText = string.Empty;
             if (viewModel != null)
             {
                 var isInstalled = _pluginManager.IsInstalled(pluginId);
-                var updateAvailable = _availableUpdates.Any(au => au.Id == pluginId);
+                var updateAvailable = isInstalled && _availableUpdates.Any(au => au.Id == pluginId);
                 
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
@@ -1121,33 +1162,23 @@ private string _currentSearchText = string.Empty;
                 viewModel.IsInstalled = isInstalled;
                 viewModel.SetUpdateAvailable(updateAvailable);
                 
-                // If plugin is now installed, check if it supports configuration
+                // If plugin is now installed, refresh capability flags.
                 if (isInstalled)
                 {
                     var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
                     if (plugin != null)
                     {
-                        try
-                        {
-                            var pluginType = plugin.GetType();
-                            var getFeatureExtension = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                            if (getFeatureExtension != null)
-                            {
-                                var featureExtension = getFeatureExtension.Invoke(plugin, null);
-                                if (featureExtension != null)
-                                {
-                                    var featureType = featureExtension.GetType();
-                                    viewModel.SupportsConfiguration = featureType.Name.Contains("IPluginPage") || 
-                                                   featureType.GetProperty("Page") != null ||
-                                                   featureType.GetProperty("SettingsPage") != null;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            viewModel.SupportsConfiguration = false;
-                        }
+                        var capabilities = ResolvePluginCapabilities(plugin, isInstalled);
+                        viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage;
+                        viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
+                        viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                     }
+                }
+                else
+                {
+                    viewModel.SupportsConfiguration = false;
+                    viewModel.SupportsFeaturePage = false;
+                    viewModel.SupportsOptimizationCategory = false;
                 }
                 
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -1156,11 +1187,7 @@ private string _currentSearchText = string.Empty;
                     Lib.Utils.Log.Instance.Trace($"  - ViewModel InstallButtonText after update: {viewModel.InstallButtonText}");
                 }
 
-                // Update bulk update button visibility
-                if (_bulkUpdateButton != null)
-                {
-                    _bulkUpdateButton.Visibility = _availableUpdates.Any() ? Visibility.Visible : Visibility.Collapsed;
-                }
+                UpdateBulkActionButtonsVisibility();
             }
             else
             {
@@ -1223,6 +1250,75 @@ private string _currentSearchText = string.Empty;
             await FetchOnlinePluginsAsync();
         }
     }
+
+    private async void BulkInstallButton_Click(object sender, RoutedEventArgs e)
+    {
+        var installCandidates = _onlinePlugins
+            .Where(plugin => !_pluginManager.IsInstalled(plugin.Id))
+            .ToList();
+
+        if (!installCandidates.Any())
+            return;
+
+        var installAllText = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
+        var installingAllText = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallingAll", Resource.Culture) ?? "Installing All...";
+        var installingAllMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallingAllMessage", Resource.Culture) ?? "Installing {0} plugin(s)...";
+        var bulkInstallComplete = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallComplete", Resource.Culture) ?? "Bulk Install Complete";
+        var bulkInstallCompleteMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallCompleteMessage", Resource.Culture) ?? "Installed {0} plugin(s).";
+        var bulkInstallFailed = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallFailed", Resource.Culture) ?? "Bulk Install Failed";
+        var bulkInstallFailedMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallFailedMessage", Resource.Culture) ?? "Failed to install plugins: {0}";
+
+        try
+        {
+            if (_bulkInstallButton != null)
+            {
+                _bulkInstallButton.IsEnabled = false;
+                _bulkInstallButton.Content = installingAllText;
+            }
+
+            if (_bulkUpdateButton != null)
+                _bulkUpdateButton.IsEnabled = false;
+
+            SnackbarHelper.Show(installingAllText, string.Format(installingAllMessage, installCandidates.Count), SnackbarType.Info);
+
+            var installedCount = 0;
+            foreach (var candidate in installCandidates)
+            {
+                try
+                {
+                    await InstallOnlinePluginAsync(candidate);
+
+                    if (_pluginManager.IsInstalled(candidate.Id))
+                        installedCount++;
+                }
+                catch (Exception ex)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Error during bulk install for {candidate.Id}: {ex.Message}", ex);
+                }
+            }
+
+            SnackbarHelper.Show(bulkInstallComplete, string.Format(bulkInstallCompleteMessage, installedCount), SnackbarType.Success);
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error in bulk install: {ex.Message}", ex);
+            SnackbarHelper.Show(bulkInstallFailed, string.Format(bulkInstallFailedMessage, ex.Message), SnackbarType.Error);
+        }
+        finally
+        {
+            if (_bulkInstallButton != null)
+            {
+                _bulkInstallButton.IsEnabled = true;
+                _bulkInstallButton.Content = installAllText;
+            }
+
+            if (_bulkUpdateButton != null)
+                _bulkUpdateButton.IsEnabled = true;
+
+            await FetchOnlinePluginsAsync();
+        }
+    }
+
     private async void PluginInstallButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
@@ -1460,6 +1556,34 @@ private string _currentSearchText = string.Empty;
         if (Lib.Utils.Log.Instance.IsTraceEnabled)
             Lib.Utils.Log.Instance.Trace($"PluginConfigureButton_Click called for {pluginId}");
 
+        OpenPluginConfiguration(pluginId);
+    }
+
+    private void PluginUpdateInfoButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Button button || button.DataContext is not PluginViewModel viewModel)
+            return;
+
+        if (!viewModel.HasChangelogUrl || string.IsNullOrWhiteSpace(viewModel.Changelog))
+            return;
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = viewModel.Changelog,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            Lib.Utils.Log.Instance.Trace($"Error opening changelog link for plugin {viewModel.PluginId}: {ex.Message}", ex);
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
+        }
+    }
+
+    private void OpenPluginConfiguration(string pluginId)
+    {
         try
         {
             // Check if plugin is installed
@@ -1472,28 +1596,12 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            // Check if plugin supports configuration (using reflection for dynamic plugins)
-            var supportsSettings = false;
             var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-            if (plugin != null)
-            {
-                try
-                {
-                    var pluginType = plugin.GetType();
-                    var getSettingsPage = pluginType.GetMethod("GetSettingsPage", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                    if (getSettingsPage != null)
-                    {
-                        var settingsPage = getSettingsPage.Invoke(plugin, null);
-                        supportsSettings = settingsPage != null;
-                    }
-                }
-                catch
-                {
-                    supportsSettings = false;
-                }
-            }
+            var capabilities = plugin is null
+                ? default(PluginUiCapabilities)
+                : ResolvePluginCapabilities(plugin, isInstalled: true);
             
-            if (!supportsSettings)
+            if (!capabilities.SupportsSettingsPage)
             {
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                     Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
@@ -1533,6 +1641,11 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
+            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
+            var capabilities = plugin is null
+                ? default(PluginUiCapabilities)
+                : ResolvePluginCapabilities(plugin, isInstalled: true);
+
             // Find plugin's executable file
             var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginId);
             var exeFile = Path.Combine(pluginDir, $"{pluginId}.exe");
@@ -1551,7 +1664,7 @@ private string _currentSearchText = string.Empty;
                 
                 SnackbarHelper.Show("Run Plugin", $"Started {pluginId}.exe", SnackbarType.Info);
             }
-            else
+            else if (capabilities.SupportsFeaturePage)
             {
                 // Navigate to plugin page (if executable file doesn't exist)
                 var mainWindow2 = Application.Current.MainWindow as MainWindow;
@@ -1574,13 +1687,43 @@ private string _currentSearchText = string.Empty;
                     }
                 }
             }
+            else if (capabilities.SupportsOptimizationCategory)
+            {
+                if (!NavigateToPluginOptimizationCategory(pluginId))
+                {
+                    SnackbarHelper.Show("Navigation Failed", $"Plugin {plugin?.Name ?? pluginId} optimization category could not be opened.", SnackbarType.Warning);
+                }
+            }
+            else if (capabilities.SupportsSettingsPage)
+            {
+                OpenPluginConfiguration(pluginId);
+            }
+            else
+            {
+                SnackbarHelper.Show("No UI", $"Plugin {plugin?.Name ?? pluginId} does not expose an entry page.", SnackbarType.Info);
+            }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error opening plugin: {ex.Message}", ex);
             
-            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenPluginFailed, ex.Message), SnackbarType.Error);
+            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
         }
+    }
+
+    private bool NavigateToPluginOptimizationCategory(string pluginId)
+    {
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow == null)
+            return false;
+
+        var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
+        if (navigationStore == null)
+            return false;
+
+        WindowsOptimizationPage.RequestPluginCategoryFocus(pluginId);
+        navigationStore.Navigate("windowsOptimization");
+        return true;
     }
 
     private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)
@@ -2163,17 +2306,58 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
 
     private void PluginListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (_pluginsListBox.SelectedItem is PluginViewModel selectedViewModel)
+        PluginViewModel? clickedViewModel = null;
+
+        if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick triggered");
+
+        // Ignore double-clicks that originate from action buttons inside the item template.
+        if (e.OriginalSource is DependencyObject source)
         {
+            var current = source;
+            while (current != null)
+            {
+                if (current is System.Windows.Controls.Button)
+                {
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick ignored because original source is a button");
+                    return;
+                }
+
+                if (current is FrameworkElement element && element.DataContext is PluginViewModel viewModel)
+                {
+                    clickedViewModel = viewModel;
+                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                        Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick data context resolved: {viewModel.PluginId}");
+                    break;
+                }
+
+                current = VisualTreeHelper.GetParent(current);
+            }
+        }
+
+        var selectedViewModel = clickedViewModel ?? _pluginsListBox.SelectedItem as PluginViewModel;
+        if (selectedViewModel != null)
+        {
+            if (!ReferenceEquals(_pluginsListBox.SelectedItem, selectedViewModel))
+                _pluginsListBox.SelectedItem = selectedViewModel;
+
             var isInstalled = _pluginManager.IsInstalled(selectedViewModel.PluginId);
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
+
             if (isInstalled)
             {
-                PluginOpenButton_Click(sender, e);
+                OpenPluginConfiguration(selectedViewModel.PluginId);
             }
             else
             {
-                PluginInstallButton_Click(sender, e);
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
             }
+        }
+        else if (Lib.Utils.Log.Instance.IsTraceEnabled)
+        {
+            Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick no target plugin view model resolved");
         }
     }
 

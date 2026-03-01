@@ -1217,6 +1217,9 @@ Make sure that your script runs correctly first.</value>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Autorun</value>
   </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>Start minimized to tray when you sign in to Windows.</value>
+  </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
     <value>Legion Zone may have not been disabled correctly</value>
   </data>
@@ -1318,6 +1321,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
     <value>Install extensions from the Plugin Extensions page to enhance system optimization functionality.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>Coming Soon</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>Extensions marketplace will be available in a future update.</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Windows optimization</value>
@@ -1442,6 +1451,24 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>Restores the default style and restarts Explorer.</value>
   </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>Apply Modern Context Menu</value>
@@ -1526,6 +1553,18 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
     <value>Optimize network settings to improve network speed and responsiveness.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
+    <value>TCP/IP and DNS Optimization</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
+    <value>Optimize TCP/IP parameters and DNS cache settings to improve connection speed and responsiveness.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
+    <value>Reset Network Configuration</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
+    <value>Flush DNS cache and reset Winsock and TCP/IP stack configuration to repair network connectivity issues.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
     <value>Cleanup</value>
@@ -2956,7 +2995,7 @@ Supported formats are: {1}.</value>
     <value>Repository Owner</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
-    <value>e.g., Crs10259</value>
+    <value>e.g., SSC-STUDIO</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
     <value>Repository Name</value>
@@ -3421,9 +3460,12 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Unable to uninstall plugin: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
-    <value>Failed to open plugin: {0}</value>
+    <value>Failed to open plugin</value>
   </data>
     <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>Unable to open plugin: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
     <value>Unable to open plugin: {0}</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
@@ -3536,6 +3578,30 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
     <value>Update all available plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>Install All</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>Install all available plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>Installing All...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>Installing {0} plugin(s)...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>Bulk Install Complete</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>Installed {0} plugin(s).</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>Bulk Install Failed</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>Failed to install plugins: {0}</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
     <value>Updating All...</value>

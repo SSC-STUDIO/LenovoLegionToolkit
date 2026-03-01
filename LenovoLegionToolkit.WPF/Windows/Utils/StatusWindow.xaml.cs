@@ -25,7 +25,8 @@ public partial class StatusWindow
         BatteryInformation? batteryInformation,
         BatteryState? batteryState,
         DateTime? onBatterySince,
-        bool hasUpdate)
+        bool hasUpdate,
+        bool isCompatibilityMode)
     {
         public PowerModeState? PowerModeState { get; } = powerModeState;
         public string? GodModePresetName { get; } = godModePresetName;
@@ -34,6 +35,7 @@ public partial class StatusWindow
         public BatteryState? BatteryState { get; } = batteryState;
         public DateTime? OnBatterySince { get; } = onBatterySince;
         public bool HasUpdate { get; } = hasUpdate;
+        public bool IsCompatibilityMode { get; } = isCompatibilityMode;
     }
 
     public static async Task<StatusWindow> CreateAsync() => new(await GetStatusWindowDataAsync());
@@ -53,6 +55,18 @@ public partial class StatusWindow
         BatteryState? batteryState = null;
         DateTime? onBatterySince = null;
         var hasUpdate = false;
+        var isCompatibilityMode = false;
+
+        try
+        {
+            var machineInfo = await Compatibility.GetMachineInformationAsync();
+            isCompatibilityMode = !Compatibility.IsSupportedLegionMachine(machineInfo);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to detect compatibility mode for StatusWindow.", ex);
+        }
 
         try
         {
@@ -124,7 +138,7 @@ public partial class StatusWindow
                 Log.Instance.Trace($"Failed to check for updates for StatusWindow.", ex);
         }
 
-        return new(state, godModePresetName, gpuStatus, batteryInformation, batteryState, onBatterySince, hasUpdate);
+        return new(state, godModePresetName, gpuStatus, batteryInformation, batteryState, onBatterySince, hasUpdate, isCompatibilityMode);
     }
 
     private StatusWindow(StatusWindowData data)
@@ -158,7 +172,7 @@ public partial class StatusWindow
 
         RefreshPowerMode(data.PowerModeState, data.GodModePresetName);
         RefreshDiscreteGpu(data.GPUStatus);
-        RefreshBattery(data.BatteryInformation, data.BatteryState, data.OnBatterySince);
+        RefreshBattery(data.BatteryInformation, data.BatteryState, data.OnBatterySince, data.IsCompatibilityMode);
         RefreshUpdate(data.HasUpdate);
     }
 
@@ -254,8 +268,10 @@ public partial class StatusWindow
         _gpuGrid.Visibility = Visibility.Visible;
     }
 
-    private void RefreshBattery(BatteryInformation? batteryInformation, BatteryState? batteryState, DateTime? onBatterySince)
+    private void RefreshBattery(BatteryInformation? batteryInformation, BatteryState? batteryState, DateTime? onBatterySince, bool isCompatibilityMode)
     {
+        SetBatteryRateRowsVisibility(!isCompatibilityMode);
+
         if (!batteryInformation.HasValue || !batteryState.HasValue)
         {
             _batteryIcon.Symbol = SymbolRegular.Battery024;
@@ -310,6 +326,17 @@ public partial class StatusWindow
         {
             _batteryUsageTimeValueLabel.Content = "-";
         }
+    }
+
+    private void SetBatteryRateRowsVisibility(bool isVisible)
+    {
+        var visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+        _batteryDischargeLabel.Visibility = visibility;
+        _batteryDischargeValueLabel.Visibility = visibility;
+        _batteryMinDischargeLabel.Visibility = visibility;
+        _batteryMinDischargeValueLabel.Visibility = visibility;
+        _batteryMaxDischargeLabel.Visibility = visibility;
+        _batteryMaxDischargeValueLabel.Visibility = visibility;
     }
 
     private void RefreshUpdate(bool hasUpdate) => _updateIndicator.Visibility = hasUpdate ? Visibility.Visible : Visibility.Collapsed;

@@ -68,7 +68,7 @@ namespace MyPlugin;
     version: "1.0.0",
     description: "A sample plugin",
     author: "Your Name",
-    MinimumHostVersion = "2.14.0",
+    MinimumHostVersion = "3.6.0",
     Icon = "Apps24"
 )]
 public class MyPlugin : PluginBase
@@ -120,7 +120,7 @@ public class MyPlugin : PluginBase
   "id": "my-plugin",
   "name": "My Plugin",
   "version": "1.0.0",
-  "minLLTVersion": "2.14.0",
+  "minLLTVersion": "3.6.0",
   "author": "Your Name",
   "repository": "https://github.com/yourname/my-plugin",
   "issues": "https://github.com/yourname/my-plugin/issues"
@@ -463,7 +463,7 @@ public override void OnInstalled()
 ```csharp
 [Plugin(
     id: "my-plugin",
-    MinimumHostVersion = "2.14.0"  // 最低兼容版本
+    MinimumHostVersion = "3.6.0"  // 最低兼容版本
 )]
 public class MyPlugin : PluginBase
 {
@@ -481,7 +481,7 @@ public class MyPlugin : PluginBase
 - **NetworkAcceleration**: 网络加速插件
 - **ShellIntegration**: Shell 集成插件（系统插件）
 
-插件仓库地址：[LenovoLegionToolkit-Plugins](https://github.com/Crs10259/LenovoLegionToolkit-Plugins)
+插件仓库地址：[LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins)
 
 ---
 

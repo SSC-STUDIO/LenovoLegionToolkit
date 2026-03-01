@@ -8,14 +8,72 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased]
+
+### Fixed / 修复
+- **Command Execution / 命令执行**: Fixed `CMD.RunAsync` output-buffer deadlock by draining standard output/error streams while waiting for process exit (prevents hangs on large output commands such as directory listing) / 修复 `CMD.RunAsync` 输出缓冲区死锁问题：在等待进程退出时并行读取标准输出/错误流（避免目录遍历等大输出命令卡死）
+- **Retry Logic / 重试逻辑**: Fixed `RetryHelper` to correctly stop and throw `MaximumRetriesReachedException` after reaching retry limit instead of looping indefinitely / 修复 `RetryHelper` 在达到重试上限后的行为：现在会正确停止并抛出 `MaximumRetriesReachedException`，不再无限循环
+- **Power Mode Error Message / 电源模式错误消息**: Fixed `PowerModeUnavailableWithoutACException` message to include the blocked power mode for clearer diagnostics / 修复 `PowerModeUnavailableWithoutACException` 的消息内容，包含被阻止的电源模式，便于问题诊断
+- **Status Tray Popup / 托盘状态弹窗**: Hide battery discharge/min/max rate rows when running in compatibility mode to avoid showing meaningless `0.00 W` values on unsupported machines / 在兼容模式下隐藏托盘状态弹窗中的电池充放电功率、最小值、最大值行，避免在不受支持设备上显示无意义的 `0.00 W`
+- **Localization / 本地化**: Fixed plugin-open error localization by removing an invalid `{0}` placeholder from the title resource and unifying plugin open failure message formatting to `PluginExtensionsPage_OpenFailedMessage` / 修复插件打开失败提示的本地化问题：移除标题资源中的无效 `{0}` 占位符，并统一使用 `PluginExtensionsPage_OpenFailedMessage` 作为错误消息模板
+- **Localization / 本地化**: Fixed missing `SettingsPage_Autorun_Message` in base and zh-Hans resources to ensure settings subtitle renders correctly in default and simplified Chinese UI / 修复基准与简体中文资源中缺失的 `SettingsPage_Autorun_Message`，确保设置页副标题在默认语言与简体中文界面下正确显示
+- **Localization / 本地化**: Added missing base resource entries for network optimization action keys used by `WindowsOptimizationCategoryProvider` to ensure fallback localization works outside zh-Hans / 补齐 `WindowsOptimizationCategoryProvider` 使用的网络优化操作键的基准资源条目，确保非简体中文环境下本地化回退正常
+- **Localization / 本地化**: Removed stale locale-only resource keys in zh-Hans/zh-Hant/ar that had no code references, and aligned locale files with base keys to reduce translation drift / 清理 zh-Hans/zh-Hant/ar 中无代码引用的陈旧本地化键，并将多语言资源与基准键对齐，降低翻译漂移
+- **Localization / 本地化**: Restored base fallback entries for `WindowsOptimizationPage_Extensions_ComingSoon_*` and `PluginExtensionsPage_OpenPluginFailed` to keep `Resource.resx` aligned with generated designer metadata and avoid null fallback strings if reintroduced / 恢复 `WindowsOptimizationPage_Extensions_ComingSoon_*` 与 `PluginExtensionsPage_OpenPluginFailed` 的基准回退条目，使 `Resource.resx` 与生成的设计器元数据保持一致，避免后续重新启用时出现空回退文本
+- **Localization / 本地化**: Improved Chinese translation quality by synchronizing untranslated `zh-Hant` entries from `zh-Hans` with Simplified-to-Traditional conversion and manually localizing high-visibility plugin/menu-style UI strings in both `zh-Hans` and `zh-Hant` / 提升中文翻译质量：将 `zh-Hant` 中未翻译条目基于 `zh-Hans` 同步并执行简转繁，同时对 `zh-Hans` 与 `zh-Hant` 的高可见插件/菜单样式界面文案进行人工本地化修订
+- **Localization / 本地化**: Performed a full 20+ locale semantic translation pass for newly added English UI strings across WPF/Lib/Automation/Macro resources (Bing-backed batching + placeholder-safe restoration), updating 16k+ entries and preserving resource structure integrity (`missing=0`, `extra=0`, `placeholder_mismatch=0`) / 对 WPF/Lib/Automation/Macro 资源执行 20+ 语言全量语义翻译补齐（基于 Bing 的分批翻译与占位符安全回填），修复 1.6 万+ 条新增英文界面文案，并保持资源结构完整性（`missing=0`、`extra=0`、`placeholder_mismatch=0`）
+- **Localization**: Added a follow-up 20+ locale semantic completion pass to translate additional English-identical leftovers (`+63` entries across `25` locale files) while keeping structural audit clean (`missing=0`, `extra=0`, `placeholder_mismatch=0`).
+- **Localization**: Continued multi-round semantic localization refinement across 20+ locales with interruption-safe per-locale runs, reducing English-identical residual entries from `1047` to `486` while preserving structural consistency (`missing=0`, `extra=0`, `placeholder_mismatch=0`).
+
+### Improved / 改进
+- **Localization Workflow / 本地化流程**: Replaced legacy single-file Crowdin mapping with a repository-wide `crowdin.yml` that covers WPF/Lib/Automation/Macro resource modules and locale naming mappings (`zh-hans`, `zh-hant`, `pt-br`, `nl-nl`, `uz-latn-uz`) / 将旧的单文件 Crowdin 映射升级为仓库级 `crowdin.yml`，覆盖 WPF/Lib/Automation/Macro 四个资源模块，并补齐 `zh-hans`、`zh-hant`、`pt-br`、`nl-nl`、`uz-latn-uz` 等语言命名映射
+- **Documentation / 文档**: Updated README and Docs set to align with current repository links, workflow files, release examples, and translation synchronization commands / 更新 README 与 Docs 文档集，使其与当前仓库链接、工作流文件、发布示例及翻译同步命令保持一致
+- **Plugin UI Smoke / 插件界面冒烟**: Stabilized `MainAppPluginUi.Smoke` settings-window automation by switching to descendant modal-window discovery, filtering stale window handles, adding deterministic close-wait logic, and using a configure-button fallback when double-click is flaky; verified end-to-end network plugin settings + feature interactions / 稳定 `MainAppPluginUi.Smoke` 的设置窗口自动化：改为 descendant 模态窗口探测、过滤陈旧窗口句柄、加入确定性的关闭等待逻辑，并在双击不稳定时回退到配置按钮；已验证网络插件设置页与功能页端到端交互
+- **Plugin Open Routing / 插件打开路由**: Extended plugin marketplace `Open` behavior to include optimization-category plugins, and added category-focused navigation into Windows Optimization for `shell-integration` and `custom-mouse` / 扩展插件市场 `Open` 行为以支持系统优化分类插件，并为 `shell-integration` 与 `custom-mouse` 增加跳转系统优化并定位分类的能力
+
+## [3.6.4] - 2026-02-26
+
+### Improved / 改进
+- **Plugin Marketplace Validation / 插件市场验证**: Extended desktop smoke validation for plugin marketplace interactions (open plugin page, install/uninstall, double-click configuration window) and verified the end-to-end flow against latest plugin runtime fixes / 扩展插件市场桌面冒烟验证（打开插件页面、安装/卸载、双击配置窗口），并基于最新插件运行时修复完成端到端流程校验
+
+## [3.6.3] - 2026-02-26
+
+### Improved / 改进
+- **Plugin Tooling / 插件工具链**: Added a standalone plugin completion UI tool in the sibling `LenovoLegionToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓库 `LenovoLegionToolkit-Plugins` 中新增独立的插件完成度可视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化验证
+
+## [3.6.2] - 2026-02-26
+
+### Fixed / 修复
+- **Plugin Navigation / 插件导航**: Fixed sidebar plugin navigation to include only installed plugins that provide `IPluginPage`, preventing empty plugin pages / 修复插件侧边栏导航逻辑：仅显示已安装且提供 `IPluginPage` 的插件，避免空白页面
+- **Plugin Actions / 插件操作**: Fixed plugin card action visibility and capability probing by separating feature-page and settings-page detection / 修复插件卡片操作可见性与能力探测逻辑，拆分“功能页”和“设置页”判定
+- **Plugin Settings Host / 插件设置宿主**: Fixed `PluginSettingsWindow` to support `IPluginPage` settings providers in addition to raw `Page` objects / 修复 `PluginSettingsWindow` 对 `IPluginPage` 设置提供器的支持（兼容原有 `Page` 对象）
+- **Plugin Implementations / 插件实现**: Fixed official plugin runtime behavior by adding missing UI/settings/optimization capabilities for `custom-mouse`, `network-acceleration`, and `shell-integration` / 修复官方插件运行时行为：为 `custom-mouse`、`network-acceleration`、`shell-integration` 补齐缺失的 UI/设置/系统优化扩展能力
+
+### Improved / 改进
+- **Windows Optimization Extensions / 系统优化扩展**: Improved integration flow by surfacing `shell-integration` as a plugin-provided optimization category with executable actions / 改进系统优化集成流程：`shell-integration` 以插件扩展分类形式提供可执行操作
+
 ## [3.6.1] - 2026-02-25
 
 ### Added / 新增
 - **Dashboard / 控制台**: Added Dashboard navigation item preservation in compatibility mode (--skip-compat-check), allowing users to access CPU/GPU/Battery monitoring on unsupported machines / 在兼容模式（--skip-compat-check）下保留 Dashboard 导航项，允许用户在不支持的机器上访问 CPU/GPU/电池监控
+- **Plugin Management / 插件管理**: Added one-click bulk install button to install all currently available online plugins / 新增插件一键安装按钮，可一次安装当前在线可用的全部插件
 
 ### Fixed / 修复
 - **Plugin Store / 插件商店**: Fixed plugin store URLs and file sizes (Crs10259 → SSC-STUDIO, correct file sizes) / 修复插件商店 URL 和文件大小（Crs10259 → SSC-STUDIO，正确的文件大小）
 - **Localization / 本地化**: Fixed hardcoded "Recommended" text in Windows Optimization view to use localized resource / 修复 Windows 优化视图中硬编码的 "Recommended" 文本，改为使用本地化资源
+- **Plugin Configuration / 插件配置**: Fixed plugin configuration button visibility for plugins exposing `GetSettingsPage` / 修复插件配置按钮可见性，支持实现 `GetSettingsPage` 的插件
+- **Plugin Configuration / 插件配置**: Added double-click behavior on plugin list items to open plugin settings for installed plugins / 为已安装插件新增列表项双击打开配置页面行为
+- **Settings UI / 设置界面**: Fixed inconsistent sidebar shadow rendering across different PCs by replacing the settings navigation selection shadow with a stable highlight-only style / 修复设置页侧边栏阴影在不同电脑上的渲染不一致问题，改为更稳定的高亮样式
+- **Settings UI / 设置界面**: Updated the default update repository owner shown in Settings to `SSC-STUDIO` and aligned owner placeholders across languages / 将设置页中更新仓库拥有者默认显示更新为 `SSC-STUDIO`，并同步多语言占位符
+- **Plugin Navigation / 插件导航**: Fixed installed plugin sidebar visibility by including installed system plugins in navigation refresh / 修复已安装插件侧边栏可见性，在导航刷新中包含已安装系统插件
+- **Plugin Loading / 插件加载**: Fixed plugin discovery and ZIP installation to support both `LenovoLegionToolkit.Plugins.*.dll` and ID-based DLL names (for example `custom-mouse.dll`) / 修复插件发现与 ZIP 安装逻辑，兼容 `LenovoLegionToolkit.Plugins.*.dll` 与按插件 ID 命名的 DLL（如 `custom-mouse.dll`）
+- **Plugin Manifest Compatibility / 插件清单兼容性**: Fixed legacy `minLLTVersion` compatibility in host manifest parsing and ecosystem metadata alignment / 修复主程序清单解析对旧字段 `minLLTVersion` 的兼容，并对齐插件生态元数据
+- **Plugin Download / 插件下载**: Fixed online install failures on GitHub 404 assets by adding multi-URL retry and local package fallback from existing compiled plugin directories / 修复 GitHub 资源 404 导致的在线安装失败，新增多 URL 重试与本地已编译插件目录打包回退机制
+- **Plugin Update UX / 插件更新体验**: Fixed update hint visibility and metadata rendering by showing update info only for installed plugins with real updates, hiding empty release/changelog fields, formatting release date, and enabling changelog URL click-through from the update icon / 修复插件更新提示可见性与元数据显示逻辑：仅对已安装且确有更新的插件显示更新提示，隐藏空的发布日期/更新日志字段，格式化发布日期，并支持从更新图标点击跳转更新日志链接
+- **Plugin Icon Color / 插件图标颜色**: Fixed plugin icon background color instability across app restarts by replacing non-deterministic hash usage and wiring `store.json` `iconBackground` into plugin cards / 修复插件图标背景色重启后变化不一致的问题：替换非确定性哈希方案，并将 `store.json` 的 `iconBackground` 正式接入插件卡片显示
+
+### Improved / 改进
+- **Plugin Store Reliability / 插件商店可靠性**: Added store metadata fallback fetch order (`main` → `master`) to reduce branch mismatch failures / 增加商店元数据回退拉取顺序（`main` → `master`），降低分支不一致导致的失败
 
 ## [3.6.0] - 2026-02-25
 

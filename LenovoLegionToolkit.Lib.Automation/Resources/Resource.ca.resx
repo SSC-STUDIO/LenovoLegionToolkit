@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>aquesta és la meva cadena llarga</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[objecte .NET Framework serialitzat codificat en base64 mime]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[cadena codificada en base64 que representa un array de bytes de l'objecte .NET Framework]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,4 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-</root>
+<data name="ACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es connecta l'adaptador d'alimentació CA</value></data><data name="ACAdapterDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es desconnecta l'adaptador d'alimentació CA</value></data><data name="DeactivateGPUAutomationStepState_KillApps" xml:space="preserve"><value>Tancar aplicacions</value></data><data name="DeactivateGPUAutomationStepState_RestartGPU" xml:space="preserve"><value>Reiniciar GPU</value></data><data name="Delay_Second" xml:space="preserve"><value>{0} segon</value></data><data name="Delay_Second_Many" xml:space="preserve"><value>{0} segons</value></data><data name="LowWattageACAdapterConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es connecta un adaptador d'alimentació CA de baixa potència</value></data><data name="OnStartupAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>En iniciar</value></data><data name="PowerModeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es canvia el Mode d'energia</value></data><data name="ProcessesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan s'inicia l'aplicació</value></data><data name="ProcessesStopRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es tanca l'aplicació</value></data><data name="TimeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>A l'hora especificada</value></data><data name="ExternalDisplayConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es connecta una pantalla externa</value></data><data name="ExternalDisplayDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es desconnecta una pantalla externa</value></data><data name="DisplayOnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan s'encenen les pantalles</value></data><data name="DisplayOffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan s'apaguen les pantalles</value></data><data name="LidOpenedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Tapa oberta</value></data><data name="LidClosedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Tapa tancada</value></data><data name="GamesStopAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan es tanca el joc</value></data><data name="GamesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan el joc està en funcionament</value></data><data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve"><value>Quan l'usuari esdevé actiu</value></data><data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan l'usuari esdevé inactiu</value></data><data name="DeactivateGpuQuickAction_Title" xml:space="preserve"><value>Desactivar GPU</value></data><data name="OverclockDiscreteGPUAutomationStepState_Off" xml:space="preserve"><value>Apagat</value></data><data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve"><value>Encès</value></data><data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan canvia la configuració de Mode personalitzat</value></data><data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve"><value>Acció periòdica</value></data><data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan el Wi-Fi està connectat</value></data><data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan el Wi-Fi està desconnectat</value></data><data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>En reprendre</value></data><data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan l'HDR s'apaga</value></data><data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan l'HDR s'encén</value></data><data name="MacroAutomationStepState_Off" xml:space="preserve"><value>Apagat</value></data><data name="MacroAutomationStepState_On" xml:space="preserve"><value>Encès</value></data><data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan el dispositiu es desconnecta</value></data><data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Quan el dispositiu es connecta</value></data><data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sessió bloquejada</value></data><data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sessió desbloquejada</value></data></root>

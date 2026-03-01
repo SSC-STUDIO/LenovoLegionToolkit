@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>ovo je moj dugi niz</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime kodirani serijalizovani .NET Framework objekat]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 mime kodirani niz koji predstavlja bajt niz forme .NET Framework objekta]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Alatni Paket</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Verzija</value>
@@ -149,7 +149,7 @@
     <value>Dodaj novu</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Lenovo Legion Alatni Paket</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Primijeni</value>
@@ -378,7 +378,7 @@ Ovo vrijeme možda neće biti tačno ako je laptop bio napunjen dok je spavao il
     <value>Uređaj</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
-    <value>Lenovo Support</value>
+    <value>Lenovo podrška</value>
   </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
     <value>Tip uređaja</value>
@@ -537,7 +537,7 @@ Ovo vrijeme možda neće biti tačno ako je laptop bio napunjen dok je spavao il
     <value>Ne prikazuj obavještenja</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>U redu</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Otvori</value>
@@ -848,10 +848,10 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Isključeno</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Preporučeno</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} odabrano {1} akcija</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Čišćenje predmemorije</value>
@@ -899,377 +899,377 @@ Logiranje će biti automatski omogućeno, ukoliko izaberete da nastavite.</value
     <value>Optimizacija sistema</value>
   </data>
 <data name="AboutPage_ApplicationFolders" xml:space="preserve">
-    <value>Application Folders</value>
+    <value>Mape aplikacija</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
-    <value>Data</value>
+    <value>Podaci</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temp</value>
+    <value>Privremeno</value>
   </data>
   <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
-    <value>Third-party libraries</value>
+    <value>Biblioteke trećih strana</value>
   </data>
   <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Obriši</value>
   </data>
   <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
-    <value>Charge USB devices, when the laptop is off, sleeping or hibernated.</value>
+    <value>Punite USB uređaje kada je laptop isključen, u stanju spavanja ili hibernacije.</value>
   </data>
   <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
-    <value>Always on USB</value>
+    <value>Uvijek uključen USB</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
-    <value>Charge USB devices, when the laptop is off, sleeping or hibernated.</value>
+    <value>Punite USB uređaje kada je laptop isključen, u stanju spavanja ili hibernacije.</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
-    <value>Always on USB</value>
+    <value>Uvijek uključen USB</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
-    <value>If enabled, these action will run automatically. Whenever state changes, all actions will be evaluated from top to bottom.
-Only actions that match current state will run.</value>
+    <value>Ako je omogućeno, ove akcije će se izvršavati automatski. Kad god se stanje promijeni, sve akcije će biti evaluirane od vrha do dna. 
+ Samo akcije koje odgovaraju trenutnom stanju će se izvršiti.</value>
   </data>
   <data name="AutomationPage_ChangeIcon" xml:space="preserve">
-    <value>Change icon</value>
+    <value>Promijeni ikonu</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
-    <value>After {0}</value>
+    <value>Nakon {0}</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
-    <value>Apps</value>
+    <value>Aplikacije</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
-    <value>At {0:D2}:{1:D2}</value>
+    <value>Na {0:D2}:{1:D2}</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Predložak</value>
   </data>
   <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>Nenaslovljeno</value>
   </data>
   <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
-    <value>Configure</value>
+    <value>Konfiguriši</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>Automatically detects when certain games are running and tweaks CPU and GPU performance. Temperatures and fan noise might increase.</value>
+    <value>Automatski detektuje kada se određene igre pokreću i podešava performanse CPU-a i GPU-a. Temperature i buka ventilatora mogu se povećati.</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
-    <value>Enable AI Engine</value>
+    <value>Omogući AI Engine</value>
   </data>
   <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
-    <value>Balance Mode Settings</value>
+    <value>Postavke Balansnog Moda</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Kada je omogućeno, ovaj uređaj će se napuniti do 80% kada je priključen preko noći i završiće punjenje do 100% do vremena kada ga budete koristili ujutro.</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Punjenje baterije preko noći</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Kada je omogućeno, ovaj uređaj će se napuniti do 80% kada je priključen preko noći i završiće punjenje do 100% do vremena kada ga budete koristili ujutro.</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Punjenje baterije preko noći</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Maksimalni kapacitet punjenja baterije.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Stanje baterije</value>
   </data>
   <data name="BatteryPage_LowLevel" xml:space="preserve">
-    <value>Battery level low</value>
+    <value>Nizak nivo baterije</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Maksimalna brzina kojom se baterija puni ( ), ili prazni (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Maksimalna brzina pražnjenja</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Minimalna brzina kojom se baterija puni ( ), ili prazni (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Minimalna brzina pražnjenja</value>
   </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
-    <value>Custom Boot Logo is set</value>
+    <value>Prilagođeni Boot Logo je postavljen</value>
   </data>
   <data name="BootLogoWindow_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>Prilagodi</value>
   </data>
   <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
-    <value>Default Boot Logo is set</value>
+    <value>Podrazumijevani Boot Logo je postavljen</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Custom boot logo must be exactly {0} pixels large.
-Supported formats are: {1}.</value>
+    <value>Prilagođeni logo pri pokretanju mora biti tačno {0} piksela velik. 
+ Podržani formati su: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
-    <value>Custom logo could not be set: {0}</value>
+    <value>Prilagođeni logo se nije mogao postaviti: {0}</value>
   </data>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
-    <value>Custom boot logo set.</value>
+    <value>Postavljena prilagođena logo animacija pri pokretanju.</value>
   </data>
   <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
-    <value>Default logo could not be set: {0}</value>
+    <value>Zadani logo nije moguće postaviti: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
-    <value>Default boot logo set.</value>
+    <value>Zadani logo pokretanja je postavljen.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Cannot mount EFI partition.</value>
+    <value>Ne može se montirati EFI particija.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
-    <value>Cannot set UEFI privilege.</value>
+    <value>Nije moguće postaviti UEFI privilegiju.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
-    <value>Invalid image format.</value>
+    <value>Nevažeći format slike.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Invalid image size.</value>
+    <value>Nevažeća veličina slike.</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Not enough free space on EFI partition.</value>
+    <value>Nema dovoljno slobodnog prostora na EFI particiji.</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
     <value>Status</value>
   </data>
   <data name="BootLogoWindow_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Logo pri pokretanju</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Očisti</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Sažmi sve</value>
   </data>
   <data name="Color_Blue" xml:space="preserve">
-    <value>Blue</value>
+    <value>Plava</value>
   </data>
   <data name="Color_Green" xml:space="preserve">
-    <value>Green</value>
+    <value>Zelena</value>
   </data>
   <data name="Color_Red" xml:space="preserve">
-    <value>Red</value>
+    <value>Crvena</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>Odaberite način rada GPU-a prema upotrebi vašeg računara i uvjetima napajanja. 
+ Promjena načina rada može zahtijevati ponovno pokretanje.</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>Način rada GPU-a</value>
   </data>
   <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>Odaberite način rada GPU-a prema upotrebi vašeg računara i uvjetima napajanja. 
+ Promjena načina rada može zahtijevati ponovno pokretanje.</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>Način rada GPU-a</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Kompaktni prikaz</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Error occured when reading device information.</value>
   </data>
   <data name="CopiedToClipboard_Message" xml:space="preserve">
-    <value>Text copied to clipboard.</value>
+    <value>Tekst kopiran u clipboard.</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Kreiraj</value>
   </data>
   <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
-    <value>Create Action</value>
+    <value>Kreiraj akciju</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Pregledaj…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Molimo unesite barem jednu ekstenziju datoteke.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Molimo odaberite mapu.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Odvojite više ekstenzija zarezima (primjer: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Proširenja</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Mapa</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Uključi podmape</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Pravilo prilagođenog čišćenja</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
-    <value>dGPU connected</value>
+    <value>dGPU povezan</value>
   </data>
   <data name="DGPU_Disconnected_Title" xml:space="preserve">
-    <value>dGPU disconnected</value>
+    <value>dGPU odspojen</value>
   </data>
   <data name="DashboardPage_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>Prilagodi</value>
   </data>
   <data name="DashboardPage_Display_Title" xml:space="preserve">
-    <value>Display</value>
+    <value>Ekran</value>
   </data>
   <data name="DashboardPage_Graphics_Title" xml:space="preserve">
-    <value>Graphics</value>
+    <value>Grafika</value>
   </data>
   <data name="DashboardPage_Power_Title" xml:space="preserve">
-    <value>Power</value>
+    <value>Snaga</value>
   </data>
   <data name="DashboardPage_Title" xml:space="preserve">
-    <value>Home</value>
+    <value>Početna</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU if it is active unnecessarily.
-
-WARNING: This action will not run correctly, if internal display is off or Hybrid mode is not active.</value>
+    <value>Onemogućite diskretni GPU ako je nepotrebno aktivan. 
+ 
+ UPOZORENJE: Ova akcija neće raditi ispravno ako je unutrašnji ekran isključen ili hibridni način nije aktivan.</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
-    <value>Deactivate GPU</value>
+    <value>Deaktiviraj GPU</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Zadano</value>
   </data>
   <data name="DelayAutomationStepControl_Message" xml:space="preserve">
-    <value>Add delay before running next step.</value>
+    <value>Dodajte kašnjenje prije izvođenja sljedećeg koraka.</value>
   </data>
   <data name="DelayAutomationStepControl_Title" xml:space="preserve">
-    <value>Delay</value>
+    <value>Kašnjenje</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Deselect all</value>
+    <value>Poništi sve</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
-    <value>Show connected devices only</value>
+    <value>Prikaži samo povezane uređaje</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
-    <value>Show removable devices only</value>
+    <value>Prikaži samo uklonjive uređaje</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
-    <value>Show selected devices only</value>
+    <value>Prikaži samo odabrane uređaje</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Osvježi</value>
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
-    <value>Devices</value>
+    <value>Uređaji</value>
   </data>
   <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
-    <value>Kill apps</value>
+    <value>Ugasi aplikacije</value>
   </data>
   <data name="DiscreteGPUControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU, if it is active unnecessarily.</value>
+    <value>Onemogućite diskretnu grafičku karticu, ako nije potrebna.</value>
   </data>
   <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
-    <value>Performance state</value>
+    <value>Stanje performansi</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Change display brightness of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>Promijenite svjetlinu ugrađenog ekrana. 
+  
+ UPOZORENJE: Ova radnja neće ispravno raditi ako je unutrašnji ekran isključen.</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Display brightness</value>
+    <value>Svjetlina ekrana</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
-    <value>Change scaling of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>Promijeni skaliranje ugrađenog ekrana. 
+  
+ UPOZORENJE: Ova radnja neće ispravno raditi ako je ugrađeni ekran isključen.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
-    <value>Change scale of the built-in display.</value>
+    <value>Promijeni veličinu skale ugrađenog ekrana.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
     <value>DPI</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Uredi</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>Naziv</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
-    <value>Edit group name</value>
+    <value>Uredi ime grupe</value>
   </data>
   <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>Naziv</value>
   </data>
   <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
-    <value>Create group</value>
+    <value>Kreiraj grupu</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
-    <value>Some features may not appear on the Dashboard depending on state and configuration of your laptop.</value>
+    <value>Neke funkcije možda se neće pojaviti na Kontrolnoj tabli ovisno o stanju i konfiguraciji vašeg laptopa.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
-    <value>Sensors</value>
+    <value>Senzori</value>
   </data>
   <data name="EditDashboardWindow_Title" xml:space="preserve">
-    <value>Customize Dashboard</value>
+    <value>Prilagodi kontrolnu tablu</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
-    <value>Uncheck refresh rates that you do not want to use when Fn+R shortcut is used.</value>
+    <value>Poništite oznaku osvježavanja koje ne želite koristiti kada se koristi Fn R prečica.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Make sure that laptop display is on. Lenovo Legion Toolkit can't load refresh rates for a display that is not on.</value>
+    <value>Provjerite da je ekran laptopa uključen. Lenovo Legion Toolkit ne može učitati stopu osvježavanja za ekran koji nije uključen.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
-    <value>No Refresh Rates found</value>
+    <value>Nema pronađenih stopa osvježavanja</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
-    <value>Exclude Refresh Rates</value>
+    <value>Isključi stope osvježavanja</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Proširi sve</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Izvezi</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>Use only integrated GPU when on battery and both integrated and discrete GPU when AC adapter is connected. When a non-standard adapter is connected, system switches to Hybrid-iGPU Only Mode.</value>
+    <value>Koristite samo integriranu grafičku karticu kada je laptop na bateriji, a obe (integriranu i diskretnu) kada je priključen adapter. Kada je priključen nestandardni adapter, sistem prelazi u Hybrid-iGPU Only način.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
-    <value>Switching to and from this mode requires restart.</value>
+    <value>Prebacivanje na ovaj način i sa njega zahtijeva ponovno pokretanje.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
-    <value>Use only discrete GPU. This mode provides best graphics performance, but increases power consumption.</value>
+    <value>Koristite samo diskretnu grafičku karticu. Ovaj način rada pruža najbolji grafički učinak, ali povećava potrošnju energije.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
-    <value>dGPU Mode</value>
+    <value>dGPU Način</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
-    <value>Both integrated and discrete GPU are enabled. System will automatically switch between them based on its needs.</value>
+    <value>Omogućene su i integrisana i diskretna grafička kartica. Sistem će automatski prelaziti između njih prema potrebama.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
-    <value>This mode only takes effect when discrete GPU is not working.</value>
+    <value>Ovaj način rada se primjenjuje samo kada diskretna grafička kartica ne radi.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
-    <value>Only use integrated GPU. This mode minimizes power consumption and noise.</value>
+    <value>Koristite samo integrisanu grafičku karticu. Ovaj način rada minimizira potrošnju energije i buku.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
-    <value>Hybrid-iGPU Only Mode</value>
+    <value>Hybrid-iGPU Samo Način</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
-    <value>About GPU Working Modes</value>
+    <value>O GPU načinima rada</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>CPU</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
-    <value>CPU Sensor</value>
+    <value>CPU Senzor</value>
   </data>
   <data name="FanCurveControl_FanSpeed" xml:space="preserve">
-    <value>Fan Speed</value>
+    <value>Brzina ventilatora</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
     <value>GPU</value>
@@ -1278,1067 +1278,1067 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>GPU #2</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>Uključite laptop kada otvorite poklopac.</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>Okreni da počne</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>Uključite laptop kada otvorite poklopac.</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>Okreni da počne</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Koristite sekundarne funkcije F1-F12 tipki bez držanja Fn tipke.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zaključavanje</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Koristite sekundarne funkcije F1-F12 tipki bez držanja Fn tipke.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zaključavanje</value>
   </data>
   <data name="GHz" xml:space="preserve">
     <value>GHz</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
-    <value>Activate Custom Mode preset.
-This settings takes effect only when Custom Mode is enabled.</value>
+    <value>Aktivirajte prilagođeni režim predloška. 
+ Ova postavka stupa na snagu samo kada je prilagođeni režim omogućen.</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
-    <value>Custom Mode preset</value>
+    <value>Prilagođeni režim predloška</value>
   </data>
   <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
-    <value>Active preset</value>
+    <value>Aktivni predložak</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>UPOZORENJE! 
+ Neki laptopi mogu prihvatiti veće vrijednosti nego što prikazuju, ali budite oprezni. Ova opcija može rezultirati nepredvidivim ponašanjem. Ako niste sigurni šta radite, ostavite ovo na 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>Maximum offset</value>
+    <value>Maksimalni pomak</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>Do not change options below unless you really know what you are doing.</value>
+    <value>Ne mijenjajte opcije ispod osim ako stvarno ne znate šta radite.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>UPOZORENJE! 
+ Neki laptopi mogu prihvatiti niže vrijednosti nego što prikazuju, ali budite oprezni. Ova opcija može rezultirati nepredvidivim ponašanjem. Ako niste sigurni šta radite, ostavite ovo na 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>Minimum offset</value>
+    <value>Minimalni pomak</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
-    <value>APU sPPT Power Limit</value>
+    <value>Ograničenje snage APU sPPT</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU with a minor delay.</value>
+    <value>Vrhunska potrošnja energije koju CPU može postići uz mali odmak.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
-    <value>Long Term Power Limit (Cross Loading)</value>
+    <value>Dugoročni limit snage (Cross Loading)</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
-    <value>The maximum power consumption that can be reached by the CPU when both CPU and GPU are fully utilized.</value>
+    <value>Maksimalna potrošnja energije koju CPU može postići kada su CPU i GPU potpuno iskorišteni.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
-    <value>Long Term Power Limit</value>
+    <value>Dugoročni limit snage</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
-    <value>The continuous power consumption that can be reached by the CPU.</value>
+    <value>Kontinuirana potrošnja energije koju CPU može dostići.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
-    <value>Short Term Power Limit Duration</value>
+    <value>Trajanje ograničenja kratkoročne snage</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
-    <value>The amount of time the CPU is allowed to boost and use Short Term Power Limit for. When Tau expires, Long Term Power Limit is used.</value>
+    <value>Količina vremena tokom kojeg CPU smije pojačati rad i koristiti ograničenje snage na kratko vrijeme. Kada istekne Tau, koristi se dugoročno ograničenje snage.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
-    <value>Peak Power Limit</value>
+    <value>Ograničenje vršne snage</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
-    <value>The maximum instantaneous power consumption that can be reached by the CPU.</value>
+    <value>Maksimalna trenutna potrošnja energije koju CPU može postići.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
-    <value>Short Term Power Limit</value>
+    <value>Kratkoročni limit snage</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU within a short amount time.</value>
+    <value>Vršna potrošnja energije koju CPU može dostići u kratkom vremenskom periodu.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
-    <value>CPU Temperature Limit</value>
+    <value>Limit temperature CPU-a</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the CPU before frequency and power is reduced.</value>
+    <value>Maksimalna temperatura koju CPU može doseći prije nego što se frekvencija i snaga smanje.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
     <value>CPU</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>Naziv</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
-    <value>Preset name</value>
+    <value>Naziv predloška</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>Fan speed is not strictly determined by one temperature sensor. It will raise or lower speed per the highest sensor between CPU, GPU and Heatsink temperature. Exact values will appear when you hover mouse over each step.</value>
+    <value>Brzina ventilatora nije strogo određena jednim temperaturnim senzorom. Ona će povećavati ili smanjivati brzinu prema najvišoj temperaturi između CPU-a, GPU-a i hladnjaka. Tačne vrijednosti će se pojaviti kada zadržite pokazivač miša iznad svakog koraka.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
-    <value>Fan curve</value>
+    <value>Krivulja ventilatora</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>WARNING!
-Prolonged usage of this option will degrade fans decreasing their longevity.
-Seriously, be careful with this option!</value>
+    <value>UPOZORENJE! 
+ Dugotrajna upotreba ove opcije će oštetiti ventilatore smanjujući njihov vijek trajanja. 
+ Ozbiljno, budite oprezni s ovom opcijom!</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
-    <value>Configurable TGP</value>
+    <value>Konfigurisani TGP</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
-    <value>The additional amount of power that can be allocated to the GPU on top of base power consumption.</value>
+    <value>Dodatna količina energije koja se može dodijeliti GPU-u uz osnovnu potrošnju energije.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
-    <value>Dynamic Boost</value>
+    <value>Dinamičko pojačanje</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
-    <value>The additional maximum power that can be allocated to the GPU based on the power consumption of the CPU.</value>
+    <value>Dodatna maksimalna snaga koja se može dodijeliti GPU-u na osnovu potrošnje energije CPU-a.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
-    <value>GPU Temperature Limit</value>
+    <value>Ograničenje temperature GPU-a</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the GPU before frequency and power is reduced.</value>
+    <value>Maksimalna temperatura koju GPU može doseći prije nego što se frekvencija i snaga smanje.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
     <value>GPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
-    <value>GPU to CPU Dynamic Boost</value>
+    <value>Dynamic Boost sa GPU na CPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+    <value>Ovo je maksimalna dodatna snaga koja se može dodijeliti CPU-u sa GPU-a na osnovu korištenja CPU-a. Što je veća vrijednost, to je bolje performanse aplikacija koje koriste CPU.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
-    <value>Total Processor Power Target In AC</value>
+    <value>Ukupni cilj snage procesora na AC</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
-    <value>The point at which the CPU triggers dynamic power consumption adjustment for the GPU.</value>
+    <value>Tačka u kojoj CPU pokreće dinamičko prilagođavanje potrošnje energije za GPU.</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+    <value>Postavke prilagođenog načina rada neće se ispravno primijeniti kada su Legion Zone ili njegove usluge pokrenute.</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
-    <value>Custom Mode Settings</value>
+    <value>Postavke prilagođenog načina</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+    <value>Postavke prilagođenog načina rada neće se ispravno primijeniti kada su Lenovo Vantage ili njegove usluge pokrenute.</value>
   </data>
   <data name="HDRAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.
-
-WARNING: This action will not run correctly if the internal display is off.</value>
+    <value>Omogući visoki dinamički raspon (HDR) na ugrađenom ekranu. 
+  
+ UPOZORENJE: Ova radnja neće ispravno raditi ako je unutrašnji ekran isključen.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
     <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.</value>
+    <value>Omogući visoki dinamički raspon (HDR) na ugrađenom ekranu.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
     <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
-    <value>HDR usage is blocked by Windows settings.</value>
+    <value>Upotreba HDR-a je blokirana postavkama Windows-a.</value>
   </data>
   <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+    <value>Sakrij</value>
   </data>
   <data name="HideAll" xml:space="preserve">
-    <value>Hide all</value>
+    <value>Sakrij sve</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
-If dGPU does not respond at all, please restart your laptop.</value>
+    <value>Pokušajte ponovo promijeniti način rada za nekoliko sekundi ako ne vidite očekivani rezultat. 
+ Ako dGPU uopće ne reaguje, molimo restartujte laptop.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+    <value>dGPU će se automatski isključiti kada se ne koristi i laptop je na bateriji.</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use.</value>
+    <value>dGPU će se automatski isključiti kada se ne koristi.</value>
   </data>
   <data name="IGPUModeChangeException_Title" xml:space="preserve">
-    <value>Could not change GPU Working Mode</value>
+    <value>Nije moguće promijeniti način rada GPU-a</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU is currently in use or laptop is not on battery power</value>
+    <value>dGPU se trenutno koristi ili laptop nije na bateriji</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU is currently in use</value>
+    <value>dGPU se trenutno koristi</value>
   </data>
   <data name="Import" xml:space="preserve">
-    <value>Import</value>
+    <value>Uvezi</value>
   </data>
   <data name="Information" xml:space="preserve">
-    <value>Information</value>
+    <value>Informacije</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Uključite laptop kada je priključen punjač.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Instantno pokretanje</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Uključite laptop kada je priključen punjač.</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Instantno pokretanje</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.</value>
+    <value>Pozadinsko osvjetljenje tastature se ovdje ne može kontrolisati kada su Lenovo Vantage ili njegovi servisi pokrenuti.</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage or its services are running</value>
+    <value>Lenovo Vantage ili njegovi servisi su pokrenuti</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value>Load</value>
+    <value>Učitaj</value>
   </data>
   <data name="MHz" xml:space="preserve">
     <value>MHz</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable or disable macros.</value>
+    <value>Omogući ili onemogući makroe.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Lenovo Legion Toolkit must be running for macros to work.</value>
+    <value>Lenovo Legion Toolkit mora biti pokrenut da bi makroi radili.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
-    <value>Enable</value>
+    <value>Omogući</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>You can record series of key presses and invoke them using the number pad on your keyboard.</value>
+    <value>Možete snimiti niz pritisaka tipki i pozvati ih korištenjem numeričkog dijela tastature.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
-    <value>Recording will start in 3 seconds...</value>
+    <value>Snimanje će početi za 3 sekunde...</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
-    <value>Press ESC to stop.</value>
+    <value>Pritisnite ESC za zaustavljanje.</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
-    <value>Recording...</value>
+    <value>Snimanje...</value>
   </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
-    <value>Don't repeat</value>
+    <value>Ne ponavljaj</value>
   </data>
   <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
-    <value>Ignore delays</value>
+    <value>Ignoriši kašnjenja</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
-    <value>Interrupt if another key was pressed</value>
+    <value>Prekid ako je pritisnut drugi taster</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Keyboard only</value>
+    <value>Samo tastatura</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Keyboard keys and mouse buttons</value>
+    <value>Tasteri tastature i dugmad miša</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
-    <value>All inputs</value>
+    <value>Svi ulazi</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
-    <value>Record</value>
+    <value>Snimaj</value>
   </data>
   <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
-    <value>Recording options</value>
+    <value>Opcije snimanja</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
-    <value>Repeat</value>
+    <value>Ponovi</value>
   </data>
   <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Stop recording</value>
+    <value>Zaustavi snimanje</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API rate limit reached, please try again later.</value>
+    <value>Dosegnut je API limit, pokušajte ponovo kasnije.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
-    <value>Failed to check for updates</value>
+    <value>Neuspjela provjera ažuriranja</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Something went wrong, please try again later.</value>
+    <value>Nešto je pošlo po zlu, pokušajte ponovo kasnije.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
-    <value>No updates found</value>
+    <value>Nema pronađenih ažuriranja</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone is running in the background.</value>
+    <value>Legion Zone radi u pozadini.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>Makro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimizacija sistema</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys is running in the background.</value>
+    <value>Lenovo Hotkeys radi u pozadini.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController is running in the background.</value>
+    <value>Lenovo Vantage i/ili ImController radi u pozadini.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>Kada je isključeno, mikrofoni će biti isključeni.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Mikrofon</value>
   </data>
   <data name="MicrophoneControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>Kada je isključeno, mikrofoni će biti isključeni.</value>
   </data>
   <data name="MicrophoneControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Mikrofon</value>
   </data>
   <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>Multiple triggers...</value>
+    <value>Više okidača...</value>
   </data>
   <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
-    <value>Notification Text</value>
+    <value>Tekst obavijesti</value>
   </data>
   <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
-    <value>Show notification</value>
+    <value>Prikaži obavijest</value>
   </data>
   <data name="Notification_ACAdapterConnected" xml:space="preserve">
-    <value>AC adapter connected</value>
+    <value>Povezan AC adapter</value>
   </data>
   <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
-    <value>AC adapter connected (Low wattage)</value>
+    <value>Povezan AC adapter (Niska snaga)</value>
   </data>
   <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
-    <value>AC adapter disconnected</value>
+    <value>AC adapter isključen</value>
   </data>
   <data name="Notification_CameraOff" xml:space="preserve">
-    <value>Camera off</value>
+    <value>Kamera isključena</value>
   </data>
   <data name="Notification_CameraOn" xml:space="preserve">
-    <value>Camera on</value>
+    <value>Kamera uključena</value>
   </data>
   <data name="Notification_CapsLockOff" xml:space="preserve">
-    <value>Caps Lock off</value>
+    <value>Caps Lock isključen</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock on</value>
+    <value>Caps Lock na</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
-    <value>Fn Lock off</value>
+    <value>Fn Lock isključen</value>
   </data>
   <data name="Notification_FnLockOn" xml:space="preserve">
-    <value>Fn Lock on</value>
+    <value>Fn Lock uključen</value>
   </data>
   <data name="Notification_MicrophoneOff" xml:space="preserve">
-    <value>Microphone off</value>
+    <value>Mikrofon isključen</value>
   </data>
   <data name="Notification_MicrophoneOn" xml:space="preserve">
-    <value>Microphone on</value>
+    <value>Mikrofon uključen</value>
   </data>
   <data name="Notification_NumLockOff" xml:space="preserve">
-    <value>Num Lock off</value>
+    <value>Num Lock isključen</value>
   </data>
   <data name="Notification_NumLockOn" xml:space="preserve">
-    <value>Num Lock on</value>
+    <value>Num Lock Lock</value>
   </data>
   <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
-    <value>Legion logo off</value>
+    <value>Legion logo isključen</value>
   </data>
   <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
-    <value>Legion logo on</value>
+    <value>Legion logo uključen</value>
   </data>
   <data name="Notification_PortLightingOff" xml:space="preserve">
-    <value>Ports backlight off</value>
+    <value>Pozadinsko svjetlo portova isključeno</value>
   </data>
   <data name="Notification_PortLightingOn" xml:space="preserve">
-    <value>Ports backlight on</value>
+    <value>Pozadinsko svjetlo portova uključeno</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>Pozadinsko osvjetljenje {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
-    <value>Brightness {0}</value>
+    <value>Svjetlina {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
-    <value>Profile {0}</value>
+    <value>Profil {0}</value>
   </data>
   <data name="Notification_TouchpadOff" xml:space="preserve">
-    <value>Touchpad off</value>
+    <value>Touchpad isključen</value>
   </data>
   <data name="Notification_TouchpadOn" xml:space="preserve">
-    <value>Touchpad on</value>
+    <value>Touchpad uključen</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
-    <value>Update {0} available!</value>
+    <value>Ažuriranje na {0} je dostupno!</value>
   </data>
   <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>Pozadinsko osvjetljenje {0}</value>
   </data>
   <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
-    <value>AC Adapter</value>
+    <value>AC adapter</value>
   </data>
   <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
-    <value>Actions</value>
+    <value>Akcije</value>
   </data>
   <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
-    <value>Camera</value>
+    <value>Kamera</value>
   </data>
   <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
-    <value>Caps Lock and Num Lock</value>
+    <value>Caps Lock i Num Lock</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Disables notification for Fn keys actions like microphone mute.
-Enable this option if you have conflicts with full screen applications.</value>
+    <value>Isključuje obavještenja za Fn tipke kao što je mikrofon mute. 
+ Omogući ovu opciju ako imaš konflikte sa aplikacijama preko cijelog ekrana.</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn zaključavanje</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
-    <value>Keyboard Backlight</value>
+    <value>Pozadinsko osvjetljenje tastature</value>
   </data>
   <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Mikrofon</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>Uvijek postavi obavijest na vrh. 
+ To neće uticati na druga prozora preko cijelog ekrana, ali nećete moći kliknuti na obavijesti.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>Obavijest uvijek na vrhu</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
-    <value>Duration</value>
+    <value>Trajanje</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Show notification on all screens connected to your device.</value>
+    <value>Prikaži obavijest na svim ekranima povezanima na vaš uređaj.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
-    <value>Notification on all screens</value>
+    <value>Obavijest na svim ekranima</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
-    <value>Position</value>
+    <value>Pozicija</value>
   </data>
   <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>Režim rada</value>
   </data>
   <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
-    <value>Refresh Rate</value>
+    <value>Frekvencija osvježavanja</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>Pametan ključ</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Obavještenja</value>
   </data>
   <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
-    <value>Touchpad Lock</value>
+    <value>Zaključavanje touchpad-a</value>
   </data>
   <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
-    <value>Updates</value>
+    <value>Ažuriranja</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Ugašeno</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn backlight on or off.</value>
+    <value>Uključi ili isključi pozadinsko osvjetljenje.</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>Pozadinsko osvjetljenje tastature</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>You can turn backlight on or off with Fn+Space.</value>
+    <value>Možete uključiti ili isključiti pozadinsko osvjetljenje pomoću Fn Space.</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>Pozadinsko osvjetljenje tastature</value>
   </data>
   <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
-    <value>Improve response time of the built-in display.</value>
+    <value>Poboljšajte vrijeme odziva ugrađenog ekrana.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Prekoračenje</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
-    <value>Improve response time of the built-in display.</value>
+    <value>Poboljšajte vrijeme odziva ugrađenog ekrana.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Prekoračenje</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.
-
-WARNING: This action will not run correctly, if discrete GPU is not available.</value>
+    <value>Povećajte performanse overclockanjem diskretnog GPU-a. 
+  
+ UPOZORENJE: Ova radnja neće raditi ispravno ako diskretni GPU nije dostupan.</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>Overclock GPU-a</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.</value>
+    <value>Povećajte performanse overclockanjem diskretnog GPU-a.</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>Overclock GPU-a</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
-    <value>Core Frequency Offset</value>
+    <value>Pomak frekvencije jezgra</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
-    <value>Memory Frequency Offset</value>
+    <value>Pomak frekvencije memorije</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
-    <value>Overclock GPU Settings</value>
+    <value>Postavke Overclocka GPU-a</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Preuzmi</value>
   </data>
   <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
-    <value>Update available!</value>
+    <value>Dostupno ažuriranje!</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Open README</value>
+    <value>Otvori README</value>
   </data>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
-    <value>Restart recommended</value>
+    <value>Preporučeno ponovno pokretanje</value>
   </data>
   <data name="PackageControl_RebootRequired" xml:space="preserve">
-    <value>Restart required</value>
+    <value>Potrebno ponovno pokretanje</value>
   </data>
   <data name="PackageControl_ShutdownRequired" xml:space="preserve">
-    <value>Shutdown required</value>
+    <value>Potrebno gašenje</value>
   </data>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
-    <value>Download folder</value>
+    <value>Mapa za preuzimanje</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>Provjerite da li je vaša internetska veza uspostavljena i radi.</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Nešto je pošlo po zlu</value>
   </data>
   <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Nema pronađenih odgovarajućih preuzimanja</value>
   </data>
   <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
-    <value>Show updates only</value>
+    <value>Prikaži samo ažuriranja</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
-    <value>Open Download folder</value>
+    <value>Otvori mapu za preuzimanje</value>
   </data>
   <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo Vantage</value>
+    <value>Isto kao Lenovo Vantage</value>
   </data>
   <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo PC Support</value>
+    <value>Isto kao Lenovo PC podrška</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
+    <value>Pokušajte dobiti ažuriranja iz drugih izvora.</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
+    <value>Katalog ažuriranja nije pronađen</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>Uključi ili isključi osvjetljenje na poklopcu laptopa.</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>Osvjetljenje loga na panelu</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>Uključi ili isključi osvjetljenje na poklopcu laptopa.</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>Osvjetljenje loga na panelu</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
-    <value>Period (minutes)</value>
+    <value>Period (minute)</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Common music formats like wav or mp3 are supported.</value>
+    <value>Uobičajeni muzički formati kao što su wav ili mp3 su podržani.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
-    <value>Play sound</value>
+    <value>Reproduciraj zvuk</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight of the ports on the back of the laptop.</value>
+    <value>Uključi ili isključi osvjetljenje portova na stražnjoj strani laptopa.</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>Osvjetljenje portova</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off backlight of the ports on the back of the laptop.</value>
+    <value>Uključi ili isključi osvjetljenje portova na stražnjoj strani laptopa.</value>
   </data>
   <data name="PortsBacklightControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>Osvjetljenje portova</value>
   </data>
   <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Change performance mode.</value>
+    <value>Promijeni način rada performansi.</value>
   </data>
   <data name="PowerModeControl_Message" xml:space="preserve">
-    <value>Change performance mode.
-Performance mode can also be changed with Fn+Q.</value>
+    <value>Promijeni način rada performansi. 
+ Način rada performansi se također može promijeniti pomoću Fn Q.</value>
   </data>
   <data name="PowerModeControl_Warning" xml:space="preserve">
-    <value>Selected power mode may not work correctly without AC adapter connected.</value>
+    <value>Odabrani način napajanja možda neće raditi ispravno bez priključenog AC adaptera.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} power mode is not available without AC power.</value>
+    <value>{0} način napajanja nije dostupan bez AC napajanja.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Cannot change Power Mode</value>
+    <value>Ne može se promijeniti način napajanja</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.</value>
+    <value>Windows prijavljuje da ovaj laptop podržava Modern Standby. Korištenje drugih planova napajanja osim uravnoteženog može prouzrokovati neočekivano ponašanje.</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
-    <value>S0 Lower Power Model detected</value>
+    <value>Otkriven S0 model niže potrošnje</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a saved quick action.</value>
+    <value>Pokreni sačuvanu brzu akciju.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
-    <value>Quick Action</value>
+    <value>Brza akcija</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
-    <value>Preset 4</value>
+    <value>Predefinisani 4</value>
   </data>
   <data name="RPM" xml:space="preserve">
     <value>RPM</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>Pročitajme</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>Promijenite učestalost osvježavanja ugrađenog ekrana. 
+  
+ UPOZORENJE: Ova radnja neće raditi ispravno ako je unutrašnji ekran isključen.</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
-    <value>Refresh rate</value>
+    <value>Učestalost osvježavanja</value>
   </data>
   <data name="RefreshRateControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.</value>
+    <value>Promijeni brzinu osvežavanja ugrađenog ekrana.</value>
   </data>
   <data name="RefreshRateControl_Title" xml:space="preserve">
-    <value>Refresh rate</value>
+    <value>Učestalost osvježavanja</value>
   </data>
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>Promijeni rezoluciju ugrađenog ekrana. 
+  
+ UPOZORENJE: Ova radnja neće ispravno raditi ako je ugrađeni ekran isključen.</value>
   </data>
   <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Rezolucija</value>
   </data>
   <data name="ResolutionControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.</value>
+    <value>Promijeni rezoluciju ugrađenog ekrana.</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Rezolucija</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
-    <value>Revert to default</value>
+    <value>Vrati na podrazumijevano</value>
   </data>
   <data name="RunAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a script or a program.
-Make sure that your script runs correctly first.</value>
+    <value>Pokreni skriptu ili program. 
+ Prvo se pobrini da tvoja skripta radi ispravno.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Run silently</value>
+    <value>Pokreni tiho</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Execute console applications, without creating a console window.</value>
+    <value>Izvršavaj konzolne aplikacije, bez kreiranja konzolnog prozora.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
-    <value>Wait until finished</value>
+    <value>Sačekaj dok ne završi</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Wait until program or script finishes executing</value>
+    <value>Sačekajte da program ili skripta završi izvršavanje</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Save &amp; Close</value>
+    <value>Sačuvaj &amp; Zatvori</value>
   </data>
   <data name="Saving" xml:space="preserve">
-    <value>Saving...</value>
+    <value>Spremanje...</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Odaberi sve</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
-    <value>Choose one or more quick actions to cycle through</value>
+    <value>Odaberi jednu ili više brzih radnji kroz koje ćeš se kretati</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
-    <value>No Quick Actions defined.</value>
+    <value>Nema definisanih brzih radnji.</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
-    <value>Show this app</value>
+    <value>Prikaži ovu aplikaciju</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
     <value>CPU</value>
   </data>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
-    <value>Core Clock</value>
+    <value>Glavna frekvencija</value>
   </data>
   <data name="SensorsControl_Fan_Title" xml:space="preserve">
-    <value>Fan</value>
+    <value>Ventilator</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
     <value>GPU</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maksimum: {0}</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
-    <value>Memory Clock</value>
+    <value>Frekvencija memorije</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
-    <value>Refresh interval</value>
+    <value>Interval osvježavanja</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Temperatura</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
-    <value>Utilization</value>
+    <value>Iskorištenost</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Postavke</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
-    <value>Autorun</value>
+    <value>Automatsko pokretanje</value>
   </data>
   <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
-    <value>Customize Boot Logo image, visible during system startup.</value>
+    <value>Prilagodi sliku Boot Loga, vidljivu tokom pokretanja sistema.</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Logo pri pokretanju</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Add CLI to user's PATH environment variable.</value>
+    <value>Dodaj CLI u korisničku PATH promenljivu okruženja.</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>Add CLI to PATH</value>
+    <value>Dodaj CLI u PATH</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>Enable Command Line Interface that allows control from command line.</value>
+    <value>Omogući komandnu liniju koja omogućava kontrolu putem komandne linije.</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
     <value>CLI</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
-    <value>Check</value>
+    <value>Provjera</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
-    <value>Checking for updates...</value>
+    <value>Provjeravam ažuriranja...</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
-    <value>Check for updates</value>
+    <value>Provjeri ažuriranja</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Sakrij upozorenje o nekompatibilnom uređaju koje se pojavljuje pri pokretanju.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Onemogući upozorenje o nekompatibilnom uređaju</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>Disable Legion Zone and its service without uninstalling it.
-Restart is recommended after changing this option.</value>
+    <value>Onemogući Legion Zone i njegovu uslugu bez deinstalacije. 
+ Preporučuje se restart nakon promjene ove opcije.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>Disable Lenovo Hotkeys and its service without uninstalling it.
-If disabled, this app will handle Fn shortcuts.
-Restart is recommended after changing this option.</value>
+    <value>Onemogući Lenovo Hotkeys i njegovu uslugu bez deinstalacije. 
+ Ako je onemogućeno, ova aplikacija će upravljati Fn prečicama. 
+ Preporučuje se restart nakon promjene ove opcije.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been disabled correctly</value>
+    <value>Lenovo Vantage i/ili ImController možda nisu ispravno onemogućeni</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Vantage and/or ImController</value>
+    <value>Nije bilo moguće onemogućiti Lenovo Vantage i/ili ImController</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController without uninstalling them.
-Restart is recommended after changing this option.</value>
+    <value>Onemogući Lenovo Vantage i ImController bez deinstalacije. 
+ Preporučuje se restart nakon promjene ove opcije.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController</value>
+    <value>Onemogući Lenovo Vantage i ImController</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been enabled correctly</value>
+    <value>Lenovo Vantage i/ili ImController možda nisu ispravno omogućeni</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Vantage and/or ImController</value>
+    <value>Nije uspjelo omogućavanje Lenovo Vantage i/ili ImController</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>You can exclude refresh rates, to make Fn+R shortcut more useful.</value>
+    <value>Možete isključiti osvježavanje, kako bi prečica Fn R bila korisnija.</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
-    <value>Exclude Refresh Rates</value>
+    <value>Isključi stope osvježavanja</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+    <value>Dijelite brzinu ventilatora, temperaturu baterije itd. sa HWiNFO64. Možda ćete morati ponovo pokrenuti HWiNFO64 nakon promjene ove opcije.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
     <value>HWiNFO64</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
-    <value>Integrations</value>
+    <value>Integracije</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>Always minimize to tray. Close with right click on tray icon.</value>
+    <value>Uvijek minimizirajte u tray. Zatvorite desnim klikom na ikonu u tray-u.</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>Always minimize to tray instead of taskbar.</value>
+    <value>Uvijek minimiziraj u sistemsku traku umjesto na taskbar.</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
-    <value>Minimize to tray</value>
+    <value>Minimiziraj u sistemsku traku</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
-    <value>Configure which notifications are shown.</value>
+    <value>Konfigurišite koja se obavještenja prikazuju.</value>
   </data>
   <data name="SettingsPage_Notifications_Title" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Obavještenja</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+    <value>Resetuje brojač za "Na bateriji otkako" u sekciji baterije kada se sistem ponovo pokrene.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Reset "On battery since" at startup</value>
+    <value>Resetuj "Na bateriji otkako" pri pokretanju</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.</value>
+    <value>Automatski promijeni Windows plan napajanja ili Windows režim napajanja prilikom promjene režima napajanja.</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
-    <value>Power Mode Synchronization</value>
+    <value>Sinkronizacija režima napajanja</value>
   </data>
   <data name="SettingsPage_Power_Title" xml:space="preserve">
-    <value>Power</value>
+    <value>Snaga</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.</value>
+    <value>Fn zaključavanje će biti privremeno onemogućeno kada se pritisne tipka Alt, Ctrl ili Shift.</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
-    <value>Smart Fn Lock</value>
+    <value>Pametni Fn Lock</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 double press.</value>
+    <value>Dodijelite Brzu Akciju dvostrukim pritiskom na Fn F9.</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
-    <value>Smart Key Secondary Action</value>
+    <value>Sekundarna akcija Smart tipke</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 single press.</value>
+    <value>Dodijelite Brzu Akciju jednim pritiskom na Fn F9.</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
-    <value>Smart Key Action</value>
+    <value>Akcija Smart tipke</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>When on, same brightness level will be applied to all Windows power plans whenever you change it.</value>
+    <value>Kada je uključeno, ista razina svjetline će se primijeniti na sve Windows planove napajanja kad god je promijenite.</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
-    <value>Single Display Brightness</value>
+    <value>Svjetlina jednog ekrana</value>
   </data>
   <data name="SettingsPage_Temperature_Message" xml:space="preserve">
-    <value>Select units for temperature sensors.</value>
+    <value>Odaberite jedinice za temperaturne senzore.</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Temperatura</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
-    <value>Automatically check for updates</value>
+    <value>Automatski provjeri ažuriranja</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
-    <value>Update</value>
+    <value>Ažuriraj</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Čišćenje trčanja</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Čišćenje nije uspjelo.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Čišćenje završeno.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Primijeni preporučene optimizacije performansi i očisti privremene datoteke.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Primijeni optimizacije performansi i usluga</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Nisam mogao primijeniti optimizacije performansi.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Optimizacije performansi primijenjene.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimizacija sistema</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Select Windows Power Mode to apply when Power Mode changes.</value>
+    <value>Odaberite Windows režim napajanja koji će se primijeniti prilikom promjene režima napajanja.</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Windows režimi napajanja</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Power Plan options in Windows Control Panel</value>
+    <value>Opcije planova napajanja u Windows control panelu</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Select Windows Power Plans to apply when Power Mode changes.</value>
+    <value>Odaberite Windows planove napajanja koji će se primijeniti kada se promijeni način napajanja.</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
-    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+    <value>Omogući brzo prebacivanje na Prilagođeni režim pomoću Fn Q.</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
-    <value>Switch to Custom Mode with Fn+Q</value>
+    <value>Prebaci na Prilagođeni režim pomoću Fn Q</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>When mute, all active audio output devices will be muted.</value>
+    <value>Kada je isključeno zvuk, svi aktivni audio uređaji će biti isključeni.</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Speaker</value>
+    <value>Zvučnik</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight brightness.</value>
+    <value>Prilagodite pozadinsko osvjetljenje tastature.</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Ugašeno</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight brightness</value>
+    <value>Svjetlina pozadinskog osvjetljenja tastature</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
-    <value>Add effect</value>
+    <value>Dodaj efekat</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
-    <value>Lighting profile couldn't be applied.</value>
+    <value>Lighting profil se nije mogao primijeniti.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
-    <value>Couldn't apply profile</value>
+    <value>Nisam mogao aplicirati za profil</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
-    <value>Brightness</value>
+    <value>Svjetlost</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>Deselect all zones</value>
+    <value>Deselectujte sve zone</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>Visual effects</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be exported</value>
+    <value>Profil se nije mogao izvesti</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
-    <value>Couldn't export profile</value>
+    <value>Nisam mogao izvesti profil</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be imported</value>
+    <value>Profil se nije mogao uvesti</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
-    <value>Couldn't import profile</value>
+    <value>Nisam mogao uvesti profil</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
-    <value>No effects added.</value>
+    <value>Nema dodanih efekata.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Predložak</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>Resetovanje na podrazumijevane postavke</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
-    <value>Select all zones</value>
+    <value>Odaberite sve zone</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
-    <value>Switch keyboard layout</value>
+    <value>Raspored tastature na prekidaču</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
-    <value>Direction</value>
+    <value>Režija</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
-    <value>Color</value>
+    <value>Boja</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
-    <value>Colors</value>
+    <value>Boje</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
-    <value>Direction</value>
+    <value>Režija</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
-    <value>Effect</value>
+    <value>Efekat</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>This effect will be applied to the whole keyboard and will replace all other effects.</value>
+    <value>Ovaj efekat će biti primijenjen na cijelu tastaturu i zamijenit će sve ostale efekte.</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
-    <value>Speed</value>
+    <value>Brzina</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
-    <value>Add effect</value>
+    <value>Dodaj efekat</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
-    <value>Edit effect</value>
+    <value>Efekat uređivanja</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Import and apply backlight configuration to the current profile.</value>
+    <value>Uvezi i primijeni konfiguraciju osvjetljenja na trenutni profil.</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
-    <value>Path</value>
+    <value>Putanja</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Import keyboard backlight profile</value>
+    <value>Uvezi profil osvjetljenja tastature</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight profile.</value>
+    <value>Podesite profil pozadinskog osvjetljenja tastature.</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight profile</value>
+    <value>Profil pozadinskog osvjetljenja tastature</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
-    <value>All keys</value>
+    <value>Sve tonalitet</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
-    <value>{0} zones</value>
+    <value>{0} zone</value>
   </data>
   <data name="StatusTrayPopup_Battery" xml:space="preserve">
-    <value>Battery</value>
+    <value>Baterija</value>
   </data>
   <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
-    <value>Discharge rate</value>
+    <value>Brzina pražnjenja</value>
   </data>
   <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>Diskretna grafička</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Maksimalna stopa pražnjenja</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Minimalna stopa pražnjenja</value>
   </data>
   <data name="StatusTrayPopup_Mode" xml:space="preserve">
-    <value>Mode</value>
+    <value>Način rada</value>
   </data>
   <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>Režim rada</value>
   </data>
   <data name="StatusTrayPopup_PowerState" xml:space="preserve">
-    <value>Power State</value>
+    <value>Stanje napajanja</value>
   </data>
   <data name="StatusTrayPopup_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Predložak</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
-    <value>Update available!</value>
+    <value>Dostupno ažuriranje!</value>
   </data>
   <data name="SymbolRegularPicker_Title" xml:space="preserve">
-    <value>Select icon</value>
+    <value>Odaberi ikonu</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2350,43 +2350,43 @@ Restart is recommended after changing this option.</value>
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Zaobljeni rubovi</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Sjene</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Izgled</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Primijeni</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Klasično</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tamna</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Svijetla</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>Moderno</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Teme</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Postavke stila menija</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2395,7 +2395,7 @@ Restart is recommended after changing this option.</value>
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Instaliraj</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2419,573 +2419,606 @@ Restart is recommended after changing this option.</value>
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Deinstaliraj</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Uljepšavanje Windows-a</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>Omogućava promjenu između integrisane i diskretne grafičke.
+Zahtijeva ponovno pokretanje.</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>Hibridni režim</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.</value>
+    <value>Isključi sve dostupne ekrane.</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off displays</value>
+    <value>Isključi ekrane</value>
   </data>
   <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.
-Moving the mouse or pressing the keyboard will wake displays up.</value>
+    <value>Isključi sve dostupne ekrane. 
+ Pomicanje miša ili pritiskanje tipki na tastaturi će probuditi ekrane.</value>
   </data>
   <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
-    <value>Turn off displays</value>
+    <value>Isključi ekrane</value>
   </data>
   <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
-    <value>Turn off</value>
+    <value>Isključi</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off Wi-Fi</value>
+    <value>Isključi Wi-Fi</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn on Wi-Fi</value>
+    <value>Uključi Wi-Fi</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Unexpected exception occurred:
-{0}</value>
+    <value>Neočekivana iznimka se desila: 
+ {0}</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>Nenaslovljeno</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Možete onemogućiti ovo upozorenje u bilo kojem trenutku u Postavkama.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Logs folder</value>
+    <value>Folder sa logovima</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>Pozadinsko osvjetljenje tastature</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
-    <value>Copy current network name</value>
+    <value>Kopiraj trenutni naziv mreže</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Leave empty for any Wi-Fi network.</value>
+    <value>Ostavite prazno za bilo koju Wi-Fi mrežu.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
+    <value>Naziv mreže (SSID)</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable Windows key on built-in keyboard.</value>
+    <value>Onemogući Windows tipku na ugrađenoj tastaturi.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>Zaključavanje Windows dugmeta</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Akcije</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Primijenite odabrane radnje</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Neuspjeh u izvršavanju odabranih radnji.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Odabrane radnje su uspješno izvršene.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Odaberite unaprijed instalirane Microsoft Store aplikacije za uklanjanje za sve korisnike.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Nema odabranih aplikacija za uklanjanje.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Upravljanje AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Neuspjelo učitavanje: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Učitavanje aplikacija, molimo sačekajte...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Izdavač: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Deinstalacija odabranih aplikacija...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Deinstaliraj odabrane aplikacije</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Nije uspjelo uklanjanje odabranih aplikacija.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Odabrane aplikacije su raspoređene za uklanjanje.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Prilagodite izgled kontekstualnog menija.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Neuspješno primjenjivanje postavki stila.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfiguracijska datoteka nije pronađena. Molimo provjerite da li je Nilesoft Shell instaliran.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Neuspješno omogućavanje klasičnog menija.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Neuspješna instalacija shell-a.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Neuspješno vraćanje zadane postavke menija.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe nije pronađen. Molimo provjerite je li Nilesoft Shell instaliran.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Odaberite temu za kontekstualni meni.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Omogućite efekt prozirnosti za kontekstualni meni.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Neuspješno deinstaliranje shell-a.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Oslobođeno {0} u {1}s</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Jasna selekcija</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Dodaj pravilo</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Očisti sve</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Odaberite mape i ekstenzije fajlova koje treba obrisati tokom čišćenja.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Uredi</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Nema konfigurisanih pravila za prilagođeno čišćenje.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Pravila za prilagođeno čišćenje</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Uključi podmape</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Ukloni</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Molimo odaberite barem jednu radnju.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Procijenjena veličina čišćenja: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Ove radnje mijenjaju sistemske servise i datoteke. Mogu biti potrebne administratorske privilegije.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Pokrenite akcije čišćenja</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Pokretanje: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Odaberi sve</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Odaberite preporučeno</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Uljepšavanje</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Deinstaliraj odabrane unaprijed instalirane UWP aplikacije za sve korisnike.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Ukloni unaprijed instalirane Windows aplikacije</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Ukloni cache i cookie fajlove Internet Explorera i Edge-a.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Očisti cache pretraživača</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Pokreni DISM čišćenje i obriši privremene WinSxS datoteke.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Servis komponentni store</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Ukloni memorijske dump fajlove nastale nakon padova sistema.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Obriši datoteke sadržeće pad sistema</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Obriši datoteke koje odgovaraju konfiguriranim ekstenzijama iz odabranih foldera.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Očisti prilagođene datoteke</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Obriši historiju skeniranja Windows Defender-a i keševe.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Očisti skeniranja Defender-a</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Ukloni keširane .NET Native slike kako bi oslobodio prostor na disku.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Očisti .NET nativne slike</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Obriši Windows logove, izvještaje o greškama i dijagnostičke tragove.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Ukloni logove i dijagnostičke podatke</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Obriši Windows prefetch podatke kako bi se generisali novi tragovi.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Očisti prefetch podatke</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Ukloni obrisane datoteke pohranjene u košu za smeće.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Isprazni koš za smeće</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Obrišite uobičajene korisničke registre (Run MRU, RecentDocs, Open/Save dijaloge, TypedPaths). Ovo ne uklanja sistemski kritične unose.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Čišćenje MRU/historije iz registra</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Ukloni cache fajlove koje je kreirao Remote Desktop klijent.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Obriši cache udaljene radne površine</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Isprazni Windows i korisničke privremene direktorije.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Očisti privremene datoteke</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Obriši bazu podataka sličica Eksplorera i keš Direct3D šejdera.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Očisti keš sličica</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Obriši preuzete datoteke ažuriranja i cache Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Očisti cache Windows Update-a</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Smanjite kašnjenje menija, brže zatvarajte zaglavljene aplikacije i po defaultu otvarajte This PC.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Poboljšajte odziv Explorer-a</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Potpuno onemogućite start meni. Kada pritisnete Win taster, otvorit će se pretraga umjesto start menija.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Onemogućite start meni i otvorite pretragu pomoću Win tastera</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Isključite sugestije o sadržaju u oblaku i reklamne banere sa preporukama.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Onemogućite Explorer predloge</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Sakrijte pretragu i dugme Task View, onemogućite grupisanje ikona na traci zadataka i uvijek prikazujte ikone u tray-u.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Izgled trake zadataka i start menija</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Prikažite ekstenzije fajlova i skrivene fajlove u File Explorer-u.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Opcije vidljivosti fajlova</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Vraća zadani stil i ponovno pokreće Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Prebaci na zadani desni klik izbornika</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Primjenjuje klasični stil i ponovno pokreće Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Prebaci na moderni izbornik</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Potpuno deinstalirajte shell.exe i povezane datoteke</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Primijeni moderni kontekstualni izbornik</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Zadrži sistemski cache u memoriji i izbjegavaj korištenje virtualne memorije za kernel drajvere.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Poboljšaj upravljanje memorijom</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Ukloni ograničenja mreže i smanji latenciju odziva sistema.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Optimizuj raspored multimedije</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Ukloni akrilne efekte na prijavi i sakrij Windows centar za obavještenja.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Onemogući akril i centar za obavještenja</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Aktiviraj energetski plan visokih performansi i onemogući hibernaciju.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Primijeni plan visokih performansi</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Onemogući reklamni ID, Spotlight funkcije i automatske prijedloge.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Smanji telemetriju i savjete</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Zaustavi i onemogući servise Connected User Experiences, Diagnostics Hub i Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Onemogući dijagnostičke servise</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Zaustavi Windows Error Reporting od prikupljanja i slanja podataka o padovima.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Onemogući izvještavanje o greškama</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Osigura sistem onemogućavanjem pristupa udaljenom registru.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Onemogući Remote Registry</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Zaustavi Windows Search servis da spriječiš ažuriranja indeksa.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Onemogući indeksiranje Windows pretrage</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Isključi Superfetch/SysMain da bi smanjio aktivnosti diska u pozadini.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Onemogući SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Promijeni ponašanje tipke Windows da otvara pretragu umjesto Start menija.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Promijeni tipku Windows da otvara pretragu</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Uklonite keševe, privremene datoteke i druge ostatke.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Čišćenje</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Podešavanje trake zadataka, File Explorera i ponašanja korisničkog interfejsa.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Explorer &amp; sučelje</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Promijenite stil desnog klika izbornika.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Uljepšavanje Windows-a</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Podešavanje postavki performansi sistema i odziva.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Performanse</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Onemogućavanje pozadinskih servisa koji troše resurse.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Servisi</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Uljepšavanje sistema</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Windows režimi napajanja</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
-    <value>Default</value>
+    <value>Zadano</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Planovi napajanja</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Registracija COM komponente   Konfiguracijska datoteka</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Tip implementacije:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Zatvori</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Registracijom Nilesoft Shell-a kao COM rukovaoca za Windows kontekstualne menije, on presreće kreiranje i prikazivanje sistemskih menija desnog klika. Kada korisnici kliknu desnim klikom na fajlove ili foldere, Shell čita konfiguracijsku datoteku shell.nss i primjenjuje prilagođene teme, transparentnost, zaobljene ivice i podešavanja sjenki kako bi se postigao efekt uljepšanog menija desnog klika.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Konfiguracijska datoteka nije pronađena. Molimo provjerite da li je Nilesoft Shell instaliran.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Datoteka konfiguracije nije pronađena</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Postavke su uspješno primijenjene. Promjene će stupiti na snagu nakon ponovnog pokretanja File Explorera.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Postavke primijenjene</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Neuspjelo primjenjivanje postavki: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Greška</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Registracija COM komponente:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Putanja: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Konfiguracijska datoteka (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Putanja konfiguracijske datoteke: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Koristi sintaksu sličnu CSS-u za definiranje stilova menija</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Primjer formata konfiguracijske datoteke:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>tema 
+    { 
+        boja-pozadine: #2d2d2d; 
+        boja-teksta: #ffffff; 
+        radijus-ugla: 5px; 
+        sjena: true; 
+        prozirnost: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Način rada:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll je registriran kao COM komponenta u sistemu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Implementira IContextMenu interfejs za presretanje kreiranja menija desnim klikom</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Čita shell.nss konfiguracijsku datoteku</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Primjenjuje prilagođene stilove (tema, zaobljeni uglovi, sjene itd.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Prikazuje uljepšani kontekstni meni</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Opis efekta:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Tema automobila: Prati sistemsku temu (svijetla/tamna)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Transparentnost: Omogućava efekt transparentnosti pozadine menija</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Zaobljeni uglovi: Dodaje zaobljene rubove stavkama menija</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Sjene: Dodaje sjene u meni, poboljšavajući percepciju dubine</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Izvršavanje {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Operacija otkazana</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Detalji greške: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Prikaži skrivene preuzimanja</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Prikaži skrivene preuzimanja</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Odaberi jezik</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Nije povezano</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Sinhronizacija zona</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Proširenja dodataka</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Postavke navigacionih stavki</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Konfigurišite koje navigacione stavke se prikazuju u bočnoj traci. Kontrolna tabla i Postavke će uvijek biti vidljive.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija tastature</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija baterije</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija automatizacije</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija makroom</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija optimizacije sistema</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija proširenja dodataka</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Prikaži ili sakrij stavku Navigacija o programu</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Navigacione stavke</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Konfigurišite koje navigacione stavke se prikazuju u bočnoj traci</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Skidanje dostupnih paketa drajvera, molimo pričekajte...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Došlo je do mrežne greške. Automatsko ponovno pokušavanje...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Ponovno skidanje paketa drajvera...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Informacije o čišćenju</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Prikaz napretka operacije čišćenja i procijenjene veličine.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Pokreni minimizirano u trayi kada se prijaviš na Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Skeniraj</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Preuzimanje drajvera</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Potvrda sigurnosti</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Čišćenje sistema trajno briše privremene fajlove i keš. Iako je obično sigurno, preporučuje se da imate sigurnosne kopije važnih podataka. Želiš li nastaviti?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Proširenja</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Upravljanje proširenjima i alatima za optimizaciju sistema</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Nema dostupnih ekstenzija</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Instalirajte ekstenzije sa stranice Plugin Extensions radi poboljšanja funkcionalnosti optimizacije sistema.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Dolazi uskoro</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Tržište ekstenzija bit će dostupno u budućem ažuriranju.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Učitavanje dodataka...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Integracija ljuske</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Poboljšana integracija Windows ljuske sa uljepšanjem kontekstualnog menija i prilagođavanjem stila miša</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Omogući moderan kontekstualni meni</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Omogući Nilesoft Shell za uljepšavanje Windows kontekstualnog menija modernim stilom</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Onemogući moderan kontekstualni meni</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Odstrani Nilesoft Shell i vrati zadani Windows kontekstualni meni</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Primijeni Windows 11 stil kursora</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Primijeni Windows 11 stil kursora sa podrškom za visoku DPI rezoluciju</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Ubrzanje mreže</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Optimizacija mrežnih postavki za poboljšanje brzine mreže i odziva.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Optimizacija TCP/IP i DNS-a</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Optimizacija TCP/IP parametara i postavki DNS keša za poboljšanje brzine veze i odziva.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Resetovanje mrežne konfiguracije</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Ispraznite DNS keš i resetujte Winsock i TCP/IP konfiguraciju da popravite probleme sa mrežnom povezanošću.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Očisti privremene datoteke i logove koje ostavljaju razne aplikacije.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Preostale datoteke aplikacija</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Skenira velike datoteke na sistemskom disku koje mogu zauzimati značajan prostor.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Skeniranje velikih datoteka</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Identifikuj i upravljaj velikim datotekama na sistemu.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Velike datoteke</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Omogući proširenja</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Omogućite sistem proširenja da pristupite tržištu dodataka na stranici Alati.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Konfigurišite izgled, ponašanje i funkcionalne opcije aplikacije.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Preporučeno</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Preuzimanje</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Instaliranje</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Dovršeno</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Definicija radnje nije pronađena</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Tehnički detalji implementacije za ovu radnju nisu dostupni</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Učitavanje nije uspjelo</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Nepoznato</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Izvršenje naredbe</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Izmjena registra</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Upravljanje servisom</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Izmjena registra   PowerShell skripta</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Čišćenje registra</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe nije pronađen</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Putanja datoteke konfiguracije: Nije pronađena</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Vrijeme upotrebe</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Instaliraj</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Deinstaliraj</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Instalacija nije uspjela</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Datoteka nije pronađena, molimo prvo preuzmite</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Instalacija počela</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Pokretanje instalatera: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Greška pri provjeri kompatibilnosti</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Aplikacija nije uspjela pročitati informacije o uređaju pri pokretanju. Molimo provjerite detalje greške u nastavku i pokušajte korake za otklanjanje problema ako je potrebno.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Koraci za otklanjanje problema</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Osigurajte da je servis Windows Management Instrumentation (WMI) pokrenut: Otvorite Servise (services.msc) i provjerite da je "Windows Management Instrumentation" pokrenut.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Pokrenite aplikaciju kao Administrator kako biste osigurali dovoljne dozvole za pristup sistemskom registru i WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Provjerite sistemske resurse: Zatvorite druge aplikacije koje troše puno resursa i pokušajte ponovo.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Pregledajte log datoteku za detaljne informacije o greškama klikom na "Otvori log" ispod.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Otvori log datoteku</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Ažuriraj repozitorij</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Konfigurirajte GitHub repozitorij za provjeru ažuriranja. Ostavite prazno za korištenje zadane vrijednosti.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Vlasnik repozitorija</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>npr., SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Naziv repozitorija</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>npr., LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Pauziraj sve</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Principi implementacije i efekta</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Tip implementacije:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Uređivač konfiguracije</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>shell.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>tema.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>slike.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>modifikovati.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Detalji akcije</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Detalji tehničke implementacije</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Korištenje ugrađene Windows funkcionalnosti za čišćenje registra</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Proširenja dodataka</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Instaliraj i upravljaj dodacima kako bi proširio funkcionalnost</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Instaliraj</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Ne može se deinstalirati</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Postavke dodatka</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Naziv dodatka</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Opis dodatka</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Ovaj dodatak nema konfigurabilne postavke.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Zatvori</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Dodatak nije pronađen: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Greška</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Postavke</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Autor: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Format interfejsa za konfiguraciju dodataka je neispravan.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Greška pri učitavanju postavki dodatka: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Pretraži dodatke...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Svi</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Nema dostupnih dodataka</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Trenutno je prodavnica dodataka prazna. Ostanite uz nas za buduća ažuriranja dodataka.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Konfiguriši</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Deinstaliraj</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Otvori</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Jezik:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Koristi podrazumijevano za aplikaciju</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Pronađeni {0} dodaci</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Masovni uvoz</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Uvezi dodatke iz lokalnih ZIP datoteka</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Uvezi iz datoteka</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Odaberite datoteke dodataka (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>Uspješno uvezeni {0} dodaci</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>{0} dodaci su uspješno uvezeni i dostupni</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Masovni uvoz nije uspio</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>Neuspjeh pri uvozu dodataka: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Uvoz dodataka u toku...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>Uvoz {0}...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>Obrada {0}...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Dodatak je uspješno instaliran</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Dodaci su uspješno instalirani</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Instalacija nije uspjela</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Nije moguće instalirati dodatak: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Dodatak uspješno deinstaliran</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Dodatak je uspješno deinstaliran</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Deinstalacija nije uspjela</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Nije moguće deinstalirati dodatak: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Nije uspjelo otvaranje dodatka</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Nije moguće otvoriti dodatak: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Nije moguće otvoriti dodatak: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Dodatak nije instaliran</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Dodatak nije instaliran i ne može se otvoriti</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Zahtijevana je minimalna verzija hosta {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Dodatak će biti trajno obrisan</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>Dodatak će biti trajno obrisan. Ova radnja se ne može poništiti.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Ažuriranje nije uspjelo</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Ažuriranje dodatka nije uspjelo, molimo provjerite mrežnu vezu i pokušajte ponovo kasnije.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Ažuriranje uspješno</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Dodatak je uspješno ažuriran</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Ažuriranje dodatka</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Preuzimanje i ažuriranje dodatka...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Ažuriraj sve</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Pokreni dodatak</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Dodatak pokrenut</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Dodatak deinstaliran</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Dodatak će biti izbrisan kada se program zatvori.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Brisanje nije uspjelo</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Došlo je do greške prilikom brisanja dodatka</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Konfiguracija nije uspjela</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Dodatak je instaliran, ali nije učitan. Molimo pokušajte ponovo pokrenuti aplikaciju.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Nema konfiguracije</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Dodatak nema opcije za konfiguraciju.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Konfiguracija nije podržana</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Dodatak ne podržava konfiguraciju.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Stanja dodatka resetovana</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Sva stanja instalacije dodataka su izbrisana</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Masovno ažuriranje završeno</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Svi dodaci su obrađeni.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Priprema preuzimanja...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Lokalno</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Dostupna nova verzija</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Verzija:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Datum izlaska:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Šta je novo:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Osvježi listu dodataka</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Nema dodataka koji odgovaraju vašoj pretrazi.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Ažuriraj sve dostupne dodatke</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Instaliraj sve</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Instaliraj sve dostupne dodatke</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Instaliranje svega...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Instaliranje {0} dodatka(a)...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Masovna instalacija završena</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Instaliran(a) {0} dodatak(a).</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Masovna instalacija nije uspjela</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Neuspjela instalacija dodataka: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Ažuriranje svega...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Ažuriranje...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Otvori fasciklu</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Kopiraj ID dodatka</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Fascikla nije pronađena</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Direktorij dodataka još ne postoji.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Kopirano</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>ID dodatka '{0}' kopiran u clipboard.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Preuzimanje završeno</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Preuzimanje...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Preuzimanje... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Ubrzanje mreže</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>ViveTool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Alati</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Funkcije za ubrzanje i optimizaciju mreže u realnom vremenu</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Upravljanje Windows funkcijskim oznakama pomoću ViVeTool-a</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Alati za optimizaciju sistema i pomoćni alati</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Upotreba</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Ovaj editor se koristi za direktno uređivanje konfiguracijske datoteke shell.nss. Nakon izmjene, kliknite</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Primijeni</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>dugme da sačuvate sve promjene i restartujete File Explorer kako bi konfiguracija stupila na snagu.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Putanja konfiguracijske datoteke:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Nakon izmjene konfiguracije, File Explorer (Explorer) treba biti restartovan da bi promjene stupile na snagu.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Primijeni</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>Konfiguracijska datoteka shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Datoteka shell.nss se koristi za definisanje ukupne strukture i ponašanja menija desnog klika</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Otvori shell.nss datoteku</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Otvori folder u kojem se nalazi</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Putanja:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Postavke korisničkog interfejsa</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Osnovne postavke teme</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Boja pozadine:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Boja teksta:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Postavke efekta lebdenja</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Pozadina pri lebdenju:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Tekst pri lebdenju:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Postavke odabranog efekta</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Odabrana pozadina:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Odabrani tekst:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Ažuriraj tekst iz korisničkog sučelja</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Učitaj iz teksta</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Uređivač teksta</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Otvori u vanjskom uređivaču</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Konfiguracijska datoteka images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Datoteka images.nss se koristi za definisanje ikona i slika za meni desnim klikom</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Otvori datoteku images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Konfiguracijska datoteka modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Datoteka modify.nss se koristi za izmjenu i prilagođavanje stavki menija desnim klikom</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Otvori datoteku modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Nema dostupnih alata. Molimo dodajte alate u folder tools u direktoriju aplikacije.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Alati će se ovdje pojaviti jednom kada budu dostupni u direktoriju tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Osnovni direktorij: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Direktorij konfiguracijske datoteke nije pronađen</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Datoteka nije pronađena</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Ne može se pročitati konfiguracijska datoteka: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Ova datoteka se koristi za definisanje stilskih postavki vezanih za temu</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Definicija boja teme</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Osnovna boja</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Boja lebdenja</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Izabrana boja</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Za više opcija konfiguracije tema, pogledajte zvaničnu Nilesoft Shell dokumentaciju</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Jesi li siguran da želiš primijeniti tu konfiguraciju? 
+ 
+ Ovo će: 
+ 1. Save all configuration files 
+ 2. Restartujte File Explorer da primijenite konfiguraciju 
+ 
+ Napomena: Restart zatvara sve prozore otvorenih foldera i taskbar, a zatim automatski restartuje.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Potvrdi Primijeni konfiguraciju</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Ne može se sačuvati konfiguraciona datoteka: 
+ {0} 
+ 
+ Molimo provjerite dozvole datoteke i pokušajte ponovo.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Spasavanje nije uspjelo</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Uspješno sačuvane sljedeće datoteke: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Failed to save files: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>File Explorer je restartovan, konfiguracija je sada na snazi!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Djelimično primijenjeno</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Uspješno primijenjeno</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Greška pri primjeni konfiguracije: 
+ {0} 
+ 
+ Možete ručno sačuvati datoteke i restartovati Explorer proces u Task Manageru.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Prijava nije uspjela</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>datoteka ne postoji ili je put nevažeći</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Otvoreni fajl nije uspio</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Koristite sistemski podrazumijevani program za otvaranje datoteke</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Ne može se otvoriti fajl: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Otvoreni fajl nije uspio</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Folder ne postoji ili je putanja nevažeća</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Otvaranje foldera nije uspjelo</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Ne mogu otvoriti folder: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Otvaranje foldera nije uspjelo</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Model</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Potrošnja energije</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Juriš</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Zdravlje</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Stopa</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Minimalna stopa</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Maksimalna stopa</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Ciklusi</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Kapacitet</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Puni kapacitet</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Dizajn</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Datum</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Radni takt jezgre / memorije</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Napon jezgre</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Raspon napona</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Prosječna temperatura</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Bočna traka</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Sistemska</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Raspon stopa</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Molimo odaberite barem jednu opciju čišćenja.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Pokreni sve</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>npr. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>npr. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Omogući prozirnost</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Omogući efekte prozirnosti za kontekstualni meni</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Prikaži ekstenzije datoteka</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Prikaži ekstenzije datoteka u File Exploreru</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Prikaži skrivene datoteke</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Prikaži skrivene datoteke i foldere u File Exploreru</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Otvori na Brzi pristup</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Otvori File Explorer na Brzi pristup umjesto na Ovo računalo</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Prikaži panel pregleda</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Prikaži panel pregleda u File Exploreru</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Molimo odaberite barem jedan predmet za čišćenje.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

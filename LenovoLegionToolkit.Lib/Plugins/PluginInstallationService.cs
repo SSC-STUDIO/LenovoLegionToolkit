@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -40,7 +41,7 @@ public class PluginInstallationService
             var pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir).ConfigureAwait(false);
             if (string.IsNullOrEmpty(pluginId))
             {
-                throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and follow the naming convention: LenovoLegionToolkit.Plugins.*.dll");
+                throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and include a main DLL (either LenovoLegionToolkit.Plugins.*.dll or an ID-based name like custom-mouse.dll).");
             }
 
             // Install ZIP-imported plugins to a 'local' subdirectory
@@ -109,9 +110,8 @@ public class PluginInstallationService
         {
             await Task.Yield();
 
-            // Check for the required DLL
-            var pluginDll = Directory.GetFiles(pluginDir, "LenovoLegionToolkit.Plugins.*.dll", SearchOption.TopDirectoryOnly)
-                .FirstOrDefault();
+            var manifestPluginId = TryReadPluginIdFromManifest(pluginDir);
+            var pluginDll = FindPluginMainDll(pluginDir, manifestPluginId, SearchOption.TopDirectoryOnly);
 
             if (string.IsNullOrEmpty(pluginDll))
             {
@@ -165,20 +165,23 @@ public class PluginInstallationService
                 Log.Instance.Trace($"Analyzing plugin structure in {extractDir}");
 
             // Case 1: Root directory contains the DLL
-            var rootDlls = Directory.GetFiles(extractDir, "LenovoLegionToolkit.Plugins.*.dll", SearchOption.TopDirectoryOnly);
-            if (rootDlls.Any())
+            var rootManifestPluginId = TryReadPluginIdFromManifest(extractDir);
+            var rootDll = FindPluginMainDll(extractDir, rootManifestPluginId, SearchOption.TopDirectoryOnly);
+            if (rootDll != null)
             {
-                return GetPluginIdFromDll(rootDlls.First());
+                return GetPluginIdFromDll(rootDll, rootManifestPluginId);
             }
 
             // Case 2: DLL is inside a subfolder
             var subDirs = Directory.GetDirectories(extractDir);
             foreach (var subDir in subDirs)
             {
-                var subDirDlls = Directory.GetFiles(subDir, "LenovoLegionToolkit.Plugins.*.dll", SearchOption.TopDirectoryOnly);
-                if (subDirDlls.Any())
+                var subDirManifestPluginId = TryReadPluginIdFromManifest(subDir);
+                var expectedPluginId = subDirManifestPluginId ?? Path.GetFileName(subDir);
+                var subDirDll = FindPluginMainDll(subDir, expectedPluginId, SearchOption.TopDirectoryOnly);
+                if (subDirDll != null)
                 {
-                    var pluginId = GetPluginIdFromDll(subDirDlls.First());
+                    var pluginId = GetPluginIdFromDll(subDirDll, subDirManifestPluginId);
                     
                     // Reorganize: Move contents of subDir to extractDir
                     await MoveDirectoryContentsAsync(subDir, extractDir).ConfigureAwait(false);
@@ -198,10 +201,109 @@ public class PluginInstallationService
         }
     }
 
-    private string GetPluginIdFromDll(string dllPath)
+    private static string? FindPluginMainDll(string searchRoot, string? preferredPluginId, SearchOption searchOption)
     {
+        var pluginDlls = Directory.GetFiles(searchRoot, "*.dll", searchOption)
+            .Where(path => !IsIgnoredDll(path))
+            .ToList();
+
+        if (!pluginDlls.Any())
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(preferredPluginId))
+        {
+            var exactMatch = pluginDlls.FirstOrDefault(path =>
+            {
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
+                return fileNameWithoutExtension.Equals(preferredPluginId, StringComparison.OrdinalIgnoreCase) ||
+                       fileNameWithoutExtension.Equals($"LenovoLegionToolkit.Plugins.{preferredPluginId}", StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (exactMatch != null)
+                return exactMatch;
+
+            var normalizedPreferred = NormalizePluginToken(preferredPluginId);
+            var normalizedMatches = pluginDlls
+                .Where(path => NormalizePluginToken(Path.GetFileNameWithoutExtension(path))
+                    .Equals(normalizedPreferred, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (normalizedMatches.Count == 1)
+                return normalizedMatches[0];
+
+            if (normalizedMatches.Count > 1)
+            {
+                return normalizedMatches.FirstOrDefault(path =>
+                           Path.GetFileName(path).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+                       ?? normalizedMatches[0];
+            }
+        }
+
+        var prefixedDlls = pluginDlls
+            .Where(path => Path.GetFileName(path).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (prefixedDlls.Count == 1)
+            return prefixedDlls[0];
+
+        if (prefixedDlls.Count > 1)
+            return prefixedDlls[0];
+
+        return pluginDlls[0];
+    }
+
+    private static bool IsIgnoredDll(string dllPath)
+    {
+        var fileName = Path.GetFileName(dllPath);
+        return fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string NormalizePluginToken(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = value.Where(char.IsLetterOrDigit).ToArray();
+        return new string(chars).ToLowerInvariant();
+    }
+
+    private static string? TryReadPluginIdFromManifest(string pluginDir)
+    {
+        try
+        {
+            var manifestPath = Path.Combine(pluginDir, "plugin.json");
+            if (!File.Exists(manifestPath))
+                return null;
+
+            using var stream = File.OpenRead(manifestPath);
+            using var document = JsonDocument.Parse(stream);
+
+            if (!document.RootElement.TryGetProperty("id", out var idElement))
+                return null;
+
+            var pluginId = idElement.GetString();
+            return string.IsNullOrWhiteSpace(pluginId) ? null : pluginId.Trim();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read plugin manifest in {pluginDir}: {ex.Message}", ex);
+            return null;
+        }
+    }
+
+    private string GetPluginIdFromDll(string dllPath, string? manifestPluginId = null)
+    {
+        if (!string.IsNullOrWhiteSpace(manifestPluginId))
+            return manifestPluginId.Trim();
+
         var dllName = Path.GetFileNameWithoutExtension(dllPath);
-        return dllName.Replace("LenovoLegionToolkit.Plugins.", "", StringComparison.OrdinalIgnoreCase);
+
+        if (dllName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+            return dllName.Replace("LenovoLegionToolkit.Plugins.", "", StringComparison.OrdinalIgnoreCase);
+
+        return dllName;
     }
 
     /// <summary>

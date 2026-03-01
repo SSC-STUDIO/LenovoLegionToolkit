@@ -52,7 +52,7 @@ Key configurations in `Directory.Build.props`:
 <Nullable>enable</Nullable>
 <OutputType>WinExe</OutputType>
 <AssemblyName>LenovoLegionToolkit</AssemblyName>
-<Version>2.x.x</Version>
+<Version>3.x.x</Version>
 ```
 
 ## Build Commands
@@ -141,7 +141,7 @@ dotnet run --project LenovoLegionToolkit.PerformanceTest/ \
 
 ### GitHub Actions Workflow
 
-Located in `.github/Workflows/`:
+Located in `.github/workflows/`:
 
 #### Build Pipeline (`Build.yml`)
 
@@ -153,7 +153,7 @@ on:
   pull_request:
     branches: [master]
 
-# Jobs
+# Jobs (current repository workflow)
 jobs:
   build:
     runs-on: windows-latest
@@ -164,14 +164,30 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Build
-        run: dotnet build --configuration Release
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
-      - name: Publish
-        run: dotnet publish artifacts
+        run: .\Make.bat
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: BuildInstaller/LenovoLegionToolkitSetup.exe
 ```
 
-#### Release Pipeline
+#### CI Tests Pipeline (`Ci-tests.yml`)
+
+```yaml
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore
+      - run: dotnet build --configuration Release --no-restore
+```
+
+#### Release Pipeline (`Release.yml`)
 
 ```yaml
 on:
@@ -237,14 +253,34 @@ LLT follows SemVer format: `MAJOR.MINOR.PATCH`
 # Update version in Directory.Build.props
 # Update CHANGELOG.md with changes
 # Create git tag
-git tag -a v2.14.0 -m "Release v2.14.0"
-git push origin v2.14.0
+git tag -a v3.6.3 -m "Release v3.6.3"
+git push origin v3.6.3
 
 # Create GitHub Release
-gh release create v2.14.0 \
-    --title "Lenovo Legion Toolkit v2.14.0" \
+gh release create v3.6.3 \
+    --title "Lenovo Legion Toolkit v3.6.3" \
     --notes "$(cat CHANGELOG.md | head -n 50)"
 ```
+
+## Localization Delivery (Crowdin)
+
+LLT translations are managed by `crowdin.yml` at repository root.
+
+```bash
+# Upload base source strings from all resource modules
+crowdin upload sources --config crowdin.yml
+
+# Upload existing local translations
+crowdin upload translations --config crowdin.yml
+
+# Download translated resources
+crowdin download --config crowdin.yml
+```
+
+After downloading translations:
+1. Run structural audit (`missing/extra/placeholder`) across all `Resource*.resx`.
+2. Build WPF project and full solution.
+3. Update `CHANGELOG.md` under `[Unreleased]` for user-visible localization fixes.
 
 ## Distribution Channels
 
@@ -256,7 +292,7 @@ gh release create v2.14.0 \
    - Auto-updater support
 
 2. **winget Package Manager**
-   - `winget install BartoszCichecki.LenovoLegionToolkit`
+   - `winget search LenovoLegionToolkit` then install one of published IDs
    - Automatic updates via Windows Package Manager
 
 3. **Scoop**
@@ -306,10 +342,10 @@ gh release create v2.14.0 \
 1. **GitHub Release Rollback**
    ```bash
    # Revert to previous version
-   gh release delete v2.14.1 --yes
-   gh release create v2.14.0 \
-       --title "Lenovo Legion Toolkit v2.14.0 (Hotfix)" \
-       --notes "Emergency rollback from v2.14.1"
+   gh release delete v3.6.4 --yes
+   gh release create v3.6.3 \
+       --title "Lenovo Legion Toolkit v3.6.3 (Hotfix)" \
+       --notes "Emergency rollback from v3.6.4"
    ```
 
 2. **winget Update**
@@ -322,7 +358,7 @@ gh release create v2.14.0 \
 
 ```bash
 # Checkout previous stable tag
-git checkout v2.13.0
+git checkout v3.6.2
 dotnet build --configuration Release
 # Deploy as hotfix release
 ```
@@ -339,7 +375,7 @@ dotnet build --configuration Release
 
 - **Download Count**: GitHub Release analytics
 - **Issue Tracker**: Bug reports and feature requests
-- **Crash Reports**: Application insights (opt-in)
+- **Crash Reports**: Local log files provided manually by users
 
 ## Security Considerations
 

@@ -33,21 +33,30 @@ public class ThrottleFirstDispatcherTests
         // Arrange
         var interval = TimeSpan.FromMilliseconds(200);
         var dispatcher = new ThrottleFirstDispatcher(interval, "test");
-        
+
         var executedTasks = new List<int>();
-        
-        // Act - Execute first task
-        await dispatcher.DispatchAsync(() => {
+        var firstTaskStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirstTask = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        // Act - Start first task and hold it so the second dispatch is guaranteed to queue behind it
+        var firstDispatch = dispatcher.DispatchAsync(async () => {
             executedTasks.Add(1);
-            return Task.CompletedTask;
+            firstTaskStarted.SetResult();
+            await releaseFirstTask.Task;
         });
-        
-        // Try to execute a second task within the interval
-        await dispatcher.DispatchAsync(() => {
+
+        await firstTaskStarted.Task;
+
+        // Queue a second task while the first one is still executing
+        var secondDispatch = dispatcher.DispatchAsync(() => {
             executedTasks.Add(2);
             return Task.CompletedTask;
         });
-        
+
+        // Release first task, then wait for both dispatches to complete
+        releaseFirstTask.SetResult();
+        await Task.WhenAll(firstDispatch, secondDispatch);
+
         // Assert - Only the first task should have executed
         executedTasks.Count.Should().Be(1);
         executedTasks[0].Should().Be(1);
@@ -90,7 +99,7 @@ public class ThrottleFirstDispatcherTests
         var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(50));
         
         // Act & Assert
-        Func<Task> act = async () => await dispatcher.DispatchAsync(null);
+        Func<Task> act = async () => await dispatcher.DispatchAsync(null!);
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
     

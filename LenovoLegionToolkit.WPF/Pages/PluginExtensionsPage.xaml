@@ -7,6 +7,7 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="PluginExtensionsPageRoot"
+    AutomationProperties.AutomationId="PluginExtensionsPageRoot"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Scrollable="True">
     
@@ -149,6 +150,7 @@
             
             <wpfui:TextBox
                     x:Name="_searchTextBox"
+                    AutomationProperties.AutomationId="PluginSearchTextBox"
                     Grid.Column="0"
                     Icon="Search24"
                     PlaceholderText="{x:Static resources:Resource.PluginExtensionsPage_SearchPlaceholder}"
@@ -163,6 +165,7 @@
                         VerticalAlignment="Center">
                 <ComboBox
                     x:Name="_filterComboBox"
+                    AutomationProperties.AutomationId="PluginFilterComboBox"
                     MinWidth="140"
                     Height="36"
                     SelectionChanged="FilterComboBox_SelectionChanged">
@@ -173,6 +176,7 @@
                 
                 <wpfui:Button
                     x:Name="_bulkImportButton"
+                    AutomationProperties.AutomationId="PluginBulkImportButton"
                     Icon="Open24"
                     Appearance="Secondary"
                     Margin="8,0,0,0"
@@ -182,6 +186,7 @@
                 
                 <wpfui:Button
                     x:Name="_refreshButton"
+                    AutomationProperties.AutomationId="PluginRefreshButton"
                     Icon="ArrowClockwise24"
                     Appearance="Secondary"
                     Margin="8,0,0,0"
@@ -191,6 +196,7 @@
 
                 <wpfui:Button
                     x:Name="_bulkUpdateButton"
+                    AutomationProperties.AutomationId="PluginBulkUpdateButton"
                     Icon="ArrowCircleUp24"
                     Appearance="Primary"
                     Margin="8,0,0,0"
@@ -199,6 +205,18 @@
                     Visibility="Collapsed"
                     ToolTip="{x:Static resources:Resource.PluginExtensionsPage_UpdateAllTooltip}"
                     Content="{x:Static resources:Resource.PluginExtensionsPage_UpdateAll}" />
+
+                <wpfui:Button
+                    x:Name="_bulkInstallButton"
+                    AutomationProperties.AutomationId="PluginBulkInstallButton"
+                    Icon="Open24"
+                    Appearance="Primary"
+                    Margin="8,0,0,0"
+                    Height="36"
+                    Click="BulkInstallButton_Click"
+                    Visibility="Collapsed"
+                    ToolTip="Install all available plugins"
+                    Content="Install All" />
             </StackPanel>
         </Grid>
 
@@ -217,6 +235,7 @@
         <!-- Results Count -->
         <TextBlock
             x:Name="_resultsCountTextBlock"
+            AutomationProperties.AutomationId="PluginResultsCountText"
             Grid.Row="3"
             Margin="0,0,0,12"
             FontSize="12"
@@ -226,6 +245,7 @@
         <!-- Plugins List -->
         <Grid Grid.Row="4">
             <ListBox x:Name="_pluginsListBox"
+                     AutomationProperties.AutomationId="PluginListBox"
                      Style="{StaticResource PluginListBoxStyle}"
                      Padding="0,0,0,24"
                      ClipToBounds="False"
@@ -234,7 +254,9 @@
                      ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid MinHeight="90" Background="Transparent">
+                        <Grid MinHeight="90"
+                              Background="Transparent"
+                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}">
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="{x:Static resources:Resource.PluginExtensionsPage_OpenFolder}" Click="ContextMenu_OpenFolder_Click" Tag="{Binding PluginId}">
@@ -324,37 +346,44 @@
                                                Style="{StaticResource PluginVersionStyle}" />
                                     
                                     <!-- Update Info Icon -->
-                                    <wpfui:Button Icon="Info24"
+                                    <wpfui:Button Icon="ArrowCircleUp24"
+                                                 AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUpdateInfoButton_{0}}"
                                                  Padding="4,0"
                                                  Margin="6,0,0,0"
                                                  Background="Transparent"
                                                  BorderThickness="0"
                                                  FontSize="12"
                                                  Foreground="{DynamicResource SystemAccentColorBrush}"
-                                                 Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                 Click="PluginUpdateInfoButton_Click"
+                                                 Visibility="{Binding UpdateInfoVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                  ToolTipService.InitialShowDelay="100">
                                         <wpfui:Button.ToolTip>
                                             <ToolTip Background="{DynamicResource ControlFillColorDefaultBrush}"
                                                      BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                                      Padding="12"
-                                                     MaxWidth="400">
+                                                     MaxWidth="360">
                                                 <StackPanel>
                                                     <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_NewVersionAvailable}" 
                                                                FontWeight="Bold" 
-                                                               FontSize="14" 
+                                                               FontSize="13"
                                                                Margin="0,0,0,8" />
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_VersionLabel}" FontWeight="SemiBold" />
                                                         <TextBlock Text="{Binding NewVersion}" />
                                                     </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="0,0,0,8"
+                                                                Visibility="{Binding ReleaseDate, Converter={StaticResource TextToVisibilityConverter}}">
                                                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_ReleaseDateLabel}" FontWeight="SemiBold" />
                                                         <TextBlock Text="{Binding ReleaseDate}" />
                                                     </StackPanel>
-                                                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_ChangelogLabel}" FontWeight="SemiBold" Margin="0,0,0,4" />
-                                                    <TextBlock Text="{Binding Changelog}" 
-                                                               TextWrapping="Wrap" 
-                                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                    <StackPanel Visibility="{Binding Changelog, Converter={StaticResource TextToVisibilityConverter}}">
+                                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_ChangelogLabel}" FontWeight="SemiBold" Margin="0,0,0,4" />
+                                                        <TextBlock Text="{Binding Changelog}" 
+                                                                   MaxHeight="96"
+                                                                   TextWrapping="Wrap" 
+                                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </ToolTip>
                                         </wpfui:Button.ToolTip>
@@ -392,6 +421,7 @@
                                         HorizontalAlignment="Right">
                                 <!-- Install/Update Button -->
                                 <Button Content="{Binding InstallButtonText}"
+                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
                                         Width="90"
                                         Height="30"
@@ -401,6 +431,7 @@
                                 
                                 <!-- Configuration Button -->
                                 <Button Content="{Binding ConfigureButtonText}"
+                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
                                         Width="70"
                                         Height="28"
@@ -419,16 +450,24 @@
                                 
                                 <!-- Open Button -->
                                 <Button Content="{Binding OpenButtonText}"
+                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
                                         Width="70"
                                         Height="28"
                                         Margin="8,0,0,0"
-                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         Click="PluginOpenButton_Click"
-                                        Tag="{Binding PluginId}" />
+                                        Tag="{Binding PluginId}">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                            <Binding Path="IsInstalled" />
+                                            <Binding Path="SupportsOpenAction" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                </Button>
                                 
                                 <!-- Uninstall Button -->
                                 <Button Content="{Binding UninstallButtonText}"
+                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
                                         Width="70"
                                         Height="28"
@@ -445,6 +484,7 @@
             <!-- Loading Indicator -->
             <StackPanel
                 x:Name="_loadingIndicator"
+                AutomationProperties.AutomationId="PluginLoadingIndicator"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Visibility="Collapsed"
@@ -485,6 +525,7 @@
             <!-- No Plugins Message -->
             <StackPanel
                 x:Name="_noPluginsMessage"
+                AutomationProperties.AutomationId="PluginNoPluginsMessage"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Visibility="Collapsed"
@@ -514,6 +555,7 @@
             <!-- No Results Message -->
             <StackPanel
                 x:Name="_noResultsStackPanel"
+                AutomationProperties.AutomationId="PluginNoResultsMessage"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,64,0,0"

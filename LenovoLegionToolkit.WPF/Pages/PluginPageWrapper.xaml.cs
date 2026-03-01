@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -71,10 +70,13 @@ public partial class PluginPageWrapper : UiPage
             }
         }
 
-        if (_pluginId != null)
+        if (_pluginId == null)
         {
-            LoadPluginPage();
+            ShowEmptyState("Unable to resolve plugin entry. Please return to Plugin Extensions and reopen this plugin.");
+            return;
         }
+
+        LoadPluginPage();
     }
 
     private void LoadPluginPage()
@@ -86,6 +88,7 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} not found");
+                ShowEmptyState($"Plugin '{_pluginId}' is not available.");
                 return;
             }
 
@@ -111,6 +114,7 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} does not provide IPluginPage");
+                ShowEmptyState($"Plugin '{plugin.Name}' does not provide a feature page.");
                 return;
             }
 
@@ -170,6 +174,7 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"PluginPageWrapper: _pluginContentFrame not found");
+                ShowEmptyState("Plugin content container is unavailable.");
                 return;
             }
             
@@ -177,22 +182,54 @@ public partial class PluginPageWrapper : UiPage
             {
                 // 如果是 Page，使用 Frame 导航
                 frame.Navigate(pageControl);
+                HideEmptyState();
             }
             else if (pluginControl is UIElement uiElement)
             {
                 // 如果是其他 UIElement，使用 ContentPresenter（通过 Frame 的内容区域）
                 frame.Content = uiElement;
+                HideEmptyState();
             }
             else
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} CreatePage() did not return a UIElement or Page");
+                ShowEmptyState($"Plugin '{plugin.Name}' did not return a valid UI page.");
             }
         }
         catch (System.Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to load plugin page for {_pluginId}", ex);
+            ShowEmptyState($"Failed to load plugin page: {ex.Message}");
         }
     }
+
+    private void ShowEmptyState(string message)
+    {
+        var emptyStateBorder = this.FindName("_emptyStateBorder") as Border;
+        var emptyStateText = this.FindName("_emptyStateTextBlock") as TextBlock;
+        var frame = this.FindName("_pluginContentFrame") as Frame;
+
+        if (frame != null)
+            frame.Content = null;
+
+        if (emptyStateText != null)
+            emptyStateText.Text = message;
+
+        if (emptyStateBorder != null)
+            emptyStateBorder.Visibility = Visibility.Visible;
+    }
+
+    private void HideEmptyState()
+    {
+        var emptyStateBorder = this.FindName("_emptyStateBorder") as Border;
+        if (emptyStateBorder != null)
+            emptyStateBorder.Visibility = Visibility.Collapsed;
+
+        var emptyStateText = this.FindName("_emptyStateTextBlock") as TextBlock;
+        if (emptyStateText != null)
+            emptyStateText.Text = string.Empty;
+    }
+
 }

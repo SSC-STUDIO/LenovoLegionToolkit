@@ -23,10 +23,10 @@ The process cannot access the file '...' because it is being used by another pro
 
 ```bash
 # 先构建一次
-dotnet build LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj
+dotnet build LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj -c Release
 
 # 运行测试时不重新构建
-dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --no-build --verbosity normal
+dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj -c Release --no-build --verbosity normal
 ```
 
 ### 方案 2: 清理并重启
@@ -129,5 +129,5 @@ dotnet test LenovoLegionToolkit.Tests
 
 ---
 
-**最后更新**: 2026-02-06
+**最后更新**: 2026-02-26
 **适用版本**: .NET 10.0, xUnit 2.x

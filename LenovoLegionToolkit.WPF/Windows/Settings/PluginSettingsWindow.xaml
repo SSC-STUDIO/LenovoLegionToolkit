@@ -56,8 +56,8 @@
                 <TextBlock
                     x:Name="_pluginNameTextBlock"
                     Margin="0,0,0,8"
-                    FontSize="20"
-                    FontWeight="Medium"
+                    FontSize="24"
+                    FontWeight="Normal"
                     Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}" />
                 
                 <TextBlock

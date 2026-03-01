@@ -59,10 +59,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>권장됨</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>선택된 {1} 작업 중 {0}</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>캐시 정리</value>
@@ -110,2089 +110,2081 @@
     <value>시스템 최적화</value>
   </data>
 <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>레노버 리전 툴킷</value>
   </data>
   <data name="AboutPage_ApplicationFolders" xml:space="preserve">
-    <value>Application Folders</value>
+    <value>애플리케이션 폴더</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>Build</value>
+    <value>빌드</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
-    <value>Data</value>
+    <value>데이터</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
-    <value>Latest release on GitHub</value>
+    <value>GitHub 최신 릴리스</value>
   </data>
   <data name="AboutPage_Links" xml:space="preserve">
-    <value>Links</value>
+    <value>링크</value>
   </data>
   <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
-    <value>Project website on GitHub</value>
+    <value>GitHub 프로젝트 웹사이트</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temp</value>
+    <value>온도</value>
   </data>
   <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
-    <value>Third-party libraries</value>
+    <value>서드파티 라이브러리</value>
   </data>
   <data name="AboutPage_Title" xml:space="preserve">
-    <value>About</value>
+    <value>정보</value>
   </data>
   <data name="AboutPage_TranslationCredit" xml:space="preserve">
-    <value>Translations provided by community.</value>
+    <value>번역은 커뮤니티에서 제공되었습니다.</value>
   </data>
   <data name="AboutPage_Version" xml:space="preserve">
-    <value>Version</value>
+    <value>버전</value>
   </data>
   <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>삭제</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Active</value>
+    <value>활성</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>추가</value>
   </data>
   <data name="AddAutomationStepWindow_Title" xml:space="preserve">
-    <value>Add step</value>
+    <value>단계 추가</value>
   </data>
   <data name="AddNew" xml:space="preserve">
-    <value>Add new</value>
+    <value>새로 추가</value>
   </data>
   <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
-    <value>Charge USB devices, when the laptop is off, sleeping or hibernated.</value>
+    <value>노트북이 꺼져 있거나 절전 모드 또는 최대 절전 모드일 때 USB 기기를 충전합니다.</value>
   </data>
   <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
-    <value>Always on USB</value>
+    <value>항상 켜진 USB</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
-    <value>Charge USB devices, when the laptop is off, sleeping or hibernated.</value>
+    <value>노트북이 꺼져 있거나 절전 모드 또는 최대 절전 모드일 때 USB 기기를 충전합니다.</value>
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
-    <value>Always on USB</value>
+    <value>항상 켜진 USB</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>레노버 리전 툴킷</value>
   </data>
   <data name="Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>적용</value>
   </data>
   <data name="ApplyAndClose" xml:space="preserve">
-    <value>Apply &amp; Close</value>
+    <value>적용 및 닫기</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
-    <value>Lenovo Legion Toolkit must be running for automatic actions to work.</value>
+    <value>자동 작업이 작동하려면 레노버 리전 툴킷이 실행 중이어야 합니다.</value>
   </data>
   <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
-    <value>Enable</value>
+    <value>활성화</value>
   </data>
   <data name="AutomationPage_Actions_Empty" xml:space="preserve">
-    <value>No Actions defined. Click "Add new" to create new Action.</value>
+    <value>정의된 작업이 없습니다. 새 작업을 생성하려면 "새로 추가"를 클릭하세요.</value>
   </data>
   <data name="AutomationPage_Actions_Message" xml:space="preserve">
-    <value>If enabled, these action will run automatically. Whenever state changes, all actions will be evaluated from top to bottom.
-Only actions that match current state will run.</value>
+    <value>활성화하면 이 작업들이 자동으로 실행됩니다. 상태가 변경될 때마다 모든 작업은 위에서 아래로 평가됩니다. 
+ 현재 상태와 일치하는 작업만 실행됩니다.</value>
   </data>
   <data name="AutomationPage_Actions_Title" xml:space="preserve">
-    <value>Actions</value>
+    <value>작업</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
-    <value>Name...</value>
+    <value>이름...</value>
   </data>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
-    <value>Add new</value>
+    <value>새로 추가</value>
   </data>
   <data name="AutomationPage_ChangeIcon" xml:space="preserve">
-    <value>Change icon</value>
+    <value>아이콘 변경</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
-    <value>No Quick Actions defined. Click "Add new" to create new Quick Action.</value>
+    <value>정의된 빠른 작업이 없습니다. 새 빠른 작업을 만들려면 '새로 추가'를 클릭하세요.</value>
   </data>
   <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
-    <value>Quick actions are available in the right click menu of the tray icon.</value>
+    <value>빠른 작업은 트레이 아이콘의 오른쪽 클릭 메뉴에서 사용할 수 있습니다.</value>
   </data>
   <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
-    <value>Quick Actions</value>
+    <value>빠른 작업</value>
   </data>
   <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
-    <value>Name...</value>
+    <value>이름...</value>
   </data>
   <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
-    <value>Rename</value>
+    <value>이름 변경</value>
   </data>
   <data name="AutomationPage_Reverted_Message" xml:space="preserve">
-    <value>All changes reverted!</value>
+    <value>모든 변경 사항이 되돌려졌습니다!</value>
   </data>
   <data name="AutomationPage_Reverted_Title" xml:space="preserve">
-    <value>Reverted</value>
+    <value>되돌려짐</value>
   </data>
   <data name="AutomationPage_Saved_Message" xml:space="preserve">
-    <value>Changes were saved successfully!</value>
+    <value>변경 사항이 성공적으로 저장되었습니다!</value>
   </data>
   <data name="AutomationPage_Saved_Title" xml:space="preserve">
-    <value>Saved</value>
+    <value>저장됨</value>
   </data>
   <data name="AutomationPage_Title" xml:space="preserve">
-    <value>Automation</value>
+    <value>자동화</value>
   </data>
   <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
-    <value>Add step</value>
+    <value>단계 추가</value>
   </data>
   <data name="AutomationPipelineControl_Configure" xml:space="preserve">
-    <value>Configure</value>
+    <value>구성</value>
   </data>
   <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
-    <value>Exclusive</value>
+    <value>독점</value>
   </data>
   <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
-    <value>Do not execute further actions when this action runs.</value>
+    <value>이 작업이 실행될 때 추가 작업을 실행하지 않음</value>
   </data>
   <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
-    <value>Run now</value>
+    <value>지금 실행</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
-    <value>Completed with errors.</value>
+    <value>오류와 함께 완료되었습니다.</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
-    <value>Run now</value>
+    <value>지금 실행</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
-    <value>Completed successfully!</value>
+    <value>성공적으로 완료되었습니다!</value>
   </data>
   <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
-    <value>Run now</value>
+    <value>지금 실행</value>
   </data>
   <data name="AutomationPipelineControl_Running" xml:space="preserve">
-    <value>Running...</value>
+    <value>실행 중...</value>
   </data>
   <data name="AutomationPipelineControl_Step" xml:space="preserve">
-    <value>{0} step</value>
+    <value>{0} 단계</value>
   </data>
   <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
-    <value>{0} steps</value>
+    <value>{0} 단계들</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
-    <value>After {0}</value>
+    <value>{0} 이후</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
-    <value>Apps</value>
+    <value>앱</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
-    <value>At sunrise</value>
+    <value>일출 시</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
-    <value>At sunset</value>
+    <value>일몰 시</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
-    <value>At {0:D2}:{1:D2}</value>
+    <value>{0:D2}:{1:D2} 시</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>전원 모드</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>사전 설정</value>
   </data>
   <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>이름 없음</value>
   </data>
   <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
-    <value>Configure</value>
+    <value>구성</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
-    <value>Automatically detects when certain games are running and tweaks CPU and GPU performance. Temperatures and fan noise might increase.</value>
+    <value>특정 게임이 실행될 때 자동으로 감지하고 CPU 및 GPU 성능을 최적화합니다. 온도와 팬 소음이 증가할 수 있습니다.</value>
   </data>
   <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
-    <value>Enable AI Engine</value>
+    <value>AI 엔진 활성화</value>
   </data>
   <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
-    <value>Balance Mode Settings</value>
+    <value>균형 모드 설정</value>
   </data>
   <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Device Information:</value>
+    <value>장치 정보:</value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Machine Type:</value>
+    <value>기계 유형:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model:</value>
+    <value>모델:</value>
   </data>
   <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Click "OK" to continue, or "Cancel" to exit.</value>
+    <value>"계속하려면 '확인'을 클릭하고, 종료하려면 '취소'를 클릭하세요."</value>
   </data>
   <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Vendor:</value>
+    <value>판매자:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Some features will be disabled (Dashboard, Automation, Macros)</value>
+    <value>- 일부 기능이 비활성화됩니다 (대시보드, 자동화, 매크로)</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>If you click "OK" to continue:</value>
+    <value>계속하려면 "확인"을 클릭하십시오:</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Your device may be missing required system components (LenovoGameZoneData).</value>
+    <value>장치에 필요한 시스템 구성 요소(LenovoGameZoneData)가 없을 수 있습니다.</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Other basic features will still be available</value>
+    <value>- 다른 기본 기능은 여전히 사용할 수 있습니다</value>
   </data>
   <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- The software will run in restricted mode</value>
+    <value>- 소프트웨어가 제한 모드로 실행됩니다</value>
   </data>
   <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
-    <value>Choose how the battery is charged.</value>
+    <value>배터리 충전 방식을 선택하세요.</value>
   </data>
   <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
-    <value>Battery Mode</value>
+    <value>배터리 모드</value>
   </data>
   <data name="BatteryModeControl_Message" xml:space="preserve">
-    <value>Choose how the battery is charged.</value>
+    <value>배터리 충전 방식을 선택하세요.</value>
   </data>
   <data name="BatteryModeControl_Title" xml:space="preserve">
-    <value>Battery Mode</value>
+    <value>배터리 모드</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>활성화하면, 이 장치는 밤새 전원에 연결되어 있을 경우 80%까지 충전되며, 아침에 장치를 사용할 때까지 100%로 충전됩니다.</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>야간 배터리 충전</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>활성화하면, 이 장치는 밤새 전원에 연결되어 있을 경우 80%까지 충전되며, 아침에 장치를 사용할 때까지 100%로 충전됩니다.</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>야간 배터리 충전</value>
   </data>
   <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
-    <value>Connected, charging...</value>
+    <value>연결됨, 충전 중...</value>
   </data>
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
-    <value>Connected, not charging</value>
+    <value>연결됨, 충전 안됨</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>배터리 최대 충전 용량.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>배터리 상태</value>
   </data>
   <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Current temperature of the battery.</value>
+    <value>배터리 현재 온도.</value>
   </data>
   <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Battery temperature</value>
+    <value>배터리 온도</value>
   </data>
   <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Current battery capacity.</value>
+    <value>현재 배터리 용량.</value>
   </data>
   <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Current capacity</value>
+    <value>현재 용량</value>
   </data>
   <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Number of charge/discharge cycles.</value>
+    <value>충전/방전 사이클 횟수.</value>
   </data>
   <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Cycle count</value>
+    <value>사이클 수</value>
   </data>
   <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Battery capacity as designed.</value>
+    <value>설계된 배터리 용량.</value>
   </data>
   <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Design capacity</value>
+    <value>설계 용량</value>
   </data>
   <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Rate at which battery is charged (+), or discharged (-).</value>
+    <value>배터리 충전( ), 방전(-) 속도.</value>
   </data>
   <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Discharge rate</value>
+    <value>방전 속도</value>
   </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
-    <value>Estimated time remaining: {0}</value>
+    <value>남은 예상 시간: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
-    <value>Estimating time...</value>
+    <value>시간 추정 중...</value>
   </data>
   <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>First use date</value>
+    <value>첫 사용 날짜</value>
   </data>
   <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>When was the battery first used.</value>
+    <value>배터리를 처음 사용한 날짜.</value>
   </data>
   <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Battery capacity when fully charged.</value>
+    <value>완전히 충전되었을 때의 배터리 용량.</value>
   </data>
   <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Full charge capacity</value>
+    <value>완전 충전 용량</value>
   </data>
   <data name="BatteryPage_LowLevel" xml:space="preserve">
-    <value>Battery level low</value>
+    <value>배터리 잔량 낮음</value>
   </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
-    <value>Low wattage charger connected</value>
+    <value>저전력 충전기 연결됨</value>
   </data>
   <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>When was the battery manufactured.</value>
+    <value>배터리 제조 날짜.</value>
   </data>
   <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Manufacture date</value>
+    <value>제조일</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>배터리가 충전되는 최대 속도( ), 또는 방전되는 속도(-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>최대 방전 속도</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>배터리 최소 충전( ), 방전(-) 속도.</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>최소 방전 속도</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Time since laptop was last connected to AC power.
-This time might not be accurate, if laptop was charged when sleeping or off.</value>
+    <value>노트북이 마지막으로 AC 전원에 연결된 이후 시간. 
+ 노트북이 절전 모드나 종료 상태에서 충전된 경우, 이 시간이 정확하지 않을 수 있음.</value>
   </data>
   <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>On battery since</value>
+    <value>배터리 사용 시작 시간</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
-    <value>Battery</value>
+    <value>배터리</value>
   </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
-    <value>Custom Boot Logo is set</value>
+    <value>사용자 정의 부팅 로고가 설정되었습니다</value>
   </data>
   <data name="BootLogoWindow_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>사용자 정의</value>
   </data>
   <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
-    <value>Default Boot Logo is set</value>
+    <value>기본 부팅 로고가 설정되었습니다</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Custom boot logo must be exactly {0} pixels large.
-Supported formats are: {1}.</value>
+    <value>사용자 정의 부팅 로고는 정확히 {0} 픽셀이어야 합니다. 
+ 지원되는 형식: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
-    <value>Custom logo could not be set: {0}</value>
+    <value>사용자 정의 로고를 설정할 수 없습니다: {0}</value>
   </data>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
-    <value>Custom boot logo set.</value>
+    <value>맞춤 부츠 로고 세트.</value>
   </data>
   <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
-    <value>Default logo could not be set: {0}</value>
+    <value>기본 로고를 설정할 수 없었다: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
-    <value>Default boot logo set.</value>
+    <value>기본 부팅 로고 설정.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Cannot mount EFI partition.</value>
+    <value>EFI 파티션을 탑재할 수 없습니다.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
-    <value>Cannot set UEFI privilege.</value>
+    <value>UEFI 권한을 설정할 수 없습니다.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
-    <value>Invalid image format.</value>
+    <value>잘못된 이미지 형식입니다.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Invalid image size.</value>
+    <value>잘못된 이미지 크기입니다.</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Not enough free space on EFI partition.</value>
+    <value>EFI 파티션에 충분한 여유 공간이 없습니다.</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
-    <value>Status</value>
+    <value>상태</value>
   </data>
   <data name="BootLogoWindow_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>부트 로고</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>취소</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>° C</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>지우기</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>닫기</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>모두 축소</value>
   </data>
   <data name="Color_Blue" xml:space="preserve">
-    <value>Blue</value>
+    <value>파랑</value>
   </data>
   <data name="Color_Green" xml:space="preserve">
-    <value>Green</value>
+    <value>초록</value>
   </data>
   <data name="Color_Red" xml:space="preserve">
-    <value>Red</value>
+    <value>빨강</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>컴퓨터 사용 및 전원 상태에 따라 GPU 작동 모드를 선택하세요. 모드 전환 시 재시작이 필요할 수 있습니다.</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>GPU 작동 모드</value>
   </data>
   <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>컴퓨터 사용 및 전원 상태에 따라 GPU 작동 모드를 선택하세요. 모드 전환 시 재시작이 필요할 수 있습니다.</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Changing to {0} requires restart. Do you want to restart now?</value>
+    <value>{0}로 변경하려면 재시작이 필요합니다. 지금 재시작하시겠습니까?</value>
   </data>
   <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
-    <value>Restart required</value>
+    <value>재시작 필요</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>GPU 작동 모드</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>간편 보기</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Error occured when reading device information.</value>
   </data>
   <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Quick Actions</value>
+    <value>빠른 작업</value>
   </data>
   <data name="Continue" xml:space="preserve">
-    <value>Continue</value>
+    <value>계속</value>
   </data>
   <data name="CopiedToClipboard_Message" xml:space="preserve">
-    <value>Text copied to clipboard.</value>
+    <value>텍스트가 클립보드에 복사되었습니다.</value>
   </data>
   <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
-    <value>"{0}" copied to clipboard.</value>
+    <value>"{0}"가 클립보드에 복사되었습니다.</value>
   </data>
   <data name="CopiedToClipboard_Title" xml:space="preserve">
-    <value>Copied!</value>
+    <value>복사됨!</value>
   </data>
   <data name="CopyAll" xml:space="preserve">
-    <value>Copy all</value>
+    <value>모두 복사</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>생성</value>
   </data>
   <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
-    <value>Create Action</value>
+    <value>작업 생성</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>찾아보기…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>적어도 하나의 파일 확장자를 입력하십시오.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>폴더를 선택하십시오.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>여러 확장자를 쉼표로 구분하세요(예: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>확장</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>폴더</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>하위 폴더 포함</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>사용자 정의 정리 규칙</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
-    <value>dGPU connected</value>
+    <value>dGPU 연결됨</value>
   </data>
   <data name="DGPU_Disconnected_Title" xml:space="preserve">
-    <value>dGPU disconnected</value>
+    <value>dGPU 연결 끊김</value>
   </data>
   <data name="DashboardPage_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>사용자 정의</value>
   </data>
   <data name="DashboardPage_Display_Title" xml:space="preserve">
-    <value>Display</value>
+    <value>디스플레이</value>
   </data>
   <data name="DashboardPage_Graphics_Title" xml:space="preserve">
-    <value>Graphics</value>
+    <value>그래픽</value>
   </data>
   <data name="DashboardPage_Other_Title" xml:space="preserve">
-    <value>Other</value>
+    <value>기타</value>
   </data>
   <data name="DashboardPage_Power_Title" xml:space="preserve">
-    <value>Power</value>
+    <value>힘</value>
   </data>
   <data name="DashboardPage_Title" xml:space="preserve">
-    <value>Home</value>
+    <value>홈</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU if it is active unnecessarily.
-
-WARNING: This action will not run correctly, if internal display is off or Hybrid mode is not active.</value>
+    <value>불필요하게 활성화된 경우 외장 GPU를 비활성화하세요. 경고: 내부 디스플레이가 꺼져 있거나 하이브리드 모드가 활성화되지 않은 경우 이 작업은 올바르게 실행되지 않습니다.</value>
   </data>
   <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
-    <value>Deactivate GPU</value>
+    <value>GPU 비활성화</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>기본값</value>
   </data>
   <data name="DelayAutomationStepControl_Message" xml:space="preserve">
-    <value>Add delay before running next step.</value>
+    <value>다음 단계를 실행하기 전에 지연을 추가하세요.</value>
   </data>
   <data name="DelayAutomationStepControl_Title" xml:space="preserve">
-    <value>Delay</value>
+    <value>지연</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>삭제</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Deselect all</value>
+    <value>모두 선택 해제</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
-    <value>Show connected devices only</value>
+    <value>연결된 장치만 표시</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
-    <value>Show removable devices only</value>
+    <value>분리 가능한 장치만 표시</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
-    <value>Show selected devices only</value>
+    <value>선택된 장치만 표시</value>
   </data>
   <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
-    <value>BIOS version</value>
+    <value>BIOS 버전</value>
   </data>
   <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
-    <value>Device</value>
+    <value>장치</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
-    <value>Lenovo Support</value>
+    <value>레노버 지원</value>
   </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>기계 유형</value>
   </data>
   <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
-    <value>Manufacturer</value>
+    <value>제조사</value>
   </data>
   <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
-    <value>Model</value>
+    <value>모델</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>새로 고침</value>
   </data>
   <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
-    <value>Serial number</value>
+    <value>시리얼 번호</value>
   </data>
   <data name="DeviceInformationWindow_Title" xml:space="preserve">
-    <value>About your device</value>
+    <value>장치 정보</value>
   </data>
   <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
-    <value>End date</value>
+    <value>종료 날짜</value>
   </data>
   <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
-    <value>Start date</value>
+    <value>시작 날짜</value>
   </data>
   <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
-    <value>Warranty</value>
+    <value>보증</value>
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
-    <value>Devices</value>
+    <value>장치</value>
   </data>
   <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
-    <value>Deactivate</value>
+    <value>비활성화</value>
   </data>
   <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
-    <value>Kill apps</value>
+    <value>앱 종료</value>
   </data>
   <data name="DiscreteGPUControl_Message" xml:space="preserve">
-    <value>Disable discrete GPU, if it is active unnecessarily.</value>
+    <value>불필요하게 활성화된 경우 개별 GPU 비활성화.</value>
   </data>
   <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
-    <value>A monitor is connected to nVidia GPU.</value>
+    <value>모니터가 nVidia GPU에 연결됨.</value>
   </data>
   <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
-    <value>No processes</value>
+    <value>실행 중인 프로세스 없음</value>
   </data>
   <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
-    <value>Performance state</value>
+    <value>성능 상태</value>
   </data>
   <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
-    <value>Unknown</value>
+    <value>알 수 없음</value>
   </data>
   <data name="DiscreteGPUControl_Processes" xml:space="preserve">
-    <value>Processes</value>
+    <value>프로세스</value>
   </data>
   <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
-    <value>Restart GPU</value>
+    <value>GPU 재시작</value>
   </data>
   <data name="DiscreteGPUControl_Title" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>개별 GPU</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Change display brightness of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>내장 디스플레이의 밝기 변경. 
+  
+ 경고: 내부 디스플레이가 꺼져 있으면 이 작업이 제대로 실행되지 않습니다.</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Display brightness</value>
+    <value>디스플레이 밝기</value>
   </data>
 
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
-    <value>Change scaling of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>내장 디스플레이의 배율을 변경합니다. 
+  
+ 경고: 내장 디스플레이가 꺼져 있으면 이 동작이 제대로 실행되지 않습니다.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>디피</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
-    <value>Change scale of the built-in display.</value>
+    <value>내장 디스플레이의 배율을 변경합니다.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>디피</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>편집</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>이름</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
-    <value>Edit group name</value>
+    <value>그룹 이름 편집</value>
   </data>
   <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>이름</value>
   </data>
   <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
-    <value>Create group</value>
+    <value>그룹 생성</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
-    <value>Some features may not appear on the Dashboard depending on state and configuration of your laptop.</value>
+    <value>노트북의 상태 및 구성에 따라 일부 기능이 대시보드에 표시되지 않을 수 있습니다.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
-    <value>Sensors</value>
+    <value>센서</value>
   </data>
   <data name="EditDashboardWindow_Title" xml:space="preserve">
-    <value>Customize Dashboard</value>
+    <value>대시보드 사용자 정의</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
-    <value>Uncheck refresh rates that you do not want to use when Fn+R shortcut is used.</value>
+    <value>Fn R 단축키 사용 시 사용하고 싶지 않은 새로 고침 속도의 체크 표시 해제.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>Make sure that laptop display is on. Lenovo Legion Toolkit can't load refresh rates for a display that is not on.</value>
+    <value>노트북 디스플레이가 켜져 있는지 확인하십시오. Lenovo Legion Toolkit은 꺼져 있는 디스플레이의 새로 고침 속도를 불러올 수 없습니다.</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
-    <value>No Refresh Rates found</value>
+    <value>새로 고침 속도를 찾을 수 없음</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
-    <value>Exclude Refresh Rates</value>
+    <value>새로 고침 속도 제외</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>종료</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>모두 확장</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>내보내기</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
-    <value>Use only integrated GPU when on battery and both integrated and discrete GPU when AC adapter is connected. When a non-standard adapter is connected, system switches to Hybrid-iGPU Only Mode.</value>
+    <value>배터리 사용 시에는 통합 GPU만 사용하고, AC 어댑터 연결 시에는 통합 및 개별 GPU 모두 사용합니다. 비표준 어댑터가 연결되면 시스템은 Hybrid-iGPU Only 모드로 전환됩니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
-    <value>Hybrid-Auto Mode</value>
+    <value>하이브리드-자동 모드</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
-    <value>Switching to and from this mode requires restart.</value>
+    <value>이 모드로 전환하거나 종료하려면 시스템을 재시작해야 합니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
-    <value>Use only discrete GPU. This mode provides best graphics performance, but increases power consumption.</value>
+    <value>개별 GPU만 사용. 이 모드는 최고의 그래픽 성능을 제공하지만 전력 소모가 증가합니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
-    <value>dGPU Mode</value>
+    <value>dGPU 모드</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
-    <value>Both integrated and discrete GPU are enabled. System will automatically switch between them based on its needs.</value>
+    <value>통합 및 개별 GPU 모두 사용 가능합니다. 시스템은 필요에 따라 자동으로 두 GPU 간 전환합니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>하이브리드 모드</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
-    <value>This mode only takes effect when discrete GPU is not working.</value>
+    <value>이 모드는 개별 GPU가 작동하지 않을 때만 적용됩니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
-    <value>Only use integrated GPU. This mode minimizes power consumption and noise.</value>
+    <value>통합 GPU만 사용합니다. 이 모드는 전력 소비와 소음을 최소화합니다.</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
-    <value>Hybrid-iGPU Only Mode</value>
+    <value>하이브리드-iGPU 전용 모드</value>
   </data>
   <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
-    <value>About GPU Working Modes</value>
+    <value>GPU 작동 모드에 대해</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>° F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>CPU의</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
-    <value>CPU Sensor</value>
+    <value>CPU 센서</value>
   </data>
   <data name="FanCurveControl_FanSpeed" xml:space="preserve">
-    <value>Fan Speed</value>
+    <value>팬 속도</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPU</value>
+    <value>GPU 지원</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU # 2</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filter...</value>
+    <value>필터...</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>덮개를 열 때 노트북을 켭니다.</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>시작하려면 뒤집기</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when you open the lid.</value>
+    <value>덮개를 열 때 노트북을 켭니다.</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>시작하려면 뒤집기</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Fn 키를 누르지 않고 F1-F12 키의 보조 기능을 사용합니다.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn 잠금</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
-    <value>Use secondary functions of F1-F12 keys without holding Fn key.</value>
+    <value>Fn 키를 누르지 않고 F1-F12 키의 보조 기능을 사용합니다.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn 잠금</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>GHz</value>
+    <value>기가헤르츠</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
-    <value>Activate Custom Mode preset.
-This settings takes effect only when Custom Mode is enabled.</value>
+    <value>커스텀 모드 프리셋을 활성화하세요. 
+: 이 설정은 커스텀 모드가 활성화되었을 때만 적용됩니다.</value>
   </data>
   <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
-    <value>Custom Mode preset</value>
+    <value>커스텀 모드 프리셋</value>
   </data>
   <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
-    <value>Active preset</value>
+    <value>활성 프리셋</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>경고! 
+ 일부 노트북은 표시된 값보다 높은 값을 허용할 수 있지만, 주의하세요. 이 옵션은 예측할 수 없는 동작을 초래할 수 있습니다. 무엇을 하고 있는지 확실하지 않다면, 이 값을 0으로 두세요.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>Maximum offset</value>
+    <value>최대 오프셋</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
-    <value>Do not change options below unless you really know what you are doing.</value>
+    <value>정말로 무엇을 하고 있는지 알지 못한다면 아래 옵션은 변경하지 마세요.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>경고! 
+ 일부 노트북은 표시된 값보다 낮은 값을 허용할 수 있지만 주의하세요. 이 옵션은 예측할 수 없는 동작을 초래할 수 있습니다. 무엇을 하는지 확실하지 않다면 이 값을 0으로 둡니다.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>Minimum offset</value>
+    <value>최소 오프셋</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
-    <value>Advanced</value>
+    <value>고급</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
-    <value>APU sPPT Power Limit</value>
+    <value>APU sPPT 전력 한도</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU with a minor delay.</value>
+    <value>약간의 지연 후 CPU가 도달할 수 있는 최대 전력 소비량 피크.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
-    <value>Long Term Power Limit (Cross Loading)</value>
+    <value>장기 전력 제한 (크로스 로딩)</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
-    <value>The maximum power consumption that can be reached by the CPU when both CPU and GPU are fully utilized.</value>
+    <value>CPU와 GPU가 모두 최대 활용될 때 CPU가 도달할 수 있는 최대 전력 소비량.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
-    <value>Long Term Power Limit</value>
+    <value>장기 전력 제한</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
-    <value>The continuous power consumption that can be reached by the CPU.</value>
+    <value>CPU가 도달할 수 있는 지속적인 전력 소비량.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
-    <value>Short Term Power Limit Duration</value>
+    <value>단기 전력 제한 지속 시간</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
-    <value>The amount of time the CPU is allowed to boost and use Short Term Power Limit for. When Tau expires, Long Term Power Limit is used.</value>
+    <value>CPU가 부스트를 하고 단기 전력 제한을 사용할 수 있는 시간입니다. 타우(Tau)가 만료되면 장기 전력 제한이 사용됩니다.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
-    <value>Peak Power Limit</value>
+    <value>최대 전력 제한</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
-    <value>The maximum instantaneous power consumption that can be reached by the CPU.</value>
+    <value>CPU가 도달할 수 있는 최대 순간 전력 소비량.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
-    <value>Short Term Power Limit</value>
+    <value>단기 전력 제한</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
-    <value>The peak power consumption that can be reached by the CPU within a short amount time.</value>
+    <value>CPU가 짧은 시간 내에 도달할 수 있는 최대 전력 소비량.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
-    <value>CPU Temperature Limit</value>
+    <value>CPU 온도 제한</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the CPU before frequency and power is reduced.</value>
+    <value>주파수와 전력이 감소되기 전에 CPU가 도달할 수 있는 최대 온도.</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>CPU의</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
-    <value>Name</value>
+    <value>이름</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
-    <value>Preset name</value>
+    <value>프리셋 이름</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
-    <value>Couldn't apply settings</value>
+    <value>설정을 적용할 수 없습니다</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
-    <value>Couldn't load setting.</value>
+    <value>설정을 불러올 수 없습니다.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
-    <value>Fan speed is not strictly determined by one temperature sensor. It will raise or lower speed per the highest sensor between CPU, GPU and Heatsink temperature. Exact values will appear when you hover mouse over each step.</value>
+    <value>팬 속도는 한 개의 온도 센서에 의해 엄격하게 결정되지 않습니다. CPU, GPU 및 히트싱크 온도 중 가장 높은 센서에 따라 속도가 증가하거나 감소합니다. 각 단계 위에 마우스를 올리면 정확한 값이 표시됩니다.</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
-    <value>Fan curve</value>
+    <value>팬 곡선</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>WARNING!
-Prolonged usage of this option will degrade fans decreasing their longevity.
-Seriously, be careful with this option!</value>
+    <value>경고! 
+ 이 옵션을 장시간 사용하면 팬이 손상되어 수명이 줄어듭니다. 
+ 정말로, 이 옵션을 사용할 때 주의하세요!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
-    <value>Maximum fan speed</value>
+    <value>최대 팬 속도</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
-    <value>Fans</value>
+    <value>팬</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
-    <value>Configurable TGP</value>
+    <value>설정 가능한 TGP</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
-    <value>The additional amount of power that can be allocated to the GPU on top of base power consumption.</value>
+    <value>기본 전력 소비 외에 GPU에 추가로 할당될 수 있는 전력량.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
-    <value>Dynamic Boost</value>
+    <value>다이내믹 부스트</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
-    <value>The additional maximum power that can be allocated to the GPU based on the power consumption of the CPU.</value>
+    <value>CPU의 전력 소비를 기반으로 GPU에 할당될 수 있는 추가 최대 전력.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
-    <value>GPU Temperature Limit</value>
+    <value>GPU 온도 제한</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
-    <value>The maximum temperature that can be reached by the GPU before frequency and power is reduced.</value>
+    <value>GPU의 주파수와 전력이 감소되기 전에 도달할 수 있는 최대 온도.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>GPU 지원</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
-    <value>GPU to CPU Dynamic Boost</value>
+    <value>GPU에서 CPU로 동적 부스트</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+    <value>이는 CPU 사용량에 따라 GPU에서 CPU로 할당할 수 있는 최대 추가 전력입니다. 값이 높을수록 CPU를 사용하는 애플리케이션 성능이 향상됩니다.</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
-    <value>Total Processor Power Target In AC</value>
+    <value>AC 기준 총 프로세서 전력 목표</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
-    <value>The point at which the CPU triggers dynamic power consumption adjustment for the GPU.</value>
+    <value>CPU가 GPU의 동적 전력 소비 조정을 트리거하는 지점.</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+    <value>Legion Zone 또는 해당 서비스가 실행 중일 때 사용자 모드 설정이 올바르게 적용되지 않습니다.</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
-    <value>Custom Mode Settings</value>
+    <value>사용자 지정 모드 설정</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+    <value>Lenovo Vantage 또는 해당 서비스가 실행 중일 때 사용자 모드 설정이 올바르게 적용되지 않습니다.</value>
   </data>
   <data name="HDRAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.
-
-WARNING: This action will not run correctly if the internal display is off.</value>
+    <value>내장 디스플레이에서 높은 동적 범위(HDR)를 사용하도록 설정합니다. 
+  
+ 경고: 내부 디스플레이가 꺼져 있으면 이 작업은 올바르게 실행되지 않습니다.</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>hrd</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
-    <value>Enable high dynamic range (HDR) on the built-in display.</value>
+    <value>내장 디스플레이에서 높은 동적 범위(HDR)를 사용하도록 설정합니다.</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>HDR</value>
+    <value>hrd</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
-    <value>HDR usage is blocked by Windows settings.</value>
+    <value>HDR 사용은 Windows 설정에 의해 차단되었습니다.</value>
   </data>
   <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+    <value>숨기기</value>
   </data>
   <data name="HideAll" xml:space="preserve">
-    <value>Hide all</value>
+    <value>모두 숨기기</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
-If dGPU does not respond at all, please restart your laptop.</value>
+    <value>예상 결과가 보이지 않으면 몇 초 후 다시 모드를 변경해 보세요. 
+ dGPU가 전혀 반응하지 않으면 노트북을 재시작해 주세요.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+    <value>dGPU는 사용하지 않을 때와 노트북이 배터리 전원일 때 자동으로 연결이 끊어집니다.</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use.</value>
+    <value>dGPU는 사용하지 않을 때 자동으로 연결이 끊어집니다.</value>
   </data>
   <data name="IGPUModeChangeException_Title" xml:space="preserve">
-    <value>Could not change GPU Working Mode</value>
+    <value>GPU 작동 모드를 변경할 수 없습니다</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU is currently in use or laptop is not on battery power</value>
+    <value>dGPU가 현재 사용 중이거나 노트북이 배터리 전원이 아닙니다</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU is currently in use</value>
+    <value>dGPU가 현재 사용 중입니다</value>
   </data>
   <data name="Import" xml:space="preserve">
-    <value>Import</value>
+    <value>가져오기</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>Inactive</value>
+    <value>비활성</value>
   </data>
   <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>This device is not compatible with Lenovo Legion Toolkit.</value>
+    <value>이 장치는 Lenovo Legion Toolkit과 호환되지 않습니다.</value>
   </data>
   <data name="Information" xml:space="preserve">
-    <value>Information</value>
+    <value>정보</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>충전기가 연결되면 노트북을 켭니다.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>즉시 부팅</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>충전기가 연결되면 노트북을 켭니다.</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>즉시 부팅</value>
   </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
-    <value>No compatible keyboards found</value>
+    <value>호환되는 키보드를 찾을 수 없습니다</value>
   </data>
   <data name="KeyboardBacklightPage_Title" xml:space="preserve">
-    <value>Keyboard Backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.</value>
+    <value>Lenovo Vantage 또는 해당 서비스가 실행 중일 때는 여기에서 키보드 백라이트를 제어할 수 없습니다.</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage or its services are running</value>
+    <value>Lenovo Vantage 또는 해당 서비스가 실행 중입니다</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value>Load</value>
+    <value>로드</value>
   </data>
   <data name="MHz" xml:space="preserve">
-    <value>MHz</value>
+    <value>메가헤르츠</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable or disable macros.</value>
+    <value>매크로 활성화 또는 비활성화.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>매크로</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Lenovo Legion Toolkit must be running for macros to work.</value>
+    <value>Lenovo Legion 툴킷이 실행 중이어야 매크로가 작동합니다.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
-    <value>Enable</value>
+    <value>활성화</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>You can record series of key presses and invoke them using the number pad on your keyboard.</value>
+    <value>키 입력 시퀀스를 기록하고 키보드의 숫자 패드를 사용해 호출할 수 있습니다.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>매크로</value>
   </data>
   <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
-    <value>Recording will start in 3 seconds...</value>
+    <value>녹화가 3초 후에 시작됩니다...</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
-    <value>Press ESC to stop.</value>
+    <value>멈추려면 ESC를 누르세요.</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
-    <value>Recording...</value>
+    <value>녹화 중...</value>
   </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
-    <value>Don't repeat</value>
+    <value>반복하지 않음</value>
   </data>
   <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
-    <value>Ignore delays</value>
+    <value>지연 무시</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
-    <value>Interrupt if another key was pressed</value>
+    <value>다른 키가 눌리면 중단</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Keyboard only</value>
+    <value>키보드만</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Keyboard keys and mouse buttons</value>
+    <value>키보드 키와 마우스 버튼</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
-    <value>All inputs</value>
+    <value>모든 입력</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
-    <value>Record</value>
+    <value>기록</value>
   </data>
   <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
-    <value>Recording options</value>
+    <value>녹화 옵션</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
-    <value>Repeat</value>
+    <value>반복</value>
   </data>
   <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Stop recording</value>
+    <value>기록 중지</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API rate limit reached, please try again later.</value>
+    <value>API 속도 제한에 도달했습니다. 나중에 다시 시도하세요.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
-    <value>Failed to check for updates</value>
+    <value>업데이트 확인 실패</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Something went wrong, please try again later.</value>
+    <value>문제가 발생했습니다. 나중에 다시 시도하세요.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
-    <value>No updates found</value>
+    <value>업데이트를 찾을 수 없음</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone is running in the background.</value>
+    <value>Legion Zone이 백그라운드에서 실행 중입니다.</value>
   </data>
   <data name="MainWindow_NavigationItem_About" xml:space="preserve">
-    <value>About</value>
+    <value>정보</value>
   </data>
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
-    <value>Actions</value>
+    <value>작업</value>
   </data>
   <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Battery</value>
+    <value>배터리</value>
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+    <value>대시보드</value>
   </data>
 
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
-    <value>Keyboard</value>
+    <value>키보드</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>매크로</value>
   </data>
   <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Downloads</value>
+    <value>다운로드</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>설정</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>시스템 최적화</value>
   </data>
   <data name="MainWindow_UpdateAvailable" xml:space="preserve">
-    <value>Update available!</value>
+    <value>업데이트 가능!</value>
   </data>
   <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
-    <value>Update {0} available!</value>
+    <value>{0} 업데이트 가능!</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys is running in the background.</value>
+    <value>Lenovo 핫키가 백그라운드에서 실행 중입니다.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController is running in the background.</value>
+    <value>Lenovo Vantage 및/또는 ImController가 백그라운드에서 실행 중입니다.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>끄면 마이크가 음소거됩니다.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>마이크</value>
   </data>
   <data name="MicrophoneControl_Message" xml:space="preserve">
-    <value>When off, microphones will be muted.</value>
+    <value>끄면 마이크가 음소거됩니다.</value>
   </data>
   <data name="MicrophoneControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>마이크</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>아래로 이동</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>위로 이동</value>
   </data>
   <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>Multiple triggers...</value>
+    <value>여러 트리거...</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>No</value>
+    <value>아니요</value>
   </data>
   <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
-    <value>Notification Text</value>
+    <value>알림 텍스트</value>
   </data>
   <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
-    <value>Show notification</value>
+    <value>알림 표시</value>
   </data>
   <data name="Notification_ACAdapterConnected" xml:space="preserve">
-    <value>AC adapter connected</value>
+    <value>AC 어댑터 연결됨</value>
   </data>
   <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
-    <value>AC adapter connected (Low wattage)</value>
+    <value>AC 어댑터 연결됨 (저전력)</value>
   </data>
   <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
-    <value>AC adapter disconnected</value>
+    <value>AC 어댑터 연결 해제</value>
   </data>
   <data name="Notification_CameraOff" xml:space="preserve">
-    <value>Camera off</value>
+    <value>카메라 꺼짐</value>
   </data>
   <data name="Notification_CameraOn" xml:space="preserve">
-    <value>Camera on</value>
+    <value>카메라 켬</value>
   </data>
   <data name="Notification_CapsLockOff" xml:space="preserve">
-    <value>Caps Lock off</value>
+    <value>Caps Lock 꺼짐</value>
   </data>
   <data name="Notification_CapsLockOn" xml:space="preserve">
-    <value>Caps Lock on</value>
+    <value>Caps Lock 켬</value>
   </data>
   <data name="Notification_FnLockOff" xml:space="preserve">
-    <value>Fn Lock off</value>
+    <value>Fn Lock 꺼짐</value>
   </data>
   <data name="Notification_FnLockOn" xml:space="preserve">
-    <value>Fn Lock on</value>
+    <value>Fn Lock 켬</value>
   </data>
   <data name="Notification_MicrophoneOff" xml:space="preserve">
-    <value>Microphone off</value>
+    <value>마이크 끄기</value>
   </data>
   <data name="Notification_MicrophoneOn" xml:space="preserve">
-    <value>Microphone on</value>
+    <value>마이크 켜기</value>
   </data>
   <data name="Notification_NumLockOff" xml:space="preserve">
-    <value>Num Lock off</value>
+    <value>Num Lock 끄기</value>
   </data>
   <data name="Notification_NumLockOn" xml:space="preserve">
-    <value>Num Lock on</value>
+    <value>Num Lock 켜기</value>
   </data>
   <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
-    <value>Legion logo off</value>
+    <value>Legion 로고 끄기</value>
   </data>
   <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
-    <value>Legion logo on</value>
+    <value>Legion 로고 켜기</value>
   </data>
   <data name="Notification_PortLightingOff" xml:space="preserve">
-    <value>Ports backlight off</value>
+    <value>포트 백라이트 끄기</value>
   </data>
   <data name="Notification_PortLightingOn" xml:space="preserve">
-    <value>Ports backlight on</value>
+    <value>포트 백라이트 켜기</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>백라이트 {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
-    <value>Brightness {0}</value>
+    <value>밝기 {0}</value>
   </data>
   <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
-    <value>Profile {0}</value>
+    <value>프로필 {0}</value>
   </data>
   <data name="Notification_TouchpadOff" xml:space="preserve">
-    <value>Touchpad off</value>
+    <value>터치패드 끄기</value>
   </data>
   <data name="Notification_TouchpadOn" xml:space="preserve">
-    <value>Touchpad on</value>
+    <value>터치패드 켜기</value>
   </data>
   <data name="Notification_UpdateAvailable" xml:space="preserve">
-    <value>Update {0} available!</value>
+    <value>{0} 업데이트 가능!</value>
   </data>
   <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
-    <value>Backlight {0}</value>
+    <value>백라이트 {0}</value>
   </data>
   <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
-    <value>AC Adapter</value>
+    <value>AC 어댑터</value>
   </data>
   <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
-    <value>Actions</value>
+    <value>작업</value>
   </data>
   <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
-    <value>Camera</value>
+    <value>카메라</value>
   </data>
   <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
-    <value>Caps Lock and Num Lock</value>
+    <value>Caps Lock 및 Num Lock</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
-    <value>Disables notification for Fn keys actions like microphone mute.
-Enable this option if you have conflicts with full screen applications.</value>
+    <value>마이크 음소거와 같은 Fn 키 동작 알림을 비활성화합니다. 
+ 전체 화면 응용 프로그램과 충돌이 있는 경우 이 옵션을 활성화하세요.</value>
   </data>
   <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
-    <value>Don't show notifications</value>
+    <value>알림 표시 안 함</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn 잠금</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
-    <value>Keyboard Backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
-    <value>Microphone</value>
+    <value>마이크</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>알림을 항상 상단에 표시합니다. 
+ 다른 전체 화면 창에는 영향을 주지 않지만, 알림을 클릭할 수는 없습니다.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>알림 항상 상단에 표시</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
-    <value>Duration</value>
+    <value>기간</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Show notification on all screens connected to your device.</value>
+    <value>장치에 연결된 모든 화면에 알림 표시</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
-    <value>Notification on all screens</value>
+    <value>모든 화면에 알림</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
-    <value>Position</value>
+    <value>위치</value>
   </data>
   <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>전원 모드</value>
   </data>
   <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
-    <value>Refresh Rate</value>
+    <value>새로고침 빈도</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>스마트 키</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
-    <value>Notifications</value>
+    <value>알림</value>
   </data>
   <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
-    <value>Touchpad Lock</value>
+    <value>터치패드 잠금</value>
   </data>
   <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
-    <value>Updates</value>
+    <value>업데이트</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>확인</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Off</value>
+    <value>끔</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn backlight on or off.</value>
+    <value>백라이트 켜기 또는 끄기.</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>You can turn backlight on or off with Fn+Space.</value>
+    <value>Fn + Space로 백라이트를 켜거나 끌 수 있습니다.</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>열기</value>
   </data>
   <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
-    <value>Improve response time of the built-in display.</value>
+    <value>내장 디스플레이의 응답 속도를 개선합니다.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>오버 드라이브</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
-    <value>Improve response time of the built-in display.</value>
+    <value>내장 디스플레이의 응답 속도를 개선합니다.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>오버 드라이브</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.
-
-WARNING: This action will not run correctly, if discrete GPU is not available.</value>
+    <value>외장 GPU를 오버클럭하여 성능을 향상시킵니다. 
+  
+ 경고: 외장 GPU가 없으면 이 동작은 올바르게 실행되지 않습니다.</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>GPU 오버클럭</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.</value>
+    <value>외장 GPU를 오버클럭하여 성능을 향상시킵니다.</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>GPU 오버클럭</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
-    <value>Core Frequency Offset</value>
+    <value>코어 주파수 오프셋</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
-    <value>Memory Frequency Offset</value>
+    <value>메모리 주파수 오프셋</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
-    <value>Overclock GPU Settings</value>
+    <value>GPU 오버클럭 설정</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>다운로드</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
-    <value>{0} downloaded!</value>
+    <value>{0} 다운로드 완료!</value>
   </data>
   <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
-    <value>Download complete</value>
+    <value>다운로드 완료</value>
   </data>
   <data name="PackageControl_GeneralError_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>문제가 발생했습니다</value>
   </data>
   <data name="PackageControl_Http404Error_Message" xml:space="preserve">
-    <value>Server returned code 404.</value>
+    <value>서버가 코드 404를 반환했습니다.</value>
   </data>
   <data name="PackageControl_Http404Error_Title" xml:space="preserve">
-    <value>The file seems to be gone</value>
+    <value>파일이 없는 것 같습니다</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>인터넷 연결이 정상인지 확인하세요.</value>
   </data>
   <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>문제가 발생했습니다</value>
   </data>
   <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
-    <value>Update available!</value>
+    <value>업데이트 가능!</value>
   </data>
   <data name="PackageControl_OldPackageWarning" xml:space="preserve">
-    <value>This package is more than a year old.</value>
+    <value>이 패키지는 1년 이상 된 것입니다.</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Open README</value>
+    <value>README 열기</value>
   </data>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
-    <value>Restart recommended</value>
+    <value>재시작 권장</value>
   </data>
   <data name="PackageControl_RebootRequired" xml:space="preserve">
-    <value>Restart required</value>
+    <value>재시작 필요</value>
   </data>
   <data name="PackageControl_ShutdownRequired" xml:space="preserve">
-    <value>Shutdown required</value>
+    <value>종료 필요</value>
   </data>
   <data name="PackageControl_Version" xml:space="preserve">
-    <value>Version</value>
+    <value>버전</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>Below is a list of software packages that are marked as compatible with your laptop.
-Always make sure that you are installing correct packages.</value>
+    <value>아래는 귀하의 노트북과 호환되는 것으로 표시된 소프트웨어 패키지 목록입니다. 
+ 설치하려는 패키지가 올바른지 항상 확인하세요.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
-    <value>Check if Machine Type and OS are set correctly.</value>
+    <value>Machine Type과 OS가 올바르게 설정되었는지 확인하세요.</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>문제가 발생했습니다</value>
   </data>
   <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
-    <value>Changing sorting, filtering results, hiding packages or refreshing the list will stop the download. Do you want to continue?</value>
+    <value>정렬 변경, 결과 필터링, 패키지 숨기기 또는 목록 새로 고침을 하면 다운로드가 중단됩니다. 계속하시겠습니까?</value>
   </data>
   <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
-    <value>Download in progress</value>
+    <value>다운로드 진행 중</value>
   </data>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
-    <value>Download folder</value>
+    <value>다운로드 폴더</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>인터넷 연결이 정상인지 확인하세요.</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>문제가 발생했습니다</value>
   </data>
   <data name="PackagesPage_MachineType" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>기계 유형</value>
   </data>
   <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>일치하는 다운로드를 찾을 수 없음</value>
   </data>
   <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
-    <value>Show updates only</value>
+    <value>업데이트만 표시</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
-    <value>Open Download folder</value>
+    <value>다운로드 폴더 열기</value>
   </data>
   <data name="PackagesPage_OperatingSystem" xml:space="preserve">
-    <value>Operating System</value>
+    <value>운영 체제</value>
   </data>
   <data name="PackagesPage_PrimarySource" xml:space="preserve">
-    <value>Primary (Recommended)</value>
+    <value>기본(권장)</value>
   </data>
   <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo Vantage</value>
+    <value>Lenovo Vantage와 동일</value>
   </data>
   <data name="PackagesPage_SecondarySource" xml:space="preserve">
-    <value>Secondary</value>
+    <value>보조</value>
   </data>
   <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
-    <value>Same as Lenovo PC Support</value>
+    <value>Lenovo PC Support와 동일</value>
   </data>
   <data name="PackagesPage_Sort_Category" xml:space="preserve">
-    <value>Category</value>
+    <value>카테고리</value>
   </data>
   <data name="PackagesPage_Sort_Date" xml:space="preserve">
-    <value>Date</value>
+    <value>날짜</value>
   </data>
   <data name="PackagesPage_Sort_Name" xml:space="preserve">
-    <value>Name</value>
+    <value>이름</value>
   </data>
   <data name="PackagesPage_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>출처</value>
   </data>
   <data name="PackagesPage_Title" xml:space="preserve">
-    <value>Downloads</value>
+    <value>다운로드</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
+    <value>다른 소스에서 업데이트를 받아보세요.</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
+    <value>업데이트 카탈로그를 찾을 수 없습니다</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>노트북 덮개의 백라이트를 켜거나 끕니다.</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>패널 로고 백라이트</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>노트북 덮개의 백라이트를 켜거나 끕니다.</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>패널 로고 백라이트</value>
   </data>
   <data name="Paste" xml:space="preserve">
-    <value>Paste</value>
+    <value>붙여넣기</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
-    <value>Period (minutes)</value>
+    <value>마침표 (분)</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Common music formats like wav or mp3 are supported.</value>
+    <value>wav 또는 mp3와 같은 일반적인 음악 형식이 지원됩니다.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
-    <value>Play sound</value>
+    <value>사운드 재생</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight of the ports on the back of the laptop.</value>
+    <value>노트북 후면 포트의 백라이트를 켜거나 끕니다.</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>포트 백라이트</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off backlight of the ports on the back of the laptop.</value>
+    <value>노트북 후면 포트의 백라이트를 켜거나 끕니다.</value>
   </data>
   <data name="PortsBacklightControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>포트 백라이트</value>
   </data>
   <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Change performance mode.</value>
+    <value>성능 모드 변경.</value>
   </data>
   <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>전원 모드</value>
   </data>
   <data name="PowerModeControl_Message" xml:space="preserve">
-    <value>Change performance mode.
-Performance mode can also be changed with Fn+Q.</value>
+    <value>성능 모드 변경. 
+ Fn + Q로도 성능 모드를 변경할 수 있습니다.</value>
   </data>
   <data name="PowerModeControl_Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>설정</value>
   </data>
   <data name="PowerModeControl_Title" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>전원 모드</value>
   </data>
   <data name="PowerModeControl_Warning" xml:space="preserve">
-    <value>Selected power mode may not work correctly without AC adapter connected.</value>
+    <value>선택한 전원 모드는 AC 어댑터가 연결되어 있지 않으면 제대로 작동하지 않을 수 있습니다.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} power mode is not available without AC power.</value>
+    <value>AC 전원 없이 {0} 전원 모드를 사용할 수 없습니다.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Cannot change Power Mode</value>
+    <value>전원 모드를 변경할 수 없습니다</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.</value>
+    <value>Windows에서 이 노트북이 모던 대기(Modern Standby)를 지원한다고 보고합니다. 균형(Balanced) 이외의 전원 계획을 사용하면 예상치 못한 동작이 발생할 수 있습니다.</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
-    <value>S0 Lower Power Model detected</value>
+    <value>S0 저전력 모드 감지됨</value>
   </data>
   <data name="PoweredOff" xml:space="preserve">
-    <value>Powered Off</value>
+    <value>전원 꺼짐</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a saved quick action.</value>
+    <value>저장된 빠른 실행을 실행합니다.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
-    <value>Quick Action</value>
+    <value>빠른 실행</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight preset.</value>
+    <value>키보드 백라이트 프리셋 조정.</value>
   </data>
   <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
-    <value>Brightness</value>
+    <value>밝기</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
-    <value>Preset 1</value>
+    <value>프리셋 1</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
-    <value>Preset 2</value>
+    <value>프리셋 2</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
-    <value>Preset 3</value>
+    <value>프리셋 3</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
-    <value>Preset 4</value>
+    <value>프리셋 4</value>
   </data>
   <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
-    <value>Off</value>
+    <value>끔</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
-    <value>Zone 1</value>
+    <value>영역 1</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
-    <value>Zone 2</value>
+    <value>영역 2</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
-    <value>Zone 3</value>
+    <value>영역 3</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
-    <value>Zone 4</value>
+    <value>영역 4</value>
   </data>
   <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
-    <value>Effect</value>
+    <value>효과</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
-    <value>Speed</value>
+    <value>속도</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>회전 속도(RPM)</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>읽어보기</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>새로 고침</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>내장 디스플레이의 새로 고침 빈도를 변경합니다. 
+  
+ 경고: 내부 디스플레이가 꺼져 있는 경우 이 작업은 올바르게 실행되지 않습니다.</value>
   </data>
   <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
-    <value>Refresh rate</value>
+    <value>새로 고침 빈도</value>
   </data>
   <data name="RefreshRateControl_Message" xml:space="preserve">
-    <value>Change refresh rate of the built-in display.</value>
+    <value>내장 디스플레이의 새로 고침 빈도를 변경합니다.</value>
   </data>
   <data name="RefreshRateControl_Title" xml:space="preserve">
-    <value>Refresh rate</value>
+    <value>새로 고침 빈도</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>이름 변경</value>
   </data>
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.
-
-WARNING: This action will not run correctly, if internal display is off.</value>
+    <value>내장 디스플레이의 해상도를 변경합니다. 
+  
+ 경고: 내장 디스플레이가 꺼져 있으면 이 동작이 제대로 실행되지 않습니다.</value>
   </data>
   <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
-    <value>Resolution</value>
+    <value>해상도</value>
   </data>
   <data name="ResolutionControl_Message" xml:space="preserve">
-    <value>Change resolution of the built-in display.</value>
+    <value>내장 디스플레이의 해상도를 변경합니다.</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
-    <value>Resolution</value>
+    <value>해상도</value>
   </data>
   <data name="RestartLater" xml:space="preserve">
-    <value>I will restart later</value>
+    <value>나중에 다시 시작</value>
   </data>
   <data name="RestartNow" xml:space="preserve">
-    <value>Restart now</value>
+    <value>지금 다시 시작</value>
   </data>
   <data name="Revert" xml:space="preserve">
-    <value>Revert</value>
+    <value>되돌리기</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
-    <value>Revert to default</value>
+    <value>기본값으로 복원</value>
   </data>
   <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
-    <value>Arguments</value>
+    <value>인수</value>
   </data>
   <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
-    <value>Executable Path</value>
+    <value>실행 파일 경로</value>
   </data>
   <data name="RunAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a script or a program.
-Make sure that your script runs correctly first.</value>
+    <value>스크립트 또는 프로그램 실행. 
+ 먼저 스크립트가 올바르게 실행되는지 확인하세요.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Run silently</value>
+    <value>조용히 실행</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Execute console applications, without creating a console window.</value>
+    <value>콘솔 창을 생성하지 않고 콘솔 응용 프로그램 실행</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
-    <value>Wait until finished</value>
+    <value>완료될 때까지 기다리기</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Wait until program or script finishes executing</value>
+    <value>프로그램이나 스크립트 실행이 끝날 때까지 기다리기</value>
   </data>
   <data name="RunAutomationStepControl_Title" xml:space="preserve">
-    <value>Run</value>
+    <value>실행</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>저장</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Save &amp; Close</value>
+    <value>저장 및 닫기</value>
   </data>
   <data name="Saving" xml:space="preserve">
-    <value>Saving...</value>
+    <value>저장 중...</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>모두 선택</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
-    <value>Choose one or more quick actions to cycle through</value>
+    <value>순환할 하나 이상의 빠른 작업을 선택하세요</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
-    <value>No Quick Actions defined.</value>
+    <value>정의된 빠른 작업이 없습니다.</value>
   </data>
   <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
-    <value>Show this app</value>
+    <value>이 앱 표시</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>CPU의</value>
   </data>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
-    <value>Core Clock</value>
+    <value>코어 클록</value>
   </data>
   <data name="SensorsControl_Fan_Title" xml:space="preserve">
-    <value>Fan</value>
+    <value>팬</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>GPU 지원</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>최대: {0}</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
-    <value>Memory Clock</value>
+    <value>메모리 클록</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
-    <value>Refresh interval</value>
+    <value>갱신 간격</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>온도</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
-    <value>Utilization</value>
+    <value>사용률</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>설정</value>
   </data>
   <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
-    <value>Change the accent color of the app.</value>
+    <value>앱의 강조 색상을 변경합니다.</value>
   </data>
   <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
-    <value>Accent color</value>
+    <value>강조 색상</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
     <value>Start minimized to tray when you log in to Windows.</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
-    <value>Autorun</value>
+    <value>자동 실행</value>
   </data>
   <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
-    <value>Customize Boot Logo image, visible during system startup.</value>
+    <value>시스템 시작 시 표시되는 부트 로고 이미지를 사용자 지정합니다.</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>부트 로고</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Add CLI to user's PATH environment variable.</value>
+    <value>사용자 PATH 환경 변수에 CLI 추가.</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>Add CLI to PATH</value>
+    <value>CLI를 PATH에 추가</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>Enable Command Line Interface that allows control from command line.</value>
+    <value>명령줄에서 제어할 수 있는 명령줄 인터페이스 활성화.</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>CLI</value>
+    <value>명령줄 인터페이스</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
-    <value>Check</value>
+    <value>확인</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
-    <value>Checking for updates...</value>
+    <value>업데이트 확인 중...</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
-    <value>Check for updates</value>
+    <value>업데이트 확인</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>시작 시 나타나는 호환되지 않는 장치 경고를 숨깁니다.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>호환되지 않는 장치 경고 비활성화</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
-    <value>Legion Zone may have not been disabled correctly</value>
+    <value>Legion Zone이 올바르게 비활성화되지 않았을 수 있습니다</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Legion Zone</value>
+    <value>레지온 존을 비활성화할 수 없습니다</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
-    <value>Disable Legion Zone and its service without uninstalling it.
-Restart is recommended after changing this option.</value>
+    <value>레지온 존과 그 서비스를 제거하지 않고 비활성화합니다. 이 옵션을 변경한 후 재시작을 권장합니다.</value>
   </data>
   <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
-    <value>Disable Legion Zone</value>
+    <value>레지온 존 비활성화</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Lenovo Hotkeys may have not been disabled correctly</value>
+    <value>레노버 핫키가 올바르게 비활성화되지 않았을 수 있습니다</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Hotkeys</value>
+    <value>레노버 핫키를 비활성화할 수 없습니다</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
-    <value>Disable Lenovo Hotkeys and its service without uninstalling it.
-If disabled, this app will handle Fn shortcuts.
-Restart is recommended after changing this option.</value>
+    <value>레노버 핫키와 그 서비스를 제거하지 않고 비활성화합니다. 비활성화하면 이 앱이 Fn 단축키를 처리합니다. 이 옵션을 변경한 후 재시작을 권장합니다.</value>
   </data>
   <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
-    <value>Disable Lenovo Hotkeys</value>
+    <value>Lenovo 핫키 비활성화</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been disabled correctly</value>
+    <value>Lenovo Vantage 및/또는 ImController가 올바르게 비활성화되지 않았을 수 있습니다.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Vantage and/or ImController</value>
+    <value>Lenovo Vantage 및/또는 ImController를 비활성화하지 못했습니다.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController without uninstalling them.
-Restart is recommended after changing this option.</value>
+    <value>Lenovo Vantage와 ImController를 제거하지 않고 비활성화합니다. 이 옵션을 변경한 후에는 재시작을 권장합니다.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController</value>
+    <value>Lenovo Vantage 및 ImController 비활성화</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
-    <value>Legion Zone may have not been enabled correctly</value>
+    <value>Legion Zone이 올바르게 활성화되지 않았을 수 있습니다.</value>
   </data>
   <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Legion Zone</value>
+    <value>Legion Zone 활성화에 실패했습니다.</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
-    <value>Lenovo Hotkeys may have not been enabled correctly</value>
+    <value>Lenovo 핫키가 올바르게 활성화되지 않았을 수 있습니다.</value>
   </data>
   <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Hotkeys Keys</value>
+    <value>Lenovo 핫키를 활성화할 수 없습니다</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been enabled correctly</value>
+    <value>Lenovo Vantage 및/또는 ImController가 올바르게 활성화되지 않았을 수 있습니다</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Vantage and/or ImController</value>
+    <value>Lenovo Vantage 및/또는 ImController를 활성화할 수 없습니다</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
-    <value>You can exclude refresh rates, to make Fn+R shortcut more useful.</value>
+    <value>Fn R 단축키를 더 유용하게 만들기 위해 새로 고침 빈도를 제외할 수 있습니다.</value>
   </data>
   <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
-    <value>Exclude Refresh Rates</value>
+    <value>새로 고침 속도 제외</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+    <value>팬 속도, 배터리 온도 등을 HWiNFO64와 공유하세요. 이 옵션을 변경한 후에는 HWiNFO64를 재시작해야 할 수도 있습니다.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>HWiNFO64</value>
+    <value>사이트맵</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
-    <value>Integrations</value>
+    <value>통합</value>
   </data>
   <data name="SettingsPage_Language_Message" xml:space="preserve">
-    <value>Select language.</value>
+    <value>언어를 선택하세요.</value>
   </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
-    <value>Language</value>
+    <value>언어</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
-    <value>Always minimize to tray. Close with right click on tray icon.</value>
+    <value>항상 트레이로 최소화. 트레이 아이콘에서 마우스 오른쪽 버튼 클릭 시 종료됩니다.</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
-    <value>Minimize on close</value>
+    <value>닫을 때 최소화</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>Always minimize to tray instead of taskbar.</value>
+    <value>항상 작업 표시줄 대신 트레이로 최소화</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
-    <value>Minimize to tray</value>
+    <value>트레이로 최소화</value>
   </data>
   <data name="SettingsPage_Notifications_Message" xml:space="preserve">
-    <value>Configure which notifications are shown.</value>
+    <value>표시할 알림을 설정합니다.</value>
   </data>
   <data name="SettingsPage_Notifications_Title" xml:space="preserve">
-    <value>Notifications</value>
+    <value>알림</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+    <value>시스템이 재부팅될 때 배터리 섹션에서 "On Battery since"라는 카운터가 초기화됩니다.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Reset "On battery since" at startup</value>
+    <value>시작 시 '배터리 사용 시간' 재설정</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.</value>
+    <value>전원 모드를 변경할 때 Windows 전원 계획 또는 Windows 전원 모드를 자동으로 변경</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
-    <value>Power Mode Synchronization</value>
+    <value>전원 모드 동기화</value>
   </data>
   <data name="SettingsPage_Power_Title" xml:space="preserve">
-    <value>Power</value>
+    <value>힘</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.</value>
+    <value>Alt, Ctrl 또는 Shift 키가 눌리면 Fn 잠금이 일시적으로 비활성화됩니다.</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
-    <value>Smart Fn Lock</value>
+    <value>스마트 Fn 잠금</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 double press.</value>
+    <value>Fn F9 두 번 누르기에 빠른 작업 할당</value>
   </data>
   <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
-    <value>Smart Key Secondary Action</value>
+    <value>스마트 키 보조 작업</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
-    <value>Assign Quick Action to Fn+F9 single press.</value>
+    <value>Fn F9 한 번 누르기에 빠른 작업 할당</value>
   </data>
   <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
-    <value>Smart Key Action</value>
+    <value>스마트 키 실행</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
-    <value>When on, same brightness level will be applied to all Windows power plans whenever you change it.</value>
+    <value>켜져 있을 때는 모든 Windows 전원 요금제에 동일한 밝기가 적용됩니다.</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
-    <value>Single Display Brightness</value>
+    <value>단일 디스플레이 밝기</value>
   </data>
   <data name="SettingsPage_Temperature_Message" xml:space="preserve">
-    <value>Select units for temperature sensors.</value>
+    <value>온도 센서의 단위를 선택하세요.</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>온도</value>
   </data>
   <data name="SettingsPage_Theme_Description" xml:space="preserve">
-    <value>Set light theme, dark theme or follow system settings.</value>
+    <value>라이트 테마, 다크 테마 또는 시스템 설정 따르기.</value>
   </data>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>테마</value>
   </data>
   <data name="SettingsPage_Title" xml:space="preserve">
-    <value>Settings</value>
+    <value>설정</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
-    <value>Automatically check for updates</value>
+    <value>업데이트 자동 확인</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
-    <value>Update</value>
+    <value>업데이트</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>정리 실행</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>정리 실패.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>정리가 완료되었습니다.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>권장 성능 조정을 적용하고 임시 파일을 정리합니다.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>성능 및 서비스 조정 적용</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>성능 최적화를 적용할 수 없습니다.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>성능 최적화가 적용되었습니다.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>시스템 최적화</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Select Windows Power Mode to apply when Power Mode changes.</value>
+    <value>전원 모드 변경 시 적용할 Windows 전원 모드 선택</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Windows 전원 모드</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Power Plan options in Windows Control Panel</value>
+    <value>Windows 제어판의 전원 계획 옵션</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Select Windows Power Plans to apply when Power Mode changes.</value>
+    <value>전원 모드가 변경될 때 적용할 Windows 전원 계획 선택</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Windows 전원 계획</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
-    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+    <value>Fn Q로 사용자 정의 모드로 빠르게 전환 허용</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
-    <value>Switch to Custom Mode with Fn+Q</value>
+    <value>Fn Q로 사용자 정의 모드로 전환</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>When mute, all active audio output devices will be muted.</value>
+    <value>음소거 시 모든 활성 오디오 출력 장치가 음소거됩니다.</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Speaker</value>
+    <value>스피커</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight brightness.</value>
+    <value>키보드 백라이트 밝기 조절.</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>끔</value>
   </data>
   <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight brightness</value>
+    <value>키보드 백라이트 밝기</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
-    <value>Add effect</value>
+    <value>효과 추가</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
-    <value>Lighting profile couldn't be applied.</value>
+    <value>조명 프로필을 적용할 수 없습니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
-    <value>Couldn't apply profile</value>
+    <value>프로필 적용 실패</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
-    <value>Brightness</value>
+    <value>밝기</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>Deselect all zones</value>
+    <value>모든 영역 선택 해제</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>Visual effects</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be exported</value>
+    <value>프로필 내보내기 실패</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
-    <value>Couldn't export profile</value>
+    <value>프로필을 내보낼 수 없습니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
-    <value>Profile couldn't be imported</value>
+    <value>프로필 가져오기 실패</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
-    <value>Couldn't import profile</value>
+    <value>프로필을 가져올 수 없습니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
-    <value>No effects added.</value>
+    <value>추가된 효과가 없습니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>사전 설정</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>기본값으로 재설정</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
-    <value>Select all zones</value>
+    <value>모든 영역 선택</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
-    <value>Switch keyboard layout</value>
+    <value>키보드 레이아웃 전환</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
-    <value>Direction</value>
+    <value>방향</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
-    <value>Color</value>
+    <value>색상</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
-    <value>Colors</value>
+    <value>색상들</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
-    <value>Direction</value>
+    <value>방향</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
-    <value>Effect</value>
+    <value>효과</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
-    <value>This effect will be applied to the whole keyboard and will replace all other effects.</value>
+    <value>이 효과는 전체 키보드에 적용되며 다른 모든 효과를 대체합니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
-    <value>Speed</value>
+    <value>속도</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
-    <value>Add effect</value>
+    <value>효과 추가</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
-    <value>Edit effect</value>
+    <value>효과 편집</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Import and apply backlight configuration to the current profile.</value>
+    <value>현재 프로필에 백라이트 구성을 가져와 적용합니다.</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
-    <value>Path</value>
+    <value>경로</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Import keyboard backlight profile</value>
+    <value>키보드 백라이트 프로필 가져오기</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight profile.</value>
+    <value>키보드 백라이트 프로필 조정.</value>
   </data>
   <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight profile</value>
+    <value>키보드 백라이트 프로필</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
-    <value>All keys</value>
+    <value>모든 키</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
-    <value>{0} zones</value>
+    <value>{0} 영역</value>
   </data>
   <data name="StatusTrayPopup_Battery" xml:space="preserve">
-    <value>Battery</value>
+    <value>배터리</value>
   </data>
   <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
-    <value>Discharge rate</value>
+    <value>방전 속도</value>
   </data>
   <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>개별 GPU</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>최대 방전율</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>최소 방전율</value>
   </data>
   <data name="StatusTrayPopup_Mode" xml:space="preserve">
-    <value>Mode</value>
+    <value>모드</value>
   </data>
   <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
-    <value>Power Mode</value>
+    <value>전원 모드</value>
   </data>
   <data name="StatusTrayPopup_PowerState" xml:space="preserve">
-    <value>Power State</value>
+    <value>전원 상태</value>
   </data>
   <data name="StatusTrayPopup_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>사전 설정</value>
   </data>
   <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
-    <value>Update available!</value>
+    <value>업데이트 가능!</value>
   </data>
   <data name="SymbolRegularPicker_Title" xml:space="preserve">
-    <value>Select icon</value>
+    <value>아이콘 선택</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2204,43 +2196,43 @@ Restart is recommended after changing this option.</value>
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>둥근 모서리</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>그림자</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>외관</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>적용</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>클래식</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>다크</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>라이트</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>모던</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>테마</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>메뉴 스타일 설정</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2249,7 +2241,7 @@ Restart is recommended after changing this option.</value>
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>설치</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2273,660 +2265,659 @@ Restart is recommended after changing this option.</value>
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>삭제</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>윈도우 꾸미기</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
-    <value>Sunrise</value>
+    <value>일출</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
-    <value>Sunset</value>
+    <value>일몰</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
-    <value>Time</value>
+    <value>시간</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>통합 그래픽과 외장 그래픽 간 전환 허용. 
+ 재시작 필요.</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>하이브리드 모드</value>
   </data>
   <data name="ToggleHybridModeControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>통합 그래픽과 외장 그래픽 간 전환 허용. 
+ 재시작 필요.</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
-    <value>Changing Hybrid Mode requires restart. Do you want to restart now?</value>
+    <value>하이브리드 모드 변경은 재시작이 필요합니다. 지금 재시작하시겠습니까?</value>
   </data>
   <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
-    <value>Restart required</value>
+    <value>재시작 필요</value>
   </data>
   <data name="ToggleHybridModeControl_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>하이브리드 모드</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable touchpad.</value>
+    <value>터치패드 비활성화.</value>
   </data>
   <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Touchpad Lock</value>
+    <value>터치패드 잠금</value>
   </data>
   <data name="TouchpadLockControl_Message" xml:space="preserve">
-    <value>Disable touchpad.</value>
+    <value>터치패드 비활성화.</value>
   </data>
   <data name="TouchpadLockControl_Title" xml:space="preserve">
-    <value>Touchpad Lock</value>
+    <value>터치패드 잠금</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
-    <value>Try again</value>
+    <value>다시 시도</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.</value>
+    <value>사용 가능한 모든 디스플레이를 끕니다.</value>
   </data>
   <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off displays</value>
+    <value>디스플레이 끄기</value>
   </data>
   <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
-    <value>Turn off all available displays.
-Moving the mouse or pressing the keyboard will wake displays up.</value>
+    <value>사용 가능한 모든 디스플레이를 끕니다. 마우스를 움직이거나 키보드를 누르면 디스플레이가 다시 켜집니다.</value>
   </data>
   <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
-    <value>Turn off displays</value>
+    <value>디스플레이 끄기</value>
   </data>
   <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
-    <value>Turn off</value>
+    <value>끄기</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off Wi-Fi</value>
+    <value>Wi-Fi 끄기</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn on Wi-Fi</value>
+    <value>Wi-Fi 켜기</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Unexpected exception occurred:
-{0}</value>
+    <value>예상치 못한 예외 발생: 
+ {0}</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>이름 없음</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>설정에서 언제든지 이 경고를 비활성화할 수 있습니다.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
-    <value>You may choose to continue at your own risk, but keep in mind that some features may not be available and/or not work properly.
-
-Logging will be enabled automatically, if you choose to continue.</value>
+    <value>사용자 책임 하에 계속 진행할 수 있지만 일부 기능이 사용 불가하거나 제대로 작동하지 않을 수 있습니다. 
+  
+ 계속 진행하면 로그 기록이 자동으로 활성화됩니다.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
-    <value>Check out project page on GitHub for more information.</value>
+    <value>자세한 내용은 GitHub 프로젝트 페이지를 확인하세요.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Logs folder</value>
+    <value>로그 폴더</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>기계 유형</value>
   </data>
   <data name="UnsupportedWindow_Message" xml:space="preserve">
-    <value>Lenovo Legion Toolkit has not been tested with your device.</value>
+    <value>Lenovo Legion Toolkit은 사용자의 기기에서 테스트되지 않았습니다.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
-    <value>Model</value>
+    <value>모델</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
-    <value>Unsupported device</value>
+    <value>지원되지 않는 장치</value>
   </data>
   <data name="UnsupportedWindow_Vendor" xml:space="preserve">
-    <value>Vendor</value>
+    <value>제조업체</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Update</value>
+    <value>업데이트</value>
   </data>
   <data name="UpdateWindow_Title" xml:space="preserve">
-    <value>Update available</value>
+    <value>업데이트 가능</value>
   </data>
   <data name="UpdateWindow_WhatsNew" xml:space="preserve">
-    <value>What's new?</value>
+    <value>새로운 기능은 무엇인가요?</value>
   </data>
   <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Adjust keyboard backlight brightness.</value>
+    <value>키보드 백라이트 밝기 조절.</value>
   </data>
   <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
-    <value>You can change brightness with Fn+Space</value>
+    <value>Fn + 스페이스로 밝기를 변경할 수 있습니다</value>
   </data>
   <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
-    <value>Keyboard backlight</value>
+    <value>키보드 백라이트</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
-    <value>Copy current network name</value>
+    <value>현재 네트워크 명칭 복사</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Leave empty for any Wi-Fi network.</value>
+    <value>모든 Wi-Fi 네트워크는 빈 상태로 두세요.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
+    <value>네트워크 이름(SSID)</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable Windows key on built-in keyboard.</value>
+    <value>내장 키보드에서 Windows 키를 비활성화합니다.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>Windows 키 잠금</value>
   </data>
   <data name="WinKeyControl_Message" xml:space="preserve">
-    <value>Only works on built-in keyboard.</value>
+    <value>내장 키보드에서만 작동합니다.</value>
   </data>
   <data name="WinKeyControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>Windows 키 잠금</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>작업</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>선택된 행동 적용</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>선택한 작업을 완료하지 못했습니다.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>선택한 작업이 성공적으로 완료되었습니다.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>모든 사용자를 위해 제거할 사전 설치된 Microsoft Store 앱을 선택하세요.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>제거할 앱이 선택되지 않았습니다.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>AppX 관리</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>로드 실패: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>앱 로딩 중, 잠시 기다려 주세요...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>게시자: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>선택한 앱 제거 중...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>선택한 앱 제거</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>선택한 앱 제거 실패.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>선택한 앱이 제거 예정입니다.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>컨텍스트 메뉴 모양 맞춤 설정</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>스타일 설정 적용 실패.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>구성 파일을 찾을 수 없습니다. Nilesoft Shell이 설치되어 있는지 확인하세요.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>클래식 메뉴 활성화 실패</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>셸 설치 실패.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>기본 메뉴 복원 실패</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe를 찾을 수 없습니다. Nilesoft Shell이 설치되어 있는지 확인하세요.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>컨텍스트 메뉴의 테마를 선택하세요.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>컨텍스트 메뉴의 투명 효과 활성화</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>셸 제거 실패.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>{1}s에서 {0} 확보</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>명확한 선발</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>규칙 추가</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>모두 지우기</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>정리 중에 삭제할 폴더와 파일 확장자를 선택하세요.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>편집</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>구성된 사용자 정의 정리 규칙이 없습니다.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>사용자 정의 정리 규칙</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>하위 폴더 포함</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>제거</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>적어도 하나의 동작을 선택하십시오.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>예상 정리 크기: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>이러한 동작들은 시스템 서비스와 파일을 수정합니다. 관리자 권한이 필요할 수 있습니다.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>정리 작업 실행</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>실행 중: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>모두 선택</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>선택 추천</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>미화</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>선택한 사전 설치된 UWP 애플리케이션을 모든 사용자에서 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>번들된 Windows 앱 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>인터넷 익스플로러 및 엣지의 캐시와 쿠키 파일 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>브라우저 캐시 정리</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>DISM 정리를 실행하고 WinSxS 임시 파일을 삭제합니다.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>서비스 구성 요소 저장소</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>시스템 충돌 후 남은 메모리 덤프 파일 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>충돌 덤프 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>선택한 폴더에서 설정된 확장자와 일치하는 파일을 삭제합니다.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>사용자 지정 파일 정리</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Windows Defender 검사 기록 및 캐시 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Defender 검사 기록 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>캐시된 .NET Native 이미지를 제거하여 디스크 공간 확보</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>.NET 네이티브 이미지 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Windows 로그, 오류 보고서 및 진단 추적 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>로그 및 진단 데이터 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>새로운 추적을 생성하기 위해 Windows 프리페치 데이터를 삭제합니다.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>프리페치 데이터 지우기</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>휴지통에 저장된 삭제된 파일 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>휴지통 비우기</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>일반 사용자 레지스트리 기록(Run MRU, RecentDocs, 열기/저장 대화상자, 입력 경로)을 지웁니다. 시스템에 중요한 항목은 제거되지 않습니다.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>레지스트리 MRU/히스토리 정리</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>원격 데스크톱 클라이언트가 생성한 캐시 파일 제거</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>원격 데스크톱 캐시 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Windows 및 사용자 임시 디렉터리 비우기</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>임시 파일 정리</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>익스플로러 썸네일 데이터베이스와 Direct3D 셰이더 캐시 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>썸네일 캐시 정리</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>다운로드된 업데이트 파일과 배달 최적화 캐시 삭제</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Windows 업데이트 캐시 정리</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>메뉴 지연 시간 줄이기, 응답하지 않는 앱 더 빨리 닫기, 기본 열기 위치를 '이 PC'로 설정.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>탐색기 반응 속도 개선</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>시작 메뉴를 완전히 비활성화합니다. 윈도우 키를 누르면 시작 메뉴 대신 검색이 열립니다.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>시작 메뉴 비활성화 및 윈도우 키로 검색 열기</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>클라우드 콘텐츠 추천 및 추천 배너 끄기.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>탐색기 제안 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>검색 상자와 작업 보기 버튼 숨기기, 작업 표시줄 그룹화 비활성화, 항상 알림 영역 아이콘 표시.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>작업 표시줄 및 시작 메뉴 레이아웃</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>파일 탐색기에서 파일 확장명 및 숨김 파일 표시.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>파일 표시 옵션</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>기본 스타일을 복원하고 탐색기를 재시작합니다.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>기본 오른쪽 클릭 메뉴로 전환</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>클래식 스타일을 적용하고 탐색기를 재시작합니다.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>모던 메뉴로 전환</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>shell.exe 및 관련 파일 완전히 제거</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>모던 컨텍스트 메뉴 적용</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>시스템 캐시는 메모리에 보관하고 커널 드라이버 페이징을 피하세요.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>메모리 관리 개선</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>네트워크 제한을 제거하고 시스템 응답 지연을 낮추세요.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>멀티미디어 스케줄링 최적화</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>로그인 시 아크릴 효과를 제거하고 Windows 알림 센터를 숨기세요.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>아크릴 및 알림 센터 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>고성능 전원 공급 방식을 활성화하고 최대 절전 모드를 비활성화하세요.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>고효율 경찰 계획</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>광고 ID, 스포트라이트 기능, 자동 제안을 비활성화하세요.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>텔레메트리와 팁 감소</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>연결된 사용자 경험, 진단 허브, 배송 최적화 서비스를 중지하고 비활성화하세요.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>진단 서비스를 비활성화하기</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Windows 오류 보고가 충돌 데이터를 수집하고 전송하는 것을 중지</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>오류 보고 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>원격 레지스트리 액세스를 비활성화하여 시스템 보안 강화</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>원격 레지스트리 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Windows 검색 서비스 중지하여 인덱스 업데이트 방지</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Windows 검색 인덱싱 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>백그라운드 디스크 활동을 줄이려면 Superfetch/SysMain을 끄세요.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>SysMain 비활성화</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>윈도우 키 동작을 시작 메뉴 대신 검색이 열리도록 수정.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>윈도우 키를 검색 열기로 변경</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>캐시, 임시 파일 및 기타 잔여 파일 제거.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>정리</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>작업 표시줄, 파일 탐색기 및 사용자 인터페이스 동작 조정.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>탐색기 및 인터페이스</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>마우스 오른쪽 버튼 클릭 메뉴 스타일을 변경합니다.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>윈도우 꾸미기</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>시스템 성능 및 반응속도 설정 조정.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>성능</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>리소스를 소비하는 백그라운드 서비스 비활성화.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>서비스</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>시스템 꾸미기</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Windows 전원 모드</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
-    <value>Default</value>
+    <value>기본값</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Windows 전원 계획</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>예</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>COM 구성 요소 등록   구성 파일</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>구현 유형:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>닫기</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Nilesoft Shell을 Windows 컨텍스트 메뉴의 COM 핸들러로 등록함으로써, 시스템 우클릭 메뉴의 생성 및 표시를 가로챕니다. 사용자가 파일이나 폴더를 우클릭할 때, Shell은 shell.nss 설정 파일을 읽고 맞춤 테마, 투명도, 둥근 모서리, 그림자 설정을 적용하여 아름다운 우클릭 메뉴 효과를 구현합니다.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>구성 파일을 찾을 수 없습니다. Nilesoft Shell이 설치되어 있는지 확인하세요.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>구성 파일 찾지 않음</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>설정이 성공적으로 적용되었습니다. 변경 사항은 파일 탐색기를 재시작한 후에 적용됩니다.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>적용된 설정</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>설정 적용 실패: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>오류</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. COM 부품 등록:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>경로: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. 구성 파일 (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>구성 파일 경로: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>메뉴 스타일을 정의하기 위해 CSS와 유사한 문법을 사용합니다</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. 구성 파일 형식 예시:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        배경색: #2d2d2d; 
+        글자색: #ffffff; 
+        모서리 반경: 5px; 
+        그림자: true; 
+        투명도: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. 작동 원리:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll은 시스템에서 COM 구성 요소로 등록됨</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- IContextMenu 인터페이스를 구현하여 오른쪽 클릭 메뉴 생성 가로채기</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- shell.nss 구성 파일 읽기</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- 사용자 정의 스타일 적용 (테마, 둥근 모서리, 그림자 등)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- 미려한 컨텍스트 메뉴 렌더링</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. 효과 설명:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- 자동 테마: 시스템 테마(밝음/어둠)를 따름</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- 투명도: 메뉴 배경 투명 효과 활성화</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- 둥근 모서리: 메뉴 항목에 둥근 모서리 테두리 추가</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- 그림자: 메뉴에 그림자 효과를 추가하여 깊이감을 향상시킴</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>{0}% 실행 중</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>작업 취소됨</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>오류 세부 정보: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>숨겨진 다운로드 표시</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>숨겨진 다운로드 표시</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>언어 선택</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>연결되지 않음</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>영역 동기화</value>
   </data>
 
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
@@ -2966,4 +2957,37 @@ Logging will be enabled automatically, if you choose to continue.</value>
     <value>{0}을(를) 처리하는 중...</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>플러그인 확장</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>탐색 항목 설정</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>사이드바에 표시할 탐색 항목을 구성합니다. 대시보드와 설정은 항상 표시됩니다.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>키보드 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>배터리 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>자동화 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>매크로 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>시스템 최적화 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>플러그인 확장 탐색 항목 표시 또는 숨기기</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>정보 탐색 항목 표시 또는 숨기기</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>탐색 항목</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>사이드바에 표시될 탐색 항목 구성</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>사용 가능한 드라이버 패키지를 검색 중입니다. 잠시 기다려 주십시오...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>네트워크 오류가 발생했습니다. 자동으로 재시도 중...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>드라이버 패키지 가져오기 재시도 중...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>정리 정보</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>정리 작업 진행 상황 및 예상 크기 보기.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Windows에 로그인할 때 최소화하여 트레이에서 시작합니다.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>스캔</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>드라이버 다운로드</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>안전 확인</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>시스템 정리는 임시 파일과 캐시를 영구적으로 삭제합니다. 보통은 안전하지만, 중요한 데이터의 백업을 반드시 갖추는 것이 좋습니다. 계속할래?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>확장</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>시스템 최적화 확장 및 도구 관리</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>연장 신청 불가</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>시스템 최적화 기능을 향상시키기 위해 플러그인 확장 페이지에서 확장 프로그램을 설치하세요.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>곧 공개됩니다</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>확장 마켓플레이스는 향후 업데이트에서 제공될 예정입니다.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>플러그인 로딩 중...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>셸 통합</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>향상된 Windows 셸 통합: 컨텍스트 메뉴 꾸미기 및 마우스 스타일 맞춤 설정</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>모던 컨텍스트 메뉴 활성화</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell을 활성화하여 Windows 컨텍스트 메뉴를 모던 스타일로 꾸밉니다</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>모던 컨텍스트 메뉴 비활성화</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Nilesoft Shell 등록 취소 및 기본 Windows 컨텍스트 메뉴 복원</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Windows 11 커서 스타일 적용</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>고해상도 DPI 지원이 포함된 Windows 11 스타일 커서 테마 적용</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>네트워크 가속</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>네트워크 속도 및 반응속도 향상을 위한 네트워크 설정 최적화.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>TCP/IP 및 DNS 최적화</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>연결 속도 및 반응속도 향상을 위한 TCP/IP 매개변수와 DNS 캐시 설정 최적화.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>네트워크 구성 재설정</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>DNS 캐시를 플러시하고 Winsock 및 TCP/IP 스택 구성을 재설정하여 네트워크 연결 문제 해결.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>다양한 응용 프로그램이 남긴 임시 파일과 로그 정리</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>앱 잔여물</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>시스템 드라이브에서 많은 공간을 차지할 수 있는 큰 파일 검색</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>대용량 파일 검색</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>시스템에서 큰 파일을 식별하고 관리</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>대용량 파일</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>확장 기능 활성화</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>도구 페이지의 플러그인 마켓에 접근할 수 있도록 확장 시스템을 활성화합니다.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>응용 프로그램의 외관, 동작 및 기능 옵션 구성.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>권장됨</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>다운로드 중</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>설치 중</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>완성됨</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>액션 정의를 찾지 못함</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>이 조치에 대한 기술적 구현 세부사항은 제공되지 않습니다</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>부하 실패</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>알 수 없음</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>명령 실행</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>등록부 수정</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>서비스 관리</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Registry modification PowerShell script</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>등록부 정리</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe 찾지 못했습니다</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>구성 파일 경로: 찾을 수 없음</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>사용 시간</value></data><data name="PackageControl_Install" xml:space="preserve"><value>설치</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>삭제</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>설치 실패</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>파일을 찾을 수 없으니 먼저 다운로드해 주세요</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>설치 시작</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>설치 시작 단계: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>호환성 확인 오류</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>애플리케이션이 시작 시 장치 정보를 읽지 못했습니다. 아래 오류 세부 정보를 확인하고 필요 시 문제 해결 단계를 시도하세요.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>문제 해결 단계</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Windows Management Instrumentation(WMI) 서비스가 실행 중인지 확인: 서비스(services.msc)를 열고 "Windows Management Instrumentation"이 실행 중인지 확인하세요.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>응용 프로그램을 관리자 권한으로 실행하여 시스템 레지스트리 및 WMI에 접근할 수 있는 충분한 권한이 있는지 확인하세요.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>시스템 리소스 확인: 다른 리소스를 많이 사용하는 응용 프로그램을 닫고 다시 시도하세요.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>아래 "로그 열기"를 클릭하여 자세한 오류 정보를 확인하세요.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>로그 파일 열기</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>리포지토리 업데이트</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>업데이트를 확인할 GitHub 리포지토리를 구성하세요. 기본값을 사용하려면 비워 두세요.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>리포지토리 소유자</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>예: SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>리포지토리 이름</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>예: LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>모두 일시 중지</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>구현 및 효과 원리</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>구현 유형:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>구성 편집기</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>쉘.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>테마.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>이미지.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>수정.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>작업 세부 정보</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>기술 구현 세부 정보</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Windows 내장 레지스트리 정리 기능 사용 중</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>플러그인 확장</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>기능 확장을 위한 플러그인 설치 및 관리</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>설치</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>제거할 수 없음</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>플러그인 설정</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>플러그인 이름</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>플러그인 설명</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>이 플러그인은 구성 가능한 설정이 없습니다.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>닫기</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>플러그인을 찾을 수 없음: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>오류</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>설정</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>작성자: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>플러그인 구성 인터페이스 형식이 잘못되었습니다.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>플러그인 설정 로드 오류: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>플러그인 검색...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>전체</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>사용 가능한 플러그인이 없습니다</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>플러그인 스토어가 현재 비어 있습니다. 향후 플러그인 업데이트를 기다려 주세요.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>구성</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>삭제</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>열기</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>언어:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>애플리케이션 기본값 사용</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>발견된 {0} 플러그인</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>플러그인이 성공적으로 설치되었습니다</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>플러그인이 성공적으로 설치되었습니다</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>설치 실패</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>플러그인을 설치할 수 없습니다: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>플러그인이 성공적으로 제거되었습니다</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>플러그인이 성공적으로 제거되었습니다</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>제거 실패</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>플러그인을 제거할 수 없습니다: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>플러그인을 열 수 없습니다</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>플러그인을 열 수 없습니다: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>플러그인을 열 수 없습니다: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>플러그인이 설치되어 있지 않습니다</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>플러그인이 설치되어 있지 않아 열 수 없습니다</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>최소 호스트 버전 {0}가 필요합니다</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>플러그인이 영구적으로 삭제됩니다</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>업데이트 실패</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>플러그인 업데이트 실패, 네트워크 연결을 확인하고 나중에 다시 시도하세요.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>업데이트 성공</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>플러그인이 성공적으로 업데이트되었습니다</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>플러그인 업데이트 중</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>플러그인을 다운로드하고 업데이트하는 중...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>모두 업데이트</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>플러그인 실행</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>플러그인이 시작되었습니다</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>플러그인 제거됨</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>프로그램을 종료하면 플러그인이 삭제됩니다.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>삭제 실패</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>플러그인 삭제 중 오류가 발생했습니다</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>구성 실패</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>플러그인이 설치되었지만 로드되지 않았습니다. 앱을 재시작해 보십시오.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>구성 없음</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>플러그인에는 구성 옵션이 없습니다.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>구성 지원 안 함</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>플러그인은 구성을 지원하지 않습니다.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>플러그인 상태 초기화</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>모든 플러그인 설치 상태가 초기화되었습니다</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>일괄 업데이트 완료</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>모든 플러그인이 처리되었습니다.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>다운로드 준비 중...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>로컬</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>새 버전 사용 가능</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>버전:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>출시일:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>새로운 기능:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>플러그인 목록 새로 고침</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>검색과 일치하는 플러그인을 찾을 수 없습니다.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>사용 가능한 모든 플러그인 업데이트</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>모두 설치</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>사용 가능한 모든 플러그인 설치</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>모두 설치 중...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>{0} 플러그인 설치 중...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>일괄 설치 완료</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>{0} 플러그인 설치됨.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>일괄 설치 실패</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>플러그인 설치 실패: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>모두 업데이트 중...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>업데이트 중...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>폴더 열기</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>플러그인 ID 복사</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>폴더를 찾을 수 없음</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>플러그인 디렉터리가 아직 생성되지 않았습니다.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>복사됨</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>플러그인 ID '{0}' 가 클립보드에 복사되었습니다.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>다운로드 완료</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>다운로드 중...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>다운로드 중... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>네트워크 가속</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>비브툴</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>도구</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>실시간 네트워크 가속 및 최적화 기능</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>ViVeTool을 사용하여 Windows 기능 플래그 관리</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>시스템 최적화 및 유틸리티 도구</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>사용법</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>이 편집기는 shell.nss 구성 파일을 직접 편집하는 데 사용됩니다. 수정 후, 모든 변경 사항을 저장하고 구성을 적용하려면</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>적용</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>버튼을 클릭하여 파일 탐색기를 다시 시작하세요.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• 구성 파일 경로:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• 구성 수정 후 변경 사항이 적용되려면 파일 탐색기(Explorer)를 다시 시작해야 합니다.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>적용</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>shell.nss 구성 파일</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>shell.nss 파일은 오른쪽 클릭 메뉴의 전체 구조와 동작을 정의하는 데 사용됩니다.</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>shell.nss 파일 열기</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>포함 폴더 열기</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>경로:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>UI 설정</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>기본 테마 설정</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>배경 색상:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>텍스트 색상:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>호버 효과 설정</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>호버 배경:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>호버 텍스트:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>선택 효과 설정</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>선택된 배경:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>선택된 텍스트:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>UI에서 텍스트 업데이트</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>텍스트에서 로드</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>텍스트 편집기</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>외부 편집기에서 열기</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>images.nss 구성 파일</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>images.nss 파일은 오른쪽 클릭 메뉴의 아이콘과 이미지를 정의하는 데 사용됩니다</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>images.nss 파일 열어</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>modify.nss 구성 파일</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>modify.nss 파일은 오른쪽 클릭 메뉴 항목을 수정하고 커스터마이즈하는 데 사용됩니다</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>modify.nss 파일을 열어</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>도구는 없어요. 애플리케이션 디렉터리의 tools 폴더에 도구를 추가해 주세요.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>도구는 도구 디렉토리에 제공되면 여기에 나타납니다.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>기본 디렉토리: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>구성 파일 디렉터리를 찾을 수 없습니다</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>파일을 찾을 수 없습니다</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>설정 파일을 읽을 수 없음: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>이 파일은 테마 관련 스타일 설정을 정의하는 데 사용됩니다</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>테마 색상 정의</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>기본 색상</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>호버 색상</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>선택된 색상</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>추가 테마 설정 옵션은 공식 Nilesoft Shell 문서를 참고하십시오.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>구성을 적용하시겠습니까? 
+  
+ 이렇게 됩니다: 
+ 1. 모든 구성 파일 저장 
+ 2. 구성을 적용하기 위해 파일 탐색기 재시작 
+  
+ 참고: 재시작 시 열려 있는 모든 폴더 창과 작업 표시줄이 닫히고 자동으로 다시 시작됩니다.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>구성 적용 확인</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>구성 파일을 저장할 수 없습니다: 
+ {0} 
+  
+ 파일 권한을 확인한 후 다시 시도하십시오.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>저장 실패</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>다음 파일이 성공적으로 저장되었습니다: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>파일 저장 실패: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>파일 탐색기가 다시 시작되었으며, 설정이 이제 적용되었습니다!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>부분 적용됨</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>성공적으로 적용됨</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>설정 적용 오류: 
+ {0} 
+  
+ 파일을 수동으로 저장하고 작업 관리자에서 탐색기 프로세스를 다시 시작할 수 있습니다.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>적용 실패</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>파일이 없거나 경로가 잘못되었습니다</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>파일 열기 실패</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>파일을 열 때 시스템 기본 프로그램 사용</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>파일을 열 수 없습니다: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>파일 열기 실패</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>폴더가 없거나 경로가 잘못되었습니다</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>폴더 열기 실패</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>폴더를 열 수 없습니다: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>폴더 열기 실패</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>모델</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>전력 사용량</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>충전</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>건강 상태</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>속도</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>최소 속도</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>최대 속도</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>사이클</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>용량</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>완전 용량</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>디자인</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>날짜</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>코어 / 메모리 클럭</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>코어 전압</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>전압 범위</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>평균 온도</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>사이드바</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>시스템</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>속도 범위</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>하나 이상의 정리 옵션을 선택하세요.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>모두 시작</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>예: 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>예: C:\드라이버</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>투명 효과 사용</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>컨텍스트 메뉴에 투명 효과 적용</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>파일 확장명 표시</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>파일 탐색기에서 파일 확장명 표시</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>숨김 파일 표시</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>파일 탐색기에서 숨김 파일 및 폴더 표시</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>빠른 액세스로 열기</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>이 PC 대신 파일 탐색기를 열어서 빠른 액세스</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>파일 탐색기에 미리 보기 창</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>표시 미리 보기 창 표시</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>정리할 항목을 하나 이상 선택하세요.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>마우스 외모</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>사용자 정의 커서 스타일을 적용하고 시스템 밝은/어두운 테마를 따릅니다.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>다음 항목 커서 스타일을 사용합니다</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>현재 윈도우 라이트/다크 모드를 감지하고 일치하는 사용자 지정 커서 체계를 적용합니다.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>테마 다음 커서 스타일을 사용하지 않습니다</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>백업된 커서 체계를 복원하고 테마 기반 사용자 지정 커서 전환을 중지합니다.</value>
+  </data>
 </root>

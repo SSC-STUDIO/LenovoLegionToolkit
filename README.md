@@ -1,6 +1,6 @@
 # Lenovo Legion Toolkit
 
-[![Build](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/Crs10259/LenovoLegionToolkit/actions/workflows/Build.yml)
+[![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
 [![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
@@ -31,6 +31,7 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
   - [FAQ](#faq)
   - [Arguments](#arguments)
   - [How to collect logs?](#how-to-collect-logs)
+  - [Localization](#localization)
   - [Documentation](#documentation)
   - [Contribution](#contribution)
 
@@ -52,13 +53,13 @@ LLT works best when it's running in the background, so go to Settings and enable
 
 ## Quick Start
 
-1. **Install LLT** - Download from [Releases](https://github.com/Crs10259/LenovoLegionToolkit/releases/latest)
+1. **Install LLT** - Download from [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest)
 2. **Configure Settings** - Enable "Autorun" and "Minimize on close" in Settings
 3. **Disable Conflicts** - Uninstall or disable Lenovo Vantage and Hotkeys
 4. **Explore Features** - Power modes, RGB lighting, fan curves, and more!
 
 > [!TIP]
-> First time? Check out the [User Guide](docs/ARCHITECTURE.md#quick-start) for detailed walkthroughs.
+> First time? Check out the [User Guide](Docs/ARCHITECTURE.md#quick-start) for detailed walkthroughs.
 
 #### Required drivers
 
@@ -631,16 +632,42 @@ Make sure to include the following information in your issue:
 
 The more info you add, the better the app will get over time. If anything seems off, write down precisely what was wrong and attach logs (`%LOCALAPPDATA%\LenovoLegionToolkit\log`).
 
+## Localization
+
+LLT localization is managed through Crowdin with a repository-level config at `crowdin.yml`.
+
+- Source files: neutral `Resource.resx` in four modules:
+  - `LenovoLegionToolkit.WPF/Resources`
+  - `LenovoLegionToolkit.Lib/Resources`
+  - `LenovoLegionToolkit.Lib.Automation/Resources`
+  - `LenovoLegionToolkit.Lib.Macro/Resources`
+- Target files: `Resource.<locale>.resx` beside each source file.
+- Locale mapping is defined in `crowdin.yml` (for example `zh-CN -> zh-hans`, `zh-TW -> zh-hant`, `pt-BR -> pt-br`).
+
+Typical CLI commands:
+
+```bash
+# upload source strings
+crowdin upload sources --config crowdin.yml
+
+# upload existing translations
+crowdin upload translations --config crowdin.yml
+
+# download translated files
+crowdin download --config crowdin.yml
+```
+
 ## Documentation
 
-Additional documentation is available in the `docs/` directory:
+Additional documentation is available in the `Docs/` directory:
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, components, and data flow |
-| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Build, test, and deployment procedures |
-| [SECURITY.md](docs/SECURITY.md) | Security policy and best practices |
-| [CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) | Community guidelines and contribution standards |
+| [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | System architecture, components, and data flow |
+| [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | Build, test, deployment, and release procedures |
+| [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | Plugin SDK and implementation guide |
+| [SECURITY.md](Docs/SECURITY.md) | Security policy and best practices |
+| [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | Community guidelines and contribution standards |
 
 ### Screenshots
 

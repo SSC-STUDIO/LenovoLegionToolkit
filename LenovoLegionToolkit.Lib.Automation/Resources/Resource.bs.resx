@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -17,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>ovo je moj dugi niz</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime kodirani serijalizovani .NET Framework objekat]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 mime kodirani niz koji predstavlja bajt niz forme .NET Framework objekta]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -147,4 +147,4 @@
   <data name="TimeAutomationPipelineTrigger_DisplayName" xml:space="preserve">
     <value>U određeno vrijeme</value>
   </data>
-</root>
+<data name="PowerModeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se promijeni način napajanja</value></data><data name="ProcessesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se aplikacija pokrene</value></data><data name="ExternalDisplayConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se poveže eksterni ekran</value></data><data name="ExternalDisplayDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se isključi eksterni ekran</value></data><data name="DisplayOnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se ekrani uključe</value></data><data name="DisplayOffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se ekrani isključe</value></data><data name="LidOpenedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Poklopac otvoren</value></data><data name="LidClosedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Poklopac zatvoren</value></data><data name="GamesStopAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se igra zatvori</value></data><data name="GamesAreRunningAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada igra radi</value></data><data name="UserInactivityAutomationPipelineTrigger_DisplayName_Zero" xml:space="preserve"><value>Kada korisnik postane aktivan</value></data><data name="UserInactivityAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada korisnik postane neaktivan</value></data><data name="DeactivateGpuQuickAction_Title" xml:space="preserve"><value>Deaktiviraj GPU</value></data><data name="OverclockDiscreteGPUAutomationStepState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="OverclockDiscreteGPUAutomationStepState_On" xml:space="preserve"><value>Na</value></data><data name="GodModePresetChangedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada se promijeni prilagođeni način rada</value></data><data name="PeriodicActionPipelineTrigger_DisplayName" xml:space="preserve"><value>Periodična radnja</value></data><data name="WiFiConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada je Wi-Fi povezan</value></data><data name="WiFiDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada je Wi-Fi isključen</value></data><data name="OnResumeAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Na nastavak rada</value></data><data name="HDROffAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada HDR isključi</value></data><data name="HDROnAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada HDR uključi</value></data><data name="MacroAutomationStepState_Off" xml:space="preserve"><value>Ugašeno</value></data><data name="MacroAutomationStepState_On" xml:space="preserve"><value>Na</value></data><data name="DeviceDisconnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada je uređaj odspojen</value></data><data name="DeviceConnectedAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Kada je uređaj povezan</value></data><data name="SessionLockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesija zaključana</value></data><data name="SessionUnlockAutomationPipelineTrigger_DisplayName" xml:space="preserve"><value>Sesija otključana</value></data></root>

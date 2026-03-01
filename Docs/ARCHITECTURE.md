@@ -8,7 +8,7 @@ Lenovo Legion Toolkit (LLT) is a lightweight Windows WPF desktop application des
 
 ### For Users
 
-1. **Download** the latest release from [GitHub Releases](https://github.com/BartoszCiccarelli/LenovoLegionToolkit/releases)
+1. **Download** the latest release from [GitHub Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases)
 2. **Install** the application by running the installer
 3. **Launch** LLT and configure your preferred settings
 4. **Enjoy** enhanced control over your Legion laptop hardware
@@ -16,7 +16,7 @@ Lenovo Legion Toolkit (LLT) is a lightweight Windows WPF desktop application des
 ### For Developers
 
 1. **Prerequisites**: Install .NET 10 SDK and Visual Studio 2022
-2. **Clone** the repository: `git clone https://github.com/BartoszCiccarelli/LenovoLegionToolkit.git`
+2. **Clone** the repository: `git clone https://github.com/SSC-STUDIO/LenovoLegionToolkit.git`
 3. **Build** the solution: `dotnet build LenovoLegionToolkit.sln`
 4. **Run** tests: `dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj`
 5. **Start** developing! See [AGENTS.md](../AGENTS.md) for detailed development guidelines.
@@ -200,11 +200,11 @@ Automatic Actions Execution
 | UI Framework | WPF (.NET 10.0) |
 | Architecture | MVVM, Clean Architecture |
 | DI Container | Autofac |
-| Hardware Access | HID Sharp, WMI, ACPI |
-| Monitoring | LibreHardwareMonitorLib |
+| Hardware Access | WMI, ACPI, Windows native APIs |
+| Monitoring | Built-in sensors and controller queries |
 | Settings | JSON file storage |
 | Updates | GitHub Releases API |
-| Localization | Crowdin (27+ languages) |
+| Localization | Crowdin + `crowdin.yml` mapping for multi-module `.resx` files |
 
 ## Key Design Decisions
 
@@ -231,7 +231,7 @@ Automatic Actions Execution
 
 - Local-only operation (no cloud dependencies)
 - Hardware-level access (requires admin for some features)
-- Plugin sandboxing (limited permissions)
+- Plugin isolation through dedicated load contexts and manifest checks
 - Secure update mechanism (signature verification)
 
 ## Future Architecture Goals

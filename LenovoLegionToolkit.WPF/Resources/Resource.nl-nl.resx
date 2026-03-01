@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -59,16 +59,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Beschrijving lenovo legion kit</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
-    <value>Build</value>
+    <value>Bouw</value>
   </data>
   <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
     <value>Laatste release op GitHub</value>
   </data>
   <data name="AboutPage_Links" xml:space="preserve">
-    <value>Links</value>
+    <value>Link</value>
   </data>
   <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
     <value>Project website op GitHub</value>
@@ -105,7 +105,7 @@
     <value>USB Altijd Aan</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Beschrijving lenovo legion kit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Toepassen</value>
@@ -398,16 +398,16 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Apparaat</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
-    <value>Lenovo Support</value>
+    <value>Lenovo Ondersteuning</value>
   </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>Machinetype</value>
   </data>
   <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
     <value>Fabrikant</value>
   </data>
   <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
-    <value>Model</value>
+    <value>model</value>
   </data>
   <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
     <value>Serienummer</value>
@@ -458,7 +458,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>GPU Opnieuw Opstarten</value>
   </data>
   <data name="DiscreteGPUControl_Title" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>Gescheiden GPU</value>
   </data>
   <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
     <value>Wijzig de helderheid van het ingebouwde display.
@@ -530,7 +530,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>CPU</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
-    <value>CPU Sensor</value>
+    <value>CPU-sensor</value>
   </data>
   <data name="FanCurveControl_FanSpeed" xml:space="preserve">
     <value>Ventilatorsnelheid</value>
@@ -539,10 +539,10 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>GPU</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU # 2</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>rpm</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
     <value>Zet de laptop aan als je het deksel opent.</value>
@@ -560,13 +560,13 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Gebruik secundaire functies van F1-F12-toetsen zonder de Fn-toets ingedrukt te houden.</value>
   </data>
   <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn-vergrendeling</value>
   </data>
   <data name="FnLockControl_Message" xml:space="preserve">
     <value>Gebruik secundaire functies van F1-F12-toetsen zonder de Fn-toets ingedrukt te houden.</value>
   </data>
   <data name="FnLockControl_Title" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn-vergrendeling</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
     <value>LET OP!
@@ -686,7 +686,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Fabrikant:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model:</value>
+    <value>Modellen:</value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
     <value>Machinetype:</value>
@@ -716,7 +716,7 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Batterij</value>
   </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+    <value>borden</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Toetsenbord</value>
@@ -800,10 +800,10 @@ WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne display i
     <value>Achtergrondverlichting {0}</value>
   </data>
   <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
-    <value>AC Adapter</value>
+    <value>Oplader</value>
   </data>
   <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
-    <value>Camera</value>
+    <value>camera</value>
   </data>
   <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
     <value>Caps Lock en Num Lock</value>
@@ -816,7 +816,7 @@ Zet deze optie aan als u problemen ondervindt met applicaties in de volledige sc
     <value>Geen meldingen weergeven</value>
   </data>
   <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
-    <value>Fn Lock</value>
+    <value>Fn-vergrendeling</value>
   </data>
   <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
     <value>Toetsenbord Achtergrondverlichting</value>
@@ -834,7 +834,7 @@ Zet deze optie aan als u problemen ondervindt met applicaties in de volledige sc
     <value>Verversingssnelheid</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>Slimme toets</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>Notificaties</value>
@@ -843,22 +843,22 @@ Zet deze optie aan als u problemen ondervindt met applicaties in de volledige sc
     <value>Touchpadvergrendeling</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>totaal</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Openen</value>
   </data>
   <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
     <value>Verbeter de responstijd van het ingebouwde display.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Overdrive</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Verbeter de responstijd van het ingebouwde display.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Overdrive</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} gedownload!</value>
@@ -910,7 +910,7 @@ Zorg er altijd voor dat u de juiste pakketten installeert.</value>
     <value>Filteren...</value>
   </data>
   <data name="PackagesPage_MachineType" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>Machinetype</value>
   </data>
   <data name="PackagesPage_OperatingSystem" xml:space="preserve">
     <value>Besturingssysteem</value>
@@ -940,7 +940,7 @@ Zorg er altijd voor dat u de juiste pakketten installeert.</value>
     <value>Bron</value>
   </data>
   <data name="PackagesPage_Title" xml:space="preserve">
-    <value>Downloads</value>
+    <value>Pakketten</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>Plakken</value>
@@ -996,19 +996,19 @@ U kunt van modus wisselen met Fn+Q.</value>
     <value>Uit</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
-    <value>Zone 1</value>
+    <value>Gebied 1</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
-    <value>Zone 2</value>
+    <value>Onderzoeksterrein 2</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
-    <value>Zone 3</value>
+    <value>Onderzoeksterrein 3</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
-    <value>Zone 4</value>
+    <value>Onderzoeksterrein 4</value>
   </data>
   <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
-    <value>Effect</value>
+    <value>effect</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Snelheid</value>
@@ -1255,7 +1255,7 @@ Een herstart wordt aanbevolen na het wijzigen van deze optie.</value>
     <value>Richting</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
-    <value>Effect</value>
+    <value>effect</value>
   </data>
   <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
     <value>Dit effect wordt op het hele toetsenbord toegepast en vervangt alle andere effecten.</value>
@@ -1279,7 +1279,7 @@ Een herstart wordt aanbevolen na het wijzigen van deze optie.</value>
     <value>Alle toetsen</value>
   </data>
   <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
-    <value>{0} zones</value>
+    <value>{0}-zones</value>
   </data>
   <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
     <value>Zonsopgang</value>
@@ -1337,13 +1337,13 @@ Logboekregistratie wordt automatisch ingeschakeld als u ervoor kiest om door te 
     <value>Map met logboeken</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
-    <value>Machine Type</value>
+    <value>Machinetype</value>
   </data>
   <data name="UnsupportedWindow_Message" xml:space="preserve">
     <value>Lenovo Legion Toolkit is niet getest met uw apparaat.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
-    <value>Model</value>
+    <value>model</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
     <value>Apparaat wordt niet ondersteund</value>
@@ -1414,13 +1414,13 @@ Logboekregistratie wordt automatisch ingeschakeld als u ervoor kiest om door te 
 WAARSCHUWING: Deze actie wordt niet correct uitgevoerd als het interne beeldscherm is uitgeschakeld.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>dpi</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>Verander de schaal van het ingebouwde display.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>dpi</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>Verander de schaal van het ingebouwde display.
@@ -1610,7 +1610,7 @@ Deze instelling is alleen van kracht wanneer de Aangepaste modus ingeschakeld is
     <value>Voorinstelling</value>
   </data>
   <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
-    <value>Discrete GPU</value>
+    <value>Gescheiden GPU</value>
   </data>
   <data name="StatusTrayPopup_PowerState" xml:space="preserve">
     <value>Energiemodus</value>
@@ -1727,7 +1727,7 @@ WAARSCHUWING: Deze actie zal niet correct uitgevoerd worden als de externe video
     <value>Mhz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maximum :{0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
     <value>CPU</value>
@@ -1823,7 +1823,7 @@ Dit vereist een herstart.</value>
     <value>Duur</value>
   </data>
   <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
-    <value>Updates</value>
+    <value>Update</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
     <value>Dynamische boost van GPU naar de CPU</value>
@@ -1847,7 +1847,7 @@ Dit vereist een herstart.</value>
     <value>Aangepaste opstartlogo is ingesteld</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
-    <value>Status</value>
+    <value>lid-staat</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
     <value>Standaardinstellingen herstellen</value>
@@ -1950,10 +1950,10 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Downloads map openen</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Downloaden</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Open README</value>
+    <value>README openen</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
     <value>Voorinstelling</value>
@@ -2029,10 +2029,10 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Fout opgetreden bij het lezen van de apparaat-informatie.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Herhalen</value>
@@ -2062,7 +2062,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Je kunt reeksen toetsaanslagen opnemen en ze afspelen met het numerieke toetsenblok op je toetsenbord.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
     <value>Schakel macro's in of uit.</value>
@@ -2116,7 +2116,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Laat alleen geselecteerde apparaten zien</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>CLI</value>
+    <value>opdrachtregelinterface</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
     <value>Schakel de opdrachtregelinterface in die controle vanaf de opdrachtregel mogelijk maakt.</value>
@@ -2149,7 +2149,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Melding op alle schermen</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
-    <value>Check</value>
+    <value>Controleren</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
     <value>Controleren op updates...</value>
@@ -2158,7 +2158,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Controleer op updates</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
-    <value>Update</value>
+    <value>Bijwerken</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>API limiet bereikt, probeer het later opnieuw.</value>
@@ -2200,10 +2200,10 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Voer een opgeslagen snelle actie uit.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Aanbevolen</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} van {1} geselecteerde acties</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Cache opschoning</value>
@@ -2251,104 +2251,104 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Systeemoptimalisatie</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Maximale oplaadcapaciteit van de batterij.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Batterijstatus</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Maximale snelheid waarmee de batterij wordt opgeladen ( ), of ontladen (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Maximale ontlaadsnelheid</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Minimale snelheid waarmee de batterij wordt opgeladen ( ), of ontladen (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Minimale ontlaadsnelheid</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Alles inklappen</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Compacte weergave</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Bladeren…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Voer ten minste één bestandsextensie in.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Kies een map.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Scheid meerdere extensies met komma's (voorbeeld: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Extensies</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Map</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Submappen meenemen</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Aangepaste opschoningsregel</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Alles uitklappen</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Systeemoptimalisatie</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>Plaats de melding altijd bovenaan. 
+ Dit heeft geen invloed op andere volledige schermvensters, maar je kunt niet klikken op de meldingen.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>Melding altijd bovenaan</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Verberg de waarschuwing voor incompatibele apparaten die bij het opstarten verschijnt.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Waarschuwing voor incompatibel apparaat uitschakelen</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Uitvoering opschoning</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Opschoning mislukt.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Opschoning voltooid.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Pas aanbevolen prestatie-aanpassingen toe en verwijder tijdelijke bestanden.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Pas prestatie- en service-aanpassingen toe</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Kon prestatieoptimalisaties niet toepassen.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Prestatieoptimalisaties toegepast.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Systeemoptimalisatie</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Maximale ontlaadsnelheid</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Minimale ontlaadsnelheid</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2360,43 +2360,43 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Afgeronde hoeken</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Schaduwen</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Uiterlijk</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Toepassen</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Klassiek</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Donker</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Licht</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>modern</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Thema</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Menu-stijl instellingen</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2405,7 +2405,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Installeren</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2429,507 +2429,540 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Verwijderen</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Windows Verfraaiing</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>U kunt deze waarschuwing op elk moment uitschakelen in Instellingen.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Acties</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Pas geselecteerde acties toe</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Voltooien van geselecteerde acties mislukt.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Geselecteerde acties succesvol voltooid.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Selecteer vooraf geïnstalleerde Microsoft Store-apps om te verwijderen voor alle gebruikers.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Geen apps geselecteerd voor verwijdering.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>AppX-beheer</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Laden mislukt: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Apps laden, even geduld...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Uitgever: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Geselecteerde apps worden gedeïnstalleerd...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Geselecteerde apps verwijderen</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Verwijderen van geselecteerde apps mislukt.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Geselecteerde apps gepland voor verwijdering.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Pas het uiterlijk van het contextmenu aan.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Kon stijlinstellingen niet toepassen.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Configuratiebestand niet gevonden. Zorg ervoor dat Nilesoft Shell is geïnstalleerd.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Kon klassiek menu niet inschakelen.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Kon shell niet installeren.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Kon standaardmenu niet herstellen.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe niet gevonden. Zorg ervoor dat Nilesoft Shell is geïnstalleerd.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Selecteer het thema voor het contextmenu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Schakel transparantie-effecten in voor het contextmenu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Kon shell niet verwijderen.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Vrijgekomen {0} in {1}s</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Wis selectie</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Regel toevoegen</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Alles wissen</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Kies mappen en bestandsextensies die tijdens het opschonen verwijderd moeten worden.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Wijzig</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Geen aangepaste opschonregels geconfigureerd.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Aangepaste opschonregels</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Submappen meenemen</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Verwijderen</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Selecteer ten minste één actie.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Geschatte schoonmaakkop: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Deze acties wijzigen systeemservices en bestanden. Mogelijk zijn beheerdersrechten vereist.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Voer opschoningsacties uit</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Wordt uitgevoerd: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Alles selecteren</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Selecteer aanbevolen</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Verfraaiing</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Deïnstalleer geselecteerde vooraf geïnstalleerde UWP-toepassingen voor alle gebruikers.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Verwijder meegeleverde Windows-apps</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Verwijder Internet Explorer- en Edge-cache en cookiebestanden.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Maak de browsercache schoon</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Voer een DISM-opruiming uit en verwijder tijdelijke WinSxS-bestanden.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Servicecomponentwinkel</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Verwijder geheugen-dumpbestanden die achterblijven na systeemcrashes.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Verwijder crashdumps</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Verwijder bestanden die overeenkomen met geconfigureerde extensies van geselecteerde mappen.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Maak aangepaste bestanden schoon</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Verwijder de scanhistorie en caches van Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Maak Defender-scans schoon</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Verwijder in de cache opgeslagen .NET-native afbeeldingen om schijfruimte vrij te maken.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Wis .NET-native afbeeldingen</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Verwijder Windows-logboeken, foutmeldingen en diagnostische sporen.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Verwijder logboeken en diagnostische gegevens</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Verwijder Windows-prefetchgegevens om nieuwe sporen te genereren.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Wis prefetch-data</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Verwijder verwijderde bestanden die in de Prullenbak zijn opgeslagen.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Leeg Prullenbak</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Veelgebruikte gebruikersregistergeschiedenissen wissen (Uitvoeren MRU, RecentDocs, Open-/Opslaan-dialogen, Getypte paden). Dit verwijdert geen systemkritieke vermeldingen.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>MRU-/geschiedenisopschoning van het register</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Verwijder in de cache opgeslagen bestanden die door de Remote Desktop-client zijn gemaakt.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Wis de cache van Remote Desktop</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Leeg de tijdelijke mappen van Windows en de gebruiker.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Maak tijdelijke bestanden schoon</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Verwijder Explorer-minatuurdatabases en Direct3D-shadercache.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Maak minatuurcaches schoon</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Verwijder gedownloade updatebestanden en de Delivery Optimisation-cache.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Maak de Windows Update-cache schoon</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Verminder menuvertragingen, sluit vastgelopen apps sneller en open Deze pc standaard.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Verbeter de reactievermogen van de Verkenner</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Schakel het startmenu volledig uit. Wanneer u de Win-toets indrukt, wordt zoeken geopend in plaats van het startmenu.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Startmenu uitschakelen en zoeken openen met Win-toets</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Schakel cloudinhoudsuggesties en aanbevelingsbanners uit.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Schakel Verkenner-suggesties uit</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Verberg het zoekvak en de knop Taakweergave, schakel taakbalkgroepering uit en toon altijd de pictogrammen in het systeemvak.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Taakbalk- en startmenu-indeling</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Toon bestandsextensies en verborgen bestanden in Verkenner.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Bestandszichtbaarheidsopties</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Herstelt de standaardstijl en herstart Verkenner.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Overschakelen naar standaard contextmenu</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Past de klassieke stijl toe en herstart Verkenner.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Overschakelen naar modern menu</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Verwijder shell.exe en gerelateerde bestanden volledig</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Modern contextmenu toepassen</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Houd het systeemcachegeheugen in het geheugen en voorkom dat kerneldrivers worden gepaged.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Verbeter geheugengebruik</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Verwijder netwerkbeperkingen en verlaag de latentie van systeemresponsiviteit.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Optimaliseer multimedia-planning</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Verwijder acryleffecten bij het aanmelden en verberg het Windows-meldingscentrum.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Schakel acryl en meldingscentrum uit</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Activeer het high-performance energieplan en schakel de slaapstand uit.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Forceer het high-performanceplan</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Schakel advertentie-ID, Spotlight-functies en automatische suggesties uit.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Verminder telemetrie en tips</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Stop en schakel de Connected User Experiences-, Diagnostics Hub- en Delivery Optimisation-services uit.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Schakel diagnostische services uit</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Stop Windows Error Reporting met het verzamelen en verzenden van crashgegevens.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Schakel foutmeldingen uit</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Beveilig het systeem door toegang op afstand tot het register uit te schakelen.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Schakel Remote Registry uit</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Stop de Windows Search-service om te voorkomen dat de index wordt bijgewerkt.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Schakel Windows Search-indexering uit</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Zet Superfetch/SysMain uit om de achtergrondschijfactiviteit te verminderen.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Schakel SysMain uit</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Pas het gedrag van de Windows-toets aan om zoeken te openen in plaats van het startmenu.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Wijzig Windows-toets om zoeken te openen</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Verwijder caches, tijdelijke bestanden en andere restanten.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Opschonen</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Pas taakbalk, Verkenner en gebruikersinterface gedrag aan.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Verkenner &amp; interface</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Wijzig de stijl van het contextmenu.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Windows Verfraaiing</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Pas systeemprestaties en reactievermogen instellingen aan.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Prestatie</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Schakel achtergrondservices uit die middelen verbruiken.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Diensten</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Systeemverfraaiing</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>COM-componentregistratie   Configuratiebestand</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Type Implementatie:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Sluiten</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Door Nilesoft Shell te registreren als een COM-handler voor Windows-contextmenu's, onderschept het de creatie en weergave van systeembrede rechterklikmenu's. Wanneer gebruikers met de rechtermuisknop op bestanden of mappen klikken, leest Shell het shell.nss-configuratiebestand en past het aangepaste thema, transparantie, afgeronde hoeken en schaduwinstellingen toe om een verfraaid rechtermuisklikmenu-effect te bereiken.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Configuratiebestand niet gevonden. Zorg ervoor dat Nilesoft Shell is geïnstalleerd.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Configuratiebestand niet gevonden</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Instellingen succesvol toegepast. Wijzigingen worden doorgevoerd na het opnieuw starten van de Verkenner.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Instellingen toegepast</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Kon de instellingen niet toepassen: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Fout</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. COM-componentregistratie:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Pad: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Configuratiebestand (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Pad van configuratiebestand: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Gebruikt CSS-achtige syntaxis om menu-stijlen te definiëren</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Voorbeeld van configuratiebestand:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        achtergrondkleur: #2d2d2d; 
+        tekstkleur: #ffffff; 
+        hoekradius: 5px; 
+        schaduw: waar; 
+        transparantie: waar; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Werkwijze:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll is geregistreerd als een COM-component in het systeem</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Implementeert de IContextMenu-interface om het maken van het rechtermuisknopmenu te onderscheppen</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Leest het shell.nss-configuratiebestand</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Past aangepaste stijlen toe (thema, afgeronde hoeken, schaduwen, enz.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Rendered het opgepoetste contextmenu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Effectbeschrijving:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Auto Thema: Volgt het systeemthema (licht/donker)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Transparantie: Maakt een transparantie-effect voor de menachtergrond mogelijk</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Afgeronde hoeken: Voegt afgeronde randjes toe aan menu-items</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Schaduwen: Voegt schaduweffecten toe aan menu's, waardoor dieptebeleving wordt verbeterd</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Uitvoeren {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Bewerking geannuleerd</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Foutdetails: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Verborgen downloads weergeven</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Verborgen downloads weergeven</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Selecteer taal</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Niet verbonden</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Synchroniseer zones</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Plugin-extensies</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Navigatie-items Instellingen</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Configureer welke navigatie-items in de zijbalk worden weergegeven. Dashboard en Instellingen zijn altijd zichtbaar.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Toetsenbord</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Batterij</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Automatisering</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Macro</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Systeemoptimalisatie</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Plug-in extensies</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Toon of verberg het navigatie-item Over</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Navigatie-items</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Stel in welke navigatie-items worden weergegeven in de zijbalk</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Bezig met scannen naar beschikbare stuurprogramma-pakketten, even geduld...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Netwerkfout opgetreden. Automatisch opnieuw proberen...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Opnieuw proberen om stuurprogramma-pakketten op te halen...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Opschoningsinformatie</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Bekijk de voortgang van de opschoningsactie en de geschatte grootte.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Minimiseren naar systeemvak bij het inloggen op Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Scannen</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Download driver</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Beveiligingsbevestiging</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Het opschonen van het systeem zal tijdelijke bestanden en cache permanent verwijderen. Hoewel dit meestal veilig is, wordt aanbevolen om te zorgen dat je back-ups hebt van belangrijke gegevens. Wil je doorgaan?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Extensies</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Beheer systeemoptimalisatie-extensies en -tools</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Geen extensies beschikbaar</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Installeer extensies vanaf de pagina Plugin-extensies om de functionaliteit voor systeemoptimalisatie uit te breiden.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Binnenkort beschikbaar</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>De extensies-marktplaats zal beschikbaar zijn in een toekomstige update.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Plugins laden...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Shell-integratie</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Verbeterde Windows Shell-integratie met verfraaiing van contextmenu en aanpassing van muisstijl</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Modern contextmenu inschakelen</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Schakel Nilesoft Shell in om het Windows-contextmenu te verfraaien met een moderne stijl</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Modern contextmenu uitschakelen</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Deregistreer Nilesoft Shell en herstel het standaard Windows-contextmenu</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Windows 11-cursorstijl toepassen</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Pas het Windows 11-stijl cursor thema toe met ondersteuning voor hoge DPI</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Netwerkversnelling</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Optimaliseer netwerkinstellingen om de netsnelheid en reactievermogen te verbeteren.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>TCP/IP- en DNS-optimalisatie</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Optimaliseer TCP/IP-parameters en DNS-cache-instellingen om de verbindingssnelheid en responsiviteit te verbeteren.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Netwerkconfiguratie resetten</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Wis de DNS-cache en reset de Winsock- en TCP/IP-stackconfiguratie om netwerkconnectiviteitsproblemen te herstellen.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Schoont tijdelijke bestanden en logbestanden op die door verschillende applicaties zijn achtergelaten.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>App-restanten</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Zoekt naar grote bestanden op uw systeemschijf die mogelijk veel ruimte innemen.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Grote Bestanden Scan</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Identificeer en beheer grote bestanden op uw systeem.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Grote Bestanden</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Extensies inschakelen</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Schakel het extensiesysteem in om toegang te krijgen tot de pluginmarkt op de Hulpprogramma's-pagina.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Configureer de opties voor uiterlijk, gedrag en functionaliteit van de toepassing.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Aanbevolen</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Downloaden</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Installeren</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Voltooid</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Actiedefinitie niet gevonden</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Technische implementatiedetails zijn niet beschikbaar voor deze actie</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Laden mislukt</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Onbekend</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Uitvoering van commando</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Registerwijziging</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Servicebeheer</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Registerwijziging   PowerShell-script</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Registeropruiming</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe niet gevonden</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Configuratiebestandspad: Niet gevonden</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Gebruiksduur</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Installeren</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Verwijderen</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Installatie mislukt</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Bestand niet gevonden, download dit eerst</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Installatie gestart</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Installer starten: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Compatibiliteitscontrolefout</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>De applicatie kon de apparaatinformatie tijdens het opstarten niet lezen. Controleer hieronder de foutdetails en probeer indien nodig de stappen voor probleemoplossing.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Stappen voor probleemoplossing</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Zorg ervoor dat de Windows Management Instrumentation (WMI) service actief is: Open Services (services.msc) en controleer of "Windows Management Instrumentation" actief is.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Voer de applicatie uit als Administrator om voldoende rechten te hebben om toegang te krijgen tot het systeemregister en WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Controleer de systeembronnen: Sluit andere applicaties die veel bronnen gebruiken en probeer het opnieuw.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Bekijk het logbestand voor gedetailleerde foutinformatie door hieronder op 'Logbestand openen' te klikken.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Logbestand openen</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Repository bijwerken</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Configureer de GitHub-repository om te controleren op updates. Laat leeg om de standaardwaarde te gebruiken.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Eigenaar van de repository</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>bijv. SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Naam van de repository</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>bijv. LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Alle pauzeren</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Implementatie- en Effectprincipes</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Type Implementatie:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Configuratie-editor</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>Shell.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>thema.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>afbeeldingen.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>wijzigen.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Actiedetails</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Technische implementatiedetails</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Gebruik de ingebouwde Windows-registeropruimfunctionaliteit</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Plugin-extensies</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Installeer en beheer plugins om functionaliteit uit te breiden</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Installeren</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Kan niet deïnstalleren</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Plugin-instellingen</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Pluginnaam</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Pluginbeschrijving</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Deze plugin heeft geen configureerbare instellingen.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Sluiten</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Plugin niet gevonden: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Fout</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Instellingen</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Auteur: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Het configuratie-interfaceformaat van de plugin is onjuist.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Fout bij het laden van plugin-instellingen: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Zoek plugins...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Alles</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Geen plugins beschikbaar</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>De pluginwinkel is momenteel leeg. Houd toekomstige plugin-updates in de gaten.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Configureren</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Verwijderen</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Openen</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Taal:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Gebruik standaardapplicatie</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Gevonden {0}-plugins</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Bulkimport</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Importeer plugins vanuit lokale ZIP-bestanden</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Importeer vanaf bestanden</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Selecteer pluginbestanden (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>{0}-plugins succesvol geïmporteerd</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>{0}-plugins zijn succesvol geïmporteerd en beschikbaar</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Bulkimport mislukt</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>Importeren van plugins mislukt: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Plugins importeren...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>{0} importeren...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>{0} verwerken...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Plugin succesvol geïnstalleerd</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Plugin is succesvol geïnstalleerd</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Installatie mislukt</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Installatie van plugin mislukt: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Plugin succesvol verwijderd</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Plugin is succesvol verwijderd</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Verwijderen mislukt</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Verwijderen van plugin mislukt: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Plugin openen mislukt</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Plugin openen mislukt: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Plugin openen mislukt: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Plugin niet geïnstalleerd</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Plugin is niet geïnstalleerd en kan niet worden geopend</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Minimale hostversie {0} is vereist</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Plugin wordt permanent verwijderd</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>Plugin wordt permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Update mislukt</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Plugin-update mislukt, controleer de netwerkverbinding en probeer het later opnieuw.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Update geslaagd</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Plugin is succesvol bijgewerkt</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Plugin bijwerken</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Plugin wordt gedownload en bijgewerkt...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Alles bijwerken</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Plugin uitvoeren</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Plugin gestart</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Plugin gedeïnstalleerd</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Plugin wordt verwijderd wanneer het programma wordt afgesloten.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Verwijderen mislukt</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Er is een fout opgetreden bij het verwijderen van de plugin</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Configuratie mislukt</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Plugin is geïnstalleerd maar niet geladen. Probeer de applicatie opnieuw te starten.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Geen configuratie</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Plugin heeft geen configuratieopties.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Configuratie niet ondersteund</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Plugin ondersteunt geen configuratie.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Pluginstatussen gereset</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Alle plugin-installatiestatussen zijn gewist</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Bulkupdate voltooid</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Alle plugins zijn verwerkt.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Download voorbereiden...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Lokaal</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Nieuwe versie beschikbaar</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Versie:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Uitgavedatum:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Wat is er nieuw:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Pluginlijst verversen</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Geen plugins gevonden die overeenkomen met uw zoekopdracht.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Werk alle beschikbare plugins bij</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Alles installeren</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Installeer alle beschikbare plugins</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Alles installeren...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Bezig met het installeren van {0} plugin(s)...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Bulk-installatie voltooid</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Geïnstalleerde {0}-plugin(s).</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Bulk-installatie mislukt</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Plugins installeren mislukt: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Alles bijwerken...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Bezig met bijwerken...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Map openen</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Plugin-ID kopiëren</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Map niet gevonden</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>De plugindirectory bestaat nog niet.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Gekopieerd</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>Plugin-ID '{0}' gekopieerd naar klembord.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Download voltooid</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Bezig met downloaden...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Bezig met downloaden... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Netwerkversnelling</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>ViveTool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Hulpmiddelen</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Realtime netwerkversnelling en optimalisatiefuncties</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Beheer Windows-featureflags met ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Systeemoptimalisatie en hulpprogramma's</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Gebruik</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Deze editor wordt gebruikt om het shell.nss-configuratiebestand direct te bewerken. Klik na wijziging</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Toepassen</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>knop om alle wijzigingen op te slaan en Verkenner opnieuw te starten om de configuratie toe te passen.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Pad van configuratiebestand:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Na het wijzigen van de configuratie moet Verkenner (Explorer) opnieuw worden gestart om de wijzigingen door te voeren.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Toepassen</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>shell.nss Configuratiebestand</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Het shell.nss-bestand wordt gebruikt om de algemene structuur en het gedrag van het contextmenu (rechtsklikmenu) te definiëren</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Open shell.nss-bestand</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Open de map waarin het bestand zich bevindt</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Pad:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>UI-instellingen</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Basis thema-instellingen</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Achtergrondkleur:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Tekstkleur:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Instellingen voor hover-effect</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Hover-achtergrond:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Hover-tekst:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Instellingen voor geselecteerd effect</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Geselecteerde achtergrond:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Geselecteerde tekst:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Tekst bijwerken vanuit UI</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Laden vanuit tekst</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Teksteditor</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Openen in externe editor</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>images.nss Configuratiebestand</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Het images.nss-bestand wordt gebruikt om iconen en afbeeldingen te definiëren voor het rechtermuisknopmenu</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Open het images.nss-bestand</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>modify.nss Configuratiebestand</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Het modify.nss-bestand wordt gebruikt om items in het rechtermuisknopmenu te wijzigen en aan te passen</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Open het modify.nss-bestand</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Geen tools beschikbaar. Voeg tools toe in de tools-map in de applicatiemap.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Tools verschijnen hier zodra ze beschikbaar zijn in de tooldirectory.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Basisdirectory: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Configuratiebestanddirectory niet gevonden</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Bestand niet gevonden</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Kan configuratiebestand niet lezen: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Dit bestand wordt gebruikt om thema-gerelateerde stijlinstellingen te definiëren</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Themakleurdefinitie</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Basiskleur</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Hoverkleur</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Geselecteerde kleur</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Voor meer thema-configuratie-opties, raadpleeg de officiële Nilesoft Shell-documentatie</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Weet u zeker dat u de configuratie wilt toepassen? 
+  
+ Dit zal: 
+ 1. Alle configuratiebestanden opslaan 
+ 2. File Explorer opnieuw starten om de configuratie toe te passen 
+  
+ Opmerking: Het opnieuw starten sluit alle geopende mapvensters en de taakbalk, en zal deze vervolgens automatisch opnieuw starten.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Bevestig Configuratie Toepassen</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Kan configuratiebestand niet opslaan: 
+ {0} 
+  
+ Controleer de bestandstoegang en probeer het opnieuw.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Opslaan Mislukt</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>De volgende bestanden zijn succesvol opgeslagen: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Opslaan van bestanden mislukt: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>File Explorer is opnieuw gestart, de configuratie is nu van kracht!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Gedeeltelijk Toegepast</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Succesvol Toegepast</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Fout bij toepassen van configuratie: 
+ {0} 
+  
+ U kunt de bestanden handmatig opslaan en het Verkenner-proces in Taakbeheer opnieuw starten.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Toepassen Mislukt</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Bestand bestaat niet of pad is ongeldig</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Bestand openen Mislukt</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Systeemstandaardprogramma gebruiken om bestand te openen</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Kan bestand niet openen: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Bestand openen Mislukt</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Map bestaat niet of pad is ongeldig</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Map openen Mislukt</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Kan map niet openen: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Map openen Mislukt</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>model</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Stroomverbruik</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Opladen</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Gezondheid</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Snelheid</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Minimale Snelheid</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Maximale Snelheid</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Cycli</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Capaciteit</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Volledige Capaciteit</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Ontwerp</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Datum</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Core / Geheugen Klok</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Core Spanning</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Spanningsbereik</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Gemiddelde Temp</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Zijkant</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Systeem</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Tariefbereik</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Selecteer minimaal één opruimoptie.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Alles starten</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>bijv. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>bijv. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Transparantie inschakelen</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Transparantie-effecten inschakelen voor het contextmenu</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Bestandsextensies weergeven</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Bestandsextensies weergeven in Verkenner</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Verborgen bestanden weergeven</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Verborgen bestanden en mappen weergeven in Verkenner</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Openen naar Snelle toegang</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Verkenner openen naar Snelle toegang in plaats van Deze pc</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Voorbeeldvenster weergeven</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Voorbeeldvenster weergeven in Verkenner</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Selecteer minimaal één item om op te ruimen.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

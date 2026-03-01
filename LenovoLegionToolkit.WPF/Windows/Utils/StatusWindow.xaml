@@ -267,6 +267,7 @@
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
             <Label
+                x:Name="_batteryDischargeLabel"
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="8,4,0,0"
@@ -285,6 +286,7 @@
                 FontSize="{StaticResource SecondaryFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
+                x:Name="_batteryMinDischargeLabel"
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="8,4,0,0"
@@ -303,6 +305,7 @@
                 FontSize="{StaticResource SecondaryFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
+                x:Name="_batteryMaxDischargeLabel"
                 Grid.Row="4"
                 Grid.Column="1"
                 Margin="8,4,0,0"

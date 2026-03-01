@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Kit de instrumente Lenovo Legion</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Compilare</value>
@@ -102,7 +102,7 @@
     <value>USB mereu activ</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Kit de instrumente Lenovo Legion</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Aplicare</value>
@@ -404,7 +404,7 @@ ATENȚIE: Această acțiune nu va rula corect dacă afișajul intern este oprit 
     <value>Producător</value>
   </data>
   <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
-    <value>Model</value>
+    <value>model</value>
   </data>
   <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
     <value>Număr de serie</value>
@@ -524,7 +524,7 @@ ATENȚIE: Această acțiune nu va rula corect dacă afișajul intern este oprit.
     <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>procesor</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>Senzor CPU</value>
@@ -533,19 +533,19 @@ ATENȚIE: Această acțiune nu va rula corect dacă afișajul intern este oprit.
     <value>Viteză ventilator</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPU</value>
+    <value>procesare grafică</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
     <value>Pornire automată a laptop-ului la deschiderea capacului.</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>Întoarce pentru a porni</value>
   </data>
   <data name="FlipToStartControl_Message" xml:space="preserve">
     <value>Pornire automată a laptop-ului la deschiderea capacului.</value>
   </data>
   <data name="FlipToStartControl_Title" xml:space="preserve">
-    <value>Flip To Start</value>
+    <value>Întoarce pentru a porni</value>
   </data>
   <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
     <value>Utilizați funcțiile secundare ale tastelor F1-F12 fără a ține apăsată tasta Fn.</value>
@@ -578,7 +578,7 @@ ATENȚIE: Această acțiune nu va rula corect dacă afișajul intern este oprit.
     <value>Limită temperatură CPU</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>procesor</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>Nu s-au putut aplica setările.</value>
@@ -613,7 +613,7 @@ Serios, aveți grijă cu această opțiune!</value>
     <value>Limită temperatură GPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>procesare grafică</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>Setări mod Personalizat</value>
@@ -814,7 +814,7 @@ Activați această opțiune dacă aveți conflicte cu aplicațiile pe ecran comp
     <value>Blocare Touchpad</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>ok</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Deschidere</value>
@@ -823,13 +823,13 @@ Activați această opțiune dacă aveți conflicte cu aplicațiile pe ecran comp
     <value>Îmbunătățirea timpului de răspuns al afișajului încorporat.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Supraîncărcare</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Îmbunătățirea timpului de răspuns al afișajului încorporat.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Supraîncărcare</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} descărcat!</value>
@@ -1278,7 +1278,7 @@ Salvarea logurilor va fi activată automat dacă alegeți să continuați.</valu
     <value>Lenovo Legion Toolkit nu a fost testat cu dispozitivul dvs.</value>
   </data>
   <data name="UnsupportedWindow_Model" xml:space="preserve">
-    <value>Model</value>
+    <value>model</value>
   </data>
   <data name="UnsupportedWindow_Title" xml:space="preserve">
     <value>Dispozitiv neacceptat</value>
@@ -1343,13 +1343,13 @@ Salvarea logurilor va fi activată automat dacă alegeți să continuați.</valu
 ATENȚIE: Această acțiune nu va rula corect dacă afișajul încorporat este oprit.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>dpi</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>Modificați scalarea afișajului încorporat.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>dpi</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>Modificați scalarea afișajului încorporat.
@@ -1575,10 +1575,10 @@ Aceste setări au efect doar atunci când modul Personalizat este activat.</valu
     <value>Oprit</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Recomandat</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} din {1} acțiuni selectate</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Curățare cache</value>
@@ -1626,685 +1626,684 @@ Aceste setări au efect doar atunci când modul Personalizat este activat.</valu
     <value>Optimizare sistem</value>
   </data>
 <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
-    <value>Third-party libraries</value>
+    <value>Biblioteci terțe</value>
   </data>
   <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Ștergere</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
-    <value>After {0}</value>
+    <value>După {0}</value>
   </data>
   <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Profil</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Când este activat, acest dispozitiv se va încărca până la 80% atunci când este conectat peste noapte și va termina încărcarea până la 100% până în momentul în care utilizați acest dispozitiv dimineața.</value>
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Încărcare baterie peste noapte</value>
   </data>
   <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
-    <value>When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.</value>
+    <value>Când este activat, acest dispozitiv se va încărca până la 80% atunci când este conectat peste noapte și va termina încărcarea până la 100% până în momentul în care utilizați acest dispozitiv dimineața.</value>
   </data>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
-    <value>Overnight Battery Charging</value>
+    <value>Încărcare baterie peste noapte</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Battery maximum charge capacity.</value>
+    <value>Capacitatea maximă de încărcare a bateriei.</value>
   </data>
   <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Battery health</value>
+    <value>Starea bateriei</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Rata maximă la care bateria este încărcată ( ), sau descărcată (-).</value>
   </data>
   <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximum discharge rate</value>
+    <value>Rata maximă de descărcare</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimum rate at which battery is charged (+), or discharged (-).</value>
+    <value>Rata minimă la care bateria este încărcată ( ), sau descărcată (-).</value>
   </data>
   <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimum discharge rate</value>
+    <value>Rata minimă de descărcare</value>
   </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
-    <value>Custom Boot Logo is set</value>
+    <value>Logo-ul de pornire personalizat este setat</value>
   </data>
   <data name="BootLogoWindow_Customize" xml:space="preserve">
-    <value>Customize</value>
+    <value>Personalizare</value>
   </data>
   <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
-    <value>Default Boot Logo is set</value>
+    <value>Logo-ul de pornire implicit este setat</value>
   </data>
   <data name="BootLogoWindow_Description" xml:space="preserve">
-    <value>Custom boot logo must be exactly {0} pixels large.
-Supported formats are: {1}.</value>
+    <value>Logo-ul de pornire personalizat trebuie să aibă exact {0} pixeli. 
+ Formatele acceptate sunt: {1}.</value>
   </data>
   <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
-    <value>Custom logo could not be set: {0}</value>
+    <value>Logo personalizat nu a putut fi setat: {0}</value>
   </data>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
-    <value>Custom boot logo set.</value>
+    <value>Logo-ul de pornire personalizat a fost setat.</value>
   </data>
   <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
-    <value>Default logo could not be set: {0}</value>
+    <value>Logo implicit nu a putut fi setat: {0}</value>
   </data>
   <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
-    <value>Default boot logo set.</value>
+    <value>Logo-ul de pornire implicit a fost setat.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
-    <value>Cannot mount EFI partition.</value>
+    <value>Nu se poate monta partiția EFI.</value>
   </data>
   <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
-    <value>Cannot set UEFI privilege.</value>
+    <value>Nu se poate seta privilegiul UEFI.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
-    <value>Invalid image format.</value>
+    <value>Format imagine nevalid.</value>
   </data>
   <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
-    <value>Invalid image size.</value>
+    <value>Dimensiune imagine nevalidă.</value>
   </data>
   <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
-    <value>Not enough free space on EFI partition.</value>
+    <value>Spațiu liber insuficient pe partiția EFI.</value>
   </data>
   <data name="BootLogoWindow_Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Stare</value>
   </data>
   <data name="BootLogoWindow_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Logo de pornire</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Șterge</value>
   </data>
   <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Restrânge tot</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Select GPU operating mode based on your computer's usage and power conditions.
-Switching modes may require restart.</value>
+    <value>Selectați modul de operare GPU în funcție de utilizarea computerului și de condițiile de alimentare.
+Schimbarea modurilor poate necesita repornirea.</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>GPU Working Mode</value>
+    <value>Mod de funcționare GPU</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Vizualizare compactă</value>
   </data>
   <data name="CompatibilityCheckError_Message" xml:space="preserve">
     <value>Error occured when reading device information.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Răsfoiește…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Vă rugăm să introduceți cel puțin o extensie de fișier.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Vă rugăm să alegeți un folder.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Separă mai multe extensii prin virgule (exemplu: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Extensii</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Dosar</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Include subfoldere</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Regulă de curățare personalizată</value>
   </data>
   <data name="DGPU_Connected_Title" xml:space="preserve">
-    <value>dGPU connected</value>
+    <value>dGPU conectat</value>
   </data>
   <data name="DGPU_Disconnected_Title" xml:space="preserve">
-    <value>dGPU disconnected</value>
+    <value>dGPU deconectat</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Deselect all</value>
+    <value>Deselectează tot</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
-    <value>Show connected devices only</value>
+    <value>Afișează doar dispozitivele conectate</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
-    <value>Show removable devices only</value>
+    <value>Afișează doar dispozitivele detașabile</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
-    <value>Show selected devices only</value>
+    <value>Afișează doar dispozitivele selectate</value>
   </data>
   <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Reîmprospătare</value>
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
-    <value>Devices</value>
+    <value>Dispozitive</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
-    <value>Sensors</value>
+    <value>Senzori</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Extinde tot</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU # 2</value>
   </data>
   <data name="GHz" xml:space="preserve">
     <value>GHz</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>ATENȚIE! 
+ Unele laptopuri pot accepta valori mai mari decât cele indicate, dar fiți atent. Această opțiune poate provoca comportamente imprevizibile. Dacă nu sunteți sigur ce faceți, lăsați această valoare la 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>Maximum offset</value>
+    <value>Deplasare maximă</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>AVERTISMENT! 
+ Unele laptopuri pot accepta valori mai mici decât cele indicate, dar fiți atent. Această opțiune poate duce la comportamente imprevizibile. Dacă nu sunteți sigur ce faceți, lăsați această valoare la 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>Minimum offset</value>
+    <value>Offset minim</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
-    <value>GPU to CPU Dynamic Boost</value>
+    <value>Boost dinamic GPU către CPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
-    <value>This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.</value>
+    <value>Aceasta este puterea maximă suplimentară care poate fi alocată CPU-ului din GPU, pe baza utilizării CPU-ului. Cu cât valoarea este mai mare, cu atât performanța aplicațiilor care folosesc CPU-ul este mai bună.</value>
   </data>
   <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Legion Zone or its services are running.</value>
+    <value>Setările Modului personalizat nu se vor aplica corect atunci când Legion Zone sau serviciile sale rulează.</value>
   </data>
   <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
-    <value>Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.</value>
+    <value>Setările Modului personalizat nu se vor aplica corect atunci când Lenovo Vantage sau serviciile sale rulează.</value>
   </data>
   <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+    <value>Ascunde</value>
   </data>
   <data name="HideAll" xml:space="preserve">
-    <value>Hide all</value>
+    <value>Ascunde tot</value>
   </data>
   <data name="IGPUModeChangeException_Message" xml:space="preserve">
-    <value>Try changing the mode again in a couple of seconds, if you do not see expected result.
-If dGPU does not respond at all, please restart your laptop.</value>
+    <value>Încercați să schimbați modul din nou peste câteva secunde, dacă nu vedeți rezultatul așteptat. 
+ Dacă dGPU nu răspunde deloc, vă rugăm să reporniți laptopul.</value>
   </data>
   <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use and laptop is on battery power.</value>
+    <value>dGPU se va deconecta automat când nu este utilizat și laptopul funcționează pe baterie.</value>
   </data>
   <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
-    <value>dGPU will disconnect automatically when not in use.</value>
+    <value>dGPU se va deconecta automat când nu este utilizat.</value>
   </data>
   <data name="IGPUModeChangeException_Title" xml:space="preserve">
-    <value>Could not change GPU Working Mode</value>
+    <value>Nu s-a putut schimba Modul de funcționare al GPU-ului</value>
   </data>
   <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
-    <value>dGPU is currently in use or laptop is not on battery power</value>
+    <value>dGPU este utilizat în prezent sau laptopul nu este alimentat de la baterie</value>
   </data>
   <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
-    <value>dGPU is currently in use</value>
+    <value>dGPU este utilizat în prezent</value>
   </data>
   <data name="Information" xml:space="preserve">
-    <value>Information</value>
+    <value>Informații</value>
   </data>
   <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Porniți laptopul când este conectat un încărcător.</value>
   </data>
   <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Boot instantanee</value>
   </data>
   <data name="InstantBootControl_Message" xml:space="preserve">
-    <value>Turn on the laptop when a charger is connected.</value>
+    <value>Porniți laptopul când este conectat un încărcător.</value>
   </data>
   <data name="InstantBootControl_Title" xml:space="preserve">
-    <value>Instant Boot</value>
+    <value>Boot instantanee</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
-    <value>Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.</value>
+    <value>Iluminarea tastaturii nu poate fi controlată aici atunci când Lenovo Vantage sau serviciile sale rulează.</value>
   </data>
   <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
-    <value>Lenovo Vantage or its services are running</value>
+    <value>Lenovo Vantage sau serviciile sale rulează</value>
   </data>
   <data name="MHz" xml:space="preserve">
     <value>MHz</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
-    <value>Enable or disable macros.</value>
+    <value>Activați sau dezactivați macro-urile.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>Lenovo Legion Toolkit must be running for macros to work.</value>
+    <value>Lenovo Legion Toolkit trebuie să fie activat pentru ca macro-urile să funcționeze.</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
-    <value>Enable</value>
+    <value>Activare</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>You can record series of key presses and invoke them using the number pad on your keyboard.</value>
+    <value>Puteți înregistra o serie de apăsări de taste și să le activați folosind tastatura numerică.</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
-    <value>Recording will start in 3 seconds...</value>
+    <value>Înregistrarea va începe în 3 secunde...</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
-    <value>Press ESC to stop.</value>
+    <value>Apasă ESC pentru a opri.</value>
   </data>
   <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
-    <value>Recording...</value>
+    <value>Înregistrare...</value>
   </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
-    <value>Don't repeat</value>
+    <value>Nu repeta</value>
   </data>
   <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
-    <value>Ignore delays</value>
+    <value>Ignoră întârzierile</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
-    <value>Interrupt if another key was pressed</value>
+    <value>Interupere dacă o altă tastă a fost apăsată</value>
   </data>
   <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
-    <value>Keyboard only</value>
+    <value>Doar tastatura</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
-    <value>Keyboard keys and mouse buttons</value>
+    <value>Tastele tastaturii și butoanele mouse-ului</value>
   </data>
   <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
-    <value>All inputs</value>
+    <value>Toate intrările</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
-    <value>Record</value>
+    <value>Înregistrează</value>
   </data>
   <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
-    <value>Recording options</value>
+    <value>Opțiuni de înregistrare</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
-    <value>Repeat</value>
+    <value>Repetare</value>
   </data>
   <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Stop recording</value>
+    <value>Oprește înregistrarea</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
-    <value>API rate limit reached, please try again later.</value>
+    <value>Limita de rate API a fost atinsă, te rugăm să încerci din nou mai târziu.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
-    <value>Failed to check for updates</value>
+    <value>Eșuat la verificarea actualizărilor</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
-    <value>Something went wrong, please try again later.</value>
+    <value>Ceva a mers greșit, vă rugăm să încercați din nou mai târziu.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
-    <value>No updates found</value>
+    <value>Nu s-au găsit actualizări</value>
   </data>
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
-    <value>Legion Zone is running in the background.</value>
+    <value>Legion Zone rulează în fundal.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>macro</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimizarea sistemului</value>
   </data>
   <data name="MainWindows_FnKeysRunning" xml:space="preserve">
-    <value>Lenovo Hotkeys is running in the background.</value>
+    <value>Lenovo Hotkeys rulează în fundal.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController is running in the background.</value>
+    <value>Lenovo Vantage și/sau ImController rulează în fundal.</value>
   </data>
   <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
-    <value>Multiple triggers...</value>
+    <value>Declanșatori multipli...</value>
   </data>
   <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
-    <value>Notification Text</value>
+    <value>Text notificare</value>
   </data>
   <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
-    <value>Show notification</value>
+    <value>Afișează notificarea</value>
   </data>
   <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
-    <value>Actions</value>
+    <value>Acțiuni</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
-    <value>Always put notification at the top.
-It won't affect other full screen windows, but you will not be able to click on the notifications.</value>
+    <value>Afișează întotdeauna notificarea în partea de sus. 
+ Nu va afecta alte ferestre pe ecran complet, dar nu vei putea face clic pe notificări.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
-    <value>Notification always on top</value>
+    <value>Notificare mereu în prim-plan</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
-    <value>Duration</value>
+    <value>Durată</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
-    <value>Show notification on all screens connected to your device.</value>
+    <value>Afișează notificarea pe toate ecranele conectate la dispozitivul tău.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
-    <value>Notification on all screens</value>
+    <value>Notificare pe toate ecranele</value>
   </data>
   <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
-    <value>Updates</value>
+    <value>Actualizări</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Oprit</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.
-
-WARNING: This action will not run correctly, if discrete GPU is not available.</value>
+    <value>Crește performanța prin overclocking pe GPU discret. 
+ 
+ AVERTISMENT: Această acțiune nu va rula corect dacă nu este disponibil un GPU discret.</value>
   </data>
   <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>GPU-ul Overclock</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
-    <value>Increase performance by overclocking discrete GPU.</value>
+    <value>Crește performanța prin overclocking pe GPU discret.</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
-    <value>Overclock GPU</value>
+    <value>GPU-ul Overclock</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
-    <value>Core Frequency Offset</value>
+    <value>Offset al frecvenței nucleului</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
-    <value>Memory Frequency Offset</value>
+    <value>Offset de frecvență a memoriei</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
-    <value>Overclock GPU Settings</value>
+    <value>Setări GPU pentru overclock</value>
   </data>
   <data name="PackageControl_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Descarcă</value>
   </data>
   <data name="PackageControl_OpenReadme" xml:space="preserve">
-    <value>Open README</value>
+    <value>Deschide README</value>
   </data>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
-    <value>Download folder</value>
+    <value>Folder descărcări</value>
   </data>
   <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Check if your internet connection is up and running.</value>
+    <value>Verificați dacă conexiunea dvs. la internet este funcțională.</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Ceva nu a mers bine</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
-    <value>Open Download folder</value>
+    <value>Deschide folderul Descărcări</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Try getting updates from the other source.</value>
+    <value>Încercați să obțineți actualizări de la altă sursă.</value>
   </data>
   <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Update catalog not found</value>
+    <value>Catalogul de actualizări nu a fost găsit</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>Pornește sau oprește iluminarea de fundal de pe capacul laptopului.</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>Iluminare de fundal a logo-ului panoului</value>
   </data>
   <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight on the lid of the laptop.</value>
+    <value>Pornește sau oprește iluminarea de fundal de pe capacul laptopului.</value>
   </data>
   <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
-    <value>Panel logo backlight</value>
+    <value>Iluminare de fundal a logo-ului panoului</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
-    <value>Period (minutes)</value>
+    <value>Perioadă (minute)</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
-    <value>Common music formats like wav or mp3 are supported.</value>
+    <value>Sunt acceptate formate de muzică comune precum wav sau mp3.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
-    <value>Play sound</value>
+    <value>Redă sunet</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>Turn on or off the backlight of the ports on the back of the laptop.</value>
+    <value>Pornește sau oprește iluminarea de fundal porturilor din spatele laptopului.</value>
   </data>
   <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>Iluminarea de fundal a porturilor</value>
   </data>
   <data name="PortsBacklightControl_Message" xml:space="preserve">
-    <value>Turn on or off backlight of the ports on the back of the laptop.</value>
+    <value>Pornește sau oprește iluminarea de fundal a porturilor de pe spatele laptopului.</value>
   </data>
   <data name="PortsBacklightControl_Title" xml:space="preserve">
-    <value>Ports backlight</value>
+    <value>Iluminarea de fundal a porturilor</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
-    <value>{0} power mode is not available without AC power.</value>
+    <value>Modul de alimentare {0} nu este disponibil fără alimentare AC.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
-    <value>Cannot change Power Mode</value>
+    <value>Nu se poate schimba Modul de alimentare</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
-    <value>Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.</value>
+    <value>Windows raportează că acest laptop suportă Standby Modern. Utilizarea planurilor de alimentare diferite de Balanced poate cauza comportamente neașteptate.</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
-    <value>S0 Lower Power Model detected</value>
+    <value>Model de putere redusă S0 detectat</value>
   </data>
   <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
-    <value>Run a saved quick action.</value>
+    <value>Rulează o acțiune rapidă salvată.</value>
   </data>
   <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
-    <value>Quick Action</value>
+    <value>Acțiune rapidă</value>
   </data>
   <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
-    <value>Preset 4</value>
+    <value>Presetare 4</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>rpm</value>
   </data>
   <data name="RevertToDefault" xml:space="preserve">
-    <value>Revert to default</value>
+    <value>Revenire la implicit</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
-    <value>Run silently</value>
+    <value>Rulează în mod silențios</value>
   </data>
   <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
-    <value>Execute console applications, without creating a console window.</value>
+    <value>Execută aplicații de consolă, fără a crea o fereastră de consolă.</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
-    <value>Wait until finished</value>
+    <value>Așteaptă până se finalizează</value>
   </data>
   <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
-    <value>Wait until program or script finishes executing</value>
+    <value>Așteaptă până programul sau scriptul se termină de executat</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Selectează tot</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>procesor</value>
   </data>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
-    <value>Core Clock</value>
+    <value>Ceas de bază</value>
   </data>
   <data name="SensorsControl_Fan_Title" xml:space="preserve">
-    <value>Fan</value>
+    <value>Ventilator</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>procesare grafică</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maxim: {0}</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
-    <value>Memory Clock</value>
+    <value>Ceas de memorie</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
-    <value>Refresh interval</value>
+    <value>Interval de reîmprospătare</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Temperatură</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
-    <value>Utilization</value>
+    <value>Utilizare</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Setări</value>
   </data>
   <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
-    <value>Customize Boot Logo image, visible during system startup.</value>
+    <value>Personalizează imaginea Logo de pornire, vizibilă în timpul inițializării sistemului.</value>
   </data>
   <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
-    <value>Boot Logo</value>
+    <value>Logo de pornire</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
-    <value>Add CLI to user's PATH environment variable.</value>
+    <value>Adaugă CLI la variabila de mediu PATH a utilizatorului.</value>
   </data>
   <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
-    <value>Add CLI to PATH</value>
+    <value>Adaugă CLI la PATH</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
-    <value>Enable Command Line Interface that allows control from command line.</value>
+    <value>Activează Interfața de Linie de Comandă care permite controlul din linia de comandă.</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
     <value>CLI</value>
   </data>
   <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
-    <value>Check</value>
+    <value>Verifică</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
-    <value>Checking for updates...</value>
+    <value>Se verifică actualizările...</value>
   </data>
   <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
-    <value>Check for updates</value>
+    <value>Verifică actualizări</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Ascunde avertizarea privind dispozitivul incompatibil care apare la pornire.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Dezactivează avertizarea privind dispozitivul incompatibil</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been disabled correctly</value>
+    <value>Lenovo Vantage și/sau ImController este posibil să nu fi fost dezactivate corect</value>
   </data>
   <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't disable Lenovo Vantage and/or ImController</value>
+    <value>Nu s-au putut dezactiva Lenovo Vantage și/sau ImController</value>
   </data>
   <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController without uninstalling them.
-Restart is recommended after changing this option.</value>
+    <value>Dezactivează Lenovo Vantage și ImController fără a le dezinstala. Se recomandă repornirea după modificarea acestei opțiuni.</value>
   </data>
   <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
-    <value>Disable Lenovo Vantage and ImController</value>
+    <value>Dezactivează Lenovo Vantage și ImController</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage and/or ImController may have not been enabled correctly</value>
+    <value>Lenovo Vantage și/sau ImController s-ar putea să nu fi fost activate corect</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
-    <value>Couldn't enable Lenovo Vantage and/or ImController</value>
+    <value>Nu s-a putut activa Lenovo Vantage și/sau ImController</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
-    <value>Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.</value>
+    <value>Partajați viteza ventilatorului, temperatura bateriei etc. cu HWiNFO64. Este posibil să fie necesar să reporniți HWiNFO64 după ce modificați această opțiune.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>HWiNFO64</value>
+    <value>HWINFO64</value>
   </data>
   <data name="SettingsPage_Integrations_Title" xml:space="preserve">
-    <value>Integrations</value>
+    <value>Integrări</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
-    <value>Always minimize to tray instead of taskbar.</value>
+    <value>Minimizează întotdeauna în tăviță în loc de bara de activități.</value>
   </data>
   <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
-    <value>Minimize to tray</value>
+    <value>Minimizează în tăviță</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
-    <value>Resets the counter for "On battery since" in the battery section when the system reboots.</value>
+    <value>Resetează contorul pentru „Pe baterie din” în secțiunea baterie când sistemul repornește.</value>
   </data>
   <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
-    <value>Reset "On battery since" at startup</value>
+    <value>Resetează "Pe baterie din" la pornire</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.</value>
+    <value>Schimbă automat Planul de alimentare Windows sau Modul de alimentare Windows la schimbarea Modurilor de alimentare.</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
-    <value>Power Mode Synchronization</value>
+    <value>Sincronizarea Modului de Alimentare</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
-    <value>Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.</value>
+    <value>Blocarea Fn va fi dezactivată temporar atunci când tasta Alt, Ctrl sau Shift este apăsată.</value>
   </data>
   <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
-    <value>Smart Fn Lock</value>
+    <value>Blocare Fn Inteligentă</value>
   </data>
   <data name="SettingsPage_Temperature_Message" xml:space="preserve">
-    <value>Select units for temperature sensors.</value>
+    <value>Selectează unitățile pentru senzorii de temperatură.</value>
   </data>
   <data name="SettingsPage_Temperature_Title" xml:space="preserve">
-    <value>Temperature</value>
+    <value>Temperatură</value>
   </data>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
-    <value>Automatically check for updates</value>
+    <value>Verifică automat pentru actualizări</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
-    <value>Update</value>
+    <value>Actualizare</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Rulați curățarea</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Curățarea a eșuat.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Curățarea a fost finalizată.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Aplicați ajustările de performanță recomandate și ștergeți fișierele temporare.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Aplicați ajustări de performanță și servicii</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Nu s-au putut aplica optimizări de performanță.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Optimizările de performanță au fost aplicate.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Optimizarea sistemului</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
-    <value>Select Windows Power Mode to apply when Power Mode changes.</value>
+    <value>Selectați Modul de alimentare Windows care să fie aplicat la schimbarea Modului de alimentare.</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Moduri de alimentare Windows</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
-    <value>Power Plan options in Windows Control Panel</value>
+    <value>Opțiuni plan de alimentare în Panoul de control Windows</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
-    <value>Select Windows Power Plans to apply when Power Mode changes.</value>
+    <value>Selectați planurile de alimentare Windows care să se aplice atunci când se schimbă modul de alimentare.</value>
   </data>
   <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Planuri de alimentare Windows</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
-    <value>Allow quick switching to Custom Mode with Fn+Q.</value>
+    <value>Permite comutarea rapidă la Mod Personalizat cu Fn Q.</value>
   </data>
   <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
-    <value>Switch to Custom Mode with Fn+Q</value>
+    <value>Comutare la Mod Personalizat cu Fn Q</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>When mute, all active audio output devices will be muted.</value>
+    <value>Când este pe mut, toate dispozitivele de ieșire audio active vor fi dezactivate.</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
-    <value>Speaker</value>
+    <value>Difuzor</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
-    <value>Preset</value>
+    <value>Profil</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
-    <value>Import and apply backlight configuration to the current profile.</value>
+    <value>Importă și aplică configurația de iluminare pentru profilul curent.</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
-    <value>Path</value>
+    <value>Cale</value>
   </data>
   <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
-    <value>Import keyboard backlight profile</value>
+    <value>Importă profilul de iluminare pentru tastatură</value>
   </data>
   <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
-    <value>Max discharge rate</value>
+    <value>Rată maximă de descărcare</value>
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
-    <value>Min discharge rate</value>
+    <value>Rată minimă de descărcare</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2316,43 +2315,43 @@ Restart is recommended after changing this option.</value>
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Colțuri rotunjite</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Umbre</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Aspect</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Aplicare</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Clasic</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Întunecat</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Luminos</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>modern</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Temă</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Setări stil meniuri</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2361,7 +2360,7 @@ Restart is recommended after changing this option.</value>
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Instalează</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2385,548 +2384,581 @@ Restart is recommended after changing this option.</value>
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Dezinstalează</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Îmbunătățirea aspectului Windows</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
-    <value>Allow switching between integrated and discrete GPU.
-Requires restart.</value>
+    <value>Permite comutarea între GPU integrat și cel dedicat.
+Necesită repornirea.</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
-    <value>Hybrid Mode</value>
+    <value>Mod Hibrid</value>
   </data>
   <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn off Wi-Fi</value>
+    <value>Dezactivează Wi-Fi</value>
   </data>
   <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
-    <value>Turn on Wi-Fi</value>
+    <value>Activează Wi-Fi</value>
   </data>
   <data name="UnexpectedException" xml:space="preserve">
-    <value>Unexpected exception occurred:
-{0}</value>
+    <value>A apărut o excepție neașteptată: 
+ {0}</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Poți dezactiva acest avertisment în orice moment din Setări.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
-    <value>Copy current network name</value>
+    <value>Copiați numele rețelei curente</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
-    <value>Leave empty for any Wi-Fi network.</value>
+    <value>Lăsați gol pentru orice rețea Wi-Fi.</value>
   </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Network name (SSID)</value>
+    <value>Nume rețea (SSID)</value>
   </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
-    <value>Disable Windows key on built-in keyboard.</value>
+    <value>Dezactivează tasta Windows pe tastatura încorporată.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
-    <value>Windows Key Lock</value>
+    <value>Blocare tastă Windows</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Acțiuni</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Aplică acțiunile selectate</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Nu s-au putut finaliza acțiunile selectate.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Acțiunile selectate s-au finalizat cu succes.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Selectează aplicațiile Microsoft Store preinstalate pentru a le elimina pentru toți utilizatorii.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Nicio aplicație selectată pentru eliminare.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Gestionarea AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Eșec la încărcare: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Se încarcă aplicațiile, așteptați...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Editor: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Dezinstalarea aplicațiilor selectate...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Dezinstalează aplicațiile selectate</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Nu s-au putut elimina aplicațiile selectate.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Aplicațiile selectate sunt programate pentru eliminare.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Personalizează aspectul meniului contextual.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Nu s-a reușit aplicarea setărilor de stil.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Fișierul de configurare nu a fost găsit. Vă rugăm să vă asigurați că Nilesoft Shell este instalat.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Nu s-a reușit activarea meniului clasic.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Nu s-a reușit instalarea shell-ului.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Nu s-a reușit restaurarea meniului implicit.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Shell.exe nu a fost găsit. Vă rugăm să vă asigurați că Nilesoft Shell este instalat.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Selectează tema pentru meniul contextual.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Activează efectele de transparență pentru meniul contextual.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Nu s-a reușit dezinstalarea shell-ului.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Eliberat {0} în {1}-uri</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Șterge selecția</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Adaugă regulă</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Șterge tot</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Alege folderele și extensiile de fișiere care ar trebui șterse în timpul curățării.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Editare</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Nu sunt configurate reguli personalizate de curățare.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Reguli personalizate de curățare</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Include subfoldere</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Îndepărtează</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Vă rugăm să selectați cel puțin o acțiune.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Dimensiune estimată a curățării: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Aceste acțiuni modifică serviciile și fișierele sistemului. Pot fi necesare privilegii de administrator.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Rulați acțiuni de curățare</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Se rulează: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Selectează tot</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Selectează recomandările</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Îmbunătățire estetică</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Dezinstalează aplicațiile UWP preinstalate selectate pentru toți utilizatorii.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Elimină aplicațiile Windows incluse</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Elimină fișierele cache și cookie-urile din Internet Explorer și Edge.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Curăță memoria cache a browserului</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Rulează curățarea DISM și șterge fișierele temporare WinSxS.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Magazinul de componente ale serviciului</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Elimină fișierele de memorie create după blocările sistemului.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Șterge fișierele de tip crash dump</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Șterge fișierele care corespund extensiilor configurate din folderele selectate.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Curăță fișierele personalizate</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Șterge istoricul scanărilor și cache-urile Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Curăță scanările Defender</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Elimină imaginile .NET Native stocate în cache pentru a recupera spațiu pe disc.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Curăță imaginile native .NET</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Șterge jurnalele Windows, rapoartele de eroare și urmele de diagnostic.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Elimină jurnalele și datele de diagnostic</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Șterge datele prefetch ale Windows pentru a regenera noi urme.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Șterge datele prefetch</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Elimină fișierele șterse stocate în Coșul de reciclare.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Golește Coșul de reciclare</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Șterge istoricul comun al utilizatorului din registru (Run MRU, RecentDocs, dialoguri Open/Save, TypedPaths). Aceasta nu elimină intrările critice pentru sistem.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Curățarea MRU/istoricului din Registru</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Elimină fișierele cache create de clientul Remote Desktop.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Curăță memoria cache Remote Desktop</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Golește directoarele temporare Windows și a utilizatorului.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Curăță fișierele temporare</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Șterge bazele de date ale miniaturilor Explorer și cache-ul shaderelor Direct3D.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Curăță cache-urile miniaturilor</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Șterge fișierele de actualizare descărcate și memoria cache Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Curăță memoria cache Windows Update</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Reduce întârzierile meniurilor, închide mai rapid aplicațiile blocate și deschide implicit Acest PC.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Îmbunătățește timpul de răspuns al Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Dezactivează complet meniul Start. Când apeși tasta Win, se va deschide căutarea în locul meniului Start.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Dezactivează meniul Start și deschide căutarea cu tasta Win</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Dezactivează sugestiile de conținut din cloud și bannerele de recomandări.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Dezactivează sugestiile din Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Ascunde caseta de căutare și butonul Vizualizare activități, dezactivează gruparea în bara de activități și afișează întotdeauna pictogramele din tavă.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Aspectul barei de activități și al meniului Start</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Afișează extensiile fișierelor și fișierele ascunse în File Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Opțiuni de vizibilitate a fișierelor</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Restabilește stilul implicit și repornește Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Comută la meniul clic dreapta implicit</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Aplică stilul clasic și repornește Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Comută la meniul modern</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Dezinstalați complet shell.exe și fișierele asociate</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Aplică Meniul Contextual Modern</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Păstrează cache-ul sistemului în memorie și evită paginarea driverelor kernel.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Îmbunătățește gestionarea memoriei</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Elimină limitarea rețelei și scade latența răspunsului sistemului.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Optimizează programarea multimedia</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Elimină efectele acrilice la logare și ascunde centrul de notificări Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Dezactivează efectele acrilice și centrul de notificări</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Activează schema de alimentare de performanță înaltă și dezactivează hibernarea.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Forțează planul de performanță înaltă</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Dezactivează ID-ul de publicitate, funcțiile Spotlight și sugestiile automate.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Reduce telemetria și sugestiile</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Oprește și dezactivează serviciile Connected User Experiences, Diagnostics Hub și Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Dezactivează serviciile de diagnosticare</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Oprește Windows Error Reporting din colectarea și trimiterea datelor de eroare.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Dezactivează raportarea erorilor</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Securizează sistemul prin dezactivarea accesului la registry la distanță.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Dezactivează Registry la distanță</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Oprește serviciul Windows Search pentru a preveni actualizările indexului.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Dezactivează indexarea căutării Windows</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Dezactivează Superfetch/SysMain pentru a reduce activitatea discului în fundal.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Dezactivează SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Modifică comportamentul tastei Windows pentru a deschide căutarea în loc de meniul Start.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Schimbă tasta Windows pentru a deschide căutarea</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Elimină cache-urile, fișierele temporare și alte resturi.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Curățare</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Ajustați bara de activități, File Explorer și comportamentul interfeței utilizator.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Explorer și interfață</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Schimbă stilul meniului clic dreapta.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Îmbunătățirea aspectului Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Ajustați setările de performanță și reacție ale sistemului.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Performant</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Dezactivați serviciile de fundal care consumă resurse.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Servicii</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Înfrumusețarea sistemului</value>
   </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
-    <value>Windows Power Modes</value>
+    <value>Moduri de alimentare Windows</value>
   </data>
   <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
-    <value>Default</value>
+    <value>Implicit</value>
   </data>
   <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
-    <value>Windows Power Plans</value>
+    <value>Planuri de alimentare Windows</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Înregistrarea componentelor COM   Fișier de configurare</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Tip de implementare:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Închidere</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Prin înregistrarea Nilesoft Shell ca handler COM pentru meniurile contextuale Windows, acesta interceptează crearea și afișarea meniurilor de clic dreapta ale sistemului. Când utilizatorii fac clic dreapta pe fișiere sau foldere, Shell citește fișierul de configurare shell.nss și aplică tema personalizată, transparența, colțurile rotunjite și setările de umbră pentru a obține un efect de meniu de clic dreapta îmbunătățit.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Fișierul de configurare nu a fost găsit. Vă rugăm să vă asigurați că Nilesoft Shell este instalat.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Fișierul de configurare nu a fost găsit</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Setările au fost aplicate cu succes. Modificările vor avea efect după repornirea File Explorer.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Setări aplicate</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Nu s-au putut aplica setările: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Eroare</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Înregistrarea componentelor COM:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Cale: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Fișier de configurare (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Calea fișierului de configurare: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Folosește o sintaxă asemănătoare CSS pentru a defini stilurile meniului</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Exemplu de format al fișierului de configurare:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        background-color: #2d2d2d; 
+        text-color: #ffffff; 
+        corner-radius: 5px; 
+        shadow: true; 
+        transparency: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Principiul de funcționare:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll este înregistrat ca un component COM în sistem</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Implementează interfața IContextMenu pentru a intercepta crearea meniului de clic dreapta</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Citește fișierul de configurare shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Aplică stiluri personalizate (temă, colțuri rotunjite, umbre etc.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Redă meniul contextual înfrumusețat</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Descrierea efectului:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Temă automată: Urmează tema sistemului (deschisă/întunecată)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Transparență: Activează efectul de transparență pentru fundalul meniului</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Colțuri rotunjite: Adaugă margini cu colțuri rotunjite la elementele meniului</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Umbre: Adaugă efecte de umbră meniurilor, îmbunătățind percepția adâncimii</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Se execută {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Operațiune anulată</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Detalii eroare: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Afișează descărcările ascunse</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Afișează descărcările ascunse</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Selectează limba</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Neconectat</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Sincronizează zonele</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Extensii plugin</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Setări elemente de navigare</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Configurează care elemente de navigare sunt afișate în bara laterală. Panoul de control și Setările vor fi întotdeauna vizibile.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Tastatură</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Baterie</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Automatizare</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Macro</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Optimizare Sistem</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Extensii Plugin</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Afișează sau ascunde elementul de navigare Despre</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Elemente de navigare</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Configurează ce elemente de navigare sunt afișate în bara laterală</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Se scanează pentru pachete de drivere disponibile, vă rugăm să așteptați...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>A apărut o eroare de rețea. Se reîncearcă automat...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Se reîncearcă preluarea pachetelor de drivere...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Informații curățare</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Vizualizați progresul operațiunii de curățare și dimensiunea estimată.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Porniți minimizat în tava de sistem când vă conectați la Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Scanare</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Descărcare drivere</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Confirmare de siguranță</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Curățarea sistemului va șterge permanent fișierele temporare și memoria cache. Deși este de obicei sigur, se recomandă să vă asigurați că aveți copii de rezervă ale datelor importante. Doriți să continuați?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Extensii</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Gestionează extensiile și instrumentele de optimizare a sistemului</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Nicio extensie disponibilă</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Instalează extensii de pe pagina de Extensii Plugin pentru a îmbunătăți funcționalitatea de optimizare a sistemului.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>În curând</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Piața de extensii va fi disponibilă într-o actualizare viitoare.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Se încarcă pluginurile...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Integrare Shell</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Integrare îmbunătățită a Shell-ului Windows cu înfrumusețarea meniului contextual și personalizarea stilului mouse-ului</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Activează Meniul Contextual Modern</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Activează Nilesoft Shell pentru a înfrumuseța meniul contextual Windows cu stil modern</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Dezactivează Meniul Contextual Modern</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Deregistrează Nilesoft Shell și restaurează meniul contextual implicit Windows</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Aplică Stilul Cursorului Windows 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Aplică tema cursorului stil Windows 11 cu suport DPI înalt</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Accelerația rețelei</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Optimizați setările rețelei pentru a îmbunătăți viteza și reacția rețelei.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Optimizarea TCP/IP și DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Optimizați parametrii TCP/IP și setările cache DNS pentru a îmbunătăți viteza conexiunii și reacția acesteia.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Resetare configurație rețea</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Golește memoria cache DNS și resetează configurația Winsock și a stivei TCP/IP pentru a repara problemele de conectivitate la rețea.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Curăță fișierele temporare și jurnalele lăsate de diferite aplicații.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Rămășițele aplicațiilor</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Scanează pentru fișiere mari pe unitatea de sistem care pot ocupa spațiu semnificativ.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Scanare fișiere mari</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Identifică și gestionează fișierele mari de pe sistem.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Fișiere mari</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Activează Extensiile</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Activează sistemul de extensii pentru a accesa piața de pluginuri în pagina Instrumente.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Configurează opțiunile de aspect, comportament și funcționalitate ale aplicației.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Recomandat</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Se descarcă</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Se instalează</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Finalizat</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Definiția acțiunii nu a fost găsită</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Detaliile tehnice de implementare nu sunt disponibile pentru această acțiune</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Încărcare eșuată</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Necunoscut</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Executare comandă</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Modificare registru</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Gestionare servicii</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Modificare registru   script PowerShell</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Curățare registru</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe nu a fost găsit</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Cale fișier de configurare: Nu a fost găsită</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Timp de utilizare</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Instalează</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Dezinstalează</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Instalarea a eșuat</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Fișierul nu a fost găsit, te rugăm să descarci mai întâi</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Instalarea a început</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Pornirea instalatorului: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Eroare de verificare a compatibilității</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Aplicația nu a reușit să citească informațiile despre dispozitiv la pornire. Vă rugăm să verificați detaliile erorii de mai jos și să încercați pașii de depanare, dacă este necesar.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Pași de depanare</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Asigurați-vă că serviciul Windows Management Instrumentation (WMI) este activ: Deschideți Servicii (services.msc) și verificați dacă „Instrumentația de Administrare Windows” este activ.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Rulați aplicația ca Administrator pentru a vă asigura că aveți permisiuni suficiente pentru a accesa registrul sistemului și WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Verificați resursele sistemului: Închideți alte aplicații care consumă multe resurse și încercați din nou.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Consultați fișierul jurnal pentru informații detaliate despre eroare făcând clic pe "Deschideți Jurnalul" mai jos.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Deschideți Fișierul Jurnal</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Actualizează depozitul</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Configurează depozitul GitHub pentru a verifica actualizările. Lăsați gol pentru a folosi setarea implicită.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Proprietar depozit</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>ex., SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Nume depozit</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>ex., LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Pauză pentru toate</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Principii de implementare și efect</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Tip de implementare:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Editor de Configurații</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>shell.ns</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>temă.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>imagini.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>modifică.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Detalii acțiune</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Detalii tehnice de implementare</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Se utilizează funcționalitatea de curățare a registrului încorporată în Windows</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Extensii plugin</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Instalează și gestionează pluginuri pentru a extinde funcționalitatea</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Instalează</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Nu se poate dezinstala</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Setări plugin</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Nume plugin</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Descriere plugin</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Acest plugin nu are setări configurabile.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Închidere</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Plugin negăsit: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Eroare</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Setări</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Autor: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Formatul interfeței de configurare a pluginului este incorect.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Eroare la încărcarea setărilor pluginului: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Caută pluginuri...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Toate</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Nu există pluginuri disponibile</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Magazinul de pluginuri este momentan gol. Rămâi la curent pentru viitoarele actualizări de pluginuri.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Configurare</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Dezinstalează</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Deschidere</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Limbă:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Folosește implicit aplicația</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Pluginuri {0} găsite</value></data><data name="PluginExtensionsPage_BulkImport" xml:space="preserve"><value>Import în vrac</value></data><data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve"><value>Importați pluginuri din fișiere ZIP locale</value></data><data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve"><value>Import din fișiere</value></data><data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve"><value>Selectați fișierele plugin (.zip)</value></data><data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve"><value>Pluginurile {0} au fost importate cu succes</value></data><data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve"><value>Pluginurile {0} au fost importate cu succes și sunt disponibile</value></data><data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve"><value>Importul în vrac a eșuat</value></data><data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve"><value>Eșec la importarea pluginurilor: {0}</value></data><data name="PluginExtensionsPage_ImportProgress" xml:space="preserve"><value>Se importă pluginuri...</value></data><data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve"><value>Se importă {0}...</value></data><data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve"><value>Se procesează {0}...</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Plugin instalat cu succes</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Pluginul a fost instalat cu succes</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Instalarea a eșuat</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Imposibil de instalat plugin-ul: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Plugin dezinstalat cu succes</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Pluginul a fost dezinstalat cu succes</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Dezinstalarea a eșuat</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Imposibil de dezinstalat plugin-ul: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Nu s-a putut deschide plugin-ul</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Imposibil de deschis plugin-ul: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Imposibil de deschis plugin-ul: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Plugin neinstalat</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Plugin-ul nu este instalat și nu poate fi deschis</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Este necesară versiunea minimă a gazdei {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Plugin-ul va fi șters permanent</value></data><data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve"><value>Plugin-ul va fi șters permanent. Această acțiune nu poate fi anulată.</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Actualizare eșuată</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Actualizarea plugin-ului a eșuat, verificați conexiunea la rețea și încercați din nou mai târziu.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Actualizare reușită</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Plugin-ul a fost actualizat cu succes</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Se actualizează Plugin-ul</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Se descarcă și se actualizează plugin-ul...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Actualizează tot</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Rulează plugin</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Plugin-ul a început</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Plugin dezinstalat</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Plugin-ul va fi șters când programul se închide.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Ștergere eșuată</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>A apărut o eroare la ștergerea plugin-ului</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Configurare eșuată</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Plugin-ul este instalat, dar nu este încărcat. Vă rugăm să încercați să reporniți aplicația.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Fără Configurație</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Plugin-ul nu are opțiuni de configurare.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Configurare Nu Este Suportată</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Plugin-ul nu suportă configurare.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Stările Plugin-ului Resetate</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Toate stările de instalare ale plugin-ului au fost șterse</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Actualizare în Masă Completă</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Toate plugin-urile au fost procesate.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Se pregătește descărcarea...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>local</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Noua Versiune Disponibilă</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Versiune:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Data Lansării:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Noutăți:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Reîmprospătează lista de plugin-uri</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Nu s-au găsit plugin-uri care corespund căutării dumneavoastră.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Actualizează toate plugin-urile disponibile</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Instalează Tot</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Instalează toate plugin-urile disponibile</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Se instalează Toate...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Se instalează plugin-ul/urile {0}...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Instalare în masă finalizată</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Plugin(urile) {0} instalat(e).</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Instalare în masă eșuată</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Instalarea pluginurilor a eșuat: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Se actualizează tot...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Se actualizează...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Deschide folderul</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Copiază ID-ul pluginului</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Folderul nu a fost găsit</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Directorul pluginurilor nu există încă.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Copiat</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>ID-ul pluginului '{0}' a fost copiat în clipboard.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Descărcare finalizată</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Se descarcă...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Se descarcă... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Accelerația rețelei</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>ViveTool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Instrumente</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Funcții de accelerare și optimizare a rețelei în timp real</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Gestionează flag-urile caracteristicilor Windows folosind ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Instrumente de optimizare a sistemului și utilitare</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Utilizare</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Acest editor este folosit pentru a edita direct fișierul de configurare shell.nss. După modificare, faceți clic</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Aplicare</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>buton pentru a salva toate modificările și a reporni File Explorer pentru a aplica configurația.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Calea fișierului de configurare:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• După modificarea configurației, File Explorer (Explorer) trebuie repornit pentru ca modificările să aibă efect.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Aplicare</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>Fișier de configurare shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Fișierul shell.nss este utilizat pentru a defini structura generală și comportamentul meniului de clic dreapta</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Deschide fișierul shell.nss</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Deschide folderul care conține fișierul</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Cale:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Setări UI</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Setări de temă de bază</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Culoare de fundal:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Culoare text:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Setări efect de hover</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Fundal la hover:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Text la hover:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Setări efect selectat</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Fundal selectat:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Text selectat:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Actualizează textul din UI</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Încărcare din text</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Editor de text</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Deschide în editor extern</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Fișier de configurare images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Fișierul images.nss este folosit pentru a defini icoane și imagini pentru meniul de clic dreapta</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Deschide fișierul images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Fișier de configurare modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Fișierul modify.nss este folosit pentru a modifica și personaliza elementele din meniul de clic dreapta</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Deschide fișierul modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Nu sunt disponibile instrumente. Vă rugăm să adăugați instrumente în folderul tools din directorul aplicației.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Instrumentele vor apărea aici odată ce sunt disponibile în directorul tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Directorul de bază: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Directorul fișierului de configurare nu a fost găsit</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Fișierul nu a fost găsit</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Nu se poate citi fișierul de configurare: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Acest fișier este folosit pentru a defini setările de stil legate de temă</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Definiția culorii temei</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Culoare de bază</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Culoare la trecerea cursorului</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Culoare selectată</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Pentru mai multe opțiuni de configurare a temei, vă rugăm să consultați documentația oficială Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Sunteți sigur că doriți să aplicați configurația? 
+  
+ Acest lucru va: 
+ 1. Salva toate fișierele de configurare 
+ 2. Repornirea File Explorer pentru a aplica configurația 
+  
+ Notă: Repornirea va închide toate ferestrele de foldere deschise și bara de activități, apoi va reporni automat.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Confirmă aplicarea configurației</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Nu se poate salva fișierul de configurare: 
+ {0} 
+  
+ Vă rugăm să verificați permisiunile fișierului și să încercați din nou.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Salvare eșuată</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Fișierele următoare au fost salvate cu succes: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Eșuat la salvarea fișierelor: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>File Explorer a fost repornit, configurația este acum activă!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Parțial aplicat</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Aplicat cu succes</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Eroare aplicând configurația: 
+ {0} 
+ 
+ Poți salva manual fișierele și reporni procesul Explorer din Managerul de Activități.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Cererea a eșuat</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Fișierul nu există sau calea este invalidă</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Fișier deschis eșuat</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Folosește programul implicit al sistemului pentru a deschide fișierul</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Nu se poate deschide fișierul: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Fișier deschis eșuat</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Folderul nu există sau calea este invalidă</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Deschide folderul a eșuat</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Nu se poate deschide folderul: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Deschide folderul a eșuat</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>model</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Consum de energie</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Atac</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Sănătate</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Tarif</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Rata minimă</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Rata maximă</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Cicluri</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Capacitate</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Capitală completă</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>design</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Dată</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Ceas de miez / memorie</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Tensiunea nucleului</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Interval de tensiune</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Temperatura medie</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Bară laterală</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Sistem</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Interval de tarife</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Vă rugăm să selectați cel puțin o opțiune de curățare.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Porniți tot</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>de ex. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>de ex. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Activează transparența</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Activează efectele de transparență pentru meniul contextual</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Afișează extensiile fișierelor</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Afișează extensiile fișierelor în Exploratorul de fișiere</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Afișează fișierele ascunse</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Afișează fișierele și folderele ascunse în Exploratorul de fișiere</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Deschide la Acces rapid</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Deschide Exploratorul de fișiere la Acces rapid în loc de Acest PC</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Afișează panoul de previzualizare</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Afișează panoul de previzualizare în Exploratorul de fișiere</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Vă rugăm să selectați cel puțin un element pentru curățare.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

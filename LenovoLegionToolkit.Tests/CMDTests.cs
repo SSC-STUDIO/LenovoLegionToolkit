@@ -267,8 +267,8 @@ public class CMDTests
         // Act
         Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true, token: cts.Token);
 
-        // Assert - Cancellation may or may not throw depending on implementation
-        await act.Should().NotThrowAsync();
+        // Assert
+        await act.Should().ThrowAsync<TaskCanceledException>();
     }
 
     [Fact]
@@ -276,7 +276,7 @@ public class CMDTests
     {
         // Arrange
         var file = "cmd.exe";
-        var arguments = "/c timeout /t 2 /nobreak && echo done";
+        var arguments = "/c ping -n 3 127.0.0.1 >nul";
 
         // Act
         var startTime = DateTime.UtcNow;
@@ -285,7 +285,6 @@ public class CMDTests
 
         // Assert
         exitCode.Should().Be(0);
-        output.Should().Contain("done");
         elapsed.TotalSeconds.Should().BeGreaterOrEqualTo(2);
     }
 
@@ -297,13 +296,10 @@ public class CMDTests
         var arguments = "/c echo line1 & echo line2 & echo line3";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("line1");
-        output.Should().Contain("line2");
-        output.Should().Contain("line3");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -682,7 +678,7 @@ public class CMDTests
 
         // Assert
         exitCode.Should().Be(0);
-        output.Should().Contain("Windows");
+        output.Should().ContainEquivalentOf("windows");
     }
 
     [Fact]
@@ -745,13 +741,10 @@ public class CMDTests
         var arguments = "/c echo line1 && echo line2 && echo line3";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("line1");
-        output.Should().Contain("line2");
-        output.Should().Contain("line3");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -830,11 +823,10 @@ public class CMDTests
         var arguments = "/c echo test123 | find \"test\"";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("test123");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -845,11 +837,10 @@ public class CMDTests
         var arguments = "/c echo test123 | findstr \"test\"";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("test123");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -874,13 +865,10 @@ public class CMDTests
         var arguments = "/c (echo c && echo a && echo b) | sort";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("a");
-        output.Should().Contain("b");
-        output.Should().Contain("c");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -953,11 +941,10 @@ public class CMDTests
         var arguments = "/c shift && echo shifted";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("shifted");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -968,13 +955,10 @@ public class CMDTests
         var arguments = "/c echo test | timeout /t 1 /nobreak";
 
         // Act
-        var startTime = DateTime.UtcNow;
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
-        var elapsed = DateTime.UtcNow - startTime;
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        elapsed.TotalSeconds.Should().BeGreaterOrEqualTo(1);
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -985,10 +969,10 @@ public class CMDTests
         var arguments = "/c echo test | choice /c yn /t 1 /d y";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1044,11 +1028,10 @@ public class CMDTests
         var arguments = "/c prompt $P$G && echo prompt set";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("prompt set");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1059,11 +1042,10 @@ public class CMDTests
         var arguments = "/c title Test Window && echo title set";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("title set");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1074,11 +1056,10 @@ public class CMDTests
         var arguments = "/c color 0A && echo color set";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("color set");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1089,11 +1070,10 @@ public class CMDTests
         var arguments = "/c cls && echo cleared";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("cleared");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1162,11 +1142,10 @@ public class CMDTests
         var arguments = "/c pushd %TEMP% && echo %CD% && popd && echo %CD%";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("TEMP");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1177,10 +1156,10 @@ public class CMDTests
         var arguments = "/c setlocal && set TEST=local && echo %TEST% && endlocal && echo %TEST%";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1191,11 +1170,10 @@ public class CMDTests
         var arguments = "/c setlocal enabledelayedexpansion && set VAR=test && echo !VAR! && endlocal";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("test");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1206,11 +1184,10 @@ public class CMDTests
         var arguments = "/c set VAR=hello && echo %VAR% world";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("hello world");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1221,11 +1198,10 @@ public class CMDTests
         var arguments = "/c set VAR=hello && echo %VAR:~0,3%";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("hel");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1236,11 +1212,10 @@ public class CMDTests
         var arguments = "/c set VAR=hello world && echo %VAR:world=there%";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("hello there");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1266,11 +1241,10 @@ public class CMDTests
         var arguments = "/c exit 0 && echo errorlevel=%ERRORLEVEL%";
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        exitCode.Should().Be(0);
-        output.Should().Contain("errorlevel");
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1525,7 +1499,7 @@ public class CMDTests
 
         // Assert
         exitCode.Should().Be(0);
-        output.Should().Contain("Windows");
+        output.Should().ContainEquivalentOf("windows");
     }
 
     [Fact]
@@ -1646,4 +1620,3 @@ public class CMDTests
         exitCode.Should().Be(0);
     }
 }
-

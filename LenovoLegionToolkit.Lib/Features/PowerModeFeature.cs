@@ -11,7 +11,8 @@ using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
 
-public class PowerModeUnavailableWithoutACException(PowerModeState powerMode) : Exception
+public class PowerModeUnavailableWithoutACException(PowerModeState powerMode)
+    : Exception($"Power mode '{powerMode}' is unavailable without AC adapter.")
 {
     public PowerModeState PowerMode { get; } = powerMode;
 }

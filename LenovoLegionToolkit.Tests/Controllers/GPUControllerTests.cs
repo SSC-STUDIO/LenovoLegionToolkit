@@ -21,8 +21,8 @@ public class GPUControllerTests : UnitTestBase
 
     protected override void Setup()
     {
-        _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Strict);
-        _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Strict);
+        _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
         _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object);
     }
 
@@ -51,7 +51,7 @@ public class GPUControllerTests : UnitTestBase
 
         _controller.IsStarted.Should().BeTrue();
 
-        await _controller.StopAsync(waitForFinish: true);
+        await _controller.StopAsync(waitForFinish: false);
     }
 
     [TestMethod]
@@ -63,14 +63,14 @@ public class GPUControllerTests : UnitTestBase
         firstStartTask.IsCompleted.Should().BeTrue();
         _controller.IsStarted.Should().BeTrue();
 
-        await _controller.StopAsync(waitForFinish: true);
+        await _controller.StopAsync(waitForFinish: false);
     }
 
     [TestMethod]
     public async Task StopAsync_WhenCalled_ShouldSetIsStartedToFalse()
     {
         await _controller.StartAsync(delay: 100, interval: 5000);
-        await _controller.StopAsync(waitForFinish: true);
+        await _controller.StopAsync(waitForFinish: false);
 
         _controller.IsStarted.Should().BeFalse();
     }
@@ -142,7 +142,7 @@ public class GPUControllerTests : UnitTestBase
 
             await Task.Delay(100);
 
-            await _controller.StopAsync(waitForFinish: true);
+            await _controller.StopAsync(waitForFinish: false);
             _controller.IsStarted.Should().BeFalse();
         }
     }

@@ -142,7 +142,7 @@ For answers to common questions about this code of conduct, see the FAQ at https
 | GitHub Issues | Bug reports, feature requests | English |
 | GitHub Discussions | Ideas, Q&A, Show and Tell | English |
 | Discord Server | Real-time chat, support | English, 中文 |
-| Crowdin | Documentation translation | Multiple |
+| Crowdin | UI/resource translation (`.resx`) | Multiple |
 
 ---
 

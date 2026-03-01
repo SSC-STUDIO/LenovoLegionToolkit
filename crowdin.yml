@@ -1,0 +1,62 @@
+# Crowdin configuration for LLT resource localization.
+# Keep this file in sync with all neutral resource modules.
+
+base_path: .
+preserve_hierarchy: true
+
+files:
+  - source: /LenovoLegionToolkit.WPF/Resources/Resource.resx
+    translation: /LenovoLegionToolkit.WPF/Resources/Resource.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-nl
+        nl-NL: nl-nl
+        pt-BR: pt-br
+        pt-PT: pt
+        zh-CN: zh-hans
+        zh-TW: zh-hant
+        uz: uz-latn-uz
+        uz-UZ: uz-latn-uz
+        uz@Latn: uz-latn-uz
+
+  - source: /LenovoLegionToolkit.Lib/Resources/Resource.resx
+    translation: /LenovoLegionToolkit.Lib/Resources/Resource.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-nl
+        nl-NL: nl-nl
+        pt-BR: pt-br
+        pt-PT: pt
+        zh-CN: zh-hans
+        zh-TW: zh-hant
+        uz: uz-latn-uz
+        uz-UZ: uz-latn-uz
+        uz@Latn: uz-latn-uz
+
+  - source: /LenovoLegionToolkit.Lib.Automation/Resources/Resource.resx
+    translation: /LenovoLegionToolkit.Lib.Automation/Resources/Resource.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-nl
+        nl-NL: nl-nl
+        pt-BR: pt-br
+        pt-PT: pt
+        zh-CN: zh-hans
+        zh-TW: zh-hant
+        uz: uz-latn-uz
+        uz-UZ: uz-latn-uz
+        uz@Latn: uz-latn-uz
+
+  - source: /LenovoLegionToolkit.Lib.Macro/Resources/Resource.resx
+    translation: /LenovoLegionToolkit.Lib.Macro/Resources/Resource.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-nl
+        nl-NL: nl-nl
+        pt-BR: pt-br
+        pt-PT: pt
+        zh-CN: zh-hans
+        zh-TW: zh-hant
+        uz: uz-latn-uz
+        uz-UZ: uz-latn-uz
+        uz@Latn: uz-latn-uz

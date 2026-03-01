@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Bộ công cụ Lenovo Legion</value>
   </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Bản dựng</value>
@@ -105,7 +105,7 @@
     <value>Luôn bật cổng USB</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Toolkit</value>
+    <value>Bộ công cụ Lenovo Legion</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Áp dụng</value>
@@ -335,7 +335,7 @@ Thời gian có thể không chính xác nếu laptop được sạc khi Ngủ h
     <value>Hủy</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>° C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Đóng</value>
@@ -416,7 +416,7 @@ CẢNH BÁO: Hành động sẽ không chạy đúng nếu màn hình laptop kh�
     <value>Thiết bị</value>
   </data>
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
-    <value>Lenovo Support</value>
+    <value>Hỗ trợ Lenovo</value>
   </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
     <value>Mã Máy</value>
@@ -542,7 +542,7 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
     <value>Về các chế độ GPU</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>° F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -557,10 +557,10 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
     <value>GPU</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>GPU # 2</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>Vòng/phút</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
     <value>Khởi động laptop khi bạn mở màn hình.</value>
@@ -591,14 +591,14 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
 Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
-    <value>Minimum offset</value>
+    <value>Độ dịch chuyển tối thiểu</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
     <value>CẢNH BÁO!
 Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
-    <value>Maximum offset</value>
+    <value>Độ dịch chuyển tối đa</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
     <value>KHÔNG THAY ĐỔI BẤT CỨ GIÁ TRỊ NÀO DƯỚI ĐÂY NẾU BẠN KHÔNG BIẾT CÔNG DỤNG CỦA CHÚNG!</value>
@@ -648,7 +648,7 @@ THẬT CẨN THẬN KHI SỬ DỤNG LỰA CHỌN NÀY!!! KHÔNG NÊN SỬ DỤNG
     <value>TDP tùy chỉnh cho GPU</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
-    <value>Dynamic Boost</value>
+    <value>Tăng cường năng động</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
     <value>Giới hạn nhiệt độ GPU</value>
@@ -704,7 +704,7 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
     <value>Nhà sản xuất:</value>
   </data>
   <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model:</value>
+    <value>Mẫu:</value>
   </data>
   <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
     <value>Loại máy:</value>
@@ -821,7 +821,7 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
     <value>Nguồn điện</value>
   </data>
   <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
-    <value>Camera</value>
+    <value>Máy ảnh</value>
   </data>
   <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
     <value>Caps Lock và Num Lock</value>
@@ -840,7 +840,7 @@ Bật tùy chọn này nếu có xung đột với các ứng dụng chạy toà
     <value>Đèn nền bàn phím</value>
   </data>
   <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Micrô</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
     <value>Vị trí</value>
@@ -852,7 +852,7 @@ Bật tùy chọn này nếu có xung đột với các ứng dụng chạy toà
     <value>Tần số quét</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>Khóa thông minh</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>Thông báo</value>
@@ -861,7 +861,7 @@ Bật tùy chọn này nếu có xung đột với các ứng dụng chạy toà
     <value>Khóa Touchpad</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>Được.</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Mở</value>
@@ -870,13 +870,13 @@ Bật tùy chọn này nếu có xung đột với các ứng dụng chạy toà
     <value>Cải thiện thời gian phản hồi cho màn hình laptop.</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Chế độ Over Drive</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>Cải thiện thời gian phản hồi cho màn hình laptop.</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>Chế độ Over Drive</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>{0} đã được tải về!</value>
@@ -1031,7 +1031,7 @@ Bạn có thể chuyển đổi giữa các Chế độ với Fn+Q.</value>
     <value>Tốc độ</value>
   </data>
   <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Readme</value>
+    <value>Đọc tôi</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Làm mới</value>
@@ -1365,7 +1365,7 @@ Logging sẽ được tự động bật, nếu bạn chọn tiếp tục.</valu
     <value>Thiết bị không được hỗ trợ</value>
   </data>
   <data name="UnsupportedWindow_Vendor" xml:space="preserve">
-    <value>Vendor</value>
+    <value>Nhà cung cấp</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Cập nhật</value>
@@ -1404,13 +1404,13 @@ Logging sẽ được tự động bật, nếu bạn chọn tiếp tục.</valu
     <value>Có</value>
   </data>
   <data name="MicrophoneControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Micrô</value>
   </data>
   <data name="MicrophoneControl_Message" xml:space="preserve">
     <value>Khi tắt, microphone sẽ bị tắt tiếng.</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
-    <value>Microphone</value>
+    <value>Micrô</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
     <value>Khi tắt, microphone sẽ bị tắt tiếng.</value>
@@ -1430,13 +1430,13 @@ Logging sẽ được tự động bật, nếu bạn chọn tiếp tục.</valu
 CẢNH BẢO! Hành động này sẽ không chạy nếu màn hình laptop tắt.</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>DPI.</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>Thay đổi scaling màn hình laptop.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>DPI.</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>Thay đổi scaling màn hình laptop.
@@ -1699,10 +1699,10 @@ Chỉ hoạt động khi chế độ Tùy Chỉnh đang bật.</value>
     <value>Cài đặt ép xung GPU rời</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
-    <value>Core Frequency Offset</value>
+    <value>Độ lệch tần số lõi</value>
   </data>
   <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
-    <value>Memory Frequency Offset</value>
+    <value>Độ lệch tần số bộ nhớ</value>
   </data>
   <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
     <value>Ép xung GPU</value>
@@ -1758,7 +1758,7 @@ CẢNH BÁO: Hành động này có thể chạy không đúng nếu GPU rời k
     <value>Mức sử dụng</value>
   </data>
   <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
-    <value>Core Clock</value>
+    <value>Đồng hồ lõi</value>
   </data>
   <data name="SensorsControl_Temperature_Title" xml:space="preserve">
     <value>Nhiệt độ</value>
@@ -1770,7 +1770,7 @@ CẢNH BÁO: Hành động này có thể chạy không đúng nếu GPU rời k
     <value>GPU</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
-    <value>Memory Clock</value>
+    <value>Đồng hồ bộ nhớ</value>
   </data>
   <data name="SensorsControl_RefreshInterval" xml:space="preserve">
     <value>Thời gian làm mới</value>
@@ -1952,7 +1952,7 @@ Các định dạng hỗ trợ: {1}.</value>
     <value>Bỏ trống cho bất kì mạng Wi-Fi nào.</value>
   </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
-    <value>HWiNFO64</value>
+    <value>CTNHFFO64</value>
   </data>
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
     <value>Dùng chung dữ liệu tốc độ quạt, nhiệt độ pin,... với HWiNFO64. Bạn có thể cần phải khởi động lại HWiNFO64 sau khi thay đổi tùy chọn này.</value>
@@ -2052,10 +2052,10 @@ Các định dạng hỗ trợ: {1}.</value>
     <value>Lỗi đã xảy ra khi đọc thông tin thiết bị.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
-    <value>Macro</value>
+    <value>Vĩ mô</value>
   </data>
   <data name="MacroPage_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Vĩ mô</value>
   </data>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Lặp lại</value>
@@ -2085,7 +2085,7 @@ Các định dạng hỗ trợ: {1}.</value>
     <value>Bạn có thể ghi lại các Macro và gọi chúng qua bàn phím số.</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
-    <value>Macro</value>
+    <value>Vĩ mô</value>
   </data>
   <data name="MacroAutomationStepControl_Message" xml:space="preserve">
     <value>Bật hoặc tắt macros.</value>
@@ -2139,7 +2139,7 @@ Các định dạng hỗ trợ: {1}.</value>
     <value>Chỉ hiển thị các thiết bị đang kết nối</value>
   </data>
   <data name="SettingsPage_CLI_Title" xml:space="preserve">
-    <value>CLI</value>
+    <value>Giao diện dòng lệnh</value>
   </data>
   <data name="SettingsPage_CLI_Message" xml:space="preserve">
     <value>Cho phép điều khiển chương trình qua dòng lệnh với Giao diện dòng lệnh.</value>
@@ -2230,10 +2230,10 @@ Các định dạng hỗ trợ: {1}.</value>
 Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn màn hình, nhưng thông báo sẽ không thể bấm vào được.</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
-    <value>Recommended</value>
+    <value>Được khuyến nghị</value>
   </data>
   <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
-    <value>{0} of {1} actions selected</value>
+    <value>{0} của {1} hành động đã chọn</value>
   </data>
   <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
     <value>Dọn dẹp bộ nhớ cache</value>
@@ -2281,73 +2281,73 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Tối ưu hóa hệ thống</value>
   </data>
 <data name="CollapseAll" xml:space="preserve">
-    <value>Collapse all</value>
+    <value>Thu gọn tất cả</value>
   </data>
   <data name="Compact" xml:space="preserve">
-    <value>Compact view</value>
+    <value>Chế độ xem gọn</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Duyệt…</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
-    <value>Please enter at least one file extension.</value>
+    <value>Vui lòng nhập ít nhất một tiện ích mở rộng tệp.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
-    <value>Please choose a folder.</value>
+    <value>Vui lòng chọn một thư mục.</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
-    <value>Separate multiple extensions with commas (example: tmp, log, bak)</value>
+    <value>Ngăn cách nhiều tiện ích mở rộng bằng dấu phẩy (ví dụ: tmp, log, bak)</value>
   </data>
   <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
-    <value>Extensions</value>
+    <value>Tiện ích mở rộng</value>
   </data>
   <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
-    <value>Folder</value>
+    <value>Thư mục</value>
   </data>
   <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Bao gồm các thư mục con</value>
   </data>
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
-    <value>Custom cleanup rule</value>
+    <value>Quy tắc dọn dẹp tùy chỉnh</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
-    <value>Expand all</value>
+    <value>Mở rộng tất cả</value>
   </data>
   <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
     <value>System beautification</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Tối ưu hóa hệ thống</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
-    <value>Hide the incompatible device warning that appears on startup.</value>
+    <value>Ẩn cảnh báo thiết bị không tương thích xuất hiện khi khởi động.</value>
   </data>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
-    <value>Disable incompatible device warning</value>
+    <value>Vô hiệu hóa cảnh báo thiết bị không tương thích</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Run cleanup</value>
+    <value>Chạy dọn dẹp</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
-    <value>Cleanup failed.</value>
+    <value>Dọn dẹp thất bại.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Cleanup completed.</value>
+    <value>Dọn dẹp hoàn tất.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Apply recommended performance tweaks and clean temporary files.</value>
+    <value>Áp dụng các tinh chỉnh hiệu suất được đề xuất và dọn các tệp tạm thời.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Apply performance &amp; service tweaks</value>
+    <value>Áp dụng các tinh chỉnh hiệu suất &amp; dịch vụ</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Couldn't apply performance optimizations.</value>
+    <value>Không thể áp dụng các tối ưu hóa hiệu suất.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Performance optimizations applied.</value>
+    <value>Các tối ưu hóa hiệu suất đã được áp dụng.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
-    <value>System optimization</value>
+    <value>Tối ưu hóa hệ thống</value>
   </data>
   <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
     <value>Adjust Windows transparency effects.</value>
@@ -2359,43 +2359,43 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
-    <value>Rounded corners</value>
+    <value>Góc bo tròn</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
-    <value>Shadows</value>
+    <value>Bóng</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Giao diện</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Áp dụng</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
     <value>Auto (Follow system theme)</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
-    <value>Classic</value>
+    <value>Cổ điển</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tối</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Sáng</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
-    <value>Modern</value>
+    <value>Hiện đại</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
-    <value>Theme</value>
+    <value>Giao diện</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
-    <value>Menu Style Settings</value>
+    <value>Cài đặt kiểu menu</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
     <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
-    <value>Transparency</value>
+    <value>Enable transparency effects</value>
   </data>
   <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
     <value>Disable classic</value>
@@ -2404,7 +2404,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Enable classic</value>
   </data>
   <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
-    <value>Install</value>
+    <value>Cài đặt</value>
   </data>
   <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
     <value>Open style settings</value>
@@ -2428,507 +2428,507 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Right-click menu style</value>
   </data>
   <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
-    <value>Uninstall</value>
+    <value>Gỡ cài đặt</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
     <value>Customize Windows appearance including right-click menu style.</value>
   </data>
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Trang trí Windows</value>
   </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
-    <value>You can disable this warning at any time in Settings.</value>
+    <value>Bạn có thể tắt cảnh báo này bất cứ lúc nào trong Cài đặt.</value>
   </data>
   <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Actions</value>
+    <value>Hành động</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Apply selected actions</value>
+    <value>Áp dụng các hành động đã chọn</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Failed to complete selected actions.</value>
+    <value>Không thể hoàn thành các hành động đã chọn.</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Selected actions completed successfully.</value>
+    <value>Các hành động đã chọn thực hiện thành công.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>Chọn các ứng dụng Microsoft Store được cài đặt sẵn để xóa cho tất cả người dùng.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>Không có ứng dụng nào được chọn để xóa.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>Quản lý AppX</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Không tải được: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Loading apps, please wait...</value>
+    <value>Đang tải ứng dụng, vui lòng đợi...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Publisher: {0}</value>
+    <value>Nhà xuất bản: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Uninstalling selected apps...</value>
+    <value>Đang gỡ cài đặt các ứng dụng đã chọn...</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Uninstall selected apps</value>
+    <value>Gỡ cài đặt các ứng dụng đã chọn</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Failed to remove selected apps.</value>
+    <value>Không thể xóa các ứng dụng đã chọn.</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Selected apps scheduled for removal.</value>
+    <value>Các ứng dụng đã chọn đã lên lịch xóa.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
-    <value>Customize the appearance of the context menu.</value>
+    <value>Tùy chỉnh giao diện của menu ngữ cảnh.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
-    <value>Failed to apply style settings.</value>
+    <value>Không thể áp dụng cài đặt kiểu.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Không tìm thấy tệp cấu hình. Vui lòng đảm bảo Nilesoft Shell đã được cài đặt.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
-    <value>Failed to enable classic menu.</value>
+    <value>Không bật được menu cổ điển.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
-    <value>Failed to install shell.</value>
+    <value>Không cài đặt được shell.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
-    <value>Failed to restore default menu.</value>
+    <value>Không khôi phục được menu mặc định.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
-    <value>Shell.exe not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Không tìm thấy Shell.exe. Vui lòng đảm bảo Nilesoft Shell đã được cài đặt.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
-    <value>Select the theme for the context menu.</value>
+    <value>Chọn chủ đề cho menu ngữ cảnh.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
-    <value>Enable transparency effects for the context menu.</value>
+    <value>Bật hiệu ứng trong suốt cho menu ngữ cảnh.</value>
   </data>
   <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
-    <value>Failed to uninstall shell.</value>
+    <value>Không gỡ cài đặt được shell.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-    <value>Freed {0} in {1}s</value>
+    <value>Giải phóng {0} trong {1}</value>
   </data>
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Xóa lựa chọn</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
-    <value>Add rule</value>
+    <value>Thêm quy tắc</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
-    <value>Clear all</value>
+    <value>Xóa tất cả</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
-    <value>Choose folders and file extensions that should be deleted during cleanup.</value>
+    <value>Chọn các thư mục và phần mở rộng tệp sẽ bị xóa trong quá trình dọn dẹp.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Chỉnh sửa</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
-    <value>No custom cleanup rules configured.</value>
+    <value>Không có quy tắc dọn dẹp tùy chỉnh nào được định cấu hình.</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
-    <value>Custom cleanup rules</value>
+    <value>Quy tắc dọn dẹp tuỳ chỉnh</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
-    <value>Include subfolders</value>
+    <value>Bao gồm các thư mục con</value>
   </data>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Loại bỏ</value>
   </data>
   <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Please select at least one action.</value>
+    <value>Vui lòng chọn ít nhất một hành động.</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
-    <value>Estimated cleanup size: {0}</value>
+    <value>Kích thước dự kiến để dọn dẹp: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
     <value>Estimating...</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>These actions modify system services and files. Administrator privileges may be required.</value>
+    <value>Những hành động này sẽ thay đổi các dịch vụ và tập tin hệ thống. Có thể cần quyền quản trị viên.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
-    <value>Run cleanup actions</value>
+    <value>Thực thi các hành động dọn dẹp</value>
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
-    <value>Running: {0}</value>
+    <value>Đang chạy: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Chọn tất cả</value>
   </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
-    <value>Select recommended</value>
+    <value>Chọn đề xuất</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Beautification</value>
+    <value>Tô điểm</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Uninstall selected preinstalled UWP applications for all users.</value>
+    <value>Gỡ cài đặt các ứng dụng UWP được cài sẵn cho tất cả người dùng.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Remove bundled Windows apps</value>
+    <value>Gỡ các ứng dụng Windows đi kèm</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
-    <value>Remove Internet Explorer and Edge cache and cookie files.</value>
+    <value>Xóa bộ nhớ đệm và tệp cookie của Internet Explorer và Edge.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
-    <value>Clean browser cache</value>
+    <value>Dọn dẹp bộ nhớ đệm trình duyệt</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
-    <value>Run DISM cleanup and clear WinSxS temporary files.</value>
+    <value>Chạy dọn dẹp DISM và xóa các tệp tạm WinSxS.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
-    <value>Service component store</value>
+    <value>Cửa hàng thành phần dịch vụ</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
-    <value>Remove memory dump files left after system crashes.</value>
+    <value>Loại bỏ các tập tin dump bộ nhớ sau khi hệ thống gặp sự cố.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
-    <value>Delete crash dumps</value>
+    <value>Xóa các tập tin crash dump</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
-    <value>Delete files matching configured extensions from selected folders.</value>
+    <value>Xóa các tệp có phần mở rộng đã cấu hình từ các thư mục đã chọn.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
-    <value>Clean custom files</value>
+    <value>Xóa các tệp tùy chỉnh</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
-    <value>Delete Windows Defender scan history and caches.</value>
+    <value>Xóa lịch sử quét và bộ nhớ đệm của Windows Defender.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
-    <value>Clean Defender scans</value>
+    <value>Dọn dẹp quét Defender</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
-    <value>Remove cached .NET Native images to reclaim disk space.</value>
+    <value>Xóa các hình ảnh .NET Native trong bộ nhớ đệm để giải phóng không gian đĩa.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
-    <value>Clear .NET native images</value>
+    <value>Xóa hình ảnh .NET chuyển đổi (native images)</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
-    <value>Delete Windows logs, error reports and diagnostic traces.</value>
+    <value>Xóa nhật ký Windows, báo cáo lỗi và các dấu vết chẩn đoán.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
-    <value>Remove logs and diagnostic data</value>
+    <value>Xóa nhật ký và dữ liệu chẩn đoán</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
-    <value>Delete Windows prefetch data to regenerate new traces.</value>
+    <value>Xóa dữ liệu prefetch của Windows để tái tạo các dấu vết mới.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
-    <value>Clear prefetch data</value>
+    <value>Xóa dữ liệu prefetch</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
-    <value>Remove deleted files stored in the Recycle Bin.</value>
+    <value>Loại bỏ các tập tin đã xóa được lưu trong Thùng rác.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
-    <value>Empty Recycle Bin</value>
+    <value>Làm trống Thùng rác</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
-    <value>Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.</value>
+    <value>Xóa lịch sử đăng ký người dùng phổ biến (Chạy MRU, RecentDocs, hộp thoại Mở/Lưu, TypedPaths). Điều này không xóa các mục quan trọng của hệ thống.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
-    <value>Registry MRU/history cleanup</value>
+    <value>Sổ đăng ký MRU/dọn dẹp lịch sử</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
-    <value>Remove cached files created by the Remote Desktop client.</value>
+    <value>Xóa các tệp bộ nhớ đệm được tạo bởi client Remote Desktop.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
-    <value>Clear Remote Desktop cache</value>
+    <value>Xóa bộ nhớ đệm Remote Desktop</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
-    <value>Empty Windows and user temporary directories.</value>
+    <value>Làm trống các thư mục tạm thời của Windows và người dùng.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
-    <value>Clean temporary files</value>
+    <value>Dọn dẹp tập tin tạm thời</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
-    <value>Delete Explorer thumbnail databases and Direct3D shader cache.</value>
+    <value>Xóa cơ sở dữ liệu thumbnail của Explorer và bộ nhớ đệm shader Direct3D.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
-    <value>Clean thumbnail caches</value>
+    <value>Dọn dẹp bộ nhớ đệm thu nhỏ (thumbnail)</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
-    <value>Delete downloaded update files and Delivery Optimisation cache.</value>
+    <value>Xóa các tệp cập nhật đã tải xuống và bộ nhớ đệm Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
-    <value>Clean Windows Update cache</value>
+    <value>Dọn dẹp bộ nhớ đệm Windows Update</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
-    <value>Reduce menu delays, close hung apps faster and open This PC by default.</value>
+    <value>Giảm độ trễ menu, đóng ứng dụng bị treo nhanh hơn và mở This PC theo mặc định.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
-    <value>Improve Explorer responsiveness</value>
+    <value>Cải thiện khả năng phản hồi của Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
-    <value>Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.</value>
+    <value>Vô hiệu hóa hoàn toàn menu Start. Khi nhấn phím Win, nó sẽ mở tìm kiếm thay vì menu Start.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
-    <value>Disable start menu and open search with Win key</value>
+    <value>Vô hiệu hóa menu Start và mở tìm kiếm bằng phím Win</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
-    <value>Turn off cloud content suggestions and recommendation banners.</value>
+    <value>Tắt đề xuất nội dung đám mây và các banner gợi ý.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
-    <value>Disable Explorer suggestions</value>
+    <value>Tắt gợi ý của Explorer</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
-    <value>Hide the search box and Task View button, disable taskbar grouping and always show tray icons.</value>
+    <value>Ẩn hộp tìm kiếm và nút Task View, tắt nhóm trên thanh tác vụ và luôn hiển thị biểu tượng khay hệ thống.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
-    <value>Taskbar and start menu layout</value>
+    <value>Bố cục thanh tác vụ và menu Start</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
-    <value>Show file extensions and hidden files in File Explorer.</value>
+    <value>Hiển thị phần mở rộng tập tin và các tập tin ẩn trong File Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
-    <value>File visibility options</value>
+    <value>Tùy chọn hiển thị tập tin</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Restores the default style and restarts Explorer.</value>
+    <value>Khôi phục kiểu mặc định và khởi động lại Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Switch to default right-click menu</value>
+    <value>Chuyển sang menu chuột phải mặc định</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Applies the classic style and restarts Explorer.</value>
+    <value>Áp dụng kiểu cổ điển và khởi động lại Explorer.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Switch to modern menu</value>
+    <value>Chuyển sang menu hiện đại</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
-    <value>Completely uninstall shell.exe and related files</value>
+    <value>Gỡ bỏ hoàn toàn shell.exe và các tệp liên quan</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
-    <value>Apply Modern Context Menu</value>
+    <value>Áp dụng Menu Ngữ cảnh Hiện đại</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
-    <value>Keep system cache in memory and avoid paging kernel drivers.</value>
+    <value>Giữ bộ nhớ đệm hệ thống trong bộ nhớ và tránh phân trang các trình điều khiển kernel.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
-    <value>Improve memory management</value>
+    <value>Cải thiện quản lý bộ nhớ</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
-    <value>Remove network throttling and lower system responsiveness latency.</value>
+    <value>Loại bỏ giới hạn băng thông mạng và giảm độ trễ phản hồi của hệ thống.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
-    <value>Optimise multimedia scheduling</value>
+    <value>Tối ưu lịch trình đa phương tiện</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
-    <value>Remove acrylic effects on logon and hide the Windows notification centre.</value>
+    <value>Loại bỏ hiệu ứng acrylic khi đăng nhập và ẩn trung tâm thông báo của Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
-    <value>Disable acrylic and notification centre</value>
+    <value>Vô hiệu hóa hiệu ứng acrylic và trung tâm thông báo</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
-    <value>Activate the high performance power scheme and disable hibernation.</value>
+    <value>Kích hoạt chế độ nguồn hiệu năng cao và tắt chế độ ngủ đông.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
-    <value>Force high performance plan</value>
+    <value>Ép chế độ hiệu năng cao</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
-    <value>Disable advertising ID, Spotlight features and automatic suggestions.</value>
+    <value>Vô hiệu hóa ID quảng cáo, các tính năng Spotlight và gợi ý tự động.</value>
   </data>
   <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
-    <value>Reduce telemetry and tips</value>
+    <value>Giảm thu thập dữ liệu và mẹo</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
-    <value>Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.</value>
+    <value>Dừng và vô hiệu hóa các dịch vụ Connected User Experiences, Diagnostics Hub và Delivery Optimisation.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
-    <value>Disable diagnostic services</value>
+    <value>Vô hiệu hóa dịch vụ chẩn đoán</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
-    <value>Stop Windows Error Reporting from collecting and sending crash data.</value>
+    <value>Ngăn Windows Error Reporting thu thập và gửi dữ liệu sự cố.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
-    <value>Disable error reporting</value>
+    <value>Vô hiệu hóa báo cáo lỗi</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
-    <value>Secure the system by disabling remote registry access.</value>
+    <value>Bảo mật hệ thống bằng cách vô hiệu hóa truy cập đăng ký từ xa.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
-    <value>Disable Remote Registry</value>
+    <value>Vô hiệu hóa Remote Registry</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
-    <value>Stop the Windows Search service to prevent index updates.</value>
+    <value>Dừng dịch vụ Windows Search để ngăn cập nhật chỉ mục.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
-    <value>Disable Windows Search indexing</value>
+    <value>Vô hiệu hóa lập chỉ mục tìm kiếm của Windows</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
-    <value>Turn off Superfetch/SysMain to reduce background disk activity.</value>
+    <value>Tắt Superfetch/SysMain để giảm hoạt động ổ đĩa nền.</value>
   </data>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
-    <value>Disable SysMain</value>
+    <value>Vô hiệu hóa SysMain</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Modify Windows key behavior to open search instead of the start menu.</value>
+    <value>Chỉnh hành vi của phím Windows để mở tìm kiếm thay vì menu Start.</value>
   </data>
   <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Change Windows key to open search</value>
+    <value>Thay đổi phím Windows để mở tìm kiếm</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Remove caches, temporary files and other leftovers.</value>
+    <value>Xóa bộ nhớ đệm, tập tin tạm thời và các dữ liệu dư thừa khác.</value>
   </data>
   <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Cleanup</value>
+    <value>Dọn dẹp</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
-    <value>Tune taskbar, File Explorer and user interface behaviour.</value>
+    <value>Tối ưu thanh tác vụ, File Explorer và hành vi giao diện người dùng.</value>
   </data>
   <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
-    <value>Explorer &amp; interface</value>
+    <value>Trình duyệt &amp; giao diện</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Change right-click menu style.</value>
+    <value>Thay đổi kiểu menu chuột phải.</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
-    <value>Windows Beautification</value>
+    <value>Trang trí Windows</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
-    <value>Adjust system performance and responsiveness settings.</value>
+    <value>Điều chỉnh hiệu suất và độ phản hồi của hệ thống.</value>
   </data>
   <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
-    <value>Performance</value>
+    <value>Hiệu Suất</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
-    <value>Disable background services that consume resources.</value>
+    <value>Vô hiệu hóa các dịch vụ nền tiêu tốn tài nguyên.</value>
   </data>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
-    <value>Services</value>
+    <value>Dịch vụ</value>
   </data>
   <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>System beautification</value>
+    <value>Làm đẹp hệ thống</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>Đăng ký Thành phần COM   Tệp Cấu hình</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>Loại Triển khai:</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>Đóng</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>Bằng cách đăng ký Nilesoft Shell làm trình xử lý COM cho menu ngữ cảnh của Windows, nó chặn việc tạo và hiển thị các menu nhấp chuột phải của hệ thống. Khi người dùng nhấp chuột phải vào tệp hoặc thư mục, Shell sẽ đọc tệp cấu hình shell.nss và áp dụng chủ đề tùy chỉnh, độ trong suốt, góc bo tròn và cài đặt bóng để tạo hiệu ứng menu nhấp chuột phải đẹp mắt.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>Không tìm thấy tệp cấu hình. Vui lòng đảm bảo Nilesoft Shell đã được cài đặt.</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>Không tìm thấy Tệp Cấu hình</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>Cài đặt đã được áp dụng thành công. Thay đổi sẽ có hiệu lực sau khi khởi động lại Trình khám phá Tệp.</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>Cài đặt Đã áp dụng</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>Không thể áp dụng cài đặt: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>Lỗi</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. Đăng ký Thành phần COM:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>Đường dẫn: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. Tệp Cấu hình (shell.nss):</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>Đường dẫn tệp cấu hình: {0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>Sử dụng cú pháp giống CSS để định nghĩa kiểu menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. Ví dụ về định dạng file cấu hình:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
-   {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
-       corner-radius: 5px;
-       shadow: true;
-       transparency: true;
-   }</value>
+    <value>theme 
+    { 
+        background-color: #2d2d2d; 
+        text-color: #ffffff; 
+        corner-radius: 5px; 
+        shadow: true; 
+        transparency: true; 
+    }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. Nguyên lý hoạt động:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>- Shell.dll được đăng ký như một thành phần COM trong hệ thống</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>- Thực hiện giao diện IContextMenu để can thiệp vào việc tạo menu chuột phải</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>- Đọc file cấu hình shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>- Áp dụng các kiểu tùy chỉnh (giao diện, bo tròn góc, bóng, v.v.)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>- Hiển thị menu ngữ cảnh được làm đẹp</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. Mô tả hiệu ứng:</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>- Giao diện tự động: Theo giao diện hệ thống (sáng/tối)</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>- Độ trong suốt: Bật hiệu ứng nền trong suốt cho menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>- Góc bo tròn: Thêm đường viền góc bo tròn cho các mục menu</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>- Bóng: Thêm hiệu ứng bóng cho menu, tăng cảm giác chiều sâu</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>Đang thực thi {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>Thao tác đã bị hủy</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>Chi tiết lỗi: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Hiển thị các tải xuống ẩn</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>Hiển thị các tải xuống ẩn</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>Chọn ngôn ngữ</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>Không kết nối</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>Đồng bộ các vùng</value>
   </data>
 
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
@@ -2968,4 +2968,37 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Đang xử lý {0}...</value>
   </data>
 
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>Tiện ích mở rộng Plugin</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>Cài đặt Mục điều hướng</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>Cấu hình các mục điều hướng sẽ hiển thị trên thanh bên. Bảng điều khiển và Cài đặt sẽ luôn luôn hiển thị.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Bàn phím</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Pin</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Tự động hóa</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Macro</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Tối ưu hóa Hệ thống</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Tiện ích mở rộng Plugin</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>Hiển thị hoặc ẩn mục điều hướng Giới thiệu</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>Mục điều hướng</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>Cấu hình các mục điều hướng hiển thị trong thanh bên</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>Đang quét các gói driver có sẵn, vui lòng chờ...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>Đã xảy ra lỗi mạng. Tự động thử lại...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>Đang thử tải lại các gói driver...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>Thông tin dọn dẹp</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>Xem tiến trình hoạt động dọn dẹp và dung lượng ước tính.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>Khởi động ở chế độ thu nhỏ vào khay hệ thống khi bạn đăng nhập vào Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>Quét</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>Tải trình điều khiển</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>Xác nhận an toàn</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>Việc dọn dẹp hệ thống sẽ xóa vĩnh viễn các tập tin tạm thời và bộ nhớ đệm. Mặc dù thường an toàn, nhưng nên chắc chắn rằng bạn đã sao lưu các dữ liệu quan trọng. Bạn có muốn tiếp tục không?</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>Tiện ích mở rộng</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>Quản lý các tiện ích mở rộng và công cụ tối ưu hóa hệ thống</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>Không có tiện ích mở rộng nào</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>Cài đặt tiện ích mở rộng từ trang Tiện ích Plugin để nâng cao chức năng tối ưu hóa hệ thống.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>Sắp ra mắt</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>Chợ tiện ích mở rộng sẽ có trong bản cập nhật tương lai.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>Đang tải plugin...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Tích hợp Shell</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>Tăng cường tích hợp Shell Windows với trang trí menu ngữ cảnh và tùy chỉnh kiểu chuột</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Bật Menu Ngữ Cảnh Hiện Đại</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Bật Nilesoft Shell để làm đẹp menu ngữ cảnh Windows với phong cách hiện đại</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>Tắt Menu Ngữ Cảnh Hiện Đại</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>Hủy đăng ký Nilesoft Shell và khôi phục menu ngữ cảnh Windows mặc định</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>Áp dụng Kiểu Con Trỏ Windows 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>Áp dụng chủ đề con trỏ kiểu Windows 11 với hỗ trợ DPI cao</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>Tăng tốc mạng</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>Tối ưu cài đặt mạng để cải thiện tốc độ và khả năng phản hồi mạng.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>Tối ưu TCP/IP và DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>Tối ưu các tham số TCP/IP và cài đặt bộ nhớ đệm DNS để cải thiện tốc độ kết nối và khả năng phản hồi.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>Đặt lại cấu hình mạng</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>Xóa bộ nhớ đệm DNS và đặt lại Winsock cùng ngăn xếp TCP/IP để sửa các vấn đề kết nối mạng.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>Dọn dẹp các tệp tạm thời và nhật ký do các ứng dụng khác nhau để lại.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>Tàn dư ứng dụng</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>Quét các tập tin lớn trên ổ đĩa hệ thống của bạn có thể chiếm dụng không gian đáng kể.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>Quét tập tin lớn</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>Xác định và quản lý các tập tin lớn trên hệ thống của bạn.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>Tập tin lớn</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>Bật Tiện ích mở rộng</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>Bật hệ thống tiện ích mở rộng để truy cập thị trường plugin trên trang Công cụ.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>Cấu hình giao diện, hành vi và các tùy chọn chức năng của ứng dụng.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>Được khuyến nghị</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>Đang tải xuống</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>Đang cài đặt</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>Hoàn tất</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>Định nghĩa hành động không tìm thấy</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>Chi tiết triển khai kỹ thuật không có sẵn cho hành động này</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>Tải không thành công</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>Không biết</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>Thực thi lệnh</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>Chỉnh sửa registry</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>Quản lý dịch vụ</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>Chỉnh sửa registry   Script PowerShell</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>Dọn dẹp registry</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM command</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>không tìm thấy shell.exe</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>Đường dẫn tệp cấu hình: Không tìm thấy</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>Thời gian sử dụng</value></data><data name="PackageControl_Install" xml:space="preserve"><value>Cài đặt</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>Gỡ cài đặt</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>Cài đặt thất bại</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>Không tìm thấy tệp, vui lòng tải xuống trước</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>Bắt đầu cài đặt</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>Bắt đầu trình cài đặt: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>Lỗi kiểm tra tương thích</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>Ứng dụng không thể đọc thông tin thiết bị khi khởi động. Vui lòng kiểm tra chi tiết lỗi bên dưới và thử các bước khắc phục nếu cần.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>Các bước khắc phục sự cố</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>Đảm bảo dịch vụ Quản lý Công cụ Windows (WMI) đang chạy: Mở Services (services.msc) và kiểm tra rằng "Windows Management Instrumentation" đang chạy.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>Chạy ứng dụng dưới quyền Quản trị viên để đảm bảo đủ quyền truy cập vào sổ đăng ký hệ thống và WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>Kiểm tra tài nguyên hệ thống: Đóng các ứng dụng dùng nhiều tài nguyên khác và thử lại.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>Xem lại tệp nhật ký để biết thông tin chi tiết về lỗi bằng cách nhấp vào "Mở Nhật ký" bên dưới.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>Mở Tệp Nhật ký</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>Cập nhật kho lưu trữ</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>Cấu hình kho lưu trữ GitHub để kiểm tra cập nhật. Để trống để sử dụng mặc định.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>Chủ sở hữu Kho lưu trữ</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>ví dụ: SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>Tên Kho lưu trữ</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>ví dụ: LenovoLegionToolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>Tạm dừng tất cả</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>Nguyên tắc Triển khai và Ảnh hưởng</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>Loại Triển khai:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>Trình chỉnh sửa cấu hình</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>Shell.nss (bằng tiếng En-us).</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>chủ đề.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>hình ảnh.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>sửa đổi.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>Chi tiết hành động</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>Chi tiết triển khai kỹ thuật</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>Sử dụng chức năng dọn dẹp registry tích hợp sẵn của Windows</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (Flush DNS cache)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (Reset Winsock protocol stack)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (Reset TCP/IP protocol stack)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>Tiện ích mở rộng Plugin</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>Cài đặt và quản lý plugin để mở rộng chức năng</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>Cài đặt</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>Không thể gỡ cài đặt</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>Cài đặt Plugin</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>Tên Plugin</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>Mô tả Plugin</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>Plugin này không có cài đặt cấu hình.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>Đóng</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>Không tìm thấy plugin: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>Lỗi</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>Cài đặt</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>Tác giả: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>Định dạng giao diện cấu hình plugin không đúng.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>Lỗi khi tải cài đặt plugin: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>Tìm kiếm plugin...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>Tất cả</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>Status: Classic menu installed and enabled</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>Status: Classic menu not installed</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>Không có plugin nào có sẵn</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>Cửa hàng plugin hiện đang trống. Hãy chờ các bản cập nhật plugin trong tương lai.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>Tùy chỉnh</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>Gỡ cài đặt</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>Mở</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>Ngôn ngữ:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>Sử dụng mặc định của ứng dụng</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>Đã tìm thấy plugin {0}</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>Cài đặt plugin thành công</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>Plugin đã được cài đặt thành công</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>Cài đặt thất bại</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>Không thể cài đặt plugin: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>Gỡ cài đặt plugin thành công</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>Plugin đã được gỡ cài đặt thành công</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>Gỡ cài đặt thất bại</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>Không thể gỡ cài đặt plugin: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>Mở plugin thất bại</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>Không thể mở plugin: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>Không thể mở plugin: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>Plugin chưa được cài đặt</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>Plugin chưa được cài đặt và không thể mở</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>Yêu cầu phiên bản host tối thiểu {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>Plugin sẽ bị xóa vĩnh viễn</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>Cập nhật thất bại</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>Cập nhật plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại sau.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>Cập nhật thành công</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>Plugin đã được cập nhật thành công</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>Đang cập nhật plugin</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>Đang tải xuống và cập nhật plugin...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>Cập nhật tất cả</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>Chạy Plugin</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>Plugin đã bắt đầu</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>Plugin đã gỡ cài đặt</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>Plugin sẽ bị xóa khi chương trình đóng.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>Xóa thất bại</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>Đã xảy ra lỗi khi xóa plugin</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>Cấu hình thất bại</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>Plugin đã được cài đặt nhưng chưa được tải. Vui lòng thử khởi động lại ứng dụng.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>Không có Cấu hình</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>Plugin không có tuỳ chọn cấu hình nào.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>Cấu hình không được hỗ trợ</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>Plugin không hỗ trợ cấu hình.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>Trạng thái Plugin đã được Đặt Lại</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>Tất cả trạng thái cài đặt plugin đã được xóa</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>Cập nhật số lượng lớn hoàn tất</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>Tất cả plugin đã được xử lý.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>Đang chuẩn bị tải xuống...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>Cục bộ</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>Phiên bản mới có sẵn</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>Phiên bản:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>Ngày phát hành:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>Có gì mới:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>Làm mới danh sách plugin</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>Không tìm thấy plugin nào khớp với tìm kiếm của bạn.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>Cập nhật tất cả các plugin có sẵn</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>Cài đặt tất cả</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>Cài đặt tất cả các plugin có sẵn</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>Đang cài đặt tất cả...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>Đang cài đặt plugin {0}...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>Cài đặt hàng loạt hoàn tất</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>Đã cài đặt plugin {0}.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>Cài đặt hàng loạt thất bại</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>Không thể cài đặt plugin: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>Đang cập nhật tất cả...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>Đang cập nhật...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>Mở thư mục</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>Sao chép ID Plugin</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>Thư mục không tìm thấy</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>Thư mục plugin chưa tồn tại.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>Đã sao chép</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>ID Plugin '{0}' đã được sao chép vào clipboard.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>Tải xuống hoàn tất</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>Đang tải xuống...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>Đang tải xuống... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>Tăng tốc mạng</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>Công cụ linh hoạt</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>Công cụ</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>Các tính năng tăng tốc và tối ưu hóa mạng theo thời gian thực</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>Quản lý các cờ tính năng của Windows bằng ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>Công cụ tối ưu hóa hệ thống và tiện ích</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>Hướng dẫn sử dụng</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>Trình chỉnh sửa này được sử dụng để chỉnh sửa trực tiếp tệp cấu hình shell.nss. Sau khi sửa đổi, nhấn</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>Áp dụng</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>nút để lưu tất cả các thay đổi và khởi động lại File Explorer để áp dụng cấu hình.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• Đường dẫn tệp cấu hình:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• Sau khi chỉnh sửa cấu hình, File Explorer (Explorer) cần được khởi động lại để các thay đổi có hiệu lực.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>Áp dụng</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>Tệp cấu hình shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>Tệp shell.nss được sử dụng để định nghĩa cấu trúc tổng thể và hành vi của menu chuột phải</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>Mở tệp shell.nss</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>Mở thư mục chứa</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>Đường dẫn:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>Cài đặt giao diện người dùng</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>Cài đặt giao diện cơ bản</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>Màu nền:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>Màu chữ:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>Cài đặt hiệu ứng khi di chuột</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>Nền khi di chuột:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>Văn bản khi di chuột:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>Cài đặt Hiệu ứng Đã chọn</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>Nền Đã chọn:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>Văn bản Đã chọn:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>Cập nhật Văn bản từ Giao diện Người dùng</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>Tải từ Văn bản</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>Trình Soạn thảo Văn bản</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>Mở trong Trình Soạn thảo Bên ngoài</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>Tệp Cấu hình images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>Tệp images.nss được sử dụng để định nghĩa biểu tượng và hình ảnh cho menu chuột phải</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>Mở tệp images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>Tệp Cấu hình modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>Tệp modify.nss được sử dụng để chỉnh sửa và tùy biến các mục menu chuột phải</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>Mở tệp modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>Không có công cụ nào có sẵn. Vui lòng thêm công cụ vào thư mục tools trong thư mục ứng dụng.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>Các công cụ sẽ xuất hiện ở đây khi chúng có sẵn trong thư mục tools.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>Thư mục Gốc: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>Không tìm thấy thư mục tệp cấu hình</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>Không tìm thấy tệp</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>Không thể đọc tệp cấu hình: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>Tệp này được sử dụng để định nghĩa các cài đặt phong cách liên quan đến chủ đề</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>Định nghĩa màu chủ đề</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>Màu cơ bản</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>Màu khi rê chuột</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>Màu được chọn</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>Để biết thêm các tùy chọn cấu hình chủ đề, vui lòng tham khảo tài liệu chính thức của Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>Bạn có chắc chắn muốn áp dụng cấu hình không? 
+  
+ Việc này sẽ: 
+ 1. Lưu tất cả các tệp cấu hình 
+ 2. Khởi động lại File Explorer để áp dụng cấu hình 
+  
+ Lưu ý: Khởi động lại sẽ đóng tất cả cửa sổ thư mục đang mở và thanh tác vụ, sau đó tự động khởi động lại.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>Xác nhận Áp dụng Cấu hình</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>Không thể lưu tệp cấu hình: 
+ {0} 
+  
+ Vui lòng kiểm tra quyền tệp và thử lại.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>Lưu Thất bại</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>Đã lưu thành công các tệp sau: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>Không lưu được các tệp: 
+ {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>Trình Khám Phá Tệp đã được khởi động lại, cấu hình hiện đang có hiệu lực!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>Áp dụng một phần</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>Áp dụng thành công</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>Lỗi khi áp dụng cấu hình: 
+ {0} 
+  
+ Bạn có thể lưu các tệp thủ công và khởi động lại quá trình Explorer trong Trình Quản Lý Tác Vụ.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>Áp dụng thất bại</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>Tệp không tồn tại hoặc đường dẫn không hợp lệ</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>Mở tệp thất bại</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>Sử dụng chương trình mặc định của hệ thống để mở tệp</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>Không thể mở tệp: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>Mở tệp thất bại</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>Thư mục không tồn tại hoặc đường dẫn không hợp lệ</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>Mở thư mục thất bại</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>Không thể mở thư mục: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>Mở thư mục thất bại</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>Mẫu máy</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>Mức tiêu thụ điện</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>Sạc</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>Tình trạng pin</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>Tỉ lệ</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>Tỷ lệ tối thiểu</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>Tỷ lệ tối đa</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>Chu kỳ</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>Dung lượng</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>Dung lượng đầy</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>Thiết kế</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>Ngày</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>Tốc độ lõi / bộ nhớ</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>Điện áp lõi</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>Phạm vi điện áp</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>Nhiệt độ trung bình</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>Thanh bên</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>Hệ thống</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>Phạm vi tỷ lệ</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>Vui lòng chọn ít nhất một tùy chọn dọn dẹp.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>Bắt đầu tất cả</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>vd. 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>vd. C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>Bật hiệu ứng trong suốt</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>Bật hiệu ứng trong suốt cho menu ngữ cảnh</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>Phần mở rộng Tệp</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>Hiển thị phần mở rộng tệp trong File Explorer</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>Hiện tập tin ẩn</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>Hiển thị các tệp và thư mục ẩn trong File Explorer</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>Mở để truy cập nhanh</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>Mở File Explorer để truy cập nhanh thay vì PC này</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>Hiển thị xem trước</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>Hiển thị cửa sổ xem trước trong File Explorer</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>Vui lòng chọn ít nhất một mục để dọn dẹp.</value></data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse appearance</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Apply custom cursor styles and follow system light/dark theme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Enable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Detect current Windows light/dark mode and apply matching custom cursor scheme.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Disable theme-following cursor style</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
+  </data>
 </root>

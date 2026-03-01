@@ -313,7 +313,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                 Resource.ResourceManager.GetString(action.TitleResourceKey) ?? action.TitleResourceKey,
                 Resource.ResourceManager.GetString(action.DescriptionResourceKey) ?? action.DescriptionResourceKey,
                 action.Recommended,
-                "Recommended")).ToList();
+                Resource.ResourceManager.GetString("WindowsOptimization_Action_Recommended_Tag") ?? "Recommended")).ToList();
 
             var isCleanup = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 

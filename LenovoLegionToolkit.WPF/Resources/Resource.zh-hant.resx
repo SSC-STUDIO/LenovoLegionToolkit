@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -16,13 +17,13 @@
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Name1"><value>這是我的長字串</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
+        <value>[base64 mime 編碼的序列化 .NET Framework 物件]</value>
     </data>
     <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <value>[base64 mime 編碼字串，代表 .NET Framework 物件的位元組陣列形式]</value>
         <comment>This is a comment</comment>
     </data>
                 
@@ -584,7 +585,7 @@
     <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
-    <value>CPU</value>
+    <value>中央處理器</value>
   </data>
   <data name="FanCurveControl_CPUSensor" xml:space="preserve">
     <value>CPU 感測器</value>
@@ -593,13 +594,13 @@
     <value>風扇轉速</value>
   </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
-    <value>GPU</value>
+    <value>顯卡</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
-    <value>GPU #2</value>
+    <value>顯卡 #2</value>
   </data>
   <data name="RPM" xml:space="preserve">
-    <value>RPM</value>
+    <value>轉</value>
   </data>
   <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
     <value>開啟上蓋後自動啟動筆記型電腦。</value>
@@ -658,7 +659,7 @@
     <value>CPU 溫度限制</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>中央處理器</value>
   </data>
   <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
     <value>無法套用設定</value>
@@ -693,7 +694,7 @@
     <value>GPU 溫度限制</value>
   </data>
   <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>顯卡</value>
   </data>
   <data name="GodModeSettingsWindow_Title" xml:space="preserve">
     <value>客製化模式設定</value>
@@ -892,7 +893,7 @@
     <value>更新率</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>Smart Key</value>
+    <value>???</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>通知</value>
@@ -910,13 +911,13 @@
     <value>透過增加電壓超頻以提升內部顯示器反應速度。（可能會導致顯示器過衝產生鬼影）</value>
   </data>
   <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>OverDrive</value>
   </data>
   <data name="OverDriveControl_Message" xml:space="preserve">
     <value>透過增加電壓超頻以提升內部顯示器反應速度。（可能會導致顯示器過衝產生鬼影）</value>
   </data>
   <data name="OverDriveControl_Title" xml:space="preserve">
-    <value>Over Drive</value>
+    <value>OverDrive</value>
   </data>
   <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
     <value>已下載 {0}！</value>
@@ -1471,13 +1472,13 @@
 警告：如果已關閉內部顯示器，則此功能將無法正確地執行。</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>解析度</value>
   </data>
   <data name="DpiScaleControl_Message" xml:space="preserve">
     <value>變更內部顯示器比例。</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
-    <value>DPI</value>
+    <value>解析度</value>
   </data>
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>變更內部顯示器比例。
@@ -1589,10 +1590,10 @@
     <value>應用程式資料夾</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
-    <value>Data</value>
+    <value>??</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>Temp</value>
+    <value>??</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>固定顯示亮度</value>
@@ -1787,7 +1788,7 @@
     <value>最大：{0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
-    <value>CPU</value>
+    <value>中央處理器</value>
   </data>
   <data name="SensorsControl_Utilization_Title" xml:space="preserve">
     <value>使用率</value>
@@ -1802,7 +1803,7 @@
     <value>風扇</value>
   </data>
   <data name="SensorsControl_GPU_Title" xml:space="preserve">
-    <value>GPU</value>
+    <value>顯卡</value>
   </data>
   <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
     <value>記憶體時脈</value>
@@ -2252,7 +2253,7 @@
     <value>倉庫擁有者</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
-    <value>例如：Crs10259</value>
+    <value>例如：SSC-STUDIO</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
     <value>倉庫名稱</value>
@@ -2675,14 +2676,29 @@
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>還原預設樣式並重新啟動檔案總管。</value>
   </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>滑鼠外觀</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>套用自訂游標樣式，並可跟隨系統明暗主題。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>啟用主題跟隨游標樣式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>依照目前 Windows 明暗模式自動套用對應的自訂游標方案。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>停用主題跟隨游標樣式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>還原備份的游標方案，並停止依系統主題自動切換。</value>
+  </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>應用新式右鍵選單</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
     <value>完全卸載 shell.exe 及相關檔案。</value>
-  </data>
-  <data name="WindowsOptimizationPage_CurrentDeletingFile" xml:space="preserve">
-    <value>正在刪除: {0}</value>
   </data>
 <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
     <value>電池最大充電容量。</value>
@@ -2799,13 +2815,13 @@
     <value>您可以在設定中隨時停用此警告。</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Select preinstalled Microsoft Store apps to remove for all users.</value>
+    <value>選擇需要爲所有用戶卸載的預裝微軟商店應用。</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>No apps selected for removal.</value>
+    <value>未選擇任何要卸載的應用。</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX management</value>
+    <value>AppX 管理</value>
   </data>
   <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
     <value>載入失敗：{0}</value>
@@ -2898,98 +2914,98 @@
     <value>系統美化</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
-    <value>COM Component Registration + Configuration File</value>
+    <value>COM組件註冊 + 配置文件</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
-    <value>Implementation Type:</value>
+    <value>實現類型：</value>
   </data>
   <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
-    <value>Close</value>
+    <value>關閉</value>
   </data>
   <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
-    <value>By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.</value>
+    <value>通過註冊Nilesoft Shell作爲Windows上下文菜單的COM處理程序，攔截系統右鍵菜單的創建和顯示。當用戶右鍵點擊文件或文件夾時，Shell會讀取shell.nss配置文件並應用自定義的主題、透明度、圓角和陰影等樣式設置，實現美化的右鍵菜單效果。</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>Configuration file not found. Please make sure Nilesoft Shell is installed.</value>
+    <value>????????????? Nilesoft Shell?</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>Configuration File Not Found</value>
+    <value>??????</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>Settings applied successfully. Changes will take effect after restarting File Explorer.</value>
+    <value>????????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>Settings Applied</value>
+    <value>?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>Failed to apply settings: {0}</value>
+    <value>???????{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>Error</value>
+    <value>??</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM Component Registration:</value>
+    <value>1. COM ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   Path: {0}</value>
+    <value>   ???{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. Configuration File (shell.nss):</value>
+    <value>2. ????shell.nss??</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   Configuration file path: {0}</value>
+    <value>   ??????{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   Uses CSS-like syntax to define menu styles</value>
+    <value>   ???? CSS ?????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. Configuration File Format Example:</value>
+    <value>3. ????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
-    <value>   theme
+    <value>theme 
    {
-       background-color: #2d2d2d;
-       text-color: #ffffff;
+       background-color: # 2d2d2d;
+       text-color: # ffffff;
        corner-radius: 5px;
        shadow: true;
-       transparency: true;
-   }</value>
+       透明度: true;
+}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. Working Principle:</value>
+    <value>4. ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll is registered as a COM component in the system</value>
+    <value>   - Shell.dll ?? COM ????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - Implements IContextMenu interface to intercept right-click menu creation</value>
+    <value>   - ?? IContextMenu ???????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - Reads shell.nss configuration file</value>
+    <value>   - ?? shell.nss ???</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - Applies custom styles (theme, rounded corners, shadows, etc.)</value>
+    <value>   - ?????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - Renders the beautified context menu</value>
+    <value>   - ??????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. Effect Description:</value>
+    <value>5. ?????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - Auto Theme: Follows system theme (light/dark)</value>
+    <value>   - ??????????????/???</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - Transparency: Enables menu background transparency effect</value>
+    <value>   - ??????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - Rounded Corners: Adds rounded corner borders to menu items</value>
+    <value>   - ??????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - Shadows: Adds shadow effects to menus, enhancing depth perception</value>
+    <value>   - ??????????????????</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
     <value>配置檔案編輯器</value>
@@ -3007,39 +3023,63 @@
     <value>modify.nss</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
-    <value>Executing {0}%</value>
+    <value>正在執行 {0}%</value>
   </data>
 
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operation cancelled</value>
+    <value>操作已取消</value>
   </data>
 
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Error details: {0}</value>
+    <value>錯誤詳情: {0}</value>
   </data>
 
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>顯示隱藏的下載</value>
   </data>
 
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
-    <value>Show hidden downloads</value>
+    <value>顯示隱藏的下載</value>
   </data>
 
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
-    <value>Select language</value>
+    <value>選擇語言</value>
   </data>
 
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
+    <value>未連接</value>
   </data>
 
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
-    <value>Synchronise zones</value>
+    <value>同步區域</value>
   </data>
 
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
     <value>插件將被永久刪除。此操作無法撤銷。</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>一鍵安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>安裝所有可用插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>正在安裝全部...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>正在安裝 {0} 個插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>一鍵安裝完成</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>已安裝 {0} 個插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>一鍵安裝失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>安裝插件失敗：{0}</value>
   </data>
   <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
     <value>批量導入</value>
@@ -3075,4 +3115,23 @@
     <value>正在處理 {0}...</value>
   </data>
 
-</root>
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>插件擴展</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>導航項設置</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>配置側邊欄中顯示哪些導航項。儀表盤和設置將始終顯示。</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏鍵盤導航項</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏電池導航項</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏自動化導航項</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏宏導航項</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏系統優化導航項</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏插件擴展導航項</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>顯示或隱藏關於導航項</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>導航項</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>配置側邊欄中顯示哪些導航項</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>正在掃描可用驅動包，請稍候...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>網絡出問題了，正在自動重試...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>正在重新獲取驅動包...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>清理信息</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>查看清理操作的進度和估算大小。</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>開啓自啓並最小化到托盤。
+如遇到無法控制等問題請選擇【延遲啓動】以等待聯想服務完全加載。</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>掃描</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>驅動更新</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>安全確認</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>系統清理將永久刪除臨時文件和緩存。雖然通常是安全的，但建議確保您已備份重要數據。是否繼續？</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>擴展</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>管理系統優化擴展和工具</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>暫無可用擴展</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>從插件擴展頁面安裝擴展以增強系統優化功能。</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>????</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>????????????????</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>Shell 集成</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>增強的 Windows Shell 集成，包含右鍵菜單美化和鼠標樣式自定義</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>啓用現代右鍵菜單</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>啓用 Nilesoft Shell 以美化 Windows 右鍵菜單，使用現代風格</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>禁用現代右鍵菜單</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>註銷 Nilesoft Shell 並恢復默認的 Windows 右鍵菜單</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>應用 Windows 11 光標樣式</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>應用 Windows 11 風格的光標主題，支持高 DPI</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>網絡加速</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>優化網絡設置以提升網絡速度和響應性能。</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>TCP/IP 和 DNS 優化</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>優化 TCP/IP 參數和 DNS 緩存設置，提升網絡連接速度和響應性能。</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>重置網絡配置</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>刷新 DNS 緩存並重置 Winsock 和 TCP/IP 協議棧配置，修復網絡連接問題。</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>清理各種應用程序留下的臨時文件和日誌。</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>應用殘留文件</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>掃描系統盤上的大文件，找出佔用大量空間的項。</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>大文件掃描</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>識別並管理系統上的大文件。</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>大文件</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>啓用擴展</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>啓用擴展系統以訪問插件市場。</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>配置應用程序的外觀、行爲和功能選項。</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>推薦</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>下載中</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>安裝中</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>已完成</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>未找到操作定義</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>此操作的技術實現細節不可用</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>加載失敗</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>未知</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>命令執行</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>註冊表修改</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>服務管理</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>註冊表修改 + PowerShell腳本</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>註冊表清理</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>DISM命令</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>shell.exe 未找到</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>配置文件路徑: 未找到</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>安裝失敗</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>文件未找到，請先下載</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>安裝已啓動</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>正在啓動安裝程序: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>兼容性檢查錯誤</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>應用程序在啓動時無法讀取設備信息。請查看下面的錯誤詳情，如需要可嘗試故障排除步驟。</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>故障排除步驟</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>確保 Windows Management Instrumentation (WMI) 服務正在運行：打開服務 (services.msc) 並檢查"Windows Management Instrumentation"是否正在運行。</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>以管理員身份運行應用程序，以確保有足夠的權限訪問系統註冊表和 WMI。</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>檢查系統資源：關閉其他佔用資源的應用程序，然後重試。</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>通過點擊下面的"打開日誌文件"按鈕查看日誌文件以獲取詳細的錯誤信息。</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>打開日誌文件</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>全部暫停</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>實現方式和效果原理</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>實現類型：</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>操作詳情</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>技術實現細節</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>使用 Windows 內置的註冊表清理功能</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (刷新DNS緩存)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (重置Winsock協議棧)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (重置TCP/IP協議棧)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>插件擴展</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>安裝和管理插件以擴展功能</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>安裝</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>已安裝</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>無法卸載</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>插件設置</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>插件名稱</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>插件描述</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>此插件沒有可配置的設置。</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>關閉</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>未找到插件: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>錯誤</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>設置</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>作者: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>插件配置界面格式不正確。</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>加載插件設置時出錯: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>搜索插件...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>全部</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>已安裝</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>未安裝</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>沒有可用的插件</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>插件商城目前爲空，敬請期待未來的插件更新</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>配置</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>卸載</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>打開</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>語言：</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>使用應用默認語言</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>找到 {0} 個插件</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>插件安裝成功</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>插件已成功安裝</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>安裝失敗</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>無法安裝插件: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>插件卸載成功</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>插件已成功卸載</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>卸載失敗</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>無法卸載插件: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>打開失敗</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>無法打開插件設置: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>???????{0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>請先安裝插件</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>插件需要先安裝才能使用</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>最低兼容版本: {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>永久刪除</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>更新失敗</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>插件更新失敗，請檢查網絡連接後重試</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>更新成功</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>插件已成功更新</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>正在更新插件</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>正在下載並更新插件...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>全部更新</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>運行插件</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>插件已啓動</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>插件已卸載</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>插件將在程序關閉時刪除</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>刪除失敗</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>刪除插件時發生錯誤</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>配置失敗</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>插件已安裝但未加載，請嘗試重啓應用程序</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>無配置選項</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>此插件沒有配置選項</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>不支持配置</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>此插件不支持配置</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>插件狀態已重置</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>所有插件的安裝狀態已清除</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>批量更新完成</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>所有插件已處理完畢。</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>正在準備下載...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>本地</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>有新版本可用</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>版本：</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>發佈日期：</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>更新內容：</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>刷新插件列表</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>未找到符合搜索條件的插件。</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>更新所有可用插件</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>正在更新全部...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>正在更新...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>打開文件夾</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>複製插件 ID</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>未找到文件夾</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>該插件目錄尚不存在。</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>已複製</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>插件 ID“{0}”已複製到剪貼板。</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>下載完成</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>正在下載...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>正在下載... {0:F1} / {1:F1} MB ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>網絡加速</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>ViVeTool</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>工具</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>實時網絡加速和優化功能</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>使用 ViVeTool 管理 Windows 功能標誌</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>系統優化和實用工具</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>使用說明</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>此編輯器用於直接編輯 shell.nss 配置文件。修改後點擊</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>應用</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>按鈕將保存所有更改並重啓資源管理器使配置生效。</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• 配置文件路徑：</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• 修改配置後，需要重啓資源管理器（Explorer）才能生效。</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>應用</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>shell.nss 配置文件</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>shell.nss 文件用於定義右鍵菜單的整體結構和行爲</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>打開 shell.nss 文件</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>打開所在文件夾</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>路徑：</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>UI 設置</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>基礎主題設置</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>背景顏色：</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>文本顏色：</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>懸停效果設置</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>懸停背景：</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>懸停文本：</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>選中效果設置</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>選中背景：</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>選中文本：</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>從UI更新文本</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>從文本加載</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>文本編輯器</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>在外部編輯器打開</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>images.nss 配置文件</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>images.nss 文件用於定義右鍵菜單的圖標和圖像</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>打開 images.nss 文件</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>modify.nss 配置文件</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>modify.nss 文件用於修改和自定義右鍵菜單項</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>打開 modify.nss 文件</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>當前沒有可用的工具。請在應用程序目錄下的 tools 文件夾中添加工具。</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>工具將在 tools 目錄中可用後顯示在這裏。</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>基礎目錄: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>未找到配置文件目錄</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>未找到文件</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>無法讀取配置文件: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>此文件用於定義主題相關的樣式設置</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>主題顏色定義</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>基礎顏色</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>懸停顏色</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>選中顏色</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>更多主題配置選項請參考 Nilesoft Shell 官方文檔</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>確定要應用配置嗎？
+
+這將：
+1. 保存所有配置文件
+2. 重啓資源管理器（Explorer）使配置生效
+
+注意：重啓將關閉所有打開的文件夾窗口和任務欄，然後自動重新啓動。</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>確認應用配置</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>無法保存配置文件：
+{0}
+
+請檢查文件權限後重試。</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>保存失敗</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>已成功保存以下文件：
+{0}
+
+</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>保存失敗的文件：
+{0}
+
+</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>資源管理器已重啓，配置已生效！</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>部分應用成功</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>應用成功</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>應用配置時出錯：
+{0}
+
+您可以手動保存文件並在任務管理器中重啓 Explorer 進程。</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>應用失敗</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>文件不存在或路徑無效</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>打開文件失敗</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>使用系統默認程序打開文件</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>無法打開文件: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>打開文件失敗</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>文件夾不存在或路徑無效</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>打開文件夾失敗</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>無法打開文件夾: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>打開文件夾失敗</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>型號</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>功耗</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>電量</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>健康度</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>速率</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>最低速率</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>最高速率</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>循環</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>容量</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>滿充容量</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>設計容量</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>日期</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>核心 / 顯存頻率</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>核心電壓</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>電壓範圍</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>平均溫度</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>應用側邊欄</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>系統</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>功率範圍</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>請至少選擇一項清理操作。</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>全部開始</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>例如: 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>例如: C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>啓用透明效果</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>爲右鍵菜單啓用透明效果</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>顯示文件擴展名</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>在文件資源管理器中顯示文件擴展名</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>顯示隱藏文件</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>在文件資源管理器中顯示隱藏的文件和文件夾</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>打開到快速訪問</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>打開文件資源管理器時默認顯示快速訪問而非此電腦</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>顯示預覽窗格</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>在文件資源管理器中顯示預覽窗格</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>請至少選擇一個要清理的項目。</value></data></root>
