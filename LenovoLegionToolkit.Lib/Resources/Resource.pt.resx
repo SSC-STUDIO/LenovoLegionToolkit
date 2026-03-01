@@ -145,7 +145,7 @@
     <value>Conservação</value>
   </data>
   <data name="BatteryState_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>normal</value>
   </data>
   <data name="BatteryState_RapidCharge" xml:space="preserve">
     <value>Carregamento rápido</value>
@@ -440,19 +440,19 @@
     <value>Longa</value>
   </data>
   <data name="NotificationDuration_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>normal</value>
   </data>
   <data name="NotificationDuration_Short" xml:space="preserve">
     <value>Curta</value>
   </data>
   <data name="ModifierKey_Shift" xml:space="preserve">
-    <value>Shift</value>
+    <value>Mudança</value>
   </data>
   <data name="ModifierKey_Ctrl" xml:space="preserve">
-    <value>Ctrl</value>
+    <value>CRTL</value>
   </data>
   <data name="ModifierKey_Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>investimentos alternativos</value>
   </data>
   <data name="BatteryNightChargeState_On" xml:space="preserve">
     <value>Ligado</value>
@@ -496,4 +496,4 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Semanalmente</value>
   </data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>Windows</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data></root>
+<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>janelas</value></data><data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>Marcos.</value></data></root>

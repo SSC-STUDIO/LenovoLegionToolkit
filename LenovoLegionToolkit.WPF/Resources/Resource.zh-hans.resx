@@ -377,7 +377,7 @@
     <value>取消</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>??</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
@@ -586,7 +586,7 @@
     <value>关于显卡工作模式</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>??</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>处理器</value>

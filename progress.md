@@ -729,3 +729,87 @@ etwork-acceleration, ive-tool.
 
 - Notable runtime/tooling issue during continuation:
   - `translators` backend initialization intermittently failed on geo/probe endpoints; mitigated with per-locale retries, provider fallback, and shorter isolated runs.
+
+
+## Session: 2026-03-01 (Translation Continuation Sprint II)
+- Continued translation residual reduction with locale-specific provider routing and interruption-safe resume strategy.
+- Updated continuation script locale mapping:
+  - `pt` language code adjusted to `pt` in `.tmp/translate_resx_remaining_multi_provider.py` for better engine compatibility.
+- Completed targeted high-yield batches (examples):
+  - `pt`, `nl-nl`, `pt-br`, `hu`, `vi`, `de`, `ko`, `ja`, `pl`, `ru`, `tr`.
+- Regenerated final audit artifacts:
+  - `.tmp/current_translation_audit_summary_xml_2026-03-01-pass6.json`
+  - `.tmp/translation_semantic_summary_after_bing_2026-03-01-pass6.json`
+
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| XML structural audit (`pass6`) | Keep locale files structurally synchronized after continuation edits | `missing=0`, `extra=0`, `placeholder_mismatch=0`, `nonzero_files=0` | PASS |
+| Semantic residual recompute (`pass6`) | Further reduce remaining English-identical entries from prior wave | `486 -> 291` (`-195`) | PASS |
+| `dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj -c Release --no-restore` | Build success after Phase 27 continuation updates | PASS (`0 errors`, `0 warnings`) | PASS |
+
+## Session: 2026-03-01 (Translation Manual Finalization Pass III)
+- Continued with `planning-with-files` and completed a manual translation closure pass on remaining high-impact English-identical strings.
+- Updated localized resource values in:
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ar.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.bg.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.bs.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ca.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.cs.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.de.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.el.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.es.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.fr.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.hu.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.it.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ja.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ko.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.lv.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.nl-nl.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.pl.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.pt.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.pt-br.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ro.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ru.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.sk.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.tr.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.uk.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.uz-latn-uz.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.vi.resx`
+- Residual-English metric progression for this pass:
+  - `291/292 -> 164` (`-127` / `-128`)
+- Generated audit artifacts:
+  - `.tmp/current_translation_audit_summary_xml_2026-03-01-pass7-manual.json`
+  - `.tmp/translation_semantic_summary_after_bing_2026-03-01-pass7-manual.json`
+  - `.tmp/manual_translation_pass7_report.json`
+
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| XML structural audit (`pass7-manual`) | Keep locale files structurally synchronized after manual translations | `missing=0`, `extra=0`, `placeholder_mismatch=0`, `nonzero_files=0` | PASS |
+| Semantic residual recompute (`pass7-manual`) | Further reduce English-identical count from pass6 baseline | `291/292 -> 164` (`-127` / `-128`) | PASS |
+| `dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj -c Release --no-restore` | Build success after manual localization edits | PASS (`0 errors`, `0 warnings`) | PASS |
+
+## Session: 2026-03-01 (Translation Manual Finalization Pass IV)
+- Continued manual translation completion based on post-pass7 residual analysis.
+- Updated resource files:
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ca.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.bg.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.bs.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.lv.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.ro.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.sk.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.tr.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.uk.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.uz-latn-uz.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.zh-hans.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.zh-hant.resx`
+  - `LenovoLegionToolkit.WPF/Resources/Resource.de.resx`
+  - `LenovoLegionToolkit.Lib/Resources/Resource.ca.resx`
+- Generated artifacts:
+  - `.tmp/current_translation_audit_summary_xml_2026-03-01-pass8-manual.json`
+  - `.tmp/translation_semantic_summary_after_bing_2026-03-01-pass8-manual.json`
+
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| XML structural audit (`pass8-manual`) | Maintain synchronized locale resource structure | `missing=0`, `extra=0`, `placeholder_mismatch=0`, `nonzero_files=0` | PASS |
+| Semantic residual recompute (`pass8-manual`) | Further reduce English-identical residual from pass7 | `164 -> 130` (`-34`) | PASS |
+| `dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj -c Release --no-restore` | Build success after pass-IV localization edits | PASS (`0 errors`, `0 warnings`) | PASS |

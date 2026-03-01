@@ -345,3 +345,34 @@ Phase 32 (Complete)
 - [x] Verify WPF Release build after continuation edits
 - [x] Update changelog and planning logs with outcomes and known network/tooling limits
 - **Status:** complete
+
+
+### Phase 27: Translation Continuation Sprint II (2026-03-01)
+- [x] Continue iterative residual reduction with locale-specific provider routing
+- [x] Fix locale mapping for Portuguese (`pt` -> `pt`) to improve provider compatibility
+- [x] Re-run targeted high-yield locales in resumable batches (`pt`, `nl-nl`, `pt-br`, `hu`, `vi`, `de`, etc.)
+- [x] Re-run zh-Hans -> zh-Hant sync pass and validate no pending syncable keys
+- [x] Re-audit all locale files for structural integrity after continuation edits
+- [x] Recompute semantic residual total and capture second-wave delta
+- [x] Verify WPF Release build after continuation wave
+- [x] Update changelog and planning logs
+- **Status:** complete
+
+### Phase 33: Translation Manual Finalization Pass (2026-03-01)
+- [x] Recompute post-pass residual baseline from current 
+esx files using XML parsing
+- [x] Manually translate high-impact residual keys across 20+ locales (command-detail strings and targeted UI text)
+- [x] Manually complete remaining CustomMouse and Model wording for s / uz-latn-uz / ca
+- [x] Re-run XML node structural audit for all locale resource files
+- [x] Recompute semantic residual count and capture delta
+- [x] Verify WPF Release build after manual translation pass
+- [x] Update planning logs in both repositories
+- **Status:** complete
+
+### Phase 34: Translation Manual Finalization Pass IV (2026-03-01)
+- [x] Continue manual translation on remaining non-technical/same-form entries after Phase 33
+- [x] Translate CA generic UI leftovers and multi-locale Celsius/Fahrenheit labels where still identical
+- [x] Re-run XML structural audit and semantic residual summary
+- [x] Verify WPF Release build after pass-IV edits
+- [x] Sync planning logs in both repositories
+- **Status:** complete
