@@ -110,28 +110,32 @@ GOTO END
 :CREATE_ZIP
 SET PLUGIN_NAME=%~1
 SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
-SET OUTPUT_DIR=build\plugins\%PLUGIN_NAME%
-SET ZIP_NAME=%PLUGIN_NAME%.zip
+SET BUILD_OUTPUT_DIR=Build\plugins\LenovoLegionToolkit.Plugins.%PLUGIN_NAME%
+SET PLUGIN_ID=
+
+FOR /F "usebackq delims=" %%I IN (`powershell -NoProfile -Command "(Get-Content '%PLUGIN_DIR%\plugin.json' -Raw | ConvertFrom-Json).id"`) DO SET PLUGIN_ID=%%I
+
+IF "%PLUGIN_ID%"=="" (
+    ECHO Error: Failed to read plugin id from %PLUGIN_DIR%\plugin.json
+    EXIT /B 1
+)
+
+SET ZIP_NAME=%PLUGIN_ID%.zip
 
 ECHO Creating %ZIP_NAME%...
 
-REM Clean previous output
-IF EXIST "%OUTPUT_DIR%" RMDIR /S /Q "%OUTPUT_DIR%"
-IF EXIST "%ZIP_NAME%" DEL /Q "%ZIP_NAME%"
-
-REM Create output directory
-MKDIR "%OUTPUT_DIR%"
-
-REM Copy plugin files
-XCOPY /E /I /Y "%PLUGIN_DIR%\bin\Release\net10.0-windows\win-x64\*" "%OUTPUT_DIR%\" >nul 2>&1
-
-REM Remove SDK DLL to avoid conflicts
-IF EXIST "%OUTPUT_DIR%\LenovoLegionToolkit.Plugins.SDK.dll" (
-    DEL /Q "%OUTPUT_DIR%\LenovoLegionToolkit.Plugins.SDK.dll"
+REM Verify compiled plugin output exists
+IF NOT EXIST "%BUILD_OUTPUT_DIR%" (
+    ECHO Error: Build output not found: %BUILD_OUTPUT_DIR%
+    ECHO Run the build step before packaging ZIP files.
+    EXIT /B 1
 )
 
-REM Create ZIP package
-powershell -Command "Compress-Archive -Path '%OUTPUT_DIR%\*' -DestinationPath '%ZIP_NAME%' -Force"
+REM Clean previous output archive
+IF EXIST "%ZIP_NAME%" DEL /Q "%ZIP_NAME%"
+
+REM Create ZIP package from the actual compiled output directory
+powershell -NoProfile -Command "Compress-Archive -Path '%BUILD_OUTPUT_DIR%\*' -DestinationPath '%ZIP_NAME%' -Force"
 IF ERRORLEVEL 1 (
     ECHO Error: Failed to create %ZIP_NAME%
     EXIT /B 1

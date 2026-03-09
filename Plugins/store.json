@@ -7,7 +7,7 @@
                         "description":  "Customize mouse cursor style behavior and mouse settings",
                         "author":  "LenovoLegionToolkit Team",
                         "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/custom-mouse.zip",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.6/custom-mouse-v1.0.6.zip",
                         "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.6",
                         "icon":  "",
                         "iconBackground":  "#2563EB",
@@ -17,7 +17,7 @@
                                          ],
                         "minLLTVersion":  "3.6.1",
                         "releaseDate":  "2026-02-28T00:00:00Z",
-                        "fileSize":  16384,
+                        "fileSize":  1495539,
                         "tags":  [
                                      "mouse",
                                      "customization",
@@ -46,7 +46,7 @@
                         "description":  "Integrate Lenovo Legion Toolkit with Windows shell context menu",
                         "author":  "LenovoLegionToolkit Team",
                         "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/shell-integration.zip",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.3/shell-integration-v1.0.3.zip",
                         "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.3",
                         "icon":  "",
                         "iconBackground":  "#0F766E",
@@ -56,7 +56,7 @@
                                          ],
                         "minLLTVersion":  "3.6.1",
                         "releaseDate":  "2026-02-26T00:00:00Z",
-                        "fileSize":  12288,
+                        "fileSize":  22704,
                         "tags":  [
                                      "system",
                                      "shell",
@@ -85,7 +85,7 @@
                         "description":  "Real-time network acceleration and optimization features",
                         "author":  "LenovoLegionToolkit Team",
                         "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/network-acceleration.zip",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.0.4/network-acceleration-v1.0.4.zip",
                         "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.0.4",
                         "icon":  "",
                         "iconBackground":  "#DC2626",
@@ -95,7 +95,7 @@
                                          ],
                         "minLLTVersion":  "3.6.1",
                         "releaseDate":  "2026-02-28T00:00:00Z",
-                        "fileSize":  16384,
+                        "fileSize":  24002,
                         "tags":  [
                                      "network",
                                      "optimization"
@@ -123,7 +123,7 @@
                         "description":  "Manage Windows feature flags using ViVeTool",
                         "author":  "LenovoLegionToolkit Team",
                         "repositoryUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/latest/download/vive-tool.zip",
+                        "downloadUrl":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.4/vive-tool-v1.1.4.zip",
                         "changelog":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.4",
                         "icon":  "",
                         "iconBackground":  "#7C3AED",
@@ -133,7 +133,7 @@
                                          ],
                         "minLLTVersion":  "3.6.1",
                         "releaseDate":  "2026-02-28T00:00:00Z",
-                        "fileSize":  16384,
+                        "fileSize":  618819,
                         "tags":  [
                                      "windows",
                                      "feature-flags",
@@ -156,6 +156,6 @@
                                                ]
                     }
                 ],
-    "version":  "1.0.8",
-    "lastUpdated":  "2026-02-28T14:30:00Z"
+    "version":  "1.0.9",
+    "lastUpdated":  "2026-03-09T00:00:00Z"
 }
