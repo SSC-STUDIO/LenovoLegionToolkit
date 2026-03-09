@@ -7,15 +7,15 @@
     <Nullable>enable</Nullable>
     <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>ar;bg;cs;de;el;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;vi;zh-hans;zh-hant;uz-latn-uz</SatelliteResourceLanguages>
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Plugin version -->
-    <Version>1.1.4</Version>
-    <FileVersion>1.1.4</FileVersion>
-    <AssemblyVersion>1.1.4</AssemblyVersion>
+    <Version>1.1.5</Version>
+    <FileVersion>1.1.5</FileVersion>
+    <AssemblyVersion>1.1.5</AssemblyVersion>
     <!-- Output DLL name matching plugin ID -->
     <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>

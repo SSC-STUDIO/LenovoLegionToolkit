@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PluginName" xml:space="preserve">
+    <value>Shell æ´å</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>å° Lenovo Legion Toolkit æ´åå° Windows å³éµé¸å®ã</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Shell æ´å</value>
+  </data>
+  <data name="Subtitle" xml:space="preserve">
+    <value>ä½¿ç¨åç®¡ç Shell æ§å¶ãåæèª¿æ´èå³æé è¦½éæ°æé å³éµé¸å®é«é©ã</value>
+  </data>
+  <data name="EnableButton" xml:space="preserve">
+    <value>åç¨</value>
+  </data>
+  <data name="DisableButton" xml:space="preserve">
+    <value>åç¨</value>
+  </data>
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+    <value>éåè¨­å®è³æå¤¾</value>
+  </data>
+  <data name="OpenStyleShortButton" xml:space="preserve">
+    <value>éåè³æå¤¾</value>
+  </data>
+  <data name="RefreshButton" xml:space="preserve">
+    <value>éæ°æ´ç</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>éåé è¨­</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>å¥ç¨è®æ´</value>
+  </data>
+  <data name="OptimizationHint" xml:space="preserve">
+    <value>ä½ ä¹å¯ä»¥å¨ç³»çµ±æä½³åé é¢ä½¿ç¨ Shell åä½ã</value>
+  </data>
+  <data name="StatusDetected" xml:space="preserve">
+    <value>å·²åµæ¸¬å° Nilesoft Shellã</value>
+  </data>
+  <data name="StatusNotDetected" xml:space="preserve">
+    <value>æªåµæ¸¬å° Nilesoft Shellã</value>
+  </data>
+  <data name="StatusRegistered" xml:space="preserve">
+    <value>å³éµé¸å®å¢å¼·ç®åå·²åç¨ã</value>
+  </data>
+  <data name="StatusUnregistered" xml:space="preserve">
+    <value>å³éµé¸å®å¢å¼·ç®åå·²ééã</value>
+  </data>
+  <data name="StatusDetailDefault" xml:space="preserve">
+    <value>å¤æç¾å¨æèªè¡ç®¡ç Shell è¨­å®æªèç¢ççè¨­å®æªã</value>
+  </data>
+  <data name="StatusEnabledBadge" xml:space="preserve">
+    <value>å·²åç¨</value>
+  </data>
+  <data name="StatusDisabledBadge" xml:space="preserve">
+    <value>å·²éé</value>
+  </data>
+  <data name="StatusMissingBadge" xml:space="preserve">
+    <value>æªå®è£</value>
+  </data>
+  <data name="StatusUnknownBadge" xml:space="preserve">
+    <value>æª¢æ¥ä¸­</value>
+  </data>
+  <data name="PathLabel" xml:space="preserve">
+    <value>è·¯å¾</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>æªæ¾å°</value>
+  </data>
+  <data name="ManagedConfigLabel" xml:space="preserve">
+    <value>åç®¡è¨­å®</value>
+  </data>
+  <data name="ManagedConfigNotReady" xml:space="preserve">
+    <value>åµæ¸¬å° Shell å¾æå»ºç«åç®¡è¨­å®ã</value>
+  </data>
+  <data name="StatusEnableCompleted" xml:space="preserve">
+    <value>åç¨å½ä»¤å·²å®æã</value>
+  </data>
+  <data name="StatusEnableFailed" xml:space="preserve">
+    <value>åç¨å½ä»¤å¤±æã</value>
+  </data>
+  <data name="StatusDisableCompleted" xml:space="preserve">
+    <value>åç¨å½ä»¤å·²å®æã</value>
+  </data>
+  <data name="StatusDisableFailed" xml:space="preserve">
+    <value>åç¨å½ä»¤å¤±æã</value>
+  </data>
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+    <value>å·²éååç®¡è¨­å®è³æå¤¾ã</value>
+  </data>
+  <data name="ProfileSavedShellMissing" xml:space="preserve">
+    <value>è¨­å®å·²å²å­ï¼ä½ç®åç³»çµ±æªæ¾å° Shellã</value>
+  </data>
+  <data name="ApplyCompletedEnabled" xml:space="preserve">
+    <value>è¨­å®å·²å¥ç¨ï¼å³éµé¸å®å¢å¼·å·²åç¨ã</value>
+  </data>
+  <data name="ApplyCompletedDisabled" xml:space="preserve">
+    <value>è¨­å®å·²å¥ç¨ï¼å³éµé¸å®å¢å¼·å·²ééã</value>
+  </data>
+  <data name="FallbackLoadError" xml:space="preserve">
+    <value>å¢å¼·è¨­å®ä»é¢æªè½è¼å¥ã</value>
+  </data>
+  <data name="AppearanceSection" xml:space="preserve">
+    <value>è¡çº</value>
+  </data>
+  <data name="AppearanceSectionHint" xml:space="preserve">
+    <value>å¨å¯«å¥åç®¡è¨­å®åï¼åèª¿æ´å»¶é²ãåæèæ´é«æ¸²æé¢¨æ ¼ã</value>
+  </data>
+  <data name="PaletteSection" xml:space="preserve">
+    <value>éè²</value>
+  </data>
+  <data name="PaletteSectionHint" xml:space="preserve">
+    <value>ç´æ¥å¨å¤æä¸­èª¿æ´é¸å®éè²ï¼ä¸¦ä¿æç¢çä¸»é¡ä¸è´ã</value>
+  </data>
+  <data name="PreviewSection" xml:space="preserve">
+    <value>å³æé è¦½</value>
+  </data>
+  <data name="PreviewHint" xml:space="preserve">
+    <value>éåé è¦½ææ¨¡æ¬ç¢çç Shell ä¸»é¡ï¼æ¹ä¾¿ä½ å¨å¥ç¨åèª¿æ´ã</value>
+  </data>
+  <data name="PathsSection" xml:space="preserve">
+    <value>è¨­å®çæ</value>
+  </data>
+  <data name="MotionToggleLabel" xml:space="preserve">
+    <value>åç¨åæé»ç¶´</value>
+  </data>
+  <data name="ShadowToggleLabel" xml:space="preserve">
+    <value>åç¨é°å½±å±¤æ¬¡</value>
+  </data>
+  <data name="ColorSchemeLabel" xml:space="preserve">
+    <value>éè²æ¨¡å¼</value>
+  </data>
+  <data name="ColorSchemeAuto" xml:space="preserve">
+    <value>è·é¨ç³»çµ±</value>
+  </data>
+  <data name="ColorSchemeLight" xml:space="preserve">
+    <value>æ°¸é æ·ºè²</value>
+  </data>
+  <data name="ColorSchemeDark" xml:space="preserve">
+    <value>æ°¸é æ·±è²</value>
+  </data>
+  <data name="VisualEffectLabel" xml:space="preserve">
+    <value>èæ¯ææ</value>
+  </data>
+  <data name="EffectNone" xml:space="preserve">
+    <value>ç¡</value>
+  </data>
+  <data name="EffectTransparent" xml:space="preserve">
+    <value>éæ</value>
+  </data>
+  <data name="EffectBlur" xml:space="preserve">
+    <value>æ¨¡ç³</value>
+  </data>
+  <data name="EffectAcrylic" xml:space="preserve">
+    <value>å£åå</value>
+  </data>
+  <data name="ShowDelayLabel" xml:space="preserve">
+    <value>å­é¸å®é¡¯ç¤ºå»¶é²</value>
+  </data>
+  <data name="ShowDelayValueFormat" xml:space="preserve">
+    <value>{0} æ¯«ç§</value>
+  </data>
+  <data name="ShadowStrengthLabel" xml:space="preserve">
+    <value>é°å½±éæåº¦</value>
+  </data>
+  <data name="ShadowStrengthValueFormat" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="AccentColorLabel" xml:space="preserve">
+    <value>å¼·èª¿è²</value>
+  </data>
+  <data name="BackgroundColorLabel" xml:space="preserve">
+    <value>èæ¯è²</value>
+  </data>
+  <data name="HoverColorLabel" xml:space="preserve">
+    <value>æ¸åè²</value>
+  </data>
+  <data name="TextColorLabel" xml:space="preserve">
+    <value>æå­é¡è²</value>
+  </data>
+  <data name="MutedColorLabel" xml:space="preserve">
+    <value>å¼±åæå­é¡è²</value>
+  </data>
+  <data name="TintColorLabel" xml:space="preserve">
+    <value>æææè²è²</value>
+  </data>
+  <data name="PreviewPrimary" xml:space="preserve">
+    <value>æè½æ¨¡å¼</value>
+  </data>
+  <data name="PreviewPrimaryHint" xml:space="preserve">
+    <value>å¸¶æç®åå¼·èª¿è²çåºå®å¿«æ·æä½ã</value>
+  </data>
+  <data name="PreviewSecondary" xml:space="preserve">
+    <value>æ··åé¡¯å¡</value>
+  </data>
+  <data name="PreviewSecondaryHint" xml:space="preserve">
+    <value>æ¬¡ç´é¸å®åä½çæ¸åçæã</value>
+  </data>
+  <data name="PreviewTertiary" xml:space="preserve">
+    <value>éåå·¥å·ç®±é¢æ¿</value>
+  </data>
+  <data name="PreviewTertiaryHint" xml:space="preserve">
+    <value>ä½¿ç¨ç¢çèæ¯éè²çä¸è¬é¸å®é ã</value>
+  </data>
+</root>

@@ -6,105 +6,417 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="420"
-             d:DesignWidth="760">
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded"
+             d:DesignHeight="760"
+             d:DesignWidth="980">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="16"
-                    AutomationProperties.AutomationId="NetworkAcceleration_FeatureRoot">
-            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+        <Grid Margin="20"
+              AutomationProperties.AutomationId="NetworkAcceleration_FeatureRoot">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Margin="0,0,0,16"
+                    Padding="20"
+                    CornerRadius="20"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="16"
-                    Margin="0,0,0,12">
-                <StackPanel>
-                    <TextBlock Text="{x:Static text:NetworkAccelerationText.QuickActionsTitle}"
-                               FontSize="16"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    <TextBlock Text="{x:Static text:NetworkAccelerationText.QuickActionsDescription}"
-                               Margin="0,6,0,12"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.45*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
 
-                    <WrapPanel>
-                        <wpfui:Button Content="{x:Static text:NetworkAccelerationText.RunQuickOptimizationButton}"
-                                      Appearance="Primary"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_QuickOptimizeButton"
-                                      Width="180"
-                                      Margin="0,0,8,8"
-                                      Click="QuickOptimizeButton_Click" />
-                        <wpfui:Button Content="{x:Static text:NetworkAccelerationText.ResetNetworkStackButton}"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_ResetStackButton"
-                                      Width="160"
-                                      Margin="0,0,0,8"
-                                      Click="ResetStackButton_Click" />
-                    </WrapPanel>
+                    <StackPanel Margin="0,0,24,0">
+                        <Border Padding="10,4"
+                                HorizontalAlignment="Left"
+                                CornerRadius="999"
+                                Background="#122B579A">
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.LiveTelemetryTitle}"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#FF5CA9FF" />
+                        </Border>
 
-                    <Border Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="10"
-                            Margin="0,8,0,0">
-                        <TextBlock Text="{x:Static text:NetworkAccelerationText.AdminHint}"
+                        <TextBlock Margin="0,12,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.PageTitle}"
+                                   FontSize="28"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                        <TextBlock Margin="0,10,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.LiveTelemetryDescription}"
                                    TextWrapping="Wrap"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    </Border>
-                </StackPanel>
-            </Border>
+                    </StackPanel>
 
-            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="16">
-                <StackPanel>
-                    <TextBlock Text="{x:Static text:NetworkAccelerationText.PreferredModeTitle}"
-                               FontSize="16"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-                    <Grid Margin="0,10,0,0">
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox x:Name="_modeComboBox"
-                                  Width="220"
-                                  HorizontalAlignment="Left"
-                                  AutomationProperties.AutomationId="NetworkAcceleration_ModeComboBox">
-                            <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeBalanced}" Tag="Balanced" />
-                            <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeGaming}" Tag="Gaming" />
-                            <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeStreaming}" Tag="Streaming" />
-                        </ComboBox>
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,0,10,10"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentDownloadLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_downloadValueTextBlock"
+                                           Margin="0,8,0,0"
+                                           FontSize="22"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
 
-                        <wpfui:Button Grid.Column="1"
-                                      Content="{x:Static text:NetworkAccelerationText.SaveModeButton}"
-                                      Appearance="Secondary"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_SaveModeButton"
-                                      Width="110"
-                                      Margin="8,0,0,0"
-                                      Click="SaveModeButton_Click" />
+                        <Border Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,0,0,10"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentUploadLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_uploadValueTextBlock"
+                                           Margin="0,8,0,0"
+                                           FontSize="22"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="0,0,10,0"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.PeakTrafficLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_peakValueTextBlock"
+                                           Margin="0,8,0,0"
+                                           FontSize="22"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1"
+                                Grid.Column="1"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.ActiveAdapterLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_adapterValueTextBlock"
+                                           Margin="0,8,0,0"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
                     </Grid>
+                </Grid>
+            </Border>
 
-                    <Border Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="10"
-                            Margin="0,12,0,0">
-                        <TextBlock x:Name="_statusTextBlock"
-                                   AutomationProperties.AutomationId="NetworkAcceleration_StatusText"
-                                   TextWrapping="Wrap"
-                                   Foreground="#FF2E7D32" />
+            <Border Grid.Row="1"
+                    Margin="0,0,0,16"
+                    Padding="20"
+                    CornerRadius="20"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <DockPanel LastChildFill="False">
+                        <StackPanel DockPanel.Dock="Left">
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.LiveTelemetryTitle}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Margin="0,6,0,0"
+                                       Text="{x:Static text:NetworkAccelerationText.LiveTelemetryDescription}"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,16,0">
+                                <Ellipse Width="10"
+                                         Height="10"
+                                         Margin="0,4,6,0"
+                                         Fill="#FF4F9CFF" />
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.DownloadLegend}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="10"
+                                         Height="10"
+                                         Margin="0,4,6,0"
+                                         Fill="#FF27C7A8" />
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.UploadLegend}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <Border Margin="0,16,0,0"
+                            Height="260"
+                            CornerRadius="18"
+                            Background="#12000000"
+                            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                            BorderThickness="1">
+                        <Grid>
+                            <Grid Margin="18,18,18,30"
+                                  IsHitTestVisible="False">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0"
+                                        BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                                        BorderThickness="0,0,0,1" />
+                                <Border Grid.Row="1"
+                                        BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                                        BorderThickness="0,0,0,1" />
+                                <Border Grid.Row="2"
+                                        BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                                        BorderThickness="0,0,0,1" />
+                            </Grid>
+
+                            <Canvas x:Name="_chartCanvas"
+                                    Margin="18,18,18,30"
+                                    SizeChanged="ChartCanvas_SizeChanged">
+                                <Polygon x:Name="_downloadFillPolygon"
+                                         Fill="#224F9CFF" />
+                                <Polygon x:Name="_uploadFillPolygon"
+                                         Fill="#1E27C7A8" />
+                                <Polyline x:Name="_downloadLine"
+                                          Stroke="#FF4F9CFF"
+                                          StrokeThickness="2.4"
+                                          StrokeLineJoin="Round"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round" />
+                                <Polyline x:Name="_uploadLine"
+                                          Stroke="#FF27C7A8"
+                                          StrokeThickness="2.4"
+                                          StrokeLineJoin="Round"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round" />
+                            </Canvas>
+
+                            <TextBlock x:Name="_chartCeilingTextBlock"
+                                       Margin="18,10,0,0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                            <TextBlock x:Name="_chartFloorTextBlock"
+                                       Margin="18,0,0,8"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Bottom"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                            <TextBlock x:Name="_chartEmptyTextBlock"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Static text:NetworkAccelerationText.ChartEmptyState}" />
+                        </Grid>
                     </Border>
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.DownloadTotalLabel}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="_downloadTotalTextBlock"
+                                       Margin="0,6,0,0"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.UploadTotalLabel}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="_uploadTotalTextBlock"
+                                       Margin="0,6,0,0"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.UpdatedLabel}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="_updatedValueTextBlock"
+                                       Margin="0,6,0,0"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </Border>
-        </StackPanel>
+
+            <Grid Grid.Row="2"
+                  Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.05*" />
+                    <ColumnDefinition Width="0.95*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Margin="0,0,8,0"
+                        Padding="20"
+                        CornerRadius="20"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.PreferredModeTitle}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.PreferredModeDescription}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                        <Grid Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="_modeComboBox"
+                                      Width="230"
+                                      HorizontalAlignment="Left"
+                                      SelectionChanged="ModeComboBox_SelectionChanged"
+                                      AutomationProperties.AutomationId="NetworkAcceleration_ModeComboBox">
+                                <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeBalanced}" Tag="Balanced" />
+                                <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeGaming}" Tag="Gaming" />
+                                <ComboBoxItem Content="{x:Static text:NetworkAccelerationText.ModeStreaming}" Tag="Streaming" />
+                            </ComboBox>
+
+                            <wpfui:Button Grid.Column="1"
+                                          Width="120"
+                                          Margin="10,0,0,0"
+                                          Content="{x:Static text:NetworkAccelerationText.SaveModeButton}"
+                                          Appearance="Secondary"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_SaveModeButton"
+                                          Click="SaveModeButton_Click" />
+                        </Grid>
+
+                        <Border Margin="0,16,0,0"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentModeLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_modeDescriptionTextBlock"
+                                           Margin="0,8,0,0"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Margin="8,0,0,0"
+                        Padding="20"
+                        CornerRadius="20"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.QuickActionsTitle}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.QuickActionsDescription}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                        <WrapPanel Margin="0,16,0,0">
+                            <wpfui:Button Content="{x:Static text:NetworkAccelerationText.RunQuickOptimizationButton}"
+                                          Width="190"
+                                          Margin="0,0,10,10"
+                                          Appearance="Primary"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_QuickOptimizeButton"
+                                          Click="QuickOptimizeButton_Click" />
+                            <wpfui:Button Content="{x:Static text:NetworkAccelerationText.ResetNetworkStackButton}"
+                                          Width="180"
+                                          Margin="0,0,0,10"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_ResetStackButton"
+                                          Click="ResetStackButton_Click" />
+                        </WrapPanel>
+
+                        <Border Margin="0,6,0,0"
+                                Padding="12"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.AdminHint}"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="3"
+                    Padding="18"
+                    CornerRadius="20"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:NetworkAccelerationText.StatusCardTitle}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock x:Name="_statusTextBlock"
+                               Margin="0,10,0,0"
+                               TextWrapping="Wrap"
+                               AutomationProperties.AutomationId="NetworkAcceleration_StatusText" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </ScrollViewer>
 
 </UserControl>

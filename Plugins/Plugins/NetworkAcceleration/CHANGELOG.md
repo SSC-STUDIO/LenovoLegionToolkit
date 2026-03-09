@@ -5,6 +5,15 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-10
+
+### Added / 新增
+- Added a redesigned network dashboard with live throughput metrics, active-adapter summary cards, and a built-in traffic chart / 新增重设计的网络仪表盘，提供实时吞吐指标、活动网卡摘要卡片和内置流量图表
+
+### Improved / 改进
+- Reworked the settings page into a clearer policy snapshot layout while keeping the existing optimization controls / 重做设置页为更清晰的策略概览布局，同时保留现有优化控制项
+- Expanded plugin localization coverage to match the host application's supported language set via resource-based translations / 通过资源化翻译将插件本地化覆盖范围扩展到与主程序一致的语言集合
+
 ## [1.0.4] - 2026-02-28
 
 ### Improved / 改进

@@ -1,20 +1,38 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
 public partial class NetworkAccelerationControl : UserControl
 {
+    private const int MaxTelemetrySamples = 24;
+
     private readonly NetworkAccelerationPlugin _plugin;
+    private readonly NetworkAccelerationTelemetryService _telemetryService = new();
+    private readonly DispatcherTimer _telemetryTimer = new()
+    {
+        Interval = TimeSpan.FromSeconds(2)
+    };
+    private readonly List<NetworkAccelerationTelemetrySnapshot> _telemetrySamples = [];
 
     public NetworkAccelerationControl(NetworkAccelerationPlugin plugin)
     {
         _plugin = plugin;
+        _telemetryTimer.Tick += TelemetryTimer_Tick;
+
         TryInitializeComponent();
         LoadCurrentMode();
+        UpdateModeDescription();
+        UpdateTelemetrySummary(new NetworkAccelerationTelemetrySnapshot(DateTimeOffset.Now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0));
+        SetStatus(NetworkAccelerationText.MonitoringStatus, false);
     }
 
     private void TryInitializeComponent()
@@ -36,84 +54,54 @@ public partial class NetworkAccelerationControl : UserControl
         _modeComboBox.Items.Add(new ComboBoxItem { Content = NetworkAccelerationText.ModeBalanced, Tag = "Balanced" });
         _modeComboBox.Items.Add(new ComboBoxItem { Content = NetworkAccelerationText.ModeGaming, Tag = "Gaming" });
         _modeComboBox.Items.Add(new ComboBoxItem { Content = NetworkAccelerationText.ModeStreaming, Tag = "Streaming" });
+        _modeComboBox.SelectionChanged += ModeComboBox_SelectionChanged;
 
         _statusTextBlock = new TextBlock
         {
-            Margin = new Thickness(0, 0, 0, 0),
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(46, 125, 50))
+            TextWrapping = TextWrapping.Wrap
         };
         AutomationProperties.SetAutomationId(_statusTextBlock, "NetworkAcceleration_StatusText");
 
-        var quickCard = new Border
-        {
-            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(14),
-            Margin = new Thickness(0, 0, 0, 12)
-        };
-        var quickStack = new StackPanel();
-        quickStack.Children.Add(new TextBlock
-        {
-            Text = NetworkAccelerationText.QuickActionsTitle,
-            FontSize = 16,
-            FontWeight = FontWeights.Medium
-        });
-        quickStack.Children.Add(new TextBlock
-        {
-            Text = NetworkAccelerationText.QuickActionsDescription,
-            Margin = new Thickness(0, 6, 0, 12),
-            TextWrapping = TextWrapping.Wrap
-        });
-        var actionPanel = new WrapPanel();
-        var optimizeButton = new Button { Content = NetworkAccelerationText.RunQuickOptimizationButton, Width = 120 };
-        AutomationProperties.SetAutomationId(optimizeButton, "NetworkAcceleration_QuickOptimizeButton");
-        optimizeButton.Click += QuickOptimizeButton_Click;
-        var resetButton = new Button { Content = NetworkAccelerationText.ResetNetworkStackButton, Width = 110, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(resetButton, "NetworkAcceleration_ResetStackButton");
-        resetButton.Click += ResetStackButton_Click;
-        actionPanel.Children.Add(optimizeButton);
-        actionPanel.Children.Add(resetButton);
-        quickStack.Children.Add(actionPanel);
-        quickCard.Child = quickStack;
-
-        var modeCard = new Border
-        {
-            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(14)
-        };
-        var modeStack = new StackPanel();
-        modeStack.Children.Add(new TextBlock
-        {
-            Text = NetworkAccelerationText.PreferredModeTitle,
-            FontSize = 16,
-            FontWeight = FontWeights.Medium
-        });
-        _modeComboBox.Width = 220;
-        _modeComboBox.Margin = new Thickness(0, 10, 0, 0);
-        modeStack.Children.Add(_modeComboBox);
-        var saveButton = new Button { Content = NetworkAccelerationText.SaveModeButton, Width = 100, Margin = new Thickness(0, 12, 0, 0) };
-        AutomationProperties.SetAutomationId(saveButton, "NetworkAcceleration_SaveModeButton");
-        saveButton.Click += SaveModeButton_Click;
-        modeStack.Children.Add(saveButton);
-        modeStack.Children.Add(new Border
-        {
-            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(10),
-            Margin = new Thickness(0, 12, 0, 0),
-            Child = _statusTextBlock
-        });
-        modeCard.Child = modeStack;
-
         var root = new StackPanel { Margin = new Thickness(16) };
         AutomationProperties.SetAutomationId(root, "NetworkAcceleration_FeatureRoot");
-        root.Children.Add(quickCard);
-        root.Children.Add(modeCard);
+        root.Children.Add(new TextBlock
+        {
+            Text = NetworkAccelerationText.PageTitle,
+            FontSize = 24,
+            FontWeight = FontWeights.SemiBold
+        });
+        root.Children.Add(new TextBlock
+        {
+            Text = NetworkAccelerationText.LiveTelemetryDescription,
+            Margin = new Thickness(0, 8, 0, 16),
+            TextWrapping = TextWrapping.Wrap
+        });
+        root.Children.Add(_modeComboBox);
+
+        var actions = new WrapPanel { Margin = new Thickness(0, 12, 0, 0) };
+        var optimizeButton = new Button { Content = NetworkAccelerationText.RunQuickOptimizationButton, Width = 160 };
+        AutomationProperties.SetAutomationId(optimizeButton, "NetworkAcceleration_QuickOptimizeButton");
+        optimizeButton.Click += QuickOptimizeButton_Click;
+        var resetButton = new Button { Content = NetworkAccelerationText.ResetNetworkStackButton, Width = 150, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(resetButton, "NetworkAcceleration_ResetStackButton");
+        resetButton.Click += ResetStackButton_Click;
+        var saveButton = new Button { Content = NetworkAccelerationText.SaveModeButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(saveButton, "NetworkAcceleration_SaveModeButton");
+        saveButton.Click += SaveModeButton_Click;
+        actions.Children.Add(optimizeButton);
+        actions.Children.Add(resetButton);
+        actions.Children.Add(saveButton);
+
+        root.Children.Add(actions);
+        root.Children.Add(new Border
+        {
+            Margin = new Thickness(0, 14, 0, 0),
+            Padding = new Thickness(12),
+            CornerRadius = new CornerRadius(10),
+            BorderThickness = new Thickness(1),
+            BorderBrush = Brushes.LightGray,
+            Child = _statusTextBlock
+        });
 
         Content = new ScrollViewer
         {
@@ -121,6 +109,23 @@ public partial class NetworkAccelerationControl : UserControl
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             Content = root
         };
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        RefreshTelemetry();
+        _telemetryTimer.Start();
+    }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _telemetryTimer.Stop();
+        _telemetryService.Dispose();
+    }
+
+    private void TelemetryTimer_Tick(object? sender, EventArgs e)
+    {
+        RefreshTelemetry();
     }
 
     private void LoadCurrentMode()
@@ -139,52 +144,213 @@ public partial class NetworkAccelerationControl : UserControl
         }
 
         if (_modeComboBox.SelectedItem == null && _modeComboBox.Items.Count > 0)
-        {
             _modeComboBox.SelectedIndex = 0;
+    }
+
+    private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        UpdateModeDescription();
+    }
+
+    private void UpdateModeDescription()
+    {
+        if (_modeDescriptionTextBlock is null)
+            return;
+
+        var mode = ParseSelectedMode();
+        _modeDescriptionTextBlock.Text = mode switch
+        {
+            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingDescription,
+            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingDescription,
+            _ => NetworkAccelerationText.ModeBalancedDescription
+        };
+    }
+
+    private void RefreshTelemetry()
+    {
+        var snapshot = _telemetryService.Capture();
+        _telemetrySamples.Add(snapshot);
+        if (_telemetrySamples.Count > MaxTelemetrySamples)
+            _telemetrySamples.RemoveAt(0);
+
+        UpdateTelemetrySummary(snapshot);
+        UpdateChart();
+    }
+
+    private void UpdateTelemetrySummary(NetworkAccelerationTelemetrySnapshot snapshot)
+    {
+        if (_downloadValueTextBlock != null)
+            _downloadValueTextBlock.Text = FormatRate(snapshot.DownloadMbps);
+
+        if (_uploadValueTextBlock != null)
+            _uploadValueTextBlock.Text = FormatRate(snapshot.UploadMbps);
+
+        if (_peakValueTextBlock != null)
+            _peakValueTextBlock.Text = FormatRate(_telemetrySamples.Count == 0
+                ? 0
+                : _telemetrySamples.Max(sample => Math.Max(sample.DownloadMbps, sample.UploadMbps)));
+
+        if (_adapterValueTextBlock != null)
+            _adapterValueTextBlock.Text = snapshot.InterfaceName;
+
+        if (_downloadTotalTextBlock != null)
+            _downloadTotalTextBlock.Text = FormatDataSize(snapshot.TotalReceivedBytes);
+
+        if (_uploadTotalTextBlock != null)
+            _uploadTotalTextBlock.Text = FormatDataSize(snapshot.TotalSentBytes);
+
+        if (_updatedValueTextBlock != null)
+            _updatedValueTextBlock.Text = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentUICulture);
+    }
+
+    private void ChartCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateChart();
+    }
+
+    private void UpdateChart()
+    {
+        if (_chartCanvas is null ||
+            _downloadLine is null ||
+            _uploadLine is null ||
+            _downloadFillPolygon is null ||
+            _uploadFillPolygon is null ||
+            _chartEmptyTextBlock is null ||
+            _chartCeilingTextBlock is null ||
+            _chartFloorTextBlock is null)
+        {
+            return;
         }
+
+        var width = _chartCanvas.ActualWidth;
+        var height = _chartCanvas.ActualHeight;
+        if (width <= 1 || height <= 1)
+            return;
+
+        if (_telemetrySamples.Count < 2)
+        {
+            _downloadLine.Points = [];
+            _uploadLine.Points = [];
+            _downloadFillPolygon.Points = [];
+            _uploadFillPolygon.Points = [];
+            _chartEmptyTextBlock.Visibility = Visibility.Visible;
+            _chartCeilingTextBlock.Text = FormatRate(0);
+            _chartFloorTextBlock.Text = FormatRate(0);
+            return;
+        }
+
+        _chartEmptyTextBlock.Visibility = Visibility.Collapsed;
+
+        var ceiling = Math.Max(1d, _telemetrySamples.Max(sample => Math.Max(sample.DownloadMbps, sample.UploadMbps)));
+        _chartCeilingTextBlock.Text = FormatRate(ceiling);
+        _chartFloorTextBlock.Text = FormatRate(0);
+
+        _downloadLine.Points = BuildLinePoints(width, height, ceiling, sample => sample.DownloadMbps);
+        _uploadLine.Points = BuildLinePoints(width, height, ceiling, sample => sample.UploadMbps);
+        _downloadFillPolygon.Points = BuildFillPoints(_downloadLine.Points, width, height);
+        _uploadFillPolygon.Points = BuildFillPoints(_uploadLine.Points, width, height);
+    }
+
+    private PointCollection BuildLinePoints(double width, double height, double ceiling, Func<NetworkAccelerationTelemetrySnapshot, double> selector)
+    {
+        var points = new PointCollection();
+        var step = _telemetrySamples.Count <= 1 ? width : width / (_telemetrySamples.Count - 1d);
+
+        for (var index = 0; index < _telemetrySamples.Count; index++)
+        {
+            var value = selector(_telemetrySamples[index]);
+            var x = step * index;
+            var y = height - ((Math.Clamp(value, 0, ceiling) / ceiling) * height);
+            points.Add(new Point(x, y));
+        }
+
+        return points;
+    }
+
+    private static PointCollection BuildFillPoints(PointCollection linePoints, double width, double height)
+    {
+        if (linePoints.Count == 0)
+            return [];
+
+        var points = new PointCollection(linePoints);
+        points.Add(new Point(width, height));
+        points.Add(new Point(0, height));
+        return points;
     }
 
     private async void QuickOptimizeButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_statusTextBlock is null)
-            return;
-
         var success = await _plugin.RunQuickOptimizationAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = success
-            ? NetworkAccelerationText.StatusQuickOptimizationCompleted
-            : NetworkAccelerationText.StatusQuickOptimizationFailed;
+        SetStatus(
+            success ? NetworkAccelerationText.StatusQuickOptimizationCompleted : NetworkAccelerationText.StatusQuickOptimizationFailed,
+            !success);
+        RefreshTelemetry();
     }
 
     private async void ResetStackButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_statusTextBlock is null)
-            return;
-
         var success = await _plugin.ResetNetworkStackAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = success
-            ? NetworkAccelerationText.StatusResetCompleted
-            : NetworkAccelerationText.StatusResetFailed;
+        SetStatus(
+            success ? NetworkAccelerationText.StatusResetCompleted : NetworkAccelerationText.StatusResetFailed,
+            !success);
+        RefreshTelemetry();
     }
 
     private async void SaveModeButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_modeComboBox is null || _statusTextBlock is null)
-            return;
-
-        if (_modeComboBox.SelectedItem is not ComboBoxItem combo || combo.Tag is not string modeText)
+        var mode = ParseSelectedMode();
+        if (mode is null)
         {
-            _statusTextBlock.Text = NetworkAccelerationText.StatusSelectValidMode;
+            SetStatus(NetworkAccelerationText.StatusSelectValidMode, true);
             return;
         }
 
-        if (!Enum.TryParse(modeText, true, out NetworkAccelerationMode mode))
-        {
-            _statusTextBlock.Text = NetworkAccelerationText.StatusSelectValidMode;
-            return;
-        }
-
-        _plugin.SetPreferredMode(mode);
+        _plugin.SetPreferredMode(mode.Value);
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = NetworkAccelerationText.StatusModeSaved;
+        UpdateModeDescription();
+        SetStatus(NetworkAccelerationText.StatusModeSaved, false);
+    }
+
+    private NetworkAccelerationMode? ParseSelectedMode()
+    {
+        if (_modeComboBox?.SelectedItem is ComboBoxItem combo &&
+            combo.Tag is string modeText &&
+            Enum.TryParse(modeText, true, out NetworkAccelerationMode parsed))
+        {
+            return parsed;
+        }
+
+        return null;
+    }
+
+    private void SetStatus(string text, bool isError)
+    {
+        if (_statusTextBlock is null)
+            return;
+
+        _statusTextBlock.Text = text;
+        _statusTextBlock.Foreground = isError
+            ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC42B1C"))
+            : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0F7B5A"));
+    }
+
+    private static string FormatRate(double mbps)
+    {
+        return string.Format(CultureInfo.CurrentUICulture, NetworkAccelerationText.MbpsValueFormat, mbps);
+    }
+
+    private static string FormatDataSize(long bytes)
+    {
+        double value = bytes;
+        var suffixes = new[] { "B", "KB", "MB", "GB", "TB" };
+        var suffixIndex = 0;
+
+        while (value >= 1024 && suffixIndex < suffixes.Length - 1)
+        {
+            value /= 1024;
+            suffixIndex++;
+        }
+
+        return string.Format(CultureInfo.CurrentUICulture, "{0:0.#} {1}", value, suffixes[suffixIndex]);
     }
 }

@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PluginName" xml:space="preserve">
+    <value>èªè¨æ»é¼ </value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>èªè¨æ»é¼ æ¸¸æ¨æ¨£å¼è¡çºèæ»é¼ è¨­å®ã</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>èªè¨æ»é¼ </value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>æ»é¼ è¨­å®</value>
+  </data>
+  <data name="FeatureSubtitle" xml:space="preserve">
+    <value>èª¿æ´æ»é¼ è¨­å®ä¸¦å¥ç¨å°ç®å Windows å·¥ä½éæ®µã</value>
+  </data>
+  <data name="PollingRateLabel" xml:space="preserve">
+    <value>åå ±ç</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>å¥ç¨</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>éè¨­</value>
+  </data>
+  <data name="StatusResetDefaults" xml:space="preserve">
+    <value>æ»é¼ è¨­å®å·²éè¨­çºé è¨­å¼ã</value>
+  </data>
+  <data name="StatusInvalidDpi" xml:space="preserve">
+    <value>DPI æ¸å¼ç¡æã</value>
+  </data>
+  <data name="StatusSelectValidPolling" xml:space="preserve">
+    <value>è«é¸æææçåå ±çã</value>
+  </data>
+  <data name="StatusInvalidPolling" xml:space="preserve">
+    <value>åå ±çç¡æã</value>
+  </data>
+  <data name="StatusProfileSaved" xml:space="preserve">
+    <value>æ»é¼ è¨­å®å·²å²å­ã</value>
+  </data>
+  <data name="SettingsSubtitle" xml:space="preserve">
+    <value>å°ææ¨éåº¦èæéµéç½®å¥ç¨å°ç®å Windows è¨­å®ã</value>
+  </data>
+  <data name="PointerSpeedLabel" xml:space="preserve">
+    <value>Windows ææ¨éåº¦</value>
+  </data>
+  <data name="SwapButtonsLabel" xml:space="preserve">
+    <value>äº¤ææ»é¼ å·¦å³éµ</value>
+  </data>
+  <data name="AutoThemeLabel" xml:space="preserve">
+    <value>ä¾ç§ç®å Windows ææä¸»é¡èªåå¥ç¨èªè¨æ¸¸æ¨æ¨£å¼</value>
+  </data>
+  <data name="CursorHint" xml:space="preserve">
+    <value>å¯å¨æ¬é æç³»çµ±æä½³åæ´ååä½ä¸­å¥ç¨æ¸¸æ¨å¤è§ã</value>
+  </data>
+  <data name="ApplyToWindowsButton" xml:space="preserve">
+    <value>å¥ç¨å° Windows</value>
+  </data>
+  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
+    <value>ç«å³å¥ç¨æ¸¸æ¨ä¸»é¡</value>
+  </data>
+  <data name="ReloadButton" xml:space="preserve">
+    <value>éæ°è¼å¥</value>
+  </data>
+  <data name="StatusApplyPointerFail" xml:space="preserve">
+    <value>å¥ç¨ææ¨éåº¦å¤±æã</value>
+  </data>
+  <data name="StatusApplySwapFail" xml:space="preserve">
+    <value>å¥ç¨æéµäº¤æè¨­å®å¤±æã</value>
+  </data>
+  <data name="StatusWindowsApplied" xml:space="preserve">
+    <value>Windows æ»é¼ è¨­å®å·²å¥ç¨ã</value>
+  </data>
+  <data name="StatusCursorApplyFailed" xml:space="preserve">
+    <value>å¥ç¨èªè¨æ¸¸æ¨æ¨£å¼å¤±æãè¥ç³»çµ±å°é INF å®è£ï¼è«åè©¦ä»¥ç³»çµ±ç®¡çå¡èº«åå·è¡ã</value>
+  </data>
+  <data name="StatusReloaded" xml:space="preserve">
+    <value>ç®åå¤æè¨­å®å·²éæ°è¼å¥ã</value>
+  </data>
+  <data name="CursorAppliedUnknownTheme" xml:space="preserve">
+    <value>??</value>
+  </data>
+  <data name="CursorAppliedFormat" xml:space="preserve">
+    <value>?????????????????{0}??</value>
+  </data>
+<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data></root>
