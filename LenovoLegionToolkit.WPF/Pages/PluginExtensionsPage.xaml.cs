@@ -89,6 +89,8 @@ private string _currentSearchText = string.Empty;
             _bulkInstallButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
             _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
         }
+
+        UpdateSummaryMetrics();
     }
     
     private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -150,6 +152,36 @@ private string _currentSearchText = string.Empty;
             _bulkInstallButton.Visibility = GetInstallableOnlinePluginCount() > 0 ? Visibility.Visible : Visibility.Collapsed;
             _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
         }
+
+        UpdateSummaryMetrics();
+    }
+
+    private void UpdateSummaryMetrics()
+    {
+        if (_summaryTotalTextBlock == null ||
+            _summaryInstalledTextBlock == null ||
+            _summaryUpdatesTextBlock == null ||
+            _summaryHintTextBlock == null)
+        {
+            return;
+        }
+
+        var totalPlugins = _allPlugins.Count;
+        var installedPlugins = _allPlugins.Count(plugin => _pluginManager.IsInstalled(plugin.Id));
+        var updatesReady = _availableUpdates.Count;
+        var discoverablePlugins = Math.Max(0, totalPlugins - installedPlugins);
+
+        _summaryTotalTextBlock.Text = totalPlugins.ToString(CultureInfo.InvariantCulture);
+        _summaryInstalledTextBlock.Text = installedPlugins.ToString(CultureInfo.InvariantCulture);
+        _summaryUpdatesTextBlock.Text = updatesReady.ToString(CultureInfo.InvariantCulture);
+
+        _summaryHintTextBlock.Text = updatesReady > 0
+            ? $"{updatesReady} plugin update(s) are ready to install."
+            : discoverablePlugins > 0
+                ? $"{discoverablePlugins} additional plugin(s) are available in the current feed."
+                : totalPlugins == 0
+                    ? "Waiting for plugin metadata to load."
+                    : "All detected plugins are currently up to date.";
     }
 
     private static string FormatReleaseDate(string releaseDateRaw)
