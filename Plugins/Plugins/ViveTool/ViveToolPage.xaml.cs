@@ -445,15 +445,19 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private static string FormatBytes(long bytes)
     {
         string[] suffix = { "B", "KB", "MB", "GB" };
-        int i;
-        double dblBytes = bytes;
+        var value = (double)Math.Abs(bytes);
+        var i = 0;
 
-        for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+        while (i < suffix.Length - 1 && value >= 1024)
         {
-            dblBytes = bytes / 1024.0;
+            value /= 1024;
+            i++;
         }
 
-        return string.Format("{0:0.##} {1}", dblBytes, suffix[i]);
+        if (bytes < 0)
+            value = -value;
+
+        return string.Format("{0:0.##} {1}", value, suffix[i]);
     }
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
@@ -534,14 +538,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    // Merge with existing features (avoid duplicates)
-                    foreach (var feature in importedFeatures)
-                    {
-                        if (!Features.Any(f => f.Id == feature.Id))
-                        {
-                            Features.Add(feature);
-                        }
-                    }
+                    MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
                     UpdateFeaturesVisibility();
                     IsLoading = false;
@@ -592,14 +589,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
             await Dispatcher.InvokeAsync(() =>
             {
-                // Merge with existing features (avoid duplicates)
-                foreach (var feature in importedFeatures)
-                {
-                    if (!Features.Any(f => f.Id == feature.Id))
-                    {
-                        Features.Add(feature);
-                    }
-                }
+                MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
                 UpdateFeaturesVisibility();
                 IsLoading = false;
@@ -672,21 +662,13 @@ public partial class ViveToolPage : INotifyPropertyChanged
             // Use local cache for fast searching instead of service calls
             await Dispatcher.InvokeAsync(() =>
             {
-                var searchText = _searchTextBox.Text ?? string.Empty;
-                var lowerKeyword = searchText.ToLowerInvariant();
-                
+                var filteredFeatures = FilterFeatures(_allFeatures, _searchTextBox.Text);
+
                 Features.Clear();
-                
-                // Fast in-memory filtering
-                foreach (var feature in _allFeatures)
+
+                foreach (var feature in filteredFeatures)
                 {
-                    if (string.IsNullOrWhiteSpace(lowerKeyword) ||
-                        feature.Id.ToString().Contains(lowerKeyword) ||
-                        feature.Name.ToLowerInvariant().Contains(lowerKeyword) ||
-                        feature.Description.ToLowerInvariant().Contains(lowerKeyword))
-                    {
-                        Features.Add(feature);
-                    }
+                    Features.Add(feature);
                 }
 
                 UpdateFeaturesVisibility();
@@ -818,6 +800,37 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
+    private static void MergeImportedFeatures(
+        ICollection<FeatureFlagInfo> visibleFeatures,
+        ICollection<FeatureFlagInfo> allFeatures,
+        IEnumerable<FeatureFlagInfo> importedFeatures)
+    {
+        foreach (var feature in importedFeatures)
+        {
+            if (!visibleFeatures.Any(f => f.Id == feature.Id))
+            {
+                visibleFeatures.Add(feature);
+            }
+
+            if (!allFeatures.Any(f => f.Id == feature.Id))
+            {
+                allFeatures.Add(feature);
+            }
+        }
+    }
+
+    private static IReadOnlyList<FeatureFlagInfo> FilterFeatures(IEnumerable<FeatureFlagInfo> allFeatures, string? searchText)
+    {
+        var lowerKeyword = (searchText ?? string.Empty).ToLowerInvariant();
+
+        return allFeatures.Where(feature =>
+                string.IsNullOrWhiteSpace(lowerKeyword) ||
+                feature.Id.ToString().Contains(lowerKeyword) ||
+                (feature.Name ?? string.Empty).ToLowerInvariant().Contains(lowerKeyword) ||
+                (feature.Description ?? string.Empty).ToLowerInvariant().Contains(lowerKeyword))
+            .ToList();
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -848,6 +861,6 @@ public class FeatureStatusConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }
