@@ -75,36 +75,13 @@ public partial class PluginSettingsWindow : BaseWindow
                         if (settingsPage is IPluginPage pluginPage)
                         {
                             var pageObject = pluginPage.CreatePage();
-                            if (pageObject is Page generatedPage)
+                            if (pageObject is UIElement generatedElement)
                             {
                                 hasSettingsPage = true;
                                 if (_pluginSettingsContainer != null)
                                     _pluginSettingsContainer.Visibility = Visibility.Visible;
-                                _pluginSettingsFrame?.Navigate(generatedPage);
-                            }
-                            else if (pageObject is UIElement generatedElement)
-                            {
-                                hasSettingsPage = true;
-                                if (_pluginSettingsContainer != null)
-                                    _pluginSettingsContainer.Visibility = Visibility.Visible;
-                                if (_pluginSettingsFrame != null)
-                                    _pluginSettingsFrame.Content = generatedElement;
-                            }
-                        }
-                        else if (settingsPage is Page page)
-                        {
-                            hasSettingsPage = true;
-                            
-                            // Show plugin settings container
-                            if (_pluginSettingsContainer != null)
-                            {
-                                _pluginSettingsContainer.Visibility = Visibility.Visible;
-                            }
-                            
-                            // Display the plugin's settings page
-                            if (_pluginSettingsFrame != null)
-                            {
-                                _pluginSettingsFrame.Navigate(page);
+                                if (_pluginSettingsHost != null)
+                                    _pluginSettingsHost.Content = generatedElement;
                             }
                         }
                         else if (settingsPage is UIElement element)
@@ -112,8 +89,8 @@ public partial class PluginSettingsWindow : BaseWindow
                             hasSettingsPage = true;
                             if (_pluginSettingsContainer != null)
                                 _pluginSettingsContainer.Visibility = Visibility.Visible;
-                            if (_pluginSettingsFrame != null)
-                                _pluginSettingsFrame.Content = element;
+                            if (_pluginSettingsHost != null)
+                                _pluginSettingsHost.Content = element;
                         }
                     }
                 }
@@ -131,6 +108,11 @@ public partial class PluginSettingsWindow : BaseWindow
                 if (_pluginSettingsContainer != null)
                 {
                     _pluginSettingsContainer.Visibility = Visibility.Collapsed;
+                }
+
+                if (_pluginSettingsHost != null)
+                {
+                    _pluginSettingsHost.Content = null;
                 }
             }
         }

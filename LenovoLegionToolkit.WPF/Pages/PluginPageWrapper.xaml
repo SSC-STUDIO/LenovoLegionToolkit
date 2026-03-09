@@ -36,11 +36,10 @@
         </StackPanel>
         
         <!-- Plugin Content -->
-        <Frame 
-            x:Name="_pluginContentFrame"
+        <ContentControl
+            x:Name="_pluginContentHost"
             AutomationProperties.AutomationId="PluginPageContentFrame"
             Grid.Row="1"
-            NavigationUIVisibility="Hidden"
             BorderThickness="0" />
 
         <Border

@@ -169,25 +169,18 @@ public partial class PluginPageWrapper : UiPage
             var pluginControl = pluginPage.CreatePage();
             
             // Find the Frame control by name
-            var frame = this.FindName("_pluginContentFrame") as Frame;
-            if (frame == null)
+            var contentHost = this.FindName("_pluginContentHost") as ContentControl;
+            if (contentHost == null)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"PluginPageWrapper: _pluginContentFrame not found");
+                    Log.Instance.Trace($"PluginPageWrapper: _pluginContentHost not found");
                 ShowEmptyState("Plugin content container is unavailable.");
                 return;
             }
             
-            if (pluginControl is System.Windows.Controls.Page pageControl)
+            if (pluginControl is UIElement uiElement)
             {
-                // 如果是 Page，使用 Frame 导航
-                frame.Navigate(pageControl);
-                HideEmptyState();
-            }
-            else if (pluginControl is UIElement uiElement)
-            {
-                // 如果是其他 UIElement，使用 ContentPresenter（通过 Frame 的内容区域）
-                frame.Content = uiElement;
+                contentHost.Content = uiElement;
                 HideEmptyState();
             }
             else
@@ -209,10 +202,10 @@ public partial class PluginPageWrapper : UiPage
     {
         var emptyStateBorder = this.FindName("_emptyStateBorder") as Border;
         var emptyStateText = this.FindName("_emptyStateTextBlock") as TextBlock;
-        var frame = this.FindName("_pluginContentFrame") as Frame;
+        var contentHost = this.FindName("_pluginContentHost") as ContentControl;
 
-        if (frame != null)
-            frame.Content = null;
+        if (contentHost != null)
+            contentHost.Content = null;
 
         if (emptyStateText != null)
             emptyStateText.Text = message;
