@@ -27,6 +27,7 @@ public class PluginRepositoryService : IDisposable
         "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/main/store.json",
         "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json"
     };
+    private const string PluginReleasesApiUrl = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50";
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -177,92 +178,27 @@ public class PluginRepositoryService : IDisposable
     private async Task<bool> DownloadPluginAsync(PluginManifest manifest, string destinationPath)
     {
         var candidateUrls = GetDownloadUrlCandidates(manifest);
-        Exception? lastException = null;
 
         foreach (var candidateUrl in candidateUrls)
         {
-            try
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Downloading plugin {manifest.Id} from {candidateUrl}");
-
-                // Handle file:// URLs for local development
-                if (candidateUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
-                {
-                    var filePath = new Uri(candidateUrl).LocalPath;
-                    if (File.Exists(filePath))
-                    {
-                        File.Copy(filePath, destinationPath, overwrite: true);
-                        
-                        // Report progress for local file copy
-                        var fileInfo = new FileInfo(filePath);
-                        DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
-                        {
-                            PluginId = manifest.Id,
-                            BytesDownloaded = fileInfo.Length,
-                            TotalBytes = fileInfo.Length,
-                            ProgressPercentage = 100
-                        });
-                        
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Copied local plugin {manifest.Id} from {filePath} to {destinationPath}");
-                        
-                        manifest.DownloadUrl = candidateUrl;
-                        return true;
-                    }
-
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Local plugin file not found: {filePath}");
-                    
-                    continue;
-                }
-
-                // Handle HTTP/HTTPS URLs
-                using var response = await _httpClient.GetAsync(candidateUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                if (!response.IsSuccessStatusCode)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Download URL failed for plugin {manifest.Id}: {candidateUrl} returned {(int)response.StatusCode} {response.StatusCode}");
-                    continue;
-                }
-
-                var totalBytes = response.Content.Headers.ContentLength ?? -1L;
-                var bytesDownloaded = 0L;
-
-                using var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                var buffer = new byte[8192];
-                int bytesRead;
-
-                while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
-                {
-                    await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-                    bytesDownloaded += bytesRead;
-
-                    var progress = totalBytes > 0 ? (double)bytesDownloaded / totalBytes * 100 : 0;
-                    
-                    DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
-                    {
-                        PluginId = manifest.Id,
-                        BytesDownloaded = bytesDownloaded,
-                        TotalBytes = totalBytes > 0 ? totalBytes : 0,
-                        ProgressPercentage = progress
-                    });
-                }
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Downloaded plugin {manifest.Id} to {destinationPath}");
-
-                manifest.DownloadUrl = candidateUrl;
+            var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
+            if (downloaded)
                 return true;
-            }
-            catch (Exception ex)
-            {
-                lastException = ex;
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error downloading plugin {manifest.Id} from candidate URL: {candidateUrl}, error: {ex.Message}", ex);
-            }
+        }
+
+        var publishedAsset = await TryResolvePublishedAssetAsync(manifest).ConfigureAwait(false);
+        if (publishedAsset is not null)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Retrying plugin {manifest.Id} download from published asset {publishedAsset.AssetName} ({publishedAsset.DownloadUrl})");
+
+            manifest.DownloadUrl = publishedAsset.DownloadUrl;
+            if (!string.IsNullOrWhiteSpace(publishedAsset.Version))
+                manifest.Version = publishedAsset.Version;
+
+            var downloaded = await TryDownloadPluginFromUrlAsync(manifest, publishedAsset.DownloadUrl, destinationPath).ConfigureAwait(false);
+            if (downloaded)
+                return true;
         }
 
         // Development fallback: if online assets are unavailable (for example HTTP 404),
@@ -278,11 +214,91 @@ public class PluginRepositoryService : IDisposable
         {
             var urlsText = string.Join(", ", candidateUrls);
             Log.Instance.Trace($"Error downloading plugin {manifest.Id}: all candidates failed. Tried URLs: [{urlsText}]");
-            if (lastException != null)
-                Log.Instance.Trace($"Last download exception for plugin {manifest.Id}: {lastException.Message}", lastException);
         }
 
         return false;
+    }
+
+    private async Task<bool> TryDownloadPluginFromUrlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Downloading plugin {manifest.Id} from {candidateUrl}");
+
+            if (candidateUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+            {
+                var filePath = new Uri(candidateUrl).LocalPath;
+                if (!File.Exists(filePath))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Local plugin file not found: {filePath}");
+                    return false;
+                }
+
+                File.Copy(filePath, destinationPath, overwrite: true);
+
+                var fileInfo = new FileInfo(filePath);
+                DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                {
+                    PluginId = manifest.Id,
+                    BytesDownloaded = fileInfo.Length,
+                    TotalBytes = fileInfo.Length,
+                    ProgressPercentage = 100
+                });
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Copied local plugin {manifest.Id} from {filePath} to {destinationPath}");
+
+                manifest.DownloadUrl = candidateUrl;
+                return true;
+            }
+
+            using var response = await _httpClient.GetAsync(candidateUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Download URL failed for plugin {manifest.Id}: {candidateUrl} returned {(int)response.StatusCode} {response.StatusCode}");
+                return false;
+            }
+
+            var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+            var bytesDownloaded = 0L;
+
+            using var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            var buffer = new byte[8192];
+            int bytesRead;
+
+            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+            {
+                await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                bytesDownloaded += bytesRead;
+
+                var progress = totalBytes > 0 ? (double)bytesDownloaded / totalBytes * 100 : 0;
+
+                DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                {
+                    PluginId = manifest.Id,
+                    BytesDownloaded = bytesDownloaded,
+                    TotalBytes = totalBytes > 0 ? totalBytes : 0,
+                    ProgressPercentage = progress
+                });
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Downloaded plugin {manifest.Id} to {destinationPath}");
+
+            manifest.DownloadUrl = candidateUrl;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error downloading plugin {manifest.Id} from candidate URL: {candidateUrl}, error: {ex.Message}", ex);
+            return false;
+        }
     }
 
     private List<string> GetDownloadUrlCandidates(PluginManifest manifest)
@@ -447,9 +463,21 @@ public class PluginRepositoryService : IDisposable
 
             // Extract zip
             ZipFile.ExtractToDirectory(zipPath, extractPath, overwriteFiles: true);
+
+            var installationService = new PluginInstallationService(_pluginManager);
+            var resolvedPluginId = await installationService.AnalyzeAndFixPluginStructureAsync(extractPath).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(resolvedPluginId))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Unable to normalize plugin package structure for {manifest.Id}");
+                return false;
+            }
+
+            if (!resolvedPluginId.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase) && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Normalized plugin package id '{resolvedPluginId}' does not match requested manifest id '{manifest.Id}'. Continuing with normalized content.");
             
             // Verify hash
-            var dllPath = FindPluginMainDll(extractPath, manifest.Id);
+            var dllPath = FindPluginMainDll(extractPath, resolvedPluginId);
             if (string.IsNullOrEmpty(dllPath))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -589,6 +617,93 @@ public class PluginRepositoryService : IDisposable
 
         throw new HttpRequestException("Failed to fetch plugin store metadata from all known URLs.", lastException);
     }
+
+    private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest)
+    {
+        try
+        {
+            using var response = await _httpClient.GetAsync(PluginReleasesApiUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using var document = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
+
+            foreach (var release in document.RootElement.EnumerateArray())
+            {
+                if (release.TryGetProperty("draft", out var draftElement) && draftElement.GetBoolean())
+                    continue;
+
+                if (release.TryGetProperty("prerelease", out var prereleaseElement) && prereleaseElement.GetBoolean())
+                    continue;
+
+                if (!release.TryGetProperty("assets", out var assetsElement) || assetsElement.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                var tagName = release.TryGetProperty("tag_name", out var tagNameElement)
+                    ? tagNameElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                foreach (var asset in assetsElement.EnumerateArray())
+                {
+                    var assetName = asset.TryGetProperty("name", out var assetNameElement)
+                        ? assetNameElement.GetString() ?? string.Empty
+                        : string.Empty;
+
+                    if (!IsMatchingPublishedPluginAsset(assetName, manifest.Id))
+                        continue;
+
+                    var browserDownloadUrl = asset.TryGetProperty("browser_download_url", out var browserDownloadUrlElement)
+                        ? browserDownloadUrlElement.GetString()
+                        : null;
+
+                    if (string.IsNullOrWhiteSpace(browserDownloadUrl))
+                        continue;
+
+                    return new PublishedPluginAsset(
+                        browserDownloadUrl,
+                        assetName,
+                        ExtractPublishedAssetVersion(assetName, tagName, manifest.Id));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve published GitHub asset for plugin {manifest.Id}: {ex.Message}", ex);
+        }
+
+        return null;
+    }
+
+    private static bool IsMatchingPublishedPluginAsset(string assetName, string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(assetName) || !assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return assetName.Equals($"{pluginId}.zip", StringComparison.OrdinalIgnoreCase) ||
+               assetName.StartsWith($"{pluginId}-", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string? ExtractPublishedAssetVersion(string assetName, string tagName, string pluginId)
+    {
+        if (!string.IsNullOrWhiteSpace(assetName))
+        {
+            var prefix = $"{pluginId}-v";
+            if (assetName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
+                assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                return assetName[prefix.Length..^4];
+            }
+        }
+
+        var tagPrefix = $"{pluginId}-v";
+        if (!string.IsNullOrWhiteSpace(tagName) && tagName.StartsWith(tagPrefix, StringComparison.OrdinalIgnoreCase))
+            return tagName[tagPrefix.Length..];
+
+        return null;
+    }
+
+    private sealed record PublishedPluginAsset(string DownloadUrl, string AssetName, string? Version);
 
     private static string? FindPluginMainDll(string extractPath, string pluginId)
     {
