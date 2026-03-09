@@ -25,85 +25,87 @@ public static class CMD
         Process cmd = new Process();
         try
         {
-        cmd.StartInfo.UseShellExecute = false;
-        cmd.StartInfo.CreateNoWindow = createNoWindow;
-        cmd.StartInfo.RedirectStandardOutput = createNoWindow;
-        cmd.StartInfo.RedirectStandardError = createNoWindow;
-        cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
-        cmd.StartInfo.FileName = file;
-        if (!string.IsNullOrWhiteSpace(arguments))
-            cmd.StartInfo.Arguments = arguments;
+            var shouldRedirectOutput = createNoWindow && waitForExit;
 
-        if (environment is not null)
-        {
-            foreach (var (key, value) in environment)
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.StartInfo.CreateNoWindow = createNoWindow;
+            cmd.StartInfo.RedirectStandardOutput = shouldRedirectOutput;
+            cmd.StartInfo.RedirectStandardError = shouldRedirectOutput;
+            cmd.StartInfo.WindowStyle = createNoWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
+            cmd.StartInfo.FileName = file;
+            if (!string.IsNullOrWhiteSpace(arguments))
+                cmd.StartInfo.Arguments = arguments;
+
+            if (environment is not null)
             {
-                if (!IsValidEnvironmentVariable(key))
-                    throw new ArgumentException($"Invalid environment variable: {key}");
-                
-                if (value == null)
+                foreach (var (key, value) in environment)
                 {
-                    // If value is null, remove the environment variable
-                    // ProcessStartInfo.Environment does not accept null values
-                    cmd.StartInfo.Environment.Remove(key);
-                }
-                else if (!ContainsDangerousInput(value))
-                {
-                    // Only set the value if it's not null and doesn't contain dangerous input
-                    cmd.StartInfo.Environment[key] = value;
-                }
-                else
-                {
-                    throw new ArgumentException($"Invalid environment variable value: {key}");
+                    if (!IsValidEnvironmentVariable(key))
+                        throw new ArgumentException($"Invalid environment variable: {key}");
+
+                    if (value == null)
+                    {
+                        // If value is null, remove the environment variable
+                        // ProcessStartInfo.Environment does not accept null values
+                        cmd.StartInfo.Environment.Remove(key);
+                    }
+                    else if (!ContainsDangerousInput(value))
+                    {
+                        // Only set the value if it's not null and doesn't contain dangerous input
+                        cmd.StartInfo.Environment[key] = value;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Invalid environment variable value: {key}");
+                    }
                 }
             }
-        }
 
-        cmd.Start();
+            cmd.Start();
 
-        if (!waitForExit)
-        {
+            if (!waitForExit)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
+
+                    // When waitForExit is false, the process runs asynchronously.
+                    // We must not dispose the Process object while the process is still running,
+                    // as disposing may close redirected streams and affect the running process.
+                    // The process will continue running independently, and the Process object
+                    // will be garbage collected when no longer referenced.
+                    // Note: This intentionally leaks the Process object to allow the process to complete.
+                    cmd = null!; // Release reference, process continues running
+                return (-1, string.Empty);
+            }
+
+            Task<string>? standardOutputTask = null;
+            Task<string>? standardErrorTask = null;
+            if (shouldRedirectOutput)
+            {
+                // Start draining redirected streams before waiting for process exit to avoid deadlocks
+                // when the child process writes enough data to fill stdout/stderr buffers.
+                standardOutputTask = cmd.StandardOutput.ReadToEndAsync(token);
+                standardErrorTask = cmd.StandardError.ReadToEndAsync(token);
+            }
+
+            await cmd.WaitForExitAsync(token).ConfigureAwait(false);
+
+            var exitCode = cmd.ExitCode;
+            var output = string.Empty;
+            if (shouldRedirectOutput)
+            {
+                await Task.WhenAll(standardOutputTask!, standardErrorTask!).ConfigureAwait(false);
+
+                output = standardOutputTask!.Result;
+                var error = standardErrorTask!.Result;
+                if (!string.IsNullOrWhiteSpace(error))
+                    output = string.IsNullOrWhiteSpace(output) ? error : $"{output}{Environment.NewLine}{error}";
+            }
+
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
+                Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
 
-                // When waitForExit is false, the process runs asynchronously.
-                // We must not dispose the Process object while the process is still running,
-                // as disposing may close redirected streams and affect the running process.
-                // The process will continue running independently, and the Process object
-                // will be garbage collected when no longer referenced.
-                // Note: This intentionally leaks the Process object to allow the process to complete.
-                cmd = null!; // Release reference, process continues running
-            return (-1, string.Empty);
-        }
-
-        Task<string>? standardOutputTask = null;
-        Task<string>? standardErrorTask = null;
-        if (createNoWindow)
-        {
-            // Start draining redirected streams before waiting for process exit to avoid deadlocks
-            // when the child process writes enough data to fill stdout/stderr buffers.
-            standardOutputTask = cmd.StandardOutput.ReadToEndAsync(token);
-            standardErrorTask = cmd.StandardError.ReadToEndAsync(token);
-        }
-
-        await cmd.WaitForExitAsync(token).ConfigureAwait(false);
-
-        var exitCode = cmd.ExitCode;
-        var output = string.Empty;
-        if (createNoWindow)
-        {
-            await Task.WhenAll(standardOutputTask!, standardErrorTask!).ConfigureAwait(false);
-
-            output = standardOutputTask!.Result;
-            var error = standardErrorTask!.Result;
-            if (!string.IsNullOrWhiteSpace(error))
-                output = string.IsNullOrWhiteSpace(output) ? error : $"{output}{Environment.NewLine}{error}";
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Ran [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, exitCode={exitCode} output={output}]");
-
-        return (exitCode, output);
+            return (exitCode, output);
         }
         finally
         {
@@ -185,6 +187,9 @@ public static class CMD
 
     public static bool ContainsDangerousInput(string input)
     {
+        if (string.IsNullOrEmpty(input))
+            return false;
+
         // Check for dangerous characters that could be used for command injection
         // Note: ">" and "<" are allowed for output redirection (e.g., ">nul 2>&1") as they are safe in cmd.exe context
         // Use the same patterns as WindowsOptimizationService for consistency
@@ -195,54 +200,41 @@ public static class CMD
                 return true;
         }
 
-        // Check for single "&" command separator (but allow "2>&1" and "1>&2" for output redirection)
-        // Single "&" can be used to chain commands: "command1 & command2"
-        // We check for " & " (with spaces on both sides) which is the most common command chaining pattern
-        // We also check for "& " (ampersand followed by space) and " &" (space before ampersand)
-        // but exclude "2>&1" and "1>&2" patterns where & is part of output redirection
-        
-        // Check for " & " (space before and after) - this is definitely command chaining
-        if (input.Contains(" & ", StringComparison.Ordinal))
-            return true;
-        
-        // Check for "& " (ampersand followed by space) - but exclude "2>&1" and "1>&2"
-        var index = input.IndexOf("& ", StringComparison.Ordinal);
-        if (index >= 0)
+        // Check for single "&" command separator (but allow "2>&1" and "1>&2" for output redirection).
+        // We scan all ampersands to block command chaining patterns with or without spaces.
+        var index = input.IndexOf('&');
+        while (index >= 0)
         {
-            // If at start or if previous character is not '>' (not part of "2>&1" or "1>&2")
-            if (index == 0 || (index > 0 && input[index - 1] != '>'))
-                return true;
-        }
-
-        // Check for " &" (space before ampersand) - but exclude "2>&1" and "1>&2"
-        index = input.IndexOf(" &", StringComparison.Ordinal);
-        if (index >= 0)
-        {
-            // Check if this is part of a valid redirection pattern (2>&1 or 1>&2)
-            // index points to the space in " &", so:
-            // - input[index-2] and input[index-1] should be "2>" or "1>"
-            // - input[index+1] should be '&'
-            // - input[index+2] should be '1' or '2'
-            bool isRedirectionPattern = false;
-            if (index >= 2 && index + 2 < input.Length)
+            // Allow escaped ampersand (e.g. "^&") used to print literal '&' in cmd.exe.
+            if (index > 0 && input[index - 1] == '^')
             {
-                var charBeforeSpace = input[index - 1]; // Should be '>'
-                var charTwoBeforeSpace = input[index - 2]; // Should be '2' or '1'
-                var charAfterSpace = input[index + 1]; // Should be '&'
-                var charAfterAmpersand = input[index + 2]; // Should be '1' or '2'
-                
-                // Valid patterns: "2>&1" or "1>&2"
-                if (charBeforeSpace == '>' && charAfterSpace == '&' &&
-                    ((charTwoBeforeSpace == '2' && charAfterAmpersand == '1') ||
-                     (charTwoBeforeSpace == '1' && charAfterAmpersand == '2')))
+                index = input.IndexOf('&', index + 1);
+                continue;
+            }
+
+            var isRedirectionPattern = false;
+            if (index > 0 && index + 1 < input.Length && input[index - 1] == '>')
+            {
+                var targetDescriptor = input[index + 1];
+                if (targetDescriptor is '1' or '2')
                 {
-                    isRedirectionPattern = true;
+                    // Explicit descriptor redirect: 1>&2 / 2>&1
+                    if (index >= 2 && input[index - 2] is '1' or '2')
+                    {
+                        isRedirectionPattern = true;
+                    }
+                    // Implicit descriptor redirect commonly used as: >&2
+                    else if (index < 2 || char.IsWhiteSpace(input[index - 2]))
+                    {
+                        isRedirectionPattern = true;
+                    }
                 }
             }
-            
-            // If it's not a valid redirection pattern, it's potentially dangerous
+
             if (!isRedirectionPattern)
                 return true;
+
+            index = input.IndexOf('&', index + 1);
         }
 
         return false;

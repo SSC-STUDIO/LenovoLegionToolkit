@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -60,7 +61,7 @@ public class CMDTests
     {
         // Arrange
         var file = "cmd.exe";
-        var arguments = "/c timeout /t 5 /nobreak";
+        var arguments = "/c ping -n 20 127.0.0.1 >nul";
 
         // Act
         var startTime = DateTime.UtcNow;
@@ -71,6 +72,44 @@ public class CMDTests
         exitCode.Should().Be(-1);
         output.Should().BeEmpty();
         elapsed.TotalSeconds.Should().BeLessThan(1); // Should return immediately
+    }
+
+    [Fact]
+    public async Task RunAsync_WithWaitForExitFalse_AndLargeBackgroundOutput_ShouldStillFinish()
+    {
+        // Arrange
+        var tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDirectory);
+
+        var markerPath = Path.Combine(tempDirectory, "done.txt");
+        var scriptPath = Path.Combine(tempDirectory, "background-output.cmd");
+        await File.WriteAllTextAsync(
+            scriptPath,
+            $"@echo off{Environment.NewLine}for /L %%i in (1,1,20000) do @echo line%%i{Environment.NewLine}echo done>{markerPath}{Environment.NewLine}");
+
+        try
+        {
+            // Act
+            var (exitCode, output) = await CMD.RunAsync(scriptPath, null, waitForExit: false);
+
+            // Assert
+            exitCode.Should().Be(-1);
+            output.Should().BeEmpty();
+
+            var completed = await WaitForFileAsync(markerPath, TimeSpan.FromSeconds(10));
+            completed.Should().BeTrue("background processes should not block on unread redirected output");
+        }
+        finally
+        {
+            if (File.Exists(scriptPath))
+                File.Delete(scriptPath);
+
+            if (File.Exists(markerPath))
+                File.Delete(markerPath);
+
+            if (Directory.Exists(tempDirectory))
+                Directory.Delete(tempDirectory);
+        }
     }
 
     [Fact]
@@ -197,6 +236,8 @@ public class CMDTests
         var validInputs = new[]
         {
             ">nul 2>&1",
+            ">&1",
+            ">&2",
             "1>&2",
             "2>&1",
             ">output.txt",
@@ -237,6 +278,69 @@ public class CMDTests
     }
 
     [Fact]
+    public void ContainsDangerousInput_WithSafeRedirectionThenCommandChaining_ShouldReturnTrue()
+    {
+        // Arrange
+        var input = "echo test 2>&1 & whoami";
+
+        // Act
+        var result = CMD.ContainsDangerousInput(input);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void ContainsDangerousInput_WithSafeRedirectionThenNoSpaceCommandChaining_ShouldReturnTrue()
+    {
+        // Arrange
+        var input = "echo test 2>&1&whoami";
+
+        // Act
+        var result = CMD.ContainsDangerousInput(input);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void ContainsDangerousInput_WithNoSpaceCommandChaining_ShouldReturnTrue()
+    {
+        // Arrange
+        var input = "echo test&whoami";
+
+        // Act
+        var result = CMD.ContainsDangerousInput(input);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void ContainsDangerousInput_WithNullOrEmptyInput_ShouldReturnFalse()
+    {
+        // Arrange
+        string? nullInput = null;
+
+        // Act & Assert
+        CMD.ContainsDangerousInput(nullInput!).Should().BeFalse();
+        CMD.ContainsDangerousInput(string.Empty).Should().BeFalse();
+    }
+
+    [Fact]
+    public void ContainsDangerousInput_WithEscapedAmpersand_ShouldReturnFalse()
+    {
+        // Arrange
+        var input = "echo test^&done";
+
+        // Act
+        var result = CMD.ContainsDangerousInput(input);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
     public void IsValidEnvironmentVariable_WithInvalidKeys_ShouldReturnFalse()
     {
         // Arrange
@@ -261,7 +365,7 @@ public class CMDTests
     {
         // Arrange
         var file = "cmd.exe";
-        var arguments = "/c timeout /t 10 /nobreak";
+        var arguments = "/c ping -n 20 127.0.0.1 >nul";
         var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
 
         // Act
@@ -397,6 +501,20 @@ public class CMDTests
         output.Should().Contain("value1");
         output.Should().Contain("value2");
         output.Should().Contain("value3");
+    }
+
+    private static async Task<bool> WaitForFileAsync(string path, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            if (File.Exists(path))
+                return true;
+
+            await Task.Delay(100);
+        }
+
+        return File.Exists(path);
     }
 
 
