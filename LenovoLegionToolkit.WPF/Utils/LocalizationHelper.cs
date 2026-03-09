@@ -223,8 +223,9 @@ public static class LocalizationHelper
                             ? pluginSettings.GetPluginCulture(pluginId) ?? defaultCultureInfo
                             : defaultCultureInfo;
 
-                        // Try to find Resource class in the plugin namespace
-                        var resourceType = assembly.GetType($"{assemblyName}.Resource");
+                        // Try both default namespace placements used by plugin resource designers.
+                        var resourceType = assembly.GetType($"{assemblyName}.Resource")
+                                           ?? assembly.GetType($"{assemblyName}.Resources.Resource");
                         if (resourceType != null)
                         {
                             var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);

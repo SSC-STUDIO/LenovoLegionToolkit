@@ -76,9 +76,8 @@
                     Background="Transparent"
                     BorderThickness="0"
                     Visibility="Collapsed">
-                    <Frame
-                        x:Name="_pluginSettingsFrame"
-                        NavigationUIVisibility="Hidden"
+                    <ContentControl
+                        x:Name="_pluginSettingsHost"
                         BorderThickness="0" />
                 </Border>
             </StackPanel>
