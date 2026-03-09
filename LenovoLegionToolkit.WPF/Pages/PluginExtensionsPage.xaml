@@ -86,8 +86,24 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="MaxHeight" Value="36" />
+            <Setter Property="MaxHeight" Value="44" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style x:Key="SummaryCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+
+        <Style x:Key="CapabilityChipStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Margin" Value="0,8,8,0" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         </Style>
         
         <!-- Plugin Action Button Style -->
@@ -115,8 +131,9 @@
 
     </wpfui:UiPage.Resources>
 
-    <Grid Margin="0,0,16,12">
+        <Grid Margin="0,0,16,12">
 <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -141,8 +158,82 @@
 
 
 
-<!-- Search and Filter -->
         <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource SummaryCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Total Plugins"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_summaryTotalTextBlock"
+                               Margin="0,6,0,0"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               Text="0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource SummaryCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Installed"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_summaryInstalledTextBlock"
+                               Margin="0,6,0,0"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               Text="0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource SummaryCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Updates Ready"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_summaryUpdatesTextBlock"
+                               Margin="0,6,0,0"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               Text="0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="16,14">
+                <StackPanel>
+                    <TextBlock Text="Store Pulse"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource SystemAccentColorBrush}" />
+                    <TextBlock x:Name="_summaryHintTextBlock"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="Checking plugin availability..." />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+<!-- Search and Filter -->
+        <Border Grid.Row="2"
+                Margin="0,0,0,16"
+                Padding="14"
+                CornerRadius="16"
+                Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -219,11 +310,12 @@
                     Content="Install All" />
             </StackPanel>
         </Grid>
+        </Border>
 
 <!-- Deprecation Notice -->
         <wpfui:InfoBar
             x:Name="_deprecationNotice"
-            Grid.Row="2"
+            Grid.Row="3"
             Margin="0,0,0,12"
             Severity="Warning"
             IsOpen="False"
@@ -236,14 +328,14 @@
         <TextBlock
             x:Name="_resultsCountTextBlock"
             AutomationProperties.AutomationId="PluginResultsCountText"
-            Grid.Row="3"
+            Grid.Row="4"
             Margin="0,0,0,12"
             FontSize="12"
             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
             Visibility="Collapsed" />
 
         <!-- Plugins List -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <ListBox x:Name="_pluginsListBox"
                      AutomationProperties.AutomationId="PluginListBox"
                      Style="{StaticResource PluginListBoxStyle}"
@@ -254,7 +346,7 @@
                      ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid MinHeight="90"
+                        <Grid MinHeight="114"
                               Background="Transparent"
                               AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}">
                             <Grid.ContextMenu>
@@ -398,6 +490,33 @@
                                            Style="{StaticResource PluginDescriptionStyle}"
                                            Margin="0,4,0,0"
                                            Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+
+                                <WrapPanel Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                    <Border Style="{StaticResource CapabilityChipStyle}"
+                                            Visibility="{Binding SupportsConfiguration, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Settings"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    </Border>
+                                    <Border Style="{StaticResource CapabilityChipStyle}"
+                                            Visibility="{Binding SupportsOpenAction, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Quick Open"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    </Border>
+                                    <Border Style="{StaticResource CapabilityChipStyle}"
+                                            Visibility="{Binding SupportsOptimizationCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Optimize"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    </Border>
+                                    <Border Style="{StaticResource CapabilityChipStyle}"
+                                            Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Update"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource SystemAccentColorBrush}" />
+                                    </Border>
+                                </WrapPanel>
                                 
                                 <!-- Installation Progress -->
                                 <StackPanel Orientation="Vertical" 
@@ -416,26 +535,27 @@
                             
                             <!-- Action Buttons -->
                             <StackPanel Grid.Column="2" 
-                                        Orientation="Horizontal" 
+                                        Orientation="Vertical" 
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Right">
                                 <!-- Install/Update Button -->
                                 <Button Content="{Binding InstallButtonText}"
                                         AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="90"
-                                        Height="30"
+                                        Width="118"
+                                        Height="32"
                                         Click="PluginInstallButton_Click"
                                         Tag="{Binding PluginId}"
+                                        Margin="0,0,0,6"
                                         Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 
                                 <!-- Configuration Button -->
                                 <Button Content="{Binding ConfigureButtonText}"
                                         AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0">
+                                        Width="118"
+                                        Height="30"
+                                        Margin="0,0,0,6">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource BooleanAndConverter}">
                                             <Binding Path="IsInstalled" />
@@ -452,9 +572,9 @@
                                 <Button Content="{Binding OpenButtonText}"
                                         AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0"
+                                        Width="118"
+                                        Height="30"
+                                        Margin="0,0,0,6"
                                         Click="PluginOpenButton_Click"
                                         Tag="{Binding PluginId}">
                                     <Button.Visibility>
@@ -469,9 +589,8 @@
                                 <Button Content="{Binding UninstallButtonText}"
                                         AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
                                         Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="70"
-                                        Height="28"
-                                        Margin="8,0,0,0"
+                                        Width="118"
+                                        Height="30"
                                         Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         Click="PluginUninstallButton_Click"
                                         Tag="{Binding PluginId}" />
