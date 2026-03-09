@@ -7,13 +7,13 @@
     <Nullable>enable</Nullable>
     <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>ar;bg;cs;de;el;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;vi;zh-hans;zh-hant;uz-latn-uz</SatelliteResourceLanguages>
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.0.6</Version>
-    <FileVersion>1.0.6</FileVersion>
-    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <Version>1.0.7</Version>
+    <FileVersion>1.0.7</FileVersion>
+    <AssemblyVersion>1.0.7</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.CustomMouse</AssemblyName>
   </PropertyGroup>
 
@@ -39,9 +39,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\**\*">
+    <Content Include="Resources\**\*" Exclude="Resources\*.resx;Resources\*.Designer.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">

@@ -14,7 +14,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Custom Mouse",
-    version: "1.0.6",
+    version: "1.0.7",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "LenovoLegionToolkit Team",
     MinimumHostVersion = "3.6.1",

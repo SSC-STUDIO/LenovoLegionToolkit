@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [1.1.5] - 2026-03-10
+
+### Improved / 改进
+- Expanded plugin localization coverage to match the host application's supported language set by adding satellite resource files for the remaining host locales / 通过为主程序其余语言补齐卫星资源文件，将插件本地化覆盖范围扩展到与主程序一致
+
 ## [1.1.4] - 2026-02-28
 
 ### Added / 新增

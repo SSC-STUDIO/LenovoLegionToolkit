@@ -68,4 +68,30 @@ public class ShellIntegrationPluginTests
 
         plugin.OpenStyleSettingsWindow();
     }
+
+    [Fact]
+    public void ConfigService_RenderTheme_ContainsManagedAccentAndEffect()
+    {
+        var profile = ShellIntegrationProfile.CreateDefault();
+        profile.AccentColor = "#3366FF";
+        profile.BackgroundEffect = ShellVisualEffect.Acrylic;
+
+        var rendered = ShellIntegrationConfigService.RenderTheme(profile);
+
+        Assert.Contains("color = #3366FF", rendered);
+        Assert.Contains("effect = [3, #DCE6FF, 92]", rendered);
+        Assert.Contains("name = \"modern\"", rendered);
+    }
+
+    [Fact]
+    public void ConfigService_UpsertManagedImportBlock_IsIdempotent()
+    {
+        var content = "theme { }";
+        var once = ShellIntegrationConfigService.UpsertManagedImportBlock(content);
+        var twice = ShellIntegrationConfigService.UpsertManagedImportBlock(once);
+
+        Assert.Equal(once, twice);
+        Assert.Contains("imports/lenovo-legion-toolkit/settings.nss", twice);
+        Assert.Contains("imports/lenovo-legion-toolkit/theme.nss", twice);
+    }
 }

@@ -9,7 +9,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
 [Plugin(
     id: "vive-tool",
     name: "ViVeTool",
-    version: "1.1.4",
+    version: "1.1.5",
     description: "Manage Windows feature flags using ViVeTool",
     author: "LenovoLegionToolkit Team",
     MinimumHostVersion = "3.6.1",

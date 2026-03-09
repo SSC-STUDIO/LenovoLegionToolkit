@@ -35,7 +35,7 @@ on:
         default: ''
 
 env:
-  PLUGIN_REPO: Crs10259/LenovoLegionToolkit-Plugins
+  PLUGIN_REPO: ${{ github.repository }}
 
 permissions:
   contents: read
@@ -148,29 +148,27 @@ jobs:
             if (-not $plugin) { continue }
             
             $pluginDir = "Plugins/$plugin"
-            $buildDir = "$pluginDir/build"
-            
-            # Ensure build directory exists
-            if (-not (Test-Path $buildDir)) {
-              New-Item -ItemType Directory -Path $buildDir -Force | Out-Null
+            $pluginJson = Join-Path $pluginDir "plugin.json"
+            $pluginId = if (Test-Path $pluginJson) {
+              (Get-Content $pluginJson -Raw | ConvertFrom-Json).id
+            } else {
+              throw "Missing plugin.json for $plugin"
             }
-            
-            # Copy plugin.json to build directory if it exists
-            $pluginJson = "$pluginDir/plugin.json"
-            if (Test-Path $pluginJson) {
-              Copy-Item $pluginJson "$buildDir/" -Force
-              Write-Host "Copied plugin.json to build directory"
+
+            $buildDir = "Build/plugins/LenovoLegionToolkit.Plugins.$plugin"
+            if (-not (Test-Path $buildDir)) {
+              throw "Expected build output not found for $plugin at $buildDir"
             }
             
             # Create ZIP with pluginname-v{version}.zip naming convention
             $version = "${{ github.event.inputs.version }}"
             if ($version) {
-              $zipName = "$plugin-v$version.zip"
+              $zipName = "$pluginId-v$version.zip"
             } else {
-              $zipName = "$plugin.zip"
+              $zipName = "$pluginId.zip"
             }
             
-            # Create ZIP from build directory
+            # Package the actual compiled plugin output so DLLs/resources stay in sync.
             Compress-Archive -Path "$buildDir/*" -DestinationPath $zipName -Force
             Write-Host "Created $zipName"
           }

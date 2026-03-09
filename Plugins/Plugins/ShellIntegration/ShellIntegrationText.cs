@@ -1,61 +1,75 @@
-﻿using System;
-using System.Globalization;
+using LenovoLegionToolkit.Plugins.ShellIntegration.Resources;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
 public static class ShellIntegrationText
 {
-    public static string PluginName => T("Shell Integration", "Shell 集成", "Shell 整合");
-    public static string PluginDescription => T(
-        "Integrate Lenovo Legion Toolkit with Windows shell context menu.",
-        "将 Lenovo Legion Toolkit 集成到 Windows 右键菜单。",
-        "將 Lenovo Legion Toolkit 整合到 Windows 右鍵選單。");
-
-    public static string SettingsPageTitle => T("Shell Integration", "Shell 集成", "Shell 整合");
-
-    public static string Subtitle => T(
-        "Manage Nilesoft Shell registration and open style editor.",
-        "管理 Nilesoft Shell 注册状态并打开样式编辑器。",
-        "管理 Nilesoft Shell 註冊狀態並開啟樣式編輯器。");
-
-    public static string EnableButton => T("Enable", "启用", "啟用");
-    public static string DisableButton => T("Disable", "禁用", "停用");
-    public static string OpenStyleSettingsButton => T("Open Style Settings", "打开样式设置", "開啟樣式設定");
-    public static string OpenStyleShortButton => T("Open Style", "打开样式", "開啟樣式");
-    public static string OptimizationHint => T(
-        "You can also access shell actions from Windows Optimization.",
-        "你也可以在系统优化页面中使用 Shell 动作。",
-        "你也可以在系統最佳化頁面使用 Shell 動作。");
-
-    public static string StatusDetected => T("Nilesoft Shell detected.", "已检测到 Nilesoft Shell。", "已偵測到 Nilesoft Shell。");
-    public static string StatusNotDetected => T("Nilesoft Shell was not detected.", "未检测到 Nilesoft Shell。", "未偵測到 Nilesoft Shell。");
-    public static string PathLabel => T("Path", "路径", "路徑");
-    public static string NotFound => T("Not found", "未找到", "未找到");
-
-    public static string StatusEnableCompleted => T("Enable command completed.", "启用命令已完成。", "啟用命令已完成。");
-    public static string StatusEnableFailed => T("Enable command failed.", "启用命令失败。", "啟用命令失敗。");
-    public static string StatusDisableCompleted => T("Disable command completed.", "禁用命令已完成。", "停用命令已完成。");
-    public static string StatusDisableFailed => T("Disable command failed.", "禁用命令失败。", "停用命令失敗。");
-    public static string StatusOpenedStyleSettings => T("Opened style settings.", "已打开样式设置。", "已開啟樣式設定。");
-
-    private static string T(string en, string zhHans, string zhHant)
-    {
-        var culture = CultureInfo.CurrentUICulture.Name;
-        if (culture.StartsWith("zh-hans", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-cn", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-sg", StringComparison.OrdinalIgnoreCase))
-        {
-            return zhHans;
-        }
-
-        if (culture.StartsWith("zh-hant", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-tw", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-hk", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-mo", StringComparison.OrdinalIgnoreCase))
-        {
-            return zhHant;
-        }
-
-        return en;
-    }
+    public static string PluginName => Resource.PluginName;
+    public static string PluginDescription => Resource.PluginDescription;
+    public static string SettingsPageTitle => Resource.SettingsPageTitle;
+    public static string Subtitle => Resource.Subtitle;
+    public static string EnableButton => Resource.EnableButton;
+    public static string DisableButton => Resource.DisableButton;
+    public static string OpenStyleSettingsButton => Resource.OpenStyleSettingsButton;
+    public static string OpenStyleShortButton => Resource.OpenStyleShortButton;
+    public static string RefreshButton => Resource.RefreshButton;
+    public static string ResetButton => Resource.ResetButton;
+    public static string ApplyButton => Resource.ApplyButton;
+    public static string OptimizationHint => Resource.OptimizationHint;
+    public static string StatusDetected => Resource.StatusDetected;
+    public static string StatusNotDetected => Resource.StatusNotDetected;
+    public static string StatusRegistered => Resource.StatusRegistered;
+    public static string StatusUnregistered => Resource.StatusUnregistered;
+    public static string StatusDetailDefault => Resource.StatusDetailDefault;
+    public static string StatusEnabledBadge => Resource.StatusEnabledBadge;
+    public static string StatusDisabledBadge => Resource.StatusDisabledBadge;
+    public static string StatusMissingBadge => Resource.StatusMissingBadge;
+    public static string StatusUnknownBadge => Resource.StatusUnknownBadge;
+    public static string PathLabel => Resource.PathLabel;
+    public static string NotFound => Resource.NotFound;
+    public static string ManagedConfigLabel => Resource.ManagedConfigLabel;
+    public static string ManagedConfigNotReady => Resource.ManagedConfigNotReady;
+    public static string StatusEnableCompleted => Resource.StatusEnableCompleted;
+    public static string StatusEnableFailed => Resource.StatusEnableFailed;
+    public static string StatusDisableCompleted => Resource.StatusDisableCompleted;
+    public static string StatusDisableFailed => Resource.StatusDisableFailed;
+    public static string StatusOpenedStyleSettings => Resource.StatusOpenedStyleSettings;
+    public static string ProfileSavedShellMissing => Resource.ProfileSavedShellMissing;
+    public static string ApplyCompletedEnabled => Resource.ApplyCompletedEnabled;
+    public static string ApplyCompletedDisabled => Resource.ApplyCompletedDisabled;
+    public static string FallbackLoadError => Resource.FallbackLoadError;
+    public static string AppearanceSection => Resource.AppearanceSection;
+    public static string AppearanceSectionHint => Resource.AppearanceSectionHint;
+    public static string PaletteSection => Resource.PaletteSection;
+    public static string PaletteSectionHint => Resource.PaletteSectionHint;
+    public static string PreviewSection => Resource.PreviewSection;
+    public static string PreviewHint => Resource.PreviewHint;
+    public static string PathsSection => Resource.PathsSection;
+    public static string MotionToggleLabel => Resource.MotionToggleLabel;
+    public static string ShadowToggleLabel => Resource.ShadowToggleLabel;
+    public static string ColorSchemeLabel => Resource.ColorSchemeLabel;
+    public static string ColorSchemeAuto => Resource.ColorSchemeAuto;
+    public static string ColorSchemeLight => Resource.ColorSchemeLight;
+    public static string ColorSchemeDark => Resource.ColorSchemeDark;
+    public static string VisualEffectLabel => Resource.VisualEffectLabel;
+    public static string EffectNone => Resource.EffectNone;
+    public static string EffectTransparent => Resource.EffectTransparent;
+    public static string EffectBlur => Resource.EffectBlur;
+    public static string EffectAcrylic => Resource.EffectAcrylic;
+    public static string ShowDelayLabel => Resource.ShowDelayLabel;
+    public static string ShowDelayValueFormat => Resource.ShowDelayValueFormat;
+    public static string ShadowStrengthLabel => Resource.ShadowStrengthLabel;
+    public static string ShadowStrengthValueFormat => Resource.ShadowStrengthValueFormat;
+    public static string AccentColorLabel => Resource.AccentColorLabel;
+    public static string BackgroundColorLabel => Resource.BackgroundColorLabel;
+    public static string HoverColorLabel => Resource.HoverColorLabel;
+    public static string TextColorLabel => Resource.TextColorLabel;
+    public static string MutedColorLabel => Resource.MutedColorLabel;
+    public static string TintColorLabel => Resource.TintColorLabel;
+    public static string PreviewPrimary => Resource.PreviewPrimary;
+    public static string PreviewPrimaryHint => Resource.PreviewPrimaryHint;
+    public static string PreviewSecondary => Resource.PreviewSecondary;
+    public static string PreviewSecondaryHint => Resource.PreviewSecondaryHint;
+    public static string PreviewTertiary => Resource.PreviewTertiary;
+    public static string PreviewTertiaryHint => Resource.PreviewTertiaryHint;
 }

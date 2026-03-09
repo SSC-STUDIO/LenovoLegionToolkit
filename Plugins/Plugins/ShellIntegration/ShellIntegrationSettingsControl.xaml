@@ -5,46 +5,373 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="420"
-             d:DesignWidth="760">
+             d:DesignHeight="860"
+             d:DesignWidth="980">
 
-    <Grid Margin="16">
+    <UserControl.Resources>
+        <Style x:Key="SectionCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="BorderBrush" Value="#1F8FA2BF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#F7F9FC" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#101828" />
+        </Style>
+
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#344054" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+
+        <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="{x:Static text:ShellIntegrationText.Subtitle}"
-                   TextWrapping="Wrap"
-                   Margin="0,0,0,16" />
+        <Border Grid.Row="0"
+                CornerRadius="22"
+                Padding="22"
+                Margin="0,0,0,16"
+                Background="#10253F6A">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="1"
-                   x:Name="_statusTextBlock"
-                   TextWrapping="Wrap"
-                   Foreground="#FF2E7D32" />
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.Subtitle}"
+                               Foreground="White"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap" />
+                    <TextBlock x:Name="_statusTextBlock"
+                               Margin="0,10,0,0"
+                               Foreground="#D0E7FF"
+                               FontSize="13"
+                               TextWrapping="Wrap" />
+                    <TextBlock x:Name="_statusDetailTextBlock"
+                               Margin="0,6,0,0"
+                               Foreground="#A8C0DD"
+                               FontSize="12"
+                               TextWrapping="Wrap" />
+                </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,16,0,0">
-            <Button Content="{x:Static text:ShellIntegrationText.EnableButton}"
-                    Width="90"
-                    Click="EnableButton_Click" />
-            <Button Content="{x:Static text:ShellIntegrationText.DisableButton}"
-                    Width="90"
-                    Margin="8,0,0,0"
-                    Click="DisableButton_Click" />
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Border x:Name="_statusBadgeBorder"
+                            Background="#1F43C66A"
+                            CornerRadius="999"
+                            Padding="12,6"
+                            HorizontalAlignment="Right">
+                        <TextBlock x:Name="_statusBadgeTextBlock"
+                                   Text="{x:Static text:ShellIntegrationText.StatusUnknownBadge}"
+                                   Foreground="#E4FFF0"
+                                   FontWeight="SemiBold" />
+                    </Border>
+                    <Button x:Name="_toggleShellButton"
+                            Width="152"
+                            Height="40"
+                            Margin="0,14,0,0"
+                            Click="ToggleShellButton_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Style="{StaticResource SectionCardStyle}"
+                    Margin="0,0,8,0">
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.AppearanceSection}"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.AppearanceSectionHint}"
+                               Margin="0,6,0,14"
+                               Foreground="#667085"
+                               TextWrapping="Wrap" />
+
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.ColorSchemeLabel}"
+                               Style="{StaticResource LabelStyle}" />
+                    <ComboBox x:Name="_colorSchemeComboBox"
+                              Height="34"
+                              Margin="0,0,0,12"
+                              SelectionChanged="PreviewInputsChanged">
+                        <ComboBoxItem Tag="Auto" Content="{x:Static text:ShellIntegrationText.ColorSchemeAuto}" />
+                        <ComboBoxItem Tag="Light" Content="{x:Static text:ShellIntegrationText.ColorSchemeLight}" />
+                        <ComboBoxItem Tag="Dark" Content="{x:Static text:ShellIntegrationText.ColorSchemeDark}" />
+                    </ComboBox>
+
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.VisualEffectLabel}"
+                               Style="{StaticResource LabelStyle}" />
+                    <ComboBox x:Name="_effectComboBox"
+                              Height="34"
+                              Margin="0,0,0,12"
+                              SelectionChanged="PreviewInputsChanged">
+                        <ComboBoxItem Tag="None" Content="{x:Static text:ShellIntegrationText.EffectNone}" />
+                        <ComboBoxItem Tag="Transparent" Content="{x:Static text:ShellIntegrationText.EffectTransparent}" />
+                        <ComboBoxItem Tag="Blur" Content="{x:Static text:ShellIntegrationText.EffectBlur}" />
+                        <ComboBoxItem Tag="Acrylic" Content="{x:Static text:ShellIntegrationText.EffectAcrylic}" />
+                    </ComboBox>
+
+                    <CheckBox x:Name="_motionEffectsCheckBox"
+                              Margin="0,0,0,10"
+                              Content="{x:Static text:ShellIntegrationText.MotionToggleLabel}"
+                              Checked="PreviewInputsChanged"
+                              Unchecked="PreviewInputsChanged" />
+                    <CheckBox x:Name="_shadowCheckBox"
+                              Margin="0,0,0,16"
+                              Content="{x:Static text:ShellIntegrationText.ShadowToggleLabel}"
+                              Checked="PreviewInputsChanged"
+                              Unchecked="PreviewInputsChanged" />
+
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.ShowDelayLabel}"
+                               Style="{StaticResource LabelStyle}" />
+                    <Slider x:Name="_showDelaySlider"
+                            Minimum="0"
+                            Maximum="400"
+                            TickFrequency="20"
+                            IsSnapToTickEnabled="True"
+                            ValueChanged="PreviewInputsChanged" />
+                    <TextBlock x:Name="_showDelayValueTextBlock"
+                               Margin="0,6,0,12"
+                               Foreground="#667085" />
+
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.ShadowStrengthLabel}"
+                               Style="{StaticResource LabelStyle}" />
+                    <Slider x:Name="_shadowOpacitySlider"
+                            Minimum="0"
+                            Maximum="60"
+                            TickFrequency="5"
+                            IsSnapToTickEnabled="True"
+                            ValueChanged="PreviewInputsChanged" />
+                    <TextBlock x:Name="_shadowValueTextBlock"
+                               Margin="0,6,0,0"
+                               Foreground="#667085" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Style="{StaticResource SectionCardStyle}"
+                    Margin="8,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.PaletteSection}"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.PaletteSectionHint}"
+                               Margin="0,6,0,14"
+                               Foreground="#667085"
+                               TextWrapping="Wrap" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.AccentColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_accentColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.BackgroundColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_backgroundColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.HoverColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_hoverColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.TextColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_textColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.MutedColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_mutedColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+
+                            <TextBlock Text="{x:Static text:ShellIntegrationText.TintColorLabel}"
+                                       Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="_tintColorTextBox"
+                                     Style="{StaticResource InputTextBoxStyle}"
+                                     TextChanged="PreviewInputsChanged" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Style="{StaticResource SectionCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.PreviewSection}"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.PreviewHint}"
+                               Margin="0,6,0,16"
+                               Foreground="#667085"
+                               TextWrapping="Wrap" />
+
+                    <Border x:Name="_previewHostBorder"
+                            CornerRadius="20"
+                            Padding="0"
+                            Background="#F7F8FC"
+                            BorderBrush="#CCD6E5"
+                            BorderThickness="1">
+                        <Border.RenderTransform>
+                            <TranslateTransform x:Name="_previewTranslateTransform" />
+                        </Border.RenderTransform>
+                        <Grid>
+                            <Border x:Name="_previewAccentBar"
+                                    Height="6"
+                                    VerticalAlignment="Top"
+                                    Background="#4F7CFF"
+                                    CornerRadius="20,20,0,0" />
+                            <StackPanel Margin="16,22,16,16">
+                                <Border x:Name="_previewItemPrimary"
+                                        CornerRadius="12"
+                                        Padding="12,10"
+                                        Margin="0,0,0,8"
+                                        Background="#4F7CFF">
+                                    <Grid>
+                                        <TextBlock x:Name="_previewPrimaryText"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewPrimary}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="White" />
+                                        <TextBlock x:Name="_previewPrimaryHint"
+                                                   Margin="0,22,0,0"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewPrimaryHint}"
+                                                   Foreground="#EAF1FF"
+                                                   FontSize="12" />
+                                    </Grid>
+                                </Border>
+
+                                <Border x:Name="_previewItemSecondary"
+                                        CornerRadius="12"
+                                        Padding="12,10"
+                                        Margin="0,0,0,8"
+                                        Background="#E8EEFF">
+                                    <StackPanel>
+                                        <TextBlock x:Name="_previewSecondaryText"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewSecondary}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#111827" />
+                                        <TextBlock x:Name="_previewSecondaryHint"
+                                                   Margin="0,4,0,0"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewSecondaryHint}"
+                                                   Foreground="#667085"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border x:Name="_previewItemTertiary"
+                                        CornerRadius="12"
+                                        Padding="12,10"
+                                        Background="#F7F8FC">
+                                    <StackPanel>
+                                        <TextBlock x:Name="_previewTertiaryText"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewTertiary}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#111827" />
+                                        <TextBlock x:Name="_previewTertiaryHint"
+                                                   Margin="0,4,0,0"
+                                                   Text="{x:Static text:ShellIntegrationText.PreviewTertiaryHint}"
+                                                   Foreground="#667085"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Grid.Column="1"
+                        Margin="14,0,0,0"
+                        Width="188">
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static text:ShellIntegrationText.PathsSection}"
+                                   Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock x:Name="_pathTextBlock"
+                                   Margin="0,12,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="#344054" />
+                        <TextBlock x:Name="_managedPathTextBlock"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="#667085"
+                                   FontSize="12" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,16,0,0">
+            <Button Content="{x:Static text:ShellIntegrationText.RefreshButton}"
+                    Width="94"
+                    Height="36"
+                    Margin="0,0,8,0"
+                    Click="RefreshButton_Click" />
             <Button Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
-                    Width="160"
-                    Margin="8,0,0,0"
+                    Width="132"
+                    Height="36"
+                    Margin="0,0,8,0"
                     Click="OpenStyleButton_Click" />
+            <Button Content="{x:Static text:ShellIntegrationText.ResetButton}"
+                    Width="118"
+                    Height="36"
+                    Margin="0,0,8,0"
+                    Click="ResetButton_Click" />
+            <Button x:Name="_applyButton"
+                    Content="{x:Static text:ShellIntegrationText.ApplyButton}"
+                    Width="132"
+                    Height="36"
+                    Background="#1D4ED8"
+                    Foreground="White"
+                    BorderBrush="#1D4ED8"
+                    Click="ApplyButton_Click" />
         </StackPanel>
-
-        <TextBlock Grid.Row="3"
-                   Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
-                   Margin="0,12,0,0"
-                   Foreground="#FF6A6A6A" />
     </Grid>
 
 </UserControl>
