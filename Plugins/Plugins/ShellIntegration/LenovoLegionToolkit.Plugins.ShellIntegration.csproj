@@ -7,13 +7,13 @@
     <Nullable>enable</Nullable>
     <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    <SatelliteResourceLanguages>ar;bg;cs;de;el;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;vi;zh-hans;zh-hant;uz-latn-uz</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.1.1</Version>
-    <FileVersion>1.1.1</FileVersion>
-    <AssemblyVersion>1.1.1</AssemblyVersion>
+    <Version>1.0.3</Version>
+    <FileVersion>1.0.3</FileVersion>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
@@ -43,18 +43,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Resource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Resource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Include="..\..\..\Shell\src\bin\shell.exe" Condition="Exists('..\..\..\Shell\src\bin\shell.exe')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\Shell\src\bin\shell.dll" Condition="Exists('..\..\..\Shell\src\bin\shell.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\Shell\src\bin\shell.nss" Condition="Exists('..\..\..\Shell\src\bin\shell.nss')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\Shell\src\bin\imports\**\*.*" Condition="Exists('..\..\..\Shell\src\bin\imports')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>imports\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
   </ItemGroup>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">

@@ -5,10 +5,14 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2026-03-10
+## [Unreleased]
+
+### Added / 新增
+- Added quick actions to open the Shell folder and config file from the settings page / 新增设置页快捷入口，可打开 Shell 文件夹与配置文件
+- Documented Shell binary source links in plugin metadata/readme / 在插件元数据与说明中补充 Shell 二进制来源链接
 
 ### Improved / 改进
-- Expanded plugin localization coverage to match the host application's supported language set via resource-based translations / 通过资源化翻译将插件本地化覆盖范围扩展到与主程序一致的语言集合
+- Show detected Shell version in the settings status panel / 在状态区域显示检测到的 Shell 版本
 
 ## [1.0.3] - 2026-02-26
 

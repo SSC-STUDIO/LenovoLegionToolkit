@@ -1,9 +1,11 @@
 ﻿{
   "id": "shell-integration",
   "name": "Shell Integration",
-  "version": "1.1.1",
+  "version": "1.0.3",
   "minLLTVersion": "3.6.1",
   "author": "LenovoLegionToolkit Team",
   "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "shellRepository": "https://github.com/Crs10259/Nilesoft-Shell",
+  "shellBinaryPath": "src/bin/shell.dll"
 }

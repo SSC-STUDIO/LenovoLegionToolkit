@@ -14,7 +14,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
     MinimumHostVersion = "3.6.1",
     Icon = "Rocket24"
 )]
-public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
+public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
     public override string Id => "network-acceleration";
     public override string Name => NetworkAccelerationText.PluginName;
@@ -23,8 +23,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     public override bool IsSystemPlugin => false;
 
     private NetworkAccelerationSettings _settings;
+    private readonly NetworkAccelerationRuntime _runtime = new();
 
     public NetworkAccelerationSettings Settings => _settings;
+    public NetworkAccelerationRuntime Runtime => _runtime;
 
     public NetworkAccelerationPlugin()
     {
@@ -45,6 +47,24 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     {
         _settings = NetworkAccelerationSettings.CreateDefault();
         _ = SaveSettingsAsync();
+    }
+
+    public void OnAppStarted()
+    {
+        _runtime.Start();
+
+        if (_settings.AutoOptimizeOnStartup)
+            _ = Task.Run(() => RunQuickOptimizationAsync());
+    }
+
+    public override void OnShutdown()
+    {
+        _runtime.Stop();
+    }
+
+    public override void Stop()
+    {
+        _runtime.Stop();
     }
 
     public bool SetPreferredMode(NetworkAccelerationMode mode)

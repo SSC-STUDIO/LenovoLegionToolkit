@@ -1,11 +1,14 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Windows;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
@@ -13,7 +16,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Shell Integration",
-    version: "1.1.1",
+    version: "1.0.3",
     description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
     author: "LenovoLegionToolkit Team",
     MinimumHostVersion = "3.6.1",
@@ -47,8 +50,6 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         @"LibraryFolder\background\shellex\ContextMenuHandlers",
         @"LibraryFolder\ShellEx\ContextMenuHandlers"
     ];
-
-    private readonly ShellIntegrationConfigService _configService = new();
 
     public override string Id => "shell-integration";
     public override string Name => ShellIntegrationText.PluginName;
@@ -87,63 +88,6 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             Id);
     }
 
-    public ShellIntegrationProfile LoadProfile() => _configService.LoadProfile();
-
-    public async Task<ShellIntegrationStatus> GetStatusAsync(CancellationToken cancellationToken = default)
-    {
-        var installPath = GetShellInstallPath();
-        var managedPaths = _configService.ResolveManagedPaths(installPath);
-        var isRegistered = installPath is not null && await IsShellRegisteredAsync(cancellationToken).ConfigureAwait(false);
-
-        return new ShellIntegrationStatus(
-            IsInstalled: installPath is not null,
-            IsRegistered: isRegistered,
-            InstallPath: installPath,
-            ShellConfigPath: managedPaths?.ShellConfigPath,
-            ManagedConfigDirectory: managedPaths?.ManagedDirectory,
-            ThemeConfigPath: managedPaths?.ThemePath,
-            SettingsConfigPath: managedPaths?.SettingsPath);
-    }
-
-    public async Task<ShellIntegrationApplyResult> SaveProfileAndApplyAsync(ShellIntegrationProfile profile, CancellationToken cancellationToken = default)
-    {
-        var normalized = profile.Normalize();
-        _configService.SaveProfile(normalized);
-
-        var installPath = GetShellInstallPath();
-        if (installPath is null)
-        {
-            return new ShellIntegrationApplyResult(
-                false,
-                ShellIntegrationText.ProfileSavedShellMissing,
-                await GetStatusAsync(cancellationToken).ConfigureAwait(false));
-        }
-
-        try
-        {
-            _configService.ApplyProfile(installPath, normalized);
-
-            if (normalized.EnableShellIntegration)
-                await EnableShellAsync(cancellationToken).ConfigureAwait(false);
-            else
-                await DisableShellAsync(cancellationToken).ConfigureAwait(false);
-
-            return new ShellIntegrationApplyResult(
-                true,
-                normalized.EnableShellIntegration
-                    ? ShellIntegrationText.ApplyCompletedEnabled
-                    : ShellIntegrationText.ApplyCompletedDisabled,
-                await GetStatusAsync(cancellationToken).ConfigureAwait(false));
-        }
-        catch (Exception ex)
-        {
-            return new ShellIntegrationApplyResult(
-                false,
-                ex.Message,
-                await GetStatusAsync(cancellationToken).ConfigureAwait(false));
-        }
-    }
-
     public bool IsShellInstalled()
     {
         return GetShellInstallPath() is not null;
@@ -151,6 +95,10 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public string? GetShellExePath()
     {
+        var bundled = GetBundledShellExePath();
+        if (!string.IsNullOrWhiteSpace(bundled))
+            return bundled;
+
         foreach (var candidate in ShellExeCandidates)
         {
             if (File.Exists(candidate))
@@ -162,6 +110,10 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public string? GetShellDllPath()
     {
+        var bundled = GetBundledShellDllPath();
+        if (!string.IsNullOrWhiteSpace(bundled))
+            return bundled;
+
         foreach (var candidate in ShellDllCandidates)
         {
             if (File.Exists(candidate))
@@ -174,6 +126,78 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public string? GetShellInstallPath()
     {
         return GetShellExePath() ?? GetShellDllPath();
+    }
+
+    public string? GetShellFolderPath()
+    {
+        var path = GetShellExePath() ?? GetShellDllPath();
+        if (string.IsNullOrWhiteSpace(path))
+            return null;
+
+        return Path.GetDirectoryName(path);
+    }
+
+    public string? GetShellConfigPath()
+    {
+        var folder = GetShellFolderPath();
+        if (string.IsNullOrWhiteSpace(folder))
+            return null;
+
+        var candidate = Path.Combine(folder, "shell.nss");
+        return File.Exists(candidate) ? candidate : null;
+    }
+
+    public string? GetShellVersion()
+    {
+        var path = GetShellExePath() ?? GetShellDllPath();
+        if (string.IsNullOrWhiteSpace(path))
+            return null;
+
+        try
+        {
+            var info = FileVersionInfo.GetVersionInfo(path);
+            return info.FileVersion ?? info.ProductVersion;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string? GetBundledShellExePath()
+    {
+        var baseDir = GetPluginBaseDirectory();
+        if (string.IsNullOrWhiteSpace(baseDir))
+            return null;
+
+        var candidate = Path.Combine(baseDir, "shell.exe");
+        return File.Exists(candidate) ? candidate : null;
+    }
+
+    private static string? GetBundledShellDllPath()
+    {
+        var baseDir = GetPluginBaseDirectory();
+        if (string.IsNullOrWhiteSpace(baseDir))
+            return null;
+
+        var candidate = Path.Combine(baseDir, "shell.dll");
+        return File.Exists(candidate) ? candidate : null;
+    }
+
+    private static string? GetPluginBaseDirectory()
+    {
+        try
+        {
+            var location = typeof(ShellIntegrationPlugin).Assembly.Location;
+            if (string.IsNullOrWhiteSpace(location))
+                return null;
+
+            return Path.GetDirectoryName(location);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<bool> EnableShellAsync()
@@ -204,12 +228,47 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public void OpenStyleSettingsWindow()
     {
-        OpenManagedConfigFolder();
+        if (Application.Current?.Dispatcher == null)
+            return;
+
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            var window = new MenuStyleSettingsWindow();
+            var mainWindow = Application.Current.MainWindow;
+            if (mainWindow != null)
+                window.Owner = mainWindow;
+            window.ShowDialog();
+        });
     }
 
-    public void OpenManagedConfigFolder()
+    public bool OpenShellFolder()
     {
-        _configService.OpenManagedConfigFolder(GetShellInstallPath());
+        return TryOpenShellPath(GetShellFolderPath());
+    }
+
+    public bool OpenShellConfigFile()
+    {
+        return TryOpenShellPath(GetShellConfigPath());
+    }
+
+    private static bool TryOpenShellPath(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = path,
+                UseShellExecute = true
+            });
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private async Task EnableShellAsync(CancellationToken cancellationToken)
@@ -291,7 +350,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             var error = await errorTask.ConfigureAwait(false);
 
             if (process.ExitCode != 0 && !swallowErrors)
+            {
                 throw new InvalidOperationException(string.IsNullOrWhiteSpace(error) ? "shell.exe command failed." : error);
+            }
 
             return string.IsNullOrWhiteSpace(output) ? error : output;
         }
@@ -361,20 +422,6 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
     }
 }
-
-public sealed record ShellIntegrationStatus(
-    bool IsInstalled,
-    bool IsRegistered,
-    string? InstallPath,
-    string? ShellConfigPath,
-    string? ManagedConfigDirectory,
-    string? ThemeConfigPath,
-    string? SettingsConfigPath);
-
-public sealed record ShellIntegrationApplyResult(
-    bool Success,
-    string Message,
-    ShellIntegrationStatus Status);
 
 public class ShellIntegrationSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
 {

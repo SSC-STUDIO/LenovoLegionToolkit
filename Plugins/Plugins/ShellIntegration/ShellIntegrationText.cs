@@ -1,75 +1,42 @@
-using LenovoLegionToolkit.Plugins.ShellIntegration.Resources;
+﻿using System;
+using System.Globalization;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
 public static class ShellIntegrationText
 {
-    public static string PluginName => Resource.PluginName;
-    public static string PluginDescription => Resource.PluginDescription;
-    public static string SettingsPageTitle => Resource.SettingsPageTitle;
-    public static string Subtitle => Resource.Subtitle;
-    public static string EnableButton => Resource.EnableButton;
-    public static string DisableButton => Resource.DisableButton;
-    public static string OpenStyleSettingsButton => Resource.OpenStyleSettingsButton;
-    public static string OpenStyleShortButton => Resource.OpenStyleShortButton;
-    public static string RefreshButton => Resource.RefreshButton;
-    public static string ResetButton => Resource.ResetButton;
-    public static string ApplyButton => Resource.ApplyButton;
-    public static string OptimizationHint => Resource.OptimizationHint;
-    public static string StatusDetected => Resource.StatusDetected;
-    public static string StatusNotDetected => Resource.StatusNotDetected;
-    public static string StatusRegistered => Resource.StatusRegistered;
-    public static string StatusUnregistered => Resource.StatusUnregistered;
-    public static string StatusDetailDefault => Resource.StatusDetailDefault;
-    public static string StatusEnabledBadge => Resource.StatusEnabledBadge;
-    public static string StatusDisabledBadge => Resource.StatusDisabledBadge;
-    public static string StatusMissingBadge => Resource.StatusMissingBadge;
-    public static string StatusUnknownBadge => Resource.StatusUnknownBadge;
-    public static string PathLabel => Resource.PathLabel;
-    public static string NotFound => Resource.NotFound;
-    public static string ManagedConfigLabel => Resource.ManagedConfigLabel;
-    public static string ManagedConfigNotReady => Resource.ManagedConfigNotReady;
-    public static string StatusEnableCompleted => Resource.StatusEnableCompleted;
-    public static string StatusEnableFailed => Resource.StatusEnableFailed;
-    public static string StatusDisableCompleted => Resource.StatusDisableCompleted;
-    public static string StatusDisableFailed => Resource.StatusDisableFailed;
-    public static string StatusOpenedStyleSettings => Resource.StatusOpenedStyleSettings;
-    public static string ProfileSavedShellMissing => Resource.ProfileSavedShellMissing;
-    public static string ApplyCompletedEnabled => Resource.ApplyCompletedEnabled;
-    public static string ApplyCompletedDisabled => Resource.ApplyCompletedDisabled;
-    public static string FallbackLoadError => Resource.FallbackLoadError;
-    public static string AppearanceSection => Resource.AppearanceSection;
-    public static string AppearanceSectionHint => Resource.AppearanceSectionHint;
-    public static string PaletteSection => Resource.PaletteSection;
-    public static string PaletteSectionHint => Resource.PaletteSectionHint;
-    public static string PreviewSection => Resource.PreviewSection;
-    public static string PreviewHint => Resource.PreviewHint;
-    public static string PathsSection => Resource.PathsSection;
-    public static string MotionToggleLabel => Resource.MotionToggleLabel;
-    public static string ShadowToggleLabel => Resource.ShadowToggleLabel;
-    public static string ColorSchemeLabel => Resource.ColorSchemeLabel;
-    public static string ColorSchemeAuto => Resource.ColorSchemeAuto;
-    public static string ColorSchemeLight => Resource.ColorSchemeLight;
-    public static string ColorSchemeDark => Resource.ColorSchemeDark;
-    public static string VisualEffectLabel => Resource.VisualEffectLabel;
-    public static string EffectNone => Resource.EffectNone;
-    public static string EffectTransparent => Resource.EffectTransparent;
-    public static string EffectBlur => Resource.EffectBlur;
-    public static string EffectAcrylic => Resource.EffectAcrylic;
-    public static string ShowDelayLabel => Resource.ShowDelayLabel;
-    public static string ShowDelayValueFormat => Resource.ShowDelayValueFormat;
-    public static string ShadowStrengthLabel => Resource.ShadowStrengthLabel;
-    public static string ShadowStrengthValueFormat => Resource.ShadowStrengthValueFormat;
-    public static string AccentColorLabel => Resource.AccentColorLabel;
-    public static string BackgroundColorLabel => Resource.BackgroundColorLabel;
-    public static string HoverColorLabel => Resource.HoverColorLabel;
-    public static string TextColorLabel => Resource.TextColorLabel;
-    public static string MutedColorLabel => Resource.MutedColorLabel;
-    public static string TintColorLabel => Resource.TintColorLabel;
-    public static string PreviewPrimary => Resource.PreviewPrimary;
-    public static string PreviewPrimaryHint => Resource.PreviewPrimaryHint;
-    public static string PreviewSecondary => Resource.PreviewSecondary;
-    public static string PreviewSecondaryHint => Resource.PreviewSecondaryHint;
-    public static string PreviewTertiary => Resource.PreviewTertiary;
-    public static string PreviewTertiaryHint => Resource.PreviewTertiaryHint;
+    public static string PluginName => T(nameof(PluginName), "Shell Integration");
+    public static string PluginDescription => T(nameof(PluginDescription), "Integrate Lenovo Legion Toolkit with Windows shell context menu.");
+    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Shell Integration");
+    public static string Subtitle => T(nameof(Subtitle), "Manage Nilesoft Shell registration and open style editor.");
+    public static string EnableButton => T(nameof(EnableButton), "Enable");
+    public static string DisableButton => T(nameof(DisableButton), "Disable");
+    public static string OpenStyleSettingsButton => T(nameof(OpenStyleSettingsButton), "Open Style Settings");
+    public static string OpenStyleShortButton => T(nameof(OpenStyleShortButton), "Open Style");
+    public static string OpenShellFolderButton => T(nameof(OpenShellFolderButton), "Open Shell Folder");
+    public static string OpenConfigButton => T(nameof(OpenConfigButton), "Open Config File");
+    public static string OptimizationHint => T(nameof(OptimizationHint), "You can also access shell actions from Windows Optimization.");
+    public static string StatusDetected => T(nameof(StatusDetected), "Nilesoft Shell detected.");
+    public static string StatusNotDetected => T(nameof(StatusNotDetected), "Nilesoft Shell was not detected.");
+    public static string PathLabel => T(nameof(PathLabel), "Path");
+    public static string NotFound => T(nameof(NotFound), "Not found");
+    public static string StatusEnableCompleted => T(nameof(StatusEnableCompleted), "Enable command completed.");
+    public static string StatusEnableFailed => T(nameof(StatusEnableFailed), "Enable command failed.");
+    public static string StatusDisableCompleted => T(nameof(StatusDisableCompleted), "Disable command completed.");
+    public static string StatusDisableFailed => T(nameof(StatusDisableFailed), "Disable command failed.");
+    public static string StatusOpenedStyleSettings => T(nameof(StatusOpenedStyleSettings), "Opened style settings.");
+    public static string StatusOpenedShellFolder => T(nameof(StatusOpenedShellFolder), "Opened shell folder.");
+    public static string StatusOpenedConfig => T(nameof(StatusOpenedConfig), "Opened config file.");
+    public static string StatusShellFolderNotFound => T(nameof(StatusShellFolderNotFound), "Shell folder not found.");
+    public static string StatusConfigNotFound => T(nameof(StatusConfigNotFound), "Config file not found.");
+    public static string VersionLabel => T(nameof(VersionLabel), "Version");
+
+    private static readonly System.Resources.ResourceManager ResourceManager =
+        new("LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(ShellIntegrationText).Assembly);
+
+    private static string T(string key, string fallback)
+    {
+        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+    }
+
 }

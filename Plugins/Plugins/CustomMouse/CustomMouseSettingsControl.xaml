@@ -27,6 +27,7 @@
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <TextBlock Text="{x:Static text:CustomMouseText.PointerSpeedLabel}" Margin="0,0,0,4" />
             <Slider x:Name="_pointerSpeedSlider"
+                    AutomationProperties.AutomationId="PointerSpeedSlider"
                     Minimum="1"
                     Maximum="20"
                     TickFrequency="1"
@@ -35,28 +36,34 @@
 
         <CheckBox Grid.Row="2"
                   x:Name="_swapButtonsCheckBox"
+                  AutomationProperties.AutomationId="SwapButtonsCheckBox"
                   Content="{x:Static text:CustomMouseText.SwapButtonsLabel}"
                   Margin="0,16,0,0" />
 
         <CheckBox Grid.Row="3"
                   x:Name="_autoThemeCursorCheckBox"
+                  AutomationProperties.AutomationId="AutoThemeCursorCheckBox"
                   Content="{x:Static text:CustomMouseText.AutoThemeLabel}"
                   Margin="0,12,0,0" />
 
         <TextBlock Grid.Row="4"
+                   AutomationProperties.AutomationId="CursorHintText"
                    Text="{x:Static text:CustomMouseText.CursorHint}"
                    Margin="0,12,0,0"
                    Foreground="#FF6A6A6A" />
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,16,0,0">
             <Button Content="{x:Static text:CustomMouseText.ApplyToWindowsButton}"
+                    AutomationProperties.AutomationId="ApplyToWindowsButton"
                     Width="130"
                     Click="ApplyButton_Click" />
             <Button Content="{x:Static text:CustomMouseText.ApplyCursorThemeNowButton}"
+                    AutomationProperties.AutomationId="ApplyCursorThemeNowButton"
                     Width="170"
                     Margin="8,0,0,0"
                     Click="ApplyCursorThemeNowButton_Click" />
             <Button Content="{x:Static text:CustomMouseText.ReloadButton}"
+                    AutomationProperties.AutomationId="ReloadButton"
                     Width="90"
                     Margin="8,0,0,0"
                     Click="ReloadButton_Click" />
@@ -64,6 +71,7 @@
 
         <TextBlock Grid.Row="6"
                    x:Name="_statusTextBlock"
+                   AutomationProperties.AutomationId="StatusText"
                    Margin="0,12,0,0"
                    TextWrapping="Wrap"
                    Foreground="#FF2E7D32" />
