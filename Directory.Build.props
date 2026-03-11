@@ -1,26 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
 <Project>
   <PropertyGroup>
-    <!-- 
-      Base version numbers - MUST match version in make.bat (SET VERSION=...)
-      This is used for development builds. Release builds use version from make.bat via /p:Version parameter.
-      Current version: 3.6.4
-    -->
+    
     <MajorVersion>3</MajorVersion>
     <MinorVersion>6</MinorVersion>
-    <PatchVersion>4</PatchVersion>
+    <PatchVersion>5</PatchVersion>
     
-    <!-- Default version values -->
+    
     <GitCommitCount>0</GitCommitCount>
     <GitCommitHash>unknown</GitCommitHash>
     
-    <!-- Full version numbers -->
+    
     <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</Version>
     <FileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</FileVersion>
     <AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</AssemblyVersion>
     <InformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-$(GitCommitHash)+$(Configuration)</InformationalVersion>
   </PropertyGroup>
   
-  <!-- Git info retrieval -->
+  
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">
     <Exec Command="git rev-list --count HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCountRaw" />
@@ -29,19 +26,19 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHashRaw" />
     </Exec>
     
-    <!-- Remove possible newline characters -->
+    
     <PropertyGroup>
       <GitCommitCountRaw>$([System.String]::new($(GitCommitCountRaw)).Trim())</GitCommitCountRaw>
       <GitCommitHashRaw>$([System.String]::new($(GitCommitHashRaw)).Trim())</GitCommitHashRaw>
     </PropertyGroup>
     
-    <!-- Set final version values -->
+    
     <PropertyGroup>
       <GitCommitCount Condition=" '$(GitCommitCountRaw)' != '' ">$(GitCommitCountRaw)</GitCommitCount>
       <GitCommitHash Condition=" '$(GitCommitHashRaw)' != '' ">$(GitCommitHashRaw)</GitCommitHash>
     </PropertyGroup>
     
-    <!-- Update version numbers -->
+    
     <PropertyGroup>
       <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</Version>
       <FileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</FileVersion>

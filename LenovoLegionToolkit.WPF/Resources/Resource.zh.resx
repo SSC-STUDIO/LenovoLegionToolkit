@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -377,7 +377,7 @@
     <value>取消</value>
   </data>
   <data name="Celsius" xml:space="preserve">
-    <value>??</value>
+    <value>°C</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
@@ -586,7 +586,7 @@
     <value>关于显卡工作模式</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>??</value>
+    <value>°F</value>
   </data>
   <data name="FanCurveControl_CPU" xml:space="preserve">
     <value>处理器</value>
@@ -939,7 +939,7 @@
     <value>刷新率</value>
   </data>
   <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
-    <value>???</value>
+    <value>智能键</value>
   </data>
   <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
     <value>提示弹窗</value>
@@ -1745,10 +1745,10 @@
     <value>应用数据文件夹</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
-    <value>??</value>
+    <value>数据</value>
   </data>
   <data name="AboutPage_Temp" xml:space="preserve">
-    <value>??</value>
+    <value>温度</value>
   </data>
   <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
     <value>固定显示亮度</value>
@@ -2930,43 +2930,43 @@
     <value>通过注册Nilesoft Shell作为Windows上下文菜单的COM处理程序，拦截系统右键菜单的创建和显示。当用户右键点击文件或文件夹时，Shell会读取shell.nss配置文件并应用自定义的主题、透明度、圆角和阴影等样式设置，实现美化的右键菜单效果。</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
-    <value>?????????????? Nilesoft Shell?</value>
+    <value>未找到配置文件。请确认已安装 Nilesoft Shell。</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
-    <value>???????</value>
+    <value>未找到配置文件</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
-    <value>?????????????????????</value>
+    <value>设置已成功应用。重启文件资源管理器后生效。</value>
   </data>
   <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
-    <value>?????</value>
+    <value>设置已应用</value>
   </data>
   <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
-    <value>???????{0}</value>
+    <value>应用设置失败：{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
-    <value>??</value>
+    <value>错误</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
-    <value>1. COM ?????</value>
+    <value>1. COM 组件注册：</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
     <value>   shell.exe -register -treat -restart</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
-    <value>   ???{0}</value>
+    <value>    路径：{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
-    <value>2. ?????shell.nss??</value>
+    <value>2. 配置文件（shell.nss）：</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
-    <value>   ???????{0}</value>
+    <value>    配置文件路径：{0}</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
-    <value>   ???? CSS ?????????</value>
+    <value>    使用类似 CSS 的语法来定义菜单样式</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
-    <value>3. ?????????</value>
+    <value>3. 配置文件格式示例：</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
     <value>theme 
@@ -2979,37 +2979,37 @@
 }</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
-    <value>4. ?????</value>
+    <value>4. 工作原理：</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
-    <value>   - Shell.dll ?? COM ????????</value>
+    <value>    - Shell.dll 以 COM 组件方式注册到系统</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
-    <value>   - ?? IContextMenu ???????????</value>
+    <value>    - 实现 IContextMenu 接口以拦截右键菜单创建</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
-    <value>   - ?? shell.nss ????</value>
+    <value>    - 读取 shell.nss 配置文件</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
-    <value>   - ??????????????????</value>
+    <value>    - 应用自定义样式（主题、圆角、阴影等）</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
-    <value>   - ??????????</value>
+    <value>    - 渲染美化后的右键菜单</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
-    <value>5. ?????</value>
+    <value>5. 效果说明：</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
-    <value>   - ??????????????/???</value>
+    <value>    - 自动主题：跟随系统主题（明/暗）</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
-    <value>   - ??????????????</value>
+    <value>    - 透明度：启用菜单背景透明效果</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
-    <value>   - ?????????????</value>
+    <value>    - 圆角：为菜单项添加圆角边框</value>
   </data>
   <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
-    <value>   - ??????????????????</value>
+    <value>    - 阴影：为菜单添加阴影以增强层次感</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
     <value>配置文件编辑器</value>
@@ -4006,4 +4006,4 @@
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>请至少选择一个要清理的项目。</value>
   </data>
-<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>????</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>??????????????</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>???????{0}</value></data></root>
+<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data></root>
