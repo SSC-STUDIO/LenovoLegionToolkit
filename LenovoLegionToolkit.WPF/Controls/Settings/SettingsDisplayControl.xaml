@@ -13,6 +13,7 @@
         <StackPanel Margin="0,0,16,12">
             <custom:CardAction
                 x:Name="_navigationItemsSettingsCard"
+                AutomationProperties.AutomationId="NavigationItemsSettingsCard"
                 Margin="0,0,0,8"
                 Click="NavigationItemsSettingsCard_Click">
                 <custom:CardAction.Content>
@@ -24,6 +25,7 @@
 
             <custom:CardAction
                 x:Name="_notificationsCard"
+                AutomationProperties.AutomationId="NotificationsCard"
                 Margin="0,0,0,8"
                 Click="NotificationsCard_Click">
                 <custom:CardAction.Content>
@@ -33,6 +35,7 @@
 
             <custom:CardAction
                 x:Name="_excludeRefreshRatesCard"
+                AutomationProperties.AutomationId="ExcludeRefreshRatesCard"
                 Margin="0,0,0,8"
                 Click="ExcludeRefreshRates_Click">
                 <custom:CardAction.Content>
@@ -46,6 +49,7 @@
                 </custom:CardControl.Header>
                 <wpfui:ToggleSwitch
                     x:Name="_synchronizeBrightnessToAllPowerPlansToggle"
+                    AutomationProperties.AutomationId="SynchronizeBrightnessToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title}"
                     Click="SynchronizeBrightnessToAllPowerPlansToggle_Click" />
@@ -53,6 +57,7 @@
 
             <custom:CardAction
                 x:Name="_bootLogoCard"
+                AutomationProperties.AutomationId="BootLogoCard"
                 Margin="0,0,0,8"
                 Click="BootLogo_Click">
                 <custom:CardAction.Content>
