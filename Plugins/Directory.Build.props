@@ -1,23 +1,21 @@
-﻿<Project>
-  <!--
-    Lenovo Legion Toolkit - Plugins Directory.Build.props
-    Unified build configuration for all plugin projects
-  -->
+<?xml version='1.0' encoding='utf-8'?>
+<Project>
+  
 
   <PropertyGroup>
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
   </PropertyGroup>
 
-  <!-- Version Control - Plugin projects only -->
+  
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Version>1.0.4</Version>
-    <FileVersion>1.0.4</FileVersion>
-    <AssemblyVersion>1.0.4</AssemblyVersion>
-    <InformationalVersion>1.0.4</InformationalVersion>
+    <Version>1.0.5</Version>
+    <FileVersion>1.0.5</FileVersion>
+    <AssemblyVersion>1.0.5</AssemblyVersion>
+    <InformationalVersion>1.0.5</InformationalVersion>
   </PropertyGroup>
 
-  <!-- Framework Configuration - WPF plugin projects only -->
+  
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginToolProject)' != 'True'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -25,20 +23,20 @@
     <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
 
-  <!-- SDK Projects Use Default Framework -->
+  
   <PropertyGroup Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.SDK'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- Output Configuration - Plugin Projects -->
+  
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
-  <!-- Project Settings - Plugin Projects Only -->
+  
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
@@ -46,35 +44,35 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-  <!-- WPF Specific Configuration - WPF Projects Only -->
+  
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
     <UseCommonControls>true</UseCommonControls>
   </PropertyGroup>
 
-  <!-- Dependency Management - Plugin Projects Only -->
+  
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <!-- Enable Unsafe Code (Required by some plugins) -->
+  
   <PropertyGroup>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Localization Configuration - WPF Projects Only -->
+  
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
     <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
   </PropertyGroup>
 
-  <!-- NuGet Package Version Management -->
+  
   <ItemGroup>
     <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- Shared host/plugin compile-time references for independent plugin-repo builds -->
+  
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Reference Include="LenovoLegionToolkit.Lib">
       <HintPath>$(MSBuildThisFileDirectory)Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
@@ -82,12 +80,12 @@
     </Reference>
   </ItemGroup>
 
-  <!-- WPF UI controls used by plugin XAML pages -->
+  
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
 
-  <!-- Cleanup Target: Remove Unnecessary Files - Plugin Projects Only -->
+  
   <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />

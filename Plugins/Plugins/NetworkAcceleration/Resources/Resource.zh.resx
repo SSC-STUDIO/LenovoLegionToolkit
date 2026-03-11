@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+<data name="AdminHint" xml:space="preserve"><value>é¨åæä½å¯è½éè¦ç®¡çåæéã</value></data><data name="AutoOptimizeOnStartup" xml:space="preserve"><value>å¯å¨æ¶èªå¨ä¼å</value></data><data name="ModeBalanced" xml:space="preserve"><value>åè¡¡</value></data><data name="ModeGaming" xml:space="preserve"><value>æ¸¸æ</value></data><data name="ModeStreaming" xml:space="preserve"><value>ä¸²æµ</value></data><data name="PageTitle" xml:space="preserve"><value>ç½ç»å é</value></data><data name="PluginDescription" xml:space="preserve"><value>å®æ¶ç½ç»å éä¸ä¼ååè½ã</value></data><data name="PluginName" xml:space="preserve"><value>ç½ç»å é</value></data><data name="PreferredModeTitle" xml:space="preserve"><value>é¦éæ¨¡å¼</value></data><data name="QuickActionsDescription" xml:space="preserve"><value>æ§è¡å¿«éä¼åå½ä»¤ï¼ä»¥éä½å»¶è¿å¹¶æ¸çç½ç»å¥æ¥å­ç¶æã</value></data><data name="QuickActionsTitle" xml:space="preserve"><value>å¿«éç½ç»æä½</value></data><data name="ResetNetworkStackButton" xml:space="preserve"><value>éç½®ç½ç»åè®®æ </value></data><data name="ResetTcpIpOnOptimize" xml:space="preserve"><value>å¿«éä¼åæ¶éç½® TCP/IP åè®®æ </value></data><data name="ResetWinsockOnOptimize" xml:space="preserve"><value>å¿«éä¼åæ¶éç½® Winsock</value></data><data name="RunQuickOptimizationButton" xml:space="preserve"><value>æ§è¡å¿«éä¼å</value></data><data name="SaveModeButton" xml:space="preserve"><value>ä¿å­æ¨¡å¼</value></data><data name="SaveSettingsButton" xml:space="preserve"><value>ä¿å­è®¾ç½®</value></data><data name="SettingsDescription" xml:space="preserve"><value>éæ©å¿«éä¼åè¿è¡æ¶è¦åå«çæ¢å¤å¨ä½ã</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>ç½ç»è®¾ç½®</value></data><data name="SettingsSaved" xml:space="preserve"><value>ç½ç»å éè®¾ç½®å·²ä¿å­ã</value></data><data name="SettingsTitle" xml:space="preserve"><value>å¿«éä¼åè¡ä¸º</value></data><data name="StatusModeSaved" xml:space="preserve"><value>é¦éæ¨¡å¼å·²ä¿å­ã</value></data><data name="StatusQuickOptimizationCompleted" xml:space="preserve"><value>å¿«éä¼åå·²å®æã</value></data><data name="StatusQuickOptimizationFailed" xml:space="preserve"><value>å¿«éä¼åå¤±è´¥ãè¯·ä»¥ç®¡çåèº«ä»½è¿è¡ã</value></data><data name="StatusResetCompleted" xml:space="preserve"><value>ç½ç»åè®®æ éç½®å·²å®æã</value></data><data name="StatusResetFailed" xml:space="preserve"><value>ç½ç»åè®®æ éç½®å¤±è´¥ãè¯·ä»¥ç®¡çåèº«ä»½è¿è¡ã</value></data><data name="StatusSelectValidMode" xml:space="preserve"><value>è¯·éæ©æææ¨¡å¼ã</value></data></root>

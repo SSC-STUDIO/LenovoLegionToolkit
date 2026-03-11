@@ -1,51 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -58,160 +58,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PluginName" xml:space="preserve">
-    <value>Network Acceleration</value>
-  </data>
-  <data name="PluginDescription" xml:space="preserve">
-    <value>Real-time network acceleration and optimization features.</value>
-  </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Network Acceleration</value>
-  </data>
-  <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Network Settings</value>
-  </data>
-  <data name="QuickActionsTitle" xml:space="preserve">
-    <value>Quick Network Actions</value>
-  </data>
-  <data name="QuickActionsDescription" xml:space="preserve">
-    <value>Run quick optimization commands for lower latency and cleaner socket state.</value>
-  </data>
-  <data name="RunQuickOptimizationButton" xml:space="preserve">
-    <value>Run Quick Optimization</value>
-  </data>
-  <data name="ResetNetworkStackButton" xml:space="preserve">
-    <value>Reset Network Stack</value>
-  </data>
-  <data name="AdminHint" xml:space="preserve">
-    <value>Some operations may require administrator permission.</value>
-  </data>
-  <data name="PreferredModeTitle" xml:space="preserve">
-    <value>Preferred Mode</value>
-  </data>
-  <data name="SaveModeButton" xml:space="preserve">
-    <value>Save Mode</value>
-  </data>
-  <data name="ModeBalanced" xml:space="preserve">
-    <value>Balanced</value>
-  </data>
-  <data name="ModeGaming" xml:space="preserve">
-    <value>Gaming</value>
-  </data>
-  <data name="ModeStreaming" xml:space="preserve">
-    <value>Streaming</value>
-  </data>
-  <data name="StatusQuickOptimizationCompleted" xml:space="preserve">
-    <value>Quick optimization completed.</value>
-  </data>
-  <data name="StatusQuickOptimizationFailed" xml:space="preserve">
-    <value>Quick optimization failed. Please run as administrator.</value>
-  </data>
-  <data name="StatusResetCompleted" xml:space="preserve">
-    <value>Network stack reset completed.</value>
-  </data>
-  <data name="StatusResetFailed" xml:space="preserve">
-    <value>Network stack reset failed. Please run as administrator.</value>
-  </data>
-  <data name="StatusSelectValidMode" xml:space="preserve">
-    <value>Select a valid mode.</value>
-  </data>
-  <data name="StatusModeSaved" xml:space="preserve">
-    <value>Preferred mode saved.</value>
-  </data>
-  <data name="SettingsTitle" xml:space="preserve">
-    <value>Quick Optimization Behavior</value>
-  </data>
-  <data name="SettingsDescription" xml:space="preserve">
-    <value>Choose which recovery actions will be included when quick optimization runs.</value>
-  </data>
-  <data name="AutoOptimizeOnStartup" xml:space="preserve">
-    <value>Auto optimize on startup</value>
-  </data>
-  <data name="ResetWinsockOnOptimize" xml:space="preserve">
-    <value>Reset Winsock during quick optimization</value>
-  </data>
-  <data name="ResetTcpIpOnOptimize" xml:space="preserve">
-    <value>Reset TCP/IP stack during quick optimization</value>
-  </data>
-  <data name="SaveSettingsButton" xml:space="preserve">
-    <value>Save Settings</value>
-  </data>
-  <data name="SettingsSaved" xml:space="preserve">
-    <value>Network acceleration settings saved.</value>
-  </data>
-  <data name="LiveTelemetryTitle" xml:space="preserve">
-    <value>Live Telemetry</value>
-  </data>
-  <data name="LiveTelemetryDescription" xml:space="preserve">
-    <value>Monitor your active adapter throughput in real time while keeping quick optimization actions within reach.</value>
-  </data>
-  <data name="CurrentDownloadLabel" xml:space="preserve">
-    <value>Current Download</value>
-  </data>
-  <data name="CurrentUploadLabel" xml:space="preserve">
-    <value>Current Upload</value>
-  </data>
-  <data name="PeakTrafficLabel" xml:space="preserve">
-    <value>Peak Throughput</value>
-  </data>
-  <data name="ActiveAdapterLabel" xml:space="preserve">
-    <value>Active Adapter</value>
-  </data>
-  <data name="DownloadLegend" xml:space="preserve">
-    <value>Download</value>
-  </data>
-  <data name="UploadLegend" xml:space="preserve">
-    <value>Upload</value>
-  </data>
-  <data name="ChartEmptyState" xml:space="preserve">
-    <value>Collecting live traffic samples...</value>
-  </data>
-  <data name="DownloadTotalLabel" xml:space="preserve">
-    <value>Total Received</value>
-  </data>
-  <data name="UploadTotalLabel" xml:space="preserve">
-    <value>Total Sent</value>
-  </data>
-  <data name="UpdatedLabel" xml:space="preserve">
-    <value>Updated</value>
-  </data>
-  <data name="PreferredModeDescription" xml:space="preserve">
-    <value>Choose the traffic profile the plugin should remember for your next optimization pass.</value>
-  </data>
-  <data name="CurrentModeLabel" xml:space="preserve">
-    <value>Current profile</value>
-  </data>
-  <data name="ModeBalancedDescription" xml:space="preserve">
-    <value>Balanced keeps latency cleanup available without leaning too hard into one workload.</value>
-  </data>
-  <data name="ModeGamingDescription" xml:space="preserve">
-    <value>Gaming prioritizes responsiveness for spikes, lobby changes, and fast reconnects.</value>
-  </data>
-  <data name="ModeStreamingDescription" xml:space="preserve">
-    <value>Streaming favors smoother sustained transfers when upload and download stay active together.</value>
-  </data>
-  <data name="StatusCardTitle" xml:space="preserve">
-    <value>Operation Status</value>
-  </data>
-  <data name="MonitoringStatus" xml:space="preserve">
-    <value>Live telemetry refreshes every two seconds while this page stays open.</value>
-  </data>
-  <data name="NoActiveAdapter" xml:space="preserve">
-    <value>No active adapter</value>
-  </data>
-  <data name="MbpsValueFormat" xml:space="preserve">
-    <value>{0:0.0} Mbps</value>
-  </data>
-  <data name="SettingsSummaryTitle" xml:space="preserve">
-    <value>Current Policy Snapshot</value>
-  </data>
-  <data name="SettingsSummaryDescription" xml:space="preserve">
-    <value>Review the saved mode and each recovery action before you write settings back to disk.</value>
-  </data>
-  <data name="StateEnabled" xml:space="preserve">
-    <value>Enabled</value>
-  </data>
-  <data name="StateDisabled" xml:space="preserve">
-    <value>Disabled</value>
-  </data>
-</root>
+<data name="AdminHint" xml:space="preserve"><value>Some operations may require administrator permission.</value></data><data name="AutoOptimizeOnStartup" xml:space="preserve"><value>Auto optimize on startup</value></data><data name="ModeBalanced" xml:space="preserve"><value>Balanced</value></data><data name="ModeGaming" xml:space="preserve"><value>Gaming</value></data><data name="ModeStreaming" xml:space="preserve"><value>Streaming</value></data><data name="PageTitle" xml:space="preserve"><value>Accelerazione della rete</value></data><data name="PluginDescription" xml:space="preserve"><value>Real-time network acceleration and optimization features.</value></data><data name="PluginName" xml:space="preserve"><value>Accelerazione della rete</value></data><data name="PreferredModeTitle" xml:space="preserve"><value>Preferred Mode</value></data><data name="QuickActionsDescription" xml:space="preserve"><value>Run quick optimization commands for lower latency and cleaner socket state.</value></data><data name="QuickActionsTitle" xml:space="preserve"><value>Quick Network Actions</value></data><data name="ResetNetworkStackButton" xml:space="preserve"><value>Reset Network Stack</value></data><data name="ResetTcpIpOnOptimize" xml:space="preserve"><value>Reset TCP/IP stack during quick optimization</value></data><data name="ResetWinsockOnOptimize" xml:space="preserve"><value>Reset Winsock during quick optimization</value></data><data name="RunQuickOptimizationButton" xml:space="preserve"><value>Run Quick Optimization</value></data><data name="SaveModeButton" xml:space="preserve"><value>Save Mode</value></data><data name="SaveSettingsButton" xml:space="preserve"><value>Save Settings</value></data><data name="SettingsDescription" xml:space="preserve"><value>Choose which recovery actions will be included when quick optimization runs.</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>Network Settings</value></data><data name="SettingsSaved" xml:space="preserve"><value>Network acceleration settings saved.</value></data><data name="SettingsTitle" xml:space="preserve"><value>Quick Optimization Behavior</value></data><data name="StatusModeSaved" xml:space="preserve"><value>Preferred mode saved.</value></data><data name="StatusQuickOptimizationCompleted" xml:space="preserve"><value>Quick optimization completed.</value></data><data name="StatusQuickOptimizationFailed" xml:space="preserve"><value>Quick optimization failed. Please run as administrator.</value></data><data name="StatusResetCompleted" xml:space="preserve"><value>Network stack reset completed.</value></data><data name="StatusResetFailed" xml:space="preserve"><value>Network stack reset failed. Please run as administrator.</value></data><data name="StatusSelectValidMode" xml:space="preserve"><value>Select a valid mode.</value></data></root>

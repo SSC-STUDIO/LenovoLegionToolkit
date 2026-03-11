@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+<data name="DisableButton" xml:space="preserve"><value>ç¦ç¨</value></data><data name="EnableButton" xml:space="preserve"><value>å¯ç¨</value></data><data name="NotFound" xml:space="preserve"><value>æªæ¾å°</value></data><data name="OpenConfigButton" xml:space="preserve"><value>æå¼éç½®æä»¶</value></data><data name="OpenShellFolderButton" xml:space="preserve"><value>æå¼ Shell æä»¶å¤¹</value></data><data name="OpenStyleSettingsButton" xml:space="preserve"><value>æå¼æ ·å¼è®¾ç½®</value></data><data name="OpenStyleShortButton" xml:space="preserve"><value>æå¼æ ·å¼</value></data><data name="OptimizationHint" xml:space="preserve"><value>ä½ ä¹å¯ä»¥å¨ç³»ç»ä¼åé¡µé¢ä¸­ä½¿ç¨ Shell å¨ä½ã</value></data><data name="PathLabel" xml:space="preserve"><value>è·¯å¾</value></data><data name="PluginDescription" xml:space="preserve"><value>å° Lenovo Legion Toolkit éæå° Windows å³é®èåã</value></data><data name="PluginName" xml:space="preserve"><value>Shell éæ</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>Shell éæ</value></data><data name="StatusConfigNotFound" xml:space="preserve"><value>æªæ¾å°éç½®æä»¶ã</value></data><data name="StatusDetected" xml:space="preserve"><value>å·²æ£æµå° Nilesoft Shellã</value></data><data name="StatusDisableCompleted" xml:space="preserve"><value>ç¦ç¨å½ä»¤å·²å®æã</value></data><data name="StatusDisableFailed" xml:space="preserve"><value>ç¦ç¨å½ä»¤å¤±è´¥ã</value></data><data name="StatusEnableCompleted" xml:space="preserve"><value>å¯ç¨å½ä»¤å·²å®æã</value></data><data name="StatusEnableFailed" xml:space="preserve"><value>å¯ç¨å½ä»¤å¤±è´¥ã</value></data><data name="StatusNotDetected" xml:space="preserve"><value>æªæ£æµå° Nilesoft Shellã</value></data><data name="StatusOpenedConfig" xml:space="preserve"><value>å·²æå¼éç½®æä»¶ã</value></data><data name="StatusOpenedShellFolder" xml:space="preserve"><value>å·²æå¼ Shell æä»¶å¤¹ã</value></data><data name="StatusOpenedStyleSettings" xml:space="preserve"><value>å·²æå¼æ ·å¼è®¾ç½®ã</value></data><data name="StatusShellFolderNotFound" xml:space="preserve"><value>æªæ¾å° Shell æä»¶å¤¹ã</value></data><data name="Subtitle" xml:space="preserve"><value>ç®¡ç Nilesoft Shell æ³¨åç¶æå¹¶æå¼æ ·å¼ç¼è¾å¨ã</value></data><data name="VersionLabel" xml:space="preserve"><value>çæ¬</value></data></root>
