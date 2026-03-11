@@ -18,6 +18,7 @@ public class PluginManager : IPluginManager
     private readonly Dictionary<string, IPlugin> _registeredPlugins = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, PluginMetadata> _pluginMetadataCache = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _startedPlugins = new(StringComparer.OrdinalIgnoreCase);
     private ResolveEventHandler? _assemblyResolveHandler;
     private bool _disposed;
 
@@ -62,6 +63,8 @@ public class PluginManager : IPluginManager
                         Log.Instance.Trace($"Failed to load plugin from {pluginFile}: {ex.Message}", ex);
                 }
             }
+
+            StartInstalledPlugins();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin scan completed. Total registered plugins: {_registeredPlugins.Count}");
@@ -536,13 +539,59 @@ public class PluginManager : IPluginManager
         if (string.IsNullOrWhiteSpace(plugin.Id))
             throw new ArgumentException("Plugin ID cannot be null or empty", nameof(plugin));
 
-        if (_registeredPlugins.ContainsKey(plugin.Id))
+        if (_registeredPlugins.TryGetValue(plugin.Id, out var existingPlugin))
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin {plugin.Id} is already registered. Replacing existing registration.");
+
+            try
+            {
+                existingPlugin.Stop();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to stop existing plugin {plugin.Id}: {ex.Message}", ex);
+            }
+
+            _startedPlugins.Remove(plugin.Id);
         }
 
         _registeredPlugins[plugin.Id] = plugin;
+    }
+
+    public void StartInstalledPlugins()
+    {
+        try
+        {
+            foreach (var plugin in _registeredPlugins.Values)
+            {
+                if (!IsInstalled(plugin.Id))
+                    continue;
+
+                if (plugin is not IAppStartupPlugin startupPlugin)
+                    continue;
+
+                if (!_startedPlugins.Add(plugin.Id))
+                    continue;
+
+                try
+                {
+                    startupPlugin.OnAppStarted();
+                }
+                catch (Exception ex)
+                {
+                    _startedPlugins.Remove(plugin.Id);
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to start plugin {plugin.Id}: {ex.Message}", ex);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to start installed plugins: {ex.Message}", ex);
+        }
     }
 
     public IEnumerable<IPlugin> GetRegisteredPlugins()
@@ -778,6 +827,8 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error stopping plugin {pluginId}: {ex.Message}", ex);
         }
+
+        _startedPlugins.Remove(pluginId);
 
         // Trigger uninstall callback
         plugin?.OnUninstalled();
@@ -1171,6 +1222,7 @@ public class PluginManager : IPluginManager
             _registeredPlugins.Clear();
             _pluginMetadataCache.Clear();
             _pluginFileCache.Clear();
+            _startedPlugins.Clear();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"All plugins unloaded successfully");
@@ -1200,6 +1252,8 @@ public class PluginManager : IPluginManager
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin {pluginId} stopped successfully");
+
+            _startedPlugins.Remove(pluginId);
 
             return true;
         }
@@ -1231,6 +1285,8 @@ public class PluginManager : IPluginManager
                         Log.Instance.Trace($"Failed to stop plugin {plugin.Id}: {ex.Message}", ex);
                 }
             }
+
+            _startedPlugins.Clear();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"All plugins stopped successfully");
