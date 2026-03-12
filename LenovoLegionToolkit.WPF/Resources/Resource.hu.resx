@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2963,4 +2963,4 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
     <value>Állítsa vissza a mentett kurzor sémát, és állítsa le a téma alapú egyéni kurzorváltást.</value>
   </data>
-</root>
+<data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>Force software rendering</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value></data></root>

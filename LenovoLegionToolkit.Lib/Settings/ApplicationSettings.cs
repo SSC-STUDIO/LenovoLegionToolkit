@@ -56,6 +56,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public ModifierKey SmartFnLockFlags { get; set; }
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
         public bool DisableUnsupportedHardwareWarning { get; set; }
+        public bool ForceSoftwareRendering { get; set; }
 
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
         public bool ExtensionsEnabled { get; set; } = false;

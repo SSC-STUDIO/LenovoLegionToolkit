@@ -195,7 +195,7 @@ public partial class App
             Log.Instance.Trace($"Starting... [version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString()}, os={Environment.OSVersion}, dotnet={Environment.Version}]");
 
         WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
-        RenderOptions.ProcessRenderMode = GetPreferredRenderMode();
+        RenderOptions.ProcessRenderMode = GetPreferredRenderMode(applicationSettings);
 
         IoCContainer.Initialize(
             new Lib.IoCModule(),
@@ -263,11 +263,11 @@ public partial class App
             Log.Instance.Trace($"Start up complete");
     }
 
-    private static RenderMode GetPreferredRenderMode()
+    private static RenderMode GetPreferredRenderMode(ApplicationSettings? settings)
     {
         try
         {
-            if (ShouldForceSoftwareRendering())
+            if (ShouldForceSoftwareRendering(settings))
                 return RenderMode.SoftwareOnly;
 
             // RenderCapability.Tier stores the rendering tier value in the upper 16 bits
@@ -285,10 +285,18 @@ public partial class App
         }
     }
 
-    private static bool ShouldForceSoftwareRendering()
+    private static bool ShouldForceSoftwareRendering(ApplicationSettings? settings)
     {
         try
         {
+            if (settings?.Store.ForceSoftwareRendering == true)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Software rendering forced by user setting.");
+
+                return true;
+            }
+
             if (System.Windows.Forms.SystemInformation.TerminalServerSession)
             {
                 if (Log.Instance.IsTraceEnabled)

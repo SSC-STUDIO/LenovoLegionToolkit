@@ -31,6 +31,7 @@ public partial class SettingsDisplayControl
         _notificationsCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _synchronizeBrightnessToAllPowerPlansToggle.IsChecked = _settings.Store.SynchronizeBrightnessToAllPowerPlans;
+        _forceSoftwareRenderingToggle.IsChecked = _settings.Store.ForceSoftwareRendering;
 
         _bootLogoCard.Visibility = await BootLogo.IsSupportedAsync() ? Visibility.Visible : Visibility.Collapsed;
 
@@ -82,6 +83,19 @@ public partial class SettingsDisplayControl
             return;
 
         _settings.Store.SynchronizeBrightnessToAllPowerPlans = state.Value;
+        _settings.SynchronizeStore();
+    }
+
+    private void ForceSoftwareRenderingToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var state = _forceSoftwareRenderingToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _settings.Store.ForceSoftwareRendering = state.Value;
         _settings.SynchronizeStore();
     }
 

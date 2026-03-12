@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed / 修复
+- **Remote Desktop Rendering / 远程桌面渲染**: Added a software-rendering fallback toggle for RDP/headless sessions to avoid blank UI when no physical display is active / 为远程桌面或无显示器场景新增“软件渲染”开关与兜底策略，避免界面空白
 - **Background Command Execution / 后台命令执行**: Fixed `CMD.RunAsync` fire-and-forget mode to stop redirecting stdout/stderr when `waitForExit` is `false`, preventing background processes with large output from hanging before completion / 修复 `CMD.RunAsync` 在 `waitForExit=false` 时的后台执行行为：不再重定向但不消费标准输出/错误，避免大输出后台进程在完成前被缓冲区阻塞
 - **Command Injection Guard / 命令注入防护**: Fixed `CMD.ContainsDangerousInput` to scan all `&` occurrences so mixed input like safe redirection followed by command chaining can no longer bypass validation / 修复 `CMD.ContainsDangerousInput` 对 `&` 的全量扫描逻辑，避免“先安全重定向后命令拼接”的混合输入绕过校验
 - **CMD Argument Validation / CMD 参数校验**: Fixed `CMD.ContainsDangerousInput` false positives by allowing escaped ampersands (`^&`) and valid implicit redirection (`>&1`, `>&2`) while still blocking no-space command chaining (e.g. `echo a&whoami`) / 修复 `CMD.ContainsDangerousInput` 误判：在保持拦截无空格命令拼接（如 `echo a&whoami`）的同时，允许合法的转义与重定向写法（`^&`、`>&1`、`>&2`）
