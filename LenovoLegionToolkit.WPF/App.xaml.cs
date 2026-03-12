@@ -267,6 +267,9 @@ public partial class App
     {
         try
         {
+            if (ShouldForceSoftwareRendering())
+                return RenderMode.SoftwareOnly;
+
             // RenderCapability.Tier stores the rendering tier value in the upper 16 bits
             // We need to right shift by 16 bits to extract the tier value (0-3)
             // where 0 = no hardware acceleration, 1 = partial, 2+ = full hardware acceleration
@@ -280,6 +283,47 @@ public partial class App
 
             return RenderMode.SoftwareOnly;
         }
+    }
+
+    private static bool ShouldForceSoftwareRendering()
+    {
+        try
+        {
+            if (System.Windows.Forms.SystemInformation.TerminalServerSession)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Remote desktop session detected. Forcing software rendering.");
+
+                return true;
+            }
+
+            var screens = System.Windows.Forms.Screen.AllScreens;
+            if (screens == null || screens.Length == 0)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("No active displays detected. Forcing software rendering.");
+
+                return true;
+            }
+
+            var primaryBounds = System.Windows.Forms.Screen.PrimaryScreen?.Bounds;
+            if (primaryBounds is not { Width: > 0, Height: > 0 })
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Primary display bounds invalid. Forcing software rendering.");
+
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to determine display state. Forcing software rendering.", ex);
+
+            return true;
+        }
+
+        return false;
     }
 
     private static void InitializePlugins()
