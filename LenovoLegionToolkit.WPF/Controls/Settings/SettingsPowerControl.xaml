@@ -11,23 +11,25 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
-            <custom:CardControl x:Name="_godModeFnQSwitchableCard" Margin="0,0,0,8">
+            <custom:CardControl x:Name="_godModeFnQSwitchableCard" AutomationProperties.AutomationId="GodModeFnQSwitchableCard" Margin="0,0,0,8">
                 <custom:CardControl.Header>
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}" Subtitle="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Message}" />
                 </custom:CardControl.Header>
                 <wpfui:ToggleSwitch
                     x:Name="_godModeFnQSwitchableToggle"
+                    AutomationProperties.AutomationId="GodModeFnQSwitchableToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}"
                     Click="GodModeFnQSwitchableToggle_Click" />
             </custom:CardControl>
 
-            <custom:CardControl x:Name="_powerModeMappingCard" Margin="0,0,0,8">
+            <custom:CardControl x:Name="_powerModeMappingCard" AutomationProperties.AutomationId="PowerModeMappingCard" Margin="0,0,0,8">
                 <custom:CardControl.Header>
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_PowerModeMapping_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_PowerModeMapping_Message}" />
                 </custom:CardControl.Header>
                 <ComboBox
                     x:Name="_powerModeMappingComboBox"
+                    AutomationProperties.AutomationId="PowerModeMappingComboBox"
                     MinWidth="160"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_PowerModeMapping_Title}"
@@ -37,6 +39,7 @@
 
             <custom:CardAction
                 x:Name="_powerModesCard"
+                AutomationProperties.AutomationId="PowerModesCard"
                 Margin="0,0,0,8"
                 Click="PowerModes_Click">
                 <custom:CardAction.Content>
@@ -46,6 +49,7 @@
 
             <custom:CardAction
                 x:Name="_windowsPowerPlansCard"
+                AutomationProperties.AutomationId="WindowsPowerPlansCard"
                 Margin="0,0,0,8"
                 Click="WindowsPowerPlans_Click">
                 <custom:CardAction.Content>
@@ -55,6 +59,7 @@
 
             <custom:CardControl
                 x:Name="_windowsPowerPlansControlPanelCard"
+                AutomationProperties.AutomationId="WindowsPowerPlansControlPanelCard"
                 Margin="0,0,0,8"
                 Click="WindowsPowerPlansControlPanel_Click">
                 <custom:CardControl.Header>
@@ -72,6 +77,7 @@
                 </custom:CardControl.Header>
                 <wpfui:ToggleSwitch
                     x:Name="_onBatterySinceResetToggle"
+                    AutomationProperties.AutomationId="OnBatterySinceResetToggle"
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}"
                     Click="OnBatterySinceResetToggle_Click" />
