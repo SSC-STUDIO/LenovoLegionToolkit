@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-03-12
+
+### Fixed / 修复
+- Added missing localization keys so the network acceleration UI text resources resolve correctly after recent layout updates / 补齐缺失的本地化键，确保网络加速界面在近期布局更新后能正确显示文本
+
 ## [1.1.0] - 2026-03-10
 
 ### Added / 新增

@@ -7,12 +7,20 @@
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
+    <HostLibPath Condition="Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll')">$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll</HostLibPath>
+    <HostLibPath Condition="'$(HostLibPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll</HostLibPath>
+    <HostWpfPath Condition="Exists('$(HostDependenciesDir)Lenovo Legion Toolkit.dll')">$(HostDependenciesDir)Lenovo Legion Toolkit.dll</HostWpfPath>
+    <HostWpfPath Condition="'$(HostWpfPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll</HostWpfPath>
+  </PropertyGroup>
+
   
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Version>1.0.5</Version>
-    <FileVersion>1.0.5</FileVersion>
-    <AssemblyVersion>1.0.5</AssemblyVersion>
-    <InformationalVersion>1.0.5</InformationalVersion>
+    <Version>1.0.8</Version>
+    <FileVersion>1.0.8</FileVersion>
+    <AssemblyVersion>1.0.8</AssemblyVersion>
+    <InformationalVersion>1.0.8</InformationalVersion>
   </PropertyGroup>
 
   
@@ -75,7 +83,7 @@
   
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>$(MSBuildThisFileDirectory)Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+      <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

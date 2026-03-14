@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+      <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

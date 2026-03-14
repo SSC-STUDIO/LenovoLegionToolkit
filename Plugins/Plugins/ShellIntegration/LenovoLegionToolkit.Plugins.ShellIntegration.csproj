@@ -31,7 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
     <Reference Include="Lenovo Legion Toolkit">
-      <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
+      <HintPath>$(HostWpfPath)</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
