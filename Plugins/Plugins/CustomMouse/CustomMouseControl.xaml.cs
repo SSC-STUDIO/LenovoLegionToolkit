@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -39,12 +40,14 @@ public partial class CustomMouseControl : UserControl
             IsSnapToTickEnabled = true,
             Value = 1600
         };
+        _dpiSlider.ValueChanged += InputChanged;
 
         _pollingRateComboBox = new ComboBox();
         _pollingRateComboBox.Items.Add(new ComboBoxItem { Content = "125 Hz", Tag = "125" });
         _pollingRateComboBox.Items.Add(new ComboBoxItem { Content = "250 Hz", Tag = "250" });
         _pollingRateComboBox.Items.Add(new ComboBoxItem { Content = "500 Hz", Tag = "500" });
         _pollingRateComboBox.Items.Add(new ComboBoxItem { Content = "1000 Hz", Tag = "1000" });
+        _pollingRateComboBox.SelectionChanged += InputChanged;
 
         _statusTextBlock = new TextBlock
         {
@@ -116,9 +119,14 @@ public partial class CustomMouseControl : UserControl
         }
 
         if (_pollingRateComboBox.SelectedItem == null && _pollingRateComboBox.Items.Count > 0)
-        {
             _pollingRateComboBox.SelectedIndex = _pollingRateComboBox.Items.Count - 1;
-        }
+
+        UpdateLiveProfileSummary();
+    }
+
+    private void InputChanged(object sender, RoutedEventArgs e)
+    {
+        UpdateLiveProfileSummary();
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -131,15 +139,21 @@ public partial class CustomMouseControl : UserControl
         _plugin.OnInstalled();
         LoadCurrentValues();
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = CustomMouseText.StatusResetDefaults;
+        if (_statusTextBlock != null)
+            _statusTextBlock.Text = CustomMouseText.StatusResetDefaults;
+        UpdateLiveProfileSummary();
     }
 
     private async Task ApplyCoreSettingsAsync()
     {
+        if (_dpiSlider is null || _pollingRateComboBox is null || _statusTextBlock is null)
+            return;
+
         var dpi = (int)Math.Round(_dpiSlider.Value);
         if (!_plugin.SetDpi(dpi))
         {
             _statusTextBlock.Text = CustomMouseText.StatusInvalidDpi;
+            UpdateLiveProfileSummary();
             return;
         }
 
@@ -147,16 +161,51 @@ public partial class CustomMouseControl : UserControl
         if (selected?.Tag is not string pollingTag || !int.TryParse(pollingTag, out var pollingRate))
         {
             _statusTextBlock.Text = CustomMouseText.StatusSelectValidPolling;
+            UpdateLiveProfileSummary();
             return;
         }
 
         if (!_plugin.SetPollingRate(pollingRate))
         {
             _statusTextBlock.Text = CustomMouseText.StatusInvalidPolling;
+            UpdateLiveProfileSummary();
             return;
         }
 
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
         _statusTextBlock.Text = CustomMouseText.StatusProfileSaved;
+        UpdateLiveProfileSummary();
+    }
+
+    private void UpdateLiveProfileSummary()
+    {
+        var dpi = _dpiSlider is null ? _plugin.Settings.Dpi : (int)Math.Round(_dpiSlider.Value);
+        var pollingRate = ParseSelectedPollingRate() ?? _plugin.Settings.PollingRate;
+
+        if (_profileStatusValueTextBlock != null)
+            _profileStatusValueTextBlock.Text = CustomMouseText.ProfileReady;
+
+        if (_currentDpiValueTextBlock != null)
+            _currentDpiValueTextBlock.Text = dpi.ToString(CultureInfo.CurrentUICulture);
+
+        if (_currentPollingValueTextBlock != null)
+            _currentPollingValueTextBlock.Text = FormatPollingRate(pollingRate);
+    }
+
+    private int? ParseSelectedPollingRate()
+    {
+        if (_pollingRateComboBox?.SelectedItem is ComboBoxItem item &&
+            item.Tag is string tag &&
+            int.TryParse(tag, NumberStyles.Integer, CultureInfo.InvariantCulture, out var pollingRate))
+        {
+            return pollingRate;
+        }
+
+        return null;
+    }
+
+    private static string FormatPollingRate(int pollingRate)
+    {
+        return string.Format(CultureInfo.CurrentUICulture, "{0} Hz", pollingRate);
     }
 }

@@ -6,6 +6,12 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-03-16
+
+### Improved / 改进
+- Reworked the feature page into a card-based live profile dashboard with at-a-glance DPI and polling summaries / 重做功能页为卡片式实时配置仪表盘，提供 DPI 与回报率摘要
+- Reworked the settings page into a richer Windows mouse overview with live pointer-speed, button-layout, and cursor-theme state summaries / 重做设置页为更完整的 Windows 鼠标总览，并增加指针速度、按键布局与光标主题状态摘要
+
 ## [1.0.7] - 2026-03-10
 
 ### Improved / 改进

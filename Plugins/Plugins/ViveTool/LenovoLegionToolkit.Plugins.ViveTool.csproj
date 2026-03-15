@@ -13,9 +13,9 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Plugin version -->
-    <Version>1.1.5</Version>
-    <FileVersion>1.1.5</FileVersion>
-    <AssemblyVersion>1.1.5</AssemblyVersion>
+    <Version>1.1.6</Version>
+    <FileVersion>1.1.6</FileVersion>
+    <AssemblyVersion>1.1.6</AssemblyVersion>
     <!-- Output DLL name matching plugin ID -->
     <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>

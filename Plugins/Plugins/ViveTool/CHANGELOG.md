@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [1.1.6] - 2026-03-16
+
+### Improved / 改进
+- Reworked the settings page into a stronger hero-plus-actions layout so current runtime status, download progress, and external actions are easier to scan / 重做设置页为更清晰的头图区加操作区布局，使运行状态、下载进度和外部操作更易读
+- Tightened the binary path management block with clearer hierarchy for bundled-path guidance, browse, and config import actions / 收紧二进制路径管理区的信息层级，更清晰地展示内置路径说明、浏览与配置导入动作
+
 ## [1.1.5] - 2026-03-10
 
 ### Improved / 改进

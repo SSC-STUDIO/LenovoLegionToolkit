@@ -83,18 +83,27 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
         var installed = _plugin.IsShellInstalled();
         var path = _plugin.GetShellInstallPath() ?? ShellIntegrationText.NotFound;
+        var configPath = _plugin.GetShellConfigPath() ?? ShellIntegrationText.NotFound;
+        var version = _plugin.GetShellVersion() ?? ShellIntegrationText.NotFound;
         var prefix = installed ? ShellIntegrationText.StatusDetected : ShellIntegrationText.StatusNotDetected;
 
+        if (_registrationValueTextBlock != null)
+            _registrationValueTextBlock.Text = installed ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState;
+
+        if (_versionValueTextBlock != null)
+            _versionValueTextBlock.Text = version;
+
+        if (_configValueTextBlock != null)
+            _configValueTextBlock.Text = configPath;
+
+        if (_pathValueTextBlock != null)
+            _pathValueTextBlock.Text = path;
+
         _statusTextBlock.Text = $"{prefix}\n{ShellIntegrationText.PathLabel}: {path}";
-        var version = _plugin.GetShellVersion();
-        if (!string.IsNullOrWhiteSpace(version))
-        {
+        if (!string.IsNullOrWhiteSpace(version) && version != ShellIntegrationText.NotFound)
             _statusTextBlock.Text += $"\n{ShellIntegrationText.VersionLabel}: {version}";
-        }
         if (!string.IsNullOrWhiteSpace(suffix))
-        {
             _statusTextBlock.Text += $"\n{suffix}";
-        }
     }
 
     private async void EnableButton_Click(object sender, RoutedEventArgs e)

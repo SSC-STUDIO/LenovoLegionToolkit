@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- **Custom Mouse**: Refreshed both the profile and Windows-settings pages into a card-based dashboard with live summary tiles for DPI, polling rate, pointer speed, button layout, and cursor-theme mode / 重构 Custom Mouse 的配置页与 Windows 设置页，改为卡片式仪表盘，并增加 DPI、回报率、指针速度、按键布局和光标主题模式的实时摘要
+- **Network Acceleration**: Expanded the telemetry dashboard with traffic-mix bars and a burst-history chart while keeping the existing live throughput graph and fallback UI intact / 扩展 Network Acceleration 遥测面板，新增流量占比条和突发历史图，同时保留原有吞吐曲线与回退 UI
+- **Shell Integration**: Promoted installation, version, config, and path details into richer overview cards while preserving the same registration actions / 提升 Shell Integration 的安装、版本、配置和路径信息展示，改为概览卡片，同时保留原有注册控制动作
+- **ViveTool**: Reworked the settings surface into a stronger hero-plus-actions layout so runtime status, download progress, and binary path management read more cleanly / 重做 ViveTool 设置页布局，采用更清晰的头图区加操作区结构，使运行状态、下载进度和二进制路径管理更易读
+
 ### Fixed / 修复
 - **Shell Integration / Shell 集成**: Prepared a new `1.0.4` marketplace payload that bundles the verified sibling `Shell` build removing the submenu black-block animation while preserving submenu transparency parity / 准备新的 `1.0.4` 市场包，内置已验证的 sibling `Shell` 修复版本，移除二级菜单黑块动画并保持子菜单透明度一致
 

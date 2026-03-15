@@ -5,7 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.5] - 2026-03-16
+
+### Improved / 改进
+- Refreshed the settings page into a clearer overview layout with dedicated cards for detection state, version, config path, and install path / 重做设置页为更清晰的总览布局，单独展示检测状态、版本、配置路径与安装路径
+- Kept the existing enable/disable/style/config actions while regrouping them into a richer quick-actions section / 保留现有启用、禁用、样式和配置操作，并重新整理为更完整的快速操作区
 
 ## [1.0.4] - 2026-03-15
 

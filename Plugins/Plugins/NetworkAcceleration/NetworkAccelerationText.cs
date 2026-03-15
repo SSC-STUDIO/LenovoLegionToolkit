@@ -23,6 +23,15 @@ public static class NetworkAccelerationText
     public static string DownloadLegend => T(nameof(DownloadLegend), "Download");
     public static string UploadLegend => T(nameof(UploadLegend), "Upload");
     public static string ChartEmptyState => T(nameof(ChartEmptyState), "Waiting for telemetry...");
+    public static string TrafficMixTitle => T(nameof(TrafficMixTitle), "Traffic Mix");
+    public static string TrafficMixDescription => T(nameof(TrafficMixDescription), "Current download and upload share based on the latest sample.");
+    public static string DownloadShareLabel => T(nameof(DownloadShareLabel), "Download Share");
+    public static string UploadShareLabel => T(nameof(UploadShareLabel), "Upload Share");
+    public static string BurstHistoryTitle => T(nameof(BurstHistoryTitle), "Burst History");
+    public static string BurstHistoryDescription => T(nameof(BurstHistoryDescription), "Recent combined throughput spikes from the latest telemetry window.");
+    public static string RollingAverageLabel => T(nameof(RollingAverageLabel), "Rolling Avg");
+    public static string BurstPeakLabel => T(nameof(BurstPeakLabel), "Burst Peak");
+    public static string BurstChartEmptyState => T(nameof(BurstChartEmptyState), "Need more samples to render burst history.");
     public static string DownloadTotalLabel => T(nameof(DownloadTotalLabel), "Total Downloaded");
     public static string UploadTotalLabel => T(nameof(UploadTotalLabel), "Total Uploaded");
     public static string UpdatedLabel => T(nameof(UpdatedLabel), "Updated");

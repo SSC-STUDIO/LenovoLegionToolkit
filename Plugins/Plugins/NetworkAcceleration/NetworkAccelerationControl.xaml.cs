@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -31,7 +32,9 @@ public partial class NetworkAccelerationControl : UserControl
         TryInitializeComponent();
         LoadCurrentMode();
         UpdateModeDescription();
-        UpdateTelemetrySummary(new NetworkAccelerationTelemetrySnapshot(DateTimeOffset.Now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0));
+        var initialSnapshot = new NetworkAccelerationTelemetrySnapshot(DateTimeOffset.Now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0);
+        UpdateTelemetrySummary(initialSnapshot);
+        UpdateAnalytics(initialSnapshot);
         SetStatus(NetworkAccelerationText.MonitoringStatus, false);
     }
 
@@ -174,7 +177,9 @@ public partial class NetworkAccelerationControl : UserControl
             _telemetrySamples.RemoveAt(0);
 
         UpdateTelemetrySummary(snapshot);
+        UpdateAnalytics(snapshot);
         UpdateChart();
+        UpdateBurstChart();
     }
 
     private void UpdateTelemetrySummary(NetworkAccelerationTelemetrySnapshot snapshot)
@@ -203,9 +208,41 @@ public partial class NetworkAccelerationControl : UserControl
             _updatedValueTextBlock.Text = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentUICulture);
     }
 
+    private void UpdateAnalytics(NetworkAccelerationTelemetrySnapshot snapshot)
+    {
+        var combinedNow = Math.Max(0, snapshot.DownloadMbps) + Math.Max(0, snapshot.UploadMbps);
+        var downloadShare = combinedNow <= 0 ? 0 : (snapshot.DownloadMbps / combinedNow) * 100d;
+        var uploadShare = combinedNow <= 0 ? 0 : (snapshot.UploadMbps / combinedNow) * 100d;
+        var averageBurst = _telemetrySamples.Count == 0 ? 0 : _telemetrySamples.Average(sample => sample.DownloadMbps + sample.UploadMbps);
+        var peakBurst = _telemetrySamples.Count == 0 ? 0 : _telemetrySamples.Max(sample => sample.DownloadMbps + sample.UploadMbps);
+
+        if (_downloadShareValueTextBlock != null)
+            _downloadShareValueTextBlock.Text = FormatPercent(downloadShare);
+
+        if (_uploadShareValueTextBlock != null)
+            _uploadShareValueTextBlock.Text = FormatPercent(uploadShare);
+
+        if (_downloadShareBar != null)
+            _downloadShareBar.Value = downloadShare;
+
+        if (_uploadShareBar != null)
+            _uploadShareBar.Value = uploadShare;
+
+        if (_rollingAverageTextBlock != null)
+            _rollingAverageTextBlock.Text = FormatRate(averageBurst);
+
+        if (_burstPeakTextBlock != null)
+            _burstPeakTextBlock.Text = FormatRate(peakBurst);
+    }
+
     private void ChartCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         UpdateChart();
+    }
+
+    private void BurstCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateBurstChart();
     }
 
     private void UpdateChart()
@@ -249,6 +286,35 @@ public partial class NetworkAccelerationControl : UserControl
         _uploadLine.Points = BuildLinePoints(width, height, ceiling, sample => sample.UploadMbps);
         _downloadFillPolygon.Points = BuildFillPoints(_downloadLine.Points, width, height);
         _uploadFillPolygon.Points = BuildFillPoints(_uploadLine.Points, width, height);
+    }
+
+    private void UpdateBurstChart()
+    {
+        if (_burstCanvas is null ||
+            _burstLine is null ||
+            _burstFillPolygon is null ||
+            _burstEmptyTextBlock is null)
+        {
+            return;
+        }
+
+        var width = _burstCanvas.ActualWidth;
+        var height = _burstCanvas.ActualHeight;
+        if (width <= 1 || height <= 1)
+            return;
+
+        if (_telemetrySamples.Count < 2)
+        {
+            _burstLine.Points = [];
+            _burstFillPolygon.Points = [];
+            _burstEmptyTextBlock.Visibility = Visibility.Visible;
+            return;
+        }
+
+        _burstEmptyTextBlock.Visibility = Visibility.Collapsed;
+        var ceiling = Math.Max(1d, _telemetrySamples.Max(sample => sample.DownloadMbps + sample.UploadMbps));
+        _burstLine.Points = BuildLinePoints(width, height, ceiling, sample => sample.DownloadMbps + sample.UploadMbps);
+        _burstFillPolygon.Points = BuildFillPoints(_burstLine.Points, width, height);
     }
 
     private PointCollection BuildLinePoints(double width, double height, double ceiling, Func<NetworkAccelerationTelemetrySnapshot, double> selector)
@@ -337,6 +403,11 @@ public partial class NetworkAccelerationControl : UserControl
     private static string FormatRate(double mbps)
     {
         return string.Format(CultureInfo.CurrentUICulture, NetworkAccelerationText.MbpsValueFormat, mbps);
+    }
+
+    private static string FormatPercent(double value)
+    {
+        return string.Format(CultureInfo.CurrentUICulture, "{0:0}%", value);
     }
 
     private static string FormatDataSize(long bytes)

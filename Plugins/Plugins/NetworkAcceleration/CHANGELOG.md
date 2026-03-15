@@ -5,6 +5,12 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-03-16
+
+### Improved / 改进
+- Expanded the telemetry page with traffic-mix progress bars and a burst-history chart driven by the existing download/upload sample stream / 扩展遥测页面，新增基于现有上下行采样流的流量占比进度条与突发历史图
+- Tightened telemetry hierarchy so live totals, burst peak, rolling average, mode controls, and quick actions read as one continuous dashboard / 收紧遥测信息层级，将实时总量、突发峰值、滚动平均、模式控制与快速操作整理为连续仪表盘
+
 ## [1.1.1] - 2026-03-12
 
 ### Fixed / 修复

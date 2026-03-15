@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,18 +37,23 @@ public partial class CustomMouseSettingsControl : UserControl
             TickFrequency = 1,
             IsSnapToTickEnabled = true
         };
+        _pointerSpeedSlider.ValueChanged += SettingsInputChanged;
 
         _swapButtonsCheckBox = new CheckBox
         {
             Content = CustomMouseText.SwapButtonsLabel,
             Margin = new Thickness(0, 16, 0, 0)
         };
+        _swapButtonsCheckBox.Checked += SettingsInputChanged;
+        _swapButtonsCheckBox.Unchecked += SettingsInputChanged;
 
         _autoThemeCursorCheckBox = new CheckBox
         {
             Content = CustomMouseText.AutoThemeLabel,
             Margin = new Thickness(0, 12, 0, 0)
         };
+        _autoThemeCursorCheckBox.Checked += SettingsInputChanged;
+        _autoThemeCursorCheckBox.Unchecked += SettingsInputChanged;
 
         _statusTextBlock = new TextBlock
         {
@@ -123,6 +129,12 @@ public partial class CustomMouseSettingsControl : UserControl
         _pointerSpeedSlider.Value = _plugin.Settings.WindowsPointerSpeed;
         _swapButtonsCheckBox.IsChecked = _plugin.Settings.SwapButtons;
         _autoThemeCursorCheckBox.IsChecked = _plugin.Settings.AutoThemeCursorStyle;
+        UpdateSummaryCards();
+    }
+
+    private void SettingsInputChanged(object sender, RoutedEventArgs e)
+    {
+        UpdateSummaryCards();
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -136,18 +148,21 @@ public partial class CustomMouseSettingsControl : UserControl
         if (!_plugin.SetWindowsPointerSpeed(speed))
         {
             _statusTextBlock.Text = CustomMouseText.StatusApplyPointerFail;
+            UpdateSummaryCards();
             return;
         }
 
         if (!_plugin.SetSwapButtons(swapButtons))
         {
             _statusTextBlock.Text = CustomMouseText.StatusApplySwapFail;
+            UpdateSummaryCards();
             return;
         }
 
         _plugin.SetAutoThemeCursorStyle(_autoThemeCursorCheckBox.IsChecked == true);
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
         _statusTextBlock.Text = CustomMouseText.StatusWindowsApplied;
+        UpdateSummaryCards();
     }
 
     private async void ApplyCursorThemeNowButton_Click(object sender, RoutedEventArgs e)
@@ -162,6 +177,7 @@ public partial class CustomMouseSettingsControl : UserControl
         _statusTextBlock.Text = applied
             ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme)
             : CustomMouseText.StatusCursorApplyFailed;
+        UpdateSummaryCards();
     }
 
     private void ReloadButton_Click(object sender, RoutedEventArgs e)
@@ -171,5 +187,25 @@ public partial class CustomMouseSettingsControl : UserControl
 
         LoadCurrentValues();
         _statusTextBlock.Text = CustomMouseText.StatusReloaded;
+        UpdateSummaryCards();
+    }
+
+    private void UpdateSummaryCards()
+    {
+        if (_pointerPreviewValueTextBlock != null)
+        {
+            var speed = _pointerSpeedSlider is null ? _plugin.Settings.WindowsPointerSpeed : (int)Math.Round(_pointerSpeedSlider.Value);
+            _pointerPreviewValueTextBlock.Text = string.Format(CultureInfo.CurrentUICulture, "{0}/20", speed);
+        }
+
+        if (_buttonLayoutValueTextBlock != null)
+            _buttonLayoutValueTextBlock.Text = _swapButtonsCheckBox?.IsChecked == true
+                ? CustomMouseText.SwappedButtonsState
+                : CustomMouseText.StandardButtonsState;
+
+        if (_cursorThemeValueTextBlock != null)
+            _cursorThemeValueTextBlock.Text = _autoThemeCursorCheckBox?.IsChecked == true
+                ? CustomMouseText.AutomaticThemeState
+                : CustomMouseText.ManualThemeState;
     }
 }
