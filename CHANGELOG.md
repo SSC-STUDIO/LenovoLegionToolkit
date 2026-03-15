@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.7] - 2026-03-15
+
+### Fixed / 修复
+- **Resource Designer / 资源设计器**: Restored the missing `SettingsPage_ForceSoftwareRendering_Title` and `SettingsPage_ForceSoftwareRendering_Message` entries in `Resource.Designer.cs`, eliminating the XAML static-resource resolution warning seen during release builds / 恢复 `Resource.Designer.cs` 中缺失的 `SettingsPage_ForceSoftwareRendering_Title` 与 `SettingsPage_ForceSoftwareRendering_Message` 条目，消除发布构建期间出现的 XAML 静态资源解析告警
+
 ## [3.6.6] - 2026-03-15
 
 ### Fixed / 修复

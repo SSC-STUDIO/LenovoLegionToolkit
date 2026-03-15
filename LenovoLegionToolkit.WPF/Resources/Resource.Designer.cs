@@ -6277,6 +6277,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Force software rendering.
+        /// </summary>
+        public static string SettingsPage_ForceSoftwareRendering_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_ForceSoftwareRendering_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use software rendering when remote desktop or headless display is detected. Restart recommended..
+        /// </summary>
+        public static string SettingsPage_ForceSoftwareRendering_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_ForceSoftwareRendering_Message", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Update {0} available!.
