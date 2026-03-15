@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-03-15
+
+### Fixed / 修复
+- Bundled the verified Shell build that removes the abrupt black block during submenu opening while keeping submenu and main-menu transparency aligned / 打包已验证的 Shell 修复版本，去除二级菜单打开时突兀的黑块，同时保持子菜单与主菜单透明度一致
+- Replaced the problematic marketplace payload built from the older Shell submenu animation path / 替换基于旧版二级菜单动画路径构建的问题市场包
+
 ### Added / 新增
 - Added quick actions to open the Shell folder and config file from the settings page / 新增设置页快捷入口，可打开 Shell 文件夹与配置文件
 - Documented Shell binary source links in plugin metadata/readme / 在插件元数据与说明中补充 Shell 二进制来源链接

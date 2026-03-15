@@ -35,7 +35,9 @@ Integrate Lenovo Legion Toolkit with Windows shell context menu.
 - Quick mode switching
 - Direct launcher access
 
-**Shell binaries:** Bundled from the sibling [Nilesoft-Shell](https://github.com/Crs10259/Nilesoft-Shell) repository (`src/bin/shell.dll`, `shell.exe`, `shell.nss`).
+**Implementation source:** The right-click menu beautification and shell hosting layer are based on the sibling `Shell` repository, published on GitHub as [SSC-STUDIO/Nilesoft-Shell](https://github.com/SSC-STUDIO/Nilesoft-Shell).
+
+**Shell binaries:** Bundled from the sibling `Shell` repository (`src/bin/shell.dll`, `shell.exe`, `shell.nss`).
 
 **Permissions:**
 - SystemInformation

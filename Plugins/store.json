@@ -40,19 +40,19 @@
         {
             "id": "shell-integration",
             "name": "Shell Integration",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.3/shell-integration-v1.0.3.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.3",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.4/shell-integration-v1.0.4.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.4",
             "icon": "",
             "iconBackground": "#0F766E",
             "isSystemPlugin": true,
             "dependencies": [],
             "minLLTVersion": "3.6.1",
-            "releaseDate": "2026-02-26T00:00:00Z",
-            "fileSize": 22704,
+            "releaseDate": "2026-03-15T00:00:00Z",
+            "fileSize": 920888,
             "tags": [
                 "system",
                 "shell",
@@ -148,6 +148,6 @@
             ]
         }
     ],
-    "version": "1.0.9",
-    "lastUpdated": "2026-03-12T00:00:00Z"
+    "version": "1.0.10",
+    "lastUpdated": "2026-03-15T00:00:00Z"
 }
