@@ -347,6 +347,8 @@ CLI does not need to be ran as Administrator.
 
 LLT supports a comprehensive plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically with full UI support.
 
+Official plugins for LLT are maintained in the separate [LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins) repository. That repository contains plugin source code, manifests, release metadata, and integration-specific assets that are distributed through the Plugin Extensions page.
+
 ### Core Features
 
 - **Dynamic Loading**: Plugins are loaded at runtime from the `Build/plugins` directory

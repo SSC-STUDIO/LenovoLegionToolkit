@@ -21,10 +21,10 @@ public class PluginRepositoryService : IDisposable
     private readonly IPluginManager _pluginManager;
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
-    // Try main first, then master for backward compatibility.
+    // The plugin store is currently published from master.
+    // Keep the source list explicit so the app does not waste time hitting the missing main/store.json endpoint first.
     private static readonly string[] PluginStoreUrls =
     {
-        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/main/store.json",
         "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json"
     };
     private const string PluginReleasesApiUrl = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50";

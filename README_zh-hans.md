@@ -113,6 +113,8 @@ LLT 可以做到：
 
 ### 插件扩展
 
+LLT 的官方插件维护在独立的 [LenovoLegionToolkit-Plugins](https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
+
 插件扩展页面提供了现代化、用户友好的插件管理界面：
 
 **功能特点：**

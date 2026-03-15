@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.6] - 2026-03-15
+
+### Fixed / 修复
+- **Plugin Store Source / 插件商店源**: Removed the failing `main/store.json` probe from the plugin store fetch path and now fetch the published `master/store.json` directly, avoiding the initial 404/timeout hop before plugin downloads / 从插件商店拉取路径中移除失效的 `main/store.json` 探测，改为直接获取已发布的 `master/store.json`，避免插件下载前先经历一次 404/超时跳转
+- **Plugin Marketplace / 插件市场**: Verified end-to-end download, install, and load of `shell-integration v1.0.4` through the main app plugin system after the store-source correction / 在修正商店源之后，已通过主程序插件系统端到端验证 `shell-integration v1.0.4` 的下载、安装与加载流程
+
+### Improved / 改进
+- **Plugin Documentation / 插件文档**: Added README links to the official `LenovoLegionToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project / 在 README 中补充官方 `LenovoLegionToolkit-Plugins` 仓库链接，便于从主项目直接查找插件源码、清单与发布元数据
+
 ### Fixed / 修复
 - **Remote Desktop Rendering / 远程桌面渲染**: Added a software-rendering fallback toggle for RDP/headless sessions to avoid blank UI when no physical display is active / 为远程桌面或无显示器场景新增“软件渲染”开关与兜底策略，避免界面空白
 - **Background Command Execution / 后台命令执行**: Fixed `CMD.RunAsync` fire-and-forget mode to stop redirecting stdout/stderr when `waitForExit` is `false`, preventing background processes with large output from hanging before completion / 修复 `CMD.RunAsync` 在 `waitForExit=false` 时的后台执行行为：不再重定向但不消费标准输出/错误，避免大输出后台进程在完成前被缓冲区阻塞
