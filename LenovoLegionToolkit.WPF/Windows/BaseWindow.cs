@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Media;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -16,9 +17,7 @@ public class BaseWindow : UiWindow
 
         // Set initial backdrop type based on settings
         var settings = IoCContainer.Resolve<ApplicationSettings>();
-        var backdropType = settings.Store.WindowBackdropStyle == WindowBackdropStyle.macOS 
-            ? BackgroundType.Acrylic 
-            : BackgroundType.Mica;
+        var backdropType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
         WindowBackdropType = backdropType;
         
         // For macOS style, Acrylic background type provides dynamic blur effect
@@ -32,9 +31,7 @@ public class BaseWindow : UiWindow
     {
         // Ensure backdrop type is correct when window loads
         var settings = IoCContainer.Resolve<ApplicationSettings>();
-        var backdropType = settings.Store.WindowBackdropStyle == WindowBackdropStyle.macOS 
-            ? BackgroundType.Acrylic 
-            : BackgroundType.Mica;
+        var backdropType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
         WindowBackdropType = backdropType;
     }
 

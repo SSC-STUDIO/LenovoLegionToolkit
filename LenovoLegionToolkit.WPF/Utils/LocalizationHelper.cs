@@ -100,7 +100,8 @@ public static class LocalizationHelper
             {
                 var isDarkMode = SystemTheme.IsDarkMode();
                 var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
-                Wpf.Ui.Appearance.Theme.Apply(themeType, Wpf.Ui.Appearance.BackgroundType.Mica, false);
+                var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
+                Wpf.Ui.Appearance.Theme.Apply(themeType, backgroundType, false);
             }
             catch (Exception ex)
             {
