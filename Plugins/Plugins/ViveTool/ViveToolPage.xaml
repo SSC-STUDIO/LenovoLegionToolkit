@@ -1,4 +1,4 @@
-<wpfui:UiPage
+<UserControl
     x:Class="LenovoLegionToolkit.Plugins.ViveTool.ViveToolPage"
     x:Name="PageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -13,15 +13,15 @@
     TextOptions.TextFormattingMode="Display"
     TextOptions.TextRenderingMode="Auto"
     FlowDirection="LeftToRight"
-    Scrollable="False"
+    AutomationProperties.AutomationId="ViveToolPageRoot"
     Loaded="Page_Loaded"
     Unloaded="Page_Unloaded">
     
-    <wpfui:UiPage.Resources>
+    <UserControl.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
-    </wpfui:UiPage.Resources>
+    </UserControl.Resources>
 
     <Grid Margin="0,0,16,0">
         <Grid.RowDefinitions>
@@ -122,6 +122,7 @@
                             <wpfui:Button
                                 Grid.Column="1"
                                 x:Name="_importButton"
+                                AutomationProperties.AutomationId="ViveToolImportButton"
                                 Content="{x:Static pluginRes:Resource.ViveTool_Import}"
                                 Click="ImportButton_Click"
                                 Padding="12,6"
@@ -129,6 +130,7 @@
                             <wpfui:Button
                                 Grid.Column="2"
                                 x:Name="_refreshListButton"
+                                AutomationProperties.AutomationId="ViveToolRefreshListButton"
                                 Content="{x:Static pluginRes:Resource.ViveTool_RefreshList}"
                                 Click="RefreshListButton_Click"
                                 Padding="12,6" />
@@ -251,4 +253,4 @@
         </ScrollViewer>
     </Grid>
 
-</wpfui:UiPage>
+</UserControl>

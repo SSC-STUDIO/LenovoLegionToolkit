@@ -244,7 +244,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         try
         {
             ApplyPluginResourceCulture();
-            await _settings.LoadAsync().ConfigureAwait(false);
+            await _settings.LoadAsync();
             await RefreshViveToolStatusAsync();
             await LoadFeaturesAsync();
         }
@@ -332,8 +332,11 @@ public partial class ViveToolPage : INotifyPropertyChanged
             if (!IsViveToolAvailable)
                 return;
 
-            IsLoading = true;
-            _emptyStatePanel.Visibility = Visibility.Collapsed;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                IsLoading = true;
+                _emptyStatePanel.Visibility = Visibility.Collapsed;
+            });
 
             var features = await _viveToolService.ListFeaturesAsync().ConfigureAwait(false);
 
