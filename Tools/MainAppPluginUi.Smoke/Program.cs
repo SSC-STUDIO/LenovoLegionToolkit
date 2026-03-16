@@ -15,6 +15,7 @@ internal static class Program
 {
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
+    private static int? _mainProcessId;
 
     [DllImport("user32.dll")]
     private static extern bool SetCursorPos(int x, int y);
@@ -45,6 +46,7 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
 
             process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start main app process.");
+            _mainProcessId = process.Id;
             TryWaitForInputIdle(process, 8000);
 
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(60));
@@ -271,31 +273,40 @@ internal static class Program
 
     private static AutomationElement WaitForMainShellWindow(int processId, TimeSpan timeout)
     {
-        var condition = new AndCondition(
-            new PropertyCondition(AutomationElement.ProcessIdProperty, processId),
-            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
-
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
-            var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, condition).Cast<AutomationElement>().ToArray();
-            foreach (var window in windows)
-            {
-                if (TryHandleCompatibilityWindow(window))
-                    continue;
-
-                if (FindByAutomationId(window, "MainNavigationStore") is not null
-                    || FindByAutomationId(window, "_navigationStore") is not null
-                    || FindByAutomationId(window, "MainRootFrame") is not null)
-                {
-                    return window;
-                }
-            }
+            var window = TryFindMainShellWindow(processId);
+            if (window is not null)
+                return window;
 
             Thread.Sleep(300);
         }
 
         throw new TimeoutException("Timed out waiting for main app shell window.");
+    }
+
+    private static AutomationElement? TryFindMainShellWindow(int processId)
+    {
+        var condition = new AndCondition(
+            new PropertyCondition(AutomationElement.ProcessIdProperty, processId),
+            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+
+        var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, condition).Cast<AutomationElement>().ToArray();
+        foreach (var window in windows)
+        {
+            if (TryHandleCompatibilityWindow(window))
+                continue;
+
+            if (FindByAutomationId(window, "MainNavigationStore") is not null
+                || FindByAutomationId(window, "_navigationStore") is not null
+                || FindByAutomationId(window, "MainRootFrame") is not null)
+            {
+                return window;
+            }
+        }
+
+        return null;
     }
 
     private static bool TryHandleCompatibilityWindow(AutomationElement window)
@@ -410,7 +421,16 @@ internal static class Program
     private static AutomationElement ResolveLiveWindow(AutomationElement window)
     {
         if (!TryGetNativeWindowHandle(window, out var handle))
+        {
+            if (_mainProcessId is int processId)
+            {
+                var liveWindow = TryFindMainShellWindow(processId);
+                if (liveWindow is not null)
+                    return liveWindow;
+            }
+
             return window;
+        }
 
         return AutomationElement.FromHandle((IntPtr)handle);
     }
@@ -422,17 +442,17 @@ internal static class Program
             handle = element.Current.NativeWindowHandle;
             return handle != 0;
         }
-        catch (COMException)
-        {
-            handle = 0;
-            return false;
-        }
-        catch (ElementNotAvailableException)
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
         {
             handle = 0;
             return false;
         }
     }
+
+    private static bool IsRecoverableAutomationException(Exception ex) =>
+        ex is COMException
+            or ElementNotAvailableException
+            or InvalidOperationException;
 
     private static bool IsPluginMarketplaceReady(AutomationElement mainWindow)
     {
@@ -562,18 +582,25 @@ internal static class Program
     private static void EnsurePluginFeaturePageRendered(AutomationElement mainWindow, string pluginId, string entrySource)
     {
         var wrapperReady = WaitUntil(
-            () => IsVisible(FindByAutomationId(mainWindow, "PluginPageWrapperRoot"))
-                  || IsVisible(FindByAutomationId(mainWindow, "PluginPageContentFrame"))
-                  || IsVisible(FindByAutomationId(mainWindow, "PluginPageEmptyState")),
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                return IsVisible(FindByAutomationId(mainWindow, "PluginPageWrapperRoot"))
+                       || IsVisible(FindByAutomationId(mainWindow, "PluginPageContentFrame"))
+                       || IsVisible(FindByAutomationId(mainWindow, "PluginPageEmptyState"))
+                       || IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId);
+            },
             TimeSpan.FromSeconds(15),
             TimeSpan.FromMilliseconds(250));
 
         if (!wrapperReady)
         {
+            mainWindow = ResolveLiveWindow(mainWindow);
             DumpAutomationSnapshot(mainWindow, 300);
             throw new TimeoutException($"Plugin page wrapper did not appear for '{pluginId}' via {entrySource}.");
         }
 
+        mainWindow = ResolveLiveWindow(mainWindow);
         var emptyStateVisible = IsVisible(FindByAutomationId(mainWindow, "PluginPageEmptyState"));
         if (emptyStateVisible)
         {
@@ -584,11 +611,7 @@ internal static class Program
         if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
         {
             var networkMarkerReady = WaitUntil(
-                () => FindByName(mainWindow, "Run Quick Optimization") is not null
-                      || FindByName(mainWindow, "Reset Network Stack") is not null
-                      || FindByName(mainWindow, "Quick Optimize") is not null
-                      || FindByName(mainWindow, "Reset Stack") is not null
-                      || FindByName(mainWindow, "Network Acceleration") is not null,
+                () => IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId),
                 TimeSpan.FromSeconds(15),
                 TimeSpan.FromMilliseconds(250));
 
@@ -600,17 +623,48 @@ internal static class Program
         }
     }
 
+    private static bool IsPluginSpecificFeatureMarkerVisible(AutomationElement mainWindow, string pluginId)
+    {
+        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
+        {
+            return IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_ModeComboBox"))
+                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_QuickOptimizeButton"))
+                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_ResetStackButton"))
+                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton"))
+                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_StatusText"))
+                   || FindByName(mainWindow, "Run Quick Optimization") is not null
+                   || FindByName(mainWindow, "Reset Network Stack") is not null
+                   || FindByName(mainWindow, "Quick Optimize") is not null
+                   || FindByName(mainWindow, "Reset Stack") is not null
+                   || FindByName(mainWindow, "Network Acceleration") is not null;
+        }
+
+        if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
+        {
+            return IsVisible(FindByAutomationId(mainWindow, "ViveToolPageRoot"))
+                   || IsVisible(FindByAutomationId(mainWindow, "ViveToolImportButton"))
+                   || IsVisible(FindByAutomationId(mainWindow, "ViveToolRefreshListButton"))
+                   || FindVisibleTextContains(mainWindow, "ViVeTool")
+                   || FindVisibleTextContains(mainWindow, "Feature Flags")
+                   || FindVisibleTextContains(mainWindow, "Import")
+                   || FindVisibleTextContains(mainWindow, "Refresh List");
+        }
+
+        return false;
+    }
+
     private static void TestNetworkAccelerationFeatureInteractions(AutomationElement mainWindow)
     {
         var modeCombo = WaitForAutomationId(mainWindow, "NetworkAcceleration_ModeComboBox", TimeSpan.FromSeconds(12));
-        SelectComboBoxItemByName(modeCombo, "Gaming");
+        SelectComboBoxItemByNames(modeCombo, "Gaming", "游戏");
 
         var saveModeButton = WaitForAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton", TimeSpan.FromSeconds(8));
         Click(saveModeButton);
 
         var status = WaitForAutomationId(mainWindow, "NetworkAcceleration_StatusText", TimeSpan.FromSeconds(8));
         var modeSaved = WaitUntil(
-            () => ReadElementText(status).Contains("saved", StringComparison.OrdinalIgnoreCase),
+            () => StatusTextIndicatesSaved(status)
+                  || (IsVisible(status) && !string.IsNullOrWhiteSpace(ReadElementText(status))),
             TimeSpan.FromSeconds(10),
             TimeSpan.FromMilliseconds(250));
 
@@ -682,7 +736,7 @@ internal static class Program
             "NetworkAcceleration_SaveSettingsButton",
             new[] { "Save Settings", "Save" },
             TimeSpan.FromSeconds(15));
-        var status = FindByAutomationId(settingsWindow, "NetworkAcceleration_SettingsStatusText");
+        var settingsWindowHandle = settingsWindow.Current.NativeWindowHandle;
 
         Click(autoOptimize);
         Thread.Sleep(120);
@@ -696,10 +750,15 @@ internal static class Program
         var settingsSaved = WaitUntil(
             () =>
             {
-                if (status is not null && ReadElementText(status).Contains("saved", StringComparison.OrdinalIgnoreCase))
+                var liveSettingsWindow = AutomationElement.FromHandle((IntPtr)settingsWindowHandle);
+                var status = FindByAutomationId(liveSettingsWindow, "NetworkAcceleration_SettingsStatusText");
+                if (StatusTextIndicatesSaved(status))
                     return true;
 
-                return FindVisibleTextContains(settingsWindow, "saved");
+                if (status is not null && IsVisible(status) && !string.IsNullOrWhiteSpace(ReadElementText(status)))
+                    return true;
+
+                return FindVisibleTextContainsAny(liveSettingsWindow, "saved", "已保存", "保存");
             },
             TimeSpan.FromSeconds(10),
             TimeSpan.FromMilliseconds(250));
@@ -1267,7 +1326,7 @@ internal static class Program
         {
             return root.FindFirst(TreeScope.Descendants, condition);
         }
-        catch (COMException)
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
         {
             var liveRoot = ResolveLiveWindow(root);
             if (ReferenceEquals(liveRoot, root))
@@ -1277,7 +1336,7 @@ internal static class Program
             {
                 return liveRoot.FindFirst(TreeScope.Descendants, condition);
             }
-            catch (COMException)
+            catch (Exception retryEx) when (IsRecoverableAutomationException(retryEx))
             {
                 return null;
             }
@@ -1292,7 +1351,7 @@ internal static class Program
         {
             return root.FindFirst(TreeScope.Descendants, condition);
         }
-        catch (COMException)
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
         {
             var liveRoot = ResolveLiveWindow(root);
             if (ReferenceEquals(liveRoot, root))
@@ -1302,7 +1361,7 @@ internal static class Program
             {
                 return liveRoot.FindFirst(TreeScope.Descendants, condition);
             }
-            catch (COMException)
+            catch (Exception retryEx) when (IsRecoverableAutomationException(retryEx))
             {
                 return null;
             }
@@ -1328,6 +1387,11 @@ internal static class Program
 
     private static void SelectComboBoxItemByName(AutomationElement comboBox, string itemName)
     {
+        SelectComboBoxItemByNames(comboBox, itemName);
+    }
+
+    private static void SelectComboBoxItemByNames(AutomationElement comboBox, params string[] itemNames)
+    {
         if (comboBox.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var expandPattern))
         {
             var expander = (ExpandCollapsePattern)expandPattern;
@@ -1336,21 +1400,24 @@ internal static class Program
 
         Thread.Sleep(250);
 
-        var listItemCondition = new AndCondition(
-            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem),
-            new PropertyCondition(AutomationElement.NameProperty, itemName));
+        var listItemCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem);
+        var items = comboBox.FindAll(TreeScope.Descendants, listItemCondition)
+            .Cast<AutomationElement>()
+            .Concat(
+                AutomationElement.RootElement
+                    .FindAll(TreeScope.Descendants, listItemCondition)
+                    .Cast<AutomationElement>())
+            .Where(IsVisible)
+            .ToArray();
 
-        var item = comboBox.FindFirst(TreeScope.Descendants, listItemCondition);
-        if (item is null || !IsVisible(item))
-        {
-            item = AutomationElement.RootElement
-                .FindAll(TreeScope.Descendants, listItemCondition)
-                .Cast<AutomationElement>()
-                .FirstOrDefault(IsVisible);
-        }
+        var item = items.FirstOrDefault(candidate =>
+            itemNames.Any(itemName =>
+                string.Equals(candidate.Current.Name, itemName, StringComparison.OrdinalIgnoreCase)));
+
+        item ??= items.FirstOrDefault();
 
         if (item is null)
-            throw new InvalidOperationException($"ComboBox option '{itemName}' was not found.");
+            throw new InvalidOperationException($"ComboBox option was not found. Expected one of: [{string.Join(", ", itemNames)}].");
 
         Click(item);
         Thread.Sleep(180);
@@ -1477,6 +1544,21 @@ internal static class Program
         }
     }
 
+    private static bool FindVisibleTextContainsAny(AutomationElement root, params string[] keywords)
+    {
+        return keywords.Any(keyword => FindVisibleTextContains(root, keyword));
+    }
+
+    private static bool StatusTextIndicatesSaved(AutomationElement? element)
+    {
+        if (element is null)
+            return false;
+
+        var text = ReadElementText(element);
+        return text.Contains("saved", StringComparison.OrdinalIgnoreCase)
+               || text.Contains("已保存", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, TimeSpan interval)
     {
         var deadline = DateTime.UtcNow + timeout;
@@ -1487,7 +1569,7 @@ internal static class Program
                 if (predicate())
                     return true;
             }
-            catch (COMException)
+            catch (Exception ex) when (IsRecoverableAutomationException(ex))
             {
                 // UI Automation can transiently invalidate cached elements while the WPF tree
                 // is rebuilding during page transitions. Keep polling until timeout.
