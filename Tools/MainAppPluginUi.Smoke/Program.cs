@@ -22,6 +22,12 @@ internal static class Program
     [DllImport("user32.dll")]
     private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
 
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
     private static int Main(string[] args)
     {
         Process? process = null;
@@ -309,16 +315,39 @@ internal static class Program
 
     private static void NavigateToPluginExtensionsPage(AutomationElement mainWindow, bool refresh)
     {
+        mainWindow = ResolveLiveWindow(mainWindow);
         CloseStalePluginSettingsWindows(mainWindow);
 
         var arrived = false;
         for (var attempt = 1; attempt <= 6; attempt++)
         {
+            mainWindow = ResolveLiveWindow(mainWindow);
             var pluginNav = WaitForPluginNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
             Click(pluginNav);
 
+            // Nav items exposed as DataItem do not always react to SelectionItemPattern
+            // on this machine; fall back to a physical click before declaring the attempt failed.
+            var quickReady = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsPluginMarketplaceReady(mainWindow);
+                },
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromMilliseconds(200));
+
+            if (!quickReady)
+            {
+                BringToForeground(mainWindow);
+                MouseClick(pluginNav);
+            }
+
             var ready = WaitUntil(
-                () => IsPluginMarketplaceReady(mainWindow),
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsPluginMarketplaceReady(mainWindow);
+                },
                 TimeSpan.FromSeconds(12),
                 TimeSpan.FromMilliseconds(250));
 
@@ -334,6 +363,7 @@ internal static class Program
 
         if (!arrived)
         {
+            mainWindow = ResolveLiveWindow(mainWindow);
             DumpAutomationSnapshot(mainWindow, 350);
             throw new TimeoutException("Timed out waiting for plugin marketplace page controls.");
         }
@@ -349,9 +379,13 @@ internal static class Program
             return;
 
         var cardReady = WaitUntil(
-            () => GetPluginIdsByButtonPrefix(mainWindow, "PluginInstallButton_").Any()
-                  || GetPluginIdsByButtonPrefix(mainWindow, "PluginOpenButton_").Any()
-                  || GetPluginIdsByButtonPrefix(mainWindow, "PluginConfigureButton_").Any(),
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                return GetPluginIdsByButtonPrefix(mainWindow, "PluginInstallButton_").Any()
+                       || GetPluginIdsByButtonPrefix(mainWindow, "PluginOpenButton_").Any()
+                       || GetPluginIdsByButtonPrefix(mainWindow, "PluginConfigureButton_").Any();
+            },
             TimeSpan.FromSeconds(45),
             TimeSpan.FromMilliseconds(350));
 
@@ -359,6 +393,44 @@ internal static class Program
         {
             DumpAutomationSnapshot(mainWindow, 300);
             throw new TimeoutException("Plugin action buttons did not appear in plugin marketplace view.");
+        }
+    }
+
+    private static void BringToForeground(AutomationElement window)
+    {
+        if (!TryGetNativeWindowHandle(window, out var handle))
+            return;
+
+        const int SW_RESTORE = 9;
+        _ = ShowWindow((IntPtr)handle, SW_RESTORE);
+        _ = SetForegroundWindow((IntPtr)handle);
+        Thread.Sleep(150);
+    }
+
+    private static AutomationElement ResolveLiveWindow(AutomationElement window)
+    {
+        if (!TryGetNativeWindowHandle(window, out var handle))
+            return window;
+
+        return AutomationElement.FromHandle((IntPtr)handle);
+    }
+
+    private static bool TryGetNativeWindowHandle(AutomationElement element, out int handle)
+    {
+        try
+        {
+            handle = element.Current.NativeWindowHandle;
+            return handle != 0;
+        }
+        catch (COMException)
+        {
+            handle = 0;
+            return false;
+        }
+        catch (ElementNotAvailableException)
+        {
+            handle = 0;
+            return false;
         }
     }
 
@@ -1189,16 +1261,52 @@ internal static class Program
 
     private static AutomationElement? FindByAutomationId(AutomationElement root, string automationId)
     {
-        return root.FindFirst(
-            TreeScope.Descendants,
-            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        var condition = new PropertyCondition(AutomationElement.AutomationIdProperty, automationId);
+
+        try
+        {
+            return root.FindFirst(TreeScope.Descendants, condition);
+        }
+        catch (COMException)
+        {
+            var liveRoot = ResolveLiveWindow(root);
+            if (ReferenceEquals(liveRoot, root))
+                return null;
+
+            try
+            {
+                return liveRoot.FindFirst(TreeScope.Descendants, condition);
+            }
+            catch (COMException)
+            {
+                return null;
+            }
+        }
     }
 
     private static AutomationElement? FindByName(AutomationElement root, string name)
     {
-        return root.FindFirst(
-            TreeScope.Descendants,
-            new PropertyCondition(AutomationElement.NameProperty, name));
+        var condition = new PropertyCondition(AutomationElement.NameProperty, name);
+
+        try
+        {
+            return root.FindFirst(TreeScope.Descendants, condition);
+        }
+        catch (COMException)
+        {
+            var liveRoot = ResolveLiveWindow(root);
+            if (ReferenceEquals(liveRoot, root))
+                return null;
+
+            try
+            {
+                return liveRoot.FindFirst(TreeScope.Descendants, condition);
+            }
+            catch (COMException)
+            {
+                return null;
+            }
+        }
     }
 
     private static void Click(AutomationElement element)
@@ -1374,8 +1482,16 @@ internal static class Program
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
-            if (predicate())
-                return true;
+            try
+            {
+                if (predicate())
+                    return true;
+            }
+            catch (COMException)
+            {
+                // UI Automation can transiently invalidate cached elements while the WPF tree
+                // is rebuilding during page transitions. Keep polling until timeout.
+            }
 
             Thread.Sleep(interval);
         }

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- **Remote Desktop Backdrop Compatibility / 远程桌面背景兼容性**: Disabled Mica/Acrylic backdrops when software rendering is forced or a Terminal Services session is detected, preventing startup and helper windows from appearing blank under Remote Desktop / 在强制软件渲染或检测到远程桌面会话时禁用 Mica/Acrylic 背景，避免主窗口与启动辅助窗口在远程桌面下出现空白显示
+
 ## [3.6.7] - 2026-03-15
 
 ### Fixed / 修复
