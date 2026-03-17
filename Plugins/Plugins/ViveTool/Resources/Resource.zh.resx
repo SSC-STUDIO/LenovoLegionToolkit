@@ -49,6 +49,18 @@
   <data name="ViveTool_ViveToolError" xml:space="preserve">
     <value>检查 ViVeTool 状态时出错</value>
   </data>
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+    <value>正在下载：{0} / {1}（{2}%）</value>
+  </data>
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+    <value>下载完成</value>
+  </data>
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+    <value>ViVeTool 已下载到 {0}</value>
+  </data>
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+    <value>下载失败</value>
+  </data>
   <data name="ViveTool_Refresh" xml:space="preserve">
     <value>刷新</value>
   </data>

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- **Chinese Plugin Localization / 插件中文本地化**: Filled the missing Chinese resource keys in ShellIntegration, CustomMouse, and ViveTool so simplified Chinese mode no longer falls back to English for the new plugin UI strings / 补齐 ShellIntegration、CustomMouse 与 ViveTool 缺失的中文资源键，避免简体中文模式下新插件界面字符串回退为英文
+
 ## [1.1.7] - 2026-03-17
 
 ### Fixed / 修复

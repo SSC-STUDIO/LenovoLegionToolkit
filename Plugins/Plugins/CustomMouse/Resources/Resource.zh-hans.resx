@@ -136,6 +136,9 @@
   <data name="StatusReloaded" xml:space="preserve">
     <value>å½åæä»¶è®¾ç½®å·²éæ°å è½½ã</value>
   </data>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>已应用光标主题：{0}。</value>
+  </data>
   <data name="CursorAppliedUnknownTheme" xml:space="preserve">
     <value>??</value>
   </data>

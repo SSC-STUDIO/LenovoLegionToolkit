@@ -67,8 +67,26 @@
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Shell éæ</value>
   </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell 集成概览</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>查看注册状态、安装路径，并直接打开此插件随附的 Shell 工具。</value>
+  </data>
   <data name="Subtitle" xml:space="preserve">
     <value>ä½¿ç¨æç®¡ç Shell æ§ä»¶ãå¨æè°èåå®æ¶é¢è§éæ°æé å³é®èåä½éªã</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>注册状态</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>快速操作</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>执行注册相关操作，或直接打开此插件打包的 Shell 资源。</value>
   </data>
   <data name="EnableButton" xml:space="preserve">
     <value>å¯ç¨</value>
@@ -81,6 +99,12 @@
   </data>
   <data name="OpenStyleShortButton" xml:space="preserve">
     <value>æå¼ç®å½</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>打开 Shell 文件夹</value>
+  </data>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>打开配置文件</value>
   </data>
   <data name="RefreshButton" xml:space="preserve">
     <value>å·æ°</value>
@@ -99,6 +123,12 @@
   </data>
   <data name="StatusNotDetected" xml:space="preserve">
     <value>æªæ£æµå° Nilesoft Shellã</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>已检测到</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>缺失</value>
   </data>
   <data name="StatusRegistered" xml:space="preserve">
     <value>å³é®èåå¢å¼ºå½åå·²å¯ç¨ã</value>
@@ -147,6 +177,21 @@
   </data>
   <data name="StatusOpenedStyleSettings" xml:space="preserve">
     <value>å·²æå¼æç®¡éç½®ç®å½ã</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>已打开 Shell 文件夹。</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>未找到 Shell 文件夹。</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>已打开配置文件。</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>未找到配置文件。</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>版本</value>
   </data>
   <data name="ProfileSavedShellMissing" xml:space="preserve">
     <value>éç½®å·²ä¿å­ï¼ä½å½åç³»ç»æªæ¾å° Shellã</value>
