@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.9] - 2026-03-17
+
+### Improved / 改进
+- **Plugin UI Smoke / 插件界面冒烟**: Hardened `MainAppPluginUi.Smoke` against stale UI Automation windows, localized plugin text, and feature-page routing differences so marketplace open/settings flows now verify `custom-mouse`, `shell-integration`, `vive-tool`, and `network-acceleration` end to end more reliably / 加固 `MainAppPluginUi.Smoke` 对陈旧 UI Automation 窗口、本地化插件文案和功能页路由差异的处理，使插件市场中的 `custom-mouse`、`shell-integration`、`vive-tool` 与 `network-acceleration` 打开与设置流程可以更稳定地完成端到端验证
+
 ## [3.6.8] - 2026-03-17
 
 ### Fixed / 修复
