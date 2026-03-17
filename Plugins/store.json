@@ -113,19 +113,19 @@
         {
             "id": "vive-tool",
             "name": "ViVeTool",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "description": "Manage Windows feature flags using ViVeTool",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.6/vive-tool-v1.1.6.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.6",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.7/vive-tool-v1.1.7.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.7",
             "icon": "",
             "iconBackground": "#7C3AED",
             "isSystemPlugin": false,
             "dependencies": [],
             "minLLTVersion": "3.6.1",
-            "releaseDate": "2026-03-16T00:00:00Z",
-            "fileSize": 725540,
+            "releaseDate": "2026-03-17T04:06:02Z",
+            "fileSize": 726359,
             "tags": [
                 "windows",
                 "feature-flags",
@@ -148,6 +148,6 @@
             ]
         }
     ],
-    "version": "1.0.11",
-    "lastUpdated": "2026-03-16T00:00:00Z"
+    "version": "1.0.12",
+    "lastUpdated": "2026-03-17T04:06:02Z"
 }

@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [1.1.7] - 2026-03-17
+
+### Fixed / 修复
+- Replaced the host-facing feature page and settings page roots with embeddable controls so ViVeTool can open inside the LLT plugin wrapper and settings dialog without `Page must have Window or Frame parent` exceptions / 将面向宿主的功能页与设置页根元素改为可嵌入控件，使 ViVeTool 可以在 LLT 插件包装页和设置对话框中正常打开，不再触发 `Page must have Window or Frame parent` 异常
+- Moved feature-list loading state updates back onto the UI dispatcher to avoid cross-thread access errors while refreshing ViVeTool status and flags / 将功能列表加载过程中的状态更新切回 UI Dispatcher，避免刷新 ViVeTool 状态与功能标志时出现跨线程访问错误
+
 ## [1.1.6] - 2026-03-16
 
 ### Improved / 改进
