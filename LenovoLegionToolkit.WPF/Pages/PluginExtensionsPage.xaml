@@ -168,7 +168,7 @@
 
             <Border Grid.Column="0" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Total Plugins"
+                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryTotal}"
                                FontSize="12"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock x:Name="_summaryTotalTextBlock"
@@ -181,7 +181,7 @@
 
             <Border Grid.Column="1" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Installed"
+                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryInstalled}"
                                FontSize="12"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock x:Name="_summaryInstalledTextBlock"
@@ -194,7 +194,7 @@
 
             <Border Grid.Column="2" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Updates Ready"
+                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryUpdatesReady}"
                                FontSize="12"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock x:Name="_summaryUpdatesTextBlock"
@@ -212,7 +212,7 @@
                     CornerRadius="14"
                     Padding="16,14">
                 <StackPanel>
-                    <TextBlock Text="Store Pulse"
+                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryStorePulse}"
                                FontSize="12"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource SystemAccentColorBrush}" />
@@ -220,7 +220,7 @@
                                Margin="0,8,0,0"
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="Checking plugin availability..." />
+                               Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryCheckingAvailability}" />
                 </StackPanel>
             </Border>
         </Grid>
@@ -414,7 +414,7 @@
                                     <TextBlock Text="{Binding Name}"
                                                Style="{StaticResource PluginTitleStyle}" />
                                     <!-- Author -->
-                                    <TextBlock Text="{Binding Author, StringFormat='by {0}'}"
+                                    <TextBlock Text="{Binding Author, StringFormat={x:Static resources:Resource.PluginExtensionsPage_AuthorFormat}}"
                                                FontSize="11"
                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                Margin="8,0,0,0"
@@ -494,25 +494,25 @@
                                 <WrapPanel Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                     <Border Style="{StaticResource CapabilityChipStyle}"
                                             Visibility="{Binding SupportsConfiguration, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="Settings"
+                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilitySettings}"
                                                    FontSize="11"
                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                     </Border>
                                     <Border Style="{StaticResource CapabilityChipStyle}"
                                             Visibility="{Binding SupportsOpenAction, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="Quick Open"
+                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilityQuickOpen}"
                                                    FontSize="11"
                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                     </Border>
                                     <Border Style="{StaticResource CapabilityChipStyle}"
                                             Visibility="{Binding SupportsOptimizationCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="Optimize"
+                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilityOptimize}"
                                                    FontSize="11"
                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                     </Border>
                                     <Border Style="{StaticResource CapabilityChipStyle}"
                                             Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="Update"
+                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilityUpdate}"
                                                    FontSize="11"
                                                    Foreground="{DynamicResource SystemAccentColorBrush}" />
                                     </Border>
