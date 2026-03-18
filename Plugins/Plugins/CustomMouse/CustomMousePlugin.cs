@@ -226,7 +226,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         await SaveSettingsAsync().ConfigureAwait(false);
 
         if (!await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false))
-            throw new InvalidOperationException("Failed to apply custom mouse cursor style.");
+            throw new InvalidOperationException(CustomMouseText.StatusCursorApplyFailed);
     }
 
     private async Task DisableAutoThemeCursorStyleAsync(CancellationToken cancellationToken)

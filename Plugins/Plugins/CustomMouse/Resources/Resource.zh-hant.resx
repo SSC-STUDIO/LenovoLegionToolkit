@@ -59,82 +59,82 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PluginName" xml:space="preserve">
-    <value>èªè¨æ»é¼ </value>
+    <value>自訂滑鼠</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>èªè¨æ»é¼ æ¸¸æ¨æ¨£å¼è¡çºèæ»é¼ è¨­å®ã</value>
+    <value>自訂滑鼠游標樣式行為與滑鼠設定。</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>èªè¨æ»é¼ </value>
+    <value>自訂滑鼠</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
-    <value>æ»é¼ è¨­å®</value>
+    <value>滑鼠設定</value>
   </data>
   <data name="FeatureSubtitle" xml:space="preserve">
-    <value>èª¿æ´æ»é¼ è¨­å®ä¸¦å¥ç¨å°ç®å Windows å·¥ä½éæ®µã</value>
+    <value>調整滑鼠設定並套用到目前 Windows 工作階段。</value>
   </data>
   <data name="PollingRateLabel" xml:space="preserve">
-    <value>åå ±ç</value>
+    <value>回報率</value>
   </data>
   <data name="ApplyButton" xml:space="preserve">
-    <value>å¥ç¨</value>
+    <value>套用</value>
   </data>
   <data name="ResetButton" xml:space="preserve">
-    <value>éè¨­</value>
+    <value>重設</value>
   </data>
   <data name="StatusResetDefaults" xml:space="preserve">
-    <value>æ»é¼ è¨­å®å·²éè¨­çºé è¨­å¼ã</value>
+    <value>滑鼠設定已重設為預設值。</value>
   </data>
   <data name="StatusInvalidDpi" xml:space="preserve">
-    <value>DPI æ¸å¼ç¡æã</value>
+    <value>DPI 數值無效。</value>
   </data>
   <data name="StatusSelectValidPolling" xml:space="preserve">
-    <value>è«é¸æææçåå ±çã</value>
+    <value>請選擇有效的回報率。</value>
   </data>
   <data name="StatusInvalidPolling" xml:space="preserve">
-    <value>åå ±çç¡æã</value>
+    <value>回報率無效。</value>
   </data>
   <data name="StatusProfileSaved" xml:space="preserve">
-    <value>æ»é¼ è¨­å®å·²å²å­ã</value>
+    <value>滑鼠設定已儲存。</value>
   </data>
   <data name="SettingsSubtitle" xml:space="preserve">
-    <value>å°ææ¨éåº¦èæéµéç½®å¥ç¨å°ç®å Windows è¨­å®ã</value>
+    <value>將指標速度與按鍵配置套用到目前 Windows 設定。</value>
   </data>
   <data name="PointerSpeedLabel" xml:space="preserve">
-    <value>Windows ææ¨éåº¦</value>
+    <value>Windows 指標速度</value>
   </data>
   <data name="SwapButtonsLabel" xml:space="preserve">
-    <value>äº¤ææ»é¼ å·¦å³éµ</value>
+    <value>交換滑鼠左右鍵</value>
   </data>
   <data name="AutoThemeLabel" xml:space="preserve">
-    <value>ä¾ç§ç®å Windows ææä¸»é¡èªåå¥ç¨èªè¨æ¸¸æ¨æ¨£å¼</value>
+    <value>依照目前 Windows 明暗主題自動套用自訂游標樣式</value>
   </data>
   <data name="CursorHint" xml:space="preserve">
-    <value>å¯å¨æ¬é æç³»çµ±æä½³åæ´ååä½ä¸­å¥ç¨æ¸¸æ¨å¤è§ã</value>
+    <value>可在本頁或系統最佳化擴充動作中套用游標外觀。</value>
   </data>
   <data name="ApplyToWindowsButton" xml:space="preserve">
-    <value>å¥ç¨å° Windows</value>
+    <value>套用到 Windows</value>
   </data>
   <data name="ApplyCursorThemeNowButton" xml:space="preserve">
-    <value>ç«å³å¥ç¨æ¸¸æ¨ä¸»é¡</value>
+    <value>立即套用游標主題</value>
   </data>
   <data name="ReloadButton" xml:space="preserve">
-    <value>éæ°è¼å¥</value>
+    <value>重新載入</value>
   </data>
   <data name="StatusApplyPointerFail" xml:space="preserve">
-    <value>å¥ç¨ææ¨éåº¦å¤±æã</value>
+    <value>套用指標速度失敗。</value>
   </data>
   <data name="StatusApplySwapFail" xml:space="preserve">
-    <value>å¥ç¨æéµäº¤æè¨­å®å¤±æã</value>
+    <value>套用按鍵交換設定失敗。</value>
   </data>
   <data name="StatusWindowsApplied" xml:space="preserve">
-    <value>Windows æ»é¼ è¨­å®å·²å¥ç¨ã</value>
+    <value>Windows 滑鼠設定已套用。</value>
   </data>
   <data name="StatusCursorApplyFailed" xml:space="preserve">
-    <value>å¥ç¨èªè¨æ¸¸æ¨æ¨£å¼å¤±æãè¥ç³»çµ±å°é INF å®è£ï¼è«åè©¦ä»¥ç³»çµ±ç®¡çå¡èº«åå·è¡ã</value>
+    <value>套用自訂游標樣式失敗。若系統封鎖 INF 安裝，請嘗試以系統管理員身分執行。</value>
   </data>
   <data name="StatusReloaded" xml:space="preserve">
-    <value>ç®åå¤æè¨­å®å·²éæ°è¼å¥ã</value>
+    <value>目前外掛設定已重新載入。</value>
   </data>
   <data name="CursorAppliedUnknownTheme" xml:space="preserve">
     <value>??</value>

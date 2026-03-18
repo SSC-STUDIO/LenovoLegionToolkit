@@ -1,51 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -59,85 +59,85 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PluginName" xml:space="preserve">
-    <value>ç¶²è·¯å é</value>
+    <value>網路加速</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>å³æç¶²è·¯å éèæä½³ååè½ã</value>
+    <value>即時網路加速與最佳化功能。</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>ç¶²è·¯å é</value>
+    <value>網路加速</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
-    <value>ç¶²è·¯è¨­å®</value>
+    <value>網路設定</value>
   </data>
   <data name="QuickActionsTitle" xml:space="preserve">
-    <value>å¿«éç¶²è·¯æä½</value>
+    <value>快速網路操作</value>
   </data>
   <data name="QuickActionsDescription" xml:space="preserve">
-    <value>å·è¡å¿«éæä½³åå½ä»¤ï¼ä»¥éä½å»¶é²ä¸¦æ¸çç¶²è·¯ Socket çæã</value>
+    <value>執行快速最佳化命令，以降低延遲並清理網路 Socket 狀態。</value>
   </data>
   <data name="RunQuickOptimizationButton" xml:space="preserve">
-    <value>å·è¡å¿«éæä½³å</value>
+    <value>執行快速最佳化</value>
   </data>
   <data name="ResetNetworkStackButton" xml:space="preserve">
-    <value>éè¨­ç¶²è·¯å ç</value>
+    <value>重設網路堆疊</value>
   </data>
   <data name="AdminHint" xml:space="preserve">
-    <value>é¨åæä½å¯è½éè¦ç³»çµ±ç®¡çå¡æ¬éã</value>
+    <value>部分操作可能需要系統管理員權限。</value>
   </data>
   <data name="PreferredModeTitle" xml:space="preserve">
-    <value>åå¥½æ¨¡å¼</value>
+    <value>偏好模式</value>
   </data>
   <data name="SaveModeButton" xml:space="preserve">
-    <value>å²å­æ¨¡å¼</value>
+    <value>儲存模式</value>
   </data>
   <data name="ModeBalanced" xml:space="preserve">
     <value>å¹³è¡¡</value>
   </data>
   <data name="ModeGaming" xml:space="preserve">
-    <value>éæ²</value>
+    <value>遊戲</value>
   </data>
   <data name="ModeStreaming" xml:space="preserve">
-    <value>ä¸²æµ</value>
+    <value>串流</value>
   </data>
   <data name="StatusQuickOptimizationCompleted" xml:space="preserve">
-    <value>å¿«éæä½³åå·²å®æã</value>
+    <value>快速最佳化已完成。</value>
   </data>
   <data name="StatusQuickOptimizationFailed" xml:space="preserve">
-    <value>å¿«éæä½³åå¤±æãè«ä»¥ç³»çµ±ç®¡çå¡èº«åå·è¡ã</value>
+    <value>快速最佳化失敗。請以系統管理員身分執行。</value>
   </data>
   <data name="StatusResetCompleted" xml:space="preserve">
-    <value>ç¶²è·¯å çéè¨­å·²å®æã</value>
+    <value>網路堆疊重設已完成。</value>
   </data>
   <data name="StatusResetFailed" xml:space="preserve">
-    <value>ç¶²è·¯å çéè¨­å¤±æãè«ä»¥ç³»çµ±ç®¡çå¡èº«åå·è¡ã</value>
+    <value>網路堆疊重設失敗。請以系統管理員身分執行。</value>
   </data>
   <data name="StatusSelectValidMode" xml:space="preserve">
-    <value>è«é¸ææææ¨¡å¼ã</value>
+    <value>請選擇有效模式。</value>
   </data>
   <data name="StatusModeSaved" xml:space="preserve">
-    <value>åå¥½æ¨¡å¼å·²å²å­ã</value>
+    <value>偏好模式已儲存。</value>
   </data>
   <data name="SettingsTitle" xml:space="preserve">
-    <value>å¿«éæä½³åè¡çº</value>
+    <value>快速最佳化行為</value>
   </data>
   <data name="SettingsDescription" xml:space="preserve">
-    <value>é¸æå¿«éæä½³åå·è¡æè¦åå«çä¿®å¾©åä½ã</value>
+    <value>選擇快速最佳化執行時要包含的修復動作。</value>
   </data>
   <data name="AutoOptimizeOnStartup" xml:space="preserve">
-    <value>ååæèªåæä½³å</value>
+    <value>啟動時自動最佳化</value>
   </data>
   <data name="ResetWinsockOnOptimize" xml:space="preserve">
-    <value>å¿«éæä½³åæéè¨­ Winsock</value>
+    <value>快速最佳化時重設 Winsock</value>
   </data>
   <data name="ResetTcpIpOnOptimize" xml:space="preserve">
-    <value>å¿«éæä½³åæéè¨­ TCP/IP å ç</value>
+    <value>快速最佳化時重設 TCP/IP 堆疊</value>
   </data>
   <data name="SaveSettingsButton" xml:space="preserve">
-    <value>å²å­è¨­å®</value>
+    <value>儲存設定</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
-    <value>ç¶²è·¯å éè¨­å®å·²å²å­ã</value>
+    <value>網路加速設定已儲存。</value>
   </data>
   <data name="LiveTelemetryTitle" xml:space="preserve">
     <value>????</value>
