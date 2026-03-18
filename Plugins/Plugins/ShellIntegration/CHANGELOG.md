@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-03-18
+
+### Fixed / 修复
+- Repaired simplified Chinese resource text in the marketplace card and settings page so Shell Integration no longer shows mojibake or partial English fallback in Chinese mode / 修复插件市场卡片和设置页中的简体中文资源文本，使 Shell Integration 在中文模式下不再出现乱码或部分英文回退
+
 ## [1.0.5] - 2026-03-16
 
 ### Improved / 改进

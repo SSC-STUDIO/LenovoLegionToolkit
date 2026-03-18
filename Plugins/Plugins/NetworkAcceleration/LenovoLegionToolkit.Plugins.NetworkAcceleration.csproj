@@ -11,9 +11,9 @@
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.1.2</Version>
-    <FileVersion>1.1.2</FileVersion>
-    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <Version>1.1.3</Version>
+    <FileVersion>1.1.3</FileVersion>
+    <AssemblyVersion>1.1.3</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.NetworkAcceleration</AssemblyName>
   </PropertyGroup>
 

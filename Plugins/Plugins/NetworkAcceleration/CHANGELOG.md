@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-03-18
+
+### Fixed / 修复
+- Repaired simplified Chinese telemetry, mode, and status strings so the Network Acceleration dashboard and settings page now render clean Chinese copy instead of placeholder or mojibake text / 修复简体中文遥测、模式和状态文案，使 Network Acceleration 仪表盘与设置页不再显示占位符或乱码文本
+
 ## [1.1.2] - 2026-03-16
 
 ### Improved / 改进

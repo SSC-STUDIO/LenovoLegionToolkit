@@ -6,6 +6,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2026-03-18
+
+### Fixed / 修复
+- Restored simplified Chinese cursor status and failure messages across plugin pages, settings, and optimization flows so Chinese UI no longer shows mojibake or English fallback / 修复插件页面、设置页与系统优化流程中的简体中文光标状态和失败消息，避免中文界面再出现乱码或英文回退
+
 ## [1.0.8] - 2026-03-16
 
 ### Improved / 改进
