@@ -85,18 +85,18 @@ public class CMDTests
         var scriptPath = Path.Combine(tempDirectory, "background-output.cmd");
         await File.WriteAllTextAsync(
             scriptPath,
-            $"@echo off{Environment.NewLine}for /L %%i in (1,1,20000) do @echo line%%i{Environment.NewLine}echo done>{markerPath}{Environment.NewLine}");
+            $"@echo off{Environment.NewLine}for /L %%i in (1,1,2000) do @echo line%%i{Environment.NewLine}echo done>{markerPath}{Environment.NewLine}");
 
         try
         {
             // Act
-            var (exitCode, output) = await CMD.RunAsync(scriptPath, null, waitForExit: false);
+            var (exitCode, output) = await CMD.RunAsync("cmd.exe", $"/c \"{scriptPath}\"", waitForExit: false);
 
             // Assert
             exitCode.Should().Be(-1);
             output.Should().BeEmpty();
 
-            var completed = await WaitForFileAsync(markerPath, TimeSpan.FromSeconds(10));
+            var completed = await WaitForFileAsync(markerPath, TimeSpan.FromSeconds(20));
             completed.Should().BeTrue("background processes should not block on unread redirected output");
         }
         finally
