@@ -176,12 +176,20 @@ private string _currentSearchText = string.Empty;
         _summaryUpdatesTextBlock.Text = updatesReady.ToString(CultureInfo.InvariantCulture);
 
         _summaryHintTextBlock.Text = updatesReady > 0
-            ? $"{updatesReady} plugin update(s) are ready to install."
+            ? string.Format(
+                Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryUpdatesReadyMessage", Resource.Culture)
+                ?? "{0} plugin update(s) are ready to install.",
+                updatesReady)
             : discoverablePlugins > 0
-                ? $"{discoverablePlugins} additional plugin(s) are available in the current feed."
+                ? string.Format(
+                    Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryDiscoverableMessage", Resource.Culture)
+                    ?? "{0} additional plugin(s) are available in the current feed.",
+                    discoverablePlugins)
                 : totalPlugins == 0
-                    ? "Waiting for plugin metadata to load."
-                    : "All detected plugins are currently up to date.";
+                    ? Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryWaitingMetadata", Resource.Culture)
+                      ?? "Waiting for plugin metadata to load."
+                    : Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryUpToDate", Resource.Culture)
+                      ?? "All detected plugins are currently up to date.";
     }
 
     private static string FormatReleaseDate(string releaseDateRaw)

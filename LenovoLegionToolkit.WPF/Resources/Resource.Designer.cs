@@ -9760,6 +9760,132 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("PluginExtensionsPage_Description", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Total Plugins.
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryTotal {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryTotal", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Installed.
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryInstalled {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryInstalled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Updates Ready.
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryUpdatesReady {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryUpdatesReady", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Store Pulse.
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryStorePulse {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryStorePulse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Checking plugin availability....
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryCheckingAvailability {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryCheckingAvailability", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} plugin update(s) are ready to install..
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryUpdatesReadyMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryUpdatesReadyMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} additional plugin(s) are available in the current feed..
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryDiscoverableMessage {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryDiscoverableMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Waiting for plugin metadata to load..
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryWaitingMetadata {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryWaitingMetadata", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All detected plugins are currently up to date..
+        /// </summary>
+        public static string PluginExtensionsPage_SummaryUpToDate {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_SummaryUpToDate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to by {0}.
+        /// </summary>
+        public static string PluginExtensionsPage_AuthorFormat {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_AuthorFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string PluginExtensionsPage_CapabilitySettings {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CapabilitySettings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Open.
+        /// </summary>
+        public static string PluginExtensionsPage_CapabilityQuickOpen {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CapabilityQuickOpen", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Optimize.
+        /// </summary>
+        public static string PluginExtensionsPage_CapabilityOptimize {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CapabilityOptimize", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string PluginExtensionsPage_CapabilityUpdate {
+            get {
+                return ResourceManager.GetString("PluginExtensionsPage_CapabilityUpdate", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to System Optimization Plugin.

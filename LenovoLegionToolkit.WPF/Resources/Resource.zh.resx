@@ -3313,6 +3313,48 @@
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
     <value>安装和管理插件以扩展功能</value>
   </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>插件总数</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>已安装</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>可更新</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>商店状态</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>正在检查插件可用性...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>有 {0} 个插件更新可安装。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>当前源中还有 {0} 个额外插件可用。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>正在等待加载插件元数据。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>当前检测到的插件均已是最新版本。</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>作者：{0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>快速打开</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>优化</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>更新</value>
+  </data>
 
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
     <value>安装</value>
@@ -3947,5 +3989,8 @@
   </data>
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>请至少选择一个要清理的项目。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>应用 {0} 失败：{1}</value>
   </data>
 <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>??????</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>???????????????????????</value></data></root>

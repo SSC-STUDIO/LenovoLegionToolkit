@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- **Plugin UI Localization / 插件界面本地化**: Replaced plugin marketplace summary/capability/author strings with localized resources and added a localized optimization failure format so simplified Chinese UI no longer shows English labels such as `Total Plugins`, `Quick Open`, or `Failed to apply ...` in the plugin workflow / 将插件市场的摘要、能力标签、作者前缀改为资源化本地化文本，并补充系统优化失败消息模板，使简体中文插件流程中不再显示 `Total Plugins`、`Quick Open`、`Failed to apply ...` 等英文标签
+
 ## [3.6.9] - 2026-03-17
 
 ### Improved / 改进
@@ -19,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 - **Remote Desktop Backdrop Compatibility / 远程桌面背景兼容性**: Disabled Mica/Acrylic backdrops when software rendering is forced or a Terminal Services session is detected, preventing startup and helper windows from appearing blank under Remote Desktop / 在强制软件渲染或检测到远程桌面会话时禁用 Mica/Acrylic 背景，避免主窗口与启动辅助窗口在远程桌面下出现空白显示
+
 ## [3.6.7] - 2026-03-15
 
 ### Fixed / 修复
