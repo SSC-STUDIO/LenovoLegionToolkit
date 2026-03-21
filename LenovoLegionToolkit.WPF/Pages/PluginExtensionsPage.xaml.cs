@@ -1509,16 +1509,20 @@ private string _currentSearchText = string.Empty;
             
             _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
             
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-            
             if (success)
             {
                 _pluginManager.ScanAndLoadPlugins();
                 LocalizationHelper.SetPluginResourceCultures();
-                
+
                 // After rescanning plugins, immediately update specific plugin's UI state
                 UpdateSpecificPluginUI(manifest.Id);
-                
+
+                // Refresh navigation items so the plugin appears in the sidebar
+                if (Application.Current.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.UpdateInstalledPluginsNavigationItems();
+                }
+
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallSuccess, string.Format(Resource.PluginExtensionsPage_InstallSuccessMessage, manifest.Name), SnackbarType.Success);
             }
             else
