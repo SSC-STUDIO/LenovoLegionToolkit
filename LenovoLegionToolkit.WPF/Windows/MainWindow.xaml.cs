@@ -36,8 +36,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 
 #pragma warning disable CA1416
 
-namespace LenovoLegionToolkit.WPF.Windows;
-
+namespace LenovoLegionToolkit.WPF.Windows
+{
 public partial class MainWindow
 {
     private readonly ApplicationSettings _applicationSettings;
@@ -788,4 +788,5 @@ public partial class MainWindow
             Marshal.FreeHGlobal(ptr);
         }
     }
+}
 }

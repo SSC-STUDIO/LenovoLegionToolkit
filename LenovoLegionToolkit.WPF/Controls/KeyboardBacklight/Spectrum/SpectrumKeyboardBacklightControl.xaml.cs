@@ -21,10 +21,12 @@ using LenovoLegionToolkit.WPF.Windows.KeyboardBacklight.Spectrum;
 using Microsoft.Win32;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
-
-public partial class SpectrumKeyboardBacklightControl
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum
 {
+public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingControl
+{
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+
     private readonly ThrottleLastDispatcher _changeBrightnessDispatcher = new(TimeSpan.FromMilliseconds(250), "ChangeBrightnessDispatcher");
     private readonly TimeSpan _refreshStateInterval = TimeSpan.FromMilliseconds(50);
     private readonly AsyncLock _startStopAnimationLock = new();
@@ -201,7 +203,7 @@ public partial class SpectrumKeyboardBacklightControl
             {
                 Title = Resource.Export,
                 InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
-                Filter = "Json Files (.json)|*.json",
+                Filter = T("Common_JsonFileDialogFilter", "Json Files (.json)|*.json"),
             };
 
             var result = sfd.ShowDialog();
@@ -229,7 +231,7 @@ public partial class SpectrumKeyboardBacklightControl
             {
                 Title = Resource.Import,
                 InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
-                Filter = "Json Files (.json)|*.json",
+                Filter = T("Common_JsonFileDialogFilter", "Json Files (.json)|*.json"),
                 CheckFileExists = true,
             };
 
@@ -569,4 +571,5 @@ public partial class SpectrumKeyboardBacklightControl
     }
 
     private void DeleteAllEffects() => _effects.Children.Clear();
+}
 }

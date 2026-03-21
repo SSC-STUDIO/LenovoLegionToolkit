@@ -21,8 +21,8 @@ using LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class WindowsOptimizationPage : UiPage
 {
     private static readonly object FocusRequestLock = new();
@@ -314,4 +314,5 @@ public partial class WindowsOptimizationPage : UiPage
             ViewModel.ClearSelection();
         }
     }
+}
 }

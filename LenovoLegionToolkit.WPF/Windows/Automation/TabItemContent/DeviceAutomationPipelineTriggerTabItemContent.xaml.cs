@@ -13,8 +13,8 @@ using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<INativeWindowsMessagePipelineTrigger>
 {
     private readonly NativeWindowsMessageListener _listener = IoCContainer.Resolve<NativeWindowsMessageListener>();
@@ -272,4 +272,5 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Content = _cardControl;
         }
     }
+}
 }

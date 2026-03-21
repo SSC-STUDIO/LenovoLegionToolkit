@@ -7,8 +7,8 @@ using LenovoLegionToolkit.Lib.Macro;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class MacroPage
 {
     private readonly MacroController _controller = IoCContainer.Resolve<MacroController>();
@@ -52,4 +52,5 @@ public partial class MacroPage
         var key = Convert.ToUInt64((string)button.Tag, 16);
         _sequenceControl.Set(new(MacroSource.Keyboard, key));
     }
+}
 }

@@ -7,8 +7,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Macro;
 using Wpf.Ui.Common;
 
-namespace LenovoLegionToolkit.WPF.Controls.Macro;
-
+namespace LenovoLegionToolkit.WPF.Controls.Macro
+{
 public abstract partial class AbstractMacroEventControl
 {
     protected AbstractMacroEventControl()
@@ -50,4 +50,5 @@ public abstract partial class AbstractMacroEventControl
 
         _header.Subtitle = macroEvent.Source.GetDisplayName() + $" • {TotalDelay.Humanize(maxUnit: TimeUnit.Millisecond)}";
     }
+}
 }

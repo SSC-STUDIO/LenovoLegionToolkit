@@ -17,7 +17,6 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Resources;
-using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
@@ -26,12 +25,12 @@ using Wpf.Ui.Controls;
 using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
 using PluginManifest = LenovoLegionToolkit.Lib.Plugins.PluginManifest;
 
-namespace LenovoLegionToolkit.WPF.Pages;
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class PluginExtensionsPage
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
-    private readonly PluginSettings _pluginSettings = new();
     private readonly PluginRepositoryService _pluginRepositoryService;
     
 private string _currentSearchText = string.Empty;
@@ -88,6 +87,13 @@ private string _currentSearchText = string.Empty;
         {
             _bulkInstallButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
             _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
+        }
+
+        if (_deprecationNotice != null)
+        {
+            _deprecationNotice.Title = Resource.ResourceManager.GetString("PluginExtensionsPage_DeprecationTitle", Resource.Culture) ?? "Toolkit Deprecated";
+            _deprecationNotice.Message = Resource.ResourceManager.GetString("PluginExtensionsPage_DeprecationMessage", Resource.Culture)
+                ?? "The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools.";
         }
 
         UpdateSummaryMetrics();
@@ -201,6 +207,11 @@ private string _currentSearchText = string.Empty;
             return releaseDateRaw;
 
         return releaseDate.ToLocalTime().ToString(LocalizationHelper.ShortDateFormat);
+    }
+
+    private static string T(string key, string fallback)
+    {
+        return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
     }
 
     // private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
@@ -497,7 +508,13 @@ private string _currentSearchText = string.Empty;
         {
             Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
             
-            SnackbarHelper.Show("Failed to fetch plugins", $"Unable to get plugin list from store: {ex.Message}", SnackbarType.Error);
+            SnackbarHelper.Show(
+                T("PluginExtensionsPage_FetchFailed", "Failed to fetch plugins"),
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_FetchFailedMessage", "Unable to get plugin list from store: {0}"),
+                    ex.Message),
+                SnackbarType.Error);
             
             // Hide loading indicator
             if (loadingIndicator != null)
@@ -1010,7 +1027,10 @@ private string _currentSearchText = string.Empty;
             var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
             if (onlinePlugin == null)
             {
-                SnackbarHelper.Show("Update Failed", "Unable to find online version of plugin", SnackbarType.Error);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_UpdateFailed,
+                    T("PluginExtensionsPage_OnlineVersionMissing", "Unable to find online version of plugin"),
+                    SnackbarType.Error);
                 return;
             }
 
@@ -1018,10 +1038,16 @@ private string _currentSearchText = string.Empty;
             if (updateButton != null)
             {
                 updateButton.IsEnabled = false;
-                updateButton.Content = "Updating...";
+                updateButton.Content = T("PluginExtensionsPage_Updating", "Updating...");
             }
 
-            SnackbarHelper.Show("Updating Plugin", $"Downloading and updating {onlinePlugin.Name}...", SnackbarType.Info);
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_UpdatingPlugin,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_UpdatingPluginMessageWithName", "Downloading and updating {0}..."),
+                    onlinePlugin.Name),
+                SnackbarType.Info);
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
             if (downloadProgressPanel != null)
@@ -1039,7 +1065,7 @@ private string _currentSearchText = string.Empty;
 
             if (progressText != null)
             {
-                progressText.Text = "Preparing download...";
+                progressText.Text = Resource.PluginExtensionsPage_PreparingDownload;
             }
 
             _currentDownloadingPluginId = pluginId;
@@ -1067,18 +1093,31 @@ private string _currentSearchText = string.Empty;
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
 
-                SnackbarHelper.Show("Update Successful", $"Plugin {onlinePlugin.Name} has been successfully updated to v{onlinePlugin.Version}", SnackbarType.Success);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_UpdateSuccessful,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_UpdateSuccessfulVersionMessage", "Plugin {0} has been successfully updated to v{1}"),
+                        onlinePlugin.Name,
+                        onlinePlugin.Version),
+                    SnackbarType.Success);
             }
             else
             {
-                SnackbarHelper.Show("Update Failed", "Plugin update failed, please check network connection and try again later.", SnackbarType.Error);
+                SnackbarHelper.Show(Resource.PluginExtensionsPage_UpdateFailed, Resource.PluginExtensionsPage_UpdateFailedMessage, SnackbarType.Error);
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
 
-            SnackbarHelper.Show("Update Failed", $"Error updating plugin: {ex.Message}", SnackbarType.Error);
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_UpdateFailed,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_UpdateExceptionMessage", "Error updating plugin: {0}"),
+                    ex.Message),
+                SnackbarType.Error);
         }
         finally
         {
@@ -1088,7 +1127,7 @@ private string _currentSearchText = string.Empty;
             if (updateButton != null)
             {
                 updateButton.IsEnabled = true;
-                updateButton.Content = "Update";
+                updateButton.Content = Resource.Update;
             }
 
             var downloadProgressPanel = this.FindName("DownloadProgressPanel") as StackPanel;
@@ -1484,7 +1523,10 @@ private string _currentSearchText = string.Empty;
             }
             else
             {
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallFailed, Resource.PluginExtensionsPage_UpdateFailedMessage, SnackbarType.Error);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_InstallFailed,
+                    T("PluginExtensionsPage_InstallFailedWithoutDetailsMessage", "Plugin could not be installed. Please try again."),
+                    SnackbarType.Error);
                 
                 // Reset plugin's UI state
                 UpdateSpecificPluginUI(manifest.Id);
@@ -1494,7 +1536,13 @@ private string _currentSearchText = string.Empty;
         {
             Lib.Utils.Log.Instance.Trace($"Error installing online plugin {manifest.Id}: {ex.Message}", ex);
             
-            SnackbarHelper.Show(Resource.PluginExtensionsPage_InstallFailed, $"Error installing plugin: {ex.Message}", SnackbarType.Error);
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_InstallFailed,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    Resource.PluginExtensionsPage_InstallFailedMessage,
+                    ex.Message),
+                SnackbarType.Error);
         }
         finally
         {
@@ -1565,7 +1613,10 @@ private string _currentSearchText = string.Empty;
 
             if (!result)
             {
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallFailed, "Plugin could not be uninstalled. It might be a dependency for another plugin.", SnackbarType.Error);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_UninstallFailed,
+                    T("PluginExtensionsPage_UninstallDependencyMessage", "Plugin could not be uninstalled. It might be a dependency for another plugin."),
+                    SnackbarType.Error);
                 return;
             }
             
@@ -1646,7 +1697,13 @@ private string _currentSearchText = string.Empty;
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                     Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
                 
-                SnackbarHelper.Show("No Configuration", $"Plugin {plugin?.Name ?? pluginId} does not have any configuration options.", SnackbarType.Info);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_NoConfiguration,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_NoConfigurationForPluginMessage", "Plugin {0} does not have any configuration options."),
+                        plugin?.Name ?? pluginId),
+                    SnackbarType.Info);
                 return;
             }
 
@@ -1702,7 +1759,13 @@ private string _currentSearchText = string.Empty;
                 
                 System.Diagnostics.Process.Start(processInfo);
                 
-                SnackbarHelper.Show("Run Plugin", $"Started {pluginId}.exe", SnackbarType.Info);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_RunPlugin,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_RunPluginStartedMessage", "Started {0}.exe"),
+                        pluginId),
+                    SnackbarType.Info);
             }
             else if (capabilities.SupportsFeaturePage)
             {
@@ -1731,7 +1794,13 @@ private string _currentSearchText = string.Empty;
             {
                 if (!NavigateToPluginOptimizationCategory(pluginId))
                 {
-                    SnackbarHelper.Show("Navigation Failed", $"Plugin {plugin?.Name ?? pluginId} optimization category could not be opened.", SnackbarType.Warning);
+                    SnackbarHelper.Show(
+                        T("PluginExtensionsPage_NavigationFailed", "Navigation Failed"),
+                        string.Format(
+                            Resource.Culture ?? CultureInfo.CurrentUICulture,
+                            T("PluginExtensionsPage_NavigationFailedMessage", "Plugin {0} optimization category could not be opened."),
+                            plugin?.Name ?? pluginId),
+                        SnackbarType.Warning);
                 }
             }
             else if (capabilities.SupportsSettingsPage)
@@ -1740,7 +1809,13 @@ private string _currentSearchText = string.Empty;
             }
             else
             {
-                SnackbarHelper.Show("No UI", $"Plugin {plugin?.Name ?? pluginId} does not expose an entry page.", SnackbarType.Info);
+                SnackbarHelper.Show(
+                    T("PluginExtensionsPage_NoUi", "No UI"),
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_NoUiMessage", "Plugin {0} does not expose an entry page."),
+                        plugin?.Name ?? pluginId),
+                    SnackbarType.Info);
             }
         }
         catch (Exception ex)
@@ -1777,10 +1852,13 @@ private string _currentSearchText = string.Empty;
 
         // Show confirmation dialog
         var result = await MessageBoxHelper.ShowAsync(this, 
-            "Permanently Delete Plugin", 
-            $"Are you sure you want to permanently delete plugin \"{plugin.Name}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted.",
-            "Delete",
-            "Cancel");
+            T("PluginExtensionsPage_PermanentlyDeleteTitle", "Permanently Delete Plugin"), 
+            string.Format(
+                Resource.Culture ?? CultureInfo.CurrentUICulture,
+                T("PluginExtensionsPage_PermanentlyDeleteConfirmationMessage", "Are you sure you want to permanently delete plugin \"{0}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted."),
+                plugin.Name),
+            Resource.Delete,
+            Resource.Cancel);
 
         if (!result)
             return;
@@ -1818,155 +1896,30 @@ private string _currentSearchText = string.Empty;
             
             if (deleted)
             {
-                SnackbarHelper.Show("Plugin Deleted", "Plugin has been permanently deleted from your computer.", SnackbarType.Success);
+                SnackbarHelper.Show(
+                    T("PluginExtensionsPage_PluginDeleted", "Plugin Deleted"),
+                    T("PluginExtensionsPage_PluginDeletedMessage", "Plugin has been permanently deleted from your computer."),
+                    SnackbarType.Success);
             }
             else
             {
-                SnackbarHelper.Show("Plugin Uninstalled", "Plugin will be deleted when the program closes (some files were locked).", SnackbarType.Info);
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_PluginUninstalled,
+                    T("PluginExtensionsPage_PluginUninstalledLockedMessage", "Plugin will be deleted when the program closes (some files were locked)."),
+                    SnackbarType.Info);
             }
         }
         catch (Exception ex)
         {
             Lib.Utils.Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
             
-            SnackbarHelper.Show("Deletion Failed", $"Error occurred while deleting plugin: {ex.Message}", SnackbarType.Error);
-        }
-    }
-
-    private void SetupLanguageSelection(string pluginId)
-    {
-        var languageComboBox = this.FindName("PluginLanguageComboBox") as ComboBox;
-        if (languageComboBox == null)
-            return;
-
-        languageComboBox.Items.Clear();
-        languageComboBox.Tag = pluginId;
-
-        // Add "Use Application Default" option
-        var defaultItem = new ComboBoxItem
-        {
-            Content = Resource.ResourceManager.GetString("PluginExtensionsPage_LanguageDefault", Resource.Culture) ?? "Use Application Default",
-            Tag = (string?)null
-        };
-        languageComboBox.Items.Add(defaultItem);
-
-        // Add all available languages
-        foreach (var culture in LocalizationHelper.Languages)
-        {
-            var item = new ComboBoxItem
-            {
-                Content = LocalizationHelper.LanguageDisplayName(culture),
-                Tag = culture.Name
-            };
-            languageComboBox.Items.Add(item);
-        }
-
-        // Select current language setting
-        var currentCulture = _pluginSettings.GetPluginCulture(pluginId);
-        if (currentCulture != null)
-        {
-            foreach (ComboBoxItem item in languageComboBox.Items)
-            {
-                if (item.Tag is string cultureName && cultureName == currentCulture.Name)
-                {
-                    languageComboBox.SelectedItem = item;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            languageComboBox.SelectedItem = defaultItem;
-        }
-
-        languageComboBox.Visibility = Visibility.Visible;
-    }
-
-    private void PluginLanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (sender is not ComboBox comboBox || comboBox.Tag is not string pluginId)
-            return;
-
-        if (comboBox.SelectedItem is not ComboBoxItem selectedItem)
-            return;
-
-        var cultureName = selectedItem.Tag as string;
-        CultureInfo? cultureInfo = null;
-        
-        if (!string.IsNullOrWhiteSpace(cultureName))
-        {
-            try
-            {
-                cultureInfo = new CultureInfo(cultureName);
-            }
-            catch
-            {
-                // Invalid culture name, use null (default)
-            }
-        }
-
-        _pluginSettings.SetPluginCulture(pluginId, cultureInfo);
-        
-        // Apply language change immediately
-        if (cultureInfo != null)
-        {
-            ApplyPluginLanguage(pluginId, cultureInfo);
-        }
-        else
-        {
-            // Use application default
-            ApplyPluginLanguage(pluginId, Resource.Culture ?? CultureInfo.CurrentUICulture);
-        }
-        
-        // Refresh plugin list to update language
-        UpdateAllPluginsUI();
-    }
-
-    private void ApplyPluginLanguage(string pluginId, CultureInfo cultureInfo)
-    {
-        try
-        {
-            // Find the plugin assembly and set its Resource.Culture
-            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
-            {
-                var assemblyName = assembly.GetName().Name;
-                if (assemblyName != null && assemblyName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Check if this is the right plugin by finding a class with the plugin ID
-                    var pluginType = assembly.GetTypes()
-                        .FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-                    
-                    if (pluginType != null)
-                    {
-                        try
-                        {
-                            var pluginInstance = Activator.CreateInstance(pluginType) as IPlugin;
-                            if (pluginInstance?.Id == pluginId)
-                            {
-                                // Found the plugin, now set its Resource.Culture
-                                var resourceType = assembly.GetType($"{assemblyName}.Resource");
-                                if (resourceType != null)
-                                {
-                                    var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                                    cultureProperty?.SetValue(null, cultureInfo);
-                                    
-                                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                                        Lib.Utils.Log.Instance.Trace($"Applied language {cultureInfo.Name} to plugin {pluginId}");
-                                }
-                                break;
-                            }
-                        }
-                        catch
-                        {
-                            // Continue searching for the right plugin
-                        }
-                    }
-                }
-            }
-        }
-        finally
-        {
-            // Cleanup or final operations if needed
+            SnackbarHelper.Show(
+                Resource.PluginExtensionsPage_DeletionFailed,
+                string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
+                    T("PluginExtensionsPage_DeletionExceptionMessage", "Error occurred while deleting plugin: {0}"),
+                    ex.Message),
+                SnackbarType.Error);
         }
     }
 
@@ -1978,7 +1931,7 @@ private string _currentSearchText = string.Empty;
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = Resource.PluginExtensionsPage_SelectPluginFiles,
-                Filter = "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*",
+                Filter = T("PluginExtensionsPage_ZipFileFilter", "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*"),
                 Multiselect = true
             };
 
@@ -2027,7 +1980,11 @@ private string _currentSearchText = string.Empty;
             Lib.Utils.Log.Instance.Trace($"Error in bulk import: {ex.Message}", ex);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
-                string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, "Unknown", ex.Message), SnackbarType.Error);
+                string.Format(
+                    Resource.PluginExtensionsPage_BulkImportFailedMessage,
+                    T("PluginExtensionsPage_UnknownSource", "Unknown"),
+                    ex.Message),
+                SnackbarType.Error);
         }
     }
 
@@ -2461,4 +2418,5 @@ private string GetPluginLocalizedDescription(IPlugin plugin)
             }
         }
     }
+}
 }

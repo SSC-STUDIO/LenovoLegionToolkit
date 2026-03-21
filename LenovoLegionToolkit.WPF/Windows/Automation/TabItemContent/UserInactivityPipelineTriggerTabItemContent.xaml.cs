@@ -3,8 +3,8 @@ using Humanizer;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.WPF.Extensions;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class UserInactivityPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IUserInactivityPipelineTrigger>
 {
     private static readonly TimeSpan[] TimeSpans =
@@ -37,4 +37,5 @@ public partial class UserInactivityPipelineTriggerTabItemContent : IAutomationPi
             : TimeSpan.FromSeconds(30);
         return _trigger.DeepCopy(state);
     }
+}
 }

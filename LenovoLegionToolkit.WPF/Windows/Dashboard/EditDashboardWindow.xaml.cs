@@ -10,8 +10,8 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class EditDashboardWindow
 {
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
@@ -151,4 +151,5 @@ public partial class EditDashboardWindow
     {
         _groupsStackPanel.Children.Remove(control);
     }
+}
 }

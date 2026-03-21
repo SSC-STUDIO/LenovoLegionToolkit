@@ -8,8 +8,8 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class NotificationsSettingsWindow
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -236,4 +236,5 @@ public partial class NotificationsSettingsWindow
         _settings.Store.Notifications.AutomationNotification = state.Value;
         _settings.SynchronizeStore();
     }
+}
 }

@@ -12,8 +12,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Windows.Settings;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsPowerControl
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -135,4 +135,5 @@ public partial class SettingsPowerControl
         _settings.Store.ResetBatteryOnSinceTimerOnReboot = state.Value;
         _settings.SynchronizeStore();
     }
+}
 }

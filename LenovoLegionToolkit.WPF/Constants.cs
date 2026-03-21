@@ -8,6 +8,7 @@ public static class Constants
     // Also update the same constants in UpdateChecker.cs in the Lib project
     public const string UpdateRepositoryOwner = "SSC-STUDIO";
     public const string UpdateRepositoryName = "LenovoLegionToolkit";
+    public static readonly Uri ProjectWebsiteUri = new($"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}");
     public static readonly Uri LatestReleaseUri = new($"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}/releases/latest");
-
+    public static readonly Uri ContributionUri = new($"{ProjectWebsiteUri}#contribution");
 }

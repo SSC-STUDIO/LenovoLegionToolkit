@@ -14,8 +14,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class StatusWindow
 {
     private readonly struct StatusWindowData(
@@ -340,4 +340,5 @@ public partial class StatusWindow
     }
 
     private void RefreshUpdate(bool hasUpdate) => _updateIndicator.Visibility = hasUpdate ? Visibility.Visible : Visibility.Collapsed;
+}
 }

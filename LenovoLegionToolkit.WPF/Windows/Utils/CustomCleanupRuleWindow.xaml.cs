@@ -5,8 +5,8 @@ using System.Windows;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class CustomCleanupRuleWindow
 {
     public CustomCleanupRule? Result { get; private set; }
@@ -94,4 +94,4 @@ public partial class CustomCleanupRuleWindow
             .ToList();
     }
 }
-
+}

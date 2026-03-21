@@ -11,12 +11,13 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using Theme = Wpf.Ui.Appearance.Theme;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class CompatibilityCheckErrorWindow : UiWindow
 {
     private readonly Exception _exception;
     private readonly string _logFilePath;
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
 
     public CompatibilityCheckErrorWindow(Exception exception)
     {
@@ -107,7 +108,7 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
         }
     }
     
-    private void OpenLogFile()
+    private void OpenLogFile(bool showErrors = false)
     {
         try
         {
@@ -135,8 +136,15 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to open log file automatically: {ex.Message}", ex);
-            
-            // Don't show error dialog for automatic opening - user can still click the button
+
+            if (!showErrors)
+                return;
+
+            System.Windows.MessageBox.Show(
+                string.Format(T("CompatibilityCheckErrorWindow_OpenLogFailed", "Failed to open log file: {0}"), ex.Message),
+                Resource.AppName,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning);
         }
     }
 
@@ -147,25 +155,12 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
 
     private void OpenLogButton_Click(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            OpenLogFile();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to open log file: {ex.Message}", ex);
-            
-            System.Windows.MessageBox.Show(
-                $"Failed to open log file: {ex.Message}",
-                Resource.AppName,
-                System.Windows.MessageBoxButton.OK,
-                System.Windows.MessageBoxImage.Warning);
-        }
+        OpenLogFile(showErrors: true);
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
     }
+}
 }

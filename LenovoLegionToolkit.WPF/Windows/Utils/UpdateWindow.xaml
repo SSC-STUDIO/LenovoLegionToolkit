@@ -46,7 +46,7 @@
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Focusable="True"
-                FontSize="12"
+                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.UpdateWindow_Title}" />
 
@@ -66,8 +66,7 @@
                     Grid.Row="0"
                     Margin="0,0,0,24"
                     Focusable="True"
-                    FontSize="24"
-                    FontWeight="Medium"
+                    Style="{StaticResource AppPageTitleTextBlockStyle}"
                     Text="{x:Static resources:Resource.UpdateWindow_WhatsNew}" />
 
                 <markdig:MarkdownViewer

@@ -25,8 +25,8 @@ using Wpf.Ui.Controls;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class PackagesPage : IProgress<float>
 {
     private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
@@ -419,4 +419,5 @@ public partial class PackagesPage : IProgress<float>
 
         return result.ToList();
     }
+}
 }

@@ -16,13 +16,13 @@
         <TextBlock
             Margin="0,16,0,8"
             Focusable="True"
-            FontSize="24"
-            FontWeight="Medium"
+            Style="{StaticResource AppPageTitleTextBlockStyle}"
             Text="{x:Static resources:Resource.MacroPage_Title}" />
 
         <TextBlock
             Margin="0,0,0,24"
             Focusable="True"
+            Style="{StaticResource AppPageDescriptionTextBlockStyle}"
             Text="{x:Static resources:Resource.MacroPage_Subtitle}" />
 
         <custom:CardControl Margin="0,0,0,32">

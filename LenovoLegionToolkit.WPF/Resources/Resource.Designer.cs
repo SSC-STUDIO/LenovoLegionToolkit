@@ -2765,6 +2765,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("PackagesPage_MachineType", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to For example: 82JQ.
+        /// </summary>
+        public static string PackagesPage_MachineType_Placeholder {
+            get {
+                return ResourceManager.GetString("PackagesPage_MachineType_Placeholder", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Operating System.
@@ -7508,6 +7517,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string PackagesPage_DownloadTo {
             get {
                 return ResourceManager.GetString("PackagesPage_DownloadTo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Leave empty to use the default path.
+        /// </summary>
+        public static string PackagesPage_DownloadTo_Placeholder {
+            get {
+                return ResourceManager.GetString("PackagesPage_DownloadTo_Placeholder", resourceCulture);
             }
         }
         

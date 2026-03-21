@@ -8,8 +8,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class SymbolRegularPicker
 {
     private readonly ThrottleLastDispatcher _throttleDispatcher = new(TimeSpan.FromMilliseconds(500));
@@ -72,4 +72,5 @@ public partial class SymbolRegularPicker
             _itemsControl.Items.Add(button);
         }
     }
+}
 }

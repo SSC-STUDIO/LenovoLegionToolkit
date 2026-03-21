@@ -10,8 +10,8 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsUpdateControl
 {
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
@@ -94,4 +94,5 @@ public partial class SettingsUpdateControl
         _updateCheckSettings.Store.UpdateRepositoryName = string.IsNullOrWhiteSpace(text) ? null : text;
         _updateCheckSettings.SynchronizeStore();
     }
+}
 }

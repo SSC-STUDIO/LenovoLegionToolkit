@@ -9,8 +9,8 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class AddDashboardItemWindow
 {
     private readonly Func<IEnumerable<DashboardItem>> _existingItems;
@@ -68,4 +68,5 @@ public partial class AddDashboardItemWindow
 
         return control;
     }
+}
 }

@@ -19,8 +19,8 @@ using LenovoLegionToolkit.WPF.Windows.Dashboard;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class DashboardPage
 {
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
@@ -162,4 +162,5 @@ public partial class DashboardPage
             Grid.SetColumn(control, 0);
         }
     }
+}
 }

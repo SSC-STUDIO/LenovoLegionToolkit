@@ -4,8 +4,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
-
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum
+{
 public partial class SpectrumKeyboardEffectControl
 {
     public new SpectrumKeyboardBacklightEffect Effect { get; }
@@ -47,4 +47,5 @@ public partial class SpectrumKeyboardEffectControl
         Delete?.Invoke(this, EventArgs.Empty);
         e.Handled = true;
     }
+}
 }

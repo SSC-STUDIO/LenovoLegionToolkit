@@ -40,8 +40,8 @@ using MessageBox = System.Windows.MessageBox;
 using WinFormsApp = System.Windows.Forms.Application;
 using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
 
-namespace LenovoLegionToolkit.WPF;
-
+namespace LenovoLegionToolkit.WPF
+{
 public partial class App
     {
         [LibraryImport("kernel32.dll")]
@@ -63,6 +63,8 @@ public partial class App
     private bool _shutdownInvoked;
     private bool _inExitHandler;
     private bool _exceptionHandlerExecuting;
+
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
 
     public new static App Current => (App)Application.Current;
 
@@ -195,7 +197,7 @@ public partial class App
             Log.Instance.Trace($"Starting... [version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString()}, os={Environment.OSVersion}, dotnet={Environment.Version}]");
 
         WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
-        RenderOptions.ProcessRenderMode = GetPreferredRenderMode(applicationSettings);
+        RenderOptions.ProcessRenderMode = RenderingCompatibilityHelper.GetPreferredRenderMode(applicationSettings);
 
         IoCContainer.Initialize(
             new Lib.IoCModule(),
@@ -261,77 +263,6 @@ public partial class App
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Start up complete");
-    }
-
-    private static RenderMode GetPreferredRenderMode(ApplicationSettings? settings)
-    {
-        try
-        {
-            if (ShouldForceSoftwareRendering(settings))
-                return RenderMode.SoftwareOnly;
-
-            // RenderCapability.Tier stores the rendering tier value in the upper 16 bits
-            // We need to right shift by 16 bits to extract the tier value (0-3)
-            // where 0 = no hardware acceleration, 1 = partial, 2+ = full hardware acceleration
-            var tier = RenderCapability.Tier >> 16;
-            return tier >= 2 ? RenderMode.Default : RenderMode.SoftwareOnly;
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Falling back to software rendering.", ex);
-
-            return RenderMode.SoftwareOnly;
-        }
-    }
-
-    private static bool ShouldForceSoftwareRendering(ApplicationSettings? settings)
-    {
-        try
-        {
-            if (settings?.Store.ForceSoftwareRendering == true)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Software rendering forced by user setting.");
-
-                return true;
-            }
-
-            if (System.Windows.Forms.SystemInformation.TerminalServerSession)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Remote desktop session detected. Forcing software rendering.");
-
-                return true;
-            }
-
-            var screens = System.Windows.Forms.Screen.AllScreens;
-            if (screens == null || screens.Length == 0)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("No active displays detected. Forcing software rendering.");
-
-                return true;
-            }
-
-            var primaryBounds = System.Windows.Forms.Screen.PrimaryScreen?.Bounds;
-            if (primaryBounds is not { Width: > 0, Height: > 0 })
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Primary display bounds invalid. Forcing software rendering.");
-
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to determine display state. Forcing software rendering.", ex);
-
-            return true;
-        }
-
-        return false;
     }
 
     private static void InitializePlugins()
@@ -823,8 +754,8 @@ public partial class App
             // Try to show message box, but don't let it cause infinite recursion
             try
             {
-                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? "Unknown exception."),
-                    "Application Domain Error",
+                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? T("App_UnhandledException_Unknown", "Unknown exception.")),
+                    T("App_UnhandledException_AppDomain_Title", "Application Domain Error"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
@@ -877,7 +808,7 @@ public partial class App
             try
             {
                 MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
-                    "Application Error",
+                    T("App_UnhandledException_Dispatcher_Title", "Application Error"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
@@ -1183,4 +1114,5 @@ public partial class App
         var controller = IoCContainer.Resolve<MacroController>();
         controller.Start();
     }
+}
 }

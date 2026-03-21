@@ -23,6 +23,7 @@ public static class LocalizationHelper
     private static readonly string LanguagePath = Path.Combine(Folders.AppData, "lang");
 
     private static readonly CultureInfo DefaultLanguage = new("en");
+    public static event EventHandler? PluginResourceCulturesChanged;
 
     public static readonly CultureInfo[] Languages = [
         DefaultLanguage,
@@ -176,13 +177,15 @@ public static class LocalizationHelper
     }
 
     /// <summary>
-    /// Set resource cultures for all plugins, using plugin-specific language settings if available
+    /// Set resource cultures for all loaded plugins to the current application language.
+    /// Per-plugin language overrides were removed because the runtime no longer exposes
+    /// a user-facing way to manage them and stale hidden values caused plugins to drift
+    /// away from the global language selection.
     /// </summary>
     public static void SetPluginResourceCultures(CultureInfo? defaultCultureInfo = null)
     {
         try
         {
-            var pluginSettings = new Settings.PluginSettings();
             defaultCultureInfo ??= Resource.Culture ?? CultureInfo.CurrentUICulture;
 
             // Iterate through all loaded assemblies to find plugin Resource classes
@@ -193,37 +196,6 @@ public static class LocalizationHelper
                     var assemblyName = assembly.GetName().Name;
                     if (assemblyName != null && assemblyName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Find the plugin ID by looking for IPlugin implementation
-                        string? pluginId = null;
-                        try
-                        {
-                            var pluginTypes = assembly.GetTypes()
-                                .Where(t => typeof(Lib.Plugins.IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-                            foreach (var pluginType in pluginTypes)
-                            {
-                                try
-                                {
-                                    var pluginInstance = Activator.CreateInstance(pluginType) as Lib.Plugins.IPlugin;
-                                    pluginId = pluginInstance?.Id;
-                                    if (!string.IsNullOrWhiteSpace(pluginId))
-                                        break;
-                                }
-                                catch
-                                {
-                                    // Continue searching
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            // Continue without plugin ID
-                        }
-
-                        // Get plugin-specific culture or use default
-                        var pluginCulture = !string.IsNullOrWhiteSpace(pluginId)
-                            ? pluginSettings.GetPluginCulture(pluginId) ?? defaultCultureInfo
-                            : defaultCultureInfo;
-
                         // Try both default namespace placements used by plugin resource designers.
                         var resourceType = assembly.GetType($"{assemblyName}.Resource")
                                            ?? assembly.GetType($"{assemblyName}.Resources.Resource");
@@ -232,9 +204,9 @@ public static class LocalizationHelper
                             var cultureProperty = resourceType.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                             if (cultureProperty != null)
                             {
-                                cultureProperty.SetValue(null, pluginCulture);
+                                cultureProperty.SetValue(null, defaultCultureInfo);
                                 if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Set resource culture for plugin: {assemblyName} (ID: {pluginId ?? "unknown"}) = {pluginCulture.Name}");
+                                    Log.Instance.Trace($"Set resource culture for plugin: {assemblyName} = {defaultCultureInfo.Name}");
                             }
                         }
                     }
@@ -251,6 +223,10 @@ public static class LocalizationHelper
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to set plugin resource cultures: {ex.Message}");
+        }
+        finally
+        {
+            PluginResourceCulturesChanged?.Invoke(null, EventArgs.Empty);
         }
     }
 

@@ -10,8 +10,8 @@ using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
 using TextBox = Wpf.Ui.Controls.TextBox;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class WiFiConnectedPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IWiFiConnectedPipelineTrigger>
 {
     private readonly IWiFiConnectedPipelineTrigger _trigger;
@@ -120,4 +120,5 @@ public partial class WiFiConnectedPipelineTriggerTabItemContent : IAutomationPip
             Content = _grid;
         }
     }
+}
 }

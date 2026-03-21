@@ -12,8 +12,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsApplicationBehaviorControl
 {
     public event EventHandler<SoftwareStatus>? FnKeysStatusChanged;
@@ -317,4 +317,5 @@ public partial class SettingsApplicationBehaviorControl
         var newFnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
         FnKeysStatusChanged?.Invoke(this, newFnKeysStatus);
     }
+}
 }

@@ -9,8 +9,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class UpdateWindow : IProgress<float>
 {
     private readonly UpdateChecker _updateChecker = IoCContainer.Resolve<UpdateChecker>();
@@ -103,4 +103,5 @@ public partial class UpdateWindow : IProgress<float>
         _downloadProgressBar.IsIndeterminate = !(value > 0);
         _downloadProgressBar.Value = value;
     });
+}
 }

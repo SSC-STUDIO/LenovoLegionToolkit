@@ -15,8 +15,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class GodModeSettingsWindow
 {
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
@@ -483,4 +483,5 @@ public partial class GodModeSettingsWindow
     {
         _fanCurveCardControl.IsEnabled = !(_fanFullSpeedToggle.IsChecked ?? false);
     }
+}
 }

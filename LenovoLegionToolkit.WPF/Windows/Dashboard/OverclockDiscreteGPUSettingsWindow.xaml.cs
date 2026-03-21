@@ -3,8 +3,8 @@ using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class OverclockDiscreteGPUSettingsWindow
 {
     private const string MHZ = "MHz";
@@ -61,4 +61,5 @@ public partial class OverclockDiscreteGPUSettingsWindow
     }
 
     private async Task ApplyAsync() => await _gpuOverclockController.ApplyStateAsync();
+}
 }

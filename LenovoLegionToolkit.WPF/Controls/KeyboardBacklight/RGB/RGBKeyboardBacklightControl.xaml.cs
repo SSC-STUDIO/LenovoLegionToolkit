@@ -16,9 +16,9 @@ using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using MenuItem = System.Windows.Controls.MenuItem;
 
-namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB;
-
-public partial class RGBKeyboardBacklightControl
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB
+{
+public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
 {
     private Button[] PresetButtons => [_offPresetButton, _preset1Button, _preset2Button, _preset3Button, _preset4Button];
 
@@ -259,4 +259,5 @@ public partial class RGBKeyboardBacklightControl
         Grid.SetColumnSpan(_zone3Control, 4);
         Grid.SetColumnSpan(_zone4Control, 4);
     }
+}
 }

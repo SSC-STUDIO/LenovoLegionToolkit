@@ -8,14 +8,17 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
+using LenovoLegionToolkit.WPF.Resources;
 using Microsoft.Win32;
 using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomationPipelineTriggerTabItemContent<IProcessesAutomationPipelineTrigger>
 {
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+
     private readonly IProcessesAutomationPipelineTrigger _trigger;
     private readonly List<ProcessInfo> _processes;
 
@@ -55,8 +58,9 @@ public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomatio
     {
         var ofd = new OpenFileDialog
         {
+            Title = Resource.Open,
             InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
-            Filter = "Exe Files (.exe)|*.exe",
+            Filter = T("Common_ExecutableFileDialogFilter", "Exe Files (.exe)|*.exe"),
             CheckFileExists = true,
         };
 
@@ -210,4 +214,5 @@ public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomatio
             Content = _grid;
         }
     }
+}
 }

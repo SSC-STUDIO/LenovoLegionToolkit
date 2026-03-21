@@ -1,8 +1,8 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class ErrorDialogWindow
 {
     public new bool? DialogResult { get; private set; }
@@ -46,4 +46,5 @@ public partial class ErrorDialogWindow
     {
         InitializeComponent();
     }
+}
 }

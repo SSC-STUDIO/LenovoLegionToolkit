@@ -9,8 +9,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation
+{
 public partial class AutomationPipelineTriggerConfigurationWindow
 {
     private readonly IEnumerable<IAutomationPipelineTrigger> _triggers;
@@ -118,4 +118,5 @@ public partial class AutomationPipelineTriggerConfigurationWindow
         IWiFiConnectedPipelineTrigger wt => new WiFiConnectedPipelineTriggerTabItemContent(wt),
         _ => null
     };
+}
 }

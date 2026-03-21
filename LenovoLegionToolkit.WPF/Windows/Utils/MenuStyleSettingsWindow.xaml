@@ -99,9 +99,7 @@
         <wpfui:CardControl Grid.Row="0" Margin="20,20,20,12">
             <wpfui:CardControl.Header>
                 <TextBlock
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
                     Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ConfigEditor_Usage}" />
             </wpfui:CardControl.Header>
             <StackPanel Margin="0,8,0,0">
@@ -208,8 +206,8 @@
                             <!-- Shell.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <wpfui:Button x:Name="_openShellNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenShellNssFile}" MinWidth="150" Click="OpenShellNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openShellNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenShellNssFolderBtn_Click" />
@@ -230,7 +228,7 @@
                                                 <!-- Basic Theme Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_BasicThemeSettings}" />
+                                                        <TextBlock Style="{StaticResource AppSubsectionTitleTextBlockStyle}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_BasicThemeSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Background Color -->
@@ -252,7 +250,7 @@
                                                 <!-- Hover Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_HoverEffectSettings}" />
+                                                        <TextBlock Style="{StaticResource AppSubsectionTitleTextBlockStyle}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_HoverEffectSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Hover Background Color -->
@@ -274,7 +272,7 @@
                                                 <!-- Selected Settings -->
                                                 <wpfui:CardControl Margin="0">
                                                     <wpfui:CardControl.Header>
-                                                        <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_SelectedEffectSettings}" />
+                                                        <TextBlock Style="{StaticResource AppSubsectionTitleTextBlockStyle}" Text="{x:Static resources:Resource.MenuStyleSettingsWindow_SelectedEffectSettings}" />
                                                     </wpfui:CardControl.Header>
                                                     <StackPanel Orientation="Vertical" Margin="0,8,0,0">
                                                         <!-- Selected Background Color -->
@@ -335,8 +333,8 @@
                             <!-- Images.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <wpfui:Button x:Name="_openImagesNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenImagesNssFile}" MinWidth="150" Click="OpenImagesNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openImagesNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenImagesNssFolderBtn_Click" />
@@ -349,8 +347,8 @@
                             <!-- Modify.nss Content -->
                             <Grid Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                 <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssConfigFile}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssDescription}" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                    <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <wpfui:Button x:Name="_openModifyNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenModifyNssFile}" MinWidth="150" Click="OpenModifyNssBtn_Click" Margin="0,0,12,0" />
                                         <wpfui:Button x:Name="_openModifyNssFolderBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenContainingFolder}" MinWidth="150" Click="OpenModifyNssFolderBtn_Click" />
@@ -384,4 +382,3 @@
         </StackPanel>
     </Grid>
 </local:BaseWindow>
-

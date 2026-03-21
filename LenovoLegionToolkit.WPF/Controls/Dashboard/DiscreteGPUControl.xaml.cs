@@ -9,9 +9,9 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
-
-public partial class DiscreteGPUControl
+namespace LenovoLegionToolkit.WPF.Controls.Dashboard
+{
+public partial class DiscreteGPUControl : AbstractRefreshingControl
 {
     private readonly GPUController _gpuController = IoCContainer.Resolve<GPUController>();
     private readonly NativeWindowsMessageListener _nativeWindowsMessageListener = IoCContainer.Resolve<NativeWindowsMessageListener>();
@@ -165,4 +165,5 @@ public partial class DiscreteGPUControl
         _deactivateGPUButton.IsEnabled = false;
         await _gpuController.RestartGPUAsync();
     }
+}
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class PeriodicAutomationPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IPeriodicAutomationPipelineTrigger>
 {
     private readonly IPeriodicAutomationPipelineTrigger _trigger;
@@ -25,4 +25,5 @@ public partial class PeriodicAutomationPipelineTriggerTabItemContent : IAutomati
         var periodMinutes = (int)(_periodPickerMinutes.Value ?? 1);
         return _trigger.DeepCopy(TimeSpan.FromMinutes(periodMinutes));
     }
+}
 }

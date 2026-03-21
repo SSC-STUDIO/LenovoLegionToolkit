@@ -7,8 +7,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class AboutPage
 {
     private static string VersionText
@@ -64,4 +64,5 @@ public partial class AboutPage
 
         Process.Start("explorer", Folders.Temp);
     }
+}
 }

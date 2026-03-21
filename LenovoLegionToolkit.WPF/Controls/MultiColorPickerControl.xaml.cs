@@ -3,8 +3,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace LenovoLegionToolkit.WPF.Controls;
-
+namespace LenovoLegionToolkit.WPF.Controls
+{
 public partial class MultiColorPickerControl
 {
     private const int MAX_ITEMS = 3;
@@ -67,4 +67,5 @@ public partial class MultiColorPickerControl
         ColorsChangedContinuous?.Invoke(this, EventArgs.Empty);
         ColorsChangedDelayed?.Invoke(this, EventArgs.Empty);
     }
+}
 }

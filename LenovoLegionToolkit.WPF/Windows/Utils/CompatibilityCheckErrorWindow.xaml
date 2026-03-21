@@ -65,15 +65,14 @@
                     x:Name="_mainMessageTextBlock"
                     Margin="0,0,0,12"
                     Focusable="True"
-                    FontSize="18"
-                    FontWeight="Medium"
+                    Style="{StaticResource AppSectionTitleTextBlockStyle}"
                     TextWrapping="Wrap" />
                 
                 <TextBlock
                     Margin="0,0,0,16"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                     Text="{x:Static resources:Resource.CompatibilityCheckErrorWindow_Description}"
-                    TextWrapping="Wrap" />
+                    />
             </StackPanel>
 
             <!-- Error Details -->

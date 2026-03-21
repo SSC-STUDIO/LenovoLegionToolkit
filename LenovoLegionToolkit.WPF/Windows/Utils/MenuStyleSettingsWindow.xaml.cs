@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows;
-using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
@@ -21,8 +23,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         private string? _imagesNssPath;
         private string? _modifyNssPath;
 
-        // Theme colors structure
-        private class ThemeColors
+        private sealed class ThemeColors
         {
             public string BackgroundColor { get; set; } = "#ffffff";
             public string TextColor { get; set; } = "#000000";
@@ -32,175 +33,258 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             public string SelectedTextColor { get; set; } = "#ffffff";
         }
 
-        private ThemeColors _themeColors = new();
+        private readonly ThemeColors _themeColors = new();
 
         public MenuStyleSettingsWindow()
         {
             InitializeComponent();
-            LoadAllConfigFiles();
             LoadLocalizedStrings();
+            LoadAllConfigFiles();
+            ApplyConfigurationAvailability();
+        }
+
+        private static string Localized(string key, string fallback)
+        {
+            return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+        }
+
+        private static string LocalizedFormat(string key, string fallback, params object[] args)
+        {
+            return string.Format(Localized(key, fallback), args);
         }
 
         private void LoadLocalizedStrings()
         {
-            // Load localized strings for UI elements
             if (_shellNssTab != null)
-            {
-                _shellNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ShellNss", Resource.Culture) ?? "shell.nss";
-            }
+                _shellNssTab.Content = Localized("MenuStyleSettingsWindow_Tab_ShellNss", "shell.nss");
 
             if (_themeNssTab != null)
-            {
-                _themeNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ThemeNss", Resource.Culture) ?? "theme.nss";
-            }
+                _themeNssTab.Content = Localized("MenuStyleSettingsWindow_Tab_ThemeNss", "theme.nss");
 
             if (_imagesNssTab != null)
-            {
-                _imagesNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ImagesNss", Resource.Culture) ?? "images.nss";
-            }
+                _imagesNssTab.Content = Localized("MenuStyleSettingsWindow_Tab_ImagesNss", "images.nss");
 
             if (_modifyNssTab != null)
-            {
-                _modifyNssTab.Content = Resource.ResourceManager.GetString("MenuStyleSettingsWindow_Tab_ModifyNss", Resource.Culture) ?? "modify.nss";
-            }
-        }
-
-
-
-        private void UpdateColorFromTextBox(System.Windows.Controls.TextBox textBox, Button button)
-        {
-            string hexColor = textBox.Text.Trim();
-            if (IsValidHexColor(hexColor))
-            {
-                var color = HexToColor(hexColor);
-                if (button != null)
-                {
-                    button.Tag = color;
-                    button.Background = new SolidColorBrush(color);
-                    button.Foreground = new SolidColorBrush(ContrastColor(color));
-                }
-            }
-        }
-
-        private Color ContrastColor(Color color)
-        {
-            byte r = color.R;
-            byte g = color.G;
-            byte b = color.B;
-            double brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
-            return brightness > 128 ? Colors.Black : Colors.White;
-        }
-
-        private string ColorToHex(Color color)
-        {
-            return string.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
-        }
-
-        private Color HexToColor(string hex)
-        {
-            if (hex.StartsWith("#"))
-                hex = hex.Substring(1);
-            byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            return Color.FromRgb(r, g, b);
-        }
-
-        private bool IsValidHexColor(string hex)
-        {
-            return Regex.IsMatch(hex, @"^#[0-9A-Fa-f]{6}$");
+                _modifyNssTab.Content = Localized("MenuStyleSettingsWindow_Tab_ModifyNss", "modify.nss");
         }
 
         private void LoadAllConfigFiles()
         {
-            // Try to locate shell.nss configuration file and base directory
             _shellConfigPath = GetShellConfigPath();
             _baseDirectory = GetBaseDirectory();
-            
-            // Determine paths for import files
+
             if (!string.IsNullOrEmpty(_baseDirectory))
             {
                 _themeNssPath = Path.Combine(_baseDirectory, "imports", "theme.nss");
                 _imagesNssPath = Path.Combine(_baseDirectory, "imports", "images.nss");
                 _modifyNssPath = Path.Combine(_baseDirectory, "imports", "modify.nss");
             }
-            
-            // Update config path display
+
             if (_configPathTextBlock != null)
             {
-                var pathInfo = !string.IsNullOrEmpty(_baseDirectory) 
-                    ? $"基础目录: {_baseDirectory}" 
-                    : "未找到配置文件目录";
-                _configPathTextBlock.Text = pathInfo;
+                _configPathTextBlock.Text = !string.IsNullOrEmpty(_baseDirectory)
+                    ? LocalizedFormat("MenuStyleSettingsWindow_BaseDirectory", "Base Directory: {0}", _baseDirectory)
+                    : Localized("MenuStyleSettingsWindow_ConfigFileDirectoryNotFound", "Configuration file directory not found");
             }
 
-            // Update path text boxes
+            var missingFileText = Localized("MenuStyleSettingsWindow_FileNotFound", "File not found");
+
             if (_shellNssPathTextBox != null)
-            {
-                _shellNssPathTextBox.Text = _shellConfigPath ?? "未找到文件";
-            }
+                _shellNssPathTextBox.Text = _shellConfigPath ?? missingFileText;
+
             if (_imagesNssPathTextBox != null)
-            {
-                _imagesNssPathTextBox.Text = _imagesNssPath ?? "未找到文件";
-            }
+                _imagesNssPathTextBox.Text = _imagesNssPath ?? missingFileText;
+
             if (_modifyNssPathTextBox != null)
-            {
-                _modifyNssPathTextBox.Text = _modifyNssPath ?? "未找到文件";
-            }
+                _modifyNssPathTextBox.Text = _modifyNssPath ?? missingFileText;
 
-            // Only load theme.nss content, others use external editor
-            LoadFileContent(_themeNssTextBox, _themeNssPath, GetDefaultThemeNssTemplate());
-
-            // Load theme colors from text to UI
-            LoadThemeColorsFromText();
+            var themeLoaded = LoadFileContent(_themeNssTextBox, _themeNssPath, GetDefaultThemeNssTemplate());
+            if (themeLoaded)
+                LoadThemeColorsFromText();
+            else
+                UpdateUIControls();
         }
 
-        private void LoadFileContent(System.Windows.Controls.TextBox textBox, string? filePath, string defaultTemplate)
+        private bool LoadFileContent(TextBox? textBox, string? filePath, string defaultTemplate)
         {
             if (textBox == null)
-                return;
+                return false;
 
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
                 textBox.Text = defaultTemplate;
-                return;
+                return false;
             }
 
             try
             {
-                var content = File.ReadAllText(filePath, System.Text.Encoding.UTF8);
-                textBox.Text = content;
+                textBox.Text = File.ReadAllText(filePath, Encoding.UTF8);
+                return true;
             }
             catch (Exception ex)
             {
-                textBox.Text = $"# 无法读取配置文件: {ex.Message}\n\n{defaultTemplate}";
+                textBox.Text =
+                    LocalizedFormat("MenuStyleSettingsWindow_CannotReadConfigFile", "Cannot read configuration file: {0}", ex.Message)
+                    + Environment.NewLine + Environment.NewLine
+                    + defaultTemplate;
+                return false;
             }
+        }
+
+        private void ApplyConfigurationAvailability()
+        {
+            var hasShellConfig = FileExists(_shellConfigPath);
+            var hasThemeConfig = FileExists(_themeNssPath);
+            var hasImagesConfig = FileExists(_imagesNssPath);
+            var hasModifyConfig = FileExists(_modifyNssPath);
+
+            SetTabAvailability(_shellNssTab, hasShellConfig);
+            SetTabAvailability(_themeNssTab, hasThemeConfig);
+            SetTabAvailability(_imagesNssTab, hasImagesConfig);
+            SetTabAvailability(_modifyNssTab, hasModifyConfig);
+            EnsureSelectedTab();
+
+            if (_openShellNssBtn != null)
+                _openShellNssBtn.IsEnabled = hasShellConfig;
+
+            if (_openShellNssFolderBtn != null)
+                _openShellNssFolderBtn.IsEnabled = DirectoryExistsForFile(_shellConfigPath);
+
+            if (_openThemeNssBtn != null)
+                _openThemeNssBtn.IsEnabled = hasThemeConfig;
+
+            if (_openImagesNssBtn != null)
+                _openImagesNssBtn.IsEnabled = hasImagesConfig;
+
+            if (_openImagesNssFolderBtn != null)
+                _openImagesNssFolderBtn.IsEnabled = DirectoryExistsForFile(_imagesNssPath);
+
+            if (_openModifyNssBtn != null)
+                _openModifyNssBtn.IsEnabled = hasModifyConfig;
+
+            if (_openModifyNssFolderBtn != null)
+                _openModifyNssFolderBtn.IsEnabled = DirectoryExistsForFile(_modifyNssPath);
+
+            if (_themeNssTextBox != null)
+                _themeNssTextBox.IsReadOnly = !hasThemeConfig;
+
+            if (_updateFromUIBtn != null)
+                _updateFromUIBtn.IsEnabled = hasThemeConfig;
+
+            if (_loadToUIBtn != null)
+                _loadToUIBtn.IsEnabled = hasThemeConfig;
+
+            if (_applyButton != null)
+                _applyButton.IsEnabled = hasThemeConfig;
+        }
+
+        private static bool FileExists(string? path)
+        {
+            return !string.IsNullOrWhiteSpace(path) && File.Exists(path);
+        }
+
+        private static bool DirectoryExistsForFile(string? filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return false;
+
+            var directory = Path.GetDirectoryName(filePath);
+            return !string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory);
+        }
+
+        private static void SetTabAvailability(RadioButton? tab, bool isAvailable)
+        {
+            if (tab == null)
+                return;
+
+            tab.Visibility = isAvailable ? Visibility.Visible : Visibility.Collapsed;
+            tab.IsEnabled = isAvailable;
+
+            if (!isAvailable && tab.IsChecked == true)
+                tab.IsChecked = false;
+        }
+
+        private void EnsureSelectedTab()
+        {
+            RadioButton? firstVisibleTab = null;
+
+            foreach (var tab in new[] { _shellNssTab, _themeNssTab, _imagesNssTab, _modifyNssTab })
+            {
+                if (tab == null || tab.Visibility != Visibility.Visible || !tab.IsEnabled)
+                    continue;
+
+                firstVisibleTab ??= tab;
+
+                if (tab.IsChecked == true)
+                    return;
+            }
+
+            if (firstVisibleTab != null)
+                firstVisibleTab.IsChecked = true;
+        }
+
+        private void UpdateColorFromTextBox(TextBox textBox, Button button)
+        {
+            var hexColor = textBox.Text.Trim();
+            if (!IsValidHexColor(hexColor))
+                return;
+
+            var color = HexToColor(hexColor);
+            button.Tag = color;
+            button.Background = new SolidColorBrush(color);
+            button.Foreground = new SolidColorBrush(ContrastColor(color));
+        }
+
+        private static Color ContrastColor(Color color)
+        {
+            var brightness = (color.R * 0.299 + color.G * 0.587 + color.B * 0.114) / 255d;
+            return brightness > 0.5 ? Colors.Black : Colors.White;
+        }
+
+        private static Color HexToColor(string hex)
+        {
+            if (hex.StartsWith("#", StringComparison.Ordinal))
+                hex = hex.Substring(1);
+
+            var r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            var g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return Color.FromRgb(r, g, b);
+        }
+
+        private static bool IsValidHexColor(string hex)
+        {
+            return Regex.IsMatch(hex, "^#[0-9A-Fa-f]{6}$");
         }
 
         private string? GetBaseDirectory()
         {
-            // Try to get directory from shell.nss path
             if (!string.IsNullOrEmpty(_shellConfigPath))
             {
-                var dir = Path.GetDirectoryName(_shellConfigPath);
-                if (!string.IsNullOrEmpty(dir))
-                    return dir;
+                var directory = Path.GetDirectoryName(_shellConfigPath);
+                if (!string.IsNullOrEmpty(directory))
+                    return directory;
             }
 
-            // Try AppContext.BaseDirectory
-            var baseDir = AppContext.BaseDirectory;
-            if (!string.IsNullOrWhiteSpace(baseDir))
+            try
             {
-                if (File.Exists(Path.Combine(baseDir, "shell.nss")))
-                    return baseDir;
+                var baseDir = AppContext.BaseDirectory;
+                if (!string.IsNullOrWhiteSpace(baseDir))
+                {
+                    var direct = Path.Combine(baseDir, "shell.nss");
+                    if (File.Exists(direct))
+                        return baseDir;
 
-                // Search recursively
-                var files = Directory.GetFiles(baseDir, "shell.nss", SearchOption.AllDirectories);
-                if (files.Length > 0)
-                    return Path.GetDirectoryName(files[0]);
+                    var files = Directory.GetFiles(baseDir, "shell.nss", SearchOption.AllDirectories);
+                    if (files.Length > 0)
+                        return Path.GetDirectoryName(files[0]);
+                }
+            }
+            catch
+            {
+                // Ignore fallback probing failures.
             }
 
-            // Fallback to ProgramFiles
             var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             if (!string.IsNullOrWhiteSpace(programFiles))
             {
@@ -212,106 +296,27 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             return null;
         }
 
-        private string GetDefaultShellNssTemplate()
-        {
-            return @"# Nilesoft Shell 配置文件 (shell.nss)
-# 此文件用于自定义 Windows 右键菜单的外观和行为
-
-# 导入基础主题配置
-import 'imports/theme.nss'
-import 'imports/images.nss'
-import 'imports/modify.nss'
-
-# 主题设置
-theme
-{
-    # 外观设置
-    corner-radius: 5px;
-    shadow: true;
-    transparency: false;
-    
-    # 颜色设置
-    background-color: #ffffff;
-    text-color: #000000;
-}
-
-# 菜单样式
-.menu
-{
-    padding: 4px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 5px;
-}
-
-# 分隔符样式
-.separator
-{
-    height: 1px;
-    margin: 4px 20px;
-}
-
-# 更多配置选项请参考 Nilesoft Shell 官方文档
-";
-        }
-
         private string GetDefaultThemeNssTemplate()
         {
             return @"# Theme configuration file (theme.nss)
-# 此文件用于定义主题相关的样式设置
+# This file defines theme-related style settings
 
-# 主题颜色定义
 theme
 {
-    # 基础颜色
+    # Base colors
     background-color: #ffffff;
     text-color: #000000;
-    
-    # 悬停颜色
+
+    # Hover colors
     hover-background-color: #f0f0f0;
     hover-text-color: #000000;
-    
-    # 选中颜色
+
+    # Selected colors
     selected-background-color: #0078d4;
     selected-text-color: #ffffff;
 }
 
-# 更多主题配置选项请参考 Nilesoft Shell 官方文档
-";
-        }
-
-        private string GetDefaultImagesNssTemplate()
-        {
-            return @"# Images configuration file (images.nss)
-# 此文件用于定义菜单项图标和图像设置
-
-# 图标设置示例
-# item
-# {
-#     icon: 'path/to/icon.png';
-#     icon-size: 16px;
-# }
-
-# 更多图像配置选项请参考 Nilesoft Shell 官方文档
-";
-        }
-
-        private string GetDefaultModifyNssTemplate()
-        {
-            return @"# Modify configuration file (modify.nss)
-# 此文件用于修改和自定义右键菜单项
-
-# 菜单项修改示例
-# menu
-# {
-#     item
-#     {
-#         text: '自定义项';
-#         command: 'notepad.exe';
-#     }
-# }
-
-# 更多菜单修改选项请参考 Nilesoft Shell 官方文档
+# For more theme options, refer to the official Nilesoft Shell documentation
 ";
         }
 
@@ -326,13 +331,11 @@ theme
                     if (File.Exists(direct))
                         return direct;
 
-                    // Search recursively if not found directly
                     var files = Directory.GetFiles(baseDir, "shell.nss", SearchOption.AllDirectories);
                     if (files.Length > 0)
                         return files[0];
                 }
 
-                // Fallback to default installation path
                 var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
                 if (!string.IsNullOrWhiteSpace(programFiles))
                 {
@@ -343,31 +346,26 @@ theme
             }
             catch
             {
-                // ignore
+                // Ignore probing failures and leave the editor in unavailable mode.
             }
 
             return null;
         }
 
-
         private void ShellNssTab_Checked(object sender, RoutedEventArgs e)
         {
-            // Tab visibility is handled by XAML binding
         }
 
         private void ThemeNssTab_Checked(object sender, RoutedEventArgs e)
         {
-            // Tab visibility is handled by XAML binding
         }
 
         private void ImagesNssTab_Checked(object sender, RoutedEventArgs e)
         {
-            // Tab visibility is handled by XAML binding
         }
 
         private void ModifyNssTab_Checked(object sender, RoutedEventArgs e)
         {
-            // Tab visibility is handled by XAML binding
         }
 
         private void LoadThemeColorsFromText()
@@ -375,9 +373,7 @@ theme
             if (_themeNssTextBox == null)
                 return;
 
-            string content = _themeNssTextBox.Text;
-
-            // Parse theme colors
+            var content = _themeNssTextBox.Text;
             _themeColors.BackgroundColor = ExtractColorValue(content, "background-color") ?? "#ffffff";
             _themeColors.TextColor = ExtractColorValue(content, "text-color") ?? "#000000";
             _themeColors.HoverBackgroundColor = ExtractColorValue(content, "hover-background-color") ?? "#f0f0f0";
@@ -385,24 +381,18 @@ theme
             _themeColors.SelectedBackgroundColor = ExtractColorValue(content, "selected-background-color") ?? "#0078d4";
             _themeColors.SelectedTextColor = ExtractColorValue(content, "selected-text-color") ?? "#ffffff";
 
-            // Update UI controls
             UpdateUIControls();
         }
 
-        private string? ExtractColorValue(string content, string propertyName)
+        private static string? ExtractColorValue(string content, string propertyName)
         {
-            string pattern = $@"{propertyName}*:*([#0-9a-fA-F]+);";
-            Match match = Regex.Match(content, pattern);
-            if (match.Success && match.Groups.Count > 1)
-            {
-                return match.Groups[1].Value.Trim();
-            }
-            return null;
+            var pattern = $@"{Regex.Escape(propertyName)}\s*:\s*([#0-9A-Fa-f]+)\s*;";
+            var match = Regex.Match(content, pattern, RegexOptions.IgnoreCase);
+            return match.Success && match.Groups.Count > 1 ? match.Groups[1].Value.Trim() : null;
         }
 
         private void UpdateUIControls()
         {
-            // Update text boxes
             if (_backgroundColorTextBox != null)
                 _backgroundColorTextBox.Text = _themeColors.BackgroundColor;
             if (_textColorTextBox != null)
@@ -415,6 +405,19 @@ theme
                 _selectedBackgroundColorTextBox.Text = _themeColors.SelectedBackgroundColor;
             if (_selectedTextColorTextBox != null)
                 _selectedTextColorTextBox.Text = _themeColors.SelectedTextColor;
+
+            if (_backgroundColorTextBox != null && _backgroundColorPicker != null)
+                UpdateColorFromTextBox(_backgroundColorTextBox, _backgroundColorPicker);
+            if (_textColorTextBox != null && _textColorPicker != null)
+                UpdateColorFromTextBox(_textColorTextBox, _textColorPicker);
+            if (_hoverBackgroundColorTextBox != null && _hoverBackgroundColorPicker != null)
+                UpdateColorFromTextBox(_hoverBackgroundColorTextBox, _hoverBackgroundColorPicker);
+            if (_hoverTextColorTextBox != null && _hoverTextColorPicker != null)
+                UpdateColorFromTextBox(_hoverTextColorTextBox, _hoverTextColorPicker);
+            if (_selectedBackgroundColorTextBox != null && _selectedBackgroundColorPicker != null)
+                UpdateColorFromTextBox(_selectedBackgroundColorTextBox, _selectedBackgroundColorPicker);
+            if (_selectedTextColorTextBox != null && _selectedTextColorPicker != null)
+                UpdateColorFromTextBox(_selectedTextColorTextBox, _selectedTextColorPicker);
         }
 
         private void UpdateThemeTextFromUI()
@@ -422,17 +425,8 @@ theme
             if (_themeNssTextBox == null)
                 return;
 
-            // Get current text content
-            string content = _themeNssTextBox.Text;
-
-            // Update theme colors from UI controls
             UpdateThemeColorsFromUI();
-
-            // Build new theme content
-            string newThemeContent = GenerateThemeContent(content);
-
-            // Update the text box
-            _themeNssTextBox.Text = newThemeContent;
+            _themeNssTextBox.Text = GenerateThemeContent(_themeNssTextBox.Text);
         }
 
         private void UpdateThemeColorsFromUI()
@@ -453,37 +447,27 @@ theme
 
         private string GenerateThemeContent(string originalContent)
         {
-            // Check if theme block exists
-            string themeBlockPattern = @"theme\s*\{[\s\S]*?\}";
-            Match themeBlockMatch = Regex.Match(originalContent, themeBlockPattern);
+            const string themeBlockPattern = @"theme\s*\{[\s\S]*?\}";
+            var updatedThemeBlock = GenerateThemeBlock();
 
-            if (themeBlockMatch.Success)
-            {
-                // Update existing theme block
-                string updatedThemeBlock = GenerateThemeBlock();
-                return Regex.Replace(originalContent, themeBlockPattern, updatedThemeBlock);
-            }
-            else
-            {
-                // Add new theme block
-                string newThemeBlock = GenerateThemeBlock();
-                return $"{originalContent}\n\n{newThemeBlock}";
-            }
+            return Regex.IsMatch(originalContent, themeBlockPattern)
+                ? Regex.Replace(originalContent, themeBlockPattern, updatedThemeBlock)
+                : $"{originalContent}{Environment.NewLine}{Environment.NewLine}{updatedThemeBlock}";
         }
 
         private string GenerateThemeBlock()
         {
             return $@"theme
 {{
-    # 基础颜色
+    # Base colors
     background-color: {_themeColors.BackgroundColor};
     text-color: {_themeColors.TextColor};
-    
-    # 悬停颜色
+
+    # Hover colors
     hover-background-color: {_themeColors.HoverBackgroundColor};
     hover-text-color: {_themeColors.HoverTextColor};
-    
-    # 选中颜色
+
+    # Selected colors
     selected-background-color: {_themeColors.SelectedBackgroundColor};
     selected-text-color: {_themeColors.SelectedTextColor};
 }}";
@@ -503,138 +487,106 @@ theme
         {
             try
             {
-                // Confirm with user
                 var result = MessageBox.Show(
-                    "确定要应用配置吗？\n\n这将：\n1. 保存所有配置文件\n2. 重启资源管理器（Explorer）使配置生效\n\n注意：重启将关闭所有打开的文件夹窗口和任务栏，然后自动重新启动。",
-                    "确认应用配置",
+                    Localized(
+                        "MenuStyleSettingsWindow_ConfirmApplyConfig",
+                        "Are you sure you want to apply the configuration?\n\nThis will:\n1. Save all configuration files\n2. Restart File Explorer to apply the configuration\n\nNote: Restarting will close all open folder windows and the taskbar, then automatically restart."),
+                    Localized("MenuStyleSettingsWindow_ConfirmApplyConfig_Title", "Confirm Apply"),
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
                 if (result != MessageBoxResult.Yes)
                     return;
 
-                // Disable button to prevent multiple clicks
                 if (_applyButton != null)
                     _applyButton.IsEnabled = false;
 
-                // Step 1: Save all configuration files
                 var savedFiles = new List<string>();
                 var failedFiles = new List<string>();
 
                 await SaveAllFilesAsync(savedFiles, failedFiles);
 
-                // Check if save was successful
                 if (failedFiles.Count > 0 && savedFiles.Count == 0)
                 {
                     MessageBox.Show(
-                        $"无法保存配置文件：\n{string.Join("\n", failedFiles)}\n\n请检查文件权限后重试。",
-                        "保存失败",
+                        LocalizedFormat(
+                            "MenuStyleSettingsWindow_SaveFailed_Message",
+                            "Unable to save configuration files:\n{0}\n\nPlease check file permissions and try again.",
+                            string.Join(Environment.NewLine, failedFiles)),
+                        Localized("MenuStyleSettingsWindow_SaveFailed_Title", "Save Failed"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                     return;
                 }
 
-                // Step 2: Restart Explorer
-                await RestartExplorerAsync();
+                await ExplorerRestartHelper.RestartAsync();
 
-                // Show success message
-                var message = "";
+                var messageBuilder = new StringBuilder();
                 if (savedFiles.Count > 0)
                 {
-                    message = $"已成功保存以下文件：\n{string.Join("\n", savedFiles)}\n\n";
+                    messageBuilder.AppendLine(LocalizedFormat(
+                        "MenuStyleSettingsWindow_SavedFiles_Message",
+                        "Saved files:\n{0}",
+                        string.Join(Environment.NewLine, savedFiles)));
+                    messageBuilder.AppendLine();
                 }
 
                 if (failedFiles.Count > 0)
                 {
-                    message += $"保存失败的文件：\n{string.Join("\n", failedFiles)}\n\n";
+                    messageBuilder.AppendLine(LocalizedFormat(
+                        "MenuStyleSettingsWindow_FailedFiles_Message",
+                        "Failed files:\n{0}",
+                        string.Join(Environment.NewLine, failedFiles)));
+                    messageBuilder.AppendLine();
                 }
 
-                message += "资源管理器已重启，配置已生效！";
+                messageBuilder.Append(Localized(
+                    "MenuStyleSettingsWindow_ApplySucceeded_Message",
+                    "File Explorer has been restarted and the configuration is now active."));
 
                 MessageBox.Show(
-                    message,
-                    failedFiles.Count > 0 ? "部分应用成功" : "应用成功",
+                    messageBuilder.ToString(),
+                    failedFiles.Count > 0
+                        ? Localized("MenuStyleSettingsWindow_PartialApplySucceeded_Title", "Applied with warnings")
+                        : Localized("MenuStyleSettingsWindow_ApplySucceeded_Title", "Apply Succeeded"),
                     MessageBoxButton.OK,
                     failedFiles.Count > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"应用配置时出错：\n{ex.Message}\n\n您可以手动保存文件并在任务管理器中重启 Explorer 进程。",
-                    "应用失败",
+                    LocalizedFormat(
+                        "MenuStyleSettingsWindow_ApplyFailed_Message",
+                        "An error occurred while applying the configuration:\n{0}\n\nYou can save files manually and restart Explorer from Task Manager.",
+                        ex.Message),
+                    Localized("MenuStyleSettingsWindow_ApplyFailed_Title", "Apply Failed"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             finally
             {
-                // Re-enable button
                 if (_applyButton != null)
-                    _applyButton.IsEnabled = true;
+                    _applyButton.IsEnabled = FileExists(_themeNssPath);
             }
         }
 
         private async Task SaveAllFilesAsync(List<string> savedFiles, List<string> failedFiles)
         {
-            // Only save theme.nss since others are edited externally
-            if (!string.IsNullOrEmpty(_themeNssPath) && _themeNssTextBox != null)
-            {
-                try
-                {
-                    var dir = Path.GetDirectoryName(_themeNssPath);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
+            if (string.IsNullOrEmpty(_themeNssPath) || _themeNssTextBox == null)
+                return;
 
-                    await File.WriteAllTextAsync(_themeNssPath, _themeNssTextBox.Text, System.Text.Encoding.UTF8);
-                    savedFiles.Add("theme.nss");
-                }
-                catch (Exception ex)
-                {
-                    failedFiles.Add($"theme.nss: {ex.Message}");
-                }
-            }
-        }
-
-        private static async Task RestartExplorerAsync()
-        {
             try
             {
-                // First, kill explorer.exe
-                var killInfo = new ProcessStartInfo
-                {
-                    FileName = "taskkill.exe",
-                    Arguments = "/f /im explorer.exe",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
+                var directory = Path.GetDirectoryName(_themeNssPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
 
-                using var killProcess = Process.Start(killInfo);
-                if (killProcess != null)
-                {
-                    killProcess.WaitForExit(5000);
-                }
-
-                // Wait a moment for processes to fully terminate
-                await Task.Delay(1000).ConfigureAwait(false);
-
-                // Then, start explorer.exe
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = "explorer.exe",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-
-                Process.Start(startInfo);
+                await File.WriteAllTextAsync(_themeNssPath, _themeNssTextBox.Text, Encoding.UTF8);
+                savedFiles.Add("theme.nss");
             }
             catch (Exception ex)
             {
-                if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                    Lib.Utils.Log.Instance.Trace($"Failed to restart Explorer.", ex);
-                throw;
+                failedFiles.Add($"theme.nss: {ex.Message}");
             }
         }
 
@@ -643,8 +595,6 @@ theme
             Close();
         }
 
-        #region File Operations
-        
         private void OpenShellNssBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFile(_shellConfigPath);
@@ -652,11 +602,7 @@ theme
 
         private void OpenShellNssFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_shellConfigPath))
-            {
-                string? folderPath = Path.GetDirectoryName(_shellConfigPath);
-                OpenFolder(folderPath);
-            }
+            OpenFolder(Path.GetDirectoryName(_shellConfigPath));
         }
 
         private void OpenThemeNssBtn_Click(object sender, RoutedEventArgs e)
@@ -671,11 +617,7 @@ theme
 
         private void OpenImagesNssFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_imagesNssPath))
-            {
-                string? folderPath = Path.GetDirectoryName(_imagesNssPath);
-                OpenFolder(folderPath);
-            }
+            OpenFolder(Path.GetDirectoryName(_imagesNssPath));
         }
 
         private void OpenModifyNssBtn_Click(object sender, RoutedEventArgs e)
@@ -685,24 +627,23 @@ theme
 
         private void OpenModifyNssFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_modifyNssPath))
-            {
-                string? folderPath = Path.GetDirectoryName(_modifyNssPath);
-                OpenFolder(folderPath);
-            }
+            OpenFolder(Path.GetDirectoryName(_modifyNssPath));
         }
 
         private void OpenFile(string? filePath)
         {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            if (!FileExists(filePath))
             {
-                MessageBox.Show("文件不存在或路径无效", "打开文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    Localized("MenuStyleSettingsWindow_FileNotFound", "File not found"),
+                    Localized("MenuStyleSettingsWindow_OpenFileFailed_Title", "Open File Failed"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return;
             }
 
             try
             {
-                // 使用系统默认程序打开文件
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = filePath,
@@ -711,21 +652,28 @@ theme
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"无法打开文件: {ex.Message}", "打开文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    LocalizedFormat("MenuStyleSettingsWindow_OpenFileFailed_Message", "Unable to open file: {0}", ex.Message),
+                    Localized("MenuStyleSettingsWindow_OpenFileFailed_Title", "Open File Failed"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
         private void OpenFolder(string? folderPath)
         {
-            if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath))
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
-                MessageBox.Show("文件夹不存在或路径无效", "打开文件夹失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    Localized("MenuStyleSettingsWindow_ConfigFileDirectoryNotFound", "Configuration file directory not found"),
+                    Localized("MenuStyleSettingsWindow_OpenFolderFailed_Title", "Open Folder Failed"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return;
             }
 
             try
             {
-                // 打开文件夹
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = folderPath,
@@ -735,10 +683,12 @@ theme
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"无法打开文件夹: {ex.Message}", "打开文件夹失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    LocalizedFormat("MenuStyleSettingsWindow_OpenFolderFailed_Message", "Unable to open folder: {0}", ex.Message),
+                    Localized("MenuStyleSettingsWindow_OpenFolderFailed_Title", "Open Folder Failed"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
-
-        #endregion
     }
 }

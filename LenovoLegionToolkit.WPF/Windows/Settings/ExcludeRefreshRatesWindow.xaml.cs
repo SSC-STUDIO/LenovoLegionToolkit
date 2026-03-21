@@ -10,8 +10,8 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class ExcludeRefreshRatesWindow
 {
     private readonly RefreshRateFeature _feature = IoCContainer.Resolve<RefreshRateFeature>();
@@ -147,4 +147,5 @@ public partial class ExcludeRefreshRatesWindow
             Content = _grid;
         }
     }
+}
 }

@@ -12,10 +12,12 @@ using LenovoLegionToolkit.WPF.Controls.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Common;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class SettingsPage
 {
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
 
@@ -45,14 +47,14 @@ public partial class SettingsPage
 
         var navigationItems = new List<NavigationItem>
         {
-            new() { Key = "Appearance", Title = "外观", Icon = SymbolRegular.PaintBrush24 },
-            new() { Key = "Application", Title = "应用行为", Icon = SymbolRegular.Apps24 }
+            new() { Key = "Appearance", Title = T("SettingsPage_Navigation_Appearance", "Appearance"), Icon = SymbolRegular.PaintBrush24 },
+            new() { Key = "Application", Title = T("SettingsPage_Navigation_Application", "Application"), Icon = SymbolRegular.Apps24 }
         };
 
         if (isSupportedLegionMachine)
         {
-            navigationItems.Add(new() { Key = "SmartKeys", Title = "智能按键", Icon = SymbolRegular.Keyboard24 });
-            navigationItems.Add(new() { Key = "Display", Title = "显示", Icon = SymbolRegular.Desktop24 });
+            navigationItems.Add(new() { Key = "SmartKeys", Title = T("SettingsPage_Navigation_SmartKeys", "Smart Keys"), Icon = SymbolRegular.Keyboard24 });
+            navigationItems.Add(new() { Key = "Display", Title = T("SettingsPage_Navigation_Display", "Display"), Icon = SymbolRegular.Desktop24 });
         }
 
         navigationItems.Add(new() { Key = "Update", Title = Resource.SettingsPage_Update_Title, Icon = SymbolRegular.ArrowSync24 });
@@ -207,4 +209,5 @@ public partial class SettingsPage
         public string Title { get; set; } = string.Empty;
         public SymbolRegular Icon { get; set; }
     }
+}
 }

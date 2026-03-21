@@ -16,8 +16,7 @@
                 x:Name="_titleTextBlock"
                 Margin="0,16,0,24"
                 Focusable="True"
-                FontSize="24"
-                FontWeight="Medium"
+                Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
             <controls:LoadableControl x:Name="_loader">

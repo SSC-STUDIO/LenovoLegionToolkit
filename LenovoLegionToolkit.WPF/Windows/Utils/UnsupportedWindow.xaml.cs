@@ -10,8 +10,8 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using Theme = Wpf.Ui.Appearance.Theme;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class UnsupportedWindow : UiWindow
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
@@ -83,4 +83,5 @@ public partial class UnsupportedWindow : UiWindow
         _taskCompletionSource.TrySetResult(false);
         Close();
     }
+}
 }

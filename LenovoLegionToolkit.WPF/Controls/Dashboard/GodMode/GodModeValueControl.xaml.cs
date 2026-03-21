@@ -6,8 +6,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.Extensions;
 
-namespace LenovoLegionToolkit.WPF.Controls.Dashboard.GodMode;
-
+namespace LenovoLegionToolkit.WPF.Controls.Dashboard.GodMode
+{
 public partial class GodModeValueControl
 {
     private int? _defaultValue;
@@ -157,4 +157,5 @@ public partial class GodModeValueControl
         if (_comboBox.Visibility == Visibility.Visible)
             _comboBox.SelectItem(_defaultValue.Value);
     }
+}
 }
