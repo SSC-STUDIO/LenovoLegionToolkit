@@ -61,13 +61,22 @@
                 <!-- Header with Description -->
                 <StackPanel Margin="0,16,0,28">
                     <StackPanel VerticalAlignment="Center">
+                        <Border Padding="10,4"
+                                HorizontalAlignment="Left"
+                                CornerRadius="999"
+                                Background="#122B579A">
+                            <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_ViveToolStatus}"
+                                       Style="{StaticResource AppHeroBadgeTextBlockStyle}"
+                                       Foreground="#FF5CA9FF" />
+                        </Border>
                         <TextBlock
+                            Margin="0,12,0,0"
                             AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                             Focusable="True"
                             Style="{StaticResource AppPageTitleTextBlockStyle}"
                             Text="{x:Static pluginRes:Resource.ViveTool_PageTitle}" />
                         <TextBlock
-                            Margin="0,6,0,0"
+                            Margin="0,8,0,0"
                             Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                             Text="{x:Static pluginRes:Resource.ViveTool_PageDescription}"
                             />
