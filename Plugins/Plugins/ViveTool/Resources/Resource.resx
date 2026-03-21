@@ -130,6 +130,9 @@
   <data name="ViveTool_ImportFromFile" xml:space="preserve">
     <value>Import from File</value>
   </data>
+  <data name="ViveTool_ImportFileDialogFilter" xml:space="preserve">
+    <value>All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv</value>
+  </data>
   <data name="ViveTool_ImportFromUrl" xml:space="preserve">
     <value>Import from URL</value>
   </data>
@@ -159,6 +162,9 @@
   </data>
   <data name="ViveTool_SelectViveTool" xml:space="preserve">
     <value>Select vivetool.exe</value>
+  </data>
+  <data name="ViveTool_ExecutableDialogFilter" xml:space="preserve">
+    <value>Executable Files (*.exe)|*.exe|All Files (*.*)|*.*</value>
   </data>
   <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
     <value>Please select vivetool.exe file</value>
@@ -210,6 +216,9 @@
   </data>
   <data name="ViveTool_ImportConfigTitle" xml:space="preserve">
     <value>Import Configuration</value>
+  </data>
+  <data name="ViveTool_ImportConfigDialogFilter" xml:space="preserve">
+    <value>JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*</value>
   </data>
   <data name="ViveTool_ImportConfigDescription" xml:space="preserve">
     <value>Import ViVeTool configuration from a local file. This will load feature flags and their settings.</value>

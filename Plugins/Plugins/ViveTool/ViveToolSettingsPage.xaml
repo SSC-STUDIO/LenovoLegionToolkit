@@ -26,23 +26,24 @@
                                 CornerRadius="999"
                                 Background="#122B579A">
                             <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_ViveToolStatus}"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
+                                       Style="{StaticResource AppHeroBadgeTextBlockStyle}"
                                        Foreground="#FF5CA9FF" />
                         </Border>
 
                         <TextBlock Margin="0,12,0,0"
-                                   FontSize="28"
-                                   FontWeight="Medium"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                   Style="{StaticResource AppPageTitleTextBlockStyle}"
                                    Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}" />
 
-                        <TextBlock x:Name="_statusTextBlock"
-                                   Margin="0,10,0,0"
-                                   FontSize="13"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   TextWrapping="Wrap"
-                                   LineHeight="18" />
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <wpfui:SymbolIcon x:Name="_statusIcon"
+                                              Symbol="CheckmarkCircle24"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Top"
+                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="_statusTextBlock"
+                                       Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                        </StackPanel>
 
                         <Grid x:Name="_downloadProgressGrid"
                               Margin="0,14,0,0"
@@ -102,9 +103,7 @@
                     Padding="22">
                 <StackPanel>
                     <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}"
-                               FontSize="18"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
 
                     <Grid Margin="0,14,0,0">
                         <Grid.ColumnDefinitions>

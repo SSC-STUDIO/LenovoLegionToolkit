@@ -42,21 +42,64 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\Shell\src\bin\shell.exe" Condition="Exists('..\..\..\Shell\src\bin\shell.exe')">
+  <!-- Shell binary source paths: local repo (priority) and cached download (fallback) -->
+  <PropertyGroup>
+    <ShellLocalBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', '..', 'Shell', 'src', 'bin'))</ShellLocalBinPath>
+    <ShellCachedBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', 'Dependencies', 'Shell'))</ShellCachedBinPath>
+    <FetchShellScript>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', 'Scripts', 'fetch-shell-binaries.ps1'))</FetchShellScript>
+    <_ShellLocalExists Condition="Exists('$(ShellLocalBinPath)\shell.exe')">true</_ShellLocalExists>
+    <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
+  </PropertyGroup>
+
+  <!-- Priority 1: Local Shell repo (for developers who have it cloned) -->
+  <ItemGroup Condition="'$(_ShellLocalExists)' == 'true'">
+    <None Include="$(ShellLocalBinPath)\shell.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\Shell\src\bin\shell.dll" Condition="Exists('..\..\..\Shell\src\bin\shell.dll')">
+    <None Include="$(ShellLocalBinPath)\shell.dll" Condition="Exists('$(ShellLocalBinPath)\shell.dll')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\Shell\src\bin\shell.nss" Condition="Exists('..\..\..\Shell\src\bin\shell.nss')">
+    <None Include="$(ShellLocalBinPath)\shell.nss" Condition="Exists('$(ShellLocalBinPath)\shell.nss')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\Shell\src\bin\imports\**\*.*" Condition="Exists('..\..\..\Shell\src\bin\imports')">
+    <None Include="$(ShellLocalBinPath)\imports\**\*.*" Condition="Exists('$(ShellLocalBinPath)\imports')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>imports\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
   </ItemGroup>
+
+  <!-- Priority 2: Cached download from Dependencies/Shell/ -->
+  <ItemGroup Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' == 'true'">
+    <None Include="$(ShellCachedBinPath)\shell.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\shell.dll" Condition="Exists('$(ShellCachedBinPath)\shell.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\shell.nss" Condition="Exists('$(ShellCachedBinPath)\shell.nss')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\imports\**\*.*" Condition="Exists('$(ShellCachedBinPath)\imports')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>imports\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- Auto-fetch Shell binaries if neither local repo nor cache has them -->
+  <Target Name="FetchShellBinaries"
+          BeforeTargets="BeforeBuild"
+          Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
+    <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;"
+          ConsoleToMSBuild="true"
+          StandardOutputImportance="normal" />
+    <!-- Re-evaluate after download so the ItemGroup picks up the files -->
+    <PropertyGroup>
+      <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
+    </PropertyGroup>
+    <Warning Condition="'$(_ShellCachedExists)' != 'true'"
+             Text="Shell binaries could not be fetched. The plugin will build without Shell integration files. If the fetch succeeded, please rebuild to include the downloaded files." />
+  </Target>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">
     <ItemGroup>

@@ -67,6 +67,15 @@
   <data name="PageTitle" xml:space="preserve">
     <value>网络加速</value>
   </data>
+  <data name="HeroBadgeTitle" xml:space="preserve">
+    <value>流量脉冲</value>
+  </data>
+  <data name="FeatureOverviewTitle" xml:space="preserve">
+    <value>实时流量概览</value>
+  </data>
+  <data name="FeatureOverviewDescription" xml:space="preserve">
+    <value>在一个界面里查看当前吞吐、活动适配器状态，并执行快速网络恢复操作。</value>
+  </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>网络设置</value>
   </data>

@@ -5,6 +5,8 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 
 public static class CustomMouseText
 {
+    public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
+
     public static string PluginName => T(nameof(PluginName), "Custom Mouse");
     public static string PluginDescription => T(nameof(PluginDescription), "Customize mouse cursor style behavior and mouse settings.");
     public static string PageTitle => T(nameof(PageTitle), "Custom Mouse");
@@ -20,6 +22,8 @@ public static class CustomMouseText
     public static string CurrentPollingLabel => T(nameof(CurrentPollingLabel), "Current Polling");
     public static string ApplyButton => T(nameof(ApplyButton), "Apply");
     public static string ResetButton => T(nameof(ResetButton), "Reset");
+    public static string QuickActionsTitle => T(nameof(QuickActionsTitle), "Quick Actions");
+    public static string QuickActionsDescription => T(nameof(QuickActionsDescription), "Apply or reset your mouse profile settings.");
     public static string StatusResetDefaults => T(nameof(StatusResetDefaults), "Mouse profile reset to defaults.");
     public static string StatusInvalidDpi => T(nameof(StatusInvalidDpi), "Invalid DPI value.");
     public static string StatusSelectValidPolling => T(nameof(StatusSelectValidPolling), "Please select a valid polling rate.");
@@ -53,7 +57,7 @@ public static class CustomMouseText
     public static string FormatCursorApplied(string? theme)
     {
         var format = T(nameof(FormatCursorApplied), "Cursor style applied ({0}).");
-        return string.Format(CultureInfo.CurrentUICulture, format, theme ?? "unknown");
+        return string.Format(Culture, format, theme ?? "unknown");
     }
 
     private static readonly System.Resources.ResourceManager ResourceManager =
@@ -61,7 +65,7 @@ public static class CustomMouseText
 
     private static string T(string key, string fallback)
     {
-        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+        return ResourceManager.GetString(key, Culture) ?? fallback;
     }
 
 }

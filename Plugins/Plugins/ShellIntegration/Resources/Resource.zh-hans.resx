@@ -74,7 +74,7 @@
     <value>查看注册状态、安装路径，并直接打开此插件随附的 Shell 工具。</value>
   </data>
   <data name="Subtitle" xml:space="preserve">
-    <value>使用托管的 Shell 控件、动效调节和实时预览重新打造右键菜单体验。</value>
+    <value>管理 Nilesoft Shell 注册状态并打开样式编辑器。</value>
   </data>
   <data name="RegistrationLabel" xml:space="preserve">
     <value>注册状态</value>
@@ -95,10 +95,10 @@
     <value>禁用</value>
   </data>
   <data name="OpenStyleSettingsButton" xml:space="preserve">
-    <value>打开配置目录</value>
+    <value>打开样式设置</value>
   </data>
   <data name="OpenStyleShortButton" xml:space="preserve">
-    <value>打开目录</value>
+    <value>打开样式</value>
   </data>
   <data name="OpenShellFolderButton" xml:space="preserve">
     <value>打开 Shell 文件夹</value>

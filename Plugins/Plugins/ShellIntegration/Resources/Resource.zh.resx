@@ -58,4 +58,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<data name="DisableButton" xml:space="preserve"><value>禁用</value></data><data name="EnableButton" xml:space="preserve"><value>启用</value></data><data name="NotFound" xml:space="preserve"><value>未找到</value></data><data name="OpenConfigButton" xml:space="preserve"><value>打开配置文件</value></data><data name="OpenShellFolderButton" xml:space="preserve"><value>打开 Shell 文件夹</value></data><data name="OpenStyleSettingsButton" xml:space="preserve"><value>打开样式设置</value></data><data name="OpenStyleShortButton" xml:space="preserve"><value>打开样式</value></data><data name="OptimizationHint" xml:space="preserve"><value>你也可以在系统优化页面中使用 Shell 动作。</value></data><data name="PathLabel" xml:space="preserve"><value>路径</value></data><data name="PluginDescription" xml:space="preserve"><value>将 Lenovo Legion Toolkit 集成到 Windows 右键菜单。</value></data><data name="PluginName" xml:space="preserve"><value>Shell 集成</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>Shell 集成</value></data><data name="StatusConfigNotFound" xml:space="preserve"><value>未找到配置文件。</value></data><data name="StatusDetected" xml:space="preserve"><value>已检测到 Nilesoft Shell。</value></data><data name="StatusDisableCompleted" xml:space="preserve"><value>禁用命令已完成。</value></data><data name="StatusDisableFailed" xml:space="preserve"><value>禁用命令失败。</value></data><data name="StatusEnableCompleted" xml:space="preserve"><value>启用命令已完成。</value></data><data name="StatusEnableFailed" xml:space="preserve"><value>启用命令失败。</value></data><data name="StatusNotDetected" xml:space="preserve"><value>未检测到 Nilesoft Shell。</value></data><data name="StatusOpenedConfig" xml:space="preserve"><value>已打开配置文件。</value></data><data name="StatusOpenedShellFolder" xml:space="preserve"><value>已打开 Shell 文件夹。</value></data><data name="StatusOpenedStyleSettings" xml:space="preserve"><value>已打开样式设置。</value></data><data name="StatusShellFolderNotFound" xml:space="preserve"><value>未找到 Shell 文件夹。</value></data><data name="Subtitle" xml:space="preserve"><value>管理 Nilesoft Shell 注册状态并打开样式编辑器。</value></data><data name="VersionLabel" xml:space="preserve"><value>版本</value></data></root>
+  <data name="DisableButton" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="EnableButton" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>未找到</value>
+  </data>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>打开配置文件</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>打开 Shell 文件夹</value>
+  </data>
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+    <value>打开样式设置</value>
+  </data>
+  <data name="OpenStyleShortButton" xml:space="preserve">
+    <value>打开样式</value>
+  </data>
+  <data name="OptimizationHint" xml:space="preserve">
+    <value>你也可以在系统优化页面中使用 Shell 动作。</value>
+  </data>
+  <data name="PathLabel" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>将 Lenovo Legion Toolkit 集成到 Windows 右键菜单。</value>
+  </data>
+  <data name="PluginName" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="Subtitle" xml:space="preserve">
+    <value>管理 Nilesoft Shell 注册状态并打开样式编辑器。</value>
+  </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell 集成概览</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>查看注册状态、安装路径，并直接打开此插件随附的 Shell 工具。</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>注册状态</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>快速操作</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>执行注册相关操作，或直接打开此插件打包的 Shell 资源。</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>未找到配置文件。</value>
+  </data>
+  <data name="StatusDetected" xml:space="preserve">
+    <value>已检测到 Nilesoft Shell。</value>
+  </data>
+  <data name="StatusDisableCompleted" xml:space="preserve">
+    <value>禁用命令已完成。</value>
+  </data>
+  <data name="StatusDisableFailed" xml:space="preserve">
+    <value>禁用命令失败。</value>
+  </data>
+  <data name="StatusEnableCompleted" xml:space="preserve">
+    <value>启用命令已完成。</value>
+  </data>
+  <data name="StatusEnableFailed" xml:space="preserve">
+    <value>启用命令失败。</value>
+  </data>
+  <data name="StatusNotDetected" xml:space="preserve">
+    <value>未检测到 Nilesoft Shell。</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>已打开配置文件。</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>已打开 Shell 文件夹。</value>
+  </data>
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+    <value>已打开样式设置。</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>未找到 Shell 文件夹。</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>已检测到</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>缺失</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>版本</value>
+  </data>
+</root>

@@ -15,6 +15,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 public partial class NetworkAccelerationControl : UserControl
 {
     private const int MaxTelemetrySamples = 24;
+    private static readonly string[] DataSizeSuffixes = ["B", "KB", "MB", "GB", "TB"];
 
     private readonly NetworkAccelerationPlugin _plugin;
     private readonly NetworkAccelerationTelemetryService _telemetryService = new();
@@ -23,6 +24,7 @@ public partial class NetworkAccelerationControl : UserControl
         Interval = TimeSpan.FromSeconds(2)
     };
     private readonly List<NetworkAccelerationTelemetrySnapshot> _telemetrySamples = [];
+    private static CultureInfo Culture => NetworkAccelerationText.Culture;
 
     public NetworkAccelerationControl(NetworkAccelerationPlugin plugin)
     {
@@ -65,45 +67,187 @@ public partial class NetworkAccelerationControl : UserControl
         };
         AutomationProperties.SetAutomationId(_statusTextBlock, "NetworkAcceleration_StatusText");
 
-        var root = new StackPanel { Margin = new Thickness(16) };
+        _downloadValueTextBlock = CreateMetricValueTextBlock(24);
+        _uploadValueTextBlock = CreateMetricValueTextBlock(24);
+        _peakValueTextBlock = CreateMetricValueTextBlock(24);
+        _adapterValueTextBlock = CreateMetricValueTextBlock(18);
+        _downloadTotalTextBlock = CreateMetricValueTextBlock(18);
+        _uploadTotalTextBlock = CreateMetricValueTextBlock(18);
+        _updatedValueTextBlock = CreateMetricValueTextBlock(18);
+        _modeDescriptionTextBlock = new TextBlock
+        {
+            Margin = new Thickness(0, 8, 0, 0),
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
+        };
+
+        var root = new StackPanel { Margin = new Thickness(20) };
         AutomationProperties.SetAutomationId(root, "NetworkAcceleration_FeatureRoot");
-        root.Children.Add(new TextBlock
-        {
-            Text = NetworkAccelerationText.PageTitle,
-            FontSize = 24,
-            FontWeight = FontWeights.SemiBold
-        });
-        root.Children.Add(new TextBlock
-        {
-            Text = NetworkAccelerationText.LiveTelemetryDescription,
-            Margin = new Thickness(0, 8, 0, 16),
-            TextWrapping = TextWrapping.Wrap
-        });
-        root.Children.Add(_modeComboBox);
 
-        var actions = new WrapPanel { Margin = new Thickness(0, 12, 0, 0) };
-        var optimizeButton = new Button { Content = NetworkAccelerationText.RunQuickOptimizationButton, Width = 160 };
-        AutomationProperties.SetAutomationId(optimizeButton, "NetworkAcceleration_QuickOptimizeButton");
-        optimizeButton.Click += QuickOptimizeButton_Click;
-        var resetButton = new Button { Content = NetworkAccelerationText.ResetNetworkStackButton, Width = 150, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(resetButton, "NetworkAcceleration_ResetStackButton");
-        resetButton.Click += ResetStackButton_Click;
-        var saveButton = new Button { Content = NetworkAccelerationText.SaveModeButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(saveButton, "NetworkAcceleration_SaveModeButton");
-        saveButton.Click += SaveModeButton_Click;
-        actions.Children.Add(optimizeButton);
-        actions.Children.Add(resetButton);
-        actions.Children.Add(saveButton);
+        var heroGrid = new Grid();
+        heroGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.3, GridUnitType.Star) });
+        heroGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        root.Children.Add(actions);
-        root.Children.Add(new Border
+        var heroCopy = new StackPanel { Margin = new Thickness(0, 0, 20, 0) };
+        heroCopy.Children.Add(CreateBadge(NetworkAccelerationText.HeroBadgeTitle, "#FF5CA9FF", "#17335A93"));
+        heroCopy.Children.Add(new TextBlock
         {
             Margin = new Thickness(0, 14, 0, 0),
-            Padding = new Thickness(12),
-            CornerRadius = new CornerRadius(10),
+            Text = NetworkAccelerationText.FeatureOverviewTitle,
+            FontSize = 30,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
+        });
+        heroCopy.Children.Add(new TextBlock
+        {
+            Margin = new Thickness(0, 10, 0, 0),
+            Text = NetworkAccelerationText.FeatureOverviewDescription,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+        });
+        Grid.SetColumn(heroCopy, 0);
+        heroGrid.Children.Add(heroCopy);
+
+        var heroVisual = CreateTrafficHeroPanel();
+        Grid.SetColumn(heroVisual, 1);
+        heroGrid.Children.Add(heroVisual);
+
+        root.Children.Add(new Border
+        {
+            Padding = new Thickness(24),
+            CornerRadius = new CornerRadius(24),
+            Background = new LinearGradientBrush(
+                (Color)ColorConverter.ConvertFromString("#FF2F3028"),
+                (Color)ColorConverter.ConvertFromString("#FF383A31"),
+                0),
+            BorderBrush = FindBrush("ControlStrokeColorDefaultBrush", "#443C3B35"),
             BorderThickness = new Thickness(1),
-            BorderBrush = Brushes.LightGray,
-            Child = _statusTextBlock
+            Child = heroGrid
+        });
+
+        var summaryGrid = new System.Windows.Controls.Primitives.UniformGrid
+        {
+            Margin = new Thickness(0, 16, 0, 0),
+            Columns = 4
+        };
+        summaryGrid.Children.Add(CreateMetricCard("DL", NetworkAccelerationText.CurrentDownloadLabel, "#FF4F9CFF", _downloadValueTextBlock));
+        summaryGrid.Children.Add(CreateMetricCard("UL", NetworkAccelerationText.CurrentUploadLabel, "#FF27C7A8", _uploadValueTextBlock));
+        summaryGrid.Children.Add(CreateMetricCard("PK", NetworkAccelerationText.PeakTrafficLabel, "#FFFFA24C", _peakValueTextBlock));
+        summaryGrid.Children.Add(CreateMetricCard("NET", NetworkAccelerationText.ActiveAdapterLabel, "#FFB78CFF", _adapterValueTextBlock));
+        root.Children.Add(summaryGrid);
+
+        var optimizeButton = new Button { Content = NetworkAccelerationText.RunQuickOptimizationButton, Width = 176, Height = 36 };
+        AutomationProperties.SetAutomationId(optimizeButton, "NetworkAcceleration_QuickOptimizeButton");
+        optimizeButton.Click += QuickOptimizeButton_Click;
+        var resetButton = new Button { Content = NetworkAccelerationText.ResetNetworkStackButton, Width = 168, Height = 36, Margin = new Thickness(10, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(resetButton, "NetworkAcceleration_ResetStackButton");
+        resetButton.Click += ResetStackButton_Click;
+        var saveButton = new Button { Content = NetworkAccelerationText.SaveModeButton, Width = 128, Height = 36, Margin = new Thickness(10, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(saveButton, "NetworkAcceleration_SaveModeButton");
+        saveButton.Click += SaveModeButton_Click;
+
+        var contentGrid = new Grid { Margin = new Thickness(0, 16, 0, 0) };
+        contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.1, GridUnitType.Star) });
+        contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.9, GridUnitType.Star) });
+
+        var leftPanel = CreatePanel();
+        leftPanel.Margin = new Thickness(0, 0, 8, 0);
+        leftPanel.Child = new StackPanel
+        {
+            Children =
+            {
+                CreateSectionTitle(NetworkAccelerationText.PreferredModeTitle),
+                new TextBlock
+                {
+                    Margin = new Thickness(0, 6, 0, 0),
+                    Text = NetworkAccelerationText.PreferredModeDescription,
+                    TextWrapping = TextWrapping.Wrap,
+                    Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+                },
+                new Border
+                {
+                    Margin = new Thickness(0, 16, 0, 0),
+                    Padding = new Thickness(16),
+                    CornerRadius = new CornerRadius(18),
+                    Background = FindBrush("ControlFillColorSecondaryBrush", "#FF47463F"),
+                    Child = new StackPanel
+                    {
+                        Children =
+                        {
+                            _modeComboBox,
+                            _modeDescriptionTextBlock
+                        }
+                    }
+                },
+                new WrapPanel
+                {
+                    Margin = new Thickness(0, 16, 0, 0),
+                    Children =
+                    {
+                        optimizeButton,
+                        resetButton,
+                        saveButton
+                    }
+                },
+                new Border
+                {
+                    Margin = new Thickness(0, 16, 0, 0),
+                    Padding = new Thickness(14),
+                    CornerRadius = new CornerRadius(16),
+                    Background = FindBrush("ControlFillColorSecondaryBrush", "#FF47463F"),
+                    Child = new TextBlock
+                    {
+                        Text = NetworkAccelerationText.AdminHint,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+                    }
+                }
+            }
+        };
+        contentGrid.Children.Add(leftPanel);
+
+        var rightPanel = CreatePanel();
+        rightPanel.Margin = new Thickness(8, 0, 0, 0);
+        var rightStack = new StackPanel();
+        rightStack.Children.Add(CreateSectionTitle(NetworkAccelerationText.LiveTelemetryTitle));
+        rightStack.Children.Add(new TextBlock
+        {
+            Margin = new Thickness(0, 6, 0, 0),
+            Text = NetworkAccelerationText.LiveTelemetryDescription,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+        });
+        rightStack.Children.Add(CreateMetricCard("RX", NetworkAccelerationText.DownloadTotalLabel, "#FF4F9CFF", _downloadTotalTextBlock, new Thickness(0, 16, 0, 0)));
+        rightStack.Children.Add(CreateMetricCard("TX", NetworkAccelerationText.UploadTotalLabel, "#FF27C7A8", _uploadTotalTextBlock, new Thickness(0, 12, 0, 0)));
+        rightStack.Children.Add(CreateMetricCard("UPD", NetworkAccelerationText.UpdatedLabel, "#FFFFA24C", _updatedValueTextBlock, new Thickness(0, 12, 0, 0)));
+        rightPanel.Child = rightStack;
+        Grid.SetColumn(rightPanel, 1);
+        contentGrid.Children.Add(rightPanel);
+        root.Children.Add(contentGrid);
+
+        root.Children.Add(new Border
+        {
+            Margin = new Thickness(0, 16, 0, 0),
+            Padding = new Thickness(18),
+            CornerRadius = new CornerRadius(20),
+            Background = FindBrush("ControlFillColorDefaultBrush", "#FF34342D"),
+            BorderBrush = FindBrush("ControlStrokeColorDefaultBrush", "#443C3B35"),
+            BorderThickness = new Thickness(1),
+            Child = new StackPanel
+            {
+                Children =
+                {
+                    CreateSectionTitle(NetworkAccelerationText.StatusCardTitle),
+                    new Border
+                    {
+                        Margin = new Thickness(0, 12, 0, 0),
+                        Padding = new Thickness(14),
+                        CornerRadius = new CornerRadius(16),
+                        Background = FindBrush("ControlFillColorSecondaryBrush", "#FF47463F"),
+                        Child = _statusTextBlock
+                    }
+                }
+            }
         });
 
         Content = new ScrollViewer
@@ -112,6 +256,202 @@ public partial class NetworkAccelerationControl : UserControl
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             Content = root
         };
+    }
+
+    private Border CreatePanel()
+    {
+        return new Border
+        {
+            Padding = new Thickness(20),
+            CornerRadius = new CornerRadius(22),
+            Background = FindBrush("ControlFillColorDefaultBrush", "#FF34342D"),
+            BorderBrush = FindBrush("ControlStrokeColorDefaultBrush", "#443C3B35"),
+            BorderThickness = new Thickness(1)
+        };
+    }
+
+    private TextBlock CreateMetricValueTextBlock(double fontSize)
+    {
+        return new TextBlock
+        {
+            Margin = new Thickness(0, 10, 0, 0),
+            FontSize = fontSize,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
+        };
+    }
+
+    private TextBlock CreateSectionTitle(string text)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            FontSize = 20,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
+        };
+    }
+
+    private Border CreateMetricCard(string badgeText, string label, string accentHex, TextBlock valueText, Thickness? margin = null)
+    {
+        return new Border
+        {
+            Margin = margin ?? new Thickness(0, 0, 12, 0),
+            Padding = new Thickness(16),
+            CornerRadius = new CornerRadius(18),
+            Background = FindBrush("ControlFillColorDefaultBrush", "#FF34342D"),
+            BorderBrush = FindBrush("ControlStrokeColorDefaultBrush", "#443C3B35"),
+            BorderThickness = new Thickness(1),
+            Child = new StackPanel
+            {
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Children =
+                        {
+                            CreateBadge(badgeText, "#FFF8F6F1", accentHex),
+                            new TextBlock
+                            {
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Text = label,
+                                Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+                            }
+                        }
+                    },
+                    valueText
+                }
+            }
+        };
+    }
+
+    private Border CreateBadge(string text, string foregroundHex, string backgroundHex)
+    {
+        return new Border
+        {
+            Margin = new Thickness(0, 0, 8, 0),
+            Padding = new Thickness(8, 3, 8, 3),
+            CornerRadius = new CornerRadius(999),
+            Background = CreateBrush(backgroundHex),
+            Child = new TextBlock
+            {
+                Text = text,
+                FontSize = 11,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = CreateBrush(foregroundHex)
+            }
+        };
+    }
+
+    private Border CreateTrafficHeroPanel()
+    {
+        var canvas = new Canvas
+        {
+            Height = 150
+        };
+
+        var dlBrush = CreateBrush("#FF5CA9FF");
+        var ulBrush = CreateBrush("#FF41D4BE");
+        var glowBrush = CreateBrush("#29FFFFFF");
+
+        var glow = new Ellipse
+        {
+            Width = 112,
+            Height = 112,
+            Fill = glowBrush
+        };
+        canvas.Children.Add(glow);
+        Canvas.SetLeft(glow, 84);
+        Canvas.SetTop(glow, 16);
+
+        AddSignalNode(canvas, 26, 42, dlBrush);
+        AddSignalNode(canvas, 86, 68, dlBrush);
+        AddSignalNode(canvas, 146, 48, ulBrush);
+        AddSignalNode(canvas, 208, 80, ulBrush);
+        AddSignalNode(canvas, 270, 58, dlBrush);
+
+        AddSignalLine(canvas, 44, 46, 90, 66, dlBrush);
+        AddSignalLine(canvas, 104, 66, 150, 52, dlBrush);
+        AddSignalLine(canvas, 164, 52, 212, 78, ulBrush);
+        AddSignalLine(canvas, 226, 78, 274, 62, ulBrush);
+
+        return new Border
+        {
+            Padding = new Thickness(18),
+            CornerRadius = new CornerRadius(22),
+            Background = FindBrush("ControlFillColorSecondaryBrush", "#FF47463F"),
+            Child = new StackPanel
+            {
+                Children =
+                {
+                    new TextBlock
+                    {
+                        Text = NetworkAccelerationText.PageTitle,
+                        FontSize = 14,
+                        FontWeight = FontWeights.SemiBold,
+                        Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+                    },
+                    canvas,
+                    new TextBlock
+                    {
+                        Text = NetworkAccelerationText.LiveTelemetryTitle,
+                        FontSize = 16,
+                        FontWeight = FontWeights.SemiBold,
+                        Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
+                    },
+                    new TextBlock
+                    {
+                        Margin = new Thickness(0, 6, 0, 0),
+                        Text = NetworkAccelerationText.LiveTelemetryDescription,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
+                    }
+                }
+            }
+        };
+    }
+
+    private void AddSignalLine(Canvas canvas, double x1, double y1, double x2, double y2, Brush stroke)
+    {
+        canvas.Children.Add(new Line
+        {
+            X1 = x1,
+            Y1 = y1,
+            X2 = x2,
+            Y2 = y2,
+            Stroke = stroke,
+            StrokeThickness = 4,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeEndLineCap = PenLineCap.Round
+        });
+    }
+
+    private void AddSignalNode(Canvas canvas, double left, double top, Brush fill)
+    {
+        var node = new Ellipse
+        {
+            Width = 18,
+            Height = 18,
+            Fill = fill
+        };
+        canvas.Children.Add(node);
+        Canvas.SetLeft(node, left);
+        Canvas.SetTop(node, top);
+    }
+
+    private Brush FindBrush(string resourceKey, string fallbackHex)
+    {
+        if (TryFindResource(resourceKey) is Brush brush)
+            return brush;
+
+        return CreateBrush(fallbackHex);
+    }
+
+    private static Brush CreateBrush(string hex)
+    {
+        return new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -205,7 +545,7 @@ public partial class NetworkAccelerationControl : UserControl
             _uploadTotalTextBlock.Text = FormatDataSize(snapshot.TotalSentBytes);
 
         if (_updatedValueTextBlock != null)
-            _updatedValueTextBlock.Text = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", CultureInfo.CurrentUICulture);
+            _updatedValueTextBlock.Text = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", Culture);
     }
 
     private void UpdateAnalytics(NetworkAccelerationTelemetrySnapshot snapshot)
@@ -398,30 +738,37 @@ public partial class NetworkAccelerationControl : UserControl
         _statusTextBlock.Foreground = isError
             ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC42B1C"))
             : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0F7B5A"));
+
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = isError
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock.Foreground;
+        }
     }
 
     private static string FormatRate(double mbps)
     {
-        return string.Format(CultureInfo.CurrentUICulture, NetworkAccelerationText.MbpsValueFormat, mbps);
+        return string.Format(Culture, NetworkAccelerationText.MbpsValueFormat, mbps);
     }
 
     private static string FormatPercent(double value)
     {
-        return string.Format(CultureInfo.CurrentUICulture, "{0:0}%", value);
+        return string.Format(Culture, "{0:0}%", value);
     }
 
     private static string FormatDataSize(long bytes)
     {
         double value = bytes;
-        var suffixes = new[] { "B", "KB", "MB", "GB", "TB" };
         var suffixIndex = 0;
 
-        while (value >= 1024 && suffixIndex < suffixes.Length - 1)
+        while (value >= 1024 && suffixIndex < DataSizeSuffixes.Length - 1)
         {
             value /= 1024;
             suffixIndex++;
         }
 
-        return string.Format(CultureInfo.CurrentUICulture, "{0:0.#} {1}", value, suffixes[suffixIndex]);
+        return string.Format(Culture, "{0:0.#} {1}", value, DataSizeSuffixes[suffixIndex]);
     }
 }

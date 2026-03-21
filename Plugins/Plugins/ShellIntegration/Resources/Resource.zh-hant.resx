@@ -77,7 +77,7 @@
     <value>停用</value>
   </data>
   <data name="OpenStyleSettingsButton" xml:space="preserve">
-    <value>開啟設定資料夾</value>
+    <value>開啟樣式設定</value>
   </data>
   <data name="OpenStyleShortButton" xml:space="preserve">
     <value>開啟資料夾</value>
@@ -262,4 +262,25 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>使用產生背景配色的一般選單項。</value>
   </data>
-</root>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>開啟設定檔</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>開啟 Shell 資料夾</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>找不到設定檔。</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>已開啟設定檔。</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>已開啟 Shell 資料夾。</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>找不到 Shell 資料夾。</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  </root>

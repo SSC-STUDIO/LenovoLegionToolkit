@@ -54,21 +54,21 @@ public partial class ShellIntegrationSettingsControl : UserControl
         root.Children.Add(_statusTextBlock);
 
         var buttonPanel = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 12, 0, 0) };
-        var enableButton = new Button { Content = ShellIntegrationText.EnableButton, Width = 90 };
-        enableButton.Click += EnableButton_Click;
-        var disableButton = new Button { Content = ShellIntegrationText.DisableButton, Width = 90, Margin = new Thickness(8, 0, 0, 0) };
-        disableButton.Click += DisableButton_Click;
-        var styleButton = new Button { Content = ShellIntegrationText.OpenStyleShortButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
-        styleButton.Click += OpenStyleButton_Click;
-        var folderButton = new Button { Content = ShellIntegrationText.OpenShellFolderButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
-        folderButton.Click += OpenShellFolderButton_Click;
-        var configButton = new Button { Content = ShellIntegrationText.OpenConfigButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
-        configButton.Click += OpenConfigButton_Click;
-        buttonPanel.Children.Add(enableButton);
-        buttonPanel.Children.Add(disableButton);
-        buttonPanel.Children.Add(styleButton);
-        buttonPanel.Children.Add(folderButton);
-        buttonPanel.Children.Add(configButton);
+        _enableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.EnableButton, Width = 90 };
+        _enableButton.Click += EnableButton_Click;
+        _disableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.DisableButton, Width = 90, Margin = new Thickness(8, 0, 0, 0) };
+        _disableButton.Click += DisableButton_Click;
+        _openStyleSettingsButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenStyleShortButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
+        _openStyleSettingsButton.Click += OpenStyleButton_Click;
+        _openShellFolderButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenShellFolderButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
+        _openShellFolderButton.Click += OpenShellFolderButton_Click;
+        _openConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenConfigButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
+        _openConfigButton.Click += OpenConfigButton_Click;
+        buttonPanel.Children.Add(_enableButton);
+        buttonPanel.Children.Add(_disableButton);
+        buttonPanel.Children.Add(_openStyleSettingsButton);
+        buttonPanel.Children.Add(_openShellFolderButton);
+        buttonPanel.Children.Add(_openConfigButton);
 
         Grid.SetRow(buttonPanel, 2);
         root.Children.Add(buttonPanel);
@@ -76,16 +76,21 @@ public partial class ShellIntegrationSettingsControl : UserControl
         Content = root;
     }
 
-    private void RefreshStatus(string? suffix = null)
+    private void RefreshStatus(string? suffix = null, bool? isError = null)
     {
         if (_statusTextBlock is null)
             return;
 
         var installed = _plugin.IsShellInstalled();
-        var path = _plugin.GetShellInstallPath() ?? ShellIntegrationText.NotFound;
+        var shellFolder = _plugin.GetShellFolderPath();
         var configPath = _plugin.GetShellConfigPath() ?? ShellIntegrationText.NotFound;
         var version = _plugin.GetShellVersion() ?? ShellIntegrationText.NotFound;
+        var path = _plugin.GetShellInstallPath() ?? ShellIntegrationText.NotFound;
         var prefix = installed ? ShellIntegrationText.StatusDetected : ShellIntegrationText.StatusNotDetected;
+        var canManageShell = installed;
+        var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
+        var canOpenConfig = !string.IsNullOrWhiteSpace(_plugin.GetShellConfigPath());
+        var canOpenStyleSettings = canManageShell && canOpenConfig;
 
         if (_registrationValueTextBlock != null)
             _registrationValueTextBlock.Text = installed ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState;
@@ -99,40 +104,68 @@ public partial class ShellIntegrationSettingsControl : UserControl
         if (_pathValueTextBlock != null)
             _pathValueTextBlock.Text = path;
 
+        if (_enableButton != null)
+            _enableButton.IsEnabled = canManageShell;
+
+        if (_disableButton != null)
+            _disableButton.IsEnabled = canManageShell;
+
+        if (_openStyleSettingsButton != null)
+            _openStyleSettingsButton.IsEnabled = canOpenStyleSettings;
+
+        if (_openShellFolderButton != null)
+            _openShellFolderButton.IsEnabled = canOpenShellFolder;
+
+        if (_openConfigButton != null)
+            _openConfigButton.IsEnabled = canOpenConfig;
+
         _statusTextBlock.Text = $"{prefix}\n{ShellIntegrationText.PathLabel}: {path}";
         if (!string.IsNullOrWhiteSpace(version) && version != ShellIntegrationText.NotFound)
             _statusTextBlock.Text += $"\n{ShellIntegrationText.VersionLabel}: {version}";
         if (!string.IsNullOrWhiteSpace(suffix))
             _statusTextBlock.Text += $"\n{suffix}";
+
+        var effectiveIsError = isError ?? !installed;
+        _statusTextBlock.Foreground = effectiveIsError
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
+            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = effectiveIsError
+                ? Wpf.Ui.Common.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock.Foreground;
+        }
     }
 
     private async void EnableButton_Click(object sender, RoutedEventArgs e)
     {
         var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
-        RefreshStatus(success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed);
+        RefreshStatus(success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed, !success);
     }
 
     private async void DisableButton_Click(object sender, RoutedEventArgs e)
     {
         var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
-        RefreshStatus(success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed);
+        RefreshStatus(success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed, !success);
     }
 
     private void OpenStyleButton_Click(object sender, RoutedEventArgs e)
     {
         _plugin.OpenStyleSettingsWindow();
-        RefreshStatus(ShellIntegrationText.StatusOpenedStyleSettings);
+        RefreshStatus(ShellIntegrationText.StatusOpenedStyleSettings, false);
     }
 
     private void OpenShellFolderButton_Click(object sender, RoutedEventArgs e)
     {
         var success = _plugin.OpenShellFolder();
-        RefreshStatus(success ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusShellFolderNotFound);
+        RefreshStatus(success ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusShellFolderNotFound, !success);
     }
 
     private void OpenConfigButton_Click(object sender, RoutedEventArgs e)
     {
         var success = _plugin.OpenShellConfigFile();
-        RefreshStatus(success ? ShellIntegrationText.StatusOpenedConfig : ShellIntegrationText.StatusConfigNotFound);
+        RefreshStatus(success ? ShellIntegrationText.StatusOpenedConfig : ShellIntegrationText.StatusConfigNotFound, !success);
     }
 }

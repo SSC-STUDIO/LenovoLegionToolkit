@@ -177,25 +177,38 @@ public partial class ViveToolSettingsPage
         {
             var available = await _viveToolService.IsViveToolAvailableAsync();
             var path = await _viveToolService.GetViveToolPathAsync();
-            
-            var statusText = available ? 
+
+            var statusText = available ?
                 string.Format(Resource.ViveTool_ViveToolFound, path ?? Resource.ViveTool_ViveToolNotFound) :
                 Resource.ViveTool_ViveToolNotFound;
 
-            if (_statusTextBlock != null)
-            {
-                _statusTextBlock.Text = statusText;
-            }
+            SetStatus(statusText, !available);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
-            
-            if (_statusTextBlock != null)
-            {
-                _statusTextBlock.Text = Resource.ViveTool_ViveToolError;
-            }
+
+            SetStatus(Resource.ViveTool_ViveToolError, true);
+        }
+    }
+
+    private void SetStatus(string text, bool isError)
+    {
+        if (_statusTextBlock is null)
+            return;
+
+        _statusTextBlock.Text = text;
+        _statusTextBlock.Foreground = isError
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
+            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = isError
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
     }
 
@@ -223,11 +236,12 @@ public partial class ViveToolSettingsPage
                     return;
                 }
 
-                var success = await _viveToolService.SetViveToolPathAsync(selectedPath).ConfigureAwait(false);
-                
+                var success = await _viveToolService.SetViveToolPathAsync(selectedPath).ConfigureAwait(true);
+
                 if (success)
                 {
-                    _viveToolPathTextBox.Text = selectedPath;
+                    if (_viveToolPathTextBox != null)
+                        _viveToolPathTextBox.Text = selectedPath;
                 }
                 else
                 {
@@ -361,7 +375,7 @@ public partial class ViveToolSettingsPage
 
             if (openFileDialog.ShowDialog() == true)
             {
-                var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName).ConfigureAwait(false);
+                var importedFeatures = await _viveToolService.ImportFeaturesFromFileAsync(openFileDialog.FileName).ConfigureAwait(true);
                 
                 System.Windows.MessageBox.Show(
                     string.Format(Resource.ViveTool_ConfigImportSuccessMessage, importedFeatures.Count, openFileDialog.FileName),
@@ -385,38 +399,16 @@ public partial class ViveToolSettingsPage
 
     private static string GetExecutableDialogFilter()
     {
-        return GetLocalizedFilter(
-            "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*",
-            "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*",
-            "可執行檔案 (*.exe)|*.exe|所有檔案 (*.*)|*.*");
+        return T("ViveTool_ExecutableDialogFilter", "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*");
     }
 
     private static string GetImportConfigDialogFilter()
     {
-        return GetLocalizedFilter(
-            "JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
-            "JSON 文件 (*.json)|*.json|CSV 文件 (*.csv)|*.csv|文本文件 (*.txt)|*.txt|所有文件 (*.*)|*.*",
-            "JSON 檔案 (*.json)|*.json|CSV 檔案 (*.csv)|*.csv|文字檔案 (*.txt)|*.txt|所有檔案 (*.*)|*.*");
+        return T("ViveTool_ImportConfigDialogFilter", "JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*");
     }
 
-    private static string GetLocalizedFilter(string en, string zhHans, string zhHant)
+    private static string T(string key, string fallback)
     {
-        var culture = CultureInfo.CurrentUICulture.Name;
-        if (culture.StartsWith("zh-hans", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-cn", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-sg", StringComparison.OrdinalIgnoreCase))
-        {
-            return zhHans;
-        }
-
-        if (culture.StartsWith("zh-hant", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-tw", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-hk", StringComparison.OrdinalIgnoreCase) ||
-            culture.Equals("zh-mo", StringComparison.OrdinalIgnoreCase))
-        {
-            return zhHant;
-        }
-
-        return en;
+        return Resource.ResourceManager.GetString(key, Resource.Culture ?? CultureInfo.CurrentUICulture) ?? fallback;
     }
 }

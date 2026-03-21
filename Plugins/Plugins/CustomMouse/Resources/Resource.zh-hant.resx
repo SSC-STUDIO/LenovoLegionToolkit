@@ -142,4 +142,14 @@
   <data name="CursorAppliedFormat" xml:space="preserve">
     <value>?????????????????{0}??</value>
   </data>
-<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data></root>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>已套用游標主題：{0}。</value>
+  </data>
+<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
+  <data name="QuickActionsTitle" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="QuickActionsDescription" xml:space="preserve">
+    <value>套用或重設滑鼠設定檔設定。</value>
+  </data>
+</root>

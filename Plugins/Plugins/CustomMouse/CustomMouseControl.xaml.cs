@@ -10,6 +10,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 public partial class CustomMouseControl : UserControl
 {
     private readonly CustomMousePlugin _plugin;
+    private static CultureInfo Culture => CustomMouseText.Culture;
 
     public CustomMouseControl(CustomMousePlugin plugin)
     {
@@ -122,11 +123,13 @@ public partial class CustomMouseControl : UserControl
             _pollingRateComboBox.SelectedIndex = _pollingRateComboBox.Items.Count - 1;
 
         UpdateLiveProfileSummary();
+        UpdateDpiValueLabel();
     }
 
     private void InputChanged(object sender, RoutedEventArgs e)
     {
         UpdateLiveProfileSummary();
+        UpdateDpiValueLabel();
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -139,8 +142,7 @@ public partial class CustomMouseControl : UserControl
         _plugin.OnInstalled();
         LoadCurrentValues();
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        if (_statusTextBlock != null)
-            _statusTextBlock.Text = CustomMouseText.StatusResetDefaults;
+        SetStatus(CustomMouseText.StatusResetDefaults, false);
         UpdateLiveProfileSummary();
     }
 
@@ -152,7 +154,7 @@ public partial class CustomMouseControl : UserControl
         var dpi = (int)Math.Round(_dpiSlider.Value);
         if (!_plugin.SetDpi(dpi))
         {
-            _statusTextBlock.Text = CustomMouseText.StatusInvalidDpi;
+            SetStatus(CustomMouseText.StatusInvalidDpi, true);
             UpdateLiveProfileSummary();
             return;
         }
@@ -160,20 +162,20 @@ public partial class CustomMouseControl : UserControl
         var selected = _pollingRateComboBox.SelectedItem as ComboBoxItem;
         if (selected?.Tag is not string pollingTag || !int.TryParse(pollingTag, out var pollingRate))
         {
-            _statusTextBlock.Text = CustomMouseText.StatusSelectValidPolling;
+            SetStatus(CustomMouseText.StatusSelectValidPolling, true);
             UpdateLiveProfileSummary();
             return;
         }
 
         if (!_plugin.SetPollingRate(pollingRate))
         {
-            _statusTextBlock.Text = CustomMouseText.StatusInvalidPolling;
+            SetStatus(CustomMouseText.StatusInvalidPolling, true);
             UpdateLiveProfileSummary();
             return;
         }
 
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = CustomMouseText.StatusProfileSaved;
+        SetStatus(CustomMouseText.StatusProfileSaved, false);
         UpdateLiveProfileSummary();
     }
 
@@ -186,7 +188,7 @@ public partial class CustomMouseControl : UserControl
             _profileStatusValueTextBlock.Text = CustomMouseText.ProfileReady;
 
         if (_currentDpiValueTextBlock != null)
-            _currentDpiValueTextBlock.Text = dpi.ToString(CultureInfo.CurrentUICulture);
+            _currentDpiValueTextBlock.Text = dpi.ToString(Culture);
 
         if (_currentPollingValueTextBlock != null)
             _currentPollingValueTextBlock.Text = FormatPollingRate(pollingRate);
@@ -204,8 +206,35 @@ public partial class CustomMouseControl : UserControl
         return null;
     }
 
+    private void UpdateDpiValueLabel()
+    {
+        if (_dpiValueLabel is null || _dpiSlider is null)
+            return;
+
+        _dpiValueLabel.Text = ((int)Math.Round(_dpiSlider.Value)).ToString(Culture);
+    }
+
+    private void SetStatus(string text, bool isError)
+    {
+        if (_statusTextBlock is null)
+            return;
+
+        _statusTextBlock.Text = text;
+        _statusTextBlock.Foreground = isError
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
+            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = isError
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock.Foreground;
+        }
+    }
+
     private static string FormatPollingRate(int pollingRate)
     {
-        return string.Format(CultureInfo.CurrentUICulture, "{0} Hz", pollingRate);
+        return string.Format(Culture, "{0} Hz", pollingRate);
     }
 }

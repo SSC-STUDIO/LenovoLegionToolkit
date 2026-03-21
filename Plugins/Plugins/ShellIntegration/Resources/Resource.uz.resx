@@ -58,4 +58,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<data name="DisableButton" xml:space="preserve"><value>Disable</value></data><data name="EnableButton" xml:space="preserve"><value>Iske túsiriw</value></data><data name="NotFound" xml:space="preserve"><value>Not found</value></data><data name="OpenConfigButton" xml:space="preserve"><value>Open Config File</value></data><data name="OpenShellFolderButton" xml:space="preserve"><value>Open Shell Folder</value></data><data name="OpenStyleSettingsButton" xml:space="preserve"><value>Open style settings</value></data><data name="OpenStyleShortButton" xml:space="preserve"><value>Open Style</value></data><data name="OptimizationHint" xml:space="preserve"><value>You can also access shell actions from Windows Optimization.</value></data><data name="PathLabel" xml:space="preserve"><value>Jol</value></data><data name="PluginDescription" xml:space="preserve"><value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value></data><data name="PluginName" xml:space="preserve"><value>Shell integratsiyasi</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>Shell integratsiyasi</value></data><data name="StatusConfigNotFound" xml:space="preserve"><value>Config file not found.</value></data><data name="StatusDetected" xml:space="preserve"><value>Nilesoft Shell detected.</value></data><data name="StatusDisableCompleted" xml:space="preserve"><value>Disable command completed.</value></data><data name="StatusDisableFailed" xml:space="preserve"><value>Disable command failed.</value></data><data name="StatusEnableCompleted" xml:space="preserve"><value>Enable command completed.</value></data><data name="StatusEnableFailed" xml:space="preserve"><value>Enable command failed.</value></data><data name="StatusNotDetected" xml:space="preserve"><value>Nilesoft Shell was not detected.</value></data><data name="StatusOpenedConfig" xml:space="preserve"><value>Opened config file.</value></data><data name="StatusOpenedShellFolder" xml:space="preserve"><value>Opened shell folder.</value></data><data name="StatusOpenedStyleSettings" xml:space="preserve"><value>Opened style settings.</value></data><data name="StatusShellFolderNotFound" xml:space="preserve"><value>Shell folder not found.</value></data><data name="Subtitle" xml:space="preserve"><value>Manage Nilesoft Shell registration and open style editor.</value></data><data name="VersionLabel" xml:space="preserve"><value>Versiya</value></data></root>
+  <data name="PluginName" xml:space="preserve">
+    <value>Shell integratsiyasi</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Shell integratsiyasi</value>
+  </data>
+  <data name="Subtitle" xml:space="preserve">
+    <value>Manage Nilesoft Shell registration and open style editor.</value>
+  </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell Integration Overview</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>Check registration state, installation path, and jump straight into the packaged Shell tools.</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Apply registration changes or open the packaged Shell assets used by this plugin.</value>
+  </data>
+  <data name="EnableButton" xml:space="preserve">
+    <value>Iske túsiriw</value>
+  </data>
+  <data name="DisableButton" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+    <value>Open style settings</value>
+  </data>
+  <data name="OpenStyleShortButton" xml:space="preserve">
+    <value>Open Style</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>Open Shell Folder</value>
+  </data>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>Open Config File</value>
+  </data>
+  <data name="OptimizationHint" xml:space="preserve">
+    <value>You can also access shell actions from Windows Optimization.</value>
+  </data>
+  <data name="StatusDetected" xml:space="preserve">
+    <value>Nilesoft Shell detected.</value>
+  </data>
+  <data name="StatusNotDetected" xml:space="preserve">
+    <value>Nilesoft Shell was not detected.</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>Detected</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+  <data name="PathLabel" xml:space="preserve">
+    <value>Jol</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="StatusEnableCompleted" xml:space="preserve">
+    <value>Enable command completed.</value>
+  </data>
+  <data name="StatusEnableFailed" xml:space="preserve">
+    <value>Enable command failed.</value>
+  </data>
+  <data name="StatusDisableCompleted" xml:space="preserve">
+    <value>Disable command completed.</value>
+  </data>
+  <data name="StatusDisableFailed" xml:space="preserve">
+    <value>Disable command failed.</value>
+  </data>
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+    <value>Opened style settings.</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>Opened shell folder.</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>Opened config file.</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>Shell folder not found.</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>Config file not found.</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>Versiya</value>
+  </data>
+</root>

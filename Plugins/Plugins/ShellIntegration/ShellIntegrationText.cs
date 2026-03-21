@@ -44,7 +44,8 @@ public static class ShellIntegrationText
 
     private static string T(string key, string fallback)
     {
-        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+        var culture = Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
+        return ResourceManager.GetString(key, culture) ?? fallback;
     }
 
 }

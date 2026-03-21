@@ -21,6 +21,25 @@
         <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
+
+        <!-- Status-based row foreground color -->
+        <Style x:Key="FeatureRowStyle" TargetType="DataGridRow">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+            <Setter Property="Padding" Value="0,4" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="1">
+                    <Setter Property="Background" Value="#0C0F7B5A" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="2">
+                    <Setter Property="Background" Value="#0CC42B1C" />
+                </DataTrigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="0,0,16,0">
@@ -45,16 +64,13 @@
                         <TextBlock
                             AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                             Focusable="True"
-                            FontSize="28"
-                            FontWeight="Medium"
+                            Style="{StaticResource AppPageTitleTextBlockStyle}"
                             Text="{x:Static pluginRes:Resource.ViveTool_PageTitle}" />
                         <TextBlock
                             Margin="0,6,0,0"
-                            FontSize="14"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            TextWrapping="Wrap"
+                            Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                             Text="{x:Static pluginRes:Resource.ViveTool_PageDescription}"
-                            LineHeight="20" />
+                            />
                     </StackPanel>
                 </StackPanel>
                 
@@ -73,9 +89,7 @@
                                           Foreground="{DynamicResource SystemFillColorCautionBrush}"
                                           Margin="0,0,0,16" />
                         <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
                             TextAlignment="Center"
                             Margin="0,0,0,8"
                             Text="{x:Static pluginRes:Resource.ViveTool_MissingToolMessage}" />
@@ -115,9 +129,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Column="0"
-                                FontSize="17"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Style="{StaticResource AppSectionTitleTextBlockStyle}"
                                 Text="{x:Static pluginRes:Resource.ViveTool_FeatureFlags}" />
                             <wpfui:Button
                                 Grid.Column="1"
@@ -186,43 +198,81 @@
                                     IsReadOnly="True"
                                     SelectionMode="Single"
                                     HeadersVisibility="Column"
-                                    GridLinesVisibility="Horizontal"
-                                    RowHeight="40"
+                                    GridLinesVisibility="None"
+                                    RowStyle="{StaticResource FeatureRowStyle}"
+                                    RowHeight="44"
                                     MaxHeight="600"
                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                                     CanUserReorderColumns="False"
+                                    Background="Transparent"
+                                    BorderThickness="0"
                                     ItemsSource="{Binding Features}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn
                                             Header="{x:Static pluginRes:Resource.ViveTool_FeatureId}"
                                             Binding="{Binding Id}"
-                                            Width="100" />
+                                            Width="110">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="FontFamily" Value="Consolas" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                         <DataGridTextColumn
                                             Header="{x:Static pluginRes:Resource.ViveTool_FeatureName}"
                                             Binding="{Binding Name}"
-                                            Width="*" />
+                                            Width="*">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                         <DataGridTextColumn
                                             Header="{x:Static pluginRes:Resource.ViveTool_Status}"
                                             Binding="{Binding Status, Converter={StaticResource FeatureStatusConverter}}"
-                                            Width="120" />
+                                            Width="120">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="1">
+                                                            <Setter Property="Foreground" Value="#FF0F7B5A" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="2">
+                                                            <Setter Property="Foreground" Value="#FFC42B1C" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                         <DataGridTemplateColumn
                                             Header="{x:Static pluginRes:Resource.ViveTool_Actions}"
                                             Width="200">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center">
                                                         <wpfui:Button
                                                             Content="{x:Static pluginRes:Resource.ViveTool_Enable}"
                                                             Click="EnableFeatureButton_Click"
                                                             Tag="{Binding Id}"
-                                                            Padding="8,4"
+                                                            Appearance="Primary"
+                                                            Padding="10,4"
                                                             Margin="0,0,8,0"
                                                             FontSize="12" />
                                                         <wpfui:Button
                                                             Content="{x:Static pluginRes:Resource.ViveTool_Disable}"
                                                             Click="DisableFeatureButton_Click"
                                                             Tag="{Binding Id}"
-                                                            Padding="8,4"
+                                                            Padding="10,4"
                                                             FontSize="12" />
                                                     </StackPanel>
                                                 </DataTemplate>

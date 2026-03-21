@@ -42,22 +42,18 @@
                                 HorizontalAlignment="Left"
                                 CornerRadius="999"
                                 Background="#122B579A">
-                            <TextBlock Text="{x:Static text:NetworkAccelerationText.LiveTelemetryTitle}"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.HeroBadgeTitle}"
+                                       Style="{StaticResource AppHeroBadgeTextBlockStyle}"
                                        Foreground="#FF5CA9FF" />
                         </Border>
 
                         <TextBlock Margin="0,12,0,0"
-                                   Text="{x:Static text:NetworkAccelerationText.PageTitle}"
-                                   FontSize="30"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                   Text="{x:Static text:NetworkAccelerationText.FeatureOverviewTitle}"
+                                   Style="{StaticResource AppPageTitleTextBlockStyle}" />
 
                         <TextBlock Margin="0,10,0,0"
-                                   Text="{x:Static text:NetworkAccelerationText.LiveTelemetryDescription}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                   Text="{x:Static text:NetworkAccelerationText.FeatureOverviewDescription}"
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                     </StackPanel>
 
                     <Grid Grid.Column="1">
@@ -77,8 +73,20 @@
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <StackPanel>
-                                <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentDownloadLabel}"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Padding="8,3"
+                                            Margin="0,0,8,0"
+                                            CornerRadius="999"
+                                            Background="#224F9CFF">
+                                        <TextBlock Text="DL"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#FFDDEEFF" />
+                                    </Border>
+                                    <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentDownloadLabel}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
                                 <TextBlock x:Name="_downloadValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="22"
@@ -94,8 +102,20 @@
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <StackPanel>
-                                <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentUploadLabel}"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Padding="8,3"
+                                            Margin="0,0,8,0"
+                                            CornerRadius="999"
+                                            Background="#1D27C7A8">
+                                        <TextBlock Text="UL"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#FFDDFBF5" />
+                                    </Border>
+                                    <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentUploadLabel}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
                                 <TextBlock x:Name="_uploadValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="22"
@@ -111,8 +131,20 @@
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <StackPanel>
-                                <TextBlock Text="{x:Static text:NetworkAccelerationText.PeakTrafficLabel}"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Padding="8,3"
+                                            Margin="0,0,8,0"
+                                            CornerRadius="999"
+                                            Background="#22FF9C4F">
+                                        <TextBlock Text="PK"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#FFFFE6D6" />
+                                    </Border>
+                                    <TextBlock Text="{x:Static text:NetworkAccelerationText.PeakTrafficLabel}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
                                 <TextBlock x:Name="_peakValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="22"
@@ -127,8 +159,20 @@
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <StackPanel>
-                                <TextBlock Text="{x:Static text:NetworkAccelerationText.ActiveAdapterLabel}"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Padding="8,3"
+                                            Margin="0,0,8,0"
+                                            CornerRadius="999"
+                                            Background="#229A7BFF">
+                                        <TextBlock Text="NET"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#FFE9E2FF" />
+                                    </Border>
+                                    <TextBlock Text="{x:Static text:NetworkAccelerationText.ActiveAdapterLabel}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
                                 <TextBlock x:Name="_adapterValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="18"
@@ -152,13 +196,10 @@
                     <DockPanel LastChildFill="False">
                         <StackPanel DockPanel.Dock="Left">
                             <TextBlock Text="{x:Static text:NetworkAccelerationText.LiveTelemetryTitle}"
-                                       FontSize="18"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                       Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                             <TextBlock Margin="0,6,0,0"
                                        Text="{x:Static text:NetworkAccelerationText.LiveTelemetryDescription}"
-                                       TextWrapping="Wrap"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                       Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"
@@ -309,13 +350,10 @@
                         BorderThickness="1">
                     <StackPanel>
                         <TextBlock Text="{x:Static text:NetworkAccelerationText.TrafficMixTitle}"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                         <TextBlock Margin="0,6,0,0"
                                    Text="{x:Static text:NetworkAccelerationText.TrafficMixDescription}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                         <StackPanel Margin="0,18,0,0">
                             <Grid>
@@ -370,13 +408,10 @@
                         BorderThickness="1">
                     <StackPanel>
                         <TextBlock Text="{x:Static text:NetworkAccelerationText.BurstHistoryTitle}"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                         <TextBlock Margin="0,6,0,0"
                                    Text="{x:Static text:NetworkAccelerationText.BurstHistoryDescription}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                         <Border Margin="0,16,0,0"
                                 Height="170"
@@ -463,13 +498,10 @@
                         BorderThickness="1">
                     <StackPanel>
                         <TextBlock Text="{x:Static text:NetworkAccelerationText.PreferredModeTitle}"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                         <TextBlock Margin="0,6,0,0"
                                    Text="{x:Static text:NetworkAccelerationText.PreferredModeDescription}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                         <Grid Margin="0,16,0,0">
                             <Grid.ColumnDefinitions>
@@ -521,13 +553,10 @@
                         BorderThickness="1">
                     <StackPanel>
                         <TextBlock Text="{x:Static text:NetworkAccelerationText.QuickActionsTitle}"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                         <TextBlock Margin="0,6,0,0"
                                    Text="{x:Static text:NetworkAccelerationText.QuickActionsDescription}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                         <WrapPanel Margin="0,16,0,0">
                             <wpfui:Button Content="{x:Static text:NetworkAccelerationText.RunQuickOptimizationButton}"
@@ -563,13 +592,18 @@
                     BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="{x:Static text:NetworkAccelerationText.StatusCardTitle}"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    <TextBlock x:Name="_statusTextBlock"
-                               Margin="0,10,0,0"
-                               TextWrapping="Wrap"
-                               AutomationProperties.AutomationId="NetworkAcceleration_StatusText" />
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <wpfui:SymbolIcon x:Name="_statusIcon"
+                                          Symbol="CheckmarkCircle24"
+                                          FontSize="16"
+                                          Margin="0,0,8,0"
+                                          VerticalAlignment="Top"
+                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_statusTextBlock"
+                                   TextWrapping="Wrap"
+                                   AutomationProperties.AutomationId="NetworkAcceleration_StatusText" />
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>

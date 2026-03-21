@@ -214,4 +214,13 @@
   <data name="StateDisabled" xml:space="preserve">
     <value>???</value>
   </data>
-</root>
+  <data name="HeroBadgeTitle" xml:space="preserve">
+    <value>流量脈衝</value>
+  </data>
+  <data name="FeatureOverviewTitle" xml:space="preserve">
+    <value>即時流量概覽</value>
+  </data>
+  <data name="FeatureOverviewDescription" xml:space="preserve">
+    <value>在同一個介面檢視目前吞吐量、活動配接器狀態，並執行快速網路恢復操作。</value>
+  </data>
+  </root>

@@ -528,7 +528,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = Resource.ViveTool_ImportFromFile,
-                Filter = "All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv",
+                Filter = Resource.ResourceManager.GetString("ViveTool_ImportFileDialogFilter", Resource.Culture ?? CultureInfo.CurrentUICulture)
+                    ?? "All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv",
                 FilterIndex = 1
             };
 

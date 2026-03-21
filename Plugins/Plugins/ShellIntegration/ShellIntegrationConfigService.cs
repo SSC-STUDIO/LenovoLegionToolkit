@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -13,13 +14,26 @@ public sealed record ShellManagedConfigPaths(
     string ShellConfigPath,
     string ManagedDirectory,
     string SettingsPath,
-    string ThemePath);
+    string ThemePath,
+    string LanguagePath);
 
 public sealed class ShellIntegrationConfigService
 {
     private const string ManagedDirectoryName = "lenovo-legion-toolkit";
     private const string ManagedBlockStart = "# region LenovoLegionToolkit.Managed";
     private const string ManagedBlockEnd = "# endregion LenovoLegionToolkit.Managed";
+    private const string ManagedLanguageFileName = "language.nss";
+
+    private static readonly IReadOnlyDictionary<string, string[]> LanguageAliases = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["zh-hans"] = ["zh-CN", "zh"],
+        ["zh-cn"] = ["zh-CN", "zh"],
+        ["zh-hant"] = ["zh-TW", "zh"],
+        ["zh-tw"] = ["zh-TW", "zh"],
+        ["pt-br"] = ["pt-BR", "pt"],
+        ["nl-nl"] = ["nl"],
+        ["uz-latn-uz"] = ["uz"]
+    };
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -81,10 +95,11 @@ public sealed class ShellIntegrationConfigService
             Path.Combine(installDirectory, "shell.nss"),
             managedDirectory,
             Path.Combine(managedDirectory, "settings.nss"),
-            Path.Combine(managedDirectory, "theme.nss"));
+            Path.Combine(managedDirectory, "theme.nss"),
+            Path.Combine(managedDirectory, ManagedLanguageFileName));
     }
 
-    public ShellManagedConfigPaths? ApplyProfile(string? shellInstallPath, ShellIntegrationProfile profile)
+    public ShellManagedConfigPaths? ApplyProfile(string? shellInstallPath, ShellIntegrationProfile profile, CultureInfo? preferredCulture = null)
     {
         var paths = ResolveManagedPaths(shellInstallPath);
         if (paths is null)
@@ -93,6 +108,7 @@ public sealed class ShellIntegrationConfigService
         Directory.CreateDirectory(paths.ManagedDirectory);
         File.WriteAllText(paths.SettingsPath, RenderSettings(profile.Normalize()), new UTF8Encoding(false));
         File.WriteAllText(paths.ThemePath, RenderTheme(profile.Normalize()), new UTF8Encoding(false));
+        File.WriteAllText(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture), new UTF8Encoding(false));
         EnsureManagedImportBlock(paths.ShellConfigPath);
 
         return paths;
@@ -249,20 +265,32 @@ theme
     {
         var block =
 $@"{ManagedBlockStart}
+import lang 'imports/{ManagedDirectoryName}/{ManagedLanguageFileName}'
 import 'imports/{ManagedDirectoryName}/settings.nss'
 import 'imports/{ManagedDirectoryName}/theme.nss'
 {ManagedBlockEnd}
 ".TrimEnd();
 
-        if (string.IsNullOrWhiteSpace(existingContent))
+        var pattern = $"{Regex.Escape(ManagedBlockStart)}[\\s\\S]*?{Regex.Escape(ManagedBlockEnd)}";
+        var cleaned = string.IsNullOrWhiteSpace(existingContent)
+            ? string.Empty
+            : Regex.Replace(existingContent, pattern, string.Empty).TrimEnd();
+
+        if (string.IsNullOrWhiteSpace(cleaned))
             return $"{block}{Environment.NewLine}";
 
-        var pattern = $"{Regex.Escape(ManagedBlockStart)}[\\s\\S]*?{Regex.Escape(ManagedBlockEnd)}";
-        if (Regex.IsMatch(existingContent, pattern))
-            return Regex.Replace(existingContent, pattern, block);
+        var menuMatch = Regex.Match(cleaned, @"(?m)^\s*menu\(");
+        if (menuMatch.Success)
+        {
+            var before = cleaned[..menuMatch.Index].TrimEnd();
+            var after = cleaned[menuMatch.Index..].TrimStart();
 
-        var trimmed = existingContent.TrimEnd();
-        return $"{trimmed}{Environment.NewLine}{Environment.NewLine}{block}{Environment.NewLine}";
+            return string.IsNullOrWhiteSpace(before)
+                ? $"{block}{Environment.NewLine}{Environment.NewLine}{after}{Environment.NewLine}"
+                : $"{before}{Environment.NewLine}{Environment.NewLine}{block}{Environment.NewLine}{after}{Environment.NewLine}";
+        }
+
+        return $"{cleaned}{Environment.NewLine}{Environment.NewLine}{block}{Environment.NewLine}";
     }
 
     private static void EnsureManagedImportBlock(string shellConfigPath)
@@ -277,5 +305,70 @@ import 'imports/{ManagedDirectoryName}/theme.nss'
             Directory.CreateDirectory(directory);
 
         File.WriteAllText(shellConfigPath, updated, new UTF8Encoding(false));
+    }
+
+    private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)
+    {
+        var sourcePath = ResolveLanguageSourcePath(installDirectory, preferredCulture);
+        if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
+            return "# Managed by Lenovo Legion Toolkit." + Environment.NewLine;
+
+        return File.ReadAllText(sourcePath, Encoding.UTF8);
+    }
+
+    private static string? ResolveLanguageSourcePath(string installDirectory, CultureInfo? preferredCulture)
+    {
+        var languageDirectory = Path.Combine(installDirectory, "imports", "lang");
+        if (!Directory.Exists(languageDirectory))
+            return null;
+
+        foreach (var candidate in GetLanguageFileCandidates(preferredCulture))
+        {
+            var path = Path.Combine(languageDirectory, candidate);
+            if (File.Exists(path))
+                return path;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetLanguageFileCandidates(CultureInfo? preferredCulture)
+    {
+        var candidates = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        void AddCandidate(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return;
+
+            var candidate = name.EndsWith(".nss", StringComparison.OrdinalIgnoreCase) ? name : $"{name}.nss";
+            if (seen.Add(candidate))
+                candidates.Add(candidate);
+        }
+
+        if (preferredCulture is not null)
+        {
+            AddCandidate(preferredCulture.Name);
+            AddCandidate(preferredCulture.IetfLanguageTag);
+
+            if (LanguageAliases.TryGetValue(preferredCulture.Name, out var aliasesByName))
+            {
+                foreach (var alias in aliasesByName)
+                    AddCandidate(alias);
+            }
+
+            if (LanguageAliases.TryGetValue(preferredCulture.IetfLanguageTag, out var aliasesByTag))
+            {
+                foreach (var alias in aliasesByTag)
+                    AddCandidate(alias);
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferredCulture.Parent?.Name))
+                AddCandidate(preferredCulture.Parent.Name);
+        }
+
+        AddCandidate("en");
+        return candidates;
     }
 }

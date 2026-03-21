@@ -5,9 +5,14 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
 public static class NetworkAccelerationText
 {
+    public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
+
     public static string PluginName => T(nameof(PluginName), "Network Acceleration");
     public static string PluginDescription => T(nameof(PluginDescription), "Real-time network acceleration and optimization features.");
     public static string PageTitle => T(nameof(PageTitle), "Network Acceleration");
+    public static string HeroBadgeTitle => T(nameof(HeroBadgeTitle), "Traffic Pulse");
+    public static string FeatureOverviewTitle => T(nameof(FeatureOverviewTitle), "Traffic Overview");
+    public static string FeatureOverviewDescription => T(nameof(FeatureOverviewDescription), "Monitor live throughput, active adapter status, and quick recovery actions in one place.");
     public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Network Settings");
     public static string QuickActionsTitle => T(nameof(QuickActionsTitle), "Quick Network Actions");
     public static string QuickActionsDescription => T(nameof(QuickActionsDescription), "Run quick optimization commands for lower latency and cleaner socket state.");
@@ -72,7 +77,7 @@ public static class NetworkAccelerationText
 
     private static string T(string key, string fallback)
     {
-        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+        return ResourceManager.GetString(key, Culture) ?? fallback;
     }
 
 }

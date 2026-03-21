@@ -130,6 +130,9 @@
   <data name="ViveTool_ImportFromFile" xml:space="preserve">
     <value>从文件导入</value>
   </data>
+  <data name="ViveTool_ImportFileDialogFilter" xml:space="preserve">
+    <value>所有文件 (*.*)|*.*|JSON 文件 (*.json)|*.json|文本文件 (*.txt)|*.txt|CSV 文件 (*.csv)|*.csv</value>
+  </data>
   <data name="ViveTool_ImportFromUrl" xml:space="preserve">
     <value>从 URL 导入</value>
   </data>
@@ -159,6 +162,9 @@
   </data>
   <data name="ViveTool_SelectViveTool" xml:space="preserve">
     <value>选择 vivetool.exe</value>
+  </data>
+  <data name="ViveTool_ExecutableDialogFilter" xml:space="preserve">
+    <value>可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*</value>
   </data>
   <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
     <value>请选择 vivetool.exe 文件</value>
@@ -210,6 +216,9 @@
   </data>
   <data name="ViveTool_ImportConfigTitle" xml:space="preserve">
     <value>导入配置</value>
+  </data>
+  <data name="ViveTool_ImportConfigDialogFilter" xml:space="preserve">
+    <value>JSON 文件 (*.json)|*.json|CSV 文件 (*.csv)|*.csv|文本文件 (*.txt)|*.txt|所有文件 (*.*)|*.*</value>
   </data>
   <data name="ViveTool_ImportConfigDescription" xml:space="preserve">
     <value>从本地文件导入 ViVeTool 配置。这将加载功能标志及其设置。</value>

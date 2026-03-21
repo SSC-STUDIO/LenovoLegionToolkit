@@ -8,6 +8,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 public partial class CustomMouseSettingsControl : UserControl
 {
     private readonly CustomMousePlugin _plugin;
+    private static CultureInfo Culture => CustomMouseText.Culture;
 
     public CustomMouseSettingsControl(CustomMousePlugin plugin)
     {
@@ -130,11 +131,21 @@ public partial class CustomMouseSettingsControl : UserControl
         _swapButtonsCheckBox.IsChecked = _plugin.Settings.SwapButtons;
         _autoThemeCursorCheckBox.IsChecked = _plugin.Settings.AutoThemeCursorStyle;
         UpdateSummaryCards();
+        UpdatePointerSpeedValueLabel();
     }
 
     private void SettingsInputChanged(object sender, RoutedEventArgs e)
     {
         UpdateSummaryCards();
+        UpdatePointerSpeedValueLabel();
+    }
+
+    private void UpdatePointerSpeedValueLabel()
+    {
+        if (_pointerSpeedValueLabel is null || _pointerSpeedSlider is null)
+            return;
+
+        _pointerSpeedValueLabel.Text = string.Format(Culture, "{0}/20", (int)Math.Round(_pointerSpeedSlider.Value));
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
@@ -147,21 +158,21 @@ public partial class CustomMouseSettingsControl : UserControl
 
         if (!_plugin.SetWindowsPointerSpeed(speed))
         {
-            _statusTextBlock.Text = CustomMouseText.StatusApplyPointerFail;
+            SetStatus(CustomMouseText.StatusApplyPointerFail, true);
             UpdateSummaryCards();
             return;
         }
 
         if (!_plugin.SetSwapButtons(swapButtons))
         {
-            _statusTextBlock.Text = CustomMouseText.StatusApplySwapFail;
+            SetStatus(CustomMouseText.StatusApplySwapFail, true);
             UpdateSummaryCards();
             return;
         }
 
         _plugin.SetAutoThemeCursorStyle(_autoThemeCursorCheckBox.IsChecked == true);
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = CustomMouseText.StatusWindowsApplied;
+        SetStatus(CustomMouseText.StatusWindowsApplied, false);
         UpdateSummaryCards();
     }
 
@@ -174,9 +185,9 @@ public partial class CustomMouseSettingsControl : UserControl
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
 
         var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
-        _statusTextBlock.Text = applied
-            ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme)
-            : CustomMouseText.StatusCursorApplyFailed;
+        SetStatus(
+            applied ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme) : CustomMouseText.StatusCursorApplyFailed,
+            !applied);
         UpdateSummaryCards();
     }
 
@@ -186,8 +197,27 @@ public partial class CustomMouseSettingsControl : UserControl
             return;
 
         LoadCurrentValues();
-        _statusTextBlock.Text = CustomMouseText.StatusReloaded;
+        SetStatus(CustomMouseText.StatusReloaded, false);
         UpdateSummaryCards();
+    }
+
+    private void SetStatus(string text, bool isError)
+    {
+        if (_statusTextBlock is null)
+            return;
+
+        _statusTextBlock.Text = text;
+        _statusTextBlock.Foreground = isError
+            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
+            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+
+        if (_statusIcon is not null)
+        {
+            _statusIcon.Symbol = isError
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+            _statusIcon.Foreground = _statusTextBlock.Foreground;
+        }
     }
 
     private void UpdateSummaryCards()
@@ -195,7 +225,7 @@ public partial class CustomMouseSettingsControl : UserControl
         if (_pointerPreviewValueTextBlock != null)
         {
             var speed = _pointerSpeedSlider is null ? _plugin.Settings.WindowsPointerSpeed : (int)Math.Round(_pointerSpeedSlider.Value);
-            _pointerPreviewValueTextBlock.Text = string.Format(CultureInfo.CurrentUICulture, "{0}/20", speed);
+            _pointerPreviewValueTextBlock.Text = string.Format(Culture, "{0}/20", speed);
         }
 
         if (_buttonLayoutValueTextBlock != null)

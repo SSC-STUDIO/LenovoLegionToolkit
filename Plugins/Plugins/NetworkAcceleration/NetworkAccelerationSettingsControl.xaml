@@ -27,13 +27,10 @@
                     BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsTitle}"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                     <TextBlock Margin="0,6,0,0"
                                Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                     <Border Margin="0,18,0,0"
                             Padding="16"
@@ -74,9 +71,17 @@
                             Padding="14"
                             CornerRadius="18"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <TextBlock x:Name="_statusTextBlock"
-                                   TextWrapping="Wrap"
-                                   AutomationProperties.AutomationId="NetworkAcceleration_SettingsStatusText" />
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon x:Name="_statusIcon"
+                                              Symbol="CheckmarkCircle24"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Top"
+                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="_statusTextBlock"
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.AutomationId="NetworkAcceleration_SettingsStatusText" />
+                        </StackPanel>
                     </Border>
                 </StackPanel>
             </Border>
@@ -90,13 +95,10 @@
                     BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsSummaryTitle}"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                     <TextBlock Margin="0,6,0,0"
                                Text="{x:Static text:NetworkAccelerationText.SettingsSummaryDescription}"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
                     <Border Margin="0,18,0,0"
                             Padding="14"

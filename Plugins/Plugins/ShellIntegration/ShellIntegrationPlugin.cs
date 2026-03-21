@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
 using LenovoLegionToolkit.Lib.Optimization;
+using LenovoLegionToolkit.Plugins.ShellIntegration.Resources;
 using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Win32;
@@ -24,8 +26,10 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 )]
 public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 {
+    private const string PluginId = "shell-integration";
     private const string ShellClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
     private const string DisabledClsid = "{00000000-0000-0000-0000-000000000000}";
+    private static readonly string GlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LenovoLegionToolkit", "lang");
 
     private static readonly string[] ShellExeCandidates =
     [
@@ -51,7 +55,9 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         @"LibraryFolder\ShellEx\ContextMenuHandlers"
     ];
 
-    public override string Id => "shell-integration";
+    private readonly ShellIntegrationConfigService _configService = new();
+
+    public override string Id => PluginId;
     public override string Name => ShellIntegrationText.PluginName;
     public override string Description => ShellIntegrationText.PluginDescription;
     public override string Icon => "Folder24";
@@ -59,11 +65,14 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public override object? GetSettingsPage()
     {
+        SyncManagedConfiguration();
         return new ShellIntegrationSettingsPluginPage(this);
     }
 
     public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
+        SyncManagedConfiguration();
+
         return new WindowsOptimizationCategoryDefinition(
             "shell.integration",
             "WindowsOptimization_Category_NilesoftShell_Title",
@@ -273,24 +282,32 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     private async Task EnableShellAsync(CancellationToken cancellationToken)
     {
+        SyncManagedConfiguration();
+
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-register -treat -restart", cancellationToken).ConfigureAwait(false);
+            SyncManagedConfiguration();
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: true, cancellationToken).ConfigureAwait(false);
+        SyncManagedConfiguration();
     }
 
     private async Task DisableShellAsync(CancellationToken cancellationToken)
     {
+        SyncManagedConfiguration();
+
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-unregister -restart", cancellationToken).ConfigureAwait(false);
+            SyncManagedConfiguration();
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
+        SyncManagedConfiguration();
     }
 
     private async Task<bool> IsShellRegisteredAsync(CancellationToken cancellationToken)
@@ -419,6 +436,42 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         catch (ArgumentException)
         {
             // Ignore missing keys when enabling.
+        }
+    }
+
+    public bool SyncManagedConfiguration()
+    {
+        var shellInstallPath = GetShellInstallPath();
+        if (string.IsNullOrWhiteSpace(shellInstallPath) || string.IsNullOrWhiteSpace(GetShellConfigPath()))
+            return false;
+
+        try
+        {
+            _configService.ApplyProfile(shellInstallPath, _configService.LoadProfile(), ResolveManagedCulture());
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static CultureInfo? ResolveManagedCulture()
+    {
+        if (Resource.Culture is not null)
+            return Resource.Culture;
+
+        try
+        {
+            if (!File.Exists(GlobalLanguagePath))
+                return null;
+
+            var name = File.ReadAllText(GlobalLanguagePath).Trim();
+            return string.IsNullOrWhiteSpace(name) ? null : new CultureInfo(name);
+        }
+        catch
+        {
+            return null;
         }
     }
 }
