@@ -227,8 +227,8 @@ public partial class CustomMouseControl : UserControl
         if (_statusIcon is not null)
         {
             _statusIcon.Symbol = isError
-                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
-                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
+                ? Wpf.Ui.Common.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
     }

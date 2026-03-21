@@ -143,7 +143,7 @@
     <value>已应用未知主题的光标样式。</value>
   </data>
   <data name="CursorAppliedFormat" xml:space="preserve">
-    <value>已为“{0}”主题应用光标样式。</value>
+    <value>已为"{0}"主题应用光标样式。</value>
   </data>
 <data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
   <data name="QuickActionsTitle" xml:space="preserve">
