@@ -92,8 +92,13 @@ public partial class ShellIntegrationSettingsControl : UserControl
         var canOpenConfig = !string.IsNullOrWhiteSpace(_plugin.GetShellConfigPath());
         var canOpenStyleSettings = canManageShell && canOpenConfig;
 
+        // Detect current registration state
+        var isRegistered = installed && IsShellCurrentlyRegistered();
+
         if (_registrationValueTextBlock != null)
-            _registrationValueTextBlock.Text = installed ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState;
+            _registrationValueTextBlock.Text = installed
+                ? (isRegistered ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState)
+                : ShellIntegrationText.MissingState;
 
         if (_versionValueTextBlock != null)
             _versionValueTextBlock.Text = version;
@@ -104,11 +109,18 @@ public partial class ShellIntegrationSettingsControl : UserControl
         if (_pathValueTextBlock != null)
             _pathValueTextBlock.Text = path;
 
+        // Toggle Enable/Disable visibility based on registration state
         if (_enableButton != null)
+        {
             _enableButton.IsEnabled = canManageShell;
+            _enableButton.Visibility = isRegistered ? Visibility.Collapsed : Visibility.Visible;
+        }
 
         if (_disableButton != null)
+        {
             _disableButton.IsEnabled = canManageShell;
+            _disableButton.Visibility = isRegistered ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         if (_openStyleSettingsButton != null)
             _openStyleSettingsButton.IsEnabled = canOpenStyleSettings;
@@ -136,6 +148,31 @@ public partial class ShellIntegrationSettingsControl : UserControl
                 ? Wpf.Ui.Common.SymbolRegular.ErrorCircle24
                 : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
+        }
+    }
+
+    private bool IsShellCurrentlyRegistered()
+    {
+        try
+        {
+            // Check registry for shell registration
+            foreach (var subKey in new[]
+            {
+                @"*\shellex\ContextMenuHandlers",
+                @"Directory\background\shellex\ContextMenuHandlers"
+            })
+            {
+                using var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{subKey}\ @nilesoft.shell", false)
+                             ?? Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{subKey}\@nilesoft.shell", false);
+                var value = System.Convert.ToString(key?.GetValue(string.Empty)) ?? string.Empty;
+                if (value.Equals("{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}", System.StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
         }
     }
 

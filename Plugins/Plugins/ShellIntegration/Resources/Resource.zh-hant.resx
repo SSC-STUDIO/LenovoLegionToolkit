@@ -283,4 +283,28 @@
   <data name="VersionLabel" xml:space="preserve">
     <value>版本</value>
   </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell 整合概覽</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>查看註冊狀態、安裝路徑，並快速存取打包的 Shell 工具。</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>註冊狀態</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>套用註冊變更或開啟此外掛使用的 Shell 資源。</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>已偵測</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>未偵測</value>
+  </data>
   </root>

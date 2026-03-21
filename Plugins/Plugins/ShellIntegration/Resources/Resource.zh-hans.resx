@@ -71,7 +71,7 @@
     <value>Shell 集成概览</value>
   </data>
   <data name="OverviewDescription" xml:space="preserve">
-    <value>查看注册状态、安装路径，并直接打开此插件随附的 Shell 工具。</value>
+    <value>查看注册状态、安装路径，并快速访问打包的 Shell 工具。</value>
   </data>
   <data name="Subtitle" xml:space="preserve">
     <value>管理 Nilesoft Shell 注册状态并打开样式编辑器。</value>
@@ -80,13 +80,13 @@
     <value>注册状态</value>
   </data>
   <data name="ConfigLabel" xml:space="preserve">
-    <value>配置文件</value>
+    <value>配置</value>
   </data>
   <data name="ActionsTitle" xml:space="preserve">
-    <value>快速操作</value>
+    <value>快捷操作</value>
   </data>
   <data name="ActionsDescription" xml:space="preserve">
-    <value>执行注册相关操作，或直接打开此插件打包的 Shell 资源。</value>
+    <value>应用注册更改或打开此插件使用的 Shell 资源。</value>
   </data>
   <data name="EnableButton" xml:space="preserve">
     <value>启用</value>
@@ -125,10 +125,10 @@
     <value>未检测到 Nilesoft Shell。</value>
   </data>
   <data name="RegisteredState" xml:space="preserve">
-    <value>已检测到</value>
+    <value>已检测</value>
   </data>
   <data name="MissingState" xml:space="preserve">
-    <value>缺失</value>
+    <value>未检测</value>
   </data>
   <data name="StatusRegistered" xml:space="preserve">
     <value>右键菜单增强当前已启用。</value>
