@@ -10,8 +10,8 @@ using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Extensions;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class WindowsPowerModesWindow
 {
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
@@ -94,4 +94,5 @@ public partial class WindowsPowerModesWindow
         if (_godModeComboBox.TryGetSelectedItem(out WindowsPowerMode windowsPowerMode))
             await WindowsPowerModeChangedAsync(windowsPowerMode, PowerModeState.GodMode);
     }
+}
 }

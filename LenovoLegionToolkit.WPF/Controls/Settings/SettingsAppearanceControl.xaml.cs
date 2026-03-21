@@ -12,8 +12,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsAppearanceControl
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -140,4 +140,5 @@ public partial class SettingsAppearanceControl
         _accentColorPicker.Visibility = _settings.Store.AccentColorSource == AccentColorSource.Custom ? Visibility.Visible : Visibility.Collapsed;
         _accentColorPicker.SelectedColor = _themeManager.GetAccentColor().ToColor();
     }
+}
 }

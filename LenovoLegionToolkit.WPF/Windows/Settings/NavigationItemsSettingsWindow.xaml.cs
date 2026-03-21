@@ -4,8 +4,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Windows;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class NavigationItemsSettingsWindow : BaseWindow
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
@@ -67,4 +67,5 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
             mainWindow.UpdateNavigationVisibility();
         }
     }
+}
 }

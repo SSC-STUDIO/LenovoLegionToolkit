@@ -19,8 +19,8 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Common;
 
-namespace LenovoLegionToolkit.WPF.Controls.Packages;
-
+namespace LenovoLegionToolkit.WPF.Controls.Packages
+{
 public partial class PackageControl : IProgress<float>
 {
     private readonly IPackageDownloader _packageDownloader;
@@ -735,4 +735,5 @@ public partial class PackageControl : IProgress<float>
         
         await InstallPackageAsync();
     }
+}
 }

@@ -8,8 +8,8 @@ using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.Windows.Settings;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsDisplayControl
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -107,4 +107,5 @@ public partial class SettingsDisplayControl
         var window = new BootLogoWindow { Owner = Window.GetWindow(this) };
         window.ShowDialog();
     }
+}
 }

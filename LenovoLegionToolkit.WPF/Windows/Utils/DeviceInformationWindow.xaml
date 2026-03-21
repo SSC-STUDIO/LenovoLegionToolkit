@@ -43,7 +43,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="12"
+                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.DeviceInformationWindow_Title}" />
 
@@ -55,8 +55,7 @@
                 <TextBlock
                     Margin="0,16,0,24"
                     Focusable="True"
-                    FontSize="24"
-                    FontWeight="Medium"
+                    Style="{StaticResource AppPageTitleTextBlockStyle}"
                     Text="{x:Static resources:Resource.DeviceInformationWindow_Device_Title}" />
 
                 <custom:CardControl Margin="0,0,0,8" Click="DeviceCardControl_Click">
@@ -104,8 +103,7 @@
                         <TextBlock
                             Grid.Column="0"
                             Focusable="True"
-                            FontSize="24"
-                            FontWeight="Medium"
+                            Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                             Text="{x:Static resources:Resource.DeviceInformationWindow_Warranty_Title}" />
                         <wpfui:Button
                             x:Name="_refreshWarrantyButton"

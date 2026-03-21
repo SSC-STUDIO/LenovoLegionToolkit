@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -13,8 +15,8 @@ using Wpf.Ui.Controls;
 // Use IPluginPage from Plugins.SDK (temporarily commented for compilation)
 // using IPluginPage = LenovoLegionToolkit.Plugins.SDK.IPluginPage;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 /// <summary>
 /// 插件页面包装器，用于承载插件提供的UI页面
 /// </summary>
@@ -24,11 +26,13 @@ public partial class PluginPageWrapper : UiPage
     
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private string? _pluginId;
+    private bool _listeningForLocalizationChanges;
 
     public PluginPageWrapper()
     {
         InitializeComponent();
         Loaded += PluginPageWrapper_Loaded;
+        Unloaded += PluginPageWrapper_Unloaded;
     }
 
     /// <summary>
@@ -41,6 +45,8 @@ public partial class PluginPageWrapper : UiPage
 
     private void PluginPageWrapper_Loaded(object sender, RoutedEventArgs e)
     {
+        EnsureLocalizationSubscription();
+
         // 从导航上下文中获取插件ID
         // NavigationStore 使用 PageTag 来标识页面，格式为 "plugin:{pluginId}"
         if (_pluginId == null)
@@ -72,23 +78,36 @@ public partial class PluginPageWrapper : UiPage
 
         if (_pluginId == null)
         {
-            ShowEmptyState("Unable to resolve plugin entry. Please return to Plugin Extensions and reopen this plugin.");
+            ShowEmptyState(T("PluginPageWrapper_UnableToResolve", "Unable to resolve plugin entry. Please return to Plugin Extensions and reopen this plugin."));
             return;
         }
 
         LoadPluginPage();
     }
 
+    private void PluginPageWrapper_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (!_listeningForLocalizationChanges)
+            return;
+
+        LocalizationHelper.PluginResourceCulturesChanged -= LocalizationHelper_PluginResourceCulturesChanged;
+        _listeningForLocalizationChanges = false;
+    }
+
     private void LoadPluginPage()
     {
         try
         {
+            FlowDirection = LocalizationHelper.Direction;
+
             var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == _pluginId);
             if (plugin == null)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} not found");
-                ShowEmptyState($"Plugin '{_pluginId}' is not available.");
+                ShowEmptyState(string.Format(
+                    T("PluginPageWrapper_PluginUnavailable", "Plugin '{0}' is not available."),
+                    _pluginId));
                 return;
             }
 
@@ -114,7 +133,9 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} does not provide IPluginPage");
-                ShowEmptyState($"Plugin '{plugin.Name}' does not provide a feature page.");
+                ShowEmptyState(string.Format(
+                    T("PluginPageWrapper_NoFeaturePage", "Plugin '{0}' does not provide a feature page."),
+                    plugin.Name));
                 return;
             }
 
@@ -174,7 +195,7 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"PluginPageWrapper: _pluginContentHost not found");
-                ShowEmptyState("Plugin content container is unavailable.");
+                ShowEmptyState(T("PluginPageWrapper_ContentUnavailable", "Plugin content container is unavailable."));
                 return;
             }
             
@@ -187,14 +208,18 @@ public partial class PluginPageWrapper : UiPage
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {_pluginId} CreatePage() did not return a UIElement or Page");
-                ShowEmptyState($"Plugin '{plugin.Name}' did not return a valid UI page.");
+                ShowEmptyState(string.Format(
+                    T("PluginPageWrapper_InvalidPage", "Plugin '{0}' did not return a valid UI page."),
+                    plugin.Name));
             }
         }
         catch (System.Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to load plugin page for {_pluginId}", ex);
-            ShowEmptyState($"Failed to load plugin page: {ex.Message}");
+            ShowEmptyState(string.Format(
+                T("PluginPageWrapper_LoadFailed", "Failed to load plugin page: {0}"),
+                ex.Message));
         }
     }
 
@@ -225,4 +250,27 @@ public partial class PluginPageWrapper : UiPage
             emptyStateText.Text = string.Empty;
     }
 
+    private void EnsureLocalizationSubscription()
+    {
+        if (_listeningForLocalizationChanges)
+            return;
+
+        LocalizationHelper.PluginResourceCulturesChanged += LocalizationHelper_PluginResourceCulturesChanged;
+        _listeningForLocalizationChanges = true;
+    }
+
+    private void LocalizationHelper_PluginResourceCulturesChanged(object? sender, EventArgs e)
+    {
+        if (!IsLoaded)
+            return;
+
+        Dispatcher.InvokeAsync(LoadPluginPage);
+    }
+
+    private static string T(string key, string fallback)
+    {
+        return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    }
+
+}
 }

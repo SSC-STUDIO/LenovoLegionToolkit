@@ -8,8 +8,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Windows.KeyboardBacklight.Spectrum;
-
+namespace LenovoLegionToolkit.WPF.Windows.KeyboardBacklight.Spectrum
+{
 public partial class SpectrumKeyboardBacklightEditEffectWindow
 {
     private readonly ushort[] _keyCodes;
@@ -227,4 +227,5 @@ public partial class SpectrumKeyboardBacklightEditEffectWindow
             _ => Visibility.Collapsed
         };
     }
+}
 }

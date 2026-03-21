@@ -11,9 +11,9 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Controls;
-
-public partial class FanCurveControl
+namespace LenovoLegionToolkit.WPF.Controls
+{
+public partial class FanCurveControl : UserControl
 {
     private readonly List<Slider> _sliders = [];
     private readonly InfoTooltip _customToolTip = new();
@@ -337,4 +337,5 @@ public partial class FanCurveControl
             }
         }
     }
+}
 }

@@ -19,8 +19,8 @@ using LenovoLegionToolkit.WPF.Windows.Utils;
 using Wpf.Ui.Common;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class AutomationPage
 {
     public static bool EnableHybridModeAutomation;
@@ -356,4 +356,5 @@ public partial class AutomationPage
 
         PipelinesChanged();
     }
+}
 }

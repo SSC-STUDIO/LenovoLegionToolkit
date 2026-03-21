@@ -22,13 +22,13 @@
         
         <!-- List Box Item Style -->
         <Style x:Key="PluginListItemContainerStyle" TargetType="ListBoxItem">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="16,12" />
-            <Setter Property="MinHeight" Value="90" />
+            <Setter Property="Padding" Value="20,16" />
+            <Setter Property="MinHeight" Value="100" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Margin" Value="0,0,0,6" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
@@ -36,15 +36,23 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8"
+                                CornerRadius="12"
                                 Padding="{TemplateBinding Padding}"
                                 SnapsToDevicePixels="True">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="1" Opacity="0.04" BlurRadius="6" />
+                            </Border.Effect>
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
                                 <Setter TargetName="MainBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                                <Setter TargetName="MainBorder" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.08" BlurRadius="10" />
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
@@ -58,35 +66,36 @@
         
         <!-- Plugin Icon Style -->
         <Style x:Key="PluginIconStyle" TargetType="Border">
-            <Setter Property="Width" Value="48" />
-            <Setter Property="Height" Value="48" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Width" Value="52" />
+            <Setter Property="Height" Value="52" />
+            <Setter Property="CornerRadius" Value="14" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="Margin" Value="0,0,16,0" />
         </Style>
         
         <!-- Plugin Title Style -->
         <Style x:Key="PluginTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="15" />
-            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
-        
+
         <!-- Plugin Version Style -->
         <Style x:Key="PluginVersionStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="Margin" Value="0,3,0,0" />
         </Style>
-        
+
         <!-- Plugin Description Style -->
         <Style x:Key="PluginDescriptionStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="MaxHeight" Value="44" />
+            <Setter Property="MaxHeight" Value="48" />
+            <Setter Property="LineHeight" Value="18" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
 
@@ -94,16 +103,18 @@
             <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="14" />
-            <Setter Property="Padding" Value="16,14" />
-            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="20,16" />
+            <Setter Property="Margin" Value="0,0,10,0" />
         </Style>
 
         <Style x:Key="CapabilityChipStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="999" />
-            <Setter Property="Padding" Value="8,4" />
-            <Setter Property="Margin" Value="0,8,8,0" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Margin" Value="0,8,6,0" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
         
         <!-- Plugin Action Button Style -->
@@ -146,13 +157,13 @@
             <TextBlock
                 x:Name="_titleTextBlock"
                 Focusable="True"
-                FontSize="24"
-                FontWeight="Medium"
+                Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Title}" />
             <TextBlock
                 x:Name="_descriptionTextBlock"
                 Margin="0,8,0,0"
                 Focusable="True"
+                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
         </StackPanel>
 
@@ -163,16 +174,19 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1.2*" />
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryTotal}"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal">
+                        <wpfui:SymbolIcon Symbol="Apps24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryTotal}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
                     <TextBlock x:Name="_summaryTotalTextBlock"
-                               Margin="0,6,0,0"
+                               Margin="0,8,0,0"
                                FontSize="28"
                                FontWeight="SemiBold"
                                Text="0" />
@@ -181,11 +195,14 @@
 
             <Border Grid.Column="1" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryInstalled}"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal">
+                        <wpfui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryInstalled}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
                     <TextBlock x:Name="_summaryInstalledTextBlock"
-                               Margin="0,6,0,0"
+                               Margin="0,8,0,0"
                                FontSize="28"
                                FontWeight="SemiBold"
                                Text="0" />
@@ -194,11 +211,14 @@
 
             <Border Grid.Column="2" Style="{StaticResource SummaryCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryUpdatesReady}"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal">
+                        <wpfui:SymbolIcon Symbol="ArrowCircleUp24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryUpdatesReady}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
                     <TextBlock x:Name="_summaryUpdatesTextBlock"
-                               Margin="0,6,0,0"
+                               Margin="0,8,0,0"
                                FontSize="28"
                                FontWeight="SemiBold"
                                Text="0" />
@@ -209,16 +229,21 @@
                     Background="{DynamicResource ControlFillColorSecondaryBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="14"
-                    Padding="16,14">
+                    CornerRadius="16"
+                    Padding="20,16">
                 <StackPanel>
-                    <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryStorePulse}"
-                               FontSize="12"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource SystemAccentColorBrush}" />
+                    <StackPanel Orientation="Horizontal">
+                        <wpfui:SymbolIcon Symbol="Pulse24" FontSize="14" Foreground="{DynamicResource SystemAccentColorBrush}" Margin="0,0,6,0" />
+                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryStorePulse}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SystemAccentColorBrush}" />
+                    </StackPanel>
                     <TextBlock x:Name="_summaryHintTextBlock"
                                Margin="0,8,0,0"
                                TextWrapping="Wrap"
+                               FontSize="12.5"
+                               LineHeight="18"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryCheckingAvailability}" />
                 </StackPanel>
@@ -306,8 +331,8 @@
                     Height="36"
                     Click="BulkInstallButton_Click"
                     Visibility="Collapsed"
-                    ToolTip="Install all available plugins"
-                    Content="Install All" />
+                    ToolTip=""
+                    Content="" />
             </StackPanel>
         </Grid>
         </Border>
@@ -320,8 +345,8 @@
             Severity="Warning"
             IsOpen="False"
             IsClosable="True"
-            Title="Toolkit Deprecated"
-            Message="The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools."
+            Title=""
+            Message=""
             Visibility="Collapsed" />
 
         <!-- Results Count -->

@@ -17,8 +17,8 @@ using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Common;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
-namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Controls.Dashboard
+{
 public partial class SensorsControl
 {
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
@@ -477,4 +477,5 @@ public partial class SensorsControl
             label.Tag = value;
         }
     }
+}
 }

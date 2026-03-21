@@ -6,8 +6,8 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
 
-namespace LenovoLegionToolkit.WPF.Pages;
-
+namespace LenovoLegionToolkit.WPF.Pages
+{
 public partial class KeyboardBacklightPage
 {
     public KeyboardBacklightPage() => InitializeComponent();
@@ -53,4 +53,5 @@ public partial class KeyboardBacklightPage
 
         return false;
     }
+}
 }

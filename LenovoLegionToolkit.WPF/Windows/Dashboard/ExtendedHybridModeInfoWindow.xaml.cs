@@ -2,8 +2,8 @@
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class ExtendedHybridModeInfoWindow
 {
     public ExtendedHybridModeInfoWindow(HybridModeState[] hybridModeStates)
@@ -25,4 +25,5 @@ public partial class ExtendedHybridModeInfoWindow
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+}
 }

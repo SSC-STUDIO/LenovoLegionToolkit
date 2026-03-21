@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 
-namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device;
-
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device
+{
 public partial class SpectrumZoneControl
 {
     private ushort _keyCode;
@@ -43,4 +43,5 @@ public partial class SpectrumZoneControl
     {
         InitializeComponent();
     }
+}
 }

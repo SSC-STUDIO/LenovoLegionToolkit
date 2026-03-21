@@ -7,8 +7,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Color = System.Windows.Media.Color;
 
-namespace LenovoLegionToolkit.WPF.Controls;
-
+namespace LenovoLegionToolkit.WPF.Controls
+{
 public partial class ColorPickerControl
 {
     [GeneratedRegex("^#(?:[0-9A-F]{3}){2}$", RegexOptions.IgnoreCase, "en-DK")]
@@ -145,4 +145,5 @@ public partial class ColorPickerControl
 
         return (byte)Math.Clamp(userInput, 0, 255);
     }
+}
 }

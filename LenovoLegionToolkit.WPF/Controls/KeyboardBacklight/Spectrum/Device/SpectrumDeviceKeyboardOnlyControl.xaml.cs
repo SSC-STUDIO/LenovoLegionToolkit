@@ -1,7 +1,7 @@
 ﻿using LenovoLegionToolkit.Lib;
 
-namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device;
-
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device
+{
 public partial class SpectrumDeviceKeyboardOnlyControl
 {
     public SpectrumDeviceKeyboardOnlyControl()
@@ -13,4 +13,5 @@ public partial class SpectrumDeviceKeyboardOnlyControl
     {
         _keyboard.SetLayout(keyboardLayout);
     }
+}
 }

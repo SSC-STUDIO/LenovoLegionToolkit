@@ -351,8 +351,7 @@ public class WindowsOptimizationService
         }
 
         NotifyExplorerSettingsChanged();
-        RestartExplorer();
-        await Task.CompletedTask;
+        await ExplorerRestartHelper.RestartAsync().ConfigureAwait(false);
     }
 
     internal bool AreStartMenuTweaksApplied()
@@ -377,36 +376,4 @@ public class WindowsOptimizationService
         }
     }
 
-    private static void RestartExplorer()
-    {
-        try
-        {
-            var killInfo = new ProcessStartInfo
-            {
-                FileName = "taskkill.exe",
-                Arguments = "/f /im explorer.exe",
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-
-            using var killProcess = Process.Start(killInfo);
-            killProcess?.WaitForExit(5000);
-
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "explorer.exe",
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-
-            Process.Start(startInfo);
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to restart Explorer.", ex);
-        }
-    }
 }

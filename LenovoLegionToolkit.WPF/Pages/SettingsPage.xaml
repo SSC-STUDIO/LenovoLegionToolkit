@@ -48,15 +48,13 @@
             Margin="0,0,16,24">
             <TextBlock
                 Margin="0,16,0,8"
-                FontSize="24"
-                FontWeight="Medium"
+                Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.SettingsPage_Title}" />
             <TextBlock
                 Margin="0,0,0,0"
-                FontSize="14"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                 Text="{x:Static resources:Resource.SettingsPage_Description}"
-                TextWrapping="Wrap" />
+                />
         </StackPanel>
 
         <!-- Left Navigation Bar -->

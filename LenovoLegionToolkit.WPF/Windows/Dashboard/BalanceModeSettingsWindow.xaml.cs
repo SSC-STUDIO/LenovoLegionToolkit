@@ -3,8 +3,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
 
-namespace LenovoLegionToolkit.WPF.Windows.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Windows.Dashboard
+{
 public partial class BalanceModeSettingsWindow
 {
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
@@ -39,4 +39,5 @@ public partial class BalanceModeSettingsWindow
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
+}
 }

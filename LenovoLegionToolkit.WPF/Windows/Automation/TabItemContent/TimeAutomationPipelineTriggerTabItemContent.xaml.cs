@@ -7,8 +7,8 @@ using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Automation.Resources;
 using LenovoLegionToolkit.Lib.Extensions;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class TimeAutomationPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<ITimeAutomationPipelineTrigger>
 {
     private readonly ITimeAutomationPipelineTrigger _trigger;
@@ -114,4 +114,5 @@ public partial class TimeAutomationPipelineTriggerTabItemContent : IAutomationPi
 
         checkBox.IsChecked = true;
     }
+}
 }

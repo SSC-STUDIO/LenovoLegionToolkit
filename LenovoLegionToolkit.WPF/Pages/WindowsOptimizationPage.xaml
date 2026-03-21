@@ -102,11 +102,8 @@
                     </Trigger>
                 </Style.Triggers>
         </Style>
-        <Style TargetType="TextBlock" x:Key="SectionTitleTextStyle">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="Medium" />
+        <Style TargetType="TextBlock" x:Key="SectionTitleTextStyle" BasedOn="{StaticResource AppSectionTitleTextBlockStyle}">
             <Setter Property="Margin" Value="0,0,0,8" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
         <Style x:Key="PrimaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
             <Setter Property="Appearance" Value="Primary" />
@@ -148,17 +145,16 @@
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                     Focusable="True"
-                    FontSize="24"
-                    FontWeight="Medium"
+                    Style="{StaticResource AppPageTitleTextBlockStyle}"
                     Text="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}" />
 
                 <TextBlock
                     MaxWidth="540"
-                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     HorizontalAlignment="Left"
+                    Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                     Text="{x:Static resources:Resource.WindowsOptimizationPage_Info}"
                     TextTrimming="CharacterEllipsis"
-                    TextWrapping="Wrap" />
+                    />
             </StackPanel>
 
             <wpfui:Button
@@ -510,7 +506,7 @@
                                             Margin="8,0,0,0"
                                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                                             ClearButtonEnabled="False"
-                                            PlaceholderText="例如: 82JQ" />
+                                            PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />
                                         <ComboBox
                                             x:Name="_driverOsComboBox"
                                             Grid.Row="1"
@@ -533,7 +529,7 @@
                                                 Grid.Column="0"
                                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                                 ClearButtonEnabled="False"
-                                                PlaceholderText="例如: 82JQ"
+                                                PlaceholderText="{x:Static resources:Resource.PackagesPage_DownloadTo_Placeholder}"
                                                 TextChanged="DriverDownloadToText_OnTextChanged" />
 
                                             <wpfui:Button

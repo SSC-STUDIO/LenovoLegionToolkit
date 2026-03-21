@@ -28,13 +28,13 @@
                 <StackPanel Grid.Row="0" Margin="0,16,0,24">
                     <TextBlock
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.AutomationPage_Actions_Title}" />
 
                     <TextBlock
                         Margin="0,8,0,0"
                         Focusable="True"
+                        Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                         Text="{x:Static resources:Resource.AutomationPage_Actions_Message}" />
                 </StackPanel>
 
@@ -82,13 +82,13 @@
 
                     <TextBlock
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.AutomationPage_QuickActions_Title}" />
 
                     <TextBlock
                         Margin="0,8,0,0"
                         Focusable="True"
+                        Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                         Text="{x:Static resources:Resource.AutomationPage_QuickActions_Message}" />
 
                 </StackPanel>

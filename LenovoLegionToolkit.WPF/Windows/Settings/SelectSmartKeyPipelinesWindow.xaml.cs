@@ -12,8 +12,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class SelectSmartKeyPipelinesWindow
 {
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
@@ -163,4 +163,5 @@ public partial class SelectSmartKeyPipelinesWindow
             Content = _grid;
         }
     }
+}
 }

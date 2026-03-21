@@ -7,8 +7,8 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.CLI;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsIntegrationsControl
 {
     private readonly IntegrationsSettings _integrationsSettings = IoCContainer.Resolve<IntegrationsSettings>();
@@ -65,4 +65,5 @@ public partial class SettingsIntegrationsControl
 
         SystemPath.SetCLI(_cliPathToggle.IsChecked ?? false);
     }
+}
 }

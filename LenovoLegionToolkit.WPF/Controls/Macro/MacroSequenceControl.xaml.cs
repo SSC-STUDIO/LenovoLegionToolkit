@@ -10,8 +10,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Macro;
 
-namespace LenovoLegionToolkit.WPF.Controls.Macro;
-
+namespace LenovoLegionToolkit.WPF.Controls.Macro
+{
 public partial class MacroSequenceControl
 {
     private readonly MacroController _controller = IoCContainer.Resolve<MacroController>();
@@ -182,4 +182,5 @@ public partial class MacroSequenceControl
 
         Set(_macroIdentifier);
     }
+}
 }

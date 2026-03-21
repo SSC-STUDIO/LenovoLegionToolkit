@@ -9,8 +9,8 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Settings;
 
-namespace LenovoLegionToolkit.WPF.Controls.Settings;
-
+namespace LenovoLegionToolkit.WPF.Controls.Settings
+{
 public partial class SettingsSmartKeysControl
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -76,4 +76,5 @@ public partial class SettingsSmartKeysControl
         var window = new SelectSmartKeyPipelinesWindow(isDoublePress: true) { Owner = Window.GetWindow(this) };
         window.ShowDialog();
     }
+}
 }

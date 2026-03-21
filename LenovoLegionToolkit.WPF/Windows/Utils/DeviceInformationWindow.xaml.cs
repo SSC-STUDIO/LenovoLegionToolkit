@@ -10,8 +10,8 @@ using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class DeviceInformationWindow
 {
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
@@ -111,4 +111,5 @@ public partial class DeviceInformationWindow
         var link = _warrantyLinkCardAction.Tag as Uri;
         link?.Open();
     }
+}
 }

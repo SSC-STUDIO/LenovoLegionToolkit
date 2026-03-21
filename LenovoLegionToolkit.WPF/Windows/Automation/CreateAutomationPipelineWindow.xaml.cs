@@ -14,8 +14,8 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation
+{
 public partial class CreateAutomationPipelineWindow
 {
     private readonly IAutomationPipelineTrigger[] _triggers =
@@ -211,4 +211,5 @@ public partial class CreateAutomationPipelineWindow
 
         _createButton.IsEnabled = anyChecked;
     }
+}
 }

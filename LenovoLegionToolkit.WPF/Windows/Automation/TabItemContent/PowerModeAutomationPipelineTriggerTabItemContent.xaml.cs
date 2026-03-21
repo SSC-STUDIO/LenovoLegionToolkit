@@ -6,8 +6,8 @@ using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IPowerModeAutomationPipelineTrigger>
 {
     private readonly PowerModeFeature _feature = IoCContainer.Resolve<PowerModeFeature>();
@@ -50,4 +50,5 @@ public partial class PowerModeAutomationPipelineTriggerTabItemContent : IAutomat
             _content.Children.Add(radio);
         }
     }
+}
 }

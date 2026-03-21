@@ -6,10 +6,12 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class BootLogoWindow
 {
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+
     public BootLogoWindow()
     {
         InitializeComponent();
@@ -70,7 +72,7 @@ public partial class BootLogoWindow
             {
                 Title = Resource.Open,
                 InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
-                Filter = $"Images|{string.Join(";", filters)}",
+                Filter = string.Format(T("Common_ImageFileDialogFilterFormat", "Images|{0}"), string.Join(";", filters)),
                 CheckFileExists = true,
             };
 
@@ -110,4 +112,5 @@ public partial class BootLogoWindow
         InvalidBootLogoImageFormatException => Resource.BootLogoWindow_SetError_Invalid_Image_Format,
         _ => exception.Message
     };
+}
 }

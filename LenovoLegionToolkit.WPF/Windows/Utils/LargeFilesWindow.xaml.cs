@@ -8,8 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class LargeFilesWindow : BaseWindow
 {
     private readonly List<FileInfo> _allFiles;
@@ -146,4 +146,5 @@ public partial class LargeFilesWindow : BaseWindow
             return $"{dblSByte:0.##} {Suffix[i]}";
         }
     }
+}
 }

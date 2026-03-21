@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace LenovoLegionToolkit.WPF.Controls;
-
+namespace LenovoLegionToolkit.WPF.Controls
+{
 public partial class MultiColorPickerItemControl
 {
     public Color SelectedColor
@@ -29,4 +29,5 @@ public partial class MultiColorPickerItemControl
     public MultiColorPickerItemControl() => InitializeComponent();
 
     private void Delete_Click(object sender, MouseButtonEventArgs e) => Delete?.Invoke(this, e);
+}
 }

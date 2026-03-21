@@ -4,8 +4,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Controls;
 
-namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
-
+namespace LenovoLegionToolkit.WPF.Controls.Dashboard
+{
 public partial class TurnOffMonitorsControl : AbstractRefreshingControl
 {
     private readonly NativeWindowsMessageListener _nativeWindowsMessageListener = IoCContainer.Resolve<NativeWindowsMessageListener>();
@@ -22,4 +22,5 @@ public partial class TurnOffMonitorsControl : AbstractRefreshingControl
     protected override Task OnRefreshAsync() => Task.CompletedTask;
 
     protected override void OnFinishedLoading() { }
+}
 }

@@ -44,7 +44,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="12"
+                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.GodModeSettingsWindow_Title}" />
 
@@ -77,8 +77,7 @@
                     <TextBlock
                         Margin="0,16,0,24"
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_ActivePreset_Title}" />
 
                     <Grid Margin="0,0,0,16">
@@ -124,8 +123,7 @@
                         x:Name="_cpuSectionTitle"
                         Margin="0,16,0,24"
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_CPU_Title}" />
 
                     <godMode:GodModeValueControl
@@ -181,8 +179,7 @@
                         x:Name="_gpuSectionTitle"
                         Margin="0,16,0,24"
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_GPU_Title}" />
 
                     <godMode:GodModeValueControl
@@ -224,8 +221,7 @@
                         x:Name="_fanSectionTitle"
                         Margin="0,16,0,24"
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Title}" />
 
                     <custom:CardControl
@@ -264,8 +260,7 @@
                         x:Name="_advancedSectionTitle"
                         Margin="0,16,0,8"
                         Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
+                        Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Title}" />
 
                     <TextBlock

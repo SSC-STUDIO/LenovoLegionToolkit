@@ -7,8 +7,8 @@ using System.Windows;
 using Humanizer;
 using LenovoLegionToolkit.WPF.Extensions;
 
-namespace LenovoLegionToolkit.WPF.Windows.Utils;
-
+namespace LenovoLegionToolkit.WPF.Windows.Utils
+{
 public partial class LanguageSelectorWindow
 {
     private readonly TaskCompletionSource<CultureInfo?> _taskCompletionSource = new();
@@ -32,4 +32,5 @@ public partial class LanguageSelectorWindow
         _taskCompletionSource.TrySetResult(cultureInfo);
         Close();
     }
+}
 }

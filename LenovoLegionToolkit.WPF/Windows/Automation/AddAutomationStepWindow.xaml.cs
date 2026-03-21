@@ -8,8 +8,8 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation
+{
 public partial class AddAutomationStepWindow
 {
     private readonly List<AbstractAutomationStepControl> _controls;
@@ -64,4 +64,5 @@ public partial class AddAutomationStepWindow
 
         return control;
     }
+}
 }

@@ -28,8 +28,7 @@
                 Grid.Row="0"
                 Margin="0,16,0,24"
                 Focusable="True"
-                FontSize="24"
-                FontWeight="Medium"
+                Style="{StaticResource AppPageTitleTextBlockStyle}"
                 Text="{x:Static resources:Resource.PackagesPage_Title}" />
 
             <custom:CardControl
@@ -88,7 +87,7 @@
                             Margin="8,0,0,0"
                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                             ClearButtonEnabled="False"
-                            PlaceholderText="(eg. 82JQ)" />
+                            PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />
                         <ComboBox
                             x:Name="_osComboBox"
                             Grid.Row="1"
@@ -111,7 +110,7 @@
                                 Grid.Column="0"
                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                 ClearButtonEnabled="False"
-                                PlaceholderText="(eg. 82JQ)"
+                                PlaceholderText="{x:Static resources:Resource.PackagesPage_DownloadTo_Placeholder}"
                                 TextChanged="DownloadToText_OnTextChanged" />
 
                             <wpfui:Button

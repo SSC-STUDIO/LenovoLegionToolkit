@@ -12,6 +12,8 @@ namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
 public class SpectrumKeyboardBacklightImportProfileAutomationStepControl : AbstractAutomationStepControl<SpectrumKeyboardBacklightImportProfileAutomationStep>
 {
+    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+
     private readonly TextBox _path = new()
     {
         PlaceholderText = Resource.SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path,
@@ -65,7 +67,7 @@ public class SpectrumKeyboardBacklightImportProfileAutomationStepControl : Abstr
             {
                 Title = Resource.Import,
                 InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
-                Filter = "Json Files (.json)|*.json",
+                Filter = T("Common_JsonFileDialogFilter", "Json Files (.json)|*.json"),
                 CheckFileExists = true,
             };
 

@@ -5,8 +5,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Settings;
 
-namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
-
+namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
+{
 public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPipelineTriggerTabItemContent<IGodModePresetChangedAutomationPipelineTrigger>
 {
     private readonly GodModeSettings _settings = IoCContainer.Resolve<GodModeSettings>();
@@ -45,4 +45,5 @@ public partial class GodModePresetPipelineTriggerTabItemContent : IAutomationPip
             _content.Children.Add(radio);
         }
     }
+}
 }

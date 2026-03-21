@@ -12,8 +12,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 
-namespace LenovoLegionToolkit.WPF.Windows.Settings;
-
+namespace LenovoLegionToolkit.WPF.Windows.Settings
+{
 public partial class WindowsPowerPlansWindow
 {
     private static readonly WindowsPowerPlan DefaultValue = new(Guid.Empty, Resource.WindowsPowerPlansWindow_DefaultPowerPlan, false);
@@ -105,4 +105,5 @@ public partial class WindowsPowerPlansWindow
         if (_godModeComboBox.TryGetSelectedItem(out WindowsPowerPlan windowsPowerPlan))
             await WindowsPowerPlanChangedAsync(windowsPowerPlan, PowerModeState.GodMode);
     }
+}
 }

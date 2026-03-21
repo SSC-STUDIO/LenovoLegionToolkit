@@ -10,25 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.6.10] - 2026-03-18
-
 ### Fixed / 修复
+- **WPF Rendering Compatibility / WPF 渲染兼容性**: Centralized the software-rendering fallback in `RenderingCompatibilityHelper`, applied an opaque window background fallback in `BaseWindow`, and routed app startup render-mode selection through the helper so Remote Desktop / forced-software-rendering sessions no longer show blank Mica/Acrylic windows. Evidence: `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`, `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff` / 将软件渲染兜底逻辑集中到 `RenderingCompatibilityHelper`，在 `BaseWindow` 中补充不透明背景兜底，并让启动阶段的渲染模式统一走 helper，避免远程桌面或强制软件渲染场景下 Mica/Acrylic 窗口空白。证据：`C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`、`C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff`
 - **Plugin UI Localization / 插件界面本地化**: Replaced plugin marketplace summary/capability/author strings with localized resources and added a localized optimization failure format so simplified Chinese UI no longer shows English labels such as `Total Plugins`, `Quick Open`, or `Failed to apply ...` in the plugin workflow / 将插件市场的摘要、能力标签、作者前缀改为资源化本地化文本，并补充系统优化失败消息模板，使简体中文插件流程中不再显示 `Total Plugins`、`Quick Open`、`Failed to apply ...` 等英文标签
-
-## [3.6.9] - 2026-03-17
+- **Menu Style Editor Localization / 菜单样式编辑器本地化**: Replaced hard-coded Chinese strings in `MenuStyleSettingsWindow` with resource lookups, localized apply/open error prompts, and aligned the editor with the actual Shell config availability so Chinese and cold-locale runs no longer mix in untranslated text or expose missing-file actions / 将 `MenuStyleSettingsWindow` 中的硬编码中文替换为资源查找，补齐应用与打开失败提示的本地化，并按实际 Shell 配置文件可用性控制编辑器状态，避免中文和冷门语言运行时混入未翻译文本或暴露无效文件操作
+- **Plugin Host Localization Refresh / 插件宿主本地化刷新**: Added a shared plugin-resource culture change event, taught `PluginPageWrapper` and `PluginSettingsWindow` to rebuild plugin UI after culture changes, and localized previously hard-coded plugin host empty states, delete confirmations, snackbars, and ZIP dialog filters so plugin pages/settings inherit language changes more reliably instead of keeping stale text or popping English-only helper UI / 新增共享的插件资源文化变更事件，让 `PluginPageWrapper` 与 `PluginSettingsWindow` 在语言变化后重建插件界面，并把原本硬编码的插件宿主空状态、删除确认、提示条与 ZIP 文件对话框过滤文本资源化，减少插件页/设置页保留旧语言或弹出英文辅助界面的情况
+- **Plugin Marketplace Hidden Copy / 插件市场隐藏文案**: Routed the remaining install/uninstall/bulk-import fallback snackbars in `PluginExtensionsPage` through resource keys so the plugin marketplace no longer mixes English helper text like install-failed details, dependency uninstall warnings, or `Unknown` import-source placeholders into Chinese mode / 将 `PluginExtensionsPage` 中残留的安装、卸载、批量导入兜底提示统一改走资源键，避免插件市场在中文模式下继续混入安装失败详情、依赖卸载警告或 `Unknown` 这类英文占位提示
+- **Hidden Settings Dialog Copy / 隐藏设置弹框文案**: Routed package-download example placeholders in `PackagesPage` and the mirrored `WindowsOptimizationPage` surface through shared resource keys, and localized the Compatibility Check window's manual “Open Log” failure message so hidden host dialogs no longer mix hard-coded English/Chinese helper text / 将 `PackagesPage` 及镜像到 `WindowsOptimizationPage` 的包下载示例占位文案改走共享资源键，并把兼容性检查窗口里手动“打开日志”失败提示资源化，避免宿主隐藏弹框继续混入硬编码中英文辅助文本
+- **Explorer Restart Reliability / Explorer 重启可靠性**: Replaced duplicated Explorer restart snippets with a shared helper that waits for Explorer to fully exit, relaunches it via the shell with a `cmd /c start` fallback, uses the Windows `explorer.exe` full path, and verifies the process actually returns so optimization and menu-style apply flows no longer leave the desktop shell closed / 用共享 helper 替换重复的 Explorer 重启片段：等待 Explorer 完全退出、通过 shell 方式拉起并提供 `cmd /c start` 兜底、使用 Windows 下 `explorer.exe` 的全路径、并校验进程确实恢复，避免系统优化和菜单样式应用流程把桌面壳杀掉后不自动回来
 
 ### Improved / 改进
-- **Plugin UI Smoke / 插件界面冒烟**: Hardened `MainAppPluginUi.Smoke` against stale UI Automation windows, localized plugin text, and feature-page routing differences so marketplace open/settings flows now verify `custom-mouse`, `shell-integration`, `vive-tool`, and `network-acceleration` end to end more reliably / 加固 `MainAppPluginUi.Smoke` 对陈旧 UI Automation 窗口、本地化插件文案和功能页路由差异的处理，使插件市场中的 `custom-mouse`、`shell-integration`、`vive-tool` 与 `network-acceleration` 打开与设置流程可以更稳定地完成端到端验证
-
-## [3.6.8] - 2026-03-17
-
-### Fixed / 修复
-- **Remote Desktop Backdrop Compatibility / 远程桌面背景兼容性**: Disabled Mica/Acrylic backdrops when software rendering is forced or a Terminal Services session is detected, preventing startup and helper windows from appearing blank under Remote Desktop / 在强制软件渲染或检测到远程桌面会话时禁用 Mica/Acrylic 背景，避免主窗口与启动辅助窗口在远程桌面下出现空白显示
-
-## [3.6.7] - 2026-03-15
-
-### Fixed / 修复
-- **Resource Designer / 资源设计器**: Restored the missing `SettingsPage_ForceSoftwareRendering_Title` and `SettingsPage_ForceSoftwareRendering_Message` entries in `Resource.Designer.cs`, eliminating the XAML static-resource resolution warning seen during release builds / 恢复 `Resource.Designer.cs` 中缺失的 `SettingsPage_ForceSoftwareRendering_Title` 与 `SettingsPage_ForceSoftwareRendering_Message` 条目，消除发布构建期间出现的 XAML 静态资源解析告警
+- **Plugin UI Smoke / 插件界面冒烟**: Updated `MainAppPluginUi.Smoke` to launch the app with `--skip-compat-check`, tolerate missing refresh buttons, and capture optimization-route settings windows so Shell Integration localization and availability fixes can be verified on unsupported hardware / 更新 `MainAppPluginUi.Smoke`：启动主程序时自动附加 `--skip-compat-check`、兼容缺失的刷新按钮，并支持截取优化路由下的设置窗口，便于在不受支持硬件上验证 Shell Integration 的本地化与可用性修复
+- **Plugin UI Smoke Stability / 插件界面冒烟稳定性**: Hardened `MainAppPluginUi.Smoke` against stale UI Automation window handles during plugin settings validation so Shell and Network Acceleration screenshot runs no longer fail on transient `ElementNotAvailableException` cleanup/rebind paths / 加强 `MainAppPluginUi.Smoke` 在插件设置页验证中的 UI Automation 句柄容错，避免 Shell 与 Network Acceleration 截图验证因瞬时 `ElementNotAvailableException` 的清理或重绑定路径而失败
 
 ## [3.6.6] - 2026-03-15
 
@@ -61,8 +54,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved / 改进
 - **Test Stability / 测试稳定性**: Replaced the `CMD.RunAsync` cancellation test command from `timeout` to a deterministic `ping`-based long-running command to avoid environment-dependent false negatives in headless runs / 将 `CMD.RunAsync` 取消测试中的 `timeout` 命令替换为更稳定的 `ping` 长耗时命令，避免无界面环境下的环境相关误报失败
+- **Smoke Evidence / 冒烟证据**: Captured latest WPF smoke log at `attachments/lenovo-legion-toolkit/wpf-smoke-latest.log` for verification traceability / 记录最新 WPF 冒烟日志（`attachments/lenovo-legion-toolkit/wpf-smoke-latest.log`）用于验证留痕
 - **Localization Workflow / 本地化流程**: Replaced legacy single-file Crowdin mapping with a repository-wide `crowdin.yml` that covers WPF/Lib/Automation/Macro resource modules and locale naming mappings (`zh-hans`, `zh-hant`, `pt-br`, `nl-nl`, `uz-latn-uz`) / 将旧的单文件 Crowdin 映射升级为仓库级 `crowdin.yml`，覆盖 WPF/Lib/Automation/Macro 四个资源模块，并补齐 `zh-hans`、`zh-hant`、`pt-br`、`nl-nl`、`uz-latn-uz` 等语言命名映射
 - **Documentation / 文档**: Updated README and Docs set to align with current repository links, workflow files, release examples, and translation synchronization commands / 更新 README 与 Docs 文档集，使其与当前仓库链接、工作流文件、发布示例及翻译同步命令保持一致
+- **Documentation / 文档**: Added a WPF smoke build shortcut to deployment docs to highlight `scripts/smoke-build.ps1` / 在部署文档中补充 WPF 冒烟构建快捷命令，说明 `scripts/smoke-build.ps1` 的使用方式
+- **Documentation / 文档**: Documented how to capture smoke build output logs with `Tee-Object` for sharing / 说明如何使用 `Tee-Object` 捕获 WPF 冒烟构建输出日志，便于分享
 - **Plugin UI Smoke / 插件界面冒烟**: Stabilized `MainAppPluginUi.Smoke` settings-window automation by switching to descendant modal-window discovery, filtering stale window handles, adding deterministic close-wait logic, and using a configure-button fallback when double-click is flaky; verified end-to-end network plugin settings + feature interactions / 稳定 `MainAppPluginUi.Smoke` 的设置窗口自动化：改为 descendant 模态窗口探测、过滤陈旧窗口句柄、加入确定性的关闭等待逻辑，并在双击不稳定时回退到配置按钮；已验证网络插件设置页与功能页端到端交互
 - **Plugin Open Routing / 插件打开路由**: Extended plugin marketplace `Open` behavior to include optimization-category plugins, and added category-focused navigation into Windows Optimization for `shell-integration` and `custom-mouse` / 扩展插件市场 `Open` 行为以支持系统优化分类插件，并为 `shell-integration` 与 `custom-mouse` 增加跳转系统优化并定位分类的能力
 
