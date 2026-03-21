@@ -3,12 +3,12 @@
         {
             "id": "custom-mouse",
             "name": "Custom Mouse",
-            "version": "1.0.9",
+            "version": "1.0.10",
             "description": "Customize mouse cursor style behavior and mouse settings",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.9/custom-mouse-v1.0.9.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.9",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.10/custom-mouse-v1.0.10.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.10",
             "icon": "",
             "iconBackground": "#2563EB",
             "isSystemPlugin": false,
@@ -40,12 +40,12 @@
         {
             "id": "shell-integration",
             "name": "Shell Integration",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.6/shell-integration-v1.0.6.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.6",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.7/shell-integration-v1.0.7.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.7",
             "icon": "",
             "iconBackground": "#0F766E",
             "isSystemPlugin": true,
@@ -77,12 +77,12 @@
         {
             "id": "network-acceleration",
             "name": "Network Acceleration",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "description": "Real-time network acceleration and optimization features",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.3/network-acceleration-v1.1.3.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.3",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.4/network-acceleration-v1.1.4.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.4",
             "icon": "",
             "iconBackground": "#DC2626",
             "isSystemPlugin": false,
@@ -113,12 +113,12 @@
         {
             "id": "vive-tool",
             "name": "ViVeTool",
-            "version": "1.1.7",
+            "version": "1.1.8",
             "description": "Manage Windows feature flags using ViVeTool",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.7/vive-tool-v1.1.7.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.7",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.1.8/vive-tool-v1.1.8.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.1.8",
             "icon": "",
             "iconBackground": "#7C3AED",
             "isSystemPlugin": false,
@@ -148,6 +148,6 @@
             ]
         }
     ],
-    "version": "1.0.13",
-    "lastUpdated": "2026-03-18T14:15:03Z"
+    "version": "1.0.14",
+    "lastUpdated": "2026-03-21T00:00:00Z"
 }
