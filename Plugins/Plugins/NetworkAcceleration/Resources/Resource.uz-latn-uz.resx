@@ -59,159 +59,165 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="PluginName" xml:space="preserve">
-    <value>Network Acceleration</value>
+    <value>Tarmoq tezlashtirish</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>Real-time network acceleration and optimization features.</value>
+    <value>Real vaqtli tarmoq tezlashtirish va optimallashtirish funksiyalari.</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>Network Acceleration</value>
+    <value>Tarmoq tezlashtirish</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Network Settings</value>
+    <value>Tarmoq sozlamalari</value>
   </data>
   <data name="QuickActionsTitle" xml:space="preserve">
-    <value>Quick Network Actions</value>
+    <value>Tezkor tarmoq amallari</value>
   </data>
   <data name="QuickActionsDescription" xml:space="preserve">
-    <value>Run quick optimization commands for lower latency and cleaner socket state.</value>
+    <value>Kechikishni kamaytirish va ulanish holatini tozalash uchun tezkor optimallashtirish buyruqlarini ishga tushiring.</value>
   </data>
   <data name="RunQuickOptimizationButton" xml:space="preserve">
-    <value>Run Quick Optimization</value>
+    <value>Tezkor optimallashtirishni ishga tushirish</value>
   </data>
   <data name="ResetNetworkStackButton" xml:space="preserve">
-    <value>Reset Network Stack</value>
+    <value>Tarmoq stekini tiklash</value>
   </data>
   <data name="AdminHint" xml:space="preserve">
-    <value>Some operations may require administrator permission.</value>
+    <value>Ba'zi amallar administrator ruxsatini talab qilishi mumkin.</value>
   </data>
   <data name="PreferredModeTitle" xml:space="preserve">
-    <value>Preferred Mode</value>
+    <value>Afzal rejim</value>
   </data>
   <data name="SaveModeButton" xml:space="preserve">
-    <value>Save Mode</value>
+    <value>Rejimni saqlash</value>
   </data>
   <data name="ModeBalanced" xml:space="preserve">
-    <value>Balanced</value>
+    <value>Muvozanatli</value>
   </data>
   <data name="ModeGaming" xml:space="preserve">
-    <value>Gaming</value>
+    <value>O'yin</value>
   </data>
   <data name="ModeStreaming" xml:space="preserve">
-    <value>Streaming</value>
+    <value>Striming</value>
   </data>
   <data name="StatusQuickOptimizationCompleted" xml:space="preserve">
-    <value>Quick optimization completed.</value>
+    <value>Tezkor optimallashtirish yakunlandi.</value>
   </data>
   <data name="StatusQuickOptimizationFailed" xml:space="preserve">
-    <value>Quick optimization failed. Please run as administrator.</value>
+    <value>Tezkor optimallashtirish amalga oshmadi. Iltimos, administrator sifatida ishga tushiring.</value>
   </data>
   <data name="StatusResetCompleted" xml:space="preserve">
-    <value>Network stack reset completed.</value>
+    <value>Tarmoq steki tiklandi.</value>
   </data>
   <data name="StatusResetFailed" xml:space="preserve">
-    <value>Network stack reset failed. Please run as administrator.</value>
+    <value>Tarmoq stekini tiklash amalga oshmadi. Iltimos, administrator sifatida ishga tushiring.</value>
   </data>
   <data name="StatusSelectValidMode" xml:space="preserve">
-    <value>Select a valid mode.</value>
+    <value>To'g'ri rejimni tanlang.</value>
   </data>
   <data name="StatusModeSaved" xml:space="preserve">
-    <value>Preferred mode saved.</value>
+    <value>Afzal rejim saqlandi.</value>
   </data>
   <data name="SettingsTitle" xml:space="preserve">
-    <value>Quick Optimization Behavior</value>
+    <value>Tezkor optimallashtirish xatti-harakati</value>
   </data>
   <data name="SettingsDescription" xml:space="preserve">
-    <value>Choose which recovery actions will be included when quick optimization runs.</value>
+    <value>Tezkor optimallashtirish ishga tushganda qaysi tiklash amallari bajarilishini tanlang.</value>
   </data>
   <data name="AutoOptimizeOnStartup" xml:space="preserve">
-    <value>Auto optimize on startup</value>
+    <value>Ishga tushganda avtomatik optimallashtirish</value>
   </data>
   <data name="ResetWinsockOnOptimize" xml:space="preserve">
-    <value>Reset Winsock during quick optimization</value>
+    <value>Tezkor optimallashtirish paytida Winsock'ni tiklash</value>
   </data>
   <data name="ResetTcpIpOnOptimize" xml:space="preserve">
-    <value>Reset TCP/IP stack during quick optimization</value>
+    <value>Tezkor optimallashtirish paytida TCP/IP stekini tiklash</value>
   </data>
   <data name="SaveSettingsButton" xml:space="preserve">
-    <value>Save Settings</value>
+    <value>Sozlamalarni saqlash</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
-    <value>Network acceleration settings saved.</value>
+    <value>Tarmoq tezlashtirish sozlamalari saqlandi.</value>
   </data>
   <data name="LiveTelemetryTitle" xml:space="preserve">
-    <value>Live Telemetry</value>
+    <value>Jonli telemetriya</value>
   </data>
   <data name="LiveTelemetryDescription" xml:space="preserve">
-    <value>Monitor your active adapter throughput in real time while keeping quick optimization actions within reach.</value>
+    <value>Jonli telemetriya joriy trafikni ko'rsatish uchun har bir necha soniyada yangilanadi.</value>
   </data>
   <data name="CurrentDownloadLabel" xml:space="preserve">
-    <value>Current Download</value>
+    <value>Joriy yuklab olish</value>
   </data>
   <data name="CurrentUploadLabel" xml:space="preserve">
-    <value>Current Upload</value>
+    <value>Joriy yuklash</value>
   </data>
   <data name="PeakTrafficLabel" xml:space="preserve">
-    <value>Peak Throughput</value>
+    <value>Eng yuqori trafik</value>
   </data>
   <data name="ActiveAdapterLabel" xml:space="preserve">
-    <value>Active Adapter</value>
+    <value>Faol adapter</value>
   </data>
   <data name="DownloadLegend" xml:space="preserve">
-    <value>Download</value>
+    <value>Yuklab olish</value>
   </data>
   <data name="UploadLegend" xml:space="preserve">
-    <value>Upload</value>
+    <value>Yuklash</value>
   </data>
   <data name="ChartEmptyState" xml:space="preserve">
-    <value>Collecting live traffic samples...</value>
+    <value>Telemetriya kutilmoqda...</value>
   </data>
   <data name="DownloadTotalLabel" xml:space="preserve">
-    <value>Total Received</value>
+    <value>Jami yuklab olingan</value>
   </data>
   <data name="UploadTotalLabel" xml:space="preserve">
-    <value>Total Sent</value>
+    <value>Jami yuklangan</value>
   </data>
   <data name="UpdatedLabel" xml:space="preserve">
-    <value>Updated</value>
+    <value>Yangilandi</value>
   </data>
   <data name="PreferredModeDescription" xml:space="preserve">
-    <value>Choose the traffic profile the plugin should remember for your next optimization pass.</value>
+    <value>Tarmoq trafiki qanday ustuvorlashtirilishini tanlang.</value>
   </data>
   <data name="CurrentModeLabel" xml:space="preserve">
-    <value>Current profile</value>
+    <value>Joriy rejim</value>
   </data>
   <data name="ModeBalancedDescription" xml:space="preserve">
-    <value>Balanced keeps latency cleanup available without leaning too hard into one workload.</value>
+    <value>Kundalik ulanish uchun muvozanatli profil.</value>
   </data>
   <data name="ModeGamingDescription" xml:space="preserve">
-    <value>Gaming prioritizes responsiveness for spikes, lobby changes, and fast reconnects.</value>
+    <value>O'yinlar uchun kechikishga sezgir trafikni ustun qo'ying.</value>
   </data>
   <data name="ModeStreamingDescription" xml:space="preserve">
-    <value>Streaming favors smoother sustained transfers when upload and download stay active together.</value>
+    <value>Striming va yuklab olishlar uchun barqaror o'tkazuvchanlikni afzal ko'ring.</value>
   </data>
   <data name="StatusCardTitle" xml:space="preserve">
-    <value>Operation Status</value>
+    <value>Holat</value>
   </data>
   <data name="MonitoringStatus" xml:space="preserve">
-    <value>Live telemetry refreshes every two seconds while this page stays open.</value>
+    <value>Tarmoq faolligi kuzatilmoqda.</value>
   </data>
   <data name="NoActiveAdapter" xml:space="preserve">
-    <value>No active adapter</value>
+    <value>Faol tarmoq adapteri topilmadi.</value>
   </data>
   <data name="MbpsValueFormat" xml:space="preserve">
-    <value>{0:0.0} Mbps</value>
+    <value>{0:0.0} Mbit/s</value>
   </data>
   <data name="SettingsSummaryTitle" xml:space="preserve">
-    <value>Current Policy Snapshot</value>
+    <value>Sozlamalar xulosasi</value>
   </data>
   <data name="SettingsSummaryDescription" xml:space="preserve">
-    <value>Review the saved mode and each recovery action before you write settings back to disk.</value>
+    <value>Tezkor optimallashtirish va monitoring sozlamalarini sozlang.</value>
   </data>
   <data name="StateEnabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Yoqilgan</value>
   </data>
   <data name="StateDisabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>O'chirilgan</value>
   </data>
+
+  <data name="FeatureOverviewTitle" xml:space="preserve"><value>Trafik umumiy ko'rinishi</value></data>
+
+  <data name="HeroBadgeTitle" xml:space="preserve"><value>Trafik impulsi</value></data>
+
+  <data name="FeatureOverviewDescription" xml:space="preserve"><value>Jonli o'tkazuvchanlikni, faol adapter holatini va tezkor tiklash amallarini bir joyda kuzating.</value></data>
 </root>

@@ -20,7 +20,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
     name: "Shell Integration",
     version: "1.0.5",
     description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
-    author: "LenovoLegionToolkit Team",
+    author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
     Icon = "Folder24"
 )]

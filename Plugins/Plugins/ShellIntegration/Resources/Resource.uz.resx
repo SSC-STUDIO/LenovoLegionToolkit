@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -62,97 +62,97 @@
     <value>Shell integratsiyasi</value>
   </data>
   <data name="PluginDescription" xml:space="preserve">
-    <value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value>
+    <value>Lenovo Legion Toolkit'ni Windows kontekst menyusiga integratsiya qiling.</value>
   </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Shell integratsiyasi</value>
   </data>
   <data name="Subtitle" xml:space="preserve">
-    <value>Manage Nilesoft Shell registration and open style editor.</value>
+    <value>Nilesoft Shell ro'yxatdan o'tishini boshqaring va uslub tahrirlagichini oching.</value>
   </data>
   <data name="OverviewTitle" xml:space="preserve">
-    <value>Shell Integration Overview</value>
+    <value>Shell integratsiyasi haqida</value>
   </data>
   <data name="OverviewDescription" xml:space="preserve">
-    <value>Check registration state, installation path, and jump straight into the packaged Shell tools.</value>
+    <value>Ro'yxatdan o'tish holatini, o'rnatish yo'lini tekshiring va Shell vositalariga darhol o'ting.</value>
   </data>
   <data name="RegistrationLabel" xml:space="preserve">
-    <value>Registration</value>
+    <value>Ro'yxatdan o'tish</value>
   </data>
   <data name="ConfigLabel" xml:space="preserve">
-    <value>Config</value>
+    <value>Konfiguratsiya</value>
   </data>
   <data name="ActionsTitle" xml:space="preserve">
-    <value>Quick Actions</value>
+    <value>Tezkor amallar</value>
   </data>
   <data name="ActionsDescription" xml:space="preserve">
-    <value>Apply registration changes or open the packaged Shell assets used by this plugin.</value>
+    <value>Ro'yxatdan o'tkazish o'zgarishlarini qo'llang yoki ushbu plagin ishlatadigan Shell fayllarini oching.</value>
   </data>
   <data name="EnableButton" xml:space="preserve">
-    <value>Iske túsiriw</value>
+    <value>Yoqish</value>
   </data>
   <data name="DisableButton" xml:space="preserve">
-    <value>Disable</value>
+    <value>O'chirish</value>
   </data>
   <data name="OpenStyleSettingsButton" xml:space="preserve">
-    <value>Open style settings</value>
+    <value>Uslub sozlamalarini ochish</value>
   </data>
   <data name="OpenStyleShortButton" xml:space="preserve">
-    <value>Open Style</value>
+    <value>Uslubni ochish</value>
   </data>
   <data name="OpenShellFolderButton" xml:space="preserve">
-    <value>Open Shell Folder</value>
+    <value>Shell papkasini ochish</value>
   </data>
   <data name="OpenConfigButton" xml:space="preserve">
-    <value>Open Config File</value>
+    <value>Konfiguratsiya faylini ochish</value>
   </data>
   <data name="OptimizationHint" xml:space="preserve">
-    <value>You can also access shell actions from Windows Optimization.</value>
+    <value>Shell amallariga Tizim optimizatsiyasidan ham kirishingiz mumkin.</value>
   </data>
   <data name="StatusDetected" xml:space="preserve">
-    <value>Nilesoft Shell detected.</value>
+    <value>Nilesoft Shell aniqlandi.</value>
   </data>
   <data name="StatusNotDetected" xml:space="preserve">
-    <value>Nilesoft Shell was not detected.</value>
+    <value>Nilesoft Shell topilmadi.</value>
   </data>
   <data name="RegisteredState" xml:space="preserve">
-    <value>Detected</value>
+    <value>Aniqlandi</value>
   </data>
   <data name="MissingState" xml:space="preserve">
-    <value>Missing</value>
+    <value>Mavjud emas</value>
   </data>
   <data name="PathLabel" xml:space="preserve">
-    <value>Jol</value>
+    <value>Yo'l</value>
   </data>
   <data name="NotFound" xml:space="preserve">
-    <value>Not found</value>
+    <value>Topilmadi</value>
   </data>
   <data name="StatusEnableCompleted" xml:space="preserve">
-    <value>Enable command completed.</value>
+    <value>Yoqish buyrug'i bajarildi.</value>
   </data>
   <data name="StatusEnableFailed" xml:space="preserve">
-    <value>Enable command failed.</value>
+    <value>Yoqish buyrug'i amalga oshmadi.</value>
   </data>
   <data name="StatusDisableCompleted" xml:space="preserve">
-    <value>Disable command completed.</value>
+    <value>O'chirish buyrug'i bajarildi.</value>
   </data>
   <data name="StatusDisableFailed" xml:space="preserve">
-    <value>Disable command failed.</value>
+    <value>O'chirish buyrug'i amalga oshmadi.</value>
   </data>
   <data name="StatusOpenedStyleSettings" xml:space="preserve">
-    <value>Opened style settings.</value>
+    <value>Uslub sozlamalari ochildi.</value>
   </data>
   <data name="StatusOpenedShellFolder" xml:space="preserve">
-    <value>Opened shell folder.</value>
+    <value>Shell papkasi ochildi.</value>
   </data>
   <data name="StatusOpenedConfig" xml:space="preserve">
-    <value>Opened config file.</value>
+    <value>Konfiguratsiya fayli ochildi.</value>
   </data>
   <data name="StatusShellFolderNotFound" xml:space="preserve">
-    <value>Shell folder not found.</value>
+    <value>Shell papkasi topilmadi.</value>
   </data>
   <data name="StatusConfigNotFound" xml:space="preserve">
-    <value>Config file not found.</value>
+    <value>Konfiguratsiya fayli topilmadi.</value>
   </data>
   <data name="VersionLabel" xml:space="preserve">
     <value>Versiya</value>

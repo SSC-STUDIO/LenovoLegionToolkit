@@ -10,7 +10,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
     name: "Network Acceleration",
     version: "1.1.2",
     description: "Real-time network acceleration and optimization features",
-    author: "LenovoLegionToolkit Team",
+    author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
     Icon = "Rocket24"
 )]

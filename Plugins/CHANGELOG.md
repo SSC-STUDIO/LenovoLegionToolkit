@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed / 修复
 - **Chinese Plugin Localization / 插件中文本地化**: Filled the missing Chinese resource keys in ShellIntegration, CustomMouse, and ViveTool so simplified Chinese mode no longer falls back to English for the new plugin UI strings / 补齐 ShellIntegration、CustomMouse 与 ViveTool 缺失的中文资源键，避免简体中文模式下新插件界面字符串回退为英文
+- **Uzbek Plugin Localization / 插件乌兹别克语本地化**: Filled the remaining `uz` / `uz-latn-uz` gaps in CustomMouse, NetworkAcceleration, ShellIntegration, and ViveTool so cold-language runs no longer leak English labels or dialog filters across the active plugin set / 补齐 CustomMouse、NetworkAcceleration、ShellIntegration 与 ViveTool 的 `uz` / `uz-latn-uz` 资源缺口，避免冷门语言实跑时在活跃插件界面和文件对话框过滤器中继续泄露英文
 
 ## [1.1.7] - 2026-03-17
 
