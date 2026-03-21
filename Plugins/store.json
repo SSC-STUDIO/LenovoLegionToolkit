@@ -77,12 +77,12 @@
         {
             "id": "network-acceleration",
             "name": "Network Acceleration",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "description": "Real-time network acceleration and optimization features",
             "author": "LenovoLegionToolkit Team",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.4/network-acceleration-v1.1.4.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.4",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.5/network-acceleration-v1.1.5.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.5",
             "icon": "",
             "iconBackground": "#DC2626",
             "isSystemPlugin": false,
@@ -148,6 +148,6 @@
             ]
         }
     ],
-    "version": "1.0.15",
+    "version": "1.0.16",
     "lastUpdated": "2026-03-21T00:00:00Z"
 }
