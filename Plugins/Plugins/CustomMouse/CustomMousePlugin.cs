@@ -88,7 +88,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public override object? GetFeatureExtension()
     {
-        return null;
+        return new CustomMousePluginPage(this);
     }
 
     public override object? GetSettingsPage()
