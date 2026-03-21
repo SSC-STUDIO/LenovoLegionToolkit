@@ -167,12 +167,16 @@
                                   Checked="SettingsInputChanged"
                                   Unchecked="SettingsInputChanged" />
 
-                        <CheckBox x:Name="_autoThemeCursorCheckBox"
-                                  AutomationProperties.AutomationId="AutoThemeCursorCheckBox"
-                                  Content="{x:Static text:CustomMouseText.AutoThemeLabel}"
-                                  Margin="0,12,0,0"
-                                  Checked="SettingsInputChanged"
-                                  Unchecked="SettingsInputChanged" />
+                        <TextBlock Margin="0,18,0,6"
+                                   Text="{x:Static text:CustomMouseText.CursorThemeModeLabel}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <ComboBox x:Name="_cursorThemeModeComboBox"
+                                  AutomationProperties.AutomationId="CursorThemeModeComboBox"
+                                  SelectionChanged="CursorThemeModeComboBox_SelectionChanged">
+                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeAuto}" Tag="Auto" />
+                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeLight}" Tag="Light" />
+                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeDark}" Tag="Dark" />
+                        </ComboBox>
                     </StackPanel>
                 </Border>
 

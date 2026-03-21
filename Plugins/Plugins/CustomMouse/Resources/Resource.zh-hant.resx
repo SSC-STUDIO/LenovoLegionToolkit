@@ -152,4 +152,19 @@
   <data name="QuickActionsDescription" xml:space="preserve">
     <value>套用或重設滑鼠設定檔設定。</value>
   </data>
+  <data name="CursorThemeModeLabel" xml:space="preserve">
+    <value>游標主題模式</value>
+  </data>
+  <data name="CursorThemeModeAuto" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="CursorThemeModeLight" xml:space="preserve">
+    <value>亮色</value>
+  </data>
+  <data name="CursorThemeModeDark" xml:space="preserve">
+    <value>暗色</value>
+  </data>
+  <data name="CursorThemeModeApplied" xml:space="preserve">
+    <value>游標主題模式已設定為：{0}。</value>
+  </data>
 </root>

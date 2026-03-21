@@ -54,6 +54,12 @@ public static class CustomMouseText
     public static string StatusCursorApplyFailed => T(nameof(StatusCursorApplyFailed), "Failed to apply custom cursor style. Try running as administrator if your system blocks INF installation.");
     public static string StatusReloaded => T(nameof(StatusReloaded), "Current plugin settings reloaded.");
 
+    public static string CursorThemeModeLabel => T(nameof(CursorThemeModeLabel), "Cursor Theme Mode");
+    public static string CursorThemeModeAuto => T(nameof(CursorThemeModeAuto), "Follow System");
+    public static string CursorThemeModeLight => T(nameof(CursorThemeModeLight), "Light");
+    public static string CursorThemeModeDark => T(nameof(CursorThemeModeDark), "Dark");
+    public static string CursorThemeModeApplied => T(nameof(CursorThemeModeApplied), "Cursor theme mode set to: {0}.");
+
     public static string FormatCursorApplied(string? theme)
     {
         var format = T(nameof(FormatCursorApplied), "Cursor style applied ({0}).");

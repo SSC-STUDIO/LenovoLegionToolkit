@@ -48,13 +48,11 @@ public partial class CustomMouseSettingsControl : UserControl
         _swapButtonsCheckBox.Checked += SettingsInputChanged;
         _swapButtonsCheckBox.Unchecked += SettingsInputChanged;
 
-        _autoThemeCursorCheckBox = new CheckBox
-        {
-            Content = CustomMouseText.AutoThemeLabel,
-            Margin = new Thickness(0, 12, 0, 0)
-        };
-        _autoThemeCursorCheckBox.Checked += SettingsInputChanged;
-        _autoThemeCursorCheckBox.Unchecked += SettingsInputChanged;
+        _cursorThemeModeComboBox = new ComboBox { Margin = new Thickness(0, 12, 0, 0) };
+        _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeAuto, Tag = "Auto" });
+        _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeLight, Tag = "Light" });
+        _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeDark, Tag = "Dark" });
+        _cursorThemeModeComboBox.SelectionChanged += CursorThemeModeComboBox_SelectionChanged;
 
         _statusTextBlock = new TextBlock
         {
@@ -91,8 +89,16 @@ public partial class CustomMouseSettingsControl : UserControl
         Grid.SetRow(_swapButtonsCheckBox, 2);
         root.Children.Add(_swapButtonsCheckBox);
 
-        Grid.SetRow(_autoThemeCursorCheckBox, 3);
-        root.Children.Add(_autoThemeCursorCheckBox);
+        var themeLabel = new TextBlock
+        {
+            Text = CustomMouseText.CursorThemeModeLabel,
+            Margin = new Thickness(0, 12, 0, 4)
+        };
+        Grid.SetRow(themeLabel, 3);
+        root.Children.Add(themeLabel);
+
+        Grid.SetRow(_cursorThemeModeComboBox, 4);
+        root.Children.Add(_cursorThemeModeComboBox);
 
         var hint = new TextBlock
         {
@@ -124,14 +130,36 @@ public partial class CustomMouseSettingsControl : UserControl
 
     private void LoadCurrentValues()
     {
-        if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _autoThemeCursorCheckBox is null)
+        if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null)
             return;
 
         _pointerSpeedSlider.Value = _plugin.Settings.WindowsPointerSpeed;
         _swapButtonsCheckBox.IsChecked = _plugin.Settings.SwapButtons;
-        _autoThemeCursorCheckBox.IsChecked = _plugin.Settings.AutoThemeCursorStyle;
+        LoadCursorThemeMode();
         UpdateSummaryCards();
         UpdatePointerSpeedValueLabel();
+    }
+
+    private void LoadCursorThemeMode()
+    {
+        if (_cursorThemeModeComboBox is null)
+            return;
+
+        var modeTag = _plugin.Settings.CursorThemeMode switch
+        {
+            CursorThemeMode.Light => "Light",
+            CursorThemeMode.Dark => "Dark",
+            _ => "Auto"
+        };
+
+        foreach (var item in _cursorThemeModeComboBox.Items)
+        {
+            if (item is ComboBoxItem comboItem && comboItem.Tag as string == modeTag)
+            {
+                _cursorThemeModeComboBox.SelectedItem = comboItem;
+                break;
+            }
+        }
     }
 
     private void SettingsInputChanged(object sender, RoutedEventArgs e)
@@ -148,9 +176,42 @@ public partial class CustomMouseSettingsControl : UserControl
         _pointerSpeedValueLabel.Text = string.Format(Culture, "{0}/20", (int)Math.Round(_pointerSpeedSlider.Value));
     }
 
+    private async void CursorThemeModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_cursorThemeModeComboBox?.SelectedItem is not ComboBoxItem selected)
+            return;
+
+        var mode = (selected.Tag as string) switch
+        {
+            "Light" => CursorThemeMode.Light,
+            "Dark" => CursorThemeMode.Dark,
+            _ => CursorThemeMode.Auto
+        };
+
+        var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
+        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+
+        if (applied)
+        {
+            var modeText = mode switch
+            {
+                CursorThemeMode.Light => CustomMouseText.CursorThemeModeLight,
+                CursorThemeMode.Dark => CustomMouseText.CursorThemeModeDark,
+                _ => CustomMouseText.CursorThemeModeAuto
+            };
+            SetStatus(string.Format(CustomMouseText.CursorThemeModeApplied, modeText), false);
+        }
+        else
+        {
+            SetStatus(CustomMouseText.StatusCursorApplyFailed, true);
+        }
+
+        UpdateSummaryCards();
+    }
+
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _autoThemeCursorCheckBox is null || _statusTextBlock is null)
+        if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _statusTextBlock is null)
             return;
 
         var speed = (int)Math.Round(_pointerSpeedSlider.Value);
@@ -170,7 +231,6 @@ public partial class CustomMouseSettingsControl : UserControl
             return;
         }
 
-        _plugin.SetAutoThemeCursorStyle(_autoThemeCursorCheckBox.IsChecked == true);
         await _plugin.SaveSettingsAsync().ConfigureAwait(true);
         SetStatus(CustomMouseText.StatusWindowsApplied, false);
         UpdateSummaryCards();
@@ -178,11 +238,8 @@ public partial class CustomMouseSettingsControl : UserControl
 
     private async void ApplyCursorThemeNowButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_autoThemeCursorCheckBox is null || _statusTextBlock is null)
+        if (_statusTextBlock is null)
             return;
-
-        _plugin.SetAutoThemeCursorStyle(_autoThemeCursorCheckBox.IsChecked == true);
-        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
 
         var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
         SetStatus(
@@ -234,8 +291,29 @@ public partial class CustomMouseSettingsControl : UserControl
                 : CustomMouseText.StandardButtonsState;
 
         if (_cursorThemeValueTextBlock != null)
-            _cursorThemeValueTextBlock.Text = _autoThemeCursorCheckBox?.IsChecked == true
-                ? CustomMouseText.AutomaticThemeState
-                : CustomMouseText.ManualThemeState;
+        {
+            var mode = GetSelectedCursorThemeMode();
+            _cursorThemeValueTextBlock.Text = mode switch
+            {
+                CursorThemeMode.Light => CustomMouseText.CursorThemeModeLight,
+                CursorThemeMode.Dark => CustomMouseText.CursorThemeModeDark,
+                _ => CustomMouseText.CursorThemeModeAuto
+            };
+        }
+    }
+
+    private CursorThemeMode GetSelectedCursorThemeMode()
+    {
+        if (_cursorThemeModeComboBox?.SelectedItem is ComboBoxItem selected)
+        {
+            return (selected.Tag as string) switch
+            {
+                "Light" => CursorThemeMode.Light,
+                "Dark" => CursorThemeMode.Dark,
+                _ => CursorThemeMode.Auto
+            };
+        }
+
+        return _plugin.Settings.CursorThemeMode;
     }
 }

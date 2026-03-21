@@ -20,7 +20,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
     MinimumHostVersion = "3.6.1",
     Icon = "Mouse24"
 )]
-public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
+public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
     private enum CursorTheme
     {
@@ -34,8 +34,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private const uint SpifUpdateIniFile = 0x0001;
     private const uint SpifSendChange = 0x0002;
 
-    private const string CursorRegistryPath = @"Control Panel\\Cursors";
-    private const string CursorSchemesRegistryPath = @"Control Panel\\Cursors\\Schemes";
+    private const string CursorRegistryPath = @"Control Panel\Cursors";
+    private const string CursorSchemesRegistryPath = @"Control Panel\Cursors\Schemes";
     private const string CursorBackupSavedFlag = "CursorBackupSaved";
 
     private static readonly (string Key, string FileName)[] CursorSchemeOrder =
@@ -71,12 +71,19 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public override bool IsSystemPlugin => false;
 
     private MouseSettings _settings;
+    private readonly ThemeWatcherRuntime _themeWatcher = new();
 
     public MouseSettings Settings => _settings;
 
     public CustomMousePlugin()
     {
         _settings = LoadSettings();
+    }
+
+    public void OnAppStarted()
+    {
+        if (_settings.CursorThemeMode == CursorThemeMode.Auto)
+            StartThemeWatcher();
     }
 
     public override object? GetFeatureExtension()
@@ -123,9 +130,21 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public override void OnUninstalled()
     {
+        StopThemeWatcher();
         _settings.AutoThemeCursorStyle = false;
+        _settings.CursorThemeMode = CursorThemeMode.Auto;
         _ = SaveSettingsAsync();
         _ = RestoreBackedUpCursorSchemeAsync(CancellationToken.None);
+    }
+
+    public override void OnShutdown()
+    {
+        StopThemeWatcher();
+    }
+
+    public override void Stop()
+    {
+        StopThemeWatcher();
     }
 
     public bool SetDpi(int dpi)
@@ -171,7 +190,48 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public bool SetAutoThemeCursorStyle(bool enabled)
     {
         _settings.AutoThemeCursorStyle = enabled;
+        _settings.CursorThemeMode = enabled ? CursorThemeMode.Auto : CursorThemeMode.Dark;
+
+        if (enabled)
+            StartThemeWatcher();
+        else
+            StopThemeWatcher();
+
         return true;
+    }
+
+    public async Task<bool> SetCursorThemeModeAsync(CursorThemeMode mode)
+    {
+        _settings.CursorThemeMode = mode;
+        _settings.AutoThemeCursorStyle = mode == CursorThemeMode.Auto;
+
+        if (mode == CursorThemeMode.Auto)
+        {
+            StartThemeWatcher();
+            return await ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(false);
+        }
+
+        StopThemeWatcher();
+        return await ApplySpecificCursorThemeAsync(mode == CursorThemeMode.Light ? CursorTheme.Light : CursorTheme.Dark).ConfigureAwait(false);
+    }
+
+    private async Task<bool> ApplySpecificCursorThemeAsync(CursorTheme theme, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!TryApplyCursorThemeWithInf(theme, cancellationToken))
+                ApplyCursorThemeFromResources(theme);
+
+            _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
+            await SaveSettingsAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public async Task<bool> ApplyCursorStyleForCurrentThemeAsync(CancellationToken cancellationToken = default)
@@ -201,6 +261,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         Configuration.SetValue(nameof(MouseSettings.WindowsPointerSpeed), _settings.WindowsPointerSpeed);
         Configuration.SetValue(nameof(MouseSettings.SwapButtons), _settings.SwapButtons);
         Configuration.SetValue(nameof(MouseSettings.AutoThemeCursorStyle), _settings.AutoThemeCursorStyle);
+        Configuration.SetValue(nameof(MouseSettings.CursorThemeMode), (int)_settings.CursorThemeMode);
         Configuration.SetValue(nameof(MouseSettings.LastAppliedTheme), _settings.LastAppliedTheme ?? string.Empty);
         await Configuration.SaveAsync().ConfigureAwait(false);
     }
@@ -214,9 +275,30 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             WindowsPointerSpeed = Configuration.GetValue(nameof(MouseSettings.WindowsPointerSpeed), 10),
             SwapButtons = Configuration.GetValue(nameof(MouseSettings.SwapButtons), false),
             AutoThemeCursorStyle = Configuration.GetValue(nameof(MouseSettings.AutoThemeCursorStyle), true),
+            CursorThemeMode = (CursorThemeMode)Configuration.GetValue(nameof(MouseSettings.CursorThemeMode), (int)CursorThemeMode.Auto),
             LastAppliedTheme = Configuration.GetValue(nameof(MouseSettings.LastAppliedTheme), string.Empty),
             ButtonMappings = new Dictionary<int, int>()
         };
+    }
+
+    private void StartThemeWatcher()
+    {
+        _themeWatcher.ThemeChanged += OnThemeChangedAsync;
+        _themeWatcher.Start(_settings.LastAppliedTheme);
+    }
+
+    private void StopThemeWatcher()
+    {
+        _themeWatcher.Stop();
+        _themeWatcher.ThemeChanged -= OnThemeChangedAsync;
+    }
+
+    private async Task OnThemeChangedAsync(string newTheme, CancellationToken cancellationToken)
+    {
+        if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+            return;
+
+        await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private async Task EnableAutoThemeCursorStyleAsync(CancellationToken cancellationToken)
@@ -380,7 +462,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     {
         try
         {
-            using var personalizeKey = Registry.CurrentUser.OpenSubKey(@"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", false);
+            using var personalizeKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", false);
             var value = personalizeKey?.GetValue("AppsUseLightTheme");
             return value is int intValue ? intValue != 0 : true;
         }
@@ -503,6 +585,13 @@ public class CustomMouseSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPl
     }
 }
 
+public enum CursorThemeMode
+{
+    Auto = 0,
+    Light = 1,
+    Dark = 2
+}
+
 public class MouseSettings
 {
     public int Dpi { get; set; } = 1600;
@@ -510,6 +599,7 @@ public class MouseSettings
     public int WindowsPointerSpeed { get; set; } = 10;
     public bool SwapButtons { get; set; }
     public bool AutoThemeCursorStyle { get; set; } = true;
+    public CursorThemeMode CursorThemeMode { get; set; } = CursorThemeMode.Auto;
     public string? LastAppliedTheme { get; set; }
     public Dictionary<int, int> ButtonMappings { get; set; } = new();
 
@@ -522,6 +612,7 @@ public class MouseSettings
             WindowsPointerSpeed = 10,
             SwapButtons = false,
             AutoThemeCursorStyle = true,
+            CursorThemeMode = CursorThemeMode.Auto,
             LastAppliedTheme = string.Empty,
             ButtonMappings = new Dictionary<int, int>()
         };
