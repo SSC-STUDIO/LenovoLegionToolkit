@@ -64,7 +64,7 @@ public partial class App
     private bool _inExitHandler;
     private bool _exceptionHandlerExecuting;
 
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     public new static App Current => (App)Application.Current;
 

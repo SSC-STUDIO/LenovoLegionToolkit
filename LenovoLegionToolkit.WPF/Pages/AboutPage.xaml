@@ -48,11 +48,11 @@
         <wpfui:Hyperlink
             Content="{x:Static resources:Resource.AboutPage_ProjectWebsiteOnGitHub}"
             Icon="Link24"
-            NavigateUri="{x:Static root:Constants.ProjectWebsiteUri}" />
+            NavigateUri="{x:Static root:Constants.ProjectWebsiteUrl}" />
         <wpfui:Hyperlink
             Content="{x:Static resources:Resource.AboutPage_LatestReleaseOnGitHub}"
             Icon="Link24"
-            NavigateUri="{x:Static root:Constants.LatestReleaseUri}" />
+            NavigateUri="{x:Static root:Constants.LatestReleaseUrl}" />
 
         <TextBlock
             Padding="0,24,0,8"

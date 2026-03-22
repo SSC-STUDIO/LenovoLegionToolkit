@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -45,7 +46,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 
         private static string Localized(string key, string fallback)
         {
-            return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+            return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
         }
 
         private static string LocalizedFormat(string key, string fallback, params object[] args)

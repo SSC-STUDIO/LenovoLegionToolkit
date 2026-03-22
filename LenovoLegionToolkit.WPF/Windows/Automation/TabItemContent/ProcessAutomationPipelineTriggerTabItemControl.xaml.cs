@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using Microsoft.Win32;
 using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
@@ -17,7 +18,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
 {
 public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomationPipelineTriggerTabItemContent<IProcessesAutomationPipelineTrigger>
 {
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     private readonly IProcessesAutomationPipelineTrigger _trigger;
     private readonly List<ProcessInfo> _processes;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -25,6 +26,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     private readonly ApplicationSettings _applicationSettings;
     private readonly PackageDownloaderSettings _packageDownloaderSettings;
     private readonly PackageDownloaderFactory _packageDownloaderFactory;
+    private static CultureInfo ActiveCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveCulture);
 
     private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
     private bool _isRefreshingStates;
@@ -85,9 +88,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     public bool IsDriverDownloadMode => CurrentMode == PageMode.DriverDownload;
     public bool IsBeautificationMode => CurrentMode == PageMode.Beautification;
 
-    public string ScanCleanupButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_Scan_Button") ?? "Scan";
-    public string PauseAllButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_PauseAll_Button") ?? "Pause All";
-    public string StartAllButtonText => Resource.ResourceManager.GetString("WindowsOptimizationPage_StartAll_Button") ?? "Start All";
+    public string ScanCleanupButtonText => T("WindowsOptimizationPage_Scan_Button", "Scan");
+    public string PauseAllButtonText => T("WindowsOptimizationPage_PauseAll_Button", "Pause All");
+    public string StartAllButtonText => T("WindowsOptimizationPage_StartAll_Button", "Start All");
     public string PendingText => Resource.WindowsOptimizationPage_EstimatedCleanupSize_Pending;
     public string SelectedActionsEmptyText => Resource.WindowsOptimizationPage_SelectedActions_Empty ?? "No actions selected yet.";
 
@@ -152,7 +155,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         }
     }
 
-    private string _runCleanupButtonText = Resource.ResourceManager.GetString("WindowsOptimizationPage_RunCleanup_Button") ?? "Run Cleanup";
+    private string _runCleanupButtonText = T("WindowsOptimizationPage_RunCleanup_Button", "Run Cleanup");
     public string RunCleanupButtonText
     {
         get => _runCleanupButtonText;
@@ -310,10 +313,10 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         {
             var actions = category.Actions.Select(action => new OptimizationActionViewModel(
                 action.Key,
-                Resource.ResourceManager.GetString(action.TitleResourceKey) ?? action.TitleResourceKey,
-                Resource.ResourceManager.GetString(action.DescriptionResourceKey) ?? action.DescriptionResourceKey,
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, action.TitleResourceKey, action.TitleResourceKey, ActiveCulture),
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, action.DescriptionResourceKey, action.DescriptionResourceKey, ActiveCulture),
                 action.Recommended,
-                Resource.ResourceManager.GetString("WindowsOptimization_Action_Recommended_Tag") ?? "Recommended")).ToList();
+                T("WindowsOptimization_Action_Recommended_Tag", "Recommended"))).ToList();
 
             var isCleanup = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 
@@ -342,8 +345,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
             var categoryVm = new OptimizationCategoryViewModel(
                 category.Key,
-                Resource.ResourceManager.GetString(category.TitleResourceKey) ?? category.TitleResourceKey,
-                Resource.ResourceManager.GetString(category.DescriptionResourceKey) ?? category.DescriptionResourceKey,
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, category.TitleResourceKey, category.TitleResourceKey, ActiveCulture),
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, category.DescriptionResourceKey, category.DescriptionResourceKey, ActiveCulture),
                 Resource.WindowsOptimization_Category_SelectionSummary,
                 actions,
                 category.PluginId);
@@ -604,7 +607,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
                 {
                     await Application.Current.Dispatcher.InvokeAsync(() => SnackbarHelper.Show(
                         Resource.SettingsPage_WindowsOptimization_Title,
-                        Resource.ResourceManager.GetString("WindowsOptimization_NoCleanupSelection_Warning") ?? "Please select at least one item to clean up.",
+                T("WindowsOptimization_NoCleanupSelection_Warning", "Please select at least one item to clean up."),
                         SnackbarType.Warning));
                 }
                 return;
@@ -624,7 +627,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         }
         finally
         {
-            var buttonText = Resource.ResourceManager.GetString("WindowsOptimizationPage_RunCleanup_Button") ?? "Run Cleanup";
+        var buttonText = T("WindowsOptimizationPage_RunCleanup_Button", "Run Cleanup");
             UpdateUIState(false, false, string.Empty, buttonText);
         }
     }
@@ -721,7 +724,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
             {
                 await Application.Current.Dispatcher.BeginInvoke(() => SnackbarHelper.Show(
                     Resource.SettingsPage_WindowsOptimization_Title,
-                    string.Format(Resource.ResourceManager.GetString("WindowsOptimizationPage_Optimization_Error_Format") ?? "Failed to apply {0}: {1}", actionVm?.Title ?? "Unknown", ex.Message),
+                    string.Format(T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"), actionVm?.Title ?? "Unknown", ex.Message),
                     SnackbarType.Error));
             }
 

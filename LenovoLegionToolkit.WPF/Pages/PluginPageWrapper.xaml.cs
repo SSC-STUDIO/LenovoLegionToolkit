@@ -269,7 +269,7 @@ public partial class PluginPageWrapper : UiPage
 
     private static string T(string key, string fallback)
     {
-        return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+        return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
     }
 
 }

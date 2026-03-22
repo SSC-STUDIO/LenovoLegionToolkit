@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using Microsoft.Win32;
 using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
@@ -12,7 +13,7 @@ namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
 public class SpectrumKeyboardBacklightImportProfileAutomationStepControl : AbstractAutomationStepControl<SpectrumKeyboardBacklightImportProfileAutomationStep>
 {
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     private readonly TextBox _path = new()
     {

@@ -6,6 +6,7 @@ using System.Linq;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 
@@ -50,7 +51,7 @@ public class CustomCleanupRuleViewModel : INotifyPropertyChanged
 
     public string ExtensionsDisplay =>
         Extensions.Count == 0
-            ? Resource.ResourceManager.GetString("CustomCleanupRule_NoExtensions") ?? "No extensions specified"
+            ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "CustomCleanupRule_NoExtensions", "No extensions specified", Resource.Culture)
             : string.Join(", ", Extensions);
 
     public event PropertyChangedEventHandler? PropertyChanged;
