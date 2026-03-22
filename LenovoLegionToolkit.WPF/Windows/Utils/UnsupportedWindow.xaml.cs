@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
@@ -82,6 +83,19 @@ public partial class UnsupportedWindow : UiWindow
     {
         _taskCompletionSource.TrySetResult(false);
         Close();
+    }
+
+    private void ContributionLink_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = Constants.ContributionUrl,
+                UseShellExecute = true
+            });
+        }
+        catch { }
     }
 }
 }
