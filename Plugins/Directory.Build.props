@@ -109,4 +109,11 @@
     <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
   </Target>
 
+  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+    <PropertyGroup>
+      <SDKDllSource>$(MSBuildThisFileDirectory)Build\SDK\LenovoLegionToolkit.Plugins.SDK.dll</SDKDllSource>
+    </PropertyGroup>
+    <Copy SourceFiles="$(SDKDllSource)" DestinationFolder="$(OutputPath)" Condition="Exists('$(SDKDllSource)')" ContinueOnError="true" />
+  </Target>
+
 </Project>

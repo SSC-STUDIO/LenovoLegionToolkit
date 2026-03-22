@@ -61,7 +61,6 @@
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
       <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Plugins.SDK.*" />
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
