@@ -344,8 +344,8 @@ public class PluginManager : IPluginManager
             }
         }
 
-        // Default to Build/plugins relative to app base directory (will be created if needed)
-        var defaultPath = Path.Combine(appBaseDir, "Build", "plugins");
+        // Default to plugins relative to app base directory (will be created if needed)
+        var defaultPath = Path.Combine(appBaseDir, "plugins");
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
         return defaultPath;

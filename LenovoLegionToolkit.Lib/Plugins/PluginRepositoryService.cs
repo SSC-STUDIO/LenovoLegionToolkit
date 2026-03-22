@@ -787,7 +787,7 @@ public class PluginRepositoryService : IDisposable
             }
         }
 
-        var defaultPath = Path.Combine(appBaseDir, "build", "plugins");
+        var defaultPath = Path.Combine(appBaseDir, "plugins");
         Directory.CreateDirectory(defaultPath);
         return defaultPath;
     }
