@@ -89,13 +89,10 @@ public partial class NetworkAccelerationControl : UserControl
         heroGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
         var heroCopy = new StackPanel { Margin = new Thickness(0, 0, 20, 0) };
-        heroCopy.Children.Add(CreateBadge(NetworkAccelerationText.HeroBadgeTitle, "#FF5CA9FF", "#17335A93"));
         heroCopy.Children.Add(new TextBlock
         {
-            Margin = new Thickness(0, 14, 0, 0),
             Text = NetworkAccelerationText.FeatureOverviewTitle,
-            FontSize = 30,
-            FontWeight = FontWeights.SemiBold,
+            FontSize = 28,
             Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
         });
         heroCopy.Children.Add(new TextBlock
@@ -276,7 +273,6 @@ public partial class NetworkAccelerationControl : UserControl
         {
             Margin = new Thickness(0, 10, 0, 0),
             FontSize = fontSize,
-            FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap,
             Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
         };
@@ -288,7 +284,6 @@ public partial class NetworkAccelerationControl : UserControl
         {
             Text = text,
             FontSize = 20,
-            FontWeight = FontWeights.SemiBold,
             Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
         };
     }
@@ -339,7 +334,6 @@ public partial class NetworkAccelerationControl : UserControl
             {
                 Text = text,
                 FontSize = 11,
-                FontWeight = FontWeights.SemiBold,
                 Foreground = CreateBrush(foregroundHex)
             }
         };
@@ -390,7 +384,6 @@ public partial class NetworkAccelerationControl : UserControl
                     {
                         Text = NetworkAccelerationText.PageTitle,
                         FontSize = 14,
-                        FontWeight = FontWeights.SemiBold,
                         Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
                     },
                     canvas,
@@ -398,7 +391,6 @@ public partial class NetworkAccelerationControl : UserControl
                     {
                         Text = NetworkAccelerationText.LiveTelemetryTitle,
                         FontSize = 16,
-                        FontWeight = FontWeights.SemiBold,
                         Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
                     },
                     new TextBlock

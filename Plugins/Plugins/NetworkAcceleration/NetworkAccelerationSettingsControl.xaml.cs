@@ -246,7 +246,6 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         {
             Text = text,
             FontSize = 22,
-            FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         };
         if (margin != null)
@@ -280,7 +279,6 @@ public partial class NetworkAccelerationSettingsControl : UserControl
             {
                 Text = text,
                 FontSize = 12,
-                FontWeight = FontWeights.SemiBold,
                 Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(foregroundHex))
             }
         };
@@ -390,7 +388,6 @@ public partial class NetworkAccelerationSettingsControl : UserControl
     private static void StyleValueText(TextBlock textBlock)
     {
         textBlock.FontSize = 18;
-        textBlock.FontWeight = FontWeights.SemiBold;
         textBlock.TextWrapping = TextWrapping.Wrap;
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
     }

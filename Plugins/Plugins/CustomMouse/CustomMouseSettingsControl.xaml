@@ -32,16 +32,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,24,0">
-                        <Border Padding="10,4"
-                                HorizontalAlignment="Left"
-                                CornerRadius="999"
-                                Background="#102D6A4F">
-                            <TextBlock Text="{x:Static text:CustomMouseText.WindowsSettingsTitle}"
-                                       Style="{StaticResource AppHeroBadgeTextBlockStyle}"
-                                       Foreground="#FF2DAA7A" />
-                        </Border>
-
-                        <TextBlock Margin="0,12,0,0"
+                        <TextBlock Margin="0,0,0,0"
                                    Text="{x:Static text:CustomMouseText.SettingsPageTitle}"
                                    Style="{StaticResource AppPageTitleTextBlockStyle}" />
 
@@ -72,7 +63,6 @@
                                 <TextBlock x:Name="_pointerPreviewValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="20"
-                                           FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
                         </Border>
@@ -89,7 +79,6 @@
                                 <TextBlock x:Name="_buttonLayoutValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="20"
-                                           FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
                         </Border>
@@ -106,7 +95,6 @@
                                 <TextBlock x:Name="_cursorThemeValueTextBlock"
                                            Margin="0,8,0,0"
                                            FontSize="20"
-                                           FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
                         </Border>
@@ -156,7 +144,6 @@
                                        VerticalAlignment="Center"
                                        TextAlignment="Right"
                                        FontSize="14"
-                                       FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </Grid>
 

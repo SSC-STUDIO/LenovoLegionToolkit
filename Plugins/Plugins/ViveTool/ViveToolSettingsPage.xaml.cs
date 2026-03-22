@@ -113,8 +113,7 @@ public partial class ViveToolSettingsPage
         statusStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_ViveToolStatus,
-            FontSize = 16,
-            FontWeight = FontWeights.Medium
+            FontSize = 16
         });
         statusStack.Children.Add(_statusTextBlock);
         statusStack.Children.Add(_downloadProgressGrid);
@@ -133,7 +132,6 @@ public partial class ViveToolSettingsPage
         {
             Text = Resource.ViveTool_BinaryPathTitle,
             FontSize = 16,
-            FontWeight = FontWeights.Medium,
             Margin = new Thickness(0, 0, 0, 10)
         });
         pathStack.Children.Add(pathRow);
