@@ -10,7 +10,7 @@ public static class Constants
     public const string UpdateRepositoryName = "LenovoLegionToolkit";
     public const string ProjectWebsiteUrl = $"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}";
     public const string LatestReleaseUrl = $"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}/releases/latest";
-    public const string ContributionUrl = $"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}#contribution";
+    public const string ContributionUrl = $"https://github.com/{UpdateRepositoryOwner}/{UpdateRepositoryName}";
     public static readonly Uri ProjectWebsiteUri = new(ProjectWebsiteUrl);
     public static readonly Uri LatestReleaseUri = new(LatestReleaseUrl);
     public static readonly Uri ContributionUri = new(ContributionUrl);
