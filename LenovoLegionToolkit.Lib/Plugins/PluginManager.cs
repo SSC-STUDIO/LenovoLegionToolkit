@@ -326,11 +326,11 @@ public class PluginManager : IPluginManager
         // Try multiple relative paths to handle different build configurations
         var possiblePaths = new[]
         {
+            Path.Combine(appBaseDir, "plugins"),  // Same directory as executable (release)
+            Path.Combine(appBaseDir, "Plugins"),  // Same directory as executable (release, legacy)
             Path.Combine(appBaseDir, "Build", "plugins"),  // Direct Build/plugins
             Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),  // Relative to bin
             Path.Combine(appBaseDir, "..", "Build", "plugins"),  // One level up
-            Path.Combine(appBaseDir, "Plugins"),  // Same directory as executable (release, legacy)
-            Path.Combine(appBaseDir, "plugins"),  // Same directory as executable (release)
         };
 
         foreach (var possiblePath in possiblePaths)
