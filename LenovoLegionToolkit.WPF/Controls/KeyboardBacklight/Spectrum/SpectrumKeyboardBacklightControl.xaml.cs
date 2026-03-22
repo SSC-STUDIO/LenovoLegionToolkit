@@ -25,7 +25,7 @@ namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum
 {
 public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingControl
 {
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     private readonly ThrottleLastDispatcher _changeBrightnessDispatcher = new(TimeSpan.FromMilliseconds(250), "ChangeBrightnessDispatcher");
     private readonly TimeSpan _refreshStateInterval = TimeSpan.FromMilliseconds(50);

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -88,6 +89,27 @@ public static class LocalizationHelper
         if (Resource.Culture?.TextInfo.IsRightToLeft ?? false)
             return "\u200e" + str + "\u200e";
         return str;
+    }
+
+    public static string GetStringOrEnglish(ResourceManager resourceManager, string key, string fallback, CultureInfo? cultureInfo = null)
+    {
+        if (resourceManager is null)
+            throw new ArgumentNullException(nameof(resourceManager));
+
+        if (string.IsNullOrWhiteSpace(key))
+            return fallback;
+
+        var activeCulture = cultureInfo ?? Resource.Culture ?? CultureInfo.CurrentUICulture;
+
+        foreach (var culture in EnumerateCultureFallbackChain(activeCulture))
+        {
+            var value = TryGetStringExact(resourceManager, key, culture);
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        var invariant = resourceManager.GetString(key, CultureInfo.InvariantCulture);
+        return string.IsNullOrWhiteSpace(invariant) ? fallback : invariant;
     }
 
     public static async Task SetLanguageAsync(bool interactive = false)
@@ -249,5 +271,37 @@ public static class LocalizationHelper
         {
             Marshal.FreeHGlobal(ptr);
         }
+    }
+
+    private static string? TryGetStringExact(ResourceManager resourceManager, string key, CultureInfo culture)
+    {
+        try
+        {
+            var resourceSet = resourceManager.GetResourceSet(culture, true, false);
+            return resourceSet?.GetString(key, false);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static CultureInfo[] EnumerateCultureFallbackChain(CultureInfo cultureInfo)
+    {
+        var fallbackChain = new System.Collections.Generic.List<CultureInfo>();
+        var current = cultureInfo;
+
+        while (current != CultureInfo.InvariantCulture)
+        {
+            if (!fallbackChain.Any(existing => existing.Name.Equals(current.Name, StringComparison.OrdinalIgnoreCase)))
+                fallbackChain.Add(current);
+
+            current = current.Parent;
+        }
+
+        if (!fallbackChain.Any(existing => existing.Name.Equals(DefaultLanguage.Name, StringComparison.OrdinalIgnoreCase)))
+            fallbackChain.Add(DefaultLanguage);
+
+        return fallbackChain.ToArray();
     }
 }

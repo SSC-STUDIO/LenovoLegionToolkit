@@ -10,13 +10,14 @@ using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Settings;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Common;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
 public partial class SettingsPage
 {
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();

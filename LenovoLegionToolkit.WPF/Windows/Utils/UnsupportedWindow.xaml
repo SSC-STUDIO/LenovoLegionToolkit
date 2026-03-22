@@ -118,7 +118,7 @@
                     Text="{x:Static resources:Resource.UnsupportedWindow_Disclaimer}"
                     TextWrapping="Wrap" />
 
-                <wpfui:Hyperlink Content="{x:Static resources:Resource.UnsupportedWindow_Disclaimer_GitHub}" NavigateUri="{x:Static root:Constants.ContributionUri}" />
+                <wpfui:Hyperlink Content="{x:Static resources:Resource.UnsupportedWindow_Disclaimer_GitHub}" NavigateUri="{x:Static root:Constants.ContributionUrl}" />
 
             </StackPanel>
 

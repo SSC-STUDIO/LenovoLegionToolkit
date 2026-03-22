@@ -4,13 +4,14 @@ using System.Windows;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.WPF.Windows.Settings
 {
 public partial class BootLogoWindow
 {
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     public BootLogoWindow()
     {

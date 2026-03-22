@@ -61,6 +61,12 @@ public partial class WindowsOptimizationPage : UiPage
             _pendingFocusPluginId = pluginId;
     }
 
+    public static void ClearPendingPluginCategoryFocus()
+    {
+        lock (FocusRequestLock)
+            _pendingFocusPluginId = null;
+    }
+
     private void WindowsOptimizationPage_Loaded(object sender, RoutedEventArgs e)
     {
         TryApplyPendingPluginFocusRequest();

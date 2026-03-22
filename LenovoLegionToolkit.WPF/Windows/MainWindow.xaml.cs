@@ -109,7 +109,7 @@ public partial class MainWindow
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // When page navigation is complete, update window title to: App Name - Page Title
-        var appName = Resource.ResourceManager.GetString("AppName", Resource.Culture) ?? "Lenovo Legion Toolkit";
+        var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", "Lenovo Legion Toolkit", Resource.Culture);
 
         if (e.Content is UiPage page && !string.IsNullOrWhiteSpace(page.Title))
         {
@@ -179,7 +179,7 @@ public partial class MainWindow
         // Set the plugin extensions navigation item text
         if (_pluginExtensionsItem != null)
         {
-            _pluginExtensionsItem.Content = Resource.ResourceManager.GetString("MainWindow_NavigationItem_PluginExtensions", Resource.Culture) ?? "Plugin Extensions";
+            _pluginExtensionsItem.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", Resource.Culture);
         }
 
         var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);

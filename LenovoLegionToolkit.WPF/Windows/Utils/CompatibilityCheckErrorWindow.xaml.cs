@@ -17,7 +17,7 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
 {
     private readonly Exception _exception;
     private readonly string _logFilePath;
-    private static string T(string key, string fallback) => Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
     public CompatibilityCheckErrorWindow(Exception exception)
     {

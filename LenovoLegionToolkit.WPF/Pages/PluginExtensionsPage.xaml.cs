@@ -58,7 +58,7 @@ private string _currentSearchText = string.Empty;
         var loadingText = this.FindName("_loadingText") as System.Windows.Controls.TextBlock;
         if (loadingText != null)
         {
-            loadingText.Text = Resource.ResourceManager.GetString("PluginExtensionsPage_Loading", Resource.Culture) ?? "Loading plugins...";
+            loadingText.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Loading", "Loading plugins...", Resource.Culture);
         }
         
         // Initialize ListBox data binding
@@ -69,31 +69,30 @@ private string _currentSearchText = string.Empty;
         }
         
         // Set page title and text (using dynamic resources to avoid auto-generated resource issues)
-        Title = Resource.ResourceManager.GetString("PluginExtensionsPage_Title", Resource.Culture) ?? "Plugin Extensions";
+        Title = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Title", "Plugin Extensions", Resource.Culture);
         
         var titleTextBlock = this.FindName("_titleTextBlock") as System.Windows.Controls.TextBlock;
         if (titleTextBlock != null)
         {
-            titleTextBlock.Text = Resource.ResourceManager.GetString("PluginExtensionsPage_Title", Resource.Culture) ?? "Plugin Extensions";
+            titleTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Title", "Plugin Extensions", Resource.Culture);
         }
         
         var descriptionTextBlock = this.FindName("_descriptionTextBlock") as System.Windows.Controls.TextBlock;
         if (descriptionTextBlock != null)
         {
-            descriptionTextBlock.Text = Resource.ResourceManager.GetString("PluginExtensionsPage_Description", Resource.Culture) ?? "Install and manage plugins to extend functionality";
+            descriptionTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Description", "Install and manage plugins to extend functionality", Resource.Culture);
         }
 
         if (_bulkInstallButton != null)
         {
-            _bulkInstallButton.Content = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
-            _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
+            _bulkInstallButton.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAll", "Install All", Resource.Culture);
+            _bulkInstallButton.ToolTip = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAllTooltip", "Install all available plugins", Resource.Culture);
         }
 
         if (_deprecationNotice != null)
         {
-            _deprecationNotice.Title = Resource.ResourceManager.GetString("PluginExtensionsPage_DeprecationTitle", Resource.Culture) ?? "Toolkit Deprecated";
-            _deprecationNotice.Message = Resource.ResourceManager.GetString("PluginExtensionsPage_DeprecationMessage", Resource.Culture)
-                ?? "The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools.";
+            _deprecationNotice.Title = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DeprecationTitle", "Toolkit Deprecated", Resource.Culture);
+            _deprecationNotice.Message = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DeprecationMessage", "The toolkit functionality has been replaced by the plugin system. Please use the Plugin Extensions page to install and manage tools.", Resource.Culture);
         }
 
         UpdateSummaryMetrics();
@@ -156,7 +155,7 @@ private string _currentSearchText = string.Empty;
         if (_bulkInstallButton != null)
         {
             _bulkInstallButton.Visibility = GetInstallableOnlinePluginCount() > 0 ? Visibility.Visible : Visibility.Collapsed;
-            _bulkInstallButton.ToolTip = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAllTooltip", Resource.Culture) ?? "Install all available plugins";
+            _bulkInstallButton.ToolTip = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAllTooltip", "Install all available plugins", Resource.Culture);
         }
 
         UpdateSummaryMetrics();
@@ -183,19 +182,15 @@ private string _currentSearchText = string.Empty;
 
         _summaryHintTextBlock.Text = updatesReady > 0
             ? string.Format(
-                Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryUpdatesReadyMessage", Resource.Culture)
-                ?? "{0} plugin update(s) are ready to install.",
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpdatesReadyMessage", "{0} plugin update(s) are ready to install.", Resource.Culture),
                 updatesReady)
             : discoverablePlugins > 0
                 ? string.Format(
-                    Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryDiscoverableMessage", Resource.Culture)
-                    ?? "{0} additional plugin(s) are available in the current feed.",
+                    LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryDiscoverableMessage", "{0} additional plugin(s) are available in the current feed.", Resource.Culture),
                     discoverablePlugins)
                 : totalPlugins == 0
-                    ? Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryWaitingMetadata", Resource.Culture)
-                      ?? "Waiting for plugin metadata to load."
-                    : Resource.ResourceManager.GetString("PluginExtensionsPage_SummaryUpToDate", Resource.Culture)
-                      ?? "All detected plugins are currently up to date.";
+                    ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryWaitingMetadata", "Waiting for plugin metadata to load.", Resource.Culture)
+                    : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpToDate", "All detected plugins are currently up to date.", Resource.Culture);
     }
 
     private static string FormatReleaseDate(string releaseDateRaw)
@@ -211,7 +206,7 @@ private string _currentSearchText = string.Empty;
 
     private static string T(string key, string fallback)
     {
-        return Resource.ResourceManager.GetString(key, Resource.Culture) ?? fallback;
+        return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
     }
 
     // private async void ImportPluginButton_Click(object sender, RoutedEventArgs e)
@@ -810,6 +805,8 @@ private string _currentSearchText = string.Empty;
     {
         if ((bool)e.NewValue)
         {
+            EnsurePluginExtensionsNavigationState();
+
             // Use Dispatcher to ensure UI updates happen after plugin scanning
             Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -1339,13 +1336,13 @@ private string _currentSearchText = string.Empty;
         if (!installCandidates.Any())
             return;
 
-        var installAllText = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallAll", Resource.Culture) ?? "Install All";
-        var installingAllText = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallingAll", Resource.Culture) ?? "Installing All...";
-        var installingAllMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_InstallingAllMessage", Resource.Culture) ?? "Installing {0} plugin(s)...";
-        var bulkInstallComplete = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallComplete", Resource.Culture) ?? "Bulk Install Complete";
-        var bulkInstallCompleteMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallCompleteMessage", Resource.Culture) ?? "Installed {0} plugin(s).";
-        var bulkInstallFailed = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallFailed", Resource.Culture) ?? "Bulk Install Failed";
-        var bulkInstallFailedMessage = Resource.ResourceManager.GetString("PluginExtensionsPage_BulkInstallFailedMessage", Resource.Culture) ?? "Failed to install plugins: {0}";
+        var installAllText = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAll", "Install All", Resource.Culture);
+        var installingAllText = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallingAll", "Installing All...", Resource.Culture);
+        var installingAllMessage = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallingAllMessage", "Installing {0} plugin(s)...", Resource.Culture);
+        var bulkInstallComplete = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_BulkInstallComplete", "Bulk Install Complete", Resource.Culture);
+        var bulkInstallCompleteMessage = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_BulkInstallCompleteMessage", "Installed {0} plugin(s).", Resource.Culture);
+        var bulkInstallFailed = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_BulkInstallFailed", "Bulk Install Failed", Resource.Culture);
+        var bulkInstallFailedMessage = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_BulkInstallFailedMessage", "Failed to install plugins: {0}", Resource.Culture);
 
         try
         {
@@ -1843,6 +1840,21 @@ private string _currentSearchText = string.Empty;
         WindowsOptimizationPage.RequestPluginCategoryFocus(pluginId);
         navigationStore.Navigate("windowsOptimization");
         return true;
+    }
+
+    private void EnsurePluginExtensionsNavigationState()
+    {
+        WindowsOptimizationPage.ClearPendingPluginCategoryFocus();
+
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow == null)
+            return;
+
+        var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
+        if (navigationStore?.Current?.PageTag == "pluginExtensions")
+            return;
+
+        navigationStore?.Navigate("pluginExtensions");
     }
 
     private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)

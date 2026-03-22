@@ -33,7 +33,7 @@ public partial class WindowsOptimizationPage
         {
             await SnackbarHelper.ShowAsync(
                 Resource.SettingsPage_WindowsOptimization_Title,
-                Resource.ResourceManager.GetString("WindowsOptimizationPage_Cleanup_NoSelection_Warning") ?? "Please select at least one cleanup option.",
+                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_Cleanup_NoSelection_Warning", "Please select at least one cleanup option.", Resource.Culture),
                 SnackbarType.Warning);
             return;
         }
@@ -54,7 +54,7 @@ public partial class WindowsOptimizationPage
                 // Update UI on UI thread
                 await Dispatcher.BeginInvoke(() =>
                 {
-                    ViewModel.CurrentOperationText = string.Format(Resource.ResourceManager.GetString("WindowsOptimizationPage_RunningStep") ?? "Running {0}...", action.Title);
+                    ViewModel.CurrentOperationText = string.Format(LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_RunningStep", "Running {0}...", Resource.Culture), action.Title);
                     ViewModel.RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, progress);
                 });
 
@@ -85,7 +85,7 @@ public partial class WindowsOptimizationPage
             }
 
             swOverall.Stop();
-            var summary = string.Format(Resource.ResourceManager.GetString("WindowsOptimizationPage_CleanupSummary") ?? "Freed {0} in {1}s", 
+            var summary = string.Format(LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_CleanupSummary", "Freed {0} in {1}s", Resource.Culture), 
                 ViewModel.EstimatedCleanupSizeText, swOverall.Elapsed.TotalSeconds.ToString("0.0"));
             
             // Show snackbar on UI thread
