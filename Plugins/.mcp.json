@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "codex": {
+      "command": "codex",
+      "args": ["mcp-server"],
+      "env": {
+        "OPENAI_BASE_URL": "http://127.0.0.1:18080/v1"
+      }
+    }
+  }
+}
