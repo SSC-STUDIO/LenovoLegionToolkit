@@ -771,11 +771,11 @@ public class PluginRepositoryService : IDisposable
         
         var possiblePaths = new[]
         {
+            Path.Combine(appBaseDir, "plugins"),
+            Path.Combine(appBaseDir, "Plugins"),
             Path.Combine(appBaseDir, "build", "plugins"),
             Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
             Path.Combine(appBaseDir, "..", "build", "plugins"),
-            Path.Combine(appBaseDir, "Plugins"),
-            Path.Combine(appBaseDir, "plugins"),
         };
 
         foreach (var possiblePath in possiblePaths)
