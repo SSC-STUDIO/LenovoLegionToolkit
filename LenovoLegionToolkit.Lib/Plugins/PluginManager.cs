@@ -164,7 +164,7 @@ public class PluginManager : IPluginManager
         var dllPath = Path.Combine(pluginsDirectory, $"{assemblyName}.dll");
         if (File.Exists(dllPath))
             return Assembly.LoadFrom(dllPath);
-        
+
         var subdirectories = Directory.GetDirectories(pluginsDirectory);
         foreach (var subdir in subdirectories)
         {
@@ -172,10 +172,22 @@ public class PluginManager : IPluginManager
             if (File.Exists(subDirDllPath))
                 return Assembly.LoadFrom(subDirDllPath);
         }
-        
+
         var appBaseDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{assemblyName}.dll");
         if (File.Exists(appBaseDllPath))
             return Assembly.LoadFrom(appBaseDllPath);
+
+        // Check SDK directory relative to plugins directory
+        var sdkPath = Path.Combine(pluginsDirectory, "..", "SDK", $"{assemblyName}.dll");
+        if (File.Exists(sdkPath))
+            return Assembly.LoadFrom(Path.GetFullPath(sdkPath));
+
+        // For SDK assembly, try to resolve from already loaded assemblies
+        // The SDK types forward to LenovoLegionToolkit.Lib which is already loaded
+        var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.GetName().Name == assemblyName);
+        if (loadedAssembly != null)
+            return loadedAssembly;
 
         return null;
     }
