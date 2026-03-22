@@ -221,7 +221,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         root.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_PageTitle,
-            FontSize = 24
+            FontSize = 28
         });
         root.Children.Add(new TextBlock
         {

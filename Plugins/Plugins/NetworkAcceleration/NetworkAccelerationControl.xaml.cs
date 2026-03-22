@@ -283,7 +283,7 @@ public partial class NetworkAccelerationControl : UserControl
         return new TextBlock
         {
             Text = text,
-            FontSize = 20,
+            FontSize = 18,
             Foreground = FindBrush("TextFillColorPrimaryBrush", "#FFF6F3EE")
         };
     }
@@ -302,19 +302,10 @@ public partial class NetworkAccelerationControl : UserControl
             {
                 Children =
                 {
-                    new StackPanel
+                    new TextBlock
                     {
-                        Orientation = Orientation.Horizontal,
-                        Children =
-                        {
-                            CreateBadge(badgeText, "#FFF8F6F1", accentHex),
-                            new TextBlock
-                            {
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Text = label,
-                                Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
-                            }
-                        }
+                        Text = label,
+                        Foreground = FindBrush("TextFillColorSecondaryBrush", "#FFBDB8B0")
                     },
                     valueText
                 }

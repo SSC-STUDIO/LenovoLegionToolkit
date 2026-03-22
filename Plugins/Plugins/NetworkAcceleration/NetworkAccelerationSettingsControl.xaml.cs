@@ -103,7 +103,6 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         heroGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) });
 
         var heroText = new StackPanel();
-        heroText.Children.Add(CreateBadge(NetworkAccelerationText.SettingsPageTitle, "#FF5CA9FF", "#122B579A"));
         heroText.Children.Add(CreateTitleText(NetworkAccelerationText.SettingsTitle, new Thickness(0, 12, 0, 0)));
         heroText.Children.Add(CreateSecondaryText(NetworkAccelerationText.SettingsDescription, new Thickness(0, 8, 0, 0)));
 
@@ -245,7 +244,7 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         var textBlock = new TextBlock
         {
             Text = text,
-            FontSize = 22,
+            FontSize = 18,
             TextWrapping = TextWrapping.Wrap
         };
         if (margin != null)
@@ -295,7 +294,6 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         ApplyCardChrome(tile, "ControlFillColorSecondaryBrush", borderKey: null);
 
         var stack = new StackPanel();
-        stack.Children.Add(CreateBadge(badgeText, "#FFF3F5F7", badgeHex));
         stack.Children.Add(CreateSecondaryText(label, new Thickness(0, 10, 0, 0)));
         valueTextBlock.Margin = new Thickness(0, 8, 0, 0);
         stack.Children.Add(valueTextBlock);
