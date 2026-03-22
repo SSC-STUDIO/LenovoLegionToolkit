@@ -21,7 +21,7 @@
             <Border Grid.Row="0"
                     Margin="0,0,0,16"
                     Padding="24"
-                    CornerRadius="22"
+                    CornerRadius="20"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">

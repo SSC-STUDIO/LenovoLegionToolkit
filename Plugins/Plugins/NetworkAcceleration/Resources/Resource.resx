@@ -73,4 +73,32 @@
 <data name="PreferredModeDescription" xml:space="preserve"><value>Select how network traffic is prioritized.</value></data>
 <data name="SettingsSummaryTitle" xml:space="preserve"><value>Settings Summary</value></data>
 <data name="CurrentModeLabel" xml:space="preserve"><value>Current Mode</value></data>
-<data name="StatusCardTitle" xml:space="preserve"><value>Status</value></data></root>
+<data name="StatusCardTitle" xml:space="preserve"><value>Status</value></data>
+  <data name="TrafficMixTitle" xml:space="preserve">
+    <value>Traffic Mix</value>
+  </data>
+  <data name="TrafficMixDescription" xml:space="preserve">
+    <value>Current download and upload share based on the latest sample.</value>
+  </data>
+  <data name="DownloadShareLabel" xml:space="preserve">
+    <value>Download Share</value>
+  </data>
+  <data name="UploadShareLabel" xml:space="preserve">
+    <value>Upload Share</value>
+  </data>
+  <data name="BurstHistoryTitle" xml:space="preserve">
+    <value>Burst History</value>
+  </data>
+  <data name="BurstHistoryDescription" xml:space="preserve">
+    <value>Recent combined throughput spikes from the latest telemetry window.</value>
+  </data>
+  <data name="RollingAverageLabel" xml:space="preserve">
+    <value>Rolling Avg</value>
+  </data>
+  <data name="BurstPeakLabel" xml:space="preserve">
+    <value>Burst Peak</value>
+  </data>
+  <data name="BurstChartEmptyState" xml:space="preserve">
+    <value>Need more samples to render burst history.</value>
+  </data>
+</root>

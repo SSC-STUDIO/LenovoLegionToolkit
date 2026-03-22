@@ -130,8 +130,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     public ViveToolPage()
     {
-        var initialized = TryInitializeComponent();
         DataContext = this;
+        var initialized = TryInitializeComponent();
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
 

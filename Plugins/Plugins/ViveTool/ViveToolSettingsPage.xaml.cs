@@ -67,7 +67,7 @@ public partial class ViveToolSettingsPage
         {
             Margin = new Thickness(0, 12, 0, 0)
         };
-        _downloadProgressGrid = new Grid
+        _downloadProgressGrid = new StackPanel
         {
             Visibility = Visibility.Collapsed
         };
@@ -302,9 +302,10 @@ public partial class ViveToolSettingsPage
                 _downloadProgressText.Text = Resource.ViveTool_Downloading;
 
             // Start download
-            var progress = new Progress<long>(progress =>
+            var progress = new Progress<long>(bytesDownloaded =>
             {
-                _downloadProgress = (int)(progress / 10); // Convert long to int percentage
+                const long estimatedTotalBytes = 3 * 1024 * 1024;
+                _downloadProgress = (int)Math.Min(100, bytesDownloaded * 100 / estimatedTotalBytes);
                 if (_downloadProgressBar != null)
                     _downloadProgressBar.Value = _downloadProgress;
             });

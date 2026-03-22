@@ -11,9 +11,9 @@
             <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="18"
-                    Padding="22"
-                    Margin="0,0,0,14">
+                    CornerRadius="20"
+                    Padding="20"
+                    Margin="0,0,0,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.35*" />
@@ -36,9 +36,9 @@
                                        Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                         </StackPanel>
 
-                        <Grid x:Name="_downloadProgressGrid"
-                              Margin="0,14,0,0"
-                              Visibility="Collapsed">
+                        <StackPanel x:Name="_downloadProgressGrid"
+                                    Margin="0,14,0,0"
+                                    Visibility="Collapsed">
                             <ProgressBar x:Name="_downloadProgressBar"
                                          Height="8"
                                          Background="{DynamicResource ControlFillColorTertiaryBrush}"
@@ -49,8 +49,8 @@
                             <TextBlock x:Name="_downloadProgressText"
                                        FontSize="12"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Margin="0,12,0,0" />
-                        </Grid>
+                                       Margin="0,6,0,0" />
+                        </StackPanel>
                     </StackPanel>
 
                     <Border Grid.Column="1"
@@ -90,8 +90,8 @@
             <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="18"
-                    Padding="22">
+                    CornerRadius="20"
+                    Padding="20">
                 <StackPanel>
                     <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}"
                                Style="{StaticResource AppSectionTitleTextBlockStyle}" />

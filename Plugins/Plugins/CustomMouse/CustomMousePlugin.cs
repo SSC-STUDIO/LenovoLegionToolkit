@@ -283,6 +283,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     private void StartThemeWatcher()
     {
+        _themeWatcher.ThemeChanged -= OnThemeChangedAsync;
         _themeWatcher.ThemeChanged += OnThemeChangedAsync;
         _themeWatcher.Start(_settings.LastAppliedTheme);
     }
@@ -358,10 +359,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             ApplySystemCursorRefresh();
             return true;
         }
-        catch
-        {
-            return false;
-        }
+        catch (OperationCanceledException) { throw; }
+        catch { return false; }
     }
 
     private void ApplyCursorThemeFromResources(CursorTheme theme)
@@ -397,12 +396,12 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         ApplySystemCursorRefresh();
     }
 
-    private async Task RestoreBackedUpCursorSchemeAsync(CancellationToken cancellationToken)
+    private Task RestoreBackedUpCursorSchemeAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         if (!Configuration.GetValue(CursorBackupSavedFlag, false))
-            return;
+            return Task.CompletedTask;
 
         using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true)
                              ?? throw new InvalidOperationException("Failed to open cursor registry path.");
@@ -423,7 +422,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
 
         ApplySystemCursorRefresh();
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     private void BackupCurrentCursorSchemeIfNeeded()

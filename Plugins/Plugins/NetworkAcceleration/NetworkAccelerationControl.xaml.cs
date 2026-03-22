@@ -247,6 +247,9 @@ public partial class NetworkAccelerationControl : UserControl
             }
         });
 
+        Loaded += UserControl_Loaded;
+        Unloaded += UserControl_Unloaded;
+
         Content = new ScrollViewer
         {
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,

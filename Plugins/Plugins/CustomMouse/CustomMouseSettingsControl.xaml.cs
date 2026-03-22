@@ -106,7 +106,7 @@ public partial class CustomMouseSettingsControl : UserControl
             Margin = new Thickness(0, 12, 0, 0),
             Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(106, 106, 106))
         };
-        Grid.SetRow(hint, 4);
+        Grid.SetRow(hint, 5);
         root.Children.Add(hint);
 
         var actionPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 16, 0, 0) };
@@ -119,10 +119,10 @@ public partial class CustomMouseSettingsControl : UserControl
         actionPanel.Children.Add(applyButton);
         actionPanel.Children.Add(applyCursorButton);
         actionPanel.Children.Add(reloadButton);
-        Grid.SetRow(actionPanel, 5);
+        Grid.SetRow(actionPanel, 6);
         root.Children.Add(actionPanel);
 
-        Grid.SetRow(_statusTextBlock, 6);
+        Grid.SetRow(_statusTextBlock, 7);
         root.Children.Add(_statusTextBlock);
 
         Content = root;
