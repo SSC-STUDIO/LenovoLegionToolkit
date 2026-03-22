@@ -105,7 +105,8 @@ public class CustomMousePluginTests
         var settingsPage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetSettingsPage());
         var category = plugin.GetOptimizationCategory();
 
-        Assert.Null(featurePage);
+        Assert.NotNull(featurePage);
+        var featurePluginPage = Assert.IsAssignableFrom<IPluginPage>(featurePage);
         Assert.NotNull(settingsPage);
         Assert.Equal(CustomMouseText.SettingsPageTitle, settingsPage.PageTitle);
         Assert.NotNull(category);
