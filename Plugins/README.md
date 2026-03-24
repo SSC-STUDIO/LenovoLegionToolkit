@@ -59,6 +59,7 @@ Integrate Lenovo Legion Toolkit with Windows shell context menu.
 This repository can be built independently from the main `LenovoLegionToolkit` source repository.
 
 - Plugin SDK/contracts compile against vendored host references in `Dependencies/Host`.
+- `Dependencies/Host/LenovoLegionToolkit.Lib.dll` and `Dependencies/Host/Lenovo Legion Toolkit.dll` are intentionally tracked in git as the canonical fresh-checkout host baseline.
 - No plugin project should use `ProjectReference` to `..\\..\\..\\LenovoLegionToolkit`.
 - To refresh host references after host updates:
 

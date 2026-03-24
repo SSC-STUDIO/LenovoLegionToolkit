@@ -17,10 +17,10 @@
 
   
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Version>1.0.8</Version>
-    <FileVersion>1.0.8</FileVersion>
-    <AssemblyVersion>1.0.8</AssemblyVersion>
-    <InformationalVersion>1.0.8</InformationalVersion>
+    <Version>1.0.9-hostpolicy</Version>
+    <FileVersion>1.0.9.0</FileVersion>
+    <AssemblyVersion>1.0.9.0</AssemblyVersion>
+    <InformationalVersion>1.0.9-hostpolicy</InformationalVersion>
   </PropertyGroup>
 
   
