@@ -26,40 +26,28 @@
 
             <Border Grid.Row="0"
                     Margin="0,0,0,16"
-                    Padding="24"
+                    Padding="20"
                     CornerRadius="20"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.45*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="{x:Static text:NetworkAccelerationText.FeatureOverviewTitle}"
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <TextBlock Margin="0,6,0,0"
+                               Text="{x:Static text:NetworkAccelerationText.FeatureOverviewDescription}"
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
-                    <StackPanel Margin="0,0,24,0">
-                        <TextBlock Margin="0,0,0,0"
-                                   Text="{x:Static text:NetworkAccelerationText.FeatureOverviewTitle}"
-                                   Style="{StaticResource AppPageTitleTextBlockStyle}" />
-
-                        <TextBlock Margin="0,10,0,0"
-                                   Text="{x:Static text:NetworkAccelerationText.FeatureOverviewDescription}"
-                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
-                    </StackPanel>
-
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                    <Grid Margin="0,18,0,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="0,0,10,10"
+                        <Border Grid.Column="0"
+                                Margin="0,0,8,0"
                                 Padding="14"
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -73,9 +61,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="0,0,0,10"
+                        <Border Grid.Column="1"
+                                Margin="8,0"
                                 Padding="14"
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -89,9 +76,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="1"
-                                Grid.Column="0"
-                                Margin="0,0,10,0"
+                        <Border Grid.Column="2"
+                                Margin="8,0"
                                 Padding="14"
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -105,8 +91,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="1"
-                                Grid.Column="1"
+                        <Border Grid.Column="3"
+                                Margin="8,0,0,0"
                                 Padding="14"
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -121,7 +107,7 @@
                             </StackPanel>
                         </Border>
                     </Grid>
-                </Grid>
+                </StackPanel>
             </Border>
 
             <Border Grid.Row="1"
@@ -132,8 +118,13 @@
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
                 <StackPanel>
-                    <DockPanel LastChildFill="False">
-                        <StackPanel DockPanel.Dock="Left">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
                             <TextBlock Text="{x:Static text:NetworkAccelerationText.LiveTelemetryTitle}"
                                        Style="{StaticResource AppSectionTitleTextBlockStyle}" />
                             <TextBlock Margin="0,6,0,0"
@@ -141,7 +132,8 @@
                                        Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal"
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                             <StackPanel Orientation="Horizontal"
@@ -163,13 +155,13 @@
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                             </StackPanel>
                         </StackPanel>
-                    </DockPanel>
+                    </Grid>
 
                     <Border Margin="0,16,0,0"
                             Height="260"
-                            CornerRadius="18"
-                            Background="#12000000"
-                            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                            CornerRadius="16"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1">
                         <Grid>
                             <Grid Margin="18,18,18,30"
@@ -240,32 +232,50 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel>
+                        <Border Grid.Column="0"
+                                Margin="0,0,8,0"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
                             <TextBlock Text="{x:Static text:NetworkAccelerationText.DownloadTotalLabel}"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                             <TextBlock x:Name="_downloadTotalTextBlock"
                                        Margin="0,6,0,0"
                                        FontSize="18"
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Border>
 
-                        <StackPanel Grid.Column="1">
+                        <Border Grid.Column="1"
+                                Margin="8,0"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
                             <TextBlock Text="{x:Static text:NetworkAccelerationText.UploadTotalLabel}"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                             <TextBlock x:Name="_uploadTotalTextBlock"
                                        Margin="0,6,0,0"
                                        FontSize="18"
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Border>
 
-                        <StackPanel Grid.Column="2">
+                        <Border Grid.Column="2"
+                                Margin="8,0,0,0"
+                                Padding="14"
+                                CornerRadius="16"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
                             <TextBlock Text="{x:Static text:NetworkAccelerationText.UpdatedLabel}"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                             <TextBlock x:Name="_updatedValueTextBlock"
                                        Margin="0,6,0,0"
                                        FontSize="18"
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -350,8 +360,8 @@
                         <Border Margin="0,16,0,0"
                                 Height="170"
                                 CornerRadius="16"
-                                Background="#10000000"
-                                BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                 BorderThickness="1">
                             <Grid>
                                 <Canvas x:Name="_burstCanvas"

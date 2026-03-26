@@ -14,11 +14,11 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Custom Mouse",
-    version: "1.0.8",
+    version: "1.0.11",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
-    Icon = "Mouse24"
+    Icon = "Pen24"
 )]
 public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
@@ -67,7 +67,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public override string Id => "custom-mouse";
     public override string Name => CustomMouseText.PluginName;
     public override string Description => CustomMouseText.PluginDescription;
-    public override string Icon => "Mouse24";
+    public override string Icon => "Pen24";
     public override bool IsSystemPlugin => false;
 
     private MouseSettings _settings;
@@ -88,7 +88,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public override object? GetFeatureExtension()
     {
-        return new CustomMousePluginPage(this);
+        return null;
     }
 
     public override object? GetSettingsPage()
@@ -546,24 +546,6 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
-}
-
-public class CustomMousePluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
-{
-    private readonly CustomMousePlugin _plugin;
-
-    public CustomMousePluginPage(CustomMousePlugin plugin)
-    {
-        _plugin = plugin;
-    }
-
-    public string PageTitle => CustomMouseText.PageTitle;
-    public string? PageIcon => "Mouse24";
-
-    public object CreatePage()
-    {
-        return new CustomMouseControl(_plugin);
-    }
 }
 
 public class CustomMouseSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage

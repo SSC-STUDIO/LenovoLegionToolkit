@@ -59,21 +59,9 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse.Resources
             }
         }
 
-        public static string PageTitle {
-            get {
-                return ResourceManager.GetString("PageTitle", resourceCulture);
-            }
-        }
-
         public static string SettingsPageTitle {
             get {
                 return ResourceManager.GetString("SettingsPageTitle", resourceCulture);
-            }
-        }
-
-        public static string FeatureSubtitle {
-            get {
-                return ResourceManager.GetString("FeatureSubtitle", resourceCulture);
             }
         }
 

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -64,14 +64,8 @@
   <data name="PluginDescription" xml:space="preserve">
     <value>自訂滑鼠游標樣式行為與滑鼠設定。</value>
   </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>自訂滑鼠</value>
-  </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>滑鼠設定</value>
-  </data>
-  <data name="FeatureSubtitle" xml:space="preserve">
-    <value>調整滑鼠設定並套用到目前 Windows 工作階段。</value>
   </data>
   <data name="PollingRateLabel" xml:space="preserve">
     <value>回報率</value>
@@ -145,7 +139,9 @@
   <data name="FormatCursorApplied" xml:space="preserve">
     <value>已套用游標主題：{0}。</value>
   </data>
-<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
   <data name="QuickActionsTitle" xml:space="preserve">
     <value>快捷操作</value>
   </data>

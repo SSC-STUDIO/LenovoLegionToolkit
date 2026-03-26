@@ -64,14 +64,8 @@
   <data name="PluginDescription" xml:space="preserve">
     <value>Sichqoncha kursori uslubi va sichqoncha sozlamalarini moslashtiring.</value>
   </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Maxsus sichqoncha</value>
-  </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Sichqoncha sozlamalari</value>
-  </data>
-  <data name="FeatureSubtitle" xml:space="preserve">
-    <value>Sichqoncha profili qiymatlarini sozlang va ularni joriy Windows sessiyasiga qo'llang.</value>
   </data>
   <data name="PollingRateLabel" xml:space="preserve">
     <value>So'rov chastotasi</value>
@@ -142,20 +136,31 @@
   <data name="CursorAppliedFormat" xml:space="preserve">
     <value>Custom cursor style applied for current system theme ({0}).</value>
   </data>
-<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
-  <data name="QuickActionsDescription" xml:space="preserve"><value>Sichqoncha profilingiz sozlamalarini tezda qo'llang yoki tiklang.</value></data>
-
-  <data name="QuickActionsTitle" xml:space="preserve"><value>Tezkor amallar</value></data>
-
-  <data name="CursorThemeModeApplied" xml:space="preserve"><value>Kursor mavzusi rejimi qo'llandi: {0}.</value></data>
-
-  <data name="FormatCursorApplied" xml:space="preserve"><value>Qo'llangan kursor mavzusi: {0}.</value></data>
-
-  <data name="CursorThemeModeAuto" xml:space="preserve"><value>Tizimga ergashish</value></data>
-
-  <data name="CursorThemeModeDark" xml:space="preserve"><value>Qorong'i</value></data>
-
-  <data name="CursorThemeModeLabel" xml:space="preserve"><value>Kursor mavzusi rejimi</value></data>
-
-  <data name="CursorThemeModeLight" xml:space="preserve"><value>Yorug'</value></data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="QuickActionsDescription" xml:space="preserve">
+    <value>Sichqoncha profilingiz sozlamalarini tezda qo'llang yoki tiklang.</value>
+  </data>
+  <data name="QuickActionsTitle" xml:space="preserve">
+    <value>Tezkor amallar</value>
+  </data>
+  <data name="CursorThemeModeApplied" xml:space="preserve">
+    <value>Kursor mavzusi rejimi qo'llandi: {0}.</value>
+  </data>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>Qo'llangan kursor mavzusi: {0}.</value>
+  </data>
+  <data name="CursorThemeModeAuto" xml:space="preserve">
+    <value>Tizimga ergashish</value>
+  </data>
+  <data name="CursorThemeModeDark" xml:space="preserve">
+    <value>Qorong'i</value>
+  </data>
+  <data name="CursorThemeModeLabel" xml:space="preserve">
+    <value>Kursor mavzusi rejimi</value>
+  </data>
+  <data name="CursorThemeModeLight" xml:space="preserve">
+    <value>Yorug'</value>
+  </data>
 </root>

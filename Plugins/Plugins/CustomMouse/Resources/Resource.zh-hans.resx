@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -64,14 +64,8 @@
   <data name="PluginDescription" xml:space="preserve">
     <value>自定义鼠标光标样式行为与鼠标设置。</value>
   </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>自定义鼠标</value>
-  </data>
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>鼠标设置</value>
-  </data>
-  <data name="FeatureSubtitle" xml:space="preserve">
-    <value>调整鼠标配置参数并应用到当前 Windows 会话。</value>
   </data>
   <data name="PollingRateLabel" xml:space="preserve">
     <value>回报率</value>
@@ -145,7 +139,9 @@
   <data name="CursorAppliedFormat" xml:space="preserve">
     <value>已为"{0}"主题应用光标样式。</value>
   </data>
-<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
   <data name="QuickActionsTitle" xml:space="preserve">
     <value>快捷操作</value>
   </data>

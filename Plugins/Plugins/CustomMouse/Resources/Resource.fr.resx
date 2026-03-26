@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,4 +58,82 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<data name="ApplyButton" xml:space="preserve"><value>Appliquer</value></data><data name="ApplyCursorThemeNowButton" xml:space="preserve"><value>Appliquer le thème du curseur maintenant</value></data><data name="ApplyToWindowsButton" xml:space="preserve"><value>Postuler à Windows</value></data><data name="AutoThemeLabel" xml:space="preserve"><value>Application automatique du style de curseur personnalisé par le thème clair/foncé __ TERM3 __ actuel</value></data><data name="CursorHint" xml:space="preserve"><value>L'apparence du curseur peut être appliquée à partir de cette page ou à partir des actions d'extension d'optimisation du système.</value></data><data name="FeatureSubtitle" xml:space="preserve"><value>Réglez les valeurs du profil de la souris et appliquez-les à la session Windows en cours.</value></data><data name="PageTitle" xml:space="preserve"><value>TAPIS DE SOURIS PERSONNALISÉ</value></data><data name="PluginDescription" xml:space="preserve"><value>Personnalisez le comportement du style du curseur de la souris et les paramètres de la souris.</value></data><data name="PluginName" xml:space="preserve"><value>TAPIS DE SOURIS PERSONNALISÉ</value></data><data name="PointerSpeedLabel" xml:space="preserve"><value>Windows Vitesse du pointeur</value></data><data name="PollingRateLabel" xml:space="preserve"><value>Taux de scrutation</value></data><data name="ReloadButton" xml:space="preserve"><value>Recharger</value></data><data name="ResetButton" xml:space="preserve"><value>Réinitialiser</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>Paramètres de la souris</value></data><data name="SettingsSubtitle" xml:space="preserve"><value>Appliquez la vitesse du pointeur et la disposition des boutons au profil __TERM3 __ actif.</value></data><data name="StatusApplyPointerFail" xml:space="preserve"><value>Impossible d'appliquer la vitesse du pointeur.</value></data><data name="StatusApplySwapFail" xml:space="preserve"><value>Échec de l'application du paramètre d'échange de bouton.</value></data><data name="StatusCursorApplyFailed" xml:space="preserve"><value>Impossible d'appliquer le style de curseur personnalisé. Essayez de vous exécuter en tant qu'administrateur si votre système bloque l'installation de__ TERM13 __.</value></data><data name="StatusInvalidDpi" xml:space="preserve"><value>Valeur DPI non valide.</value></data><data name="StatusInvalidPolling" xml:space="preserve"><value>Taux d'interrogation non valide.</value></data><data name="StatusProfileSaved" xml:space="preserve"><value>Profil de souris enregistré.</value></data><data name="StatusReloaded" xml:space="preserve"><value>Paramètres actuels de l'extension rechargés.</value></data><data name="StatusResetDefaults" xml:space="preserve"><value>Le profil de la souris est réinitialisé aux valeurs par défaut.</value></data><data name="StatusSelectValidPolling" xml:space="preserve"><value>Veuillez sélectionner un taux d'interrogation valide.</value></data><data name="StatusWindowsApplied" xml:space="preserve"><value>Windows paramètres de la souris appliqués.</value></data><data name="SwapButtonsLabel" xml:space="preserve"><value>Échangez les boutons gauche et droit de la souris</value></data><data name="DpiLabel" xml:space="preserve"><value>DPI</value></data><data name="FormatCursorApplied" xml:space="preserve"><value>Applied cursor theme: {0}.</value></data></root>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>Appliquer</value>
+  </data>
+  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
+    <value>Appliquer le thème du curseur maintenant</value>
+  </data>
+  <data name="ApplyToWindowsButton" xml:space="preserve">
+    <value>Postuler à Windows</value>
+  </data>
+  <data name="AutoThemeLabel" xml:space="preserve">
+    <value>Application automatique du style de curseur personnalisé par le thème clair/foncé __ TERM3 __ actuel</value>
+  </data>
+  <data name="CursorHint" xml:space="preserve">
+    <value>L'apparence du curseur peut être appliquée à partir de cette page ou à partir des actions d'extension d'optimisation du système.</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>Personnalisez le comportement du style du curseur de la souris et les paramètres de la souris.</value>
+  </data>
+  <data name="PluginName" xml:space="preserve">
+    <value>TAPIS DE SOURIS PERSONNALISÉ</value>
+  </data>
+  <data name="PointerSpeedLabel" xml:space="preserve">
+    <value>Windows Vitesse du pointeur</value>
+  </data>
+  <data name="PollingRateLabel" xml:space="preserve">
+    <value>Taux de scrutation</value>
+  </data>
+  <data name="ReloadButton" xml:space="preserve">
+    <value>Recharger</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Paramètres de la souris</value>
+  </data>
+  <data name="SettingsSubtitle" xml:space="preserve">
+    <value>Appliquez la vitesse du pointeur et la disposition des boutons au profil __TERM3 __ actif.</value>
+  </data>
+  <data name="StatusApplyPointerFail" xml:space="preserve">
+    <value>Impossible d'appliquer la vitesse du pointeur.</value>
+  </data>
+  <data name="StatusApplySwapFail" xml:space="preserve">
+    <value>Échec de l'application du paramètre d'échange de bouton.</value>
+  </data>
+  <data name="StatusCursorApplyFailed" xml:space="preserve">
+    <value>Impossible d'appliquer le style de curseur personnalisé. Essayez de vous exécuter en tant qu'administrateur si votre système bloque l'installation de__ TERM13 __.</value>
+  </data>
+  <data name="StatusInvalidDpi" xml:space="preserve">
+    <value>Valeur DPI non valide.</value>
+  </data>
+  <data name="StatusInvalidPolling" xml:space="preserve">
+    <value>Taux d'interrogation non valide.</value>
+  </data>
+  <data name="StatusProfileSaved" xml:space="preserve">
+    <value>Profil de souris enregistré.</value>
+  </data>
+  <data name="StatusReloaded" xml:space="preserve">
+    <value>Paramètres actuels de l'extension rechargés.</value>
+  </data>
+  <data name="StatusResetDefaults" xml:space="preserve">
+    <value>Le profil de la souris est réinitialisé aux valeurs par défaut.</value>
+  </data>
+  <data name="StatusSelectValidPolling" xml:space="preserve">
+    <value>Veuillez sélectionner un taux d'interrogation valide.</value>
+  </data>
+  <data name="StatusWindowsApplied" xml:space="preserve">
+    <value>Windows paramètres de la souris appliqués.</value>
+  </data>
+  <data name="SwapButtonsLabel" xml:space="preserve">
+    <value>Échangez les boutons gauche et droit de la souris</value>
+  </data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>Applied cursor theme: {0}.</value>
+  </data>
+</root>
