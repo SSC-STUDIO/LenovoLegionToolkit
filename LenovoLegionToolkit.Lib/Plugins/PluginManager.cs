@@ -295,6 +295,21 @@ public class PluginManager : IPluginManager
             .ToArray();
     }
 
+    private static DateTime GetPluginFileWriteTimeUtc(string? filePath)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return DateTime.MinValue;
+
+            return File.GetLastWriteTimeUtc(filePath);
+        }
+        catch
+        {
+            return DateTime.MinValue;
+        }
+    }
+
     private static string ToPascalCasePluginId(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
@@ -503,9 +518,18 @@ public class PluginManager : IPluginManager
 
                             if (versionComparison == 0 && _registeredPlugins.ContainsKey(plugin.Id))
                             {
+                                var currentWriteTime = GetPluginFileWriteTimeUtc(pluginFilePath);
+                                var existingWriteTime = GetPluginFileWriteTimeUtc(existingMetadata.FilePath);
+
+                                if (currentWriteTime <= existingWriteTime)
+                                {
+                                    if (Log.Instance.IsTraceEnabled)
+                                        Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
+                                    continue;
+                                }
+
                                 if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
-                                continue;
+                                    Log.Instance.Trace($"Replacing duplicate plugin {plugin.Id} v{pluginVersion} with newer file {pluginFilePath} ({currentWriteTime:O}) over {existingMetadata.FilePath} ({existingWriteTime:O}).");
                             }
                         }
                         
