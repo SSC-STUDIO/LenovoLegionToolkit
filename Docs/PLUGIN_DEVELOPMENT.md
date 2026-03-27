@@ -391,7 +391,7 @@ public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
             }
         )
     };
-    
+
     return new WindowsOptimizationCategoryDefinition(
         id: "my-plugin.category",
         name: Resource.CategoryName,
@@ -401,6 +401,20 @@ public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     );
 }
 ```
+
+### 被 MainAppPluginUi.Smoke 覆盖时的入口约束
+
+如果插件希望被 `Tools/MainAppPluginUi.Smoke` 稳定覆盖，至少应满足以下之一：
+
+- **Feature page 路径**：`GetFeatureExtension()` 返回可被宿主加载的页面对象。
+- **Settings page 路径**：`GetSettingsPage()` 返回可被 `PluginSettingsWindow` 打开的页面对象。
+- **Windows Optimization 路径**：`GetOptimizationCategory()` 返回能在主程序中稳定出现的分类与动作。
+
+当前 smoke 主要验证的是“宿主是否能真正打开入口”，不是只看插件声明了能力。因此：
+
+1. optimization-route 插件除了返回 `WindowsOptimizationCategoryDefinition`，还应确保分类在主程序实际页面中能被定位；若分类未出现，smoke 会按失败处理。
+2. settings page 与 feature page 应返回宿主可直接创建的 UI 对象，避免仅在插件内部声明但无法被 `PluginPageWrapper` 或 `PluginSettingsWindow` 实际承载。
+3. AutomationId、标题或分类结构若频繁漂移，会直接增加 UI smoke 失败率；新增或调整宿主入口时，最好同步验证现有 smoke 路径是否仍可定位。
 
 ---
 
