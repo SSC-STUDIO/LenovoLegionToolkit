@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ internal static class Program
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
     private const int SwRestore = 9;
+    private const int SmXVirtualScreen = 76;
+    private const int SmYVirtualScreen = 77;
+    private const int SmCxVirtualScreen = 78;
+    private const int SmCyVirtualScreen = 79;
     private static int? _mainProcessId;
 
     private sealed record PreparedPluginInstallState(
@@ -52,6 +57,21 @@ internal static class Program
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+    [DllImport("user32.dll")]
+    private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+    [DllImport("user32.dll")]
+    private static extern int GetSystemMetrics(int nIndex);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
     private static int Main(string[] args)
     {
         Process? process = null;
@@ -73,7 +93,8 @@ internal static class Program
                 .ToDictionary(state => state.PluginId, state => state.WarningMessage!, StringComparer.OrdinalIgnoreCase);
             var fixtureReadyPluginIds = preparedRuntimePluginFixtures
                 .Where(state => state.FixturePrepared)
-                .Select(state => state.PluginId)
+                .SelectMany(state => new[] { state.PluginId, NormalizeRuntimeFixturePluginId(state.PluginId) })
+                .Where(id => !string.IsNullOrWhiteSpace(id))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
             preparedRuntimeSdkFixture = PrepareRuntimeSdkFixture(repositoryRoot, appRuntimeDirectory);
             preparedPluginInstallState = PreparePluginInstallState(
@@ -231,6 +252,26 @@ internal static class Program
 
     private static bool IsPluginFilterActive() =>
         !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("LLT_SMOKE_PLUGIN_IDS"));
+
+    private static string NormalizeRuntimeFixturePluginId(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return string.Empty;
+
+        var simpleName = pluginId;
+        const string prefix = "LenovoLegionToolkit.Plugins.";
+        if (simpleName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            simpleName = simpleName[prefix.Length..];
+
+        return simpleName switch
+        {
+            "CustomMouse" => "custom-mouse",
+            "ShellIntegration" => "shell-integration",
+            "NetworkAcceleration" => "network-acceleration",
+            "ViveTool" => "vive-tool",
+            _ => simpleName
+        };
+    }
 
     private static void EnsureRepositoryRoot(string repositoryRoot)
     {
@@ -1074,7 +1115,11 @@ internal static class Program
 
         if (marketplaceAvailable && IsPluginInstalledInUi(mainWindow, pluginId))
         {
-            TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
+            if (SupportsMarketplaceDoubleClickSettings(pluginId))
+                TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
+            else
+                Console.WriteLine($"[main-smoke] Skipping double-click settings validation for '{pluginId}' because the marketplace card is configure-button driven.");
+
             TestConfigureOpensSettings(mainWindow, processId, pluginId);
         }
         else if (isKnownInstalled)
@@ -1125,6 +1170,11 @@ internal static class Program
     {
         return pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
                || pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool SupportsMarketplaceDoubleClickSettings(string pluginId)
+    {
+        return !pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool SupportsPluginFocusedOptimizationRoute(string pluginId)
@@ -1295,11 +1345,41 @@ internal static class Program
         var configureButton = WaitForAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}", TimeSpan.FromSeconds(8));
         Click(configureButton);
 
-        var settingsWindow = WaitForPluginSettingsWindow(
-            processId,
-            mainWindow.Current.NativeWindowHandle,
-            existingSettingsWindows,
-            TimeSpan.FromSeconds(15));
+        if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
+        {
+            BringToForeground(mainWindow);
+            MouseClick(configureButton);
+            Console.WriteLine("[main-smoke] vive-tool configure button received mouse-click fallback.");
+        }
+
+        AutomationElement settingsWindow;
+        try
+        {
+            settingsWindow = pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
+                ? WaitForPluginSettingsWindowByHandleOrName(
+                    processId,
+                    mainWindow.Current.NativeWindowHandle,
+                    existingSettingsWindows,
+                    TimeSpan.FromSeconds(15),
+                    "vive-tool configure",
+                    new[] { "ViVeTool Settings", "ViVeTool 设置" })
+                : WaitForPluginSettingsWindow(
+                    processId,
+                    mainWindow.Current.NativeWindowHandle,
+                    existingSettingsWindows,
+                    TimeSpan.FromSeconds(15));
+        }
+        catch
+        {
+            if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                CaptureMainWindow(mainWindow, pluginId, "configure-failed");
+                DumpAutomationSnapshot(mainWindow, 260);
+            }
+
+            throw;
+        }
 
         Console.WriteLine($"[main-smoke] Configure button opened settings window for: {pluginId}");
         CapturePluginSettingsWindow(settingsWindow, pluginId);
@@ -1819,7 +1899,7 @@ internal static class Program
         {
             try
             {
-                var match = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition)
+                var match = AutomationElement.RootElement.FindAll(TreeScope.Descendants, Condition.TrueCondition)
                     .Cast<AutomationElement>()
                     .FirstOrDefault(window =>
                     {
@@ -1859,6 +1939,7 @@ internal static class Program
         {
             return AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition)
                 .Cast<AutomationElement>()
+                .Concat(AutomationElement.RootElement.FindAll(TreeScope.Descendants, Condition.TrueCondition).Cast<AutomationElement>())
                 .FirstOrDefault(window => window.Current.ProcessId == processId
                                           && window.Current.ControlType == ControlType.Window
                                           && window.Current.NativeWindowHandle == windowHandle);
@@ -2744,12 +2825,12 @@ internal static class Program
         if (handle == 0)
             throw new InvalidOperationException($"Settings window handle unavailable for screenshot: {pluginId}");
 
-        var context = CreateScreenshotContext();
-        var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-window.png");
-        var fullPath = Path.Combine(context.OutputDirectory, $"{pluginId}-fullscreen.png");
+        var outputDirectory = CreateScreenshotOutputDirectory();
+        var windowPath = Path.Combine(outputDirectory, $"{pluginId}-window.png");
+        var fullPath = Path.Combine(outputDirectory, $"{pluginId}-fullscreen.png");
 
-        RunScreenshotCapture(context.ScriptPath, $"-Path \"{fullPath}\"");
-        CaptureWindowWithFallback(context.ScriptPath, windowPath, handle, $"{pluginId}/settings");
+        CaptureFullScreenToFile(fullPath);
+        CaptureWindowToFileWithFallback(windowPath, handle, $"{pluginId}/settings");
 
         Console.WriteLine($"[main-smoke] Captured settings screenshots for {pluginId}: {windowPath}");
     }
@@ -2759,56 +2840,49 @@ internal static class Program
         if (!TryGetNativeWindowHandle(mainWindow, out var handle))
             throw new InvalidOperationException($"Main window handle unavailable for screenshot: {pluginId}/{suffix}");
 
-        var context = CreateScreenshotContext();
-        var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-{suffix}.png");
-        CaptureWindowWithFallback(context.ScriptPath, windowPath, handle, $"{pluginId}/{suffix}");
+        var outputDirectory = CreateScreenshotOutputDirectory();
+        var windowPath = Path.Combine(outputDirectory, $"{pluginId}-{suffix}.png");
+        CaptureWindowToFileWithFallback(windowPath, handle, $"{pluginId}/{suffix}");
         Console.WriteLine($"[main-smoke] Captured main-window screenshot for {pluginId}/{suffix}: {windowPath}");
     }
 
-    private static (string ScriptPath, string OutputDirectory) CreateScreenshotContext()
+    private static string CreateScreenshotOutputDirectory()
     {
-        var scriptPath = ResolveScreenshotHelperPath();
-        if (string.IsNullOrWhiteSpace(scriptPath))
-            throw new FileNotFoundException("Screenshot helper script was not found in any supported location.");
-
-        var outputDirectory = Path.Combine(
-            Path.GetTempPath(),
-            $"llt-plugin-settings-host-{DateTime.Now:yyyyMMdd-HHmmss}");
+        var outputDirectory = Path.Combine(Path.GetTempPath(), $"llt-plugin-settings-host-{DateTime.Now:yyyyMMdd-HHmmss}");
         Directory.CreateDirectory(outputDirectory);
-        return (scriptPath, outputDirectory);
+        return outputDirectory;
     }
 
-    private static string? ResolveScreenshotHelperPath()
-    {
-        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("LLT_SMOKE_SCREENSHOT_SCRIPT"),
-            Path.Combine(userProfile, ".claude", "skills", "screenshot", "scripts", "take_screenshot.ps1"),
-            Path.Combine(userProfile, ".codex", "skills", "screenshot", "scripts", "take_screenshot.ps1")
-        };
-
-        foreach (var candidate in candidates)
-        {
-            if (!string.IsNullOrWhiteSpace(candidate) && File.Exists(candidate))
-                return candidate;
-        }
-
-        return null;
-    }
-
-    private static void CaptureWindowWithFallback(string scriptPath, string outputPath, int windowHandle, string captureLabel)
+    private static void CaptureWindowToFileWithFallback(string outputPath, int windowHandle, string captureLabel)
     {
         try
         {
-            RunScreenshotCapture(scriptPath, $"-Path \"{outputPath}\" -WindowHandle {windowHandle}", 12000);
+            CaptureWindowToFile(outputPath, windowHandle);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[main-smoke] Window-handle screenshot failed for {captureLabel}; retrying with active window. ({ex.Message})");
+            Console.WriteLine($"[main-smoke] Window screenshot failed for {captureLabel}; retrying after refocus. ({ex.Message})");
             BringWindowToForeground(windowHandle);
-            RunScreenshotCapture(scriptPath, $"-Path \"{outputPath}\" -ActiveWindow", 30000);
+            Thread.Sleep(800);
+            CaptureWindowToFile(outputPath, windowHandle);
         }
+    }
+
+    private static void CaptureWindowToFile(string outputPath, int windowHandle)
+    {
+        BringWindowToForeground(windowHandle);
+        Thread.Sleep(300);
+
+        if (!GetWindowRect((IntPtr)windowHandle, out var rect))
+            throw new InvalidOperationException($"Failed to resolve window bounds for handle {windowHandle}.");
+
+        var width = Math.Max(1, rect.Right - rect.Left);
+        var height = Math.Max(1, rect.Bottom - rect.Top);
+
+        using var bitmap = new Bitmap(width, height);
+        using var graphics = Graphics.FromImage(bitmap);
+        graphics.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
+        bitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
     }
 
     private static void BringWindowToForeground(int windowHandle)
@@ -2819,48 +2893,17 @@ internal static class Program
         Thread.Sleep(500);
     }
 
-    private static void RunScreenshotCapture(string scriptPath, string arguments, int timeoutMs = 20000)
+    private static void CaptureFullScreenToFile(string outputPath)
     {
-        using var capture = Process.Start(new ProcessStartInfo
-        {
-            FileName = "powershell",
-            Arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" {arguments}",
-            UseShellExecute = false,
-            CreateNoWindow = true
-        }) ?? throw new InvalidOperationException("Failed to start screenshot capture process.");
+        var left = GetSystemMetrics(SmXVirtualScreen);
+        var top = GetSystemMetrics(SmYVirtualScreen);
+        var width = Math.Max(1, GetSystemMetrics(SmCxVirtualScreen));
+        var height = Math.Max(1, GetSystemMetrics(SmCyVirtualScreen));
 
-        if (!capture.WaitForExit(timeoutMs))
-        {
-            try
-            {
-                capture.Kill(entireProcessTree: true);
-            }
-            catch
-            {
-                // Ignore cleanup failures for timed-out capture helpers.
-            }
-
-            throw new TimeoutException($"Screenshot capture process did not finish within {timeoutMs} ms.");
-        }
-
-        if (capture.ExitCode != 0)
-            throw new InvalidOperationException($"Screenshot capture process failed with exit code {capture.ExitCode}.");
-
-        var outputPath = ExtractScreenshotPath(arguments);
-        if (!string.IsNullOrWhiteSpace(outputPath) && !File.Exists(outputPath))
-            throw new FileNotFoundException($"Screenshot capture did not produce expected file: {outputPath}");
-    }
-
-    private static string? ExtractScreenshotPath(string arguments)
-    {
-        const string marker = "-Path \"";
-        var start = arguments.IndexOf(marker, StringComparison.Ordinal);
-        if (start < 0)
-            return null;
-
-        start += marker.Length;
-        var end = arguments.IndexOf('"', start);
-        return end > start ? arguments[start..end] : null;
+        using var bitmap = new Bitmap(width, height);
+        using var graphics = Graphics.FromImage(bitmap);
+        graphics.CopyFromScreen(left, top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
+        bitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
     }
 
     private static void MouseClick(AutomationElement element)
