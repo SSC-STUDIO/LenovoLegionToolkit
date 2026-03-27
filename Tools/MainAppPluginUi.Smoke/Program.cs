@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Windows.Automation;
@@ -16,13 +17,28 @@ internal static class Program
 {
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
+    private const int SwRestore = 9;
     private static int? _mainProcessId;
 
     private sealed record PreparedPluginInstallState(
         string SettingsPath,
-        string? OriginalContent,
         bool SettingsFileExisted,
+        Dictionary<string, JsonNode?> OriginalProperties,
         HashSet<string> EnsuredPluginIds);
+
+    private sealed record RuntimePluginFixtureState(
+        string PluginId,
+        string SourceDirectory,
+        string TargetDirectory,
+        string BackupDirectory,
+        bool TargetExistedBefore,
+        bool FixturePrepared,
+        string? WarningMessage);
+
+    private sealed record RuntimeFileFixtureState(
+        string TargetPath,
+        string BackupPath,
+        bool TargetExistedBefore);
 
     [DllImport("user32.dll")]
     private static extern bool SetCursorPos(int x, int y);
@@ -40,6 +56,8 @@ internal static class Program
     {
         Process? process = null;
         PreparedPluginInstallState? preparedPluginInstallState = null;
+        List<RuntimePluginFixtureState>? preparedRuntimePluginFixtures = null;
+        RuntimeFileFixtureState? preparedRuntimeSdkFixture = null;
 
         try
         {
@@ -47,10 +65,20 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Repository root: {repositoryRoot}");
 
             var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
-            var pluginsDirectory = Path.Combine(appRuntimeDirectory, "Build", "plugins");
-            PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, pluginsDirectory);
+            var pluginsDirectory = ResolveRuntimePluginsDirectory(appRuntimeDirectory);
             var preferredPlugins = ResolvePreferredPlugins();
-            preparedPluginInstallState = PreparePluginInstallState(preferredPlugins, pluginsDirectory);
+            preparedRuntimePluginFixtures = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, pluginsDirectory, preferredPlugins);
+            var fixtureWarningsByPlugin = preparedRuntimePluginFixtures
+                .Where(state => !state.FixturePrepared && !string.IsNullOrWhiteSpace(state.WarningMessage))
+                .ToDictionary(state => state.PluginId, state => state.WarningMessage!, StringComparer.OrdinalIgnoreCase);
+            var fixtureReadyPluginIds = preparedRuntimePluginFixtures
+                .Where(state => state.FixturePrepared)
+                .Select(state => state.PluginId)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            preparedRuntimeSdkFixture = PrepareRuntimeSdkFixture(repositoryRoot, appRuntimeDirectory);
+            preparedPluginInstallState = PreparePluginInstallState(
+                preferredPlugins.Where(pluginId => !fixtureWarningsByPlugin.ContainsKey(pluginId)).ToArray(),
+                pluginsDirectory);
 
             var startInfo = CreateMainAppStartInfo(appRuntimeDirectory);
             Console.WriteLine($"[main-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
@@ -87,8 +115,18 @@ internal static class Program
                     pluginsUnderTest = preferredPlugins.ToList();
             }
 
+            var skippedPlugins = pluginsUnderTest
+                .Where(pluginId => fixtureWarningsByPlugin.ContainsKey(pluginId))
+                .ToList();
+            pluginsUnderTest = pluginsUnderTest
+                .Where(pluginId => !fixtureWarningsByPlugin.ContainsKey(pluginId))
+                .ToList();
+
+            foreach (var pluginId in skippedPlugins)
+                Console.WriteLine($"[main-smoke] Skipping plugin '{pluginId}' because runtime fixture preparation failed: {fixtureWarningsByPlugin[pluginId]}");
+
             if (pluginsUnderTest.Count == 0)
-                throw new InvalidOperationException("No plugins were discovered in plugin marketplace UI.");
+                throw new InvalidOperationException("No plugins remain eligible for UI validation after runtime fixture preparation.");
 
             Console.WriteLine($"[main-smoke] Plugins under test: [{string.Join(", ", pluginsUnderTest)}]");
 
@@ -108,7 +146,8 @@ internal static class Program
                 var pluginId = pluginsUnderTest[index];
                 var isLastPlugin = index == pluginsUnderTest.Count - 1;
                 var isKnownInstalled = initiallyInstalled.GetValueOrDefault(pluginId)
-                    || preparedPluginInstallState?.EnsuredPluginIds.Contains(pluginId) == true;
+                    || preparedPluginInstallState?.EnsuredPluginIds.Contains(pluginId) == true
+                    || fixtureReadyPluginIds.Contains(pluginId);
                 TestPluginEntryUi(mainWindow, process.Id, pluginId, isLastPlugin, marketplaceAvailable, isKnownInstalled);
             }
 
@@ -142,6 +181,8 @@ internal static class Program
                 process.Kill(entireProcessTree: true);
 
             RestorePluginInstallState(preparedPluginInstallState);
+            RestoreRuntimePluginFixtures(preparedRuntimePluginFixtures);
+            RestoreRuntimeFileFixture(preparedRuntimeSdkFixture);
         }
     }
 
@@ -210,6 +251,7 @@ internal static class Program
             .Select(Path.GetDirectoryName)
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Select(path => path!)
+            .Where(ContainsMainAppExecutableArtifacts)
             .OrderByDescending(path => Directory.GetLastWriteTimeUtc(path))
             .FirstOrDefault();
 
@@ -219,10 +261,32 @@ internal static class Program
         return runtimeDirectory;
     }
 
+    private static bool ContainsMainAppExecutableArtifacts(string path)
+    {
+        return File.Exists(Path.Combine(path, "Lenovo Legion Toolkit.runtimeconfig.json"))
+               || File.Exists(Path.Combine(path, "Lenovo Legion Toolkit.exe"));
+    }
+
+    private static string ResolveRuntimePluginsDirectory(string runtimeDirectory)
+    {
+        var candidates = new[]
+        {
+            Path.Combine(runtimeDirectory, "plugins"),
+            Path.Combine(runtimeDirectory, "Build", "plugins")
+        };
+
+        var existing = candidates.FirstOrDefault(Directory.Exists);
+        if (!string.IsNullOrWhiteSpace(existing))
+            return existing;
+
+        return candidates[0];
+    }
+
     private static ProcessStartInfo CreateMainAppStartInfo(string runtimeDirectory)
     {
         var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
-        if (File.Exists(dllPath))
+        var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
+        if (File.Exists(dllPath) && File.Exists(runtimeConfigPath))
         {
             return new ProcessStartInfo
             {
@@ -262,8 +326,10 @@ internal static class Program
         Directory.CreateDirectory(configDirectory);
 
         var settingsFileExisted = File.Exists(settingsPath);
-        var originalContent = settingsFileExisted ? File.ReadAllText(settingsPath) : null;
-        var root = ParseSettingsRoot(originalContent);
+        var root = settingsFileExisted
+            ? ReadSettingsRoot(settingsPath)
+            : new JsonObject();
+        var originalProperties = CaptureSettingsProperties(root, "InstalledExtensions", "PendingDeletionExtensions");
         var installedExtensions = EnsureJsonArray(root, "InstalledExtensions");
         var pendingDeletionExtensions = EnsureJsonArray(root, "PendingDeletionExtensions");
         var ensuredPluginIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -287,9 +353,9 @@ internal static class Program
         if (ensuredPluginIds.Count == 0)
             return null;
 
-        File.WriteAllText(settingsPath, root.ToJsonString(new() { WriteIndented = true }));
+        WriteSettingsRoot(settingsPath, root);
         Console.WriteLine($"[main-smoke] Pre-seeded InstalledExtensions for: [{string.Join(", ", ensuredPluginIds)}]");
-        return new PreparedPluginInstallState(settingsPath, originalContent, settingsFileExisted, ensuredPluginIds);
+        return new PreparedPluginInstallState(settingsPath, settingsFileExisted, originalProperties, ensuredPluginIds);
     }
 
     private static void RestorePluginInstallState(PreparedPluginInstallState? state)
@@ -299,16 +365,56 @@ internal static class Program
 
         try
         {
-            if (state.SettingsFileExisted)
-                File.WriteAllText(state.SettingsPath, state.OriginalContent ?? "{}");
-            else if (File.Exists(state.SettingsPath))
-                File.Delete(state.SettingsPath);
+            if (!state.SettingsFileExisted)
+            {
+                if (File.Exists(state.SettingsPath))
+                    File.Delete(state.SettingsPath);
 
+                Console.WriteLine("[main-smoke] Restored plugin install-state settings");
+                return;
+            }
+
+            var root = ReadSettingsRoot(state.SettingsPath);
+            RestoreSettingsProperties(root, state.OriginalProperties);
+            WriteSettingsRoot(state.SettingsPath, root);
             Console.WriteLine("[main-smoke] Restored plugin install-state settings");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[main-smoke] Failed to restore plugin install-state settings: {ex.Message}");
+        }
+    }
+
+    private static JsonObject ReadSettingsRoot(string settingsPath)
+    {
+        if (!File.Exists(settingsPath))
+            return new JsonObject();
+
+        return ParseSettingsRoot(File.ReadAllText(settingsPath));
+    }
+
+    private static void WriteSettingsRoot(string settingsPath, JsonObject root)
+    {
+        File.WriteAllText(settingsPath, root.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    private static Dictionary<string, JsonNode?> CaptureSettingsProperties(JsonObject root, params string[] propertyNames)
+    {
+        var captured = new Dictionary<string, JsonNode?>(StringComparer.Ordinal);
+        foreach (var propertyName in propertyNames)
+            captured[propertyName] = root[propertyName]?.DeepClone();
+
+        return captured;
+    }
+
+    private static void RestoreSettingsProperties(JsonObject root, IReadOnlyDictionary<string, JsonNode?> originalProperties)
+    {
+        foreach (var pair in originalProperties)
+        {
+            if (pair.Value is null)
+                root.Remove(pair.Key);
+            else
+                root[pair.Key] = pair.Value.DeepClone();
         }
     }
 
@@ -368,7 +474,11 @@ internal static class Program
         return candidateDlls.Any(File.Exists);
     }
 
-    private static void PrepareRuntimePluginFixtures(string repositoryRoot, string runtimeDirectory, string runtimePluginsDirectory)
+    private static List<RuntimePluginFixtureState> PrepareRuntimePluginFixtures(
+        string repositoryRoot,
+        string runtimeDirectory,
+        string runtimePluginsDirectory,
+        IReadOnlyList<string> preferredPlugins)
     {
         var sourceCandidates = new[]
         {
@@ -376,49 +486,221 @@ internal static class Program
             Path.Combine(repositoryRoot, "Build", "plugins")
         };
 
-        var sdkDllCandidates = new[]
-        {
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "SDK", "LenovoLegionToolkit.Plugins.SDK.dll")),
-            Path.Combine(repositoryRoot, "Build", "SDK", "LenovoLegionToolkit.Plugins.SDK.dll"),
-            Path.Combine(runtimeDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")
-        };
-
         var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
         if (string.IsNullOrWhiteSpace(sourceRoot))
         {
             Console.WriteLine("[main-smoke] Plugin fixture source not found; continuing without fixture copy");
-            return;
+            return new List<RuntimePluginFixtureState>();
         }
 
-        var sdkDllPath = sdkDllCandidates.FirstOrDefault(File.Exists);
-
         Directory.CreateDirectory(runtimePluginsDirectory);
+        var fixtureStates = new List<RuntimePluginFixtureState>();
+        var pluginSourceDirectories = Directory.GetDirectories(sourceRoot, "*", SearchOption.TopDirectoryOnly)
+            .ToDictionary(path => Path.GetFileName(path), StringComparer.OrdinalIgnoreCase);
+        var pluginDirectoryNames = ResolveFixturePluginDirectoryNames(preferredPlugins, pluginSourceDirectories.Keys)
+            .ToArray();
 
-        var sourcePluginDirectories = Directory.GetDirectories(sourceRoot, "*", SearchOption.TopDirectoryOnly);
-        foreach (var sourcePluginDirectory in sourcePluginDirectories)
+        if (pluginDirectoryNames.Length == 0)
         {
-            var pluginDirectoryName = Path.GetFileName(sourcePluginDirectory);
-            var targetPluginDirectory = Path.Combine(runtimePluginsDirectory, pluginDirectoryName);
+            Console.WriteLine("[main-smoke] No matching runtime plugin fixtures selected; continuing without fixture copy");
+            return fixtureStates;
+        }
 
-            if (Directory.Exists(targetPluginDirectory))
-                Directory.Delete(targetPluginDirectory, recursive: true);
-
-            CopyDirectory(sourcePluginDirectory, targetPluginDirectory);
-
-            if (!string.IsNullOrWhiteSpace(sdkDllPath))
+        try
+        {
+            foreach (var pluginDirectoryName in pluginDirectoryNames)
             {
-                var targetSdkPath = Path.Combine(targetPluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll");
-                File.Copy(sdkDllPath, targetSdkPath, overwrite: true);
+                if (!pluginSourceDirectories.TryGetValue(pluginDirectoryName, out var sourcePluginDirectory))
+                    continue;
+
+                fixtureStates.Add(PrepareRuntimePluginFixture(runtimePluginsDirectory, pluginDirectoryName, sourcePluginDirectory));
+            }
+
+            Console.WriteLine($"[main-smoke] Prepared runtime plugin fixtures from: {sourceRoot} => [{string.Join(", ", pluginDirectoryNames)}]");
+            return fixtureStates;
+        }
+        catch
+        {
+            RestoreRuntimePluginFixtures(fixtureStates);
+            throw;
+        }
+    }
+
+    private static IEnumerable<string> ResolveFixturePluginDirectoryNames(
+        IReadOnlyList<string> preferredPlugins,
+        IEnumerable<string> availableDirectoryNames)
+    {
+        var available = availableDirectoryNames.ToArray();
+        if (preferredPlugins.Count == 0)
+            return available.OrderBy(name => name, StringComparer.OrdinalIgnoreCase);
+
+        var resolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pluginId in preferredPlugins)
+        {
+            foreach (var candidate in EnumeratePluginDirectoryNameCandidates(pluginId))
+            {
+                var match = available.FirstOrDefault(name => string.Equals(name, candidate, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(match))
+                    resolved.Add(match);
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(sdkDllPath))
-        {
-            var runtimeSdkPath = Path.Combine(runtimeDirectory, "LenovoLegionToolkit.Plugins.SDK.dll");
-            File.Copy(sdkDllPath, runtimeSdkPath, overwrite: true);
-        }
+        return resolved.OrderBy(name => name, StringComparer.OrdinalIgnoreCase);
+    }
 
-        Console.WriteLine($"[main-smoke] Prepared runtime plugin fixtures from: {sourceRoot}");
+    private static IEnumerable<string> EnumeratePluginDirectoryNameCandidates(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            yield break;
+
+        yield return pluginId;
+        yield return $"LenovoLegionToolkit.Plugins.{pluginId}";
+        yield return $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty, StringComparison.Ordinal)}";
+    }
+
+    private static RuntimePluginFixtureState PrepareRuntimePluginFixture(
+        string runtimePluginsDirectory,
+        string pluginDirectoryName,
+        string sourcePluginDirectory)
+    {
+        var targetPluginDirectory = Path.Combine(runtimePluginsDirectory, pluginDirectoryName);
+        var backupPluginDirectory = Path.Combine(runtimePluginsDirectory, $".{pluginDirectoryName}.smoke-backup");
+        var targetExistedBefore = Directory.Exists(targetPluginDirectory);
+        var pluginId = NormalizePluginIdFromDirectoryName(pluginDirectoryName);
+
+        try
+        {
+            CleanupFixtureDirectory(backupPluginDirectory);
+            if (targetExistedBefore)
+                Directory.Move(targetPluginDirectory, backupPluginDirectory);
+
+            CopyDirectory(sourcePluginDirectory, targetPluginDirectory);
+            return new RuntimePluginFixtureState(pluginId, sourcePluginDirectory, targetPluginDirectory, backupPluginDirectory, targetExistedBefore, true, null);
+        }
+        catch (Exception ex)
+        {
+            var warningMessage = $"Runtime fixture warning for '{pluginId}': {ex.Message}";
+            Console.WriteLine($"[main-smoke] {warningMessage}");
+            TryRestorePreparedRuntimePluginFixture(targetPluginDirectory, backupPluginDirectory, targetExistedBefore);
+            return new RuntimePluginFixtureState(pluginId, sourcePluginDirectory, targetPluginDirectory, backupPluginDirectory, targetExistedBefore, false, warningMessage);
+        }
+    }
+
+    private static string NormalizePluginIdFromDirectoryName(string pluginDirectoryName)
+    {
+        const string prefix = "LenovoLegionToolkit.Plugins.";
+        if (pluginDirectoryName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return pluginDirectoryName[prefix.Length..];
+
+        return pluginDirectoryName;
+    }
+
+    private static void TryRestorePreparedRuntimePluginFixture(string targetPluginDirectory, string backupPluginDirectory, bool targetExistedBefore)
+    {
+        try
+        {
+            CleanupFixtureDirectory(targetPluginDirectory);
+            if (targetExistedBefore && Directory.Exists(backupPluginDirectory))
+                Directory.Move(backupPluginDirectory, targetPluginDirectory);
+        }
+        catch (Exception restoreEx)
+        {
+            Console.WriteLine($"[main-smoke] Failed to rollback runtime fixture staging '{targetPluginDirectory}': {restoreEx.Message}");
+        }
+    }
+
+    private static void RestoreRuntimePluginFixtures(IReadOnlyList<RuntimePluginFixtureState>? fixtureStates)
+    {
+        if (fixtureStates is null || fixtureStates.Count == 0)
+            return;
+
+        foreach (var state in fixtureStates.Reverse())
+        {
+            if (!state.FixturePrepared)
+            {
+                if (!string.IsNullOrWhiteSpace(state.WarningMessage))
+                    Console.WriteLine($"[main-smoke] Leaving runtime fixture unchanged for '{state.PluginId}' after warning: {state.WarningMessage}");
+                continue;
+            }
+
+            try
+            {
+                CleanupFixtureDirectory(state.TargetDirectory);
+
+                if (state.TargetExistedBefore && Directory.Exists(state.BackupDirectory))
+                    Directory.Move(state.BackupDirectory, state.TargetDirectory);
+                else
+                    CleanupFixtureDirectory(state.BackupDirectory);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[main-smoke] Failed to restore runtime plugin fixture '{state.TargetDirectory}': {ex.Message}");
+            }
+        }
+    }
+
+    private static void CleanupFixtureDirectory(string path)
+    {
+        if (Directory.Exists(path))
+            Directory.Delete(path, recursive: true);
+    }
+
+    private static RuntimeFileFixtureState? PrepareRuntimeSdkFixture(string repositoryRoot, string runtimeDirectory)
+    {
+        var sdkDllCandidates = new[]
+        {
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "SDK", "LenovoLegionToolkit.Plugins.SDK.dll")),
+            Path.Combine(repositoryRoot, "Build", "SDK", "LenovoLegionToolkit.Plugins.SDK.dll")
+        };
+
+        var sdkDllPath = sdkDllCandidates.FirstOrDefault(File.Exists);
+        if (string.IsNullOrWhiteSpace(sdkDllPath))
+            return null;
+
+        var runtimeSdkPath = Path.Combine(runtimeDirectory, "LenovoLegionToolkit.Plugins.SDK.dll");
+        var backupSdkPath = Path.Combine(runtimeDirectory, ".LenovoLegionToolkit.Plugins.SDK.dll.smoke-backup");
+        var runtimeSdkExistedBefore = File.Exists(runtimeSdkPath);
+
+        CleanupFixtureFile(backupSdkPath);
+        if (runtimeSdkExistedBefore)
+            File.Move(runtimeSdkPath, backupSdkPath);
+
+        try
+        {
+            File.Copy(sdkDllPath, runtimeSdkPath, overwrite: true);
+            return new RuntimeFileFixtureState(runtimeSdkPath, backupSdkPath, runtimeSdkExistedBefore);
+        }
+        catch
+        {
+            RestoreRuntimeFileFixture(new RuntimeFileFixtureState(runtimeSdkPath, backupSdkPath, runtimeSdkExistedBefore));
+            throw;
+        }
+    }
+
+    private static void RestoreRuntimeFileFixture(RuntimeFileFixtureState? fixtureState)
+    {
+        if (fixtureState is null)
+            return;
+
+        try
+        {
+            CleanupFixtureFile(fixtureState.TargetPath);
+
+            if (fixtureState.TargetExistedBefore && File.Exists(fixtureState.BackupPath))
+                File.Move(fixtureState.BackupPath, fixtureState.TargetPath);
+            else
+                CleanupFixtureFile(fixtureState.BackupPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[main-smoke] Failed to restore runtime file fixture '{fixtureState.TargetPath}': {ex.Message}");
+        }
+    }
+
+    private static void CleanupFixtureFile(string path)
+    {
+        if (File.Exists(path))
+            File.Delete(path);
     }
 
     private static void CopyDirectory(string source, string destination)
@@ -742,7 +1024,7 @@ internal static class Program
                 Console.WriteLine($"[main-smoke] Network feature-page test skipped (no Open button): {pluginId}");
 
             if (marketplaceAvailable && IsPluginInstalledInUi(mainWindow, pluginId))
-                TestDoubleClickOpensSettingsOrSkip(mainWindow, processId, pluginId);
+                TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
             else if (isKnownInstalled)
                 Console.WriteLine($"[main-smoke] Skipping marketplace settings validation for '{pluginId}' because marketplace UI is unavailable.");
             else
@@ -791,7 +1073,10 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Feature-page test skipped (no Open button): {pluginId}");
 
         if (marketplaceAvailable && IsPluginInstalledInUi(mainWindow, pluginId))
+        {
             TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
+            TestConfigureOpensSettings(mainWindow, processId, pluginId);
+        }
         else if (isKnownInstalled)
             Console.WriteLine($"[main-smoke] Skipping marketplace settings validation for '{pluginId}' because direct-route verification already succeeded.");
         else
@@ -842,9 +1127,15 @@ internal static class Program
                || pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
     }
 
+    private static bool SupportsPluginFocusedOptimizationRoute(string pluginId)
+    {
+        return pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
+               || pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static void TestOpenOptimizationExtension(AutomationElement mainWindow, string pluginId, bool returnToMarketplace)
     {
-        var openButton = WaitForAutomationId(mainWindow, $"PluginOpenButton_{pluginId}", TimeSpan.FromSeconds(20));
+        var openButton = FindOptimizationOpenEntryButton(mainWindow, pluginId, TimeSpan.FromSeconds(20));
         Click(openButton);
 
         EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: true);
@@ -853,6 +1144,26 @@ internal static class Program
 
         if (returnToMarketplace)
             NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+    }
+
+    private static AutomationElement FindOptimizationOpenEntryButton(AutomationElement mainWindow, string pluginId, TimeSpan timeout)
+    {
+        var directAutomationId = $"PluginOpenButton_{pluginId}";
+        var openButton = TryWaitForAutomationId(mainWindow, directAutomationId, timeout);
+        if (openButton is not null)
+            return openButton;
+
+        if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            var fallback = TryWaitForAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}", TimeSpan.FromSeconds(Math.Max(3, timeout.TotalSeconds / 2)));
+            if (fallback is not null)
+            {
+                Console.WriteLine($"[main-smoke] custom-mouse optimization entry button fell back from '{directAutomationId}' to '{fallback.Current.AutomationId}' name='{fallback.Current.Name}'");
+                return fallback;
+            }
+        }
+
+        throw new TimeoutException($"Timed out waiting for optimization entry button for '{pluginId}'. Tried '{directAutomationId}'.");
     }
 
     private static void EnsurePluginFeaturePageRendered(AutomationElement mainWindow, string pluginId, string entrySource)
@@ -898,6 +1209,7 @@ internal static class Program
             }
         }
     }
+
 
     private static bool IsPluginSpecificFeatureMarkerVisible(AutomationElement mainWindow, string pluginId)
     {
@@ -957,30 +1269,15 @@ internal static class Program
     {
         var existingSettingsWindows = GetSettingsWindowHandles(processId, mainWindow.Current.NativeWindowHandle);
         var mainWindowHandle = mainWindow.Current.NativeWindowHandle;
-        AutomationElement settingsWindow;
-        try
-        {
-            var targetElement = ResolvePluginDoubleClickTarget(mainWindow, pluginId);
-            TrySelect(targetElement);
-            DoubleClick(targetElement);
+        var targetElement = ResolvePluginDoubleClickTarget(mainWindow, pluginId);
+        TrySelect(targetElement);
+        DoubleClick(targetElement);
 
-            settingsWindow = WaitForPluginSettingsWindow(
-                processId,
-                mainWindowHandle,
-                existingSettingsWindows,
-                TimeSpan.FromSeconds(7));
-        }
-        catch (Exception ex) when (ex is TimeoutException or InvalidOperationException)
-        {
-            Console.WriteLine($"[main-smoke] Double-click path unavailable for '{pluginId}', falling back to Configure button.");
-            var configureButton = WaitForAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}", TimeSpan.FromSeconds(8));
-            Click(configureButton);
-            settingsWindow = WaitForPluginSettingsWindow(
-                processId,
-                mainWindowHandle,
-                existingSettingsWindows,
-                TimeSpan.FromSeconds(15));
-        }
+        var settingsWindow = WaitForPluginSettingsWindow(
+            processId,
+            mainWindowHandle,
+            existingSettingsWindows,
+            TimeSpan.FromSeconds(7));
 
         Console.WriteLine($"[main-smoke] Double-click opened settings window for: {pluginId}");
         CapturePluginSettingsWindow(settingsWindow, pluginId);
@@ -991,16 +1288,22 @@ internal static class Program
         CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
     }
 
-    private static void TestDoubleClickOpensSettingsOrSkip(AutomationElement mainWindow, int processId, string pluginId)
+
+    private static void TestConfigureOpensSettings(AutomationElement mainWindow, int processId, string pluginId)
     {
-        try
-        {
-            TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
-        }
-        catch (Exception ex) when ((ex is TimeoutException or InvalidOperationException) && CanSkipMissingMarketplaceSettingsWindow(pluginId))
-        {
-            Console.WriteLine($"[main-smoke] Marketplace settings window did not appear for '{pluginId}'; skipping window validation.");
-        }
+        var existingSettingsWindows = GetSettingsWindowHandles(processId, mainWindow.Current.NativeWindowHandle);
+        var configureButton = WaitForAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}", TimeSpan.FromSeconds(8));
+        Click(configureButton);
+
+        var settingsWindow = WaitForPluginSettingsWindow(
+            processId,
+            mainWindow.Current.NativeWindowHandle,
+            existingSettingsWindows,
+            TimeSpan.FromSeconds(15));
+
+        Console.WriteLine($"[main-smoke] Configure button opened settings window for: {pluginId}");
+        CapturePluginSettingsWindow(settingsWindow, pluginId);
+        CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
     }
 
     private static void TestOptimizationSettingsWindow(AutomationElement mainWindow, int processId, string pluginId, bool returnToMarketplace)
@@ -1010,45 +1313,92 @@ internal static class Program
         var definition = GetOptimizationRouteDefinition(pluginId)
                          ?? throw new InvalidOperationException($"No optimization route definition found for plugin '{pluginId}'.");
 
-        var category = WaitForAutomationId(mainWindow, definition.CategoryAutomationId, TimeSpan.FromSeconds(30));
-        ExpandIfNeeded(category);
+        var category = WaitForOptimizationCategory(mainWindow, pluginId, definition, TimeSpan.FromSeconds(30));
+        if (category is not null)
+            ExpandIfNeeded(category);
 
-        var settingsButton = WaitForAutomationId(mainWindow, definition.SettingsButtonAutomationId, TimeSpan.FromSeconds(20));
+        var settingsButton = WaitForOptimizationSettingsButton(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
         var existingSettingsWindows = GetSettingsWindowHandles(processId, mainWindow.Current.NativeWindowHandle);
         Click(settingsButton);
+
+        if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine($"[main-smoke] custom-mouse optimization settings button clicked: id='{settingsButton.Current.AutomationId}' name='{settingsButton.Current.Name}'");
+            BringToForeground(mainWindow);
+            Click(settingsButton);
+            MouseClick(settingsButton);
+            MouseClick(settingsButton);
+            Console.WriteLine("[main-smoke] custom-mouse optimization settings button received fallback mouse double-click.");
+        }
 
         AutomationElement settingsWindow;
         try
         {
-            settingsWindow = WaitForPluginSettingsWindow(
-                processId,
-                mainWindow.Current.NativeWindowHandle,
-                existingSettingsWindows,
-                TimeSpan.FromSeconds(15));
+            settingsWindow = pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase)
+                ? WaitForPluginSettingsWindowByHandleOrName(
+                    processId,
+                    mainWindow.Current.NativeWindowHandle,
+                    existingSettingsWindows,
+                    TimeSpan.FromSeconds(15),
+                    "custom-mouse optimization",
+                    new[] { "自定义鼠标 设置", "Custom Mouse Settings" })
+                : WaitForPluginSettingsWindow(
+                    processId,
+                    mainWindow.Current.NativeWindowHandle,
+                    existingSettingsWindows,
+                    TimeSpan.FromSeconds(15),
+                    Array.Empty<string>());
         }
-        catch (TimeoutException) when (CanSkipMissingOptimizationSettingsWindow(pluginId))
+        catch (TimeoutException) when (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"[main-smoke] Optimization settings window did not appear for '{pluginId}'; skipping window validation.");
-
-            if (returnToMarketplace)
-                NavigateToPluginExtensionsPage(mainWindow, refresh: false);
-
+            Console.WriteLine("[main-smoke] custom-mouse optimization settings window not detected; continuing after explicit trigger trace.");
             return;
         }
 
         Console.WriteLine($"[main-smoke] Opened optimization settings window for: {pluginId}");
         CapturePluginSettingsWindow(settingsWindow, pluginId);
-        CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
+
+        var settingsWindowHandle = settingsWindow.Current.NativeWindowHandle;
+        Console.WriteLine($"[main-smoke] Optimization settings window handle for '{pluginId}': {settingsWindowHandle}");
+
+        if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            WaitForCustomMouseTopLevelWindowToClose(settingsWindow, processId, TimeSpan.FromSeconds(8), "optimization");
+        }
+        else
+        {
+            CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
+        }
 
         if (returnToMarketplace)
+        {
+            if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+                WaitForCustomMouseReentryCleanupCheckpoint(mainWindow, processId, TimeSpan.FromSeconds(8));
+
             NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+        }
     }
 
-    private static bool CanSkipMissingOptimizationSettingsWindow(string pluginId) =>
-        pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase);
+    private static void WaitForCustomMouseReentryCleanupCheckpoint(AutomationElement mainWindow, int processId, TimeSpan timeout)
+    {
+        Console.WriteLine("[main-smoke] Waiting for custom-mouse reentry cleanup checkpoint before returning to Plugin Extensions");
+        var reentryWindow = WaitForTopLevelSettingsWindowByName(
+            processId,
+            mainWindow.Current.NativeWindowHandle,
+            new[] { "自定义鼠标 设置", "Custom Mouse Settings" },
+            timeout);
 
-    private static bool CanSkipMissingMarketplaceSettingsWindow(string pluginId) =>
-        pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase);
+        if (reentryWindow is null)
+        {
+            Console.WriteLine("[main-smoke] custom-mouse reentry cleanup checkpoint: no reentry settings window appeared.");
+            return;
+        }
+
+        var reentryHandle = reentryWindow.Current.NativeWindowHandle;
+        Console.WriteLine($"[main-smoke] custom-mouse reentry cleanup checkpoint: reentry window appeared, handle={reentryHandle} name='{reentryWindow.Current.Name}'");
+        Console.WriteLine($"[main-smoke] custom-mouse reentry cleanup checkpoint: forcing explicit close for top-level handle {reentryHandle} via PART_CloseButton/_closeButton.");
+        WaitForCustomMouseTopLevelWindowToClose(reentryWindow, processId, timeout, "reentry-checkpoint");
+    }
 
     private static void TestNetworkAccelerationSettingsInteractions(AutomationElement settingsWindow)
     {
@@ -1112,8 +1462,13 @@ internal static class Program
         int processId,
         int mainWindowHandle,
         ISet<int> existingSettingsWindows,
-        TimeSpan timeout)
+        TimeSpan timeout,
+        params string[] expectedWindowNames)
     {
+        var normalizedExpectedNames = expectedWindowNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
@@ -1136,8 +1491,17 @@ internal static class Program
                     if (!IsLikelySettingsWindow(window))
                         continue;
 
+                    if (normalizedExpectedNames.Length > 0
+                        && !normalizedExpectedNames.Any(name => string.Equals(window.Current.Name, name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        continue;
+                    }
+
                     if (!existingSettingsWindows.Contains(handle))
+                    {
+                        Console.WriteLine($"[main-smoke] Detected plugin settings window handle {handle}: id='{window.Current.AutomationId}' name='{window.Current.Name}'");
                         return window;
+                    }
                 }
             }
             catch (Exception ex) when (IsRecoverableAutomationException(ex))
@@ -1150,6 +1514,59 @@ internal static class Program
 
         DumpProcessTopLevelElements(processId);
         throw new TimeoutException("Plugin settings window did not appear after double-click.");
+    }
+
+    private static AutomationElement WaitForPluginSettingsWindowByHandleOrName(
+        int processId,
+        int mainWindowHandle,
+        ISet<int> existingSettingsWindows,
+        TimeSpan timeout,
+        string scenario,
+        params string[] expectedWindowNames)
+    {
+        var handleTimeout = TimeSpan.FromSeconds(Math.Max(1, Math.Min(timeout.TotalSeconds / 2, 7)));
+        var windowByHandle = TryWaitForPluginSettingsWindow(
+            processId,
+            mainWindowHandle,
+            existingSettingsWindows,
+            handleTimeout,
+            Array.Empty<string>());
+
+        if (windowByHandle is not null)
+            return windowByHandle;
+
+        var namedWindow = WaitForTopLevelSettingsWindowByName(
+            processId,
+            mainWindowHandle,
+            expectedWindowNames,
+            timeout,
+            existingSettingsWindows.ToArray());
+
+        if (namedWindow is not null)
+        {
+            Console.WriteLine($"[main-smoke] Detected {scenario} settings window by explicit name: handle={namedWindow.Current.NativeWindowHandle} id='{namedWindow.Current.AutomationId}' name='{namedWindow.Current.Name}'");
+            return namedWindow;
+        }
+
+        DumpProcessTopLevelElements(processId);
+        throw new TimeoutException($"{scenario} settings window did not appear by handle or explicit name.");
+    }
+
+    private static AutomationElement? TryWaitForPluginSettingsWindow(
+        int processId,
+        int mainWindowHandle,
+        ISet<int> existingSettingsWindows,
+        TimeSpan timeout,
+        params string[] expectedWindowNames)
+    {
+        try
+        {
+            return WaitForPluginSettingsWindow(processId, mainWindowHandle, existingSettingsWindows, timeout, expectedWindowNames);
+        }
+        catch (TimeoutException)
+        {
+            return null;
+        }
     }
 
     private static HashSet<int> GetSettingsWindowHandles(int processId, int mainWindowHandle)
@@ -1195,24 +1612,157 @@ internal static class Program
             return;
         }
 
-        CloseWindow(window);
-        var closed = WaitUntil(
-            () => !IsTopLevelWindowOpen(processId, handle),
-            TimeSpan.FromSeconds(3),
-            TimeSpan.FromMilliseconds(150));
+        Console.WriteLine($"[main-smoke] Closing settings window handle {handle}");
 
-        if (closed)
-            return;
-
-        var reloaded = FindTopLevelWindow(processId, handle);
-        var closeButton = reloaded is null ? null : FindByAutomationId(reloaded, "PART_CloseButton") ?? FindByAutomationId(reloaded, "CloseButton");
-        if (IsVisible(closeButton))
+        if (IsCustomMouseSettingsWindow(window))
         {
-            Click(closeButton!);
+            CloseCustomMouseSettingsWindowHandleAndWait(window, processId, timeout, "generic");
+            return;
         }
 
-        if (!WaitUntil(() => !IsTopLevelWindowOpen(processId, handle), timeout, TimeSpan.FromMilliseconds(150)))
-            Console.WriteLine($"[main-smoke] Warning: settings window handle {handle} did not close within timeout.");
+        TryCloseWindowViaExplicitCloseButton(window, processId, handle, timeout, logPrefix: "settings window");
+    }
+
+    private static bool IsCustomMouseSettingsWindow(AutomationElement window)
+    {
+        if (window is null)
+            return false;
+
+        if (string.Equals(window.Current.Name, "自定义鼠标 设置", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(window.Current.Name, "Custom Mouse Settings", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return IsVisible(FindByAutomationId(window, "PART_CloseButton"))
+               || IsVisible(FindByAutomationId(window, "_closeButton"));
+    }
+
+    private static bool TryCloseWindowViaExplicitCloseButton(
+        AutomationElement? window,
+        int processId,
+        int handle,
+        TimeSpan timeout,
+        string logPrefix)
+    {
+        if (window is null || handle == 0)
+            return false;
+
+        var explicitCloseButton = FindVisibleCloseButton(window);
+        if (!IsVisible(explicitCloseButton))
+        {
+            Console.WriteLine($"[main-smoke] {logPrefix} explicit close button not found for handle {handle}.");
+            return false;
+        }
+
+        Console.WriteLine($"[main-smoke] Clicking {logPrefix} explicit close button for handle {handle}: {explicitCloseButton!.Current.AutomationId}");
+        Click(explicitCloseButton!);
+
+        var closed = WaitUntil(
+            () => !IsTopLevelWindowOpen(processId, handle),
+            timeout,
+            TimeSpan.FromMilliseconds(150));
+        Console.WriteLine($"[main-smoke] {logPrefix} closed verification via explicit button (handle {handle}): {closed}");
+        return closed;
+    }
+
+    private static void CloseCustomMouseSettingsWindowHandleAndWait(AutomationElement window, int processId, TimeSpan timeout, string stage)
+    {
+        var handle = window.Current.NativeWindowHandle;
+        Console.WriteLine($"[main-smoke] custom-mouse {stage} close start: handle={handle} name='{window.Current.Name}'");
+
+        if (handle == 0)
+            throw new InvalidOperationException($"custom-mouse {stage} settings window does not have a native handle.");
+
+        var liveWindow = WaitForCustomMouseSettingsCloseButton(window, processId, timeout, stage);
+        var liveHandle = liveWindow.Current.NativeWindowHandle;
+        if (liveHandle != handle)
+            Console.WriteLine($"[main-smoke] custom-mouse {stage} close target refreshed: originalHandle={handle} liveHandle={liveHandle}");
+
+        var targetHandle = liveHandle != 0 ? liveHandle : handle;
+        Console.WriteLine($"[main-smoke] custom-mouse {stage} closing explicit top-level handle {targetHandle}.");
+        ClickCustomMouseExplicitCloseButtonAndWait(liveWindow, processId, targetHandle, timeout, stage);
+    }
+
+    private static void WaitForCustomMouseTopLevelWindowToClose(AutomationElement window, int processId, TimeSpan timeout, string stage)
+    {
+        var handle = window.Current.NativeWindowHandle;
+        Console.WriteLine($"[main-smoke] custom-mouse {stage}: detected top-level settings window handle={handle} name='{window.Current.Name}'");
+        Console.WriteLine($"[main-smoke] custom-mouse {stage}: explicitly closing handle {handle} via PART_CloseButton/_closeButton when available.");
+        CloseCustomMouseSettingsWindowHandleAndWait(window, processId, timeout, stage);
+
+        var closed = WaitUntil(
+            () => !IsTopLevelWindowOpen(processId, handle),
+            timeout,
+            TimeSpan.FromMilliseconds(150));
+        Console.WriteLine($"[main-smoke] custom-mouse {stage}: top-level handle gone verification for {handle}: {closed}");
+        if (!closed)
+            throw new TimeoutException($"custom-mouse {stage} window handle {handle} remained open after explicit close.");
+    }
+
+    private static void ClickCustomMouseExplicitCloseButtonAndWait(AutomationElement window, int processId, int handle, TimeSpan timeout, string stage)
+    {
+        var closeButton = FindVisibleCloseButton(window)
+            ?? throw new TimeoutException($"custom-mouse {stage} settings window handle {handle} never exposed PART_CloseButton/_closeButton.");
+
+        var closeButtonId = closeButton.Current.AutomationId;
+        var closeButtonName = closeButton.Current.Name;
+        Console.WriteLine($"[main-smoke] Clicking custom-mouse {stage} explicit close button for handle {handle}: id='{closeButtonId}' name='{closeButtonName}'");
+        Click(closeButton);
+
+        var closed = WaitUntil(
+            () => !IsTopLevelWindowOpen(processId, handle),
+            timeout,
+            TimeSpan.FromMilliseconds(150));
+
+        Console.WriteLine($"[main-smoke] custom-mouse {stage} settings handle closed: {closed} (handle={handle})");
+
+        if (!closed)
+            throw new TimeoutException($"custom-mouse settings window handle {handle} did not close after explicit close button click.");
+    }
+
+    private static AutomationElement WaitForCustomMouseSettingsCloseButton(AutomationElement window, int processId, TimeSpan timeout, string stage)
+    {
+        var handle = window.Current.NativeWindowHandle;
+        AutomationElement? liveWindowWithCloseButton = null;
+        var closeButtonReady = WaitUntil(
+            () =>
+            {
+                var liveWindow = FindTopLevelWindow(processId, handle)
+                    ?? WaitForTopLevelSettingsWindowByName(
+                        processId,
+                        0,
+                        new[] { "自定义鼠标 设置", "Custom Mouse Settings" },
+                        TimeSpan.FromMilliseconds(1),
+                        handle);
+                if (liveWindow is null)
+                    return false;
+
+                var liveCloseButton = FindVisibleCloseButton(liveWindow);
+                if (!IsVisible(liveCloseButton))
+                {
+                    Console.WriteLine($"[main-smoke] custom-mouse {stage} explicit close button not found yet for handle {handle}.");
+                    return false;
+                }
+
+                liveWindowWithCloseButton = liveWindow;
+                Console.WriteLine($"[main-smoke] custom-mouse {stage} close button ready for handle {liveWindow.Current.NativeWindowHandle}: {liveCloseButton!.Current.AutomationId}");
+                return true;
+            },
+            timeout,
+            TimeSpan.FromMilliseconds(150));
+
+        if (!closeButtonReady || liveWindowWithCloseButton is null)
+            throw new TimeoutException($"custom-mouse {stage} settings window handle {handle} never exposed PART_CloseButton/_closeButton.");
+
+        return liveWindowWithCloseButton;
+    }
+
+    private static AutomationElement? FindVisibleCloseButton(AutomationElement window)
+    {
+        return FindByAutomationId(window, "PART_CloseButton")
+               ?? FindByAutomationId(window, "_closeButton")
+               ?? FindByAutomationId(window, "CloseButton");
     }
 
     private static void CloseStalePluginSettingsWindows(AutomationElement mainWindow)
@@ -1245,6 +1795,62 @@ internal static class Program
     private static bool IsTopLevelWindowOpen(int processId, int windowHandle)
     {
         return FindTopLevelWindow(processId, windowHandle) is not null;
+    }
+
+    private static AutomationElement? WaitForTopLevelSettingsWindowByName(
+        int processId,
+        int mainWindowHandle,
+        IEnumerable<string> names,
+        TimeSpan timeout,
+        params int[] excludedHandles)
+    {
+        var normalizedNames = names
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (normalizedNames.Length == 0)
+            return null;
+
+        var excludedHandleSet = excludedHandles
+            .Where(handle => handle != 0)
+            .ToHashSet();
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                var match = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition)
+                    .Cast<AutomationElement>()
+                    .FirstOrDefault(window =>
+                    {
+                        if (window.Current.ProcessId != processId)
+                            return false;
+
+                        if (window.Current.ControlType != ControlType.Window)
+                            return false;
+
+                        var handle = window.Current.NativeWindowHandle;
+                        if (handle == 0 || handle == mainWindowHandle || excludedHandleSet.Contains(handle))
+                            return false;
+
+                        if (!IsLikelySettingsWindow(window))
+                            return false;
+
+                        return normalizedNames.Any(name => string.Equals(window.Current.Name, name, StringComparison.OrdinalIgnoreCase));
+                    });
+
+                if (match is not null)
+                    return match;
+            }
+            catch (Exception ex) when (IsRecoverableAutomationException(ex))
+            {
+                Console.WriteLine($"[main-smoke] Retrying named settings window discovery after {ex.GetType().Name}");
+            }
+
+            Thread.Sleep(150);
+        }
+
+        return null;
     }
 
     private static AutomationElement? FindTopLevelWindow(int processId, int windowHandle)
@@ -1355,15 +1961,14 @@ internal static class Program
         var definition = GetOptimizationRouteDefinition(pluginId)
                          ?? throw new InvalidOperationException($"No optimization route definition found for plugin '{pluginId}'.");
 
-        var category = WaitForAutomationId(mainWindow, definition.CategoryAutomationId, TimeSpan.FromSeconds(30));
-        ExpandIfNeeded(category);
+        var category = WaitForOptimizationCategory(mainWindow, pluginId, definition, TimeSpan.FromSeconds(30));
+        if (category is not null)
+            ExpandIfNeeded(category);
 
-        var settingsButtonVisible = IsVisible(FindByAutomationId(mainWindow, definition.SettingsButtonAutomationId));
-        Console.WriteLine($"[main-smoke] Optimization category settings button visible ({pluginId}): {settingsButtonVisible}");
+        var settingsButton = WaitForOptimizationSettingsButton(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
+        Console.WriteLine($"[main-smoke] Optimization settings button ready ({pluginId}): {settingsButton.Current.AutomationId}");
 
-        var actions = definition.ActionAutomationIds
-            .Select(actionId => WaitForAutomationId(mainWindow, actionId, TimeSpan.FromSeconds(20)))
-            .ToArray();
+        var actions = WaitForOptimizationActionButtons(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
 
         if (!toggleActions)
             return;
@@ -1376,13 +1981,80 @@ internal static class Program
         }
     }
 
+    private static AutomationElement[] WaitForOptimizationActionButtons(
+        AutomationElement mainWindow,
+        string pluginId,
+        OptimizationRouteDefinition definition,
+        TimeSpan timeout)
+    {
+        try
+        {
+            return definition.ActionAutomationIds
+                .Select(actionId => WaitForAutomationId(mainWindow, actionId, timeout))
+                .ToArray();
+        }
+        catch (TimeoutException) when (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            var actionPrefixes = new[]
+            {
+                "WindowsOptimizationAction_custom.mouse.",
+                "WindowsOptimizationAction_custom-mouse.",
+                "WindowsOptimizationAction_custommouse.",
+                "WindowsOptimizationAction_LenovoLegionToolkit.Plugins.CustomMouse.",
+                "WindowsOptimizationAction_CustomMouse."
+            };
+            var resolvedActions = definition.ActionAutomationIds
+                .Select(actionId =>
+                {
+                    var suffix = actionId.StartsWith("WindowsOptimizationAction_", StringComparison.Ordinal)
+                        ? actionId["WindowsOptimizationAction_".Length..]
+                        : actionId;
+
+                    var suffixCandidates = new[]
+                    {
+                        suffix,
+                        suffix.Replace("CustomMouse.", "custom.mouse.", StringComparison.Ordinal),
+                        suffix.Replace("CustomMouse.", "custom-mouse.", StringComparison.Ordinal),
+                        suffix.Replace("CustomMouse.", "custommouse.", StringComparison.Ordinal),
+                        suffix.Replace("custom.mouse.", "CustomMouse.", StringComparison.Ordinal),
+                        suffix.Replace("custom.mouse.", "custom-mouse.", StringComparison.Ordinal),
+                        suffix.Replace("custom.mouse.", "custommouse.", StringComparison.Ordinal)
+                    }.Distinct(StringComparer.Ordinal);
+
+                    foreach (var candidateSuffix in suffixCandidates)
+                    {
+                        foreach (var actionPrefix in actionPrefixes)
+                        {
+                            var fallback = TryWaitForAutomationIdPrefix(mainWindow, actionPrefix + candidateSuffix, timeout);
+                            if (fallback is not null)
+                            {
+                                Console.WriteLine($"[main-smoke] custom-mouse optimization action resolved by prefix fallback: requested='{actionId}' candidate='{actionPrefix + candidateSuffix}' actual='{fallback.Current.AutomationId}' name='{fallback.Current.Name}'");
+                                return fallback;
+                            }
+                        }
+                    }
+
+                    return WaitForAutomationId(mainWindow, actionId, timeout);
+                })
+                .ToArray();
+
+            return resolvedActions;
+        }
+    }
+
     private static OptimizationRouteDefinition? GetOptimizationRouteDefinition(string pluginId)
     {
         if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
         {
             return new OptimizationRouteDefinition(
-                "WindowsOptimizationCategory_shell.integration",
-                "WindowsOptimizationCategorySettings_shell-integration",
+                new[]
+                {
+                    "WindowsOptimizationCategory_shell.integration"
+                },
+                new[]
+                {
+                    "WindowsOptimizationCategorySettings_shell-integration"
+                },
                 new[]
                 {
                     "WindowsOptimizationAction_shell.integration.enable",
@@ -1393,22 +2065,205 @@ internal static class Program
         if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
         {
             return new OptimizationRouteDefinition(
-                "WindowsOptimizationCategory_custom.mouse",
-                "WindowsOptimizationCategorySettings_custom-mouse",
+                new[]
+                {
+                    "WindowsOptimizationCategory_custom.mouse",
+                    "WindowsOptimizationCategory_custom-mouse",
+                    "WindowsOptimizationCategory_custommouse",
+                    "WindowsOptimizationCategory_LenovoLegionToolkit.Plugins.CustomMouse",
+                    "WindowsOptimizationCategory_CustomMouse"
+                },
+                new[]
+                {
+                    "WindowsOptimizationCategorySettings_custom.mouse",
+                    "WindowsOptimizationCategorySettings_custom-mouse",
+                    "WindowsOptimizationCategorySettings_custommouse",
+                    "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                    "WindowsOptimizationCategorySettings_CustomMouse"
+                },
                 new[]
                 {
                     "WindowsOptimizationAction_custom.mouse.cursor.auto-theme.enable",
                     "WindowsOptimizationAction_custom.mouse.cursor.auto-theme.disable"
+                },
+                new[]
+                {
+                    "WindowsOptimizationAction_CustomMouse.cursor.auto-theme.enable",
+                    "WindowsOptimizationAction_CustomMouse.cursor.auto-theme.disable"
                 });
         }
 
         return null;
     }
 
+    private static AutomationElement? WaitForOptimizationCategory(
+        AutomationElement mainWindow,
+        string pluginId,
+        OptimizationRouteDefinition definition,
+        TimeSpan timeout)
+    {
+        var categoryAutomationIds = definition.CategoryAutomationIds;
+        if (definition.CategoryAutomationIdFallbacks is { Length: > 0 })
+            categoryAutomationIds = categoryAutomationIds.Concat(definition.CategoryAutomationIdFallbacks).Distinct(StringComparer.Ordinal).ToArray();
+
+        if (categoryAutomationIds.Length > 0)
+        {
+            try
+            {
+                var category = WaitForAnyAutomationId(mainWindow, categoryAutomationIds, timeout);
+                Console.WriteLine($"[main-smoke] Optimization category ready via category automation id ({pluginId}): {category.Current.AutomationId}");
+                return category;
+            }
+            catch (TimeoutException) when (SupportsPluginFocusedOptimizationRoute(pluginId))
+            {
+                Console.WriteLine($"[main-smoke] Optimization category direct locator missed ({pluginId}); tried '{string.Join("', '", categoryAutomationIds)}'. Falling back to settings/action markers.");
+
+                if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+                {
+                    var focusedTimeout = TimeSpan.FromSeconds(Math.Max(3, timeout.TotalSeconds / 2));
+                    var categoryPrefixes = new[]
+                    {
+                        "WindowsOptimizationCategory_custom",
+                        "WindowsOptimizationCategorySettings_custom",
+                        "WindowsOptimizationCategory_LenovoLegionToolkit.Plugins.CustomMouse",
+                        "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                        "WindowsOptimizationCategory_CustomMouse",
+                        "WindowsOptimizationCategorySettings_CustomMouse"
+                    };
+
+                    foreach (var categoryPrefix in categoryPrefixes)
+                    {
+                        var categoryByPrefix = TryWaitForAutomationIdPrefix(mainWindow, categoryPrefix, focusedTimeout);
+                        if (categoryByPrefix is not null)
+                        {
+                            Console.WriteLine($"[main-smoke] custom-mouse optimization category resolved by prefix fallback: actual='{categoryByPrefix.Current.AutomationId}' name='{categoryByPrefix.Current.Name}'");
+                            return categoryByPrefix;
+                        }
+                    }
+
+                    var categoryBySettingsButtonPrefix = TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_custom", focusedTimeout)
+                        ?? TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse", focusedTimeout)
+                        ?? TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_CustomMouse", focusedTimeout);
+                    if (categoryBySettingsButtonPrefix is not null)
+                    {
+                        Console.WriteLine($"[main-smoke] custom-mouse optimization category inferred from settings-button prefix fallback: actual='{categoryBySettingsButtonPrefix.Current.AutomationId}' name='{categoryBySettingsButtonPrefix.Current.Name}'");
+                        var inferredCategory = FindAncestorByAutomationIdPrefix(categoryBySettingsButtonPrefix, "WindowsOptimizationCategory_");
+                        if (inferredCategory is not null)
+                        {
+                            Console.WriteLine($"[main-smoke] custom-mouse optimization category inferred from settings-button ancestor: actual='{inferredCategory.Current.AutomationId}' name='{inferredCategory.Current.Name}'");
+                            return inferredCategory;
+                        }
+
+                        Console.WriteLine("[main-smoke] custom-mouse settings button prefix located, but no category ancestor with WindowsOptimizationCategory_ prefix was found.");
+                    }
+
+                    DumpAutomationSnapshot(mainWindow, 220);
+                }
+            }
+        }
+
+        if (SupportsPluginFocusedOptimizationRoute(pluginId))
+        {
+            var settingsButton = WaitForOptimizationSettingsButton(mainWindow, pluginId, definition, timeout);
+            Console.WriteLine($"[main-smoke] Optimization category fallback anchored by settings button ({pluginId}): {settingsButton.Current.AutomationId}");
+            var category = FindAncestorByAutomationIdPrefix(settingsButton, "WindowsOptimizationCategory_");
+            if (category is not null)
+            {
+                Console.WriteLine($"[main-smoke] Optimization category inferred from settings button ({pluginId}): {category.Current.AutomationId}");
+                return category;
+            }
+
+            Console.WriteLine($"[main-smoke] Optimization category inferred via plugin-focused route failed to resolve ancestor ({pluginId}); continuing with settings/action markers.");
+            return null;
+        }
+
+        throw new InvalidOperationException($"No optimization category locator available for plugin '{pluginId}'.");
+    }
+
+    private static AutomationElement WaitForOptimizationSettingsButton(
+        AutomationElement mainWindow,
+        string pluginId,
+        OptimizationRouteDefinition definition,
+        TimeSpan timeout)
+    {
+        AutomationElement settingsButton;
+        try
+        {
+            settingsButton = WaitForAnyAutomationId(mainWindow, definition.SettingsButtonAutomationIds, timeout);
+        }
+        catch (TimeoutException) when (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+        {
+            var settingsButtonPrefixes = new[]
+            {
+                "WindowsOptimizationCategorySettings_custom.mouse",
+                "WindowsOptimizationCategorySettings_custom-mouse",
+                "WindowsOptimizationCategorySettings_custommouse",
+                "WindowsOptimizationCategorySettings_custom",
+                "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                "WindowsOptimizationCategorySettings_CustomMouse"
+            };
+
+            settingsButton = settingsButtonPrefixes
+                .Select(prefix => TryWaitForAutomationIdPrefix(mainWindow, prefix, timeout))
+                .FirstOrDefault(element => element is not null)
+                ?? WaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse", timeout);
+            Console.WriteLine($"[main-smoke] custom-mouse optimization settings button resolved by prefix fallback: requested='{string.Join("', '", definition.SettingsButtonAutomationIds)}' actual='{settingsButton.Current.AutomationId}' name='{settingsButton.Current.Name}'");
+        }
+
+        if (SupportsPluginFocusedOptimizationRoute(pluginId))
+            Console.WriteLine($"[main-smoke] Optimization route anchored by plugin settings button ({pluginId}): {settingsButton.Current.AutomationId}");
+
+        return settingsButton;
+    }
+
+    private static AutomationElement WaitForAutomationIdPrefix(AutomationElement root, string automationIdPrefix, TimeSpan timeout)
+    {
+        var element = TryWaitForAutomationIdPrefix(root, automationIdPrefix, timeout);
+        if (element is null)
+            throw new TimeoutException($"Timed out waiting for automation element prefix '{automationIdPrefix}'.");
+
+        return element;
+    }
+
+    private static AutomationElement? TryWaitForAutomationIdPrefix(AutomationElement root, string automationIdPrefix, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => IsInteractable(FindByAutomationIdPrefix(root, automationIdPrefix)),
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            return null;
+
+        var element = FindByAutomationIdPrefix(root, automationIdPrefix);
+        return IsInteractable(element) ? element : null;
+    }
+
+    private static AutomationElement? FindAncestorByAutomationIdPrefix(AutomationElement element, string automationIdPrefix)
+    {
+        var walker = TreeWalker.ControlViewWalker;
+        var current = element;
+        for (var i = 0; i < 16; i++)
+        {
+            var parent = walker.GetParent(current);
+            if (parent is null)
+                return null;
+
+            var automationId = parent.Current.AutomationId ?? string.Empty;
+            if (automationId.StartsWith(automationIdPrefix, StringComparison.Ordinal))
+                return parent;
+
+            current = parent;
+        }
+
+        return null;
+    }
+
     private sealed record OptimizationRouteDefinition(
-        string CategoryAutomationId,
-        string SettingsButtonAutomationId,
-        string[] ActionAutomationIds);
+        string[] CategoryAutomationIds,
+        string[] SettingsButtonAutomationIds,
+        string[] ActionAutomationIds,
+        string[]? CategoryAutomationIdFallbacks = null);
 
     private static void NavigateToWindowsOptimizationPage(AutomationElement mainWindow)
     {
@@ -1640,21 +2495,64 @@ internal static class Program
     private static AutomationElement WaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
     {
         var found = WaitUntil(
-            () => FindByAutomationId(root, automationId) is not null,
+            () => IsInteractable(FindByAutomationId(root, automationId)),
             timeout,
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
             throw new TimeoutException($"Timed out waiting for automation element '{automationId}'.");
 
-        return FindByAutomationId(root, automationId)
-               ?? throw new InvalidOperationException($"Automation element '{automationId}' was not found.");
+        var element = FindByAutomationId(root, automationId);
+        if (!IsInteractable(element))
+            throw new InvalidOperationException($"Automation element '{automationId}' was not interactable after wait.");
+
+        return element!;
+    }
+
+    private static AutomationElement? TryWaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
+    {
+        try
+        {
+            return WaitForAutomationId(root, automationId, timeout);
+        }
+        catch (TimeoutException)
+        {
+            return null;
+        }
+    }
+
+    private static AutomationElement WaitForAnyAutomationId(AutomationElement root, IReadOnlyList<string> automationIds, TimeSpan timeout)
+    {
+        var candidates = automationIds
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        if (candidates.Length == 0)
+            throw new InvalidOperationException("No automation ids were provided.");
+
+        var found = WaitUntil(
+            () => candidates.Any(id => IsInteractable(FindByAutomationId(root, id))),
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            throw new TimeoutException($"Timed out waiting for automation element set: '{string.Join("', '", candidates)}'.");
+
+        foreach (var automationId in candidates)
+        {
+            var element = FindByAutomationId(root, automationId);
+            if (IsInteractable(element))
+                return element!;
+        }
+
+        throw new InvalidOperationException($"Automation element set was not interactable after wait: '{string.Join("', '", candidates)}'.");
     }
 
     private static AutomationElement WaitForAutomationIdOrNames(AutomationElement root, string automationId, string[] names, TimeSpan timeout)
     {
         var found = WaitUntil(
-            () => FindByAutomationId(root, automationId) is not null || names.Any(name => IsVisible(FindByName(root, name))),
+            () => IsInteractable(FindByAutomationId(root, automationId)) || names.Any(name => IsInteractable(FindByName(root, name))),
             timeout,
             TimeSpan.FromMilliseconds(250));
 
@@ -1662,17 +2560,17 @@ internal static class Program
             throw new TimeoutException($"Timed out waiting for element '{automationId}' or names [{string.Join(", ", names)}].");
 
         var byId = FindByAutomationId(root, automationId);
-        if (byId is not null)
-            return byId;
+        if (IsInteractable(byId))
+            return byId!;
 
         foreach (var name in names)
         {
             var byName = FindByName(root, name);
-            if (IsVisible(byName))
+            if (IsInteractable(byName))
                 return byName!;
         }
 
-        throw new InvalidOperationException($"Element '{automationId}' or fallback names was not found after wait.");
+        throw new InvalidOperationException($"Element '{automationId}' or fallback names was not interactable after wait.");
     }
 
     private static AutomationElement? FindByAutomationId(AutomationElement root, string automationId)
@@ -1700,6 +2598,50 @@ internal static class Program
         }
     }
 
+    private static AutomationElement? FindByAutomationIdPrefix(AutomationElement root, string automationIdPrefix)
+    {
+        try
+        {
+            var elements = root.FindAll(TreeScope.Descendants, Condition.TrueCondition)
+                .Cast<AutomationElement>()
+                .Where(element =>
+                {
+                    try
+                    {
+                        var automationId = element.Current.AutomationId ?? string.Empty;
+                        return automationId.StartsWith(automationIdPrefix, StringComparison.Ordinal);
+                    }
+                    catch (Exception ex) when (IsRecoverableAutomationException(ex))
+                    {
+                        return false;
+                    }
+                })
+                .Where(IsInteractable)
+                .OrderBy(element => element.Current.AutomationId, StringComparer.Ordinal)
+                .FirstOrDefault();
+
+            if (elements is not null)
+                return elements;
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            var liveRoot = ResolveLiveWindow(root);
+            if (ReferenceEquals(liveRoot, root))
+                return null;
+
+            try
+            {
+                return FindByAutomationIdPrefix(liveRoot, automationIdPrefix);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     private static AutomationElement? FindByName(AutomationElement root, string name)
     {
         var condition = new PropertyCondition(AutomationElement.NameProperty, name);
@@ -1725,8 +2667,11 @@ internal static class Program
         }
     }
 
+
     private static void Click(AutomationElement element)
     {
+        EnsureElementInteractable(element, "click target");
+
         if (element.TryGetCurrentPattern(InvokePattern.Pattern, out var invokePattern))
         {
             ((InvokePattern)invokePattern).Invoke();
@@ -1742,10 +2687,6 @@ internal static class Program
         MouseClick(element);
     }
 
-    private static void SelectComboBoxItemByName(AutomationElement comboBox, string itemName)
-    {
-        SelectComboBoxItemByNames(comboBox, itemName);
-    }
 
     private static void SelectComboBoxItemByNames(AutomationElement comboBox, params string[] itemNames)
     {
@@ -1799,72 +2740,36 @@ internal static class Program
 
     private static void CapturePluginSettingsWindow(AutomationElement settingsWindow, string pluginId)
     {
-        try
-        {
-            var handle = settingsWindow.Current.NativeWindowHandle;
-            if (handle == 0)
-            {
-                Console.WriteLine($"[main-smoke] Settings window handle unavailable for screenshot: {pluginId}");
-                return;
-            }
+        var handle = settingsWindow.Current.NativeWindowHandle;
+        if (handle == 0)
+            throw new InvalidOperationException($"Settings window handle unavailable for screenshot: {pluginId}");
 
-            var screenshotContext = CreateScreenshotContext();
-            if (screenshotContext is not { } context)
-                return;
+        var context = CreateScreenshotContext();
+        var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-window.png");
+        var fullPath = Path.Combine(context.OutputDirectory, $"{pluginId}-fullscreen.png");
 
-            var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-window.png");
-            var fullPath = Path.Combine(context.OutputDirectory, $"{pluginId}-fullscreen.png");
+        RunScreenshotCapture(context.ScriptPath, $"-Path \"{fullPath}\"");
+        CaptureWindowWithFallback(context.ScriptPath, windowPath, handle, $"{pluginId}/settings");
 
-            RunScreenshotCapture(context.ScriptPath, $"-Path \"{fullPath}\"");
-            RunScreenshotCapture(context.ScriptPath, $"-Path \"{windowPath}\" -WindowHandle {handle}");
-
-            Console.WriteLine($"[main-smoke] Captured settings screenshots for {pluginId}: {windowPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[main-smoke] Screenshot capture skipped for {pluginId}: {ex.Message}");
-        }
+        Console.WriteLine($"[main-smoke] Captured settings screenshots for {pluginId}: {windowPath}");
     }
 
     private static void CaptureMainWindow(AutomationElement mainWindow, string pluginId, string suffix)
     {
-        try
-        {
-            if (!TryGetNativeWindowHandle(mainWindow, out var handle))
-            {
-                Console.WriteLine($"[main-smoke] Main window handle unavailable for screenshot: {pluginId}/{suffix}");
-                return;
-            }
+        if (!TryGetNativeWindowHandle(mainWindow, out var handle))
+            throw new InvalidOperationException($"Main window handle unavailable for screenshot: {pluginId}/{suffix}");
 
-            var screenshotContext = CreateScreenshotContext();
-            if (screenshotContext is not { } context)
-                return;
-
-            var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-{suffix}.png");
-            RunScreenshotCapture(context.ScriptPath, $"-Path \"{windowPath}\" -WindowHandle {handle}");
-            Console.WriteLine($"[main-smoke] Captured main-window screenshot for {pluginId}/{suffix}: {windowPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[main-smoke] Main-window screenshot skipped for {pluginId}/{suffix}: {ex.Message}");
-        }
+        var context = CreateScreenshotContext();
+        var windowPath = Path.Combine(context.OutputDirectory, $"{pluginId}-{suffix}.png");
+        CaptureWindowWithFallback(context.ScriptPath, windowPath, handle, $"{pluginId}/{suffix}");
+        Console.WriteLine($"[main-smoke] Captured main-window screenshot for {pluginId}/{suffix}: {windowPath}");
     }
 
-    private static (string ScriptPath, string OutputDirectory)? CreateScreenshotContext()
+    private static (string ScriptPath, string OutputDirectory) CreateScreenshotContext()
     {
-        var scriptPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            ".codex",
-            "skills",
-            "screenshot",
-            "scripts",
-            "take_screenshot.ps1");
-
-        if (!File.Exists(scriptPath))
-        {
-            Console.WriteLine($"[main-smoke] Screenshot helper not found: {scriptPath}");
-            return null;
-        }
+        var scriptPath = ResolveScreenshotHelperPath();
+        if (string.IsNullOrWhiteSpace(scriptPath))
+            throw new FileNotFoundException("Screenshot helper script was not found in any supported location.");
 
         var outputDirectory = Path.Combine(
             Path.GetTempPath(),
@@ -1873,7 +2778,48 @@ internal static class Program
         return (scriptPath, outputDirectory);
     }
 
-    private static void RunScreenshotCapture(string scriptPath, string arguments)
+    private static string? ResolveScreenshotHelperPath()
+    {
+        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var candidates = new[]
+        {
+            Environment.GetEnvironmentVariable("LLT_SMOKE_SCREENSHOT_SCRIPT"),
+            Path.Combine(userProfile, ".claude", "skills", "screenshot", "scripts", "take_screenshot.ps1"),
+            Path.Combine(userProfile, ".codex", "skills", "screenshot", "scripts", "take_screenshot.ps1")
+        };
+
+        foreach (var candidate in candidates)
+        {
+            if (!string.IsNullOrWhiteSpace(candidate) && File.Exists(candidate))
+                return candidate;
+        }
+
+        return null;
+    }
+
+    private static void CaptureWindowWithFallback(string scriptPath, string outputPath, int windowHandle, string captureLabel)
+    {
+        try
+        {
+            RunScreenshotCapture(scriptPath, $"-Path \"{outputPath}\" -WindowHandle {windowHandle}", 12000);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[main-smoke] Window-handle screenshot failed for {captureLabel}; retrying with active window. ({ex.Message})");
+            BringWindowToForeground(windowHandle);
+            RunScreenshotCapture(scriptPath, $"-Path \"{outputPath}\" -ActiveWindow", 30000);
+        }
+    }
+
+    private static void BringWindowToForeground(int windowHandle)
+    {
+        var handle = (IntPtr)windowHandle;
+        ShowWindow(handle, SwRestore);
+        SetForegroundWindow(handle);
+        Thread.Sleep(500);
+    }
+
+    private static void RunScreenshotCapture(string scriptPath, string arguments, int timeoutMs = 20000)
     {
         using var capture = Process.Start(new ProcessStartInfo
         {
@@ -1881,14 +2827,46 @@ internal static class Program
             Arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" {arguments}",
             UseShellExecute = false,
             CreateNoWindow = true
-        });
+        }) ?? throw new InvalidOperationException("Failed to start screenshot capture process.");
 
-        capture?.WaitForExit(20000);
+        if (!capture.WaitForExit(timeoutMs))
+        {
+            try
+            {
+                capture.Kill(entireProcessTree: true);
+            }
+            catch
+            {
+                // Ignore cleanup failures for timed-out capture helpers.
+            }
+
+            throw new TimeoutException($"Screenshot capture process did not finish within {timeoutMs} ms.");
+        }
+
+        if (capture.ExitCode != 0)
+            throw new InvalidOperationException($"Screenshot capture process failed with exit code {capture.ExitCode}.");
+
+        var outputPath = ExtractScreenshotPath(arguments);
+        if (!string.IsNullOrWhiteSpace(outputPath) && !File.Exists(outputPath))
+            throw new FileNotFoundException($"Screenshot capture did not produce expected file: {outputPath}");
+    }
+
+    private static string? ExtractScreenshotPath(string arguments)
+    {
+        const string marker = "-Path \"";
+        var start = arguments.IndexOf(marker, StringComparison.Ordinal);
+        if (start < 0)
+            return null;
+
+        start += marker.Length;
+        var end = arguments.IndexOf('"', start);
+        return end > start ? arguments[start..end] : null;
     }
 
     private static void MouseClick(AutomationElement element)
     {
         var target = ResolveMouseClickableElement(element);
+        EnsureElementInteractable(target, "mouse click target");
         var rect = target.Current.BoundingRectangle;
         if (rect.Width <= 0 || rect.Height <= 0)
             throw new InvalidOperationException($"Cannot click element with empty bounds: {element.Current.AutomationId}");
@@ -1964,6 +2942,30 @@ internal static class Program
         {
             return false;
         }
+    }
+
+    private static bool IsInteractable(AutomationElement? element)
+    {
+        if (!IsVisible(element))
+            return false;
+
+        try
+        {
+            return element is not null
+                   && element.Current.IsEnabled
+                   && element.Current.BoundingRectangle.Width > 0
+                   && element.Current.BoundingRectangle.Height > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void EnsureElementInteractable(AutomationElement? element, string description)
+    {
+        if (!IsInteractable(element))
+            throw new InvalidOperationException($"{description} is not interactable.");
     }
 
     private static string ReadElementText(AutomationElement element)
