@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -222,5 +222,98 @@
   </data>
   <data name="StateDisabled" xml:space="preserve">
     <value>已禁用</value>
+  </data>
+  <data name="RecommendedForLabel" xml:space="preserve">
+    <value>推荐场景</value>
+  </data>
+  <data name="SettingsPendingSave" xml:space="preserve">
+    <value>设置已变更，保存后生效。</value>
+  </data>
+  <data name="ModeStreamingRecommendedFor" xml:space="preserve">
+    <value>串流与下载</value>
+  </data>
+  <data name="ModeStreamingTargetDescription" xml:space="preserve">
+    <value>优先保证串流、更新和大文件传输时的持续带宽。</value>
+  </data>
+  <data name="SessionNotStarted" xml:space="preserve">
+    <value>未启动</value>
+  </data>
+  <data name="PresetStateActive" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="ModeBalancedFocus" xml:space="preserve">
+    <value>均衡 DNS 与套接字清理</value>
+  </data>
+  <data name="MenuButton" xml:space="preserve">
+    <value>菜单</value>
+  </data>
+  <data name="OptimizationFocusLabel" xml:space="preserve">
+    <value>优化重点</value>
+  </data>
+  <data name="ModeStreamingFocus" xml:space="preserve">
+    <value>高吞吐优先与 TCP/IP 协议栈重置</value>
+  </data>
+  <data name="PresetStateReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="StartServiceButton" xml:space="preserve">
+    <value>启动加速</value>
+  </data>
+  <data name="ModeBalancedTargetTitle" xml:space="preserve">
+    <value>均衡线路</value>
+  </data>
+  <data name="StatusServiceStopped" xml:space="preserve">
+    <value>加速已停止。</value>
+  </data>
+  <data name="ModeGamingTargetDescription" xml:space="preserve">
+    <value>优先保证联机游戏、语音和匹配场景的响应速度。</value>
+  </data>
+  <data name="RefreshButton" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="ModeGamingFocus" xml:space="preserve">
+    <value>低延迟优先与 Winsock 重置</value>
+  </data>
+  <data name="AccelerationTargetsTitle" xml:space="preserve">
+    <value>加速目标</value>
+  </data>
+  <data name="SessionLabel" xml:space="preserve">
+    <value>会话</value>
+  </data>
+  <data name="ModeBalancedRecommendedFor" xml:space="preserve">
+    <value>日常综合使用</value>
+  </data>
+  <data name="ServiceStateRunning" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="ModeBalancedTargetDescription" xml:space="preserve">
+    <value>适合日常浏览、下载和混合流量场景，整体表现更稳定。</value>
+  </data>
+  <data name="ModeGamingRecommendedFor" xml:space="preserve">
+    <value>联机游戏</value>
+  </data>
+  <data name="ModeGamingTargetTitle" xml:space="preserve">
+    <value>低延迟线路</value>
+  </data>
+  <data name="ServiceStateLabel" xml:space="preserve">
+    <value>服务状态</value>
+  </data>
+  <data name="ServiceStateStopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="AccelerationTargetsDescription" xml:space="preserve">
+    <value>选择一个配置后即可一键启动，布局和交互参考 Watt Toolkit。</value>
+  </data>
+  <data name="StatusRefreshed" xml:space="preserve">
+    <value>数据已刷新。</value>
+  </data>
+  <data name="ModeStreamingTargetTitle" xml:space="preserve">
+    <value>高吞吐线路</value>
+  </data>
+  <data name="StopServiceButton" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="StatusServiceStarted" xml:space="preserve">
+    <value>加速已启动。</value>
   </data>
 </root>

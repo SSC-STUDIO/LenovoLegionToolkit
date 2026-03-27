@@ -33,10 +33,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,24,0">
-                        <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsPageTitle}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                        <TextBlock Margin="0,6,0,0"
-                                   Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
                                    Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                     </StackPanel>
 
