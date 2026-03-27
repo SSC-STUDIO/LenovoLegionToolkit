@@ -5,9 +5,9 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Version>1.0.12</Version>
-    <FileVersion>1.0.12</FileVersion>
-    <AssemblyVersion>1.0.12</AssemblyVersion>
+    <Version>1.0.13</Version>
+    <FileVersion>1.0.13</FileVersion>
+    <AssemblyVersion>1.0.13</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.CustomMouse</AssemblyName>
   </PropertyGroup>
 
@@ -68,3 +68,4 @@
   </Target>
 
 </Project>
+

@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>1.1.8</Version>
-    <FileVersion>1.1.8</FileVersion>
-    <AssemblyVersion>1.1.8</AssemblyVersion>
+    <Version>1.1.9</Version>
+    <FileVersion>1.1.9</FileVersion>
+    <AssemblyVersion>1.1.9</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 
@@ -81,3 +81,4 @@
   </Target>
 
 </Project>
+

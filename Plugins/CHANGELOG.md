@@ -11,7 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed / 修复
-- **Custom Mouse Plugin Completion / Custom Mouse 插件完成度校验**: Restored the committed `CLAUDE.md` instructions, kept `CustomMousePlugin.GetFeatureExtension()` returning an embeddable plugin page, and aligned the Custom Mouse release metadata at `1.0.12` across `plugin.json`, project metadata, and `store.json` so the targeted completion check and lifecycle test pass while verification artifacts are written under `artifacts/` / 恢复已提交的 `CLAUDE.md` 指令内容，保持 `CustomMousePlugin.GetFeatureExtension()` 返回可嵌入插件页面，并将 Custom Mouse 的 `1.0.12` 发布元数据在 `plugin.json`、项目元数据与 `store.json` 间对齐，使定向 completion check 与生命周期测试通过，同时将验证产物写入 `artifacts/`
+- **Release Metadata / 发布元数据**: Aligned the official plugin marketplace metadata with the latest shipped UI and localization work by bumping `Custom Mouse` to `1.0.13`, `Shell Integration` to `1.0.9`, `Network Acceleration` to `1.1.6`, and `ViVeTool` to `1.1.9` across each plugin manifest, project file, and `store.json` / 将官方插件市场元数据与最新 UI 和多语言改动对齐：`Custom Mouse` 升到 `1.0.13`、`Shell Integration` 升到 `1.0.9`、`Network Acceleration` 升到 `1.1.6`、`ViVeTool` 升到 `1.1.9`，并同步更新各插件清单、项目文件和 `store.json`
+- **Custom Mouse Plugin Completion / Custom Mouse 插件完成度校验**: Restored the committed `CLAUDE.md` instructions, kept `CustomMousePlugin.GetFeatureExtension()` returning an embeddable plugin page, and aligned the Custom Mouse release metadata at `1.0.13` across `plugin.json`, project metadata, `PluginAttribute`, and `store.json` so the targeted completion check and lifecycle test pass while verification artifacts are written under `artifacts/` / 恢复已提交的 `CLAUDE.md` 指令内容，保持 `CustomMousePlugin.GetFeatureExtension()` 返回可嵌入插件页面，并将 Custom Mouse 的 `1.0.13` 发布元数据在 `plugin.json`、项目元数据、`PluginAttribute` 与 `store.json` 间对齐，使定向 completion check 与生命周期测试通过，同时将验证产物写入 `artifacts/`
+
+### Improved / 改进
+- **Localization Coverage / 多语言覆盖**: Expanded the official plugin marketplace language metadata from the legacy 13-entry list to the full 32-culture set emitted by the current plugin build pipeline, matching the resource packages now shipped for `custom-mouse`, `shell-integration`, `network-acceleration`, and `vive-tool` / 将官方插件市场语言元数据从旧的 13 项扩展到当前插件构建链路实际产出的 32 个 culture，和 `custom-mouse`、`shell-integration`、`network-acceleration`、`vive-tool` 现已打包的资源语言保持一致
+- **ViVeTool Settings UI / ViVeTool 设置界面**: Refined the ViVeTool settings surface into the same summary-card language used by the rest of the official plugin set so path management, downloads, and status feedback no longer look like a leftover legacy page / 继续收敛 ViVeTool 设置页的视觉语言，使其与其他官方插件一致，统一为概览卡片式结构，避免路径管理、下载和状态反馈继续保留旧版残留页面观感
 
 ## [1.1.7] - 2026-03-17
 

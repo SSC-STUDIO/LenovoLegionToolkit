@@ -5,9 +5,9 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Version>1.1.5</Version>
-    <FileVersion>1.1.5</FileVersion>
-    <AssemblyVersion>1.1.5</AssemblyVersion>
+    <Version>1.1.6</Version>
+    <FileVersion>1.1.6</FileVersion>
+    <AssemblyVersion>1.1.6</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.NetworkAcceleration</AssemblyName>
   </PropertyGroup>
 
@@ -62,3 +62,4 @@
   </Target>
 
 </Project>
+
