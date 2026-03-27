@@ -31,6 +31,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
     private string _featureCountDescription = string.Empty;
+    private string _viveToolPath = string.Empty;
     private string? _viveToolVersion;
     private bool _isLoading;
     private CancellationTokenSource? _searchDebounceCts;
@@ -63,6 +64,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
             _featureCountDescription = value;
             OnPropertyChanged();
             UpdateFeatureSummary();
+        }
+    }
+
+    public string ViveToolPath
+    {
+        get => _viveToolPath;
+        set
+        {
+            _viveToolPath = value;
+            OnPropertyChanged();
         }
     }
 
@@ -302,6 +313,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 ViveToolVersion = version;
                 if (IsViveToolAvailable)
                 {
+                    ViveToolPath = path ?? string.Empty;
                     if (!string.IsNullOrEmpty(version))
                     {
                         ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path) + $" (v{version})";
@@ -313,6 +325,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 }
                 else
                 {
+                    ViveToolPath = Resource.ViveTool_ViveToolNotFound;
                     ViveToolStatusDescription = Resource.ViveTool_ViveToolNotFound;
                     ViveToolVersion = null;
                 }
@@ -326,6 +339,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsViveToolAvailable = false;
+                ViveToolPath = Resource.ViveTool_ViveToolNotFound;
                 ViveToolVersion = null;
                 ViveToolStatusDescription = Resource.ViveTool_ViveToolError;
             });
