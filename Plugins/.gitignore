@@ -2,3 +2,5 @@ Build/
 **/bin/
 **/obj/
 !.gitkeep
+artifacts/
+artifacts-plugin-completion-check.log

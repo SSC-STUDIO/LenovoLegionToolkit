@@ -10,14 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed / 变更
-- **Host Reference Policy / 宿主依赖策略**: Declared `Dependencies/Host/LenovoLegionToolkit.Lib.dll` and `Dependencies/Host/Lenovo Legion Toolkit.dll` as tracked repository baselines, documented the policy in README, and expanded ignore rules to drop generated `bin/` outputs while keeping the vendored host DLLs as intentional source assets / 将 `Dependencies/Host/LenovoLegionToolkit.Lib.dll` 与 `Dependencies/Host/Lenovo Legion Toolkit.dll` 明确声明为仓库跟踪的基线宿主依赖，在 README 中写明策略，并扩展忽略规则以清理生成的 `bin/` 产物，同时保留这两个 vendored DLL 作为有意纳入源码树的资产
-- **Build Metadata / 构建元数据**: Adjusted the shared defaults in `Directory.Build.props` for this maintenance change only; marketplace and plugin release versions remain governed by each plugin’s own manifest and project metadata / 针对本次维护性改动调整 `Directory.Build.props` 中的共享默认元数据；市场与插件发布版本仍以各插件自身的清单和项目元数据为准
-- **Evidence / 证据**: Verification will be recorded in `C:\Users\96152\.openclaw\workspace\attachments\lenovolegiontoolkit-plugins\dependencies-host-policy-status-latest.log` and `C:\Users\96152\.openclaw\workspace\attachments\lenovolegiontoolkit-plugins\dependencies-host-policy-build-latest.log` / 验证证据记录在上述 status 与 build 日志
-
 ### Fixed / 修复
-- **Chinese Plugin Localization / 插件中文本地化**: Filled the missing Chinese resource keys in ShellIntegration, CustomMouse, and ViveTool so simplified Chinese mode no longer falls back to English for the new plugin UI strings / 补齐 ShellIntegration、CustomMouse 与 ViveTool 缺失的中文资源键，避免简体中文模式下新插件界面字符串回退为英文
-- **Uzbek Plugin Localization / 插件乌兹别克语本地化**: Filled the remaining `uz` / `uz-latn-uz` gaps in CustomMouse, NetworkAcceleration, ShellIntegration, and ViveTool so cold-language runs no longer leak English labels or dialog filters across the active plugin set / 补齐 CustomMouse、NetworkAcceleration、ShellIntegration 与 ViveTool 的 `uz` / `uz-latn-uz` 资源缺口，避免冷门语言实跑时在活跃插件界面和文件对话框过滤器中继续泄露英文
+- **Custom Mouse Plugin Completion / Custom Mouse 插件完成度校验**: Restored the committed `CLAUDE.md` instructions, kept `CustomMousePlugin.GetFeatureExtension()` returning an embeddable plugin page, and aligned the Custom Mouse release metadata at `1.0.12` across `plugin.json`, project metadata, and `store.json` so the targeted completion check and lifecycle test pass while verification artifacts are written under `artifacts/` / 恢复已提交的 `CLAUDE.md` 指令内容，保持 `CustomMousePlugin.GetFeatureExtension()` 返回可嵌入插件页面，并将 Custom Mouse 的 `1.0.12` 发布元数据在 `plugin.json`、项目元数据与 `store.json` 间对齐，使定向 completion check 与生命周期测试通过，同时将验证产物写入 `artifacts/`
 
 ## [1.1.7] - 2026-03-17
 

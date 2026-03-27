@@ -7,8 +7,8 @@ namespace LenovoLegionToolkit.Plugins.Template;
 /// </summary>
 public class MyPluginTemplatePage : IPluginPage
 {
-    public string PageTitle => string.Empty;
-    public string? PageIcon => null;
+    public string PageTitle => "Feature Page Title";
+    public string? PageIcon => "Apps24";
 
     public object CreatePage()
     {

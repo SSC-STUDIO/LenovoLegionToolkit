@@ -156,6 +156,12 @@ namespace LenovoLegionToolkit.Plugins.MyFirstPlugin
 
 ### 步骤 2: 创建插件页面（可选）
 
+如果需要 UI，优先复制 `Plugins/Template`，并保持与正式插件一致的三段式页面骨架：
+
+- 顶部 hero / overview card
+- 中部 section cards
+- 底部 status card
+
 如果需要 UI，创建 `MyFirstPluginPage.xaml`：
 
 ```xml

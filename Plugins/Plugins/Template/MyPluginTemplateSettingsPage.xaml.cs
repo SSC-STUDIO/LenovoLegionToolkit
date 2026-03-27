@@ -7,7 +7,7 @@ namespace LenovoLegionToolkit.Plugins.Template;
 /// </summary>
 public class MyPluginTemplateSettingsPage : IPluginPage
 {
-    public string PageTitle => "Settings";
+    public string PageTitle => "Settings Page Title";
     public string? PageIcon => "Settings24";
 
     public object CreatePage()

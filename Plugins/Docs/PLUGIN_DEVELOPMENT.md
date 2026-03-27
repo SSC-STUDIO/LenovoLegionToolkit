@@ -144,6 +144,25 @@ public class MyPluginPage : IPluginPage
 }
 ```
 
+### Official Plugin Page Style / 正式插件页面风格
+
+正式插件页面应统一遵循以下骨架：
+
+- **顶部 overview / hero card**：使用 `AppPageTitleTextBlockStyle` + `AppPageDescriptionTextBlockStyle`，右侧放 2-4 个 summary 值或状态摘要。
+- **中部 section cards**：使用圆角卡片分组主要设置、操作和辅助说明，主操作按钮使用 `Appearance="Primary"`，次要操作保持默认层级。
+- **底部 status card**：统一在页面底部提供一块状态反馈区，用于 success / error / loading / missing dependency / empty 状态。
+- **状态一致性**：正常 UI 与 fallback UI 都应保持同一信息层级，不要让 fallback 退回到旧式裸控件布局。
+- **资源访问**：正式插件优先使用强类型资源或现有文本包装类，但同一插件内不要混用多套用户可见文本访问方式。
+
+推荐直接参考：
+
+- `Plugins/CustomMouse/CustomMouseControl.xaml`
+- `Plugins/CustomMouse/CustomMouseSettingsControl.xaml`
+- `Plugins/NetworkAcceleration/NetworkAccelerationControl.xaml`
+- `Plugins/ShellIntegration/ShellIntegrationSettingsControl.xaml`
+- `Plugins/ViveTool/ViveToolPage.xaml`
+- `Plugins/ViveTool/ViveToolSettingsPage.xaml`
+
 ---
 
 ## Creating a New Plugin / 创建新插件
