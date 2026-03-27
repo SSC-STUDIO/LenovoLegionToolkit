@@ -14,7 +14,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Custom Mouse",
-    version: "1.0.11",
+    version: "1.0.12",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -88,7 +88,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public override object? GetFeatureExtension()
     {
-        return null;
+        return new CustomMouseSettingsPluginPage(this);
     }
 
     public override object? GetSettingsPage()

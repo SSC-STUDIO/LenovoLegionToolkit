@@ -30,6 +30,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private ObservableCollection<FeatureFlagInfo> _features = new();
     private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
+    private string _featureCountDescription = string.Empty;
     private string? _viveToolVersion;
     private bool _isLoading;
     private CancellationTokenSource? _searchDebounceCts;
@@ -51,6 +52,17 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             _viveToolStatusDescription = value;
             OnPropertyChanged();
+        }
+    }
+
+    public string FeatureCountDescription
+    {
+        get => _featureCountDescription;
+        set
+        {
+            _featureCountDescription = value;
+            OnPropertyChanged();
+            UpdateFeatureSummary();
         }
     }
 
@@ -220,13 +232,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
         };
         root.Children.Add(new TextBlock
         {
-            Text = Resource.ViveTool_PageTitle,
-            FontSize = 28
-        });
-        root.Children.Add(new TextBlock
-        {
             Text = Resource.ViveTool_PageDescription,
-            Margin = new Thickness(0, 8, 0, 12),
+            Margin = new Thickness(0, 0, 0, 12),
             TextWrapping = TextWrapping.Wrap
         });
         root.Children.Add(buttonRow);
@@ -236,6 +243,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         root.Children.Add(_emptyStatePanel);
 
         Content = root;
+        UpdateFeatureSummary();
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -344,13 +352,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 // Update both the visible collection and the local cache
                 Features.Clear();
                 _allFeatures.Clear();
-                
+
                 foreach (var feature in features)
                 {
                     Features.Add(feature);
                     _allFeatures.Add(feature);
                 }
 
+                FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
                 UpdateFeaturesVisibility();
                 IsLoading = false;
             });
@@ -674,6 +683,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     Features.Add(feature);
                 }
 
+                FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
                 UpdateFeaturesVisibility();
             });
         }
@@ -787,6 +797,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
         _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void UpdateFeatureSummary()
+    {
+        if (_featureCountTextBlock is null)
+            return;
+
+        _featureCountTextBlock.Text = string.IsNullOrWhiteSpace(FeatureCountDescription)
+            ? "0"
+            : FeatureCountDescription;
     }
 
     private void UpdateFeaturesVisibility()

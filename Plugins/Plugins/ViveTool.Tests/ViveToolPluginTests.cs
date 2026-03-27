@@ -1,6 +1,7 @@
 using System.Reflection;
 using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.Plugins.ViveTool;
+using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
@@ -27,7 +28,7 @@ public class ViveToolPluginTests
         Assert.NotNull(attribute);
         Assert.Equal("vive-tool", attribute!.Id);
         Assert.Equal("ViVeTool", attribute.Name);
-        Assert.Equal("1.1.7", attribute.Version);
+        Assert.Equal("1.1.8", attribute.Version);
         Assert.Equal("3.6.1", attribute.MinimumHostVersion);
     }
 
@@ -39,8 +40,8 @@ public class ViveToolPluginTests
         var featurePage = Assert.IsType<ViveToolPluginPage>(plugin.GetFeatureExtension());
 
         Assert.IsAssignableFrom<IPluginPage>(featurePage);
-        Assert.Equal(string.Empty, featurePage.PageTitle);
-        Assert.Equal(string.Empty, featurePage.PageIcon);
+        Assert.Equal(Resource.ViveTool_PageTitle, featurePage.PageTitle);
+        Assert.Equal("Code24", featurePage.PageIcon);
     }
 
     [Fact]
@@ -51,7 +52,7 @@ public class ViveToolPluginTests
         var settingsPage = Assert.IsType<ViveToolSettingsPluginPage>(plugin.GetSettingsPage());
 
         Assert.IsAssignableFrom<IPluginPage>(settingsPage);
-        Assert.Equal(string.Empty, settingsPage.PageTitle);
-        Assert.Equal(string.Empty, settingsPage.PageIcon);
+        Assert.Equal(Resource.ViveTool_BinaryPathTitle, settingsPage.PageTitle);
+        Assert.Equal("Settings24", settingsPage.PageIcon);
     }
 }
