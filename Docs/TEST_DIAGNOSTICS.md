@@ -115,6 +115,42 @@ dotnet test LenovoLegionToolkit.Tests
   - `CMDTests.cs`
   - (其他测试文件)
 
+## MainAppPluginUi.Smoke 执行与诊断
+
+### 推荐执行顺序
+
+```bash
+# 1. 先确认 smoke 工具本身可构建
+dotnet build Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
+
+# 2. 先跑单插件样本
+LLT_SMOKE_PLUGIN_IDS=shell-integration dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>
+
+# 3. 再跑默认集合
+dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>
+```
+
+### 2026-03-24 已验证现象
+
+| 场景 | 结果 | 诊断结论 |
+|------|------|----------|
+| `shell-integration` 单插件 smoke | ✅ PASS | 已走通 marketplace → optimization route；验证了设置按钮、启用/禁用动作，并生成截图证据。 |
+| `custom-mouse` 单插件 smoke | ❌ FAIL | 已进入 Windows Optimization 页面，但等待 `WindowsOptimizationCategory_custom.mouse` 超时，说明失败点在优化分类定位，不是主程序未启动。 |
+| `network-acceleration` 单插件 smoke | ❌ FAIL | 主程序尚未启动；`PrepareRuntimePluginFixtures(...)` 删除运行时插件目录时对 `LenovoLegionToolkit.Plugins.ViveTool.resources.dll` 触发 `UnauthorizedAccessException`。 |
+| 默认插件集合 smoke | ❌ FAIL | 与上面相同，启动前就被 runtime fixture 清理/文件锁定问题阻断。 |
+
+### 如何判读这类失败
+
+- 若日志已出现 `Main window ready`、`Navigated to Plugin Extensions page`，说明主程序启动链路基本正常，失败更可能在具体插件入口或 UIA 定位。
+- 若失败栈停在 `PrepareRuntimePluginFixtures(...)`，优先按“运行时插件目录被占用 / 文件锁定”排查，而不是先改 marketplace 或页面逻辑。
+- 若优化路由插件失败且日志显示已进入 `Windows Optimization page`，优先检查目标分类的 AutomationId、分类加载时序、以及插件是否真的暴露了对应 optimization category。
+
+### MainAppPluginUi.Smoke 当前已知限制
+
+1. 运行时 fixture 准备阶段会对目标插件目录做备份/替换；如果运行时目录里仍有 DLL 被占用，smoke 可能在主程序启动前失败。
+2. 当前环境下 `shell-integration` 已有完整 PASS 证据，但默认插件全集尚无一次干净通过记录。
+3. 对 `custom-mouse`，当前证据表明问题集中在 optimization category 可见性，而不是 marketplace 可用性。
+
 ## 已知限制
 
 1. 在 Windows 上，dotnet test 的 testhost.exe 进程有时会保持活跃状态
