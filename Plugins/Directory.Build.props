@@ -69,7 +69,7 @@
 
 
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
-    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>
   </PropertyGroup>
 
 

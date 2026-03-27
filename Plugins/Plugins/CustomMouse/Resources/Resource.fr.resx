@@ -1,139 +1,205 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="ApplyButton" xml:space="preserve">
-    <value>Appliquer</value>
-  </data>
-  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
-    <value>Appliquer le thème du curseur maintenant</value>
-  </data>
-  <data name="ApplyToWindowsButton" xml:space="preserve">
-    <value>Postuler à Windows</value>
-  </data>
-  <data name="AutoThemeLabel" xml:space="preserve">
-    <value>Application automatique du style de curseur personnalisé par le thème clair/foncé __ TERM3 __ actuel</value>
-  </data>
-  <data name="CursorHint" xml:space="preserve">
-    <value>L'apparence du curseur peut être appliquée à partir de cette page ou à partir des actions d'extension d'optimisation du système.</value>
-  </data>
-  <data name="PluginDescription" xml:space="preserve">
-    <value>Personnalisez le comportement du style du curseur de la souris et les paramètres de la souris.</value>
-  </data>
-  <data name="PluginName" xml:space="preserve">
-    <value>TAPIS DE SOURIS PERSONNALISÉ</value>
-  </data>
-  <data name="PointerSpeedLabel" xml:space="preserve">
-    <value>Windows Vitesse du pointeur</value>
-  </data>
-  <data name="PollingRateLabel" xml:space="preserve">
-    <value>Taux de scrutation</value>
-  </data>
-  <data name="ReloadButton" xml:space="preserve">
-    <value>Recharger</value>
-  </data>
-  <data name="ResetButton" xml:space="preserve">
-    <value>Réinitialiser</value>
-  </data>
-  <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Paramètres de la souris</value>
-  </data>
-  <data name="SettingsSubtitle" xml:space="preserve">
-    <value>Appliquez la vitesse du pointeur et la disposition des boutons au profil __TERM3 __ actif.</value>
-  </data>
-  <data name="StatusApplyPointerFail" xml:space="preserve">
-    <value>Impossible d'appliquer la vitesse du pointeur.</value>
-  </data>
-  <data name="StatusApplySwapFail" xml:space="preserve">
-    <value>Échec de l'application du paramètre d'échange de bouton.</value>
-  </data>
-  <data name="StatusCursorApplyFailed" xml:space="preserve">
-    <value>Impossible d'appliquer le style de curseur personnalisé. Essayez de vous exécuter en tant qu'administrateur si votre système bloque l'installation de__ TERM13 __.</value>
-  </data>
-  <data name="StatusInvalidDpi" xml:space="preserve">
-    <value>Valeur DPI non valide.</value>
-  </data>
-  <data name="StatusInvalidPolling" xml:space="preserve">
-    <value>Taux d'interrogation non valide.</value>
-  </data>
-  <data name="StatusProfileSaved" xml:space="preserve">
-    <value>Profil de souris enregistré.</value>
-  </data>
-  <data name="StatusReloaded" xml:space="preserve">
-    <value>Paramètres actuels de l'extension rechargés.</value>
-  </data>
-  <data name="StatusResetDefaults" xml:space="preserve">
-    <value>Le profil de la souris est réinitialisé aux valeurs par défaut.</value>
-  </data>
-  <data name="StatusSelectValidPolling" xml:space="preserve">
-    <value>Veuillez sélectionner un taux d'interrogation valide.</value>
-  </data>
-  <data name="StatusWindowsApplied" xml:space="preserve">
-    <value>Windows paramètres de la souris appliqués.</value>
-  </data>
-  <data name="SwapButtonsLabel" xml:space="preserve">
-    <value>Échangez les boutons gauche et droit de la souris</value>
-  </data>
-  <data name="DpiLabel" xml:space="preserve">
-    <value>DPI</value>
-  </data>
-  <data name="FormatCursorApplied" xml:space="preserve">
-    <value>Applied cursor theme: {0}.</value>
-  </data>
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>Appliquer</value>
+  </data>
+  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
+    <value>Appliquer le thème du curseur maintenant</value>
+  </data>
+  <data name="ApplyToWindowsButton" xml:space="preserve">
+    <value>Postuler à Windows</value>
+  </data>
+  <data name="AutoThemeLabel" xml:space="preserve">
+    <value>Application automatique du style de curseur personnalisé par le thème clair/foncé __ TERM3 __ actuel</value>
+  </data>
+  <data name="CursorHint" xml:space="preserve">
+    <value>L'apparence du curseur peut être appliquée à partir de cette page ou à partir des actions d'extension d'optimisation du système.</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>Personnalisez le comportement du style du curseur de la souris et les paramètres de la souris.</value>
+  </data>
+  <data name="PluginName" xml:space="preserve">
+    <value>TAPIS DE SOURIS PERSONNALISÉ</value>
+  </data>
+  <data name="PointerSpeedLabel" xml:space="preserve">
+    <value>Windows Vitesse du pointeur</value>
+  </data>
+  <data name="PollingRateLabel" xml:space="preserve">
+    <value>Taux de scrutation</value>
+  </data>
+  <data name="ReloadButton" xml:space="preserve">
+    <value>Recharger</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Paramètres de la souris</value>
+  </data>
+  <data name="SettingsSubtitle" xml:space="preserve">
+    <value>Appliquez la vitesse du pointeur et la disposition des boutons au profil __TERM3 __ actif.</value>
+  </data>
+  <data name="StatusApplyPointerFail" xml:space="preserve">
+    <value>Impossible d'appliquer la vitesse du pointeur.</value>
+  </data>
+  <data name="StatusApplySwapFail" xml:space="preserve">
+    <value>Échec de l'application du paramètre d'échange de bouton.</value>
+  </data>
+  <data name="StatusCursorApplyFailed" xml:space="preserve">
+    <value>Impossible d'appliquer le style de curseur personnalisé. Essayez de vous exécuter en tant qu'administrateur si votre système bloque l'installation de__ TERM13 __.</value>
+  </data>
+  <data name="StatusInvalidDpi" xml:space="preserve">
+    <value>Valeur DPI non valide.</value>
+  </data>
+  <data name="StatusInvalidPolling" xml:space="preserve">
+    <value>Taux d'interrogation non valide.</value>
+  </data>
+  <data name="StatusProfileSaved" xml:space="preserve">
+    <value>Profil de souris enregistré.</value>
+  </data>
+  <data name="StatusReloaded" xml:space="preserve">
+    <value>Paramètres actuels de l'extension rechargés.</value>
+  </data>
+  <data name="StatusResetDefaults" xml:space="preserve">
+    <value>Le profil de la souris est réinitialisé aux valeurs par défaut.</value>
+  </data>
+  <data name="StatusSelectValidPolling" xml:space="preserve">
+    <value>Veuillez sélectionner un taux d'interrogation valide.</value>
+  </data>
+  <data name="StatusWindowsApplied" xml:space="preserve">
+    <value>Windows paramètres de la souris appliqués.</value>
+  </data>
+  <data name="SwapButtonsLabel" xml:space="preserve">
+    <value>Échangez les boutons gauche et droit de la souris</value>
+  </data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>Applied cursor theme: {0}.</value>
+  </data>
+  <data name="QuickActionsTitle" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="QuickActionsDescription" xml:space="preserve">
+    <value>Apply or reset your mouse profile settings.</value>
+  </data>
+  <data name="CursorThemeModeLabel" xml:space="preserve">
+    <value>Cursor Theme Mode</value>
+  </data>
+  <data name="CursorThemeModeAuto" xml:space="preserve">
+    <value>Follow System</value>
+  </data>
+  <data name="CursorThemeModeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="CursorThemeModeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="CursorThemeModeApplied" xml:space="preserve">
+    <value>Cursor theme mode set to: {0}.</value>
+  </data>
+  <data name="ProfileStatusLabel" xml:space="preserve">
+    <value>Profile State</value>
+  </data>
+  <data name="ProfileReady" xml:space="preserve">
+    <value>Ready to apply</value>
+  </data>
+  <data name="CurrentDpiLabel" xml:space="preserve">
+    <value>Current DPI</value>
+  </data>
+  <data name="CurrentPollingLabel" xml:space="preserve">
+    <value>Current Polling</value>
+  </data>
+  <data name="WindowsSettingsTitle" xml:space="preserve">
+    <value>Windows Mouse Settings</value>
+  </data>
+  <data name="WindowsSettingsDescription" xml:space="preserve">
+    <value>Preview the effective pointer behavior before writing it into the current Windows profile.</value>
+  </data>
+  <data name="PointerPreviewLabel" xml:space="preserve">
+    <value>Pointer Speed</value>
+  </data>
+  <data name="ButtonLayoutLabel" xml:space="preserve">
+    <value>Button Layout</value>
+  </data>
+  <data name="CursorThemeStatusLabel" xml:space="preserve">
+    <value>Cursor Theme</value>
+  </data>
+  <data name="EnabledState" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="DisabledState" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="StandardButtonsState" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="SwappedButtonsState" xml:space="preserve">
+    <value>Swapped</value>
+  </data>
+  <data name="AutomaticThemeState" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="ManualThemeState" xml:space="preserve">
+    <value>Manual</value>
+  </data>
 </root>
