@@ -85,6 +85,20 @@ public class PluginStoreResponse
 
     [JsonPropertyName("storeVersion")]
     public string StoreVersion { get; set; } = "1.0.0";
+
+    // Backward compatibility: some generated store manifests still emit "version" at the root.
+    [JsonPropertyName("version")]
+    public string? LegacyStoreVersion
+    {
+        get => null;
+        set
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                StoreVersion = value;
+            }
+        }
+    }
 }
 
 /// <summary>
