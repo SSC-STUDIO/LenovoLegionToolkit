@@ -458,26 +458,8 @@ private string _currentSearchText = string.Empty;
                 }
             }
             
-            // Check for plugin updates
-            var installedPlugins = _pluginManager.GetRegisteredPlugins().ToList();
-            
-            // Convert IPlugin list to PluginManifest list for update checking
-            var installedManifests = new List<PluginManifest>();
-            foreach (var plugin in installedPlugins)
-            {
-                var metadata = _pluginManager.GetPluginMetadata(plugin.Id);
-                var manifest = new PluginManifest
-                {
-                    Id = plugin.Id,
-                    Name = plugin.Name,
-                    Description = plugin.Description,
-                    Version = metadata?.Version ?? "0.0.0",
-                    Icon = plugin.Icon,
-                    IsSystemPlugin = plugin.IsSystemPlugin
-                };
-                installedManifests.Add(manifest);
-            }
-            
+            // Check for plugin updates against actually installed plugin IDs only.
+            var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
             var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
             _availableUpdates = updates;
             
@@ -1478,6 +1460,19 @@ private string _currentSearchText = string.Empty;
         
         try
         {
+            var versionChecker = new VersionChecker();
+            if (!versionChecker.IsCompatible(manifest.MinimumHostVersion))
+            {
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_InstallFailed,
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        Resource.PluginExtensionsPage_MinimumVersion,
+                        manifest.MinimumHostVersion),
+                    SnackbarType.Warning);
+                return;
+            }
+
             _currentDownloadingPluginId = manifest.Id;
             
             if (pluginViewModel != null)
@@ -1503,9 +1498,7 @@ private string _currentSearchText = string.Empty;
             _pluginRepositoryService.DownloadProgressChanged += OnDownloadProgressChanged;
             
             var success = await _pluginRepositoryService.DownloadAndInstallPluginAsync(manifest);
-            
-            _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
-            
+
             if (success)
             {
                 _pluginManager.ScanAndLoadPlugins();
@@ -1547,6 +1540,8 @@ private string _currentSearchText = string.Empty;
         }
         finally
         {
+            _pluginRepositoryService.DownloadProgressChanged -= OnDownloadProgressChanged;
+
             if (pluginViewModel != null)
             {
                 pluginViewModel.IsInstalling = false;
@@ -1744,17 +1739,13 @@ private string _currentSearchText = string.Empty;
                 ? default(PluginUiCapabilities)
                 : ResolvePluginCapabilities(plugin, isInstalled: true);
 
-            // Find plugin's executable file
-            var pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginId);
-            var exeFile = Path.Combine(pluginDir, $"{pluginId}.exe");
-            
-            if (File.Exists(exeFile))
+            if (TryResolvePluginExecutable(pluginId, out var exeFile, out var pluginDir))
             {
                 // Run plugin's executable file
                 var processInfo = new System.Diagnostics.ProcessStartInfo
                 {
-                    FileName = exeFile,
-                    WorkingDirectory = pluginDir,
+                    FileName = exeFile!,
+                    WorkingDirectory = pluginDir!,
                     UseShellExecute = false
                 };
                 
@@ -2132,9 +2123,14 @@ private string _currentSearchText = string.Empty;
         
         var possiblePaths = new[]
         {
+            Path.Combine(appBaseDir, "plugins"),
+            Path.Combine(appBaseDir, "Plugins"),
             Path.Combine(appBaseDir, "build", "plugins"),
+            Path.Combine(appBaseDir, "Build", "plugins"),
             Path.Combine(appBaseDir, "..", "..", "..", "build", "plugins"),
+            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),
             Path.Combine(appBaseDir, "..", "build", "plugins"),
+            Path.Combine(appBaseDir, "..", "Build", "plugins"),
         };
 
         foreach (var possiblePath in possiblePaths)
@@ -2153,6 +2149,87 @@ private string _currentSearchText = string.Empty;
         if (Lib.Utils.Log.Instance.IsTraceEnabled)
             Lib.Utils.Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
         return defaultPath;
+    }
+
+    private List<PluginManifest> BuildInstalledPluginManifestsForUpdateCheck()
+    {
+        var manifests = new List<PluginManifest>();
+
+        foreach (var pluginId in _pluginManager.GetInstalledPluginIds().Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            _pluginManager.TryGetPlugin(pluginId, out var plugin);
+            var metadata = _pluginManager.GetPluginMetadata(pluginId);
+
+            manifests.Add(new PluginManifest
+            {
+                Id = pluginId,
+                Name = plugin?.Name ?? metadata?.Name ?? pluginId,
+                Description = plugin?.Description ?? metadata?.Description ?? string.Empty,
+                Version = metadata?.Version ?? "0.0.0",
+                Icon = plugin?.Icon ?? metadata?.Icon ?? string.Empty,
+                IsSystemPlugin = plugin?.IsSystemPlugin ?? metadata?.IsSystemPlugin ?? false
+            });
+        }
+
+        return manifests;
+    }
+
+    private bool TryResolvePluginExecutable(string pluginId, out string? exeFile, out string? workingDirectory)
+    {
+        exeFile = null;
+        workingDirectory = null;
+
+        var metadata = _pluginManager.GetPluginMetadata(pluginId);
+        var pluginsDirectory = GetPluginsDirectory();
+        var candidateDirectories = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(metadata?.FilePath))
+        {
+            var metadataDirectory = Path.GetDirectoryName(metadata.FilePath);
+            if (!string.IsNullOrWhiteSpace(metadataDirectory))
+                candidateDirectories.Add(metadataDirectory);
+        }
+
+        candidateDirectories.Add(Path.Combine(pluginsDirectory, pluginId));
+        candidateDirectories.Add(Path.Combine(pluginsDirectory, "local", pluginId));
+        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"));
+        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"));
+
+        foreach (var candidateDirectory in candidateDirectories
+                     .Where(path => !string.IsNullOrWhiteSpace(path))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!Directory.Exists(candidateDirectory))
+                continue;
+
+            var preferredCandidates = new[]
+            {
+                Path.Combine(candidateDirectory, $"{pluginId}.exe"),
+                Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.exe"),
+                Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.exe")
+            };
+
+            foreach (var preferredCandidate in preferredCandidates)
+            {
+                if (!File.Exists(preferredCandidate))
+                    continue;
+
+                exeFile = preferredCandidate;
+                workingDirectory = candidateDirectory;
+                return true;
+            }
+
+            var discoveredExecutable = Directory.GetFiles(candidateDirectory, "*.exe", SearchOption.TopDirectoryOnly)
+                .FirstOrDefault();
+            if (discoveredExecutable is null)
+                continue;
+
+            exeFile = discoveredExecutable;
+            workingDirectory = candidateDirectory;
+            return true;
+        }
+
+        return false;
     }
 
     private string GetPluginLocalizedName(IPlugin plugin)

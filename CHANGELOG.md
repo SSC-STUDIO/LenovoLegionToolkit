@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.12] - 2026-03-28
+
+### Fixed / 修复
+- **Plugin Install State Recovery / 插件安装状态恢复**: Cleared pending-deletion markers during reinstall/update, rejected plugin packages whose normalized `plugin.json` ID does not match the requested store manifest, and blocked incompatible host-version installs before download state is persisted so plugin updates no longer disappear after app exit or land in a false-installed state / 在重装与更新时清理待删除标记，拒绝规范化后 `plugin.json` ID 与商店清单不一致的插件包，并在下载前拦截宿主版本不兼容的安装，避免插件更新后在退出时被删掉，或进入“显示已安装但实际不可用”的错误状态
+- **Plugin Update Accuracy / 插件更新准确性**: Limited marketplace update checks to truly installed plugin IDs and aligned quick-open executable discovery with real plugin directories and metadata-backed locations so update badges and `Open` actions no longer drift when only discoverable/local plugins are present / 将插件市场更新检查收敛到真正已安装的插件 ID，并让快速打开动作按真实插件目录与元数据定位可执行文件，避免仅存在可发现/本地插件时更新提示和 `Open` 行为误报
+
 ## [3.6.11] - 2026-03-27
 
 ### Fixed / 修复
