@@ -18,6 +18,8 @@ public static class CMD
             throw new ArgumentException("Invalid file name", nameof(file));
         if (arguments != null && ContainsDangerousInput(arguments))
             throw new ArgumentException("Arguments contain dangerous characters", nameof(arguments));
+        if (waitForExit && string.IsNullOrWhiteSpace(arguments) && RequiresArgumentsForNonInteractiveShell(file))
+            throw new ArgumentException("Interactive shell executables require arguments when waiting for exit", nameof(arguments));
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Running... [file={file}, argument={arguments}, createNoWindow={createNoWindow}, waitForExit={waitForExit}, environment=[{(environment is null ? string.Empty : string.Join(",", environment))}]");
@@ -183,6 +185,20 @@ public static class CMD
                 return false;
         }
         return true;
+    }
+
+    private static bool RequiresArgumentsForNonInteractiveShell(string fileName)
+    {
+        var executableName = Path.GetFileName(fileName);
+        if (string.IsNullOrWhiteSpace(executableName))
+            return false;
+
+        return executableName.Equals("cmd.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("cmd", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("powershell", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("pwsh.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("pwsh", StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool ContainsDangerousInput(string input)

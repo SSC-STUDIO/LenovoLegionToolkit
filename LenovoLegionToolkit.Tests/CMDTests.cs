@@ -201,18 +201,17 @@ public class CMDTests
     }
 
     [Fact]
-    public async Task RunAsync_WithNullArguments_ShouldSucceed()
+    public async Task RunAsync_WithNullArgumentsForCmd_ShouldThrowArgumentException()
     {
         // Arrange
         var file = "cmd.exe";
         string? arguments = null;
 
         // Act
-        var (exitCode, output) = await CMD.RunAsync(file, arguments, waitForExit: true);
+        Func<Task> act = async () => await CMD.RunAsync(file, arguments, waitForExit: true);
 
         // Assert
-        // cmd.exe without arguments starts an interactive session
-        exitCode.Should().Be(0);
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -1220,7 +1219,7 @@ public class CMDTests
 
         // Assert
         exitCode.Should().Be(0);
-        output.Should().Contain("code page");
+        output.Should().MatchRegex("(?i)(code page|活动代码页)");
     }
 
     [Fact]
