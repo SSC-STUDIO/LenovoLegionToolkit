@@ -90,7 +90,14 @@ internal static class Program
             preparedRuntimePluginFixtures = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, pluginsDirectory, preferredPlugins);
             var fixtureWarningsByPlugin = preparedRuntimePluginFixtures
                 .Where(state => !state.FixturePrepared && !string.IsNullOrWhiteSpace(state.WarningMessage))
-                .ToDictionary(state => state.PluginId, state => state.WarningMessage!, StringComparer.OrdinalIgnoreCase);
+                .SelectMany(state => new[]
+                {
+                    new KeyValuePair<string, string>(state.PluginId, state.WarningMessage!),
+                    new KeyValuePair<string, string>(NormalizeRuntimeFixturePluginId(state.PluginId), state.WarningMessage!)
+                })
+                .Where(entry => !string.IsNullOrWhiteSpace(entry.Key))
+                .GroupBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(group => group.Key, group => group.First().Value, StringComparer.OrdinalIgnoreCase);
             var fixtureReadyPluginIds = preparedRuntimePluginFixtures
                 .Where(state => state.FixturePrepared)
                 .SelectMany(state => new[] { state.PluginId, NormalizeRuntimeFixturePluginId(state.PluginId) })
