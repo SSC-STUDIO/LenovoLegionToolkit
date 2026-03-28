@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+#nullable enable
+
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
