@@ -121,6 +121,17 @@ public class PluginRepositoryService : IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Starting download and install for plugin: {manifest.Id}");
 
+            var versionChecker = new VersionChecker();
+            if (!versionChecker.IsCompatible(manifest.MinimumHostVersion))
+            {
+                var compatibilityMessage = $"Plugin {manifest.Id} requires Lenovo Legion Toolkit {manifest.MinimumHostVersion} or newer.";
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace(compatibilityMessage);
+
+                DownloadFailed?.Invoke(this, compatibilityMessage);
+                return false;
+            }
+
             // Create temporary download path
             var tempFilePath = Path.Combine(_tempDownloadDirectory, $"{manifest.Id}.zip");
 
@@ -473,8 +484,13 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
-            if (!resolvedPluginId.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase) && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Normalized plugin package id '{resolvedPluginId}' does not match requested manifest id '{manifest.Id}'. Continuing with normalized content.");
+            if (!resolvedPluginId.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Normalized plugin package id '{resolvedPluginId}' does not match requested manifest id '{manifest.Id}'. Aborting installation.");
+
+                return false;
+            }
             
             // Verify hash
             var dllPath = FindPluginMainDll(extractPath, resolvedPluginId);
@@ -589,7 +605,7 @@ public class PluginRepositoryService : IDisposable
         }
         
 // Fall back to GitHub URL
-        return $"https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/{manifest.Id}-v{manifest.Version}/{manifest.Id}.zip";
+        return $"https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/{manifest.Id}-v{manifest.Version}/{manifest.Id}-v{manifest.Version}.zip";
     }
 
     private async Task<string> FetchStoreJsonFromRemoteAsync()
