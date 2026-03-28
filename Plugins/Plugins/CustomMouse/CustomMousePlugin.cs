@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Plugins.SDK;
 using Microsoft.Win32;
@@ -14,11 +15,11 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Custom Mouse",
-    version: "1.0.8",
+    version: "1.0.13",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
-    Icon = "Mouse24"
+    Icon = "Pen24"
 )]
 public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
@@ -67,7 +68,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public override string Id => "custom-mouse";
     public override string Name => CustomMouseText.PluginName;
     public override string Description => CustomMouseText.PluginDescription;
-    public override string Icon => "Mouse24";
+    public override string Icon => "Pen24";
     public override bool IsSystemPlugin => false;
 
     private MouseSettings _settings;
@@ -88,7 +89,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public override object? GetFeatureExtension()
     {
-        return new CustomMousePluginPage(this);
+        return new CustomMouseSettingsPluginPage(this);
     }
 
     public override object? GetSettingsPage()
@@ -125,7 +126,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public override void OnInstalled()
     {
         _settings = MouseSettings.CreateDefault();
-        _ = SaveSettingsAsync();
+        RunLifecycleTask(nameof(OnInstalled), () => SaveSettingsAsync());
     }
 
     public override void OnUninstalled()
@@ -133,8 +134,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         StopThemeWatcher();
         _settings.AutoThemeCursorStyle = false;
         _settings.CursorThemeMode = CursorThemeMode.Auto;
-        _ = SaveSettingsAsync();
-        _ = RestoreBackedUpCursorSchemeAsync(CancellationToken.None);
+        RunLifecycleTask(nameof(OnUninstalled), () => SaveSettingsAsync());
+        RunLifecycleTask(nameof(OnUninstalled), () => RestoreBackedUpCursorSchemeAsync(CancellationToken.None));
     }
 
     public override void OnShutdown()
@@ -221,7 +222,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!TryApplyCursorThemeWithInf(theme, cancellationToken))
+            if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
                 ApplyCursorThemeFromResources(theme);
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
@@ -241,7 +242,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             cancellationToken.ThrowIfCancellationRequested();
             var theme = IsSystemLightTheme() ? CursorTheme.Light : CursorTheme.Dark;
 
-            if (!TryApplyCursorThemeWithInf(theme, cancellationToken))
+            if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
                 ApplyCursorThemeFromResources(theme);
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
@@ -327,7 +328,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         return Task.FromResult(_settings.AutoThemeCursorStyle);
     }
 
-    private bool TryApplyCursorThemeWithInf(CursorTheme theme, CancellationToken cancellationToken)
+    private async Task<bool> TryApplyCursorThemeWithInfAsync(CursorTheme theme, CancellationToken cancellationToken)
     {
         try
         {
@@ -350,7 +351,25 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             if (process == null)
                 return false;
 
-            process.WaitForExit(15000);
+            var waitTask = process.WaitForExitAsync(cancellationToken);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+            var completedTask = await Task.WhenAny(waitTask, timeoutTask).ConfigureAwait(false);
+            if (completedTask != waitTask)
+            {
+                try
+                {
+                    if (!process.HasExited)
+                        process.Kill(entireProcessTree: true);
+                }
+                catch
+                {
+                    // Ignore cleanup failures and report timeout below.
+                }
+
+                return false;
+            }
+
+            await waitTask.ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!process.HasExited || process.ExitCode != 0)
@@ -446,7 +465,20 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
 
         Configuration.SetValue(CursorBackupSavedFlag, true);
-        _ = Configuration.SaveAsync();
+        RunLifecycleTask(nameof(BackupCurrentCursorSchemeIfNeeded), () => Configuration.SaveAsync());
+    }
+
+    private static void RunLifecycleTask(string operationName, Func<Task> action)
+    {
+        try
+        {
+            action().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
+        }
     }
 
     private static string GetBackupConfigKey(string registryValueName)
@@ -546,24 +578,6 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
-}
-
-public class CustomMousePluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
-{
-    private readonly CustomMousePlugin _plugin;
-
-    public CustomMousePluginPage(CustomMousePlugin plugin)
-    {
-        _plugin = plugin;
-    }
-
-    public string PageTitle => CustomMouseText.PageTitle;
-    public string? PageIcon => "Mouse24";
-
-    public object CreatePage()
-    {
-        return new CustomMouseControl(_plugin);
-    }
 }
 
 public class CustomMouseSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage

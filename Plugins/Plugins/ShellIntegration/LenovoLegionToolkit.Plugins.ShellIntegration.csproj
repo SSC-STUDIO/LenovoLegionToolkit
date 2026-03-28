@@ -3,17 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Platforms>x64</Platforms>
-    <Nullable>enable</Nullable>
-    <Copyright>© 2025 SSC-STUDIO</Copyright>
-    <NeutralLanguage>en</NeutralLanguage>
-    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
     <UseWPF>true</UseWPF>
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <GenerateDependencyFile>false</GenerateDependencyFile>
-    <Version>1.0.8</Version>
-    <FileVersion>1.0.8</FileVersion>
-    <AssemblyVersion>1.0.8</AssemblyVersion>
+    <Platforms>x64</Platforms>
+    <Version>1.0.9</Version>
+    <FileVersion>1.0.9</FileVersion>
+    <AssemblyVersion>1.0.9</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
@@ -92,14 +86,13 @@
     <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;"
           ConsoleToMSBuild="true"
-          StandardOutputImportance="normal"
-          IgnoreExitCode="true" />
+          StandardOutputImportance="normal" />
     <!-- Re-evaluate after download so the ItemGroup picks up the files -->
     <PropertyGroup>
       <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
     </PropertyGroup>
-    <Warning Condition="'$(_ShellCachedExists)' != 'true'"
-             Text="Shell binaries could not be fetched. The plugin will build without Shell integration files. If the fetch succeeded, please rebuild to include the downloaded files." />
+    <Error Condition="'$(_ShellCachedExists)' != 'true'"
+           Text="Shell binaries could not be fetched. Build aborted because shell.exe is required for a valid Shell Integration package." />
   </Target>
 
   <Target Name="CleanupPluginFiles" AfterTargets="Build">
@@ -117,3 +110,4 @@
   </Target>
 
 </Project>
+

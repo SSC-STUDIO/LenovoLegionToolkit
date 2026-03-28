@@ -3,6 +3,8 @@
   <PropertyGroup>
     <!-- 插件标识 - 替换为你的插件ID -->
     <PluginId>myplugin</PluginId>
+    <!-- 插件目录名 - 保持与文件夹名一致 -->
+    <PluginFolderName>Template</PluginFolderName>
     <!-- 插件名称 -->
     <PluginName>My Plugin</PluginName>
     <!-- 插件描述 -->
@@ -11,7 +13,7 @@
 
   <PropertyGroup>
     <!-- 覆盖 Directory.Build.props 中的设置 -->
-    <OutputPath>..\..\Build\plugins\$(PluginId)\</OutputPath>
+    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.$(PluginFolderName)\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

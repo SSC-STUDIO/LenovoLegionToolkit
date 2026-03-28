@@ -18,7 +18,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Shell Integration",
-    version: "1.0.5",
+    version: "1.0.9",
     description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -100,6 +100,11 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public bool IsShellInstalled()
     {
         return GetShellInstallPath() is not null;
+    }
+
+    public bool IsShellRegistered()
+    {
+        return IsShellRegisteredInMergedClasses();
     }
 
     public string? GetShellExePath()

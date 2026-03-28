@@ -3,6 +3,8 @@ param(
     [string]$Configuration = "Release",
     [switch]$SkipBuild,
     [switch]$SkipTests,
+    [switch]$OfficialOnly,
+    [Alias("OutputJson")]
     [string]$JsonReportPath = ""
 )
 
@@ -65,7 +67,6 @@ function Resolve-OutputPath {
         return [System.IO.Path]::GetFullPath((Join-Path $ProjectDirectory $outputPath))
     }
 
-    # Fallback to SDK default layout when OutputPath is not explicitly set.
     return [System.IO.Path]::GetFullPath((Join-Path $ProjectDirectory "bin\$BuildConfiguration"))
 }
 
@@ -85,9 +86,93 @@ function Get-FirstNonEmptyNode {
     return $null
 }
 
+function Normalize-TextValue {
+    param(
+        [object]$Value
+    )
+
+    if ($null -eq $Value) {
+        return ""
+    }
+
+    return [string]$Value
+}
+
+function Compare-StringField {
+    param(
+        [string]$PluginId,
+        [string]$FieldName,
+        [object]$ManifestValue,
+        [object]$StoreValue,
+        [ref]$FailureCount
+    )
+
+    $manifestText = Normalize-TextValue -Value $ManifestValue
+    $storeText = Normalize-TextValue -Value $StoreValue
+
+    if ([string]::IsNullOrWhiteSpace($manifestText)) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "plugin.json missing $FieldName"
+        $FailureCount.Value++
+        return
+    }
+
+    if ([string]::IsNullOrWhiteSpace($storeText)) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "store.json missing $FieldName"
+        $FailureCount.Value++
+        return
+    }
+
+    if ($manifestText -ne $storeText) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "$FieldName mismatch: plugin.json=$manifestText, store.json=$storeText"
+        $FailureCount.Value++
+        return
+    }
+
+    Write-Step -PluginId $PluginId -Status "PASS" -Message "$FieldName aligned ($manifestText)"
+}
+
+function Compare-BoolField {
+    param(
+        [string]$PluginId,
+        [string]$FieldName,
+        [object]$ManifestValue,
+        [object]$StoreValue,
+        [ref]$FailureCount
+    )
+
+    if ($null -eq $ManifestValue) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "plugin.json missing $FieldName"
+        $FailureCount.Value++
+        return
+    }
+
+    if ($null -eq $StoreValue) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "store.json missing $FieldName"
+        $FailureCount.Value++
+        return
+    }
+
+    $manifestBool = [bool]$ManifestValue
+    $storeBool = [bool]$StoreValue
+    if ($manifestBool -ne $storeBool) {
+        Write-Step -PluginId $PluginId -Status "FAIL" -Message "$FieldName mismatch: plugin.json=$manifestBool, store.json=$storeBool"
+        $FailureCount.Value++
+        return
+    }
+
+    Write-Step -PluginId $PluginId -Status "PASS" -Message "$FieldName aligned ($manifestBool)"
+}
+
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $pluginsRoot = Join-Path $repoRoot "Plugins"
 $storePath = Join-Path $repoRoot "store.json"
+$templatePluginDir = Join-Path $pluginsRoot "Template"
+$officialPluginIds = @(
+    "custom-mouse",
+    "network-acceleration",
+    "shell-integration",
+    "vive-tool"
+)
 
 if (-not (Test-Path $storePath)) {
     throw "store.json not found at $storePath"
@@ -117,7 +202,32 @@ if ($storePlugins.Count -eq 0) {
     throw "No plugin entries found in store.json"
 }
 
-$targetPluginIds = if ($PluginIds.Count -gt 0) { $PluginIds } else { $storePlugins.id }
+$storePluginIds = @($storePlugins | ForEach-Object { [string]$_.id })
+if ($OfficialOnly) {
+    $unexpectedStoreIds = @($storePluginIds | Where-Object { $_ -notin $officialPluginIds })
+    if ($unexpectedStoreIds.Count -gt 0) {
+        foreach ($unexpectedStoreId in $unexpectedStoreIds) {
+            Write-Step -PluginId "" -Status "FAIL" -Message "store.json contains non-official plugin entry: $unexpectedStoreId"
+        }
+        throw "store.json contains plugin entries outside the official plugin set."
+    }
+
+    $missingStoreIds = @($officialPluginIds | Where-Object { $_ -notin $storePluginIds })
+    if ($missingStoreIds.Count -gt 0) {
+        foreach ($missingStoreId in $missingStoreIds) {
+            Write-Step -PluginId "" -Status "FAIL" -Message "store.json missing official plugin entry: $missingStoreId"
+        }
+        throw "store.json is missing one or more official plugin entries."
+    }
+}
+
+$targetPluginIds = if ($PluginIds.Count -gt 0) {
+    $PluginIds
+} elseif ($OfficialOnly) {
+    $officialPluginIds
+} else {
+    $storePluginIds
+}
 $manifestFiles = Get-ChildItem -Path $pluginsRoot -Recurse -File | Where-Object { $_.Name -ieq "plugin.json" }
 
 $manifestById = @{}
@@ -129,10 +239,19 @@ foreach ($manifestFile in $manifestFiles) {
                 Manifest = $manifest
                 Path = $manifestFile.FullName
                 Directory = $manifestFile.DirectoryName
+                FileName = $manifestFile.Name
             }
         }
     } catch {
         Write-Step -PluginId "" -Status "WARN" -Message "Failed to parse manifest file: $($manifestFile.FullName)"
+    }
+}
+
+if (Test-Path $templatePluginDir) {
+    $templateManifestPath = Join-Path $templatePluginDir "plugin.json"
+    if (Test-Path $templateManifestPath) {
+        Write-Step -PluginId "" -Status "FAIL" -Message "Template plugin must not ship a plugin.json manifest: $templateManifestPath"
+        throw "Template plugin must stay out of the official manifest set."
     }
 }
 
@@ -160,30 +279,23 @@ foreach ($pluginId in $targetPluginIds) {
     $manifestInfo = $manifestById[$pluginId]
     $manifest = $manifestInfo.Manifest
     $pluginDir = $manifestInfo.Directory
+    $pluginFolderName = [System.IO.Path]::GetFileName($pluginDir)
 
     Write-Step -PluginId $pluginId -Status "PASS" -Message "Manifest found at $($manifestInfo.Path)"
 
-    if (-not $manifest.version) {
-        Write-Step -PluginId $pluginId -Status "FAIL" -Message "plugin.json missing version"
-        $pluginFailures++
-    }
-
-    if ($manifest.version -ne $storeEntry.version) {
-        Write-Step -PluginId $pluginId -Status "FAIL" -Message "Version mismatch: plugin.json=$($manifest.version), store.json=$($storeEntry.version)"
+    if ($manifestInfo.FileName -cne "plugin.json") {
+        Write-Step -PluginId $pluginId -Status "FAIL" -Message "Manifest file must be named plugin.json"
         $pluginFailures++
     } else {
-        Write-Step -PluginId $pluginId -Status "PASS" -Message "Version aligned ($($manifest.version))"
+        Write-Step -PluginId $pluginId -Status "PASS" -Message "Manifest file name is plugin.json"
     }
 
-    if (-not $manifest.minLLTVersion) {
-        Write-Step -PluginId $pluginId -Status "FAIL" -Message "plugin.json missing minLLTVersion"
-        $pluginFailures++
-    } elseif ($manifest.minLLTVersion -ne $storeEntry.minLLTVersion) {
-        Write-Step -PluginId $pluginId -Status "FAIL" -Message "minLLTVersion mismatch: plugin.json=$($manifest.minLLTVersion), store.json=$($storeEntry.minLLTVersion)"
-        $pluginFailures++
-    } else {
-        Write-Step -PluginId $pluginId -Status "PASS" -Message "minLLTVersion aligned ($($manifest.minLLTVersion))"
-    }
+    Compare-StringField -PluginId $pluginId -FieldName "id" -ManifestValue $manifest.id -StoreValue $storeEntry.id -FailureCount ([ref]$pluginFailures)
+    Compare-StringField -PluginId $pluginId -FieldName "name" -ManifestValue $manifest.name -StoreValue $storeEntry.name -FailureCount ([ref]$pluginFailures)
+    Compare-StringField -PluginId $pluginId -FieldName "version" -ManifestValue $manifest.version -StoreValue $storeEntry.version -FailureCount ([ref]$pluginFailures)
+    Compare-StringField -PluginId $pluginId -FieldName "author" -ManifestValue $manifest.author -StoreValue $storeEntry.author -FailureCount ([ref]$pluginFailures)
+    Compare-StringField -PluginId $pluginId -FieldName "minLLTVersion" -ManifestValue $manifest.minLLTVersion -StoreValue $storeEntry.minLLTVersion -FailureCount ([ref]$pluginFailures)
+    Compare-BoolField -PluginId $pluginId -FieldName "isSystemPlugin" -ManifestValue $manifest.isSystemPlugin -StoreValue $storeEntry.isSystemPlugin -FailureCount ([ref]$pluginFailures)
 
     if ($manifest.version -and ($manifest.version -notmatch '^\d+\.\d+\.\d+([\-+][0-9A-Za-z\.-]+)?$')) {
         Write-Step -PluginId $pluginId -Status "WARN" -Message "Version is not SemVer-like: $($manifest.version)"
@@ -198,8 +310,16 @@ foreach ($pluginId in $targetPluginIds) {
         continue
     }
 
+    if ($projectFile.BaseName -ne "LenovoLegionToolkit.Plugins.$pluginFolderName") {
+        Write-Step -PluginId $pluginId -Status "FAIL" -Message "Project file name should be LenovoLegionToolkit.Plugins.$pluginFolderName.csproj"
+        $pluginFailures++
+    } else {
+        Write-Step -PluginId $pluginId -Status "PASS" -Message "Project file naming aligned ($($projectFile.Name))"
+    }
+
     $projectXml = [xml](Get-Content $projectFile.FullName)
     $projectVersion = Get-FirstNonEmptyNode -ProjectXml $projectXml -NodeName "Version"
+    $projectAuthors = Get-FirstNonEmptyNode -ProjectXml $projectXml -NodeName "Authors"
     $assemblyName = Get-FirstNonEmptyNode -ProjectXml $projectXml -NodeName "AssemblyName"
     if (-not $assemblyName) {
         $assemblyName = [System.IO.Path]::GetFileNameWithoutExtension($projectFile.Name)
@@ -214,6 +334,49 @@ foreach ($pluginId in $targetPluginIds) {
         }
     } else {
         Write-Step -PluginId $pluginId -Status "WARN" -Message "No explicit <Version> in csproj (could be inherited)."
+        $pluginWarnings++
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($projectAuthors)) {
+        if ($projectAuthors -ne $manifest.author) {
+            Write-Step -PluginId $pluginId -Status "FAIL" -Message "Author mismatch: csproj=$projectAuthors, plugin.json=$($manifest.author)"
+            $pluginFailures++
+        } else {
+            Write-Step -PluginId $pluginId -Status "PASS" -Message "csproj author aligned ($projectAuthors)"
+        }
+    } else {
+        Write-Step -PluginId $pluginId -Status "WARN" -Message "No explicit <Authors> in csproj (using shared default)."
+        $pluginWarnings++
+    }
+
+    $attributePattern = [regex]::Escape("id: `"$pluginId`"")
+    $pluginSourceFiles = Get-ChildItem -Path $pluginDir -Filter "*.cs" -File
+    $attributeSourceFile = $pluginSourceFiles |
+        Where-Object { Select-String -Path $_.FullName -Pattern $attributePattern -Quiet } |
+        Select-Object -First 1
+
+    if ($attributeSourceFile) {
+        $sourceText = Get-Content $attributeSourceFile.FullName -Raw
+        $attributeFailures = 0
+
+        foreach ($field in @(
+            @{ Pattern = "name: `"$([regex]::Escape([string]$manifest.name))`""; Label = "name" },
+            @{ Pattern = "version: `"$([regex]::Escape([string]$manifest.version))`""; Label = "version" },
+            @{ Pattern = "author: `"$([regex]::Escape([string]$manifest.author))`""; Label = "author" },
+            @{ Pattern = "MinimumHostVersion\s*=\s*`"$([regex]::Escape([string]$manifest.minLLTVersion))`""; Label = "MinimumHostVersion" }
+        )) {
+            if ($sourceText -notmatch $field.Pattern) {
+                Write-Step -PluginId $pluginId -Status "WARN" -Message "Plugin attribute may be out of sync for $($field.Label): $($attributeSourceFile.Name)"
+                $pluginWarnings++
+                $attributeFailures++
+            }
+        }
+
+        if ($attributeFailures -eq 0) {
+            Write-Step -PluginId $pluginId -Status "PASS" -Message "Plugin attribute metadata aligned ($($attributeSourceFile.Name))"
+        }
+    } else {
+        Write-Step -PluginId $pluginId -Status "WARN" -Message "Plugin attribute source not found for manifest id"
         $pluginWarnings++
     }
 
@@ -241,6 +404,13 @@ foreach ($pluginId in $targetPluginIds) {
         $resolvedOutputPath = Resolve-OutputPath -ProjectXml $projectXml -ProjectDirectory $pluginDir -BuildConfiguration $Configuration
         $expectedDll = Join-Path $resolvedOutputPath "$assemblyName.dll"
         $outputManifest = Join-Path $resolvedOutputPath "plugin.json"
+        $forbiddenOutputs = @(
+            "*.deps.json",
+            "*.runtimeconfig.json",
+            "Lenovo Legion Toolkit.*",
+            "LenovoLegionToolkit.WPF.*",
+            "LenovoLegionToolkit.Lib.*"
+        )
 
         if (-not (Test-Path $expectedDll)) {
             Write-Step -PluginId $pluginId -Status "FAIL" -Message "Missing output DLL: $expectedDll"
@@ -255,12 +425,25 @@ foreach ($pluginId in $targetPluginIds) {
         } else {
             Write-Step -PluginId $pluginId -Status "PASS" -Message "Output plugin.json present"
         }
+
+        $forbiddenMatches = @()
+        foreach ($forbiddenPattern in $forbiddenOutputs) {
+            $forbiddenMatches += @(Get-ChildItem -Path $resolvedOutputPath -Filter $forbiddenPattern -File -ErrorAction SilentlyContinue)
+        }
+
+        if ($forbiddenMatches.Count -gt 0) {
+            $forbiddenNames = $forbiddenMatches | Select-Object -ExpandProperty Name | Sort-Object -Unique
+            Write-Step -PluginId $pluginId -Status "FAIL" -Message "Forbidden output files present: $($forbiddenNames -join ', ')"
+            $pluginFailures++
+        } else {
+            Write-Step -PluginId $pluginId -Status "PASS" -Message "Output directory cleaned for release packaging"
+        }
     } else {
         Write-Step -PluginId $pluginId -Status "WARN" -Message "Output artifact checks skipped because build is skipped"
         $pluginWarnings++
     }
 
-    $testProjectDirectory = Join-Path $pluginsRoot "$([System.IO.Path]::GetFileName($pluginDir)).Tests"
+    $testProjectDirectory = Join-Path $pluginsRoot "$pluginFolderName.Tests"
     $testProjectFile = if (Test-Path $testProjectDirectory) {
         Get-ChildItem -Path $testProjectDirectory -Filter "*.csproj" -File | Select-Object -First 1
     } else {
@@ -278,8 +461,13 @@ foreach ($pluginId in $targetPluginIds) {
         Write-Step -PluginId $pluginId -Status "WARN" -Message "Tests skipped by parameter"
         $pluginWarnings++
     } else {
-        Write-Step -PluginId $pluginId -Status "WARN" -Message "No sibling *.Tests project found (optional)"
-        $pluginWarnings++
+        if ($OfficialOnly) {
+            Write-Step -PluginId $pluginId -Status "FAIL" -Message "Missing sibling *.Tests project"
+            $pluginFailures++
+        } else {
+            Write-Step -PluginId $pluginId -Status "WARN" -Message "Missing sibling *.Tests project"
+            $pluginWarnings++
+        }
     }
 
     $results.Add([pscustomobject]@{
@@ -321,6 +509,8 @@ if (-not [string]::IsNullOrWhiteSpace($JsonReportPath)) {
         configuration = $Configuration
         skipBuild = [bool]$SkipBuild
         skipTests = [bool]$SkipTests
+        officialOnly = [bool]$OfficialOnly
+        officialPluginIds = @($officialPluginIds)
         pluginIds = @($targetPluginIds)
         totals = [pscustomobject]@{
             pluginCount = $results.Count

@@ -11,22 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed / 修复
-- **Chinese Plugin Localization / 插件中文本地化**: Filled the missing Chinese resource keys in ShellIntegration, CustomMouse, and ViveTool so simplified Chinese mode no longer falls back to English for the new plugin UI strings / 补齐 ShellIntegration、CustomMouse 与 ViveTool 缺失的中文资源键，避免简体中文模式下新插件界面字符串回退为英文
-- **Uzbek Plugin Localization / 插件乌兹别克语本地化**: Filled the remaining `uz` / `uz-latn-uz` gaps in CustomMouse, NetworkAcceleration, ShellIntegration, and ViveTool so cold-language runs no longer leak English labels or dialog filters across the active plugin set / 补齐 CustomMouse、NetworkAcceleration、ShellIntegration 与 ViveTool 的 `uz` / `uz-latn-uz` 资源缺口，避免冷门语言实跑时在活跃插件界面和文件对话框过滤器中继续泄露英文
-
-## [1.1.7] - 2026-03-17
-
-### Fixed / 修复
-- **ViveTool**: Switched the feature page and settings page to embeddable controls so host plugin pages and settings dialogs no longer hit the `Page must have Window or Frame parent` crash path, and fixed feature-list loading to marshal UI state changes back onto the dispatcher thread / 将 ViveTool 的功能页和设置页改为可嵌入控件，避免宿主插件页与设置对话框再触发 “Page 必须有 Window 或 Frame 父级” 崩溃路径，同时修复功能列表加载时的 UI 状态更新回到 Dispatcher 线程
+- **Release Workflow Consistency / 发布工作流一致性**: Reworked the plugin release workflow so ZIP names, GitHub release tags, generated `downloadUrl`, and `store.json` IDs all derive from each plugin's canonical `plugin.json` metadata instead of ZIP base names, preventing bad release paths and mismatched plugin IDs in generated store entries / 重构插件发布工作流，使 ZIP 文件名、GitHub Release 标签、生成的 `downloadUrl` 与 `store.json` 中的插件 ID 全部以各插件 `plugin.json` 的规范元数据为准，不再从 ZIP 基名反推，避免生成错误的发布路径和错配的插件 ID
+- **Completion Checker Onboarding / 完成度校验接入**: Relaxed `plugin-completion-check.ps1` so non-official plugin IDs can be validated without tripping the hard-coded official-only gate, while still preserving an explicit `-OfficialOnly` mode for stricter repository audits / 放宽 `plugin-completion-check.ps1` 的官方插件硬编码限制，使非官方插件 ID 也能复用同一套校验流程，同时保留显式 `-OfficialOnly` 模式供仓库级严格审计使用
+- **Store Release Ordering / 商店发布顺序**: Made `store.json` updates wait for successful release publication and append newly released plugin entries instead of silently dropping plugins that were not already present in the existing store ordering / 让 `store.json` 回写依赖成功的 release 发布，并在生成时追加新发布但尚未存在于旧排序中的插件条目，避免新插件被静默丢弃
 
 ### Improved / 改进
-- **Custom Mouse**: Refreshed both the profile and Windows-settings pages into a card-based dashboard with live summary tiles for DPI, polling rate, pointer speed, button layout, and cursor-theme mode / 重构 Custom Mouse 的配置页与 Windows 设置页，改为卡片式仪表盘，并增加 DPI、回报率、指针速度、按键布局和光标主题模式的实时摘要
-- **Network Acceleration**: Expanded the telemetry dashboard with traffic-mix bars and a burst-history chart while keeping the existing live throughput graph and fallback UI intact / 扩展 Network Acceleration 遥测面板，新增流量占比条和突发历史图，同时保留原有吞吐曲线与回退 UI
-- **Shell Integration**: Promoted installation, version, config, and path details into richer overview cards while preserving the same registration actions / 提升 Shell Integration 的安装、版本、配置和路径信息展示，改为概览卡片，同时保留原有注册控制动作
-- **ViveTool**: Reworked the settings surface into a stronger hero-plus-actions layout so runtime status, download progress, and binary path management read more cleanly / 重做 ViveTool 设置页布局，采用更清晰的头图区加操作区结构，使运行状态、下载进度和二进制路径管理更易读
+- **Plugin Scaffold And Docs / 插件脚手架与文档**: Added `Scripts/new-plugin.ps1` and rewrote the top-level README plus quick-start/development guides to document the real vendored-host build model, naming conventions, completion check usage, and workflow-dispatch release path instead of the removed legacy zip/tag flow / 新增 `Scripts/new-plugin.ps1`，并重写仓库 README 与快速开始/开发指南，改为说明当前真实使用的 vendored-host 构建模型、命名约定、完成度检查方式以及 `workflow_dispatch` 发布路径，替代已废弃的旧 zip/tag 流程
 
-### Fixed / 修复
-- **Shell Integration / Shell 集成**: Prepared a new `1.0.4` marketplace payload that bundles the verified sibling `Shell` build removing the submenu black-block animation while preserving submenu transparency parity / 准备新的 `1.0.4` 市场包，内置已验证的 sibling `Shell` 修复版本，移除二级菜单黑块动画并保持子菜单透明度一致
+## [1.1.7] - 2026-03-17
 
 ### Fixed / 修复
 - **Build Output Hygiene / 构建产物卫生**: Ignore repository-local `Build/` and all project `obj/` directories so repeated plugin builds no longer leave untracked build artifacts in `git status` / 忽略仓库内 `Build/` 与各项目 `obj/` 目录，避免重复插件构建后在 `git status` 中残留未跟踪构建产物

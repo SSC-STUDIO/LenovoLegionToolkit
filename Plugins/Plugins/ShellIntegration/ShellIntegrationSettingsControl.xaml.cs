@@ -155,20 +155,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
     {
         try
         {
-            // Check registry for shell registration
-            foreach (var subKey in new[]
-            {
-                @"*\shellex\ContextMenuHandlers",
-                @"Directory\background\shellex\ContextMenuHandlers"
-            })
-            {
-                using var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{subKey}\ @nilesoft.shell", false)
-                             ?? Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{subKey}\@nilesoft.shell", false);
-                var value = System.Convert.ToString(key?.GetValue(string.Empty)) ?? string.Empty;
-                if (value.Equals("{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}", System.StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-            return false;
+            return _plugin.IsShellRegistered();
         }
         catch
         {

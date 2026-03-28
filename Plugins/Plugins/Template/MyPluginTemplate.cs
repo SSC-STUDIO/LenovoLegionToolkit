@@ -11,7 +11,7 @@ namespace LenovoLegionToolkit.Plugins.Template;
     version: "1.0.0",
     description: "My custom plugin for Lenovo Legion Toolkit",
     author: "Your Name",
-    MinimumHostVersion = "2.0.0",
+    MinimumHostVersion = "3.6.1",
     Icon = "Apps24"
 )]
 public class MyPluginTemplate : PluginBase

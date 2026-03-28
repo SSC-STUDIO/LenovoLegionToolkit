@@ -6,7 +6,7 @@ on:
     paths:
       - 'Plugins/**'
       - 'SDK/**'
-      - 'scripts/**'
+      - 'Scripts/**'
       - 'store.json'
       - 'Directory.Build.props'
       - '.github/workflows/build.yml'
@@ -17,7 +17,7 @@ on:
     paths:
       - 'Plugins/**'
       - 'SDK/**'
-      - 'scripts/**'
+      - 'Scripts/**'
       - 'store.json'
       - 'Directory.Build.props'
       - '.github/workflows/build.yml'
@@ -30,7 +30,7 @@ on:
         required: false
         default: ''
       version:
-        description: 'Version for release (e.g., 1.0.0)'
+        description: 'Optional validation for a single-plugin release; must match plugin.json version'
         required: false
         default: ''
 
@@ -74,9 +74,9 @@ jobs:
           $pluginInput = "${{ github.event.inputs.plugin }}"
           if ($pluginInput) {
             $pluginIds = $pluginInput.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-            & .\scripts\plugin-completion-check.ps1 -PluginIds $pluginIds -JsonReportPath $reportPath
+            & .\Scripts\plugin-completion-check.ps1 -PluginIds $pluginIds -JsonReportPath $reportPath
           } else {
-            & .\scripts\plugin-completion-check.ps1 -JsonReportPath $reportPath
+            & .\Scripts\plugin-completion-check.ps1 -JsonReportPath $reportPath
           }
 
       - name: Upload plugin completion report
@@ -142,17 +142,37 @@ jobs:
       - name: Create ZIP packages
         shell: pwsh
         run: |
-          $plugins = "${{ steps.determine-plugins.outputs.plugins }}".Split(',')
-          foreach ($plugin in $plugins) {
+          $selectedPlugins = "${{ steps.determine-plugins.outputs.plugins }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          $requestedVersion = "${{ github.event.inputs.version }}".Trim()
+
+          if ($requestedVersion -and $selectedPlugins.Count -ne 1) {
+            throw "version input is only supported when building a single plugin."
+          }
+
+          foreach ($plugin in $selectedPlugins) {
             $plugin = $plugin.Trim()
             if (-not $plugin) { continue }
             
             $pluginDir = "Plugins/$plugin"
             $pluginJson = Join-Path $pluginDir "plugin.json"
-            $pluginId = if (Test-Path $pluginJson) {
-              (Get-Content $pluginJson -Raw | ConvertFrom-Json).id
-            } else {
+            if (-not (Test-Path $pluginJson)) {
               throw "Missing plugin.json for $plugin"
+            }
+
+            $pluginManifest = Get-Content $pluginJson -Raw | ConvertFrom-Json
+            $pluginId = [string]$pluginManifest.id
+            $pluginVersion = [string]$pluginManifest.version
+
+            if (-not $pluginId) {
+              throw "Missing plugin id for $plugin"
+            }
+
+            if (-not $pluginVersion) {
+              throw "Missing plugin version for $plugin"
+            }
+
+            if ($requestedVersion -and $pluginVersion -ne $requestedVersion) {
+              throw "Requested version '$requestedVersion' does not match $plugin id version '$pluginVersion'."
             }
 
             $buildDir = "Build/plugins/LenovoLegionToolkit.Plugins.$plugin"
@@ -160,13 +180,7 @@ jobs:
               throw "Expected build output not found for $plugin at $buildDir"
             }
             
-            # Create ZIP with pluginname-v{version}.zip naming convention
-            $version = "${{ github.event.inputs.version }}"
-            if ($version) {
-              $zipName = "$pluginId-v$version.zip"
-            } else {
-              $zipName = "$pluginId.zip"
-            }
+            $zipName = "$pluginId-v$pluginVersion.zip"
             
             # Package the actual compiled plugin output so DLLs/resources stay in sync.
             Compress-Archive -Path "$buildDir/*" -DestinationPath $zipName -Force
@@ -194,22 +208,29 @@ jobs:
           name: plugin-zips
           path: .
 
-      - name: Get version
-        id: version
+      - name: Publish per-plugin releases
+        shell: pwsh
         run: |
-          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          $zips = Get-ChildItem *.zip
+          if (-not $zips) {
+            throw "No ZIP artifacts found for release publishing."
+          }
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          files: '*.zip'
-          generate_release_notes: true
+          foreach ($zip in $zips) {
+            $tagName = $zip.BaseName
+
+            gh release view $tagName --repo "${{ env.PLUGIN_REPO }}" *> $null
+            if ($LASTEXITCODE -eq 0) {
+              gh release upload $tagName $zip.FullName --repo "${{ env.PLUGIN_REPO }}" --clobber
+            } else {
+              gh release create $tagName $zip.FullName --repo "${{ env.PLUGIN_REPO }}" --title $tagName --generate-notes
+            }
+          }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update-store-json:
-    needs: build
+    needs: release
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
     runs-on: ubuntu-latest
     permissions:
@@ -218,6 +239,11 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -232,45 +258,90 @@ jobs:
       - name: Generate store.json
         shell: pwsh
         run: |
-          $zips = Get-ChildItem *.zip
-          $plugins = @()
-          
-          foreach ($zip in $zips) {
-            $name = $zip.BaseName
-            $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
-            $size = $zip.Length
-            
-            # Extract version from filename (pluginname-v1.0.0.zip format)
-            $version = "${{ github.event.inputs.version }}"
-            
-            $plugin = @{
-              icon = "Apps24"
-              iconBackground = "#0078D4"
-              fileSize = [int]$size
-              name = $name
-              downloadUrl = "https://github.com/${{ env.PLUGIN_REPO }}/releases/download/$name-v$version/$($zip.Name)"
-              isSystemPlugin = $false
-              description = "$name plugin for Lenovo Legion Toolkit"
-              version = $version
-              changelog = "Version $version"
-              releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-              fileHash = $hash
-              author = "Crs10259"
-              dependencies = $null
-              id = $name.ToLower()
-              tags = @("utility")
-              minimumHostVersion = "2.0.0"
+          $storePath = Join-Path $PWD "store.json"
+          $existingStore = Get-Content $storePath -Raw | ConvertFrom-Json -AsHashtable
+          $existingPlugins = @{}
+          foreach ($plugin in $existingStore.plugins) {
+            $existingPlugins[$plugin.id] = $plugin
+          }
+
+          $requestedPlugins = "${{ github.event.inputs.plugin }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          if (-not $requestedPlugins) {
+            $requestedPlugins = Get-ChildItem -Path Plugins -Directory -Name | Where-Object { $_ -ne 'Template' -and $_ -notlike '*.Tests' }
+          }
+
+          $releaseDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+
+          foreach ($pluginFolder in $requestedPlugins) {
+            $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.json"
+            if (-not (Test-Path $pluginJsonPath)) {
+              throw "Missing plugin.json for $pluginFolder"
             }
-            
-            $plugins += $plugin
+
+            $pluginManifest = Get-Content $pluginJsonPath -Raw | ConvertFrom-Json -AsHashtable
+            $pluginId = [string]$pluginManifest.id
+            $pluginVersion = [string]$pluginManifest.version
+            $expectedZipName = "$pluginId-v$pluginVersion.zip"
+            $zipPath = Join-Path $PWD $expectedZipName
+
+            if (-not (Test-Path $zipPath)) {
+              throw "Missing ZIP artifact for $pluginId at $expectedZipName"
+            }
+
+            $zipItem = Get-Item $zipPath
+            $existingPlugin = $existingPlugins[$pluginId]
+
+            $updatedPlugin = [ordered]@{
+              id = $pluginId
+              name = if ($existingPlugin) { $existingPlugin.name } else { [string]$pluginManifest.name }
+              version = $pluginVersion
+              description = if ($existingPlugin) { $existingPlugin.description } else { "" }
+              author = if ($existingPlugin) { $existingPlugin.author } else { [string]$pluginManifest.author }
+              repositoryUrl = if ($existingPlugin) { $existingPlugin.repositoryUrl } else { [string]$pluginManifest.repository }
+              downloadUrl = "https://github.com/${{ env.PLUGIN_REPO }}/releases/download/$pluginId-v$pluginVersion/$expectedZipName"
+              changelog = "https://github.com/${{ env.PLUGIN_REPO }}/releases/tag/$pluginId-v$pluginVersion"
+              icon = if ($existingPlugin -and $existingPlugin.ContainsKey("icon")) { $existingPlugin.icon } else { "" }
+              iconBackground = if ($existingPlugin) { $existingPlugin.iconBackground } else { "" }
+              isSystemPlugin = [bool]$pluginManifest.isSystemPlugin
+              dependencies = if ($existingPlugin) { @($existingPlugin.dependencies) } else { @() }
+              minLLTVersion = [string]$pluginManifest.minLLTVersion
+              releaseDate = $releaseDate
+              fileSize = [int]$zipItem.Length
+              tags = if ($existingPlugin) { @($existingPlugin.tags) } else { @() }
+              supportedLanguages = if ($existingPlugin) { @($existingPlugin.supportedLanguages) } else { @("en") }
+            }
+
+            $existingPlugins[$pluginId] = $updatedPlugin
           }
-          
-          $store = @{
-            plugins = $plugins
-            lastUpdated = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-            storeVersion = "1.0.0"
+
+          $orderedPlugins = foreach ($plugin in $existingStore.plugins) {
+            $pluginId = [string]$plugin.id
+            if ($existingPlugins.ContainsKey($pluginId)) {
+              $existingPlugins[$pluginId]
+            }
           }
-          
+
+          $newPlugins = foreach ($pluginId in $existingPlugins.Keys) {
+            if ($existingStore.plugins.id -notcontains $pluginId) {
+              $existingPlugins[$pluginId]
+            }
+          }
+
+          $storeVersion = if ($existingStore.ContainsKey("storeVersion")) {
+            [string]$existingStore.storeVersion
+          } elseif ($existingStore.ContainsKey("version")) {
+            [string]$existingStore.version
+          } else {
+            "1.0.0"
+          }
+
+          $store = [ordered]@{
+            plugins = @($orderedPlugins + ($newPlugins | Sort-Object id))
+            lastUpdated = $releaseDate
+            storeVersion = $storeVersion
+            version = $storeVersion
+          }
+
           $store | ConvertTo-Json -Depth 10 | Out-File store.json -Encoding utf8
           Get-Content store.json
 
