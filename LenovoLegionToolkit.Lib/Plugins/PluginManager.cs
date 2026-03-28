@@ -772,6 +772,8 @@ public class PluginManager : IPluginManager
         }
 
         var installedExtensions = _applicationSettings.Store.InstalledExtensions;
+        var pendingDeletionExtensions = _applicationSettings.Store.PendingDeletionExtensions;
+        var pendingDeletionRemoved = pendingDeletionExtensions.RemoveAll(id => id.Equals(pluginId, StringComparison.OrdinalIgnoreCase)) > 0;
 
         if (!installedExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
         {
@@ -814,6 +816,14 @@ public class PluginManager : IPluginManager
             {
                 Log.Instance.Trace($"Plugin {pluginId} is already installed");
             }
+
+            if (pendingDeletionRemoved)
+                _applicationSettings.SynchronizeStore();
+        }
+
+        if (pendingDeletionRemoved && Log.Instance.IsTraceEnabled)
+        {
+            Log.Instance.Trace($"Removed {pluginId} from pending deletion list during install/reinstall.");
         }
     }
 
