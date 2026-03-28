@@ -105,24 +105,23 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Determine which plugins to build
-        id: determine-plugins
         shell: pwsh
         run: |
           $input = "${{ github.event.inputs.plugin }}"
           if ($input) {
             Write-Host "Building specific plugin: $input"
-            Write-Host "plugins=$input" >> $env:GITHUB_OUTPUT
+            "PLUGIN_SELECTION=$input" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           } else {
             $plugins = Get-ChildItem -Path Plugins -Directory -Name | Where-Object { $_ -ne 'Template' -and $_ -notlike '*.Tests' }
             $pluginsStr = $plugins -join ","
             Write-Host "Building all plugins: $pluginsStr"
-            Write-Host "plugins=$pluginsStr" >> $env:GITHUB_OUTPUT
+            "PLUGIN_SELECTION=$pluginsStr" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
 
       - name: Build plugins
         shell: pwsh
         run: |
-          $plugins = "${{ steps.determine-plugins.outputs.plugins }}".Split(',')
+          $plugins = "$env:PLUGIN_SELECTION".Split(',')
           foreach ($plugin in $plugins) {
             $plugin = $plugin.Trim()
             if (-not $plugin) { continue }
@@ -144,7 +143,7 @@ jobs:
       - name: Create ZIP packages
         shell: pwsh
         run: |
-          $selectedPlugins = "${{ steps.determine-plugins.outputs.plugins }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          $selectedPlugins = "$env:PLUGIN_SELECTION".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           $requestedVersion = "${{ github.event.inputs.version }}".Trim()
           $artifactDir = Join-Path $PWD "Build/artifacts"
 
