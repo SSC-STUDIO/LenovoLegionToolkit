@@ -3,19 +3,19 @@
         {
             "id": "custom-mouse",
             "name": "Custom Mouse",
-            "version": "1.0.11",
+            "version": "1.0.13",
             "description": "Customize mouse cursor style behavior and mouse settings",
             "author": "SSC-STUDIO",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.11/CustomMouse.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.11",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.13/custom-mouse-v1.0.13.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.13",
             "icon": "",
             "iconBackground": "#2563EB",
             "isSystemPlugin": false,
             "dependencies": [],
             "minLLTVersion": "3.6.1",
-            "releaseDate": "2026-03-18T14:15:03Z",
-            "fileSize": 1614990,
+            "releaseDate": "2026-03-28T00:00:00Z",
+            "fileSize": 1619871,
             "tags": [
                 "mouse",
                 "customization",
@@ -40,19 +40,19 @@
         {
             "id": "shell-integration",
             "name": "Shell Integration",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
             "author": "SSC-STUDIO",
             "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.8/ShellIntegration.zip",
-            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.8",
+            "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.9/shell-integration-v1.0.9.zip",
+            "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.9",
             "icon": "",
             "iconBackground": "#0F766E",
             "isSystemPlugin": true,
             "dependencies": [],
             "minLLTVersion": "3.6.1",
-            "releaseDate": "2026-03-18T14:15:03Z",
-            "fileSize": 934618,
+            "releaseDate": "2026-03-28T00:00:00Z",
+            "fileSize": 926694,
             "tags": [
                 "system",
                 "shell",
@@ -149,5 +149,5 @@
         }
     ],
     "version": "1.0.16",
-    "lastUpdated": "2026-03-21T00:00:00Z"
+    "lastUpdated": "2026-03-28T00:00:00Z"
 }
