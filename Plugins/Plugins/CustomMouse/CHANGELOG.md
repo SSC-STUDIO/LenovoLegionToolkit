@@ -6,6 +6,13 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.0.13] - 2026-03-28
+
+### Fixed / 修复
+- Moved the INF-based cursor-theme apply path off the UI-blocking `WaitForExit` call and made lifecycle persistence/restore operations run deterministically instead of fire-and-forget so theme switching no longer freezes the settings page and install/uninstall state is less likely to drift / 将基于 INF 的光标主题应用流程从阻塞 UI 的 `WaitForExit` 调用改为真正异步等待，并让安装/卸载生命周期中的持久化与恢复操作改为确定性执行，减少设置页切换主题卡顿以及安装/卸载状态落盘漂移
+
 ## [1.0.9] - 2026-03-18
 
 ### Fixed / 修复

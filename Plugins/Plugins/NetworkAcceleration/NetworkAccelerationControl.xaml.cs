@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,8 @@ public partial class NetworkAccelerationControl : UserControl
     private bool _isServiceRunning;
     private DateTimeOffset? _sessionStartedAt;
     private bool _isSelectionSyncInProgress;
+    private static readonly FieldInfo? RuntimeCancellationTokenSourceField =
+        typeof(NetworkAccelerationRuntime).GetField("_cts", BindingFlags.Instance | BindingFlags.NonPublic);
 
     private static CultureInfo Culture => NetworkAccelerationText.Culture;
 
@@ -51,6 +54,7 @@ public partial class NetworkAccelerationControl : UserControl
             0);
         UpdateTelemetrySummary(initialSnapshot);
         UpdateAnalytics(initialSnapshot);
+        SynchronizeRuntimeState();
         UpdateSessionPresentation();
 
         SetStatus(NetworkAccelerationText.MonitoringStatus, false);
@@ -58,6 +62,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        SynchronizeRuntimeState();
         RefreshTelemetry();
         _telemetryTimer.Start();
     }
@@ -193,19 +198,23 @@ public partial class NetworkAccelerationControl : UserControl
 
     private async void ServiceToggleButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isServiceRunning)
+        if (IsRuntimeRunning())
         {
+            _plugin.Runtime.Stop();
             _isServiceRunning = false;
+            _sessionStartedAt = null;
             SetStatus(NetworkAccelerationText.StatusServiceStopped, false);
         }
         else
         {
+            _plugin.Runtime.Start();
             _isServiceRunning = true;
-            _sessionStartedAt = DateTimeOffset.Now;
+            _sessionStartedAt = GetRuntimeSessionStartTime() ?? DateTimeOffset.Now;
             SetStatus(NetworkAccelerationText.StatusServiceStarted, false);
             await Task.Yield();
         }
 
+        SynchronizeRuntimeState();
         UpdateSessionPresentation();
     }
 
@@ -262,6 +271,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void RefreshTelemetry()
     {
+        SynchronizeRuntimeState();
         var snapshot = _telemetryService.Capture();
         _telemetrySamples.Add(snapshot);
         if (_telemetrySamples.Count > MaxTelemetrySamples)
@@ -378,6 +388,38 @@ public partial class NetworkAccelerationControl : UserControl
         _presetStateTextBlock.Text = _isServiceRunning
             ? NetworkAccelerationText.PresetStateActive
             : NetworkAccelerationText.PresetStateReady;
+    }
+
+    private void SynchronizeRuntimeState()
+    {
+        _isServiceRunning = IsRuntimeRunning();
+
+        if (_isServiceRunning)
+        {
+            _sessionStartedAt ??= GetRuntimeSessionStartTime() ?? DateTimeOffset.Now;
+        }
+        else
+        {
+            _sessionStartedAt = null;
+        }
+    }
+
+    private bool IsRuntimeRunning()
+    {
+        return RuntimeCancellationTokenSourceField?.GetValue(_plugin.Runtime) is not null;
+    }
+
+    private DateTimeOffset? GetRuntimeSessionStartTime()
+    {
+        var earliestSampleUtc = _plugin.Runtime.GetRecentSamples()
+            .Select(sample => sample.TimestampUtc)
+            .DefaultIfEmpty()
+            .Min();
+
+        if (earliestSampleUtc == default)
+            return null;
+
+        return new DateTimeOffset(DateTime.SpecifyKind(earliestSampleUtc, DateTimeKind.Utc));
     }
 
     private void SetStatus(string text, bool isError)

@@ -5,6 +5,14 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.0.9] - 2026-03-28
+
+### Fixed / 修复
+- Turned missing Shell runtime binaries from a warning into a hard build error so broken Shell Integration packages can no longer be produced when `shell.exe` was not fetched successfully / 将 Shell 运行时二进制缺失从警告升级为硬错误，避免在 `shell.exe` 拉取失败时继续产出不可运行的 Shell Integration 包
+- Routed the settings page registration-state probe through the plugin core's merged-classes check so the UI no longer reports a partially registered Shell state differently from the real action logic / 让设置页的 Shell 注册态检测直接复用插件核心的 merged-classes 检查逻辑，避免 UI 对“部分注册”的状态判断与真实动作逻辑不一致
+
 ## [1.0.6] - 2026-03-18
 
 ### Fixed / 修复

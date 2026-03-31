@@ -1,207 +1,128 @@
 # Lenovo Legion Toolkit Plugins
 
-This repository contains official plugins for Lenovo Legion Toolkit (LLT).
+Official plugins and plugin development tooling for Lenovo Legion Toolkit (LLT).
 
-## Available Plugins
+## Repository Model
 
-### Custom Mouse
-**ID:** `custom-mouse`  
-**Version:** 1.0.0  
-**Author:** LenovoLegionToolkit Team
+- This repository builds independently from the main `LenovoLegionToolkit` repo.
+- Plugin projects compile against vendored host references under `Dependencies/Host`.
+- Do not add `ProjectReference` links back to the sibling `LenovoLegionToolkit` source tree.
+- Official plugin outputs are expected under `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`.
 
-Customize mouse settings including DPI, polling rate, and button mappings.
-
-**Features:**
-- DPI adjustment (100-16000)
-- Polling rate control (125Hz, 250Hz, 500Hz, 1000Hz)
-- Button remapping
-- State persistence across sessions
-
-**Permissions:**
-- SystemInformation
-- HardwareAccess
-
----
-
-### Shell Integration
-**ID:** `shell-integration`  
-**Version:** 1.0.0  
-**Author:** LenovoLegionToolkit Team
-
-Integrate Lenovo Legion Toolkit with Windows shell context menu.
-
-**Features:**
-- Right-click context menu integration
-- Quick mode switching
-- Direct launcher access
-
-**Implementation source:** The right-click menu beautification and shell hosting layer are based on the sibling `Shell` repository, published on GitHub as [SSC-STUDIO/Nilesoft-Shell](https://github.com/SSC-STUDIO/Nilesoft-Shell).
-
-**Shell binaries:** Bundled from the sibling `Shell` repository (`src/bin/shell.dll`, `shell.exe`, `shell.nss`).
-
-**Permissions:**
-- SystemInformation
-- RegistryRead
-- RegistryWrite
-
-**Note:** This is a system plugin and cannot be uninstalled by users.
-
----
-
-## Development
-
-### Prerequisites
-- .NET 10.0 SDK
-- Visual Studio 2022 or VS Code
-
-### Independent Build Model
-
-This repository can be built independently from the main `LenovoLegionToolkit` source repository.
-
-- Plugin SDK/contracts compile against vendored host references in `Dependencies/Host`.
-- `Dependencies/Host/LenovoLegionToolkit.Lib.dll` and `Dependencies/Host/Lenovo Legion Toolkit.dll` are intentionally tracked in git as the canonical fresh-checkout host baseline.
-- No plugin project should use `ProjectReference` to `..\\..\\..\\LenovoLegionToolkit`.
-- To refresh host references after host updates:
+To refresh host references after the main app changes:
 
 ```powershell
-# from LenovoLegionToolkit-Plugins repo root
-powershell -ExecutionPolicy Bypass -File .\scripts\refresh-host-references.ps1 -UseSiblingRepoBuild
-
-# or provide an explicit LLT build output folder
-powershell -ExecutionPolicy Bypass -File .\scripts\refresh-host-references.ps1 -SourceDir "C:\path\to\Lenovo Legion Toolkit build output"
+powershell -ExecutionPolicy Bypass -File .\Scripts\refresh-host-references.ps1 -UseSiblingRepoBuild
 ```
 
-### Building
-```bash
-# Build all plugins
-dotnet build LenovoLegionToolkit-Plugins.sln
+## Prerequisites
 
-# Build specific plugin
-dotnet build Plugins/CustomMouse/LenovoLegionToolkit.Plugins.CustomMouse.csproj
+- .NET 10 SDK
+- Windows 10/11 x64
+- A valid `Dependencies/Host` baseline, or a sibling LLT checkout that can supply it
 
-# Build in Release mode
-dotnet build -c Release
-```
+## Common Commands
 
-### Plugin Completion Test Tool
-
-Use the independent completion checker to validate plugin release readiness without launching the main app:
+Build all plugins:
 
 ```powershell
-# check all plugins listed in store.json
-powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1
-
-# check specific plugin(s)
-powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -PluginIds custom-mouse,network-acceleration
-
-# skip build/tests when doing metadata-only checks
-powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -SkipBuild -SkipTests
-
-# write machine-readable report (for CI/release gates)
-powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1 -JsonReportPath .\artifacts\plugin-completion-report.json
+dotnet build .\LenovoLegionToolkit-Plugins.sln -c Release
 ```
 
-Checks include:
-- `store.json` ↔ `plugin.json` version / min host version consistency
-- Plugin project build (`dotnet build`)
-- Expected output artifacts (`<assembly>.dll`, `plugin.json`)
-- Plugin changelog presence
-- Optional plugin test project execution (`*.Tests`)
-- Optional JSON report output (`-JsonReportPath`)
+Validate store metadata, builds, outputs, and optional tests:
 
-### Plugin Completion UI Tool
-
-For a visual workflow, use the standalone WPF tool:
-
-```bash
-# from LenovoLegionToolkit-Plugins repo root
-dotnet run --project Tools/PluginCompletionUiTool/PluginCompletionUiTool.csproj
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1
 ```
 
-UI capabilities:
-- Select repository root folder
-- Filter plugin IDs (optional)
-- Toggle `Skip Build` / `Skip Tests`
-- Run completion checker and stream live logs
-- View plugin-level results and step-level details
-- Open generated JSON report (`artifacts/plugin-completion-ui-report.json`)
+Validate specific plugin IDs only:
 
-Desktop UI smoke automation (simulated click flow) is also available:
-
-```bash
-# build the UI tool first, then run smoke
-dotnet build Tools/PluginCompletionUiTool/PluginCompletionUiTool.csproj -c Release
-dotnet run --project Tools/PluginCompletionUiTool.Smoke/PluginCompletionUiTool.Smoke.csproj -c Release --no-build -- .
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse shell-integration vive-tool -OutputJson artifacts\plugin-completion-check-latest.json
 ```
 
-The smoke runner uses Windows UI Automation to:
-- launch the UI tool
-- set repository path
-- enable `Skip Build` and `Skip Tests`
-- click `Run Completion Check`
-- wait for completion and verify generated report integrity
+Scaffold a new plugin from the maintained template:
 
-### Creating a New Plugin
-
-1. Create a new folder under `plugins/`
-2. Create a `.csproj` file referencing the SDK
-3. Implement the `IPlugin` interface
-4. Add a `plugin.json` manifest file
-
-Example plugin structure:
-```
-plugins/
-└── MyPlugin/
-    ├── MyPlugin.csproj
-    ├── MyPlugin.cs
-    └── plugin.json
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
+  -FolderName MyPlugin `
+  -PluginId my-plugin `
+  -DisplayName "My Plugin" `
+  -Author "Your Name"
 ```
 
-### Plugin Manifest (plugin.json)
+Run the visual completion tool:
+
+```powershell
+dotnet run --project .\Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
+```
+
+## Plugin Conventions
+
+- Plugin folder: `Plugins/<FolderName>/`
+- Project file: `LenovoLegionToolkit.Plugins.<FolderName>.csproj`
+- Manifest file name: `plugin.json`
+- Output directory: `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`
+- Required manifest fields: `id`, `name`, `version`, `minLLTVersion`, `author`, `isSystemPlugin`
+- Official release ZIP name: `<plugin-id>-v<version>.zip`
+- Official release tag: `<plugin-id>-v<version>`
+
+Example `plugin.json`:
 
 ```json
 {
   "id": "my-plugin",
   "name": "My Plugin",
   "version": "1.0.0",
+  "minLLTVersion": "3.6.1",
   "author": "Your Name",
-  "description": "Plugin description",
-  "minLLTVersion": "3.6.0",
   "isSystemPlugin": false,
-  "dependencies": [],
-  "permissions": ["SystemInformation"],
-  "entryPoint": "Namespace.ClassName",
-  "stateful": false
+  "repository": "https://github.com/yourname/your-plugin-repo",
+  "issues": "https://github.com/yourname/your-plugin-repo/issues"
 }
 ```
 
-### Available Permissions
+## Release Workflow
 
-- `None` - No special permissions
-- `FileSystemRead` - Read file system
-- `FileSystemWrite` - Write file system
-- `NetworkAccess` - Network access
-- `RegistryRead` - Read registry
-- `RegistryWrite` - Write registry
-- `SystemInformation` - Access system info
-- `HardwareAccess` - Hardware control
-- `UICustomization` - UI customization
-- `InterPluginCommunication` - Inter-plugin communication
+This repository's release path is workflow-driven, not tag-driven.
 
-## CI/CD
+Current official flow:
 
-This repository uses GitHub Actions for:
+1. Update `plugin.json`, project version metadata, plugin `CHANGELOG.md`, repository root `CHANGELOG.md`, and `store.json` source metadata as needed.
+2. Run `Scripts/plugin-completion-check.ps1`.
+3. Trigger `.github/workflows/build.yml` with `workflow_dispatch`.
+4. Provide:
+   - `plugin`: optional comma-separated folder names
+   - `version`: required for release publishing; must match `plugin.json`
+5. The workflow builds ZIP assets, publishes per-plugin GitHub releases, then updates `store.json`.
 
-- **Build:** Automatically builds all plugins on push/PR
-- **Test:** Runs unit and integration tests
-- **Validation:** Runs plugin completion checker and uploads `plugin-completion-report` JSON artifact
-- **Release:** Creates releases from git tags
+Do not rely on `make.bat zip` or tag-only release instructions; those are not the current publication path.
 
-### Tag Format
+## Third-Party And New Plugin Onboarding
 
-- `v1.0.0` - Release all plugins with version 1.0.0
-- `CustomMouse-v1.0.0` - Release specific plugin
+Use the scaffold script first, then adjust generated UI/resources/tests:
 
-## License
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
+  -FolderName SamplePlugin `
+  -PluginId sample-plugin `
+  -DisplayName "Sample Plugin" `
+  -Author "Your Name" `
+  -Description "Sample plugin for Lenovo Legion Toolkit"
+```
 
-MIT License - See LICENSE file for details
+Then:
+
+1. Review generated `plugin.json` and project version metadata
+2. Add or update the generated plugin `CHANGELOG.md`
+3. Review generated test project under `Plugins/<FolderName>.Tests/`
+4. Build the new plugin
+5. Run completion check for its plugin ID
+6. Add or update the corresponding `store.json` entry if the plugin should be published from this repo
+7. Update the repository root `CHANGELOG.md`
+
+## Documents
+
+- [Quick Start](./Docs/PLUGIN_QUICKSTART.md)
+- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md)
+- [CHANGELOG](./CHANGELOG.md)

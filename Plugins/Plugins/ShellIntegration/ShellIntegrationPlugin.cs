@@ -102,6 +102,11 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         return GetShellInstallPath() is not null;
     }
 
+    public bool IsShellRegistered()
+    {
+        return IsShellRegisteredInMergedClasses();
+    }
+
     public string? GetShellExePath()
     {
         var bundled = GetBundledShellExePath();

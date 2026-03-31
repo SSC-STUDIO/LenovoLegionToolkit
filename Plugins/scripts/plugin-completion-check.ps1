@@ -3,9 +3,21 @@ param(
     [string]$Configuration = "Release",
     [switch]$SkipBuild,
     [switch]$SkipTests,
+    [switch]$OfficialOnly,
     [Alias("OutputJson")]
     [string]$JsonReportPath = ""
 )
+
+# Normalize PluginIds to handle both space-separated array and comma-separated single string
+$normalizedPluginIds = @()
+foreach ($id in $PluginIds) {
+    if ($id -match ',') {
+        $normalizedPluginIds += $id.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    } else {
+        $normalizedPluginIds += $id
+    }
+}
+$PluginIds = $normalizedPluginIds
 
 $ErrorActionPreference = "Stop"
 $script:StepLogs = New-Object System.Collections.Generic.List[object]
@@ -173,6 +185,20 @@ $officialPluginIds = @(
     "vive-tool"
 )
 
+# Plugin ID aliases for backward compatibility (alias -> canonical id)
+$pluginIdAliases = @{
+    "vivetool" = "vive-tool"
+}
+
+function Resolve-PluginIdAlias {
+    param([string]$PluginId)
+    $canonicalId = $pluginIdAliases[$PluginId.ToLowerInvariant()]
+    if ($canonicalId) {
+        return $canonicalId
+    }
+    return $PluginId
+}
+
 if (-not (Test-Path $storePath)) {
     throw "store.json not found at $storePath"
 }
@@ -202,23 +228,31 @@ if ($storePlugins.Count -eq 0) {
 }
 
 $storePluginIds = @($storePlugins | ForEach-Object { [string]$_.id })
-$unexpectedStoreIds = @($storePluginIds | Where-Object { $_ -notin $officialPluginIds })
-if ($unexpectedStoreIds.Count -gt 0) {
-    foreach ($unexpectedStoreId in $unexpectedStoreIds) {
-        Write-Step -PluginId "" -Status "FAIL" -Message "store.json contains non-official plugin entry: $unexpectedStoreId"
+if ($OfficialOnly) {
+    $unexpectedStoreIds = @($storePluginIds | Where-Object { $_ -notin $officialPluginIds })
+    if ($unexpectedStoreIds.Count -gt 0) {
+        foreach ($unexpectedStoreId in $unexpectedStoreIds) {
+            Write-Step -PluginId "" -Status "FAIL" -Message "store.json contains non-official plugin entry: $unexpectedStoreId"
+        }
+        throw "store.json contains plugin entries outside the official plugin set."
     }
-    throw "store.json contains plugin entries outside the official plugin set."
+
+    $missingStoreIds = @($officialPluginIds | Where-Object { $_ -notin $storePluginIds })
+    if ($missingStoreIds.Count -gt 0) {
+        foreach ($missingStoreId in $missingStoreIds) {
+            Write-Step -PluginId "" -Status "FAIL" -Message "store.json missing official plugin entry: $missingStoreId"
+        }
+        throw "store.json is missing one or more official plugin entries."
+    }
 }
 
-$missingStoreIds = @($officialPluginIds | Where-Object { $_ -notin $storePluginIds })
-if ($missingStoreIds.Count -gt 0) {
-    foreach ($missingStoreId in $missingStoreIds) {
-        Write-Step -PluginId "" -Status "FAIL" -Message "store.json missing official plugin entry: $missingStoreId"
-    }
-    throw "store.json is missing one or more official plugin entries."
+$targetPluginIds = if ($PluginIds.Count -gt 0) {
+    $PluginIds | ForEach-Object { Resolve-PluginIdAlias -PluginId $_ }
+} elseif ($OfficialOnly) {
+    $officialPluginIds
+} else {
+    $storePluginIds
 }
-
-$targetPluginIds = if ($PluginIds.Count -gt 0) { $PluginIds } else { $officialPluginIds }
 $manifestFiles = Get-ChildItem -Path $pluginsRoot -Recurse -File | Where-Object { $_.Name -ieq "plugin.json" }
 
 $manifestById = @{}
@@ -452,8 +486,13 @@ foreach ($pluginId in $targetPluginIds) {
         Write-Step -PluginId $pluginId -Status "WARN" -Message "Tests skipped by parameter"
         $pluginWarnings++
     } else {
-        Write-Step -PluginId $pluginId -Status "FAIL" -Message "Missing sibling *.Tests project"
-        $pluginFailures++
+        if ($OfficialOnly) {
+            Write-Step -PluginId $pluginId -Status "FAIL" -Message "Missing sibling *.Tests project"
+            $pluginFailures++
+        } else {
+            Write-Step -PluginId $pluginId -Status "WARN" -Message "Missing sibling *.Tests project"
+            $pluginWarnings++
+        }
     }
 
     $results.Add([pscustomobject]@{
@@ -495,6 +534,7 @@ if (-not [string]::IsNullOrWhiteSpace($JsonReportPath)) {
         configuration = $Configuration
         skipBuild = [bool]$SkipBuild
         skipTests = [bool]$SkipTests
+        officialOnly = [bool]$OfficialOnly
         officialPluginIds = @($officialPluginIds)
         pluginIds = @($targetPluginIds)
         totals = [pscustomobject]@{

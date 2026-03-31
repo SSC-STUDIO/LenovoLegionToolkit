@@ -8,29 +8,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
-## [Unreleased]
+## [1.0.35] - 2026-03-31
+
+### Changed / 变更
+- **Version / 版本**: Bump shared repository/store version metadata to `1.0.35` for working-set release consistency / 将共享仓库与商店版本元数据提升到 `1.0.35` 以保持工作集发布一致性
+
+### Verified / 验证
+- **Working Set Release Validation / 工作集发布验证**: Ran plugin completion check against `custom-mouse`, `shell-integration`, `vive-tool` / 对 `custom-mouse`、`shell-integration`、`vive-tool` 执行插件完成检查
+  - ✅ CustomMouse: PASS (0 failures, 1 warning) / 通过（0 失败，1 警告）
+  - ❌ ShellIntegration: FAIL (4 failures, 1 warning) — blocked by upstream `shell.exe` fetch failure, documented since 1.0.31 / 失败（4 失败，1 警告）— 因上游 `shell.exe` 拉取失败阻塞，自 1.0.31 起已记录
+  - ✅ ViveTool: PASS (0 failures, 1 warning) / 通过（0 失败，1 警告）
+- **Evidence / 证据**: `artifacts/plugin-completion-check-latest.json`, `working-set-release-smoke-test-latest.log` / 见仓库 artifacts 与附件日志
+
+## [1.0.34] - 2026-03-31
 
 ### Fixed / 修复
-- **Release Metadata / 发布元数据**: Aligned the official plugin marketplace metadata with the latest shipped UI and localization work by bumping `Custom Mouse` to `1.0.13`, `Shell Integration` to `1.0.9`, `Network Acceleration` to `1.1.6`, and `ViVeTool` to `1.1.9` across each plugin manifest, project file, and `store.json` / 将官方插件市场元数据与最新 UI 和多语言改动对齐：`Custom Mouse` 升到 `1.0.13`、`Shell Integration` 升到 `1.0.9`、`Network Acceleration` 升到 `1.1.6`、`ViVeTool` 升到 `1.1.9`，并同步更新各插件清单、项目文件和 `store.json`
-- **Custom Mouse Plugin Completion / Custom Mouse 插件完成度校验**: Restored the committed `CLAUDE.md` instructions, kept `CustomMousePlugin.GetFeatureExtension()` returning an embeddable plugin page, and aligned the Custom Mouse release metadata at `1.0.13` across `plugin.json`, project metadata, `PluginAttribute`, and `store.json` so the targeted completion check and lifecycle test pass while verification artifacts are written under `artifacts/` / 恢复已提交的 `CLAUDE.md` 指令内容，保持 `CustomMousePlugin.GetFeatureExtension()` 返回可嵌入插件页面，并将 Custom Mouse 的 `1.0.13` 发布元数据在 `plugin.json`、项目元数据、`PluginAttribute` 与 `store.json` 间对齐，使定向 completion check 与生命周期测试通过，同时将验证产物写入 `artifacts/`
+- **CustomMouse Async Lifecycle / CustomMouse 异步生命周期**: Converted INF-based cursor theme application to truly async pattern with proper timeout handling and process cleanup; lifecycle persistence operations now use deterministic execution via `RunLifecycleTask` instead of fire-and-forget / 将基于 INF 的光标主题应用转换为真正的异步模式，添加超时处理和进程清理；生命周期持久化操作现在通过 `RunLifecycleTask` 确定性执行而非 fire-and-forget
+- **ShellIntegration Build Verification / ShellIntegration 构建验证**: Added hard build-time check for Shell runtime binaries to prevent packaging broken releases when shell.exe fetch fails / 添加 Shell 运行时二进制文件的硬构建时检查，防止在 shell.exe 拉取失败时打包损坏的发布包
 
-### Improved / 改进
-- **Localization Coverage / 多语言覆盖**: Expanded the official plugin marketplace language metadata from the legacy 13-entry list to the full 32-culture set emitted by the current plugin build pipeline, matching the resource packages now shipped for `custom-mouse`, `shell-integration`, `network-acceleration`, and `vive-tool` / 将官方插件市场语言元数据从旧的 13 项扩展到当前插件构建链路实际产出的 32 个 culture，和 `custom-mouse`、`shell-integration`、`network-acceleration`、`vive-tool` 现已打包的资源语言保持一致
-- **ViVeTool Settings UI / ViVeTool 设置界面**: Refined the ViVeTool settings surface into the same summary-card language used by the rest of the official plugin set so path management, downloads, and status feedback no longer look like a leftover legacy page / 继续收敛 ViVeTool 设置页的视觉语言，使其与其他官方插件一致，统一为概览卡片式结构，避免路径管理、下载和状态反馈继续保留旧版残留页面观感
+### Changed / 变更
+- **Version / 版本**: Bump shared repository/store version metadata to `1.0.34` for plugin lifecycle and build verification improvements / 将共享仓库与商店版本元数据提升到 `1.0.34` 以包含插件生命周期和构建验证改进
 
-## [1.1.7] - 2026-03-17
-
-### Fixed / 修复
-- **ViveTool**: Switched the feature page and settings page to embeddable controls so host plugin pages and settings dialogs no longer hit the `Page must have Window or Frame parent` crash path, and fixed feature-list loading to marshal UI state changes back onto the dispatcher thread / 将 ViveTool 的功能页和设置页改为可嵌入控件，避免宿主插件页与设置对话框再触发 “Page 必须有 Window 或 Frame 父级” 崩溃路径，同时修复功能列表加载时的 UI 状态更新回到 Dispatcher 线程
-
-### Improved / 改进
-- **Custom Mouse**: Refreshed both the profile and Windows-settings pages into a card-based dashboard with live summary tiles for DPI, polling rate, pointer speed, button layout, and cursor-theme mode / 重构 Custom Mouse 的配置页与 Windows 设置页，改为卡片式仪表盘，并增加 DPI、回报率、指针速度、按键布局和光标主题模式的实时摘要
-- **Network Acceleration**: Expanded the telemetry dashboard with traffic-mix bars and a burst-history chart while keeping the existing live throughput graph and fallback UI intact / 扩展 Network Acceleration 遥测面板，新增流量占比条和突发历史图，同时保留原有吞吐曲线与回退 UI
-- **Shell Integration**: Promoted installation, version, config, and path details into richer overview cards while preserving the same registration actions / 提升 Shell Integration 的安装、版本、配置和路径信息展示，改为概览卡片，同时保留原有注册控制动作
-- **ViveTool**: Reworked the settings surface into a stronger hero-plus-actions layout so runtime status, download progress, and binary path management read more cleanly / 重做 ViveTool 设置页布局，采用更清晰的头图区加操作区结构，使运行状态、下载进度和二进制路径管理更易读
+## [1.0.33] - 2026-03-31
 
 ### Fixed / 修复
-- **Shell Integration / Shell 集成**: Prepared a new `1.0.4` marketplace payload that bundles the verified sibling `Shell` build removing the submenu black-block animation while preserving submenu transparency parity / 准备新的 `1.0.4` 市场包，内置已验证的 sibling `Shell` 修复版本，移除二级菜单黑块动画并保持子菜单透明度一致
+- **Version Alignment / 版本对齐**: Bump shared repository/store version metadata to `1.0.33` for working-set release consistency / 将共享仓库与商店版本元数据提升到 `1.0.33` 以保持工作集发布一致性
+
+## [1.0.32] - 2026-03-31
+
+### Fixed / 修复
+- **Plugin Completion Check Parameter Normalization / 插件完成检查参数规范化**: Fixed `plugin-completion-check.ps1` to accept both space-separated PowerShell array syntax and comma-separated single string for `-PluginIds` parameter, ensuring consistent behavior across README examples and actual usage / 修复 `plugin-completion-check.ps1` 以同时接受空格分隔的 PowerShell 数组语法和逗号分隔的单一字符串作为 `-PluginIds` 参数，确保 README 示例与实际使用行为一致
+- **Documentation Plugin ID Consistency / 文档插件 ID 一致性**: Corrected plugin ID references in README and documentation from `vivetool` to the actual store.json ID `vive-tool` / 修正 README 和文档中的插件 ID 引用，从 `vivetool` 改为实际的 store.json ID `vive-tool`
+
+### Changed / 变更
+- **Version / 版本**: Bump shared repository/store version metadata to `1.0.32` for parameter handling fix and documentation alignment / 为参数处理修复和文档对齐将共享仓库与商店版本元数据提升到 `1.0.32`
+
+## [1.0.31] - 2026-03-31
+
+### Fixed / 修复
+- **Release Workflow Consistency / 发布工作流一致性**: Fixed the GitHub Actions release job dependency so workflow-dispatch releases wait for the build job instead of self-referencing the release job, keeping the current ZIP/tag/store publication path runnable / 修复 GitHub Actions 发布任务依赖关系，使 workflow-dispatch 发布流程正确等待 build 作业而不是错误地自引用 release 作业，保持当前 ZIP/tag/store 发布链路可执行
+- **Completion Report Flag Alignment / 完成检查报告参数对齐**: Switched the workflow invocation to the script's supported `-OutputJson` alias so release validation and local smoke commands generate JSON evidence consistently / 将 workflow 中的完成检查调用切换到脚本已支持的 `-OutputJson` 别名，使发布校验与本地冒烟命令都能稳定生成 JSON 证据
+- **Working-Set Release Checklist / 当前工作集发布清单**: Updated README and plugin authoring guides so new-plugin follow-up, official smoke validation, and release preparation now all explicitly require syncing the repository root `CHANGELOG.md` alongside plugin/store metadata, and use the real manifest plugin IDs (`custom-mouse`, `shell-integration`, `vive-tool`) for completion-check examples / 更新 README 与插件开发文档，使 new-plugin 后续步骤、官方工作集冒烟校验与发布准备现在都明确要求在插件与 store 元数据之外同步维护仓库根 `CHANGELOG.md`，并在 completion-check 示例中统一使用真实清单插件 ID（`custom-mouse`、`shell-integration`、`vive-tool`）
+- **Shell Binary Fetch Validation / Shell 二进制拉取校验**: Verified the current `fetch-shell-binaries.ps1` path still fails against the latest upstream release layout because the fallback source zipball no longer contains a packaged `shell.exe`, documenting the remaining Shell Integration blocker in the working-set release evidence / 已验证当前 `fetch-shell-binaries.ps1` 在最新上游发布布局下仍会失败：回退到 source zipball 后已不再包含可打包的 `shell.exe`，并将该 Shell Integration 剩余阻塞明确记录进当前工作集发布证据
+
+### Changed / 变更
+- **Version / 版本**: Bump shared repository/store version metadata to `1.0.31` for this release-workflow/completion-check consistency pass / 为本次 release workflow / completion-check 一致性修正将共享仓库与商店版本元数据提升到 `1.0.31`
+
+## [1.0.28] - 2026-03-29
 
 ### Fixed / 修复
 - **Build Output Hygiene / 构建产物卫生**: Ignore repository-local `Build/` and all project `obj/` directories so repeated plugin builds no longer leave untracked build artifacts in `git status` / 忽略仓库内 `Build/` 与各项目 `obj/` 目录，避免重复插件构建后在 `git status` 中残留未跟踪构建产物

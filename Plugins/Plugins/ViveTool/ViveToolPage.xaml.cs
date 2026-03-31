@@ -393,7 +393,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshViveToolStatusAsync();
+        await RefreshPageAsync(clearFeatureCache: false);
     }
 
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
@@ -487,9 +487,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
     {
-        // Clear cache to get fresh data
-        _viveToolService.ClearFeatureCache();
-        await LoadFeaturesAsync();
+        await RefreshPageAsync(clearFeatureCache: true);
     }
 
     private void GoToSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -511,6 +509,28 @@ public partial class ViveToolPage : INotifyPropertyChanged
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
         }
+    }
+
+    private async Task RefreshPageAsync(bool clearFeatureCache)
+    {
+        if (clearFeatureCache)
+            _viveToolService.ClearFeatureCache();
+
+        await RefreshViveToolStatusAsync();
+
+        if (IsViveToolAvailable)
+        {
+            await LoadFeaturesAsync();
+            return;
+        }
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            Features.Clear();
+            _allFeatures.Clear();
+            FeatureCountDescription = 0.ToString(CultureInfo.CurrentCulture);
+            UpdateFeaturesVisibility();
+        });
     }
 
     private async void ImportButton_Click(object sender, RoutedEventArgs e)

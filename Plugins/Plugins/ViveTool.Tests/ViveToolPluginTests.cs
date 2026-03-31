@@ -28,7 +28,7 @@ public class ViveToolPluginTests
         Assert.NotNull(attribute);
         Assert.Equal("vive-tool", attribute!.Id);
         Assert.Equal("ViVeTool", attribute.Name);
-        Assert.Equal("1.1.8", attribute.Version);
+        Assert.Equal("1.1.9", attribute.Version);
         Assert.Equal("3.6.1", attribute.MinimumHostVersion);
     }
 

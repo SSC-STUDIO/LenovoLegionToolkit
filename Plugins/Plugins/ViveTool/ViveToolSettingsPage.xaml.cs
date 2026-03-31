@@ -240,6 +240,8 @@ public partial class ViveToolSettingsPage
                 {
                     if (_viveToolPathTextBox != null)
                         _viveToolPathTextBox.Text = selectedPath;
+
+                    await RefreshStatusAsync().ConfigureAwait(true);
                 }
                 else
                 {
@@ -311,26 +313,32 @@ public partial class ViveToolSettingsPage
             });
 
             var downloadSuccess = await _viveToolService.DownloadViveToolAsync(progress);
-            
-            // Download completed
-            if (_downloadProgressText != null)
-                _downloadProgressText.Text = Resource.ViveTool_DownloadComplete;
-            _downloadProgress = 100;
-            if (_downloadProgressBar != null)
-                _downloadProgressBar.Value = 100;
 
             // Set the path and refresh status
             if (downloadSuccess)
             {
+                if (_downloadProgressText != null)
+                    _downloadProgressText.Text = Resource.ViveTool_DownloadComplete;
+                _downloadProgress = 100;
+                if (_downloadProgressBar != null)
+                    _downloadProgressBar.Value = 100;
+
                 // Get the downloaded path from the service
                 var viveToolPath = await _viveToolService.GetViveToolPathAsync();
                 if (!string.IsNullOrEmpty(viveToolPath) && _viveToolPathTextBox != null)
                 {
                     _viveToolPathTextBox.Text = viveToolPath;
                 }
+
+                await RefreshStatusAsync().ConfigureAwait(true);
+            }
+            else
+            {
+                if (_downloadProgressText != null)
+                    _downloadProgressText.Text = Resource.ViveTool_DownloadFailed;
             }
 
-            await Task.Delay(2000); // Show success message for 2 seconds
+            await Task.Delay(downloadSuccess ? 2000 : 1000);
         }
         catch (Exception ex)
         {

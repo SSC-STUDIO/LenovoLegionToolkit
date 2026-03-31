@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Plugins.SDK;
 using Microsoft.Win32;
@@ -125,7 +126,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public override void OnInstalled()
     {
         _settings = MouseSettings.CreateDefault();
-        _ = SaveSettingsAsync();
+        RunLifecycleTask(nameof(OnInstalled), () => SaveSettingsAsync());
     }
 
     public override void OnUninstalled()
@@ -133,8 +134,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         StopThemeWatcher();
         _settings.AutoThemeCursorStyle = false;
         _settings.CursorThemeMode = CursorThemeMode.Auto;
-        _ = SaveSettingsAsync();
-        _ = RestoreBackedUpCursorSchemeAsync(CancellationToken.None);
+        RunLifecycleTask(nameof(OnUninstalled), () => SaveSettingsAsync());
+        RunLifecycleTask(nameof(OnUninstalled), () => RestoreBackedUpCursorSchemeAsync(CancellationToken.None));
     }
 
     public override void OnShutdown()
@@ -221,7 +222,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!TryApplyCursorThemeWithInf(theme, cancellationToken))
+            if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
                 ApplyCursorThemeFromResources(theme);
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
@@ -241,7 +242,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             cancellationToken.ThrowIfCancellationRequested();
             var theme = IsSystemLightTheme() ? CursorTheme.Light : CursorTheme.Dark;
 
-            if (!TryApplyCursorThemeWithInf(theme, cancellationToken))
+            if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
                 ApplyCursorThemeFromResources(theme);
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
@@ -327,7 +328,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         return Task.FromResult(_settings.AutoThemeCursorStyle);
     }
 
-    private bool TryApplyCursorThemeWithInf(CursorTheme theme, CancellationToken cancellationToken)
+    private async Task<bool> TryApplyCursorThemeWithInfAsync(CursorTheme theme, CancellationToken cancellationToken)
     {
         try
         {
@@ -350,7 +351,25 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             if (process == null)
                 return false;
 
-            process.WaitForExit(15000);
+            var waitTask = process.WaitForExitAsync(cancellationToken);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+            var completedTask = await Task.WhenAny(waitTask, timeoutTask).ConfigureAwait(false);
+            if (completedTask != waitTask)
+            {
+                try
+                {
+                    if (!process.HasExited)
+                        process.Kill(entireProcessTree: true);
+                }
+                catch
+                {
+                    // Ignore cleanup failures and report timeout below.
+                }
+
+                return false;
+            }
+
+            await waitTask.ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!process.HasExited || process.ExitCode != 0)
@@ -446,7 +465,20 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
 
         Configuration.SetValue(CursorBackupSavedFlag, true);
-        _ = Configuration.SaveAsync();
+        RunLifecycleTask(nameof(BackupCurrentCursorSchemeIfNeeded), () => Configuration.SaveAsync());
+    }
+
+    private static void RunLifecycleTask(string operationName, Func<Task> action)
+    {
+        try
+        {
+            action().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
+        }
     }
 
     private static string GetBackupConfigKey(string registryValueName)
