@@ -244,7 +244,10 @@ public static class IpcClient
                 pipe.ReadMode = PipeTransmissionMode.Message;
                 return;
             }
-            catch (TimeoutException) { }
+            catch (TimeoutException)
+            {
+                // Expected when connection times out, will retry
+            }
 
             retries--;
         }

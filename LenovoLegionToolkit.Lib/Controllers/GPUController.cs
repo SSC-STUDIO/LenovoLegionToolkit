@@ -144,7 +144,10 @@ public class GPUController : IDisposable
             {
                 await _refreshTask.ConfigureAwait(false);
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException)
+            {
+                // Expected when GPU service is stopped, no action needed
+            }
         }
 
         _refreshCancellationTokenSource = null;

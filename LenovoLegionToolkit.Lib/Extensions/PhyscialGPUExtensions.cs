@@ -27,7 +27,10 @@ public static class NVAPIExtensions
                 var process = Process.GetProcessById(app.ProcessId);
                 processes.Add(process);
             }
-            catch (ArgumentException) { }
+            catch (ArgumentException)
+            {
+                // Process may have exited, skip this process
+            }
         }
 
         return processes;

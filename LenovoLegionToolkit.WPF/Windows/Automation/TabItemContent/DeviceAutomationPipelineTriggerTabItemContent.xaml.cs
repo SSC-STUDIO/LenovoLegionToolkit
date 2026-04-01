@@ -69,7 +69,10 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
             Reload();
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when filter is debounced, no action needed
+        }
     }
 
     private void OnlySelected_Click(object sender, RoutedEventArgs e)

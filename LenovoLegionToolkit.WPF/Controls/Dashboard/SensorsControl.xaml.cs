@@ -135,7 +135,7 @@ public partial class SensorsControl
 
                     await Task.Delay(TimeSpan.FromSeconds(2), token);
                 }
-                catch (OperationCanceledException) { }
+                catch (OperationCanceledException) { }  // Expected when battery refresh is cancelled, no action needed
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
@@ -321,7 +321,10 @@ public partial class SensorsControl
                     Dispatcher.Invoke(() => UpdateValues(data));
                     await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
-                catch (OperationCanceledException) { }
+                catch (OperationCanceledException)
+                {
+                    // Expected when sensors refresh is cancelled, no action needed
+                }
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)

@@ -122,7 +122,10 @@ public class IpcServer(
                 }
             }
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when server is shutting down, no action needed
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)

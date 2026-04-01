@@ -340,7 +340,10 @@ public partial class AutomationPage
             var icon = await window.SymbolRegularTask;
             control.SetIcon(icon);
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when user cancels icon selection, no action needed
+        }
     }
 
     private void DeletePipeline(UIElement control, Panel stackPanel)

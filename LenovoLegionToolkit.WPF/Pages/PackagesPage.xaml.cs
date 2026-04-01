@@ -247,7 +247,10 @@ public partial class PackagesPage : IProgress<float>
 
             Reload();
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when filter is debounced, no action needed
+        }
     }
 
     private async void OnlyShowUpdatesCheckBox_OnChecked(object sender, RoutedEventArgs e)

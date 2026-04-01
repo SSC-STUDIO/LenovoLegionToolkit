@@ -57,8 +57,14 @@ public static class Registry
                     resetEvent.Reset();
                 }
             }
-            catch (OperationCanceledException) { }
-            catch (ThreadAbortException) { }
+            catch (OperationCanceledException)
+            {
+                // Expected when registry monitoring is cancelled, no action needed
+            }
+            catch (ThreadAbortException)
+            {
+                // Expected when thread is aborted, no action needed
+            }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)

@@ -71,7 +71,10 @@ public class HWiNFOIntegration(SensorsController sensorController, IntegrationsS
                 await SetSensorValuesAsync(false).ConfigureAwait(false);
             }
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when integration is stopped, no action needed
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)

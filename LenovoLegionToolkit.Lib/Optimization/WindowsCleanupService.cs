@@ -140,8 +140,8 @@ public class WindowsCleanupService
                                     largeFiles.Add(fi);
                                 }
                             }
-                            catch (UnauthorizedAccessException) { }
-                            catch (IOException) { }
+                            catch (UnauthorizedAccessException) { }  // Insufficient permissions to access file, skip
+                            catch (IOException) { }  // File may be locked or inaccessible, skip
                         }
 
                         foreach (var subDir in Directory.EnumerateDirectories(currentPath))
@@ -154,12 +154,18 @@ public class WindowsCleanupService
                                     stack.Push(subDir);
                                 }
                             }
-                            catch (UnauthorizedAccessException) { }
-                            catch (IOException) { }
+                            catch (UnauthorizedAccessException)
+                            {
+                                // Insufficient permissions to access directory, skip
+                            }
+                            catch (IOException)
+                            {
+                                // Directory may be inaccessible, skip
+                            }
                         }
                     }
-                    catch (UnauthorizedAccessException) { }
-                    catch (IOException) { }
+                    catch (UnauthorizedAccessException) { }  // Insufficient permissions to access directory, skip
+                    catch (IOException) { }  // Directory may be inaccessible, skip
                 }
             }
             return largeFiles;
@@ -212,8 +218,14 @@ public class WindowsCleanupService
                         {
                             size += new FileInfo(file).Length;
                         }
-                        catch (UnauthorizedAccessException) { }
-                        catch (IOException) { }
+                        catch (UnauthorizedAccessException)
+                        {
+                            // Insufficient permissions to access file, skip
+                        }
+                        catch (IOException)
+                        {
+                            // File may be locked or inaccessible, skip
+                        }
                     }
 
                     if (filePattern == null)
@@ -224,8 +236,8 @@ public class WindowsCleanupService
                         }
                     }
                 }
-                catch (UnauthorizedAccessException) { }
-                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }  // Insufficient permissions to access directory, skip
+                catch (IOException) { }  // Directory may be inaccessible, skip
             }
 
             return size;
@@ -312,8 +324,14 @@ public class WindowsCleanupService
                             }
                         }
                     }
-                    catch (UnauthorizedAccessException) { }
-                    catch (IOException) { }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Insufficient permissions to access directory, skip
+                    }
+                    catch (IOException)
+                    {
+                        // Directory may be inaccessible, skip
+                    }
                 }
             }
         }, cancellationToken);
