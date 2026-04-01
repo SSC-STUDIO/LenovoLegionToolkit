@@ -198,7 +198,10 @@ public class ThrottleFirstDispatcherTests
         {
             await dispatcher.DispatchAsync(() => Task.FromException(exception));
         }
-        catch (InvalidOperationException) { }
+        catch (InvalidOperationException)
+        {
+            // Expected exception for test scenario, no action needed
+        }
         
         // Try to execute another task immediately
         bool secondTaskExecuted = false;

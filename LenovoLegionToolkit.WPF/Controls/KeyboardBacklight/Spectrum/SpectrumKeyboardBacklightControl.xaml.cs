@@ -424,7 +424,10 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                 firstCheck = false;
             }
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when state refresh is cancelled, no action needed
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)

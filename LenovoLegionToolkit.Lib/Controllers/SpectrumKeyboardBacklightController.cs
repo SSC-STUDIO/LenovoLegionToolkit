@@ -528,7 +528,10 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 await delay.ConfigureAwait(false);
             }
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when Aurora refresh is cancelled, no action needed
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)

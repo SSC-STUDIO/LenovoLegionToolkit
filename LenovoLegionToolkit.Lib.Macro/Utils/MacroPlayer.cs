@@ -55,7 +55,10 @@ internal class MacroPlayer
     {
         await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
         try { await _playTask.ConfigureAwait(false); }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when playback is cancelled, no action needed
+        }
 
         _cancellationTokenSource = new();
         var token = _cancellationTokenSource.Token;
