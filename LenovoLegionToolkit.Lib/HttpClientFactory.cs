@@ -31,19 +31,30 @@ public class HttpClientFactory
 
             if (_allowAllCerts)
             {
-                // SECURITY: Only bypass certificate validation in development environment
-                // or when explicitly allowed for proxy scenarios with self-signed certificates
+                // SECURITY FIX: Always validate certificates in production
+                // Only allow bypass in explicit development builds
+                // Never bypass based on debugger attachment status
+                #if DEBUG
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
                 {
-                    // Allow certificate bypass only in development environment
-                    if (Debugger.IsAttached)
-                        return true;
-
-                    // For production, only allow certificate validation bypass when explicitly configured
-                    // This is primarily for proxy scenarios with self-signed certificates
-                    // Never bypass errors in production environments without explicit configuration
-                    return false;
+                    // In DEBUG builds, log certificate errors but still validate
+                    if (errors != SslPolicyErrors.None)
+                    {
+                        Debug.WriteLine($"SSL Certificate validation error: {errors}");
+                        // Still return false to enforce validation
+                    }
+                    return errors == SslPolicyErrors.None;
                 };
+                #else
+                // RELEASE builds: Never bypass certificate validation
+                // This prevents MITM attacks even if --proxy-allow-all-certs is specified
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                {
+                    // Always validate certificates in production
+                    // Certificate errors cannot be bypassed
+                    return errors == SslPolicyErrors.None;
+                };
+                #endif
             }
         }
 
@@ -57,6 +68,12 @@ public class HttpClientFactory
         _url = url;
         _username = username;
         _password = password;
+        // SECURITY: Ignore allowAllCerts in release builds
+        // This prevents users from bypassing certificate validation
+        #if DEBUG
         _allowAllCerts = allowAllCerts;
+        #else
+        _allowAllCerts = false;
+        #endif
     }
 }
