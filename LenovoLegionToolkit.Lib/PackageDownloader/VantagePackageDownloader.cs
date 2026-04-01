@@ -74,6 +74,8 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         }
 
         var document = new XmlDocument();
+        // SECURITY FIX: Disable DTD processing to prevent XXE attacks
+        document.XmlResolver = null;
         document.LoadXml(catalogString);
 
         var packageNodes = document.SelectNodes("/packages/package");
@@ -105,6 +107,8 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         var packageString = await httpClient.GetStringAsync(location, token).ConfigureAwait(false);
 
         var document = new XmlDocument();
+        // SECURITY FIX: Disable DTD processing to prevent XXE attacks
+        document.XmlResolver = null;
         document.LoadXml(packageString);
 
         var id = document.SelectSingleNode("/Package/@id")!.InnerText;
