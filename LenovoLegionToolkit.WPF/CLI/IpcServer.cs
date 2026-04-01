@@ -68,9 +68,15 @@ public class IpcServer(
     {
         try
         {
-            var identity = new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null);
             var security = new PipeSecurity();
-            security.AddAccessRule(new(identity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+            
+            // 只允许管理员组成员访问
+            var adminIdentity = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
+            security.AddAccessRule(new(adminIdentity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+            
+            // 拒绝其他所有用户
+            var everyoneIdentity = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+            security.AddAccessRule(new(everyoneIdentity, PipeAccessRights.ReadWrite, AccessControlType.Deny));
 
             await using var pipe = NamedPipeServerStreamAcl.Create(LenovoLegionToolkit.CLI.Lib.Constants.PIPE_NAME,
                 PipeDirection.InOut,
