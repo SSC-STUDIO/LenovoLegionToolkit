@@ -53,7 +53,8 @@ public class SpectrumKeyboardBacklightController : IDisposable
     private readonly JsonSerializerSettings _jsonSerializerSettings = new()
     {
         Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.Auto,
+        // SECURITY FIX: Changed from TypeNameHandling.Auto to None to prevent deserialization RCE attacks
+        TypeNameHandling = TypeNameHandling.None,
         ObjectCreationHandling = ObjectCreationHandling.Replace,
         Converters = [new StringEnumConverter()]
     };
