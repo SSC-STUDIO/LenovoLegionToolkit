@@ -38,7 +38,7 @@ powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1
 Validate specific plugin IDs only:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse shell-integration vive-tool -OutputJson artifacts\plugin-completion-check-latest.json
+powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse,vive-tool
 ```
 
 Scaffold a new plugin from the maintained template:
@@ -88,7 +88,7 @@ This repository's release path is workflow-driven, not tag-driven.
 
 Current official flow:
 
-1. Update `plugin.json`, project version metadata, plugin `CHANGELOG.md`, repository root `CHANGELOG.md`, and `store.json` source metadata as needed.
+1. Update `plugin.json`, project version metadata, plugin `CHANGELOG.md`, and `store.json` source metadata as needed.
 2. Run `Scripts/plugin-completion-check.ps1`.
 3. Trigger `.github/workflows/build.yml` with `workflow_dispatch`.
 4. Provide:
@@ -113,13 +113,11 @@ powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
 
 Then:
 
-1. Review generated `plugin.json` and project version metadata
-2. Add or update the generated plugin `CHANGELOG.md`
-3. Review generated test project under `Plugins/<FolderName>.Tests/`
-4. Build the new plugin
-5. Run completion check for its plugin ID
-6. Add or update the corresponding `store.json` entry if the plugin should be published from this repo
-7. Update the repository root `CHANGELOG.md`
+1. Review generated `plugin.json`
+2. Review generated test project under `Plugins/<FolderName>.Tests/`
+3. Build the new plugin
+4. Run completion check for its plugin ID
+5. Add or update the corresponding `store.json` entry if the plugin should be published from this repo
 
 ## Documents
 

@@ -89,10 +89,8 @@ powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 `
 2. 更新对应 `.csproj` 版本
 3. 更新插件自己的 `CHANGELOG.md`
 4. 确保 `store.json` 条目字段正确
-5. 更新仓库根 `CHANGELOG.md`
-6. 运行 `plugin-completion-check.ps1`
-7. 如需验证现有官方插件，可直接运行：`powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse shell-integration vive-tool -OutputJson artifacts\plugin-completion-check-latest.json`
-8. 手动触发 `.github/workflows/build.yml`
+5. 运行 `plugin-completion-check.ps1`
+6. 手动触发 `.github/workflows/build.yml`
 
 触发参数：
 

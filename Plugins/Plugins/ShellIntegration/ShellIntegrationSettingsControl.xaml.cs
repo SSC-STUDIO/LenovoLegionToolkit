@@ -1,4 +1,6 @@
 using System.Windows;
+#nullable enable
+
 using System.Windows.Controls;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;

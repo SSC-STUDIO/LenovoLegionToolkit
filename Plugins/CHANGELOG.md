@@ -8,53 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
-## [1.0.35] - 2026-03-31
-
-### Changed / 变更
-- **Version / 版本**: Bump shared repository/store version metadata to `1.0.35` for working-set release consistency / 将共享仓库与商店版本元数据提升到 `1.0.35` 以保持工作集发布一致性
-
-### Verified / 验证
-- **Working Set Release Validation / 工作集发布验证**: Ran plugin completion check against `custom-mouse`, `shell-integration`, `vive-tool` / 对 `custom-mouse`、`shell-integration`、`vive-tool` 执行插件完成检查
-  - ✅ CustomMouse: PASS (0 failures, 1 warning) / 通过（0 失败，1 警告）
-  - ❌ ShellIntegration: FAIL (4 failures, 1 warning) — blocked by upstream `shell.exe` fetch failure, documented since 1.0.31 / 失败（4 失败，1 警告）— 因上游 `shell.exe` 拉取失败阻塞，自 1.0.31 起已记录
-  - ✅ ViveTool: PASS (0 failures, 1 warning) / 通过（0 失败，1 警告）
-- **Evidence / 证据**: `artifacts/plugin-completion-check-latest.json`, `working-set-release-smoke-test-latest.log` / 见仓库 artifacts 与附件日志
-
-## [1.0.34] - 2026-03-31
+## [Unreleased]
 
 ### Fixed / 修复
-- **CustomMouse Async Lifecycle / CustomMouse 异步生命周期**: Converted INF-based cursor theme application to truly async pattern with proper timeout handling and process cleanup; lifecycle persistence operations now use deterministic execution via `RunLifecycleTask` instead of fire-and-forget / 将基于 INF 的光标主题应用转换为真正的异步模式，添加超时处理和进程清理；生命周期持久化操作现在通过 `RunLifecycleTask` 确定性执行而非 fire-and-forget
-- **ShellIntegration Build Verification / ShellIntegration 构建验证**: Added hard build-time check for Shell runtime binaries to prevent packaging broken releases when shell.exe fetch fails / 添加 Shell 运行时二进制文件的硬构建时检查，防止在 shell.exe 拉取失败时打包损坏的发布包
+- **Release Workflow Consistency / 发布工作流一致性**: Reworked the plugin release workflow so ZIP names, GitHub release tags, generated `downloadUrl`, and `store.json` IDs all derive from each plugin's canonical `plugin.json` metadata instead of ZIP base names, preventing bad release paths and mismatched plugin IDs in generated store entries / 重构插件发布工作流，使 ZIP 文件名、GitHub Release 标签、生成的 `downloadUrl` 与 `store.json` 中的插件 ID 全部以各插件 `plugin.json` 的规范元数据为准，不再从 ZIP 基名反推，避免生成错误的发布路径和错配的插件 ID
+- **Completion Checker Onboarding / 完成度校验接入**: Relaxed `plugin-completion-check.ps1` so non-official plugin IDs can be validated without tripping the hard-coded official-only gate, while still preserving an explicit `-OfficialOnly` mode for stricter repository audits / 放宽 `plugin-completion-check.ps1` 的官方插件硬编码限制，使非官方插件 ID 也能复用同一套校验流程，同时保留显式 `-OfficialOnly` 模式供仓库级严格审计使用
+- **Store Release Ordering / 商店发布顺序**: Made `store.json` updates wait for successful release publication and append newly released plugin entries instead of silently dropping plugins that were not already present in the existing store ordering / 让 `store.json` 回写依赖成功的 release 发布，并在生成时追加新发布但尚未存在于旧排序中的插件条目，避免新插件被静默丢弃
+- **Vendored Shell Runtime / 内置 Shell 运行时依赖**: Added the minimal `Dependencies/Shell` runtime payload required by `ShellIntegration` so repository validation and packaging no longer depend on the upstream `moudey/Shell` GitHub release layout continuing to ship downloadable binaries / 为 `ShellIntegration` 补入最小 `Dependencies/Shell` 运行时文件集，使仓库校验与打包不再依赖上游 `moudey/Shell` GitHub release 持续提供可直接下载的二进制布局
+- **Workflow Dependency Paths / 工作流依赖路径**: Expanded the plugin build workflow path filters to include `Dependencies/**` so vendored runtime dependency updates trigger the same validation/build pipeline as plugin source changes / 扩展插件构建工作流的路径过滤规则，纳入 `Dependencies/**`，让受控运行时依赖更新也能像插件源码变更一样自动触发校验与构建流程
+- **Workflow Runtime Maintenance / 工作流运行时维护**: Updated the plugin CI workflow to current official `actions/*` releases and switched ZIP packaging uploads to a dedicated `Build/artifacts` directory so successful builds no longer emit missing-artifact warnings from wildcard root matching / 将插件 CI 工作流升级到当前官方 `actions/*` 版本，并把 ZIP 打包产物统一输出到 `Build/artifacts` 目录，避免成功构建后仍因根目录通配匹配不到文件而产生缺失产物警告
 
-### Changed / 变更
-- **Version / 版本**: Bump shared repository/store version metadata to `1.0.34` for plugin lifecycle and build verification improvements / 将共享仓库与商店版本元数据提升到 `1.0.34` 以包含插件生命周期和构建验证改进
+### Improved / 改进
+- **Plugin Scaffold And Docs / 插件脚手架与文档**: Added `Scripts/new-plugin.ps1` and rewrote the top-level README plus quick-start/development guides to document the real vendored-host build model, naming conventions, completion check usage, and workflow-dispatch release path instead of the removed legacy zip/tag flow / 新增 `Scripts/new-plugin.ps1`，并重写仓库 README 与快速开始/开发指南，改为说明当前真实使用的 vendored-host 构建模型、命名约定、完成度检查方式以及 `workflow_dispatch` 发布路径，替代已废弃的旧 zip/tag 流程
 
-## [1.0.33] - 2026-03-31
-
-### Fixed / 修复
-- **Version Alignment / 版本对齐**: Bump shared repository/store version metadata to `1.0.33` for working-set release consistency / 将共享仓库与商店版本元数据提升到 `1.0.33` 以保持工作集发布一致性
-
-## [1.0.32] - 2026-03-31
-
-### Fixed / 修复
-- **Plugin Completion Check Parameter Normalization / 插件完成检查参数规范化**: Fixed `plugin-completion-check.ps1` to accept both space-separated PowerShell array syntax and comma-separated single string for `-PluginIds` parameter, ensuring consistent behavior across README examples and actual usage / 修复 `plugin-completion-check.ps1` 以同时接受空格分隔的 PowerShell 数组语法和逗号分隔的单一字符串作为 `-PluginIds` 参数，确保 README 示例与实际使用行为一致
-- **Documentation Plugin ID Consistency / 文档插件 ID 一致性**: Corrected plugin ID references in README and documentation from `vivetool` to the actual store.json ID `vive-tool` / 修正 README 和文档中的插件 ID 引用，从 `vivetool` 改为实际的 store.json ID `vive-tool`
-
-### Changed / 变更
-- **Version / 版本**: Bump shared repository/store version metadata to `1.0.32` for parameter handling fix and documentation alignment / 为参数处理修复和文档对齐将共享仓库与商店版本元数据提升到 `1.0.32`
-
-## [1.0.31] - 2026-03-31
-
-### Fixed / 修复
-- **Release Workflow Consistency / 发布工作流一致性**: Fixed the GitHub Actions release job dependency so workflow-dispatch releases wait for the build job instead of self-referencing the release job, keeping the current ZIP/tag/store publication path runnable / 修复 GitHub Actions 发布任务依赖关系，使 workflow-dispatch 发布流程正确等待 build 作业而不是错误地自引用 release 作业，保持当前 ZIP/tag/store 发布链路可执行
-- **Completion Report Flag Alignment / 完成检查报告参数对齐**: Switched the workflow invocation to the script's supported `-OutputJson` alias so release validation and local smoke commands generate JSON evidence consistently / 将 workflow 中的完成检查调用切换到脚本已支持的 `-OutputJson` 别名，使发布校验与本地冒烟命令都能稳定生成 JSON 证据
-- **Working-Set Release Checklist / 当前工作集发布清单**: Updated README and plugin authoring guides so new-plugin follow-up, official smoke validation, and release preparation now all explicitly require syncing the repository root `CHANGELOG.md` alongside plugin/store metadata, and use the real manifest plugin IDs (`custom-mouse`, `shell-integration`, `vive-tool`) for completion-check examples / 更新 README 与插件开发文档，使 new-plugin 后续步骤、官方工作集冒烟校验与发布准备现在都明确要求在插件与 store 元数据之外同步维护仓库根 `CHANGELOG.md`，并在 completion-check 示例中统一使用真实清单插件 ID（`custom-mouse`、`shell-integration`、`vive-tool`）
-- **Shell Binary Fetch Validation / Shell 二进制拉取校验**: Verified the current `fetch-shell-binaries.ps1` path still fails against the latest upstream release layout because the fallback source zipball no longer contains a packaged `shell.exe`, documenting the remaining Shell Integration blocker in the working-set release evidence / 已验证当前 `fetch-shell-binaries.ps1` 在最新上游发布布局下仍会失败：回退到 source zipball 后已不再包含可打包的 `shell.exe`，并将该 Shell Integration 剩余阻塞明确记录进当前工作集发布证据
-
-### Changed / 变更
-- **Version / 版本**: Bump shared repository/store version metadata to `1.0.31` for this release-workflow/completion-check consistency pass / 为本次 release workflow / completion-check 一致性修正将共享仓库与商店版本元数据提升到 `1.0.31`
-
-## [1.0.28] - 2026-03-29
+## [1.1.7] - 2026-03-17
 
 ### Fixed / 修复
 - **Build Output Hygiene / 构建产物卫生**: Ignore repository-local `Build/` and all project `obj/` directories so repeated plugin builds no longer leave untracked build artifacts in `git status` / 忽略仓库内 `Build/` 与各项目 `obj/` 目录，避免重复插件构建后在 `git status` 中残留未跟踪构建产物

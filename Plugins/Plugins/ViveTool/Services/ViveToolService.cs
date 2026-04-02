@@ -168,6 +168,14 @@ public class ViveToolService : IViveToolService
                     if (string.IsNullOrEmpty(entry.Name))
                         continue;
 
+                    // SECURITY: Validate entry name to prevent path traversal in ZIP
+                    if (entry.Name.Contains("..") || entry.Name.Contains('/') || entry.Name.Contains('\\'))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"SECURITY: Skipping suspicious entry name in ZIP: {entry.Name}");
+                        continue;
+                    }
+
                     var destinationPath = Path.Combine(builtInDir!, entry.Name);
                     entry.ExtractToFile(destinationPath, overwrite: true);
                 }
@@ -975,6 +983,14 @@ public class ViveToolService : IViveToolService
                     // Skip directories
                     if (string.IsNullOrEmpty(entry.Name))
                         continue;
+
+                    // SECURITY: Validate entry name to prevent path traversal in ZIP
+                    if (entry.Name.Contains("..") || entry.Name.Contains('/') || entry.Name.Contains('\\'))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"SECURITY: Skipping suspicious entry name in ZIP: {entry.Name}");
+                        continue;
+                    }
 
                     var destinationPath = Path.Combine(builtInDir!, entry.Name);
                     entry.ExtractToFile(destinationPath, overwrite: true);

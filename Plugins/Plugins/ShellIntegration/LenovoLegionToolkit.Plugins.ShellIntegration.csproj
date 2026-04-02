@@ -85,7 +85,6 @@
           Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
     <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
           ConsoleToMSBuild="true"
           StandardOutputImportance="normal" />
     <!-- Re-evaluate after download so the ItemGroup picks up the files -->

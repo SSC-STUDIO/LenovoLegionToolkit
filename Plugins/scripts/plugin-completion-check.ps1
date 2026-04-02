@@ -8,17 +8,6 @@ param(
     [string]$JsonReportPath = ""
 )
 
-# Normalize PluginIds to handle both space-separated array and comma-separated single string
-$normalizedPluginIds = @()
-foreach ($id in $PluginIds) {
-    if ($id -match ',') {
-        $normalizedPluginIds += $id.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-    } else {
-        $normalizedPluginIds += $id
-    }
-}
-$PluginIds = $normalizedPluginIds
-
 $ErrorActionPreference = "Stop"
 $script:StepLogs = New-Object System.Collections.Generic.List[object]
 
@@ -185,20 +174,6 @@ $officialPluginIds = @(
     "vive-tool"
 )
 
-# Plugin ID aliases for backward compatibility (alias -> canonical id)
-$pluginIdAliases = @{
-    "vivetool" = "vive-tool"
-}
-
-function Resolve-PluginIdAlias {
-    param([string]$PluginId)
-    $canonicalId = $pluginIdAliases[$PluginId.ToLowerInvariant()]
-    if ($canonicalId) {
-        return $canonicalId
-    }
-    return $PluginId
-}
-
 if (-not (Test-Path $storePath)) {
     throw "store.json not found at $storePath"
 }
@@ -247,7 +222,7 @@ if ($OfficialOnly) {
 }
 
 $targetPluginIds = if ($PluginIds.Count -gt 0) {
-    $PluginIds | ForEach-Object { Resolve-PluginIdAlias -PluginId $_ }
+    $PluginIds
 } elseif ($OfficialOnly) {
     $officialPluginIds
 } else {
