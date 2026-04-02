@@ -2,207 +2,90 @@
 setlocal enabledelayedexpansion
 
 REM ============================================================
-REM Lenovo Legion Toolkit Plugins Build Script
+REM Lenovo Legion Toolkit Plugins Compatibility Wrapper
 REM ============================================================
-REM Usage:
-REM   make.bat              - Build all plugins (Release)
-REM   make.bat all          - Build all plugins (Release)
-REM   make.bat debug        - Build all plugins (Debug)
-REM   make.bat <plugin>     - Build specific plugin (Release)
-REM   make.bat <plugin> d   - Build specific plugin (Debug)
-REM   make.bat zip          - Create ZIP packages for all plugins
-REM   make.bat clean        - Clean all build outputs
-REM   make.bat help         - Show this help message
+REM This script keeps legacy entry points working while delegating
+REM to the standard repository workflow documented in README.
 REM ============================================================
 
-REM Plugin list
-SET PLUGINS=NetworkAcceleration ShellIntegration ViveTool CustomMouse
+SET SCRIPT_DIR=%~dp0
+SET CHECKER=%SCRIPT_DIR%scripts\plugin-completion-check.ps1
+SET SOLUTION=%SCRIPT_DIR%LenovoLegionToolkit-Plugins.sln
 
-REM Check parameters
 IF "%1"=="-h" GOTO HELP
 IF "%1"=="/h" GOTO HELP
 IF "%1"=="--help" GOTO HELP
 IF "%1"=="help" GOTO HELP
-IF "%1"=="" GOTO BUILD_ALL
-IF "%1"=="all" GOTO BUILD_ALL
-IF "%1"=="debug" GOTO BUILD_ALL_DEBUG
 IF "%1"=="clean" GOTO CLEAN
-IF "%1"=="zip" GOTO CREATE_ZIPS
+IF "%1"=="check" GOTO CHECK
+IF "%1"=="ui" GOTO UI
+IF "%1"=="smoke" GOTO SMOKE
+IF "%1"=="zip" GOTO ZIP_INFO
+IF "%1"=="" GOTO BUILD
+IF /I "%1"=="all" GOTO BUILD
+IF /I "%1"=="debug" GOTO BUILD_DEBUG
 
-REM Build specific plugin
-SET PLUGIN_NAME=%1
-SET CONFIG=Release
-IF "%2"=="d" SET CONFIG=Debug
-CALL :BUILD_PLUGIN "%PLUGIN_NAME%" "%CONFIG%"
-GOTO END
+ECHO Error: Legacy per-plugin build entry points have been removed.
+ECHO Use dotnet build on the specific project directly, e.g.
+ECHO   dotnet build Plugins\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj -c Release
+EXIT /B 1
 
-:BUILD_ALL
-REM Build all plugins (Release)
-ECHO ============================================================
-ECHO Building all plugins (Release)...
-ECHO ============================================================
-FOR %%P IN (%PLUGINS%) DO (
-    CALL :BUILD_PLUGIN "%%P" "Release"
-)
-ECHO.
-ECHO ============================================================
-ECHO All plugins built successfully!
-ECHO ============================================================
-GOTO END
+:BUILD
+ECHO Building solution with the standard entry point...
+dotnet build "%SOLUTION%" -c Release
+EXIT /B %ERRORLEVEL%
 
-:BUILD_ALL_DEBUG
-REM Build all plugins (Debug)
-ECHO ============================================================
-ECHO Building all plugins (Debug)...
-ECHO ============================================================
-FOR %%P IN (%PLUGINS%) DO (
-    CALL :BUILD_PLUGIN "%%P" "Debug"
-)
-ECHO.
-ECHO ============================================================
-ECHO All plugins built successfully!
-ECHO ============================================================
-GOTO END
+:BUILD_DEBUG
+ECHO Building solution with the standard entry point (Debug)...
+dotnet build "%SOLUTION%" -c Debug
+EXIT /B %ERRORLEVEL%
 
-:BUILD_PLUGIN
-SET PLUGIN_NAME=%~1
-SET CONFIG=%~2
-SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
-SET PLUGIN_PROJECT=%PLUGIN_DIR%\LenovoLegionToolkit.Plugins.%PLUGIN_NAME%.csproj
+:CHECK
+ECHO Running plugin completion check...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%CHECKER%"
+EXIT /B %ERRORLEVEL%
 
-IF NOT EXIST "%PLUGIN_PROJECT%" (
-    ECHO Error: Plugin project not found: %PLUGIN_PROJECT%
-    EXIT /B 1
-)
+:UI
+dotnet run --project "%SCRIPT_DIR%Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj"
+EXIT /B %ERRORLEVEL%
 
-ECHO.
-ECHO Building %PLUGIN_NAME% plugin (%CONFIG%)...
-dotnet build "%PLUGIN_PROJECT%" -c "%CONFIG%" /p:DebugType=None /m
-IF ERRORLEVEL 1 (
-    ECHO Error: Failed to build %PLUGIN_NAME%
-    EXIT /B 1
-)
-ECHO %PLUGIN_NAME% plugin built successfully!
-EXIT /B 0
+:SMOKE
+dotnet build "%SCRIPT_DIR%Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj" -c Release
+IF ERRORLEVEL 1 EXIT /B 1
+dotnet run --project "%SCRIPT_DIR%Tools\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj" -c Release --no-build -- .
+EXIT /B %ERRORLEVEL%
 
-:CREATE_ZIPS
-REM Create ZIP packages for all plugins
-ECHO ============================================================
-ECHO Creating ZIP packages for all plugins...
-ECHO ============================================================
-
-REM Ensure build directory exists
-IF NOT EXIST "build\plugins" (
-    MKDIR "build\plugins"
-)
-
-FOR %%P IN (%PLUGINS%) DO (
-    CALL :CREATE_ZIP "%%P"
-)
-
-ECHO.
-ECHO ============================================================
-ECHO All ZIP packages created successfully!
-ECHO Output directory: build\plugins
-ECHO ============================================================
-GOTO END
-
-:CREATE_ZIP
-SET PLUGIN_NAME=%~1
-SET PLUGIN_DIR=plugins\%PLUGIN_NAME%
-SET BUILD_OUTPUT_DIR=Build\plugins\LenovoLegionToolkit.Plugins.%PLUGIN_NAME%
-SET PLUGIN_ID=
-
-FOR /F "usebackq delims=" %%I IN (`powershell -NoProfile -Command "(Get-Content '%PLUGIN_DIR%\plugin.json' -Raw | ConvertFrom-Json).id"`) DO SET PLUGIN_ID=%%I
-
-IF "%PLUGIN_ID%"=="" (
-    ECHO Error: Failed to read plugin id from %PLUGIN_DIR%\plugin.json
-    EXIT /B 1
-)
-
-SET ZIP_NAME=%PLUGIN_ID%.zip
-
-ECHO Creating %ZIP_NAME%...
-
-REM Verify compiled plugin output exists
-IF NOT EXIST "%BUILD_OUTPUT_DIR%" (
-    ECHO Error: Build output not found: %BUILD_OUTPUT_DIR%
-    ECHO Run the build step before packaging ZIP files.
-    EXIT /B 1
-)
-
-REM Clean previous output archive
-IF EXIST "%ZIP_NAME%" DEL /Q "%ZIP_NAME%"
-
-REM Create ZIP package from the actual compiled output directory
-powershell -NoProfile -Command "Compress-Archive -Path '%BUILD_OUTPUT_DIR%\*' -DestinationPath '%ZIP_NAME%' -Force"
-IF ERRORLEVEL 1 (
-    ECHO Error: Failed to create %ZIP_NAME%
-    EXIT /B 1
-)
-
-ECHO Created %ZIP_NAME% (%~z1 bytes)
-EXIT /B 0
+:ZIP_INFO
+ECHO Packaging is now validated via plugin-completion-check and produced from Build\plugins outputs.
+ECHO Use the documented release workflow instead of Make.bat zip.
+EXIT /B 1
 
 :CLEAN
-REM Clean all build outputs
-ECHO ============================================================
-ECHO Cleaning all build outputs...
-ECHO ============================================================
-
-FOR %%P IN (%PLUGINS%) DO (
-    SET PLUGIN_DIR=plugins\%%P
-    IF EXIST "%PLUGIN_DIR%\bin" RMDIR /S /Q "%PLUGIN_DIR%\bin"
-    IF EXIST "%PLUGIN_DIR%\obj" RMDIR /S /Q "%PLUGIN_DIR%\obj"
-    IF EXIST "build\plugins\%%P" RMDIR /S /Q "build\plugins\%%P"
-    IF EXIST "%%P.zip" DEL /Q "%%P.zip"
-)
-
-IF EXIST "build" RMDIR /S /Q "build"
-IF EXIST "*.zip" DEL /Q "*.zip"
-
-ECHO.
-ECHO ============================================================
-ECHO All build outputs cleaned!
-ECHO ============================================================
-GOTO END
+dotnet clean "%SOLUTION%"
+EXIT /B %ERRORLEVEL%
 
 :HELP
 ECHO ============================================================
-ECHO Lenovo Legion Toolkit Plugins Build Script
+ECHO Lenovo Legion Toolkit Plugins Compatibility Wrapper
 ECHO ============================================================
 ECHO.
-ECHO Usage: make.bat [command] [options]
+ECHO Preferred commands:
+ECHO   dotnet build LenovoLegionToolkit-Plugins.sln -c Release
+ECHO   powershell -ExecutionPolicy Bypass -File .\scripts\plugin-completion-check.ps1
+ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
+ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
+ECHO   dotnet run --project Tools\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj -c Release --no-build -- .
 ECHO.
-ECHO Commands:
-ECHO   (none)      Build all plugins (Release)
-ECHO   all         Build all plugins (Release)
-ECHO   debug       Build all plugins (Debug)
-ECHO   clean       Clean all build outputs
-ECHO   zip         Create ZIP packages for all plugins
-ECHO   help        Show this help message
+ECHO Compatibility commands:
+ECHO   make.bat              - dotnet build solution (Release)
+ECHO   make.bat debug        - dotnet build solution (Debug)
+ECHO   make.bat check        - run plugin completion check
+ECHO   make.bat ui           - launch PluginCompletionUiTool
+ECHO   make.bat smoke        - run UI smoke flow
+ECHO   make.bat clean        - dotnet clean solution
 ECHO.
-ECHO Options for specific plugin:
-ECHO   <plugin>    Build specific plugin (Release)
-ECHO   <plugin> d  Build specific plugin (Debug)
-ECHO.
-ECHO Examples:
-ECHO   make.bat                  - Build all plugins
-ECHO   make.bat debug            - Build all plugins (Debug)
-ECHO   make.bat ViveTool         - Build ViveTool plugin
-ECHO   make.bat ViveTool d       - Build ViveTool plugin (Debug)
-ECHO   make.bat zip              - Create ZIP packages
-ECHO   make.bat clean            - Clean all outputs
-ECHO.
-ECHO Available plugins:
-ECHO   - NetworkAcceleration
-ECHO   - ShellIntegration
-ECHO   - ViveTool
-ECHO   - CustomMouse
-ECHO.
+ECHO Notes:
+ECHO   - Per-plugin build and zip flows now belong to the standard documented workflow.
+ECHO   - Official packaging inputs come from Build\plugins and plugin-completion-check validation.
 ECHO ============================================================
-GOTO END
-
-:END
-endlocal
-exit /b 0
+EXIT /B 0

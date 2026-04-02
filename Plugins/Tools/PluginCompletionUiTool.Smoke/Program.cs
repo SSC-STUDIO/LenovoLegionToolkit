@@ -44,17 +44,7 @@ internal static class Program
             Console.WriteLine("[smoke] Run button clicked");
 
             var completed = WaitUntil(
-                () =>
-                {
-                    var statusElement = FindByAutomationId(window, "StatusTextBlock");
-                    if (statusElement is null)
-                    {
-                        return false;
-                    }
-
-                    var statusText = ReadElementText(statusElement);
-                    return statusText.Contains("Completed", StringComparison.OrdinalIgnoreCase);
-                },
+                () => TryReadStatus(window, out var statusText) && statusText.Contains("Completed", StringComparison.OrdinalIgnoreCase),
                 TimeSpan.FromSeconds(120),
                 TimeSpan.FromMilliseconds(500));
 
@@ -262,15 +252,40 @@ internal static class Program
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
-            if (predicate())
+            try
             {
-                return true;
+                if (predicate())
+                {
+                    return true;
+                }
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // UI Automation may briefly return E_UNEXPECTED while the visual tree is updating.
+            }
+            catch (InvalidOperationException)
+            {
+                // Elements can disappear transiently during UI refresh; treat as retryable.
             }
 
             Thread.Sleep(interval);
         }
 
         return false;
+    }
+
+    private static bool TryReadStatus(AutomationElement window, out string statusText)
+    {
+        statusText = string.Empty;
+
+        var statusElement = FindByAutomationId(window, "StatusTextBlock");
+        if (statusElement is null)
+        {
+            return false;
+        }
+
+        statusText = ReadElementText(statusElement);
+        return !string.IsNullOrWhiteSpace(statusText);
     }
 
     private static void WaitForFile(string path, TimeSpan timeout)

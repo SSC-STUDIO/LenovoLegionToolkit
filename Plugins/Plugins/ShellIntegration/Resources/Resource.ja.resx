@@ -1,61 +1,160 @@
-<?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-<data name="DisableButton" xml:space="preserve"><value>Disable</value></data><data name="EnableButton" xml:space="preserve"><value>有効化</value></data><data name="NotFound" xml:space="preserve"><value>Not found</value></data><data name="OpenConfigButton" xml:space="preserve"><value>Open Config File</value></data><data name="OpenShellFolderButton" xml:space="preserve"><value>Open Shell Folder</value></data><data name="OpenStyleSettingsButton" xml:space="preserve"><value>スタイル設定を開く</value></data><data name="OpenStyleShortButton" xml:space="preserve"><value>Open Style</value></data><data name="OptimizationHint" xml:space="preserve"><value>You can also access shell actions from Windows Optimization.</value></data><data name="PathLabel" xml:space="preserve"><value>パス</value></data><data name="PluginDescription" xml:space="preserve"><value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value></data><data name="PluginName" xml:space="preserve"><value>シェル統合</value></data><data name="SettingsPageTitle" xml:space="preserve"><value>シェル統合</value></data><data name="StatusConfigNotFound" xml:space="preserve"><value>Config file not found.</value></data><data name="StatusDetected" xml:space="preserve"><value>Nilesoft Shell detected.</value></data><data name="StatusDisableCompleted" xml:space="preserve"><value>Disable command completed.</value></data><data name="StatusDisableFailed" xml:space="preserve"><value>Disable command failed.</value></data><data name="StatusEnableCompleted" xml:space="preserve"><value>Enable command completed.</value></data><data name="StatusEnableFailed" xml:space="preserve"><value>Enable command failed.</value></data><data name="StatusNotDetected" xml:space="preserve"><value>Nilesoft Shell was not detected.</value></data><data name="StatusOpenedConfig" xml:space="preserve"><value>Opened config file.</value></data><data name="StatusOpenedShellFolder" xml:space="preserve"><value>Opened shell folder.</value></data><data name="StatusOpenedStyleSettings" xml:space="preserve"><value>Opened style settings.</value></data><data name="StatusShellFolderNotFound" xml:space="preserve"><value>Shell folder not found.</value></data><data name="Subtitle" xml:space="preserve"><value>Manage Nilesoft Shell registration and open style editor.</value></data><data name="VersionLabel" xml:space="preserve"><value>バージョン</value></data></root>
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DisableButton" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="EnableButton" xml:space="preserve">
+    <value>有効化</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>Open Config File</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>Open Shell Folder</value>
+  </data>
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+    <value>スタイル設定を開く</value>
+  </data>
+  <data name="OpenStyleShortButton" xml:space="preserve">
+    <value>Open Style</value>
+  </data>
+  <data name="OptimizationHint" xml:space="preserve">
+    <value>You can also access shell actions from Windows Optimization.</value>
+  </data>
+  <data name="PathLabel" xml:space="preserve">
+    <value>パス</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value>
+  </data>
+  <data name="PluginName" xml:space="preserve">
+    <value>シェル統合</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>シェル統合</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>Config file not found.</value>
+  </data>
+  <data name="StatusDetected" xml:space="preserve">
+    <value>Nilesoft Shell detected.</value>
+  </data>
+  <data name="StatusDisableCompleted" xml:space="preserve">
+    <value>Disable command completed.</value>
+  </data>
+  <data name="StatusDisableFailed" xml:space="preserve">
+    <value>Disable command failed.</value>
+  </data>
+  <data name="StatusEnableCompleted" xml:space="preserve">
+    <value>Enable command completed.</value>
+  </data>
+  <data name="StatusEnableFailed" xml:space="preserve">
+    <value>Enable command failed.</value>
+  </data>
+  <data name="StatusNotDetected" xml:space="preserve">
+    <value>Nilesoft Shell was not detected.</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>Opened config file.</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>Opened shell folder.</value>
+  </data>
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+    <value>Opened style settings.</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>Shell folder not found.</value>
+  </data>
+  <data name="Subtitle" xml:space="preserve">
+    <value>Manage Nilesoft Shell registration and open style editor.</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>バージョン</value>
+  </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell Integration Overview</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>Check registration state, installation path, and jump straight into the packaged Shell tools.</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Apply registration changes or open the packaged Shell assets used by this plugin.</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>Detected</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+</root>

@@ -6,165 +6,197 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="520"
+             d:DesignHeight="620"
              d:DesignWidth="920">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="20"
               AutomationProperties.AutomationId="NetworkAcceleration_SettingsRoot">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.15*" />
-                <ColumnDefinition Width="0.85*" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Border Grid.Column="0"
-                    Margin="0,0,10,0"
-                    Padding="20"
+            <Border Grid.Row="0"
+                    Margin="0,0,0,16"
+                    Padding="24"
                     CornerRadius="20"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsTitle}"
-                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                    <TextBlock Margin="0,6,0,0"
-                               Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
-                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
 
-                    <Border Margin="0,18,0,0"
-                            Padding="16"
+                    <StackPanel Margin="0,0,24,0">
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                    </StackPanel>
+
+                    <Border Grid.Column="1"
+                            Padding="18"
                             CornerRadius="18"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
                         <StackPanel>
-                            <CheckBox x:Name="_autoOptimizeOnStartupCheckBox"
-                                      Margin="0,0,0,12"
-                                      Checked="SettingsCheckBox_Changed"
-                                      Unchecked="SettingsCheckBox_Changed"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_AutoOptimizeCheckBox"
-                                      Content="{x:Static text:NetworkAccelerationText.AutoOptimizeOnStartup}" />
-
-                            <CheckBox x:Name="_resetWinsockCheckBox"
-                                      Margin="0,0,0,12"
-                                      Checked="SettingsCheckBox_Changed"
-                                      Unchecked="SettingsCheckBox_Changed"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_ResetWinsockCheckBox"
-                                      Content="{x:Static text:NetworkAccelerationText.ResetWinsockOnOptimize}" />
-
-                            <CheckBox x:Name="_resetTcpIpCheckBox"
-                                      Checked="SettingsCheckBox_Changed"
-                                      Unchecked="SettingsCheckBox_Changed"
-                                      AutomationProperties.AutomationId="NetworkAcceleration_ResetTcpIpCheckBox"
-                                      Content="{x:Static text:NetworkAccelerationText.ResetTcpIpOnOptimize}" />
-                        </StackPanel>
-                    </Border>
-
-                    <wpfui:Button Margin="0,18,0,0"
-                                  Width="150"
-                                  HorizontalAlignment="Left"
-                                  Appearance="Primary"
-                                  Content="{x:Static text:NetworkAccelerationText.SaveSettingsButton}"
-                                  AutomationProperties.AutomationId="NetworkAcceleration_SaveSettingsButton"
-                                  Click="SaveButton_Click" />
-
-                    <Border Margin="0,14,0,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel Orientation="Horizontal">
-                            <wpfui:SymbolIcon x:Name="_statusIcon"
-                                              Symbol="CheckmarkCircle24"
-                                              FontSize="16"
-                                              Margin="0,0,8,0"
-                                              VerticalAlignment="Top"
-                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_statusTextBlock"
+                            <TextBlock Text="{x:Static text:NetworkAccelerationText.CurrentModeLabel}"
+                                       Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                            <TextBlock x:Name="_modeSummaryTextBlock"
+                                       Margin="0,8,0,0"
+                                       FontSize="18"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Margin="0,14,0,0"
+                                       Text="{x:Static text:NetworkAccelerationText.AdminHint}"
                                        TextWrapping="Wrap"
-                                       AutomationProperties.AutomationId="NetworkAcceleration_SettingsStatusText" />
+                                       Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
                         </StackPanel>
                     </Border>
-                </StackPanel>
+                </Grid>
             </Border>
 
-            <Border Grid.Column="1"
-                    Margin="10,0,0,0"
-                    Padding="20"
+            <Grid Grid.Row="1"
+                  Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.05*" />
+                    <ColumnDefinition Width="0.95*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Margin="0,0,8,0"
+                        Padding="20"
+                        CornerRadius="20"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsTitle}"
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.SettingsDescription}"
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+
+                        <Border Margin="0,18,0,0"
+                                Padding="16"
+                                CornerRadius="18"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <StackPanel>
+                                <CheckBox x:Name="_autoOptimizeOnStartupCheckBox"
+                                          Margin="0,0,0,12"
+                                          Checked="SettingsCheckBox_Changed"
+                                          Unchecked="SettingsCheckBox_Changed"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_AutoOptimizeCheckBox"
+                                          Content="{x:Static text:NetworkAccelerationText.AutoOptimizeOnStartup}" />
+
+                                <CheckBox x:Name="_resetWinsockCheckBox"
+                                          Margin="0,0,0,12"
+                                          Checked="SettingsCheckBox_Changed"
+                                          Unchecked="SettingsCheckBox_Changed"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_ResetWinsockCheckBox"
+                                          Content="{x:Static text:NetworkAccelerationText.ResetWinsockOnOptimize}" />
+
+                                <CheckBox x:Name="_resetTcpIpCheckBox"
+                                          Checked="SettingsCheckBox_Changed"
+                                          Unchecked="SettingsCheckBox_Changed"
+                                          AutomationProperties.AutomationId="NetworkAcceleration_ResetTcpIpCheckBox"
+                                          Content="{x:Static text:NetworkAccelerationText.ResetTcpIpOnOptimize}" />
+                            </StackPanel>
+                        </Border>
+
+                        <wpfui:Button Margin="0,18,0,0"
+                                      Width="150"
+                                      HorizontalAlignment="Left"
+                                      Appearance="Primary"
+                                      Content="{x:Static text:NetworkAccelerationText.SaveSettingsButton}"
+                                      AutomationProperties.AutomationId="NetworkAcceleration_SaveSettingsButton"
+                                      Click="SaveButton_Click" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Margin="8,0,0,0"
+                        Padding="20"
+                        CornerRadius="20"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsSummaryTitle}"
+                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Text="{x:Static text:NetworkAccelerationText.SettingsSummaryDescription}"
+                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+
+                        <Border Margin="0,18,0,0"
+                                Padding="14"
+                                CornerRadius="18"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="{x:Static text:NetworkAccelerationText.AutoOptimizeOnStartup}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_startupSummaryTextBlock"
+                                           Grid.Row="0"
+                                           Grid.Column="1"
+                                           Margin="12,0,0,0"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Margin="0,14,0,0"
+                                           Text="{x:Static text:NetworkAccelerationText.ResetWinsockOnOptimize}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_winsockSummaryTextBlock"
+                                           Grid.Row="1"
+                                           Grid.Column="1"
+                                           Margin="12,14,0,0"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Margin="0,14,0,0"
+                                           Text="{x:Static text:NetworkAccelerationText.ResetTcpIpOnOptimize}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="_tcpSummaryTextBlock"
+                                           Grid.Row="2"
+                                           Grid.Column="1"
+                                           Margin="12,14,0,0"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="2"
+                    Padding="18"
                     CornerRadius="20"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="{x:Static text:NetworkAccelerationText.SettingsSummaryTitle}"
-                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                    <TextBlock Margin="0,6,0,0"
-                               Text="{x:Static text:NetworkAccelerationText.SettingsSummaryDescription}"
-                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
-
-                    <Border Margin="0,18,0,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="{x:Static text:NetworkAccelerationText.CurrentModeLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_modeSummaryTextBlock"
-                                       Grid.Row="0"
-                                       Grid.Column="1"
-                                       Margin="12,0,0,0"
-                                       
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Margin="0,14,0,0"
-                                       Text="{x:Static text:NetworkAccelerationText.AutoOptimizeOnStartup}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_startupSummaryTextBlock"
-                                       Grid.Row="1"
-                                       Grid.Column="1"
-                                       Margin="12,14,0,0"
-                                       
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="0"
-                                       Margin="0,14,0,0"
-                                       Text="{x:Static text:NetworkAccelerationText.ResetWinsockOnOptimize}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_winsockSummaryTextBlock"
-                                       Grid.Row="2"
-                                       Grid.Column="1"
-                                       Margin="12,14,0,0"
-                                       
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-                            <TextBlock Grid.Row="3"
-                                       Grid.Column="0"
-                                       Margin="0,14,0,0"
-                                       Text="{x:Static text:NetworkAccelerationText.ResetTcpIpOnOptimize}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_tcpSummaryTextBlock"
-                                       Grid.Row="3"
-                                       Grid.Column="1"
-                                       Margin="12,14,0,0"
-                                       
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Grid>
-                    </Border>
+                <StackPanel Orientation="Horizontal">
+                    <wpfui:SymbolIcon x:Name="_statusIcon"
+                                      Symbol="CheckmarkCircle24"
+                                      FontSize="16"
+                                      Margin="0,0,8,0"
+                                      VerticalAlignment="Top"
+                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_statusTextBlock"
+                               TextWrapping="Wrap"
+                               AutomationProperties.AutomationId="NetworkAcceleration_SettingsStatusText" />
                 </StackPanel>
             </Border>
         </Grid>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+#nullable enable
+
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
 
@@ -9,11 +11,7 @@ public static class CustomMouseText
 
     public static string PluginName => T(nameof(PluginName), "Custom Mouse");
     public static string PluginDescription => T(nameof(PluginDescription), "Customize mouse cursor style behavior and mouse settings.");
-    public static string PageTitle => T(nameof(PageTitle), "Custom Mouse");
     public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Mouse Settings");
-    public static string FeatureSubtitle => T(nameof(FeatureSubtitle), "Tune mouse profile values and apply them to the current Windows session.");
-    public static string LiveProfileTitle => T(nameof(LiveProfileTitle), "Live Mouse Profile");
-    public static string LiveProfileDescription => T(nameof(LiveProfileDescription), "Adjust sensitivity and polling, then push the current profile into the active Windows session.");
     public static string DpiLabel => T(nameof(DpiLabel), "DPI");
     public static string PollingRateLabel => T(nameof(PollingRateLabel), "Polling Rate");
     public static string ProfileStatusLabel => T(nameof(ProfileStatusLabel), "Profile State");
@@ -30,6 +28,7 @@ public static class CustomMouseText
     public static string StatusInvalidPolling => T(nameof(StatusInvalidPolling), "Invalid polling rate.");
     public static string StatusProfileSaved => T(nameof(StatusProfileSaved), "Mouse profile saved.");
     public static string SettingsSubtitle => T(nameof(SettingsSubtitle), "Apply pointer speed and button layout to the active Windows profile.");
+    public static string SettingsOverviewTitle => T(nameof(SettingsOverviewTitle), "Current Windows Mouse State");
     public static string WindowsSettingsTitle => T(nameof(WindowsSettingsTitle), "Windows Mouse Settings");
     public static string WindowsSettingsDescription => T(nameof(WindowsSettingsDescription), "Preview the effective pointer behavior before writing it into the current Windows profile.");
     public static string PointerSpeedLabel => T(nameof(PointerSpeedLabel), "Windows Pointer Speed");

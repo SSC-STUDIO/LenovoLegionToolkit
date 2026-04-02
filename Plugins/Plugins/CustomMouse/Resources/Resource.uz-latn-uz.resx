@@ -1,161 +1,211 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="PluginName" xml:space="preserve">
-    <value>Maxsus sichqoncha</value>
-  </data>
-  <data name="PluginDescription" xml:space="preserve">
-    <value>Sichqoncha kursori uslubi va sichqoncha sozlamalarini moslashtiring.</value>
-  </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Maxsus sichqoncha</value>
-  </data>
-  <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Sichqoncha sozlamalari</value>
-  </data>
-  <data name="FeatureSubtitle" xml:space="preserve">
-    <value>Sichqoncha profili qiymatlarini sozlang va ularni joriy Windows sessiyasiga qo'llang.</value>
-  </data>
-  <data name="PollingRateLabel" xml:space="preserve">
-    <value>So'rov chastotasi</value>
-  </data>
-  <data name="ApplyButton" xml:space="preserve">
-    <value>Qo'llash</value>
-  </data>
-  <data name="ResetButton" xml:space="preserve">
-    <value>Tiklash</value>
-  </data>
-  <data name="StatusResetDefaults" xml:space="preserve">
-    <value>Sichqoncha profili standart holatga tiklandi.</value>
-  </data>
-  <data name="StatusInvalidDpi" xml:space="preserve">
-    <value>Noto'g'ri DPI qiymati.</value>
-  </data>
-  <data name="StatusSelectValidPolling" xml:space="preserve">
-    <value>Iltimos, to'g'ri so'rov chastotasini tanlang.</value>
-  </data>
-  <data name="StatusInvalidPolling" xml:space="preserve">
-    <value>Noto'g'ri so'rov chastotasi.</value>
-  </data>
-  <data name="StatusProfileSaved" xml:space="preserve">
-    <value>Sichqoncha profili saqlandi.</value>
-  </data>
-  <data name="SettingsSubtitle" xml:space="preserve">
-    <value>Kursor tezligi va tugma joylashuvini faol Windows profiliga qo'llang.</value>
-  </data>
-  <data name="PointerSpeedLabel" xml:space="preserve">
-    <value>Windows kursor tezligi</value>
-  </data>
-  <data name="SwapButtonsLabel" xml:space="preserve">
-    <value>Chap va o'ng sichqoncha tugmalarini almashtirish</value>
-  </data>
-  <data name="AutoThemeLabel" xml:space="preserve">
-    <value>Joriy Windows yorug'/qorong'i mavzusiga qarab maxsus kursor uslubini avtomatik qo'llash</value>
-  </data>
-  <data name="CursorHint" xml:space="preserve">
-    <value>Kursor ko'rinishini shu sahifadan yoki Tizim optimizatsiyasi kengaytmasi amallaridan qo'llash mumkin.</value>
-  </data>
-  <data name="ApplyToWindowsButton" xml:space="preserve">
-    <value>Windows'ga qo'llash</value>
-  </data>
-  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
-    <value>Kursor mavzusini hozir qo'llash</value>
-  </data>
-  <data name="ReloadButton" xml:space="preserve">
-    <value>Qayta yuklash</value>
-  </data>
-  <data name="StatusApplyPointerFail" xml:space="preserve">
-    <value>Kursor tezligini qo'llab bo'lmadi.</value>
-  </data>
-  <data name="StatusApplySwapFail" xml:space="preserve">
-    <value>Tugmalarni almashtirish sozlamasini qo'llab bo'lmadi.</value>
-  </data>
-  <data name="StatusWindowsApplied" xml:space="preserve">
-    <value>Windows sichqoncha sozlamalari qo'llandi.</value>
-  </data>
-  <data name="StatusCursorApplyFailed" xml:space="preserve">
-    <value>Maxsus kursor uslubini qo'llab bo'lmadi. Tizim INF o'rnatishni to'sayotgan bo'lsa, administrator sifatida ishga tushirib ko'ring.</value>
-  </data>
-  <data name="StatusReloaded" xml:space="preserve">
-    <value>Joriy plagin sozlamalari qayta yuklandi.</value>
-  </data>
-  <data name="CursorAppliedUnknownTheme" xml:space="preserve">
-    <value>unknown</value>
-  </data>
-  <data name="CursorAppliedFormat" xml:space="preserve">
-    <value>Custom cursor style applied for current system theme ({0}).</value>
-  </data>
-<data name="DpiLabel" xml:space="preserve"><value>DPI</value></data>
-  <data name="QuickActionsDescription" xml:space="preserve"><value>Sichqoncha profilingiz sozlamalarini tezda qo'llang yoki tiklang.</value></data>
-
-  <data name="QuickActionsTitle" xml:space="preserve"><value>Tezkor amallar</value></data>
-
-  <data name="CursorThemeModeApplied" xml:space="preserve"><value>Kursor mavzusi rejimi qo'llandi: {0}.</value></data>
-
-  <data name="FormatCursorApplied" xml:space="preserve"><value>Qo'llangan kursor mavzusi: {0}.</value></data>
-
-  <data name="CursorThemeModeAuto" xml:space="preserve"><value>Tizimga ergashish</value></data>
-
-  <data name="CursorThemeModeDark" xml:space="preserve"><value>Qorong'i</value></data>
-
-  <data name="CursorThemeModeLabel" xml:space="preserve"><value>Kursor mavzusi rejimi</value></data>
-
-  <data name="CursorThemeModeLight" xml:space="preserve"><value>Yorug'</value></data>
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>Qo'llash</value>
+  </data>
+  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
+    <value>Kursor mavzusini hozir qo'llash</value>
+  </data>
+  <data name="ApplyToWindowsButton" xml:space="preserve">
+    <value>Windows'ga qo'llash</value>
+  </data>
+  <data name="AutoThemeLabel" xml:space="preserve">
+    <value>Joriy Windows yorug'/qorong'i mavzusiga qarab maxsus kursor uslubini avtomatik qo'llash</value>
+  </data>
+  <data name="CursorHint" xml:space="preserve">
+    <value>Kursor ko'rinishini shu sahifadan yoki Tizim optimizatsiyasi kengaytmasi amallaridan qo'llash mumkin.</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>Sichqoncha kursori uslubi va sichqoncha sozlamalarini moslashtiring.</value>
+  </data>
+  <data name="PluginName" xml:space="preserve">
+    <value>Maxsus sichqoncha</value>
+  </data>
+  <data name="PointerSpeedLabel" xml:space="preserve">
+    <value>Windows kursor tezligi</value>
+  </data>
+  <data name="PollingRateLabel" xml:space="preserve">
+    <value>So'rov chastotasi</value>
+  </data>
+  <data name="ReloadButton" xml:space="preserve">
+    <value>Qayta yuklash</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Tiklash</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Sichqoncha sozlamalari</value>
+  </data>
+  <data name="SettingsSubtitle" xml:space="preserve">
+    <value>Kursor tezligi va tugma joylashuvini faol Windows profiliga qo'llang.</value>
+  </data>
+  <data name="StatusApplyPointerFail" xml:space="preserve">
+    <value>Kursor tezligini qo'llab bo'lmadi.</value>
+  </data>
+  <data name="StatusApplySwapFail" xml:space="preserve">
+    <value>Tugmalarni almashtirish sozlamasini qo'llab bo'lmadi.</value>
+  </data>
+  <data name="StatusCursorApplyFailed" xml:space="preserve">
+    <value>Maxsus kursor uslubini qo'llab bo'lmadi. Tizim INF o'rnatishni to'sayotgan bo'lsa, administrator sifatida ishga tushirib ko'ring.</value>
+  </data>
+  <data name="StatusInvalidDpi" xml:space="preserve">
+    <value>Noto'g'ri DPI qiymati.</value>
+  </data>
+  <data name="StatusInvalidPolling" xml:space="preserve">
+    <value>Noto'g'ri so'rov chastotasi.</value>
+  </data>
+  <data name="StatusProfileSaved" xml:space="preserve">
+    <value>Sichqoncha profili saqlandi.</value>
+  </data>
+  <data name="StatusReloaded" xml:space="preserve">
+    <value>Joriy plagin sozlamalari qayta yuklandi.</value>
+  </data>
+  <data name="StatusResetDefaults" xml:space="preserve">
+    <value>Sichqoncha profili standart holatga tiklandi.</value>
+  </data>
+  <data name="StatusSelectValidPolling" xml:space="preserve">
+    <value>Iltimos, to'g'ri so'rov chastotasini tanlang.</value>
+  </data>
+  <data name="StatusWindowsApplied" xml:space="preserve">
+    <value>Windows sichqoncha sozlamalari qo'llandi.</value>
+  </data>
+  <data name="SwapButtonsLabel" xml:space="preserve">
+    <value>Chap va o'ng sichqoncha tugmalarini almashtirish</value>
+  </data>
+  <data name="DpiLabel" xml:space="preserve">
+    <value>DPI</value>
+  </data>
+  <data name="FormatCursorApplied" xml:space="preserve">
+    <value>Qo'llangan kursor mavzusi: {0}.</value>
+  </data>
+  <data name="QuickActionsTitle" xml:space="preserve">
+    <value>Tezkor amallar</value>
+  </data>
+  <data name="QuickActionsDescription" xml:space="preserve">
+    <value>Sichqoncha profilingiz sozlamalarini tezda qo'llang yoki tiklang.</value>
+  </data>
+  <data name="CursorThemeModeLabel" xml:space="preserve">
+    <value>Kursor mavzusi rejimi</value>
+  </data>
+  <data name="CursorThemeModeAuto" xml:space="preserve">
+    <value>Tizimga ergashish</value>
+  </data>
+  <data name="CursorThemeModeLight" xml:space="preserve">
+    <value>Yorug'</value>
+  </data>
+  <data name="CursorThemeModeDark" xml:space="preserve">
+    <value>Qorong'i</value>
+  </data>
+  <data name="CursorThemeModeApplied" xml:space="preserve">
+    <value>Kursor mavzusi rejimi qo'llandi: {0}.</value>
+  </data>
+  <data name="ProfileStatusLabel" xml:space="preserve">
+    <value>Profile State</value>
+  </data>
+  <data name="ProfileReady" xml:space="preserve">
+    <value>Ready to apply</value>
+  </data>
+  <data name="CurrentDpiLabel" xml:space="preserve">
+    <value>Current DPI</value>
+  </data>
+  <data name="CurrentPollingLabel" xml:space="preserve">
+    <value>Current Polling</value>
+  </data>
+  <data name="WindowsSettingsTitle" xml:space="preserve">
+    <value>Windows Mouse Settings</value>
+  </data>
+  <data name="WindowsSettingsDescription" xml:space="preserve">
+    <value>Preview the effective pointer behavior before writing it into the current Windows profile.</value>
+  </data>
+  <data name="PointerPreviewLabel" xml:space="preserve">
+    <value>Pointer Speed</value>
+  </data>
+  <data name="ButtonLayoutLabel" xml:space="preserve">
+    <value>Button Layout</value>
+  </data>
+  <data name="CursorThemeStatusLabel" xml:space="preserve">
+    <value>Cursor Theme</value>
+  </data>
+  <data name="EnabledState" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="DisabledState" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="StandardButtonsState" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="SwappedButtonsState" xml:space="preserve">
+    <value>Swapped</value>
+  </data>
+  <data name="AutomaticThemeState" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="ManualThemeState" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="CursorAppliedUnknownTheme" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="CursorAppliedFormat" xml:space="preserve">
+    <value>Custom cursor style applied for current system theme ({0}).</value>
+  </data>
 </root>

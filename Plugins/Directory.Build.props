@@ -1,11 +1,16 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <Project>
-  
+
 
   <PropertyGroup>
+    <Version>1.0.35</Version>
+    <FileVersion>1.0.35</FileVersion>
+    <AssemblyVersion>1.0.35</AssemblyVersion>
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
+    <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.Template'">True</IsTemplatePluginProject>
   </PropertyGroup>
+
 
   <PropertyGroup>
     <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
@@ -15,36 +20,28 @@
     <HostWpfPath Condition="'$(HostWpfPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll</HostWpfPath>
   </PropertyGroup>
 
-  
-  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Version>1.0.8</Version>
-    <FileVersion>1.0.8</FileVersion>
-    <AssemblyVersion>1.0.8</AssemblyVersion>
-    <InformationalVersion>1.0.8</InformationalVersion>
-  </PropertyGroup>
 
-  
-  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginToolProject)' != 'True'">
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.SDK'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Copyright>© 2025 SSC-STUDIO</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
@@ -52,35 +49,36 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
     <UseCommonControls>true</UseCommonControls>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  
+
   <PropertyGroup>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  
+
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
-    <SatelliteResourceLanguages>zh-hans;zh-hant;ja;ko;de</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>
   </PropertyGroup>
 
-  
+
   <ItemGroup>
     <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
-  
+
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Reference Include="LenovoLegionToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
@@ -88,13 +86,13 @@
     </Reference>
   </ItemGroup>
 
-  
+
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
 
-  
-  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+
+  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
       <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
@@ -109,7 +107,7 @@
     <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
   </Target>
 
-  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
     <PropertyGroup>
       <SDKDllSource>$(MSBuildThisFileDirectory)Build\SDK\LenovoLegionToolkit.Plugins.SDK.dll</SDKDllSource>
     </PropertyGroup>
@@ -117,3 +115,4 @@
   </Target>
 
 </Project>
+

@@ -30,6 +30,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
     private ObservableCollection<FeatureFlagInfo> _features = new();
     private List<FeatureFlagInfo> _allFeatures = new(); // Cache all features locally for fast searching
     private string _viveToolStatusDescription = string.Empty;
+    private string _featureCountDescription = string.Empty;
+    private string _viveToolPath = string.Empty;
     private string? _viveToolVersion;
     private bool _isLoading;
     private CancellationTokenSource? _searchDebounceCts;
@@ -50,6 +52,27 @@ public partial class ViveToolPage : INotifyPropertyChanged
         set
         {
             _viveToolStatusDescription = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string FeatureCountDescription
+    {
+        get => _featureCountDescription;
+        set
+        {
+            _featureCountDescription = value;
+            OnPropertyChanged();
+            UpdateFeatureSummary();
+        }
+    }
+
+    public string ViveToolPath
+    {
+        get => _viveToolPath;
+        set
+        {
+            _viveToolPath = value;
             OnPropertyChanged();
         }
     }
@@ -220,13 +243,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
         };
         root.Children.Add(new TextBlock
         {
-            Text = Resource.ViveTool_PageTitle,
-            FontSize = 28
-        });
-        root.Children.Add(new TextBlock
-        {
             Text = Resource.ViveTool_PageDescription,
-            Margin = new Thickness(0, 8, 0, 12),
+            Margin = new Thickness(0, 0, 0, 12),
             TextWrapping = TextWrapping.Wrap
         });
         root.Children.Add(buttonRow);
@@ -236,6 +254,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         root.Children.Add(_emptyStatePanel);
 
         Content = root;
+        UpdateFeatureSummary();
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -294,6 +313,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 ViveToolVersion = version;
                 if (IsViveToolAvailable)
                 {
+                    ViveToolPath = path ?? string.Empty;
                     if (!string.IsNullOrEmpty(version))
                     {
                         ViveToolStatusDescription = string.Format(Resource.ViveTool_ViveToolFound, path) + $" (v{version})";
@@ -305,6 +325,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 }
                 else
                 {
+                    ViveToolPath = Resource.ViveTool_ViveToolNotFound;
                     ViveToolStatusDescription = Resource.ViveTool_ViveToolNotFound;
                     ViveToolVersion = null;
                 }
@@ -318,6 +339,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             await Dispatcher.InvokeAsync(() =>
             {
                 IsViveToolAvailable = false;
+                ViveToolPath = Resource.ViveTool_ViveToolNotFound;
                 ViveToolVersion = null;
                 ViveToolStatusDescription = Resource.ViveTool_ViveToolError;
             });
@@ -344,13 +366,14 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 // Update both the visible collection and the local cache
                 Features.Clear();
                 _allFeatures.Clear();
-                
+
                 foreach (var feature in features)
                 {
                     Features.Add(feature);
                     _allFeatures.Add(feature);
                 }
 
+                FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
                 UpdateFeaturesVisibility();
                 IsLoading = false;
             });
@@ -370,7 +393,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshViveToolStatusAsync();
+        await RefreshPageAsync(clearFeatureCache: false);
     }
 
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
@@ -464,9 +487,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
     {
-        // Clear cache to get fresh data
-        _viveToolService.ClearFeatureCache();
-        await LoadFeaturesAsync();
+        await RefreshPageAsync(clearFeatureCache: true);
     }
 
     private void GoToSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -488,6 +509,28 @@ public partial class ViveToolPage : INotifyPropertyChanged
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
         }
+    }
+
+    private async Task RefreshPageAsync(bool clearFeatureCache)
+    {
+        if (clearFeatureCache)
+            _viveToolService.ClearFeatureCache();
+
+        await RefreshViveToolStatusAsync();
+
+        if (IsViveToolAvailable)
+        {
+            await LoadFeaturesAsync();
+            return;
+        }
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            Features.Clear();
+            _allFeatures.Clear();
+            FeatureCountDescription = 0.ToString(CultureInfo.CurrentCulture);
+            UpdateFeaturesVisibility();
+        });
     }
 
     private async void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -674,6 +717,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
                     Features.Add(feature);
                 }
 
+                FeatureCountDescription = Features.Count.ToString(CultureInfo.CurrentCulture);
                 UpdateFeaturesVisibility();
             });
         }
@@ -787,6 +831,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
         _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void UpdateFeatureSummary()
+    {
+        if (_featureCountTextBlock is null)
+            return;
+
+        _featureCountTextBlock.Text = string.IsNullOrWhiteSpace(FeatureCountDescription)
+            ? "0"
+            : FeatureCountDescription;
     }
 
     private void UpdateFeaturesVisibility()
