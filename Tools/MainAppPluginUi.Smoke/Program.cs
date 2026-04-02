@@ -86,7 +86,7 @@ internal static class Program
 
             var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
             var pluginsDirectory = ResolveRuntimePluginsDirectory(appRuntimeDirectory);
-            var preferredPlugins = ResolvePreferredPlugins();
+            var preferredPlugins = ResolvePreferredPlugins(args);
             preparedRuntimePluginFixtures = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, pluginsDirectory, preferredPlugins);
             var fixtureWarningsByPlugin = preparedRuntimePluginFixtures
                 .Where(state => !state.FixturePrepared && !string.IsNullOrWhiteSpace(state.WarningMessage))
@@ -216,7 +216,15 @@ internal static class Program
 
     private static string ResolveRepositoryRoot(string[] args)
     {
-        if (args.Length > 0)
+        var repoRootFromOption = TryReadOptionValue(args, "--repo-root");
+        if (!string.IsNullOrWhiteSpace(repoRootFromOption))
+        {
+            var fromOption = Path.GetFullPath(repoRootFromOption);
+            EnsureRepositoryRoot(fromOption);
+            return fromOption;
+        }
+
+        if (args.Length > 0 && !IsOptionToken(args[0]))
         {
             var fromArg = Path.GetFullPath(args[0]);
             EnsureRepositoryRoot(fromArg);
@@ -237,8 +245,49 @@ internal static class Program
         throw new DirectoryNotFoundException("Cannot infer main repository root. Pass repo root as first argument.");
     }
 
-    private static IReadOnlyList<string> ResolvePreferredPlugins()
+    private static string? TryReadOptionValue(IReadOnlyList<string> args, string optionName)
     {
+        for (var index = 0; index < args.Count; index++)
+        {
+            var argument = args[index];
+            if (!string.Equals(argument, optionName, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (index + 1 >= args.Count)
+                throw new ArgumentException($"Missing value for option '{optionName}'.");
+
+            var value = args[index + 1];
+            if (IsOptionToken(value))
+                throw new ArgumentException($"Missing value for option '{optionName}'.");
+
+            return value;
+        }
+
+        return null;
+    }
+
+    private static bool IsOptionToken(string value) =>
+        !string.IsNullOrWhiteSpace(value) && value.StartsWith("--", StringComparison.Ordinal);
+
+    private static IReadOnlyList<string> ResolvePreferredPlugins(string[] args)
+    {
+        // First check command line argument --plugin
+        var fromCommandLine = TryReadOptionValue(args, "--plugin");
+        if (!string.IsNullOrWhiteSpace(fromCommandLine))
+        {
+            var requested = fromCommandLine
+                .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            if (requested.Length > 0)
+            {
+                Console.WriteLine($"[main-smoke] Plugin filter from --plugin: [{string.Join(", ", requested)}]");
+                return requested;
+            }
+        }
+
+        // Fall back to environment variable
         var fromEnvironment = Environment.GetEnvironmentVariable("LLT_SMOKE_PLUGIN_IDS");
         if (!string.IsNullOrWhiteSpace(fromEnvironment))
         {
@@ -1460,7 +1509,12 @@ internal static class Program
         if (returnToMarketplace)
         {
             if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+            {
                 WaitForCustomMouseReentryCleanupCheckpoint(mainWindow, processId, TimeSpan.FromSeconds(8));
+                NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+                WaitForCustomMouseMarketplaceReentryReady(mainWindow, processId, TimeSpan.FromSeconds(12));
+                return;
+            }
 
             NavigateToPluginExtensionsPage(mainWindow, refresh: false);
         }
@@ -1485,6 +1539,59 @@ internal static class Program
         Console.WriteLine($"[main-smoke] custom-mouse reentry cleanup checkpoint: reentry window appeared, handle={reentryHandle} name='{reentryWindow.Current.Name}'");
         Console.WriteLine($"[main-smoke] custom-mouse reentry cleanup checkpoint: forcing explicit close for top-level handle {reentryHandle} via PART_CloseButton/_closeButton.");
         WaitForCustomMouseTopLevelWindowToClose(reentryWindow, processId, timeout, "reentry-checkpoint");
+    }
+
+    private static void WaitForCustomMouseMarketplaceReentryReady(AutomationElement mainWindow, int processId, TimeSpan timeout)
+    {
+        Console.WriteLine("[main-smoke] Waiting for custom-mouse marketplace reentry readiness");
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var namedWindows = new[] { "自定义鼠标 设置", "Custom Mouse Settings" };
+        var drainWindow = WaitForTopLevelSettingsWindowByName(
+            processId,
+            mainWindow.Current.NativeWindowHandle,
+            namedWindows,
+            TimeSpan.FromSeconds(Math.Min(timeout.TotalSeconds, 3)));
+
+        if (drainWindow is not null)
+        {
+            var drainHandle = drainWindow.Current.NativeWindowHandle;
+            Console.WriteLine($"[main-smoke] custom-mouse marketplace reentry: respawned settings window detected, handle={drainHandle} name='{drainWindow.Current.Name}'");
+            WaitForCustomMouseTopLevelWindowToClose(drainWindow, processId, timeout, "marketplace-reentry-drain");
+
+            var handleGone = WaitUntil(
+                () => !IsTopLevelWindowOpen(processId, drainHandle),
+                timeout,
+                TimeSpan.FromMilliseconds(150));
+            Console.WriteLine($"[main-smoke] custom-mouse marketplace reentry: drained handle gone verification for {drainHandle}: {handleGone}");
+            if (!handleGone)
+                throw new TimeoutException($"custom-mouse marketplace reentry drained handle {drainHandle} remained open.");
+        }
+        else
+        {
+            Console.WriteLine("[main-smoke] custom-mouse marketplace reentry: no respawned settings window detected after returning from plugin page.");
+        }
+
+        var ready = WaitUntil(
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                return IsPluginMarketplaceReentryReady(mainWindow);
+            },
+            timeout,
+            TimeSpan.FromMilliseconds(200));
+
+        Console.WriteLine($"[main-smoke] custom-mouse marketplace reentry readiness: {ready}");
+        if (!ready)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            DumpAutomationSnapshot(mainWindow, 260);
+            throw new TimeoutException("custom-mouse marketplace reentry did not restore Plugin Extensions readiness.");
+        }
+    }
+
+    private static bool IsPluginMarketplaceReentryReady(AutomationElement mainWindow)
+    {
+        return IsPluginMarketplaceReady(mainWindow);
     }
 
     private static void TestNetworkAccelerationSettingsInteractions(AutomationElement settingsWindow)
