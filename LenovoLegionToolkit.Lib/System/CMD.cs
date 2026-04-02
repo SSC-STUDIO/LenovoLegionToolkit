@@ -20,6 +20,7 @@ public static class CMD
     {
         "&&",      // Command chaining
         "||",      // Command chaining
+        "|",       // Pipe chaining
         ";",       // Command separator
         "`",       // PowerShell execution
         "$(",      // Command substitution
@@ -36,7 +37,7 @@ public static class CMD
     {
         new Regex(@"-[eE][nN][cC]?\s+", RegexOptions.Compiled),
         new Regex(@"-[eE][nN][cC]?\s+[a-zA-Z0-9+/]{50,}={0,2}", RegexOptions.Compiled),
-        new Regex(@"[iI][eE][xX]\s|[iI][eE][xX]\)|[iI][eE][xX]$")",
+        new Regex(@"[iI][eE][xX]\s|[iI][eE][xX]\)|[iI][eE][xX]$", RegexOptions.Compiled),
         new Regex(@"[iI]nvoke-[eE]xpression", RegexOptions.Compiled),
     };
 

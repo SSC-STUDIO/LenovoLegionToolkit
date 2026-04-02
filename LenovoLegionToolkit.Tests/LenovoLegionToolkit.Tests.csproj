@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />
+    <ProjectReference Include="..\Tools\MainAppPluginUi.Smoke\MainAppPluginUi.Smoke.csproj" />
   </ItemGroup>
 
 </Project>
-
