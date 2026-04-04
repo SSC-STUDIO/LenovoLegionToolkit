@@ -38,4 +38,14 @@ public class TimeAutoListener : AbstractAutoListener<TimeAutoListener.ChangedEve
     }
 
     private void Timer_Elapsed(object? sender, ElapsedEventArgs e) => RaiseChanged(new ChangedEventArgs(TimeExtensions.UtcNow, DateTime.UtcNow.DayOfWeek));
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
+        }
+        base.Dispose(disposing);
+    }
 }
