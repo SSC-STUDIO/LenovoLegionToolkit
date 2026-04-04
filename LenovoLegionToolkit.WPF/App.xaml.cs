@@ -93,7 +93,7 @@ public partial class App
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Flags: {flags}");
+            Log.Instance.Trace($"Flags: IsTraceEnabled={flags.IsTraceEnabled}, Minimized={flags.Minimized}, SkipCompatibilityCheck={flags.SkipCompatibilityCheck}");
 
         EnsureSingleInstance();
 

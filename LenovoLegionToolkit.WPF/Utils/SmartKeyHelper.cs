@@ -51,7 +51,10 @@ internal class SmartKeyHelper
         }
 
         if (_smartKeyDoublePressCancellationTokenSource is not null)
+        {
             await _smartKeyDoublePressCancellationTokenSource.CancelAsync();
+            _smartKeyDoublePressCancellationTokenSource.Dispose();
+        }
         _smartKeyDoublePressCancellationTokenSource = new CancellationTokenSource();
 
         var token = _smartKeyDoublePressCancellationTokenSource.Token;
