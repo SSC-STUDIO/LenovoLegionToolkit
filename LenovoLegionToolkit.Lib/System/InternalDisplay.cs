@@ -76,7 +76,7 @@ public static class InternalDisplay
 
     private static Display? FindInternalDisplay(IEnumerable<Display> displays)
     {
-        return displays.Where(d => d.GetVideoOutputTechnology().IsInternalOutput()).FirstOrDefault();
+        return displays.FirstOrDefault(d => d.GetVideoOutputTechnology().IsInternalOutput());
     }
 
     private static Display? FindInternalAdvancedOptimusDisplay(IEnumerable<Display> displays)
