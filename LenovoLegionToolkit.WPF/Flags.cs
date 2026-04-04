@@ -83,7 +83,7 @@ public class Flags
         $" {nameof(EnableHybridModeAutomation)}: {EnableHybridModeAutomation}," +
         $" {nameof(ProxyUrl)}: {ProxyUrl}," +
         $" {nameof(ProxyUsername)}: {ProxyUsername}," +
-        $" {nameof(ProxyPassword)}: {ProxyPassword}," +
+        $" {nameof(ProxyPassword)}: [REDACTED]," +
         $" {nameof(ProxyAllowAllCerts)}: {ProxyAllowAllCerts}," +
         $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}, " +
         $" {nameof(DisableConflictingSoftwareWarning)}: {DisableConflictingSoftwareWarning}";

@@ -366,6 +366,11 @@ public class TrayHelper : IDisposable
     {
         GC.SuppressFinalize(this);
 
+        // Unsubscribe from events to prevent memory leaks
+        _contextMenu.Opened -= async (_, _) => await UpdateStatusItemsAsync();
+        _themeManager.ThemeApplied -= (_, _) => _contextMenu.Resources = App.Current.Resources;
+        _automationProcessor.PipelinesChanged -= async (_, p) => await SetAutomationItemsAsync(p);
+
         if (_notifyIcon is not null)
             _notifyIcon.Visible = false;
 

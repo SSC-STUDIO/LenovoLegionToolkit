@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
 
-public class DisplayConfigurationListener : IListener<DisplayConfigurationListener.ChangedEventArgs>
+public class DisplayConfigurationListener : IListener<DisplayConfigurationListener.ChangedEventArgs>, IDisposable
 {
     public class ChangedEventArgs : EventArgs
     {
@@ -16,6 +16,7 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
     }
 
     private bool _started;
+    private bool _disposed;
 
     public bool? IsHDROn { get; private set; }
 
@@ -23,7 +24,7 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
 
     public Task StartAsync()
     {
-        if (_started)
+        if (_started || _disposed)
             return Task.CompletedTask;
 
         IsHDROn = GetHDRStatus();
@@ -70,5 +71,24 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
                 Log.Instance.Trace($"Failed to get HDR status. Assuming unavailable.", ex);
             return null;
         }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            StopAsync().GetAwaiter().GetResult();
+        }
+
+        _disposed = true;
     }
 }

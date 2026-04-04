@@ -254,4 +254,16 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
             RaiseChangedIfNeeded(false);
         }
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Unsubscribe from detector events to prevent memory leaks
+            _gameConfigStoreDetector.GamesDetected -= GameConfigStoreDetectorGamesConfigStoreDetected;
+            _effectiveGameModeDetector.Changed -= EffectiveGameModeDetectorChanged;
+        }
+
+        base.Dispose(disposing);
+    }
 }

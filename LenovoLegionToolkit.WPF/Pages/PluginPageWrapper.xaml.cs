@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -22,7 +23,7 @@ namespace LenovoLegionToolkit.WPF.Pages
 /// </summary>
 public partial class PluginPageWrapper : UiPage
 {
-    private static readonly Dictionary<string, string> PageTagToPluginIdMap = new();
+    private static readonly ConcurrentDictionary<string, string> PageTagToPluginIdMap = new();
     
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private string? _pluginId;
