@@ -377,13 +377,13 @@ public partial class App
             {
                 _backgroundInitializationCancellationTokenSource?.Cancel();
                 try { await Task.WhenAny(task, Task.Delay(500)); }
-                catch { }
+                catch { /* Background task cancellation failed - app startup continues */ }
                 return;
             }
         }
 
         try { await task; }
-        catch { }
+        catch { /* Background initialization failed - app continues startup */ }
     }
 
     /// <summary>
@@ -487,13 +487,13 @@ public partial class App
             _inExitHandler = true;
 
         try { ShutdownAsync(true).GetAwaiter().GetResult(); }
-        catch { }
+        catch { /* Shutdown failed - continue with exit anyway */ }
 
         try { Log.Instance.Shutdown(); }
-        catch { }
+        catch { /* Log shutdown failed - continue with exit */ }
 
         try { _singleInstanceMutex?.Close(); }
-        catch { }
+        catch { /* Mutex cleanup failed - continue with exit */ }
 
         StopMacroControllerSafely();
         StopSingleInstanceThreadSafely();
@@ -611,7 +611,7 @@ public partial class App
         {
             Thread.Sleep(100);
             try { Environment.Exit((int)exitCode); }
-            catch { }
+            catch { /* Environment.Exit failed - use fallback exit method */ }
             ExitProcess(exitCode);
         });
     }
@@ -625,7 +625,7 @@ public partial class App
 
             await stopAction(service);
         }
-        catch { }
+        catch { /* Service stop failed during shutdown - continue cleanup */ }
     }
 
     public async Task ShutdownAsync(bool exitApplication = false)
@@ -720,7 +720,7 @@ public partial class App
             var shutdownTasks = registeredPlugins.Select(plugin => Task.Run(() =>
             {
                 try { plugin.OnShutdown(); }
-                catch { }
+                catch { /* Plugin shutdown failed - continue with other plugins */ }
             })).ToList();
 
             await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
@@ -730,7 +730,7 @@ public partial class App
             if (pluginManager is PluginManager manager)
                 manager.PerformPendingDeletions();
         }
-        catch { }
+        catch { /* Plugin shutdown process failed - continue with app shutdown */ }
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
