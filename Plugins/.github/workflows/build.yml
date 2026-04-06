@@ -113,7 +113,7 @@ jobs:
             Write-Host "Building specific plugin: $input"
             Write-Host "plugins=$input" >> $env:GITHUB_OUTPUT
           } else {
-            $plugins = Get-ChildItem -Path Plugins -Directory -Name | Where-Object { $_ -ne 'Template' -and $_ -notlike '*.Tests' }
+            $plugins = Get-ChildItem -Path Plugins -Directory -Name | Where-Object { $_ -ne 'Template' -and $_ -ne 'Shared' -and $_ -notlike '*.Tests' }
             $pluginsStr = $plugins -join ","
             Write-Host "Building all plugins: $pluginsStr"
             Write-Host "plugins=$pluginsStr" >> $env:GITHUB_OUTPUT
