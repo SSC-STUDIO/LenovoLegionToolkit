@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.WPF;
@@ -154,7 +155,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     public ViveToolPage()
     {
         DataContext = this;
-        var initialized = TryInitializeComponent();
+        var initialized = WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
 
@@ -162,23 +163,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Loaded += Page_Loaded;
             Unloaded += Page_Unloaded;
-        }
-    }
-
-    private bool TryInitializeComponent()
-    {
-        try
-        {
-            InitializeComponent();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveToolPage InitializeComponent fallback: {ex.Message}", ex);
-
-            BuildFallbackUi();
-            return false;
         }
     }
 
@@ -393,7 +377,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshPageAsync(clearFeatureCache: false);
+        try
+        {
+            await RefreshPageAsync(clearFeatureCache: false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private async void DownloadViveToolButton_Click(object sender, RoutedEventArgs e)
@@ -411,7 +403,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             {
                 // Calculate progress percentage (we don't have total size, so we'll use a heuristic)
                 // ViVeTool is around 2-3 MB, so we'll assume 3 MB for estimation
-                const long estimatedTotalBytes = 3 * 1024 * 1024;
+                const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 double percent = Math.Min(100, (bytesDownloaded * 100.0) / estimatedTotalBytes);
                 
                 DownloadProgress = percent;
@@ -487,7 +479,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshPageAsync(clearFeatureCache: true);
+        try
+        {
+            await RefreshPageAsync(clearFeatureCache: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"RefreshListButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void GoToSettingsButton_Click(object sender, RoutedEventArgs e)

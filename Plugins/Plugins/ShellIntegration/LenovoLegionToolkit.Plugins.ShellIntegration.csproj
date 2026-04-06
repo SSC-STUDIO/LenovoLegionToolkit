@@ -5,6 +5,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
     <Version>1.0.9</Version>
     <FileVersion>1.0.9</FileVersion>
     <AssemblyVersion>1.0.9</AssemblyVersion>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
     <Reference Include="Lenovo Legion Toolkit">
       <HintPath>$(HostWpfPath)</HintPath>
       <Private>false</Private>
@@ -93,20 +95,6 @@
     </PropertyGroup>
     <Error Condition="'$(_ShellCachedExists)' != 'true'"
            Text="Shell binaries could not be fetched. Build aborted because shell.exe is required for a valid Shell Integration package." />
-  </Target>
-
-  <Target Name="CleanupPluginFiles" AfterTargets="Build">
-    <ItemGroup>
-      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
-      <FilesToDelete Include="$(OutputPath)*.deps.json" />
-    </ItemGroup>
-    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
-    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
   </Target>
 
 </Project>

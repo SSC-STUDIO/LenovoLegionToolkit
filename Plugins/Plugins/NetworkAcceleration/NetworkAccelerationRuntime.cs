@@ -42,6 +42,11 @@ public sealed class NetworkAccelerationRuntime
 
     public event EventHandler<NetworkAccelerationSample>? Sampled;
 
+    /// <summary>
+    /// Gets whether the runtime is currently running.
+    /// </summary>
+    public bool IsRunning => _cts != null;
+
     public IReadOnlyList<NetworkAccelerationSample> GetRecentSamples()
     {
         lock (_gate)
@@ -81,11 +86,52 @@ public sealed class NetworkAccelerationRuntime
         try
         {
             cts.Cancel();
-            loopTask?.Wait(TimeSpan.FromSeconds(2));
+            // Use WaitAsync to avoid blocking the calling thread
+            _ = loopTask?.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
         }
         catch
         {
             // Ignore stop exceptions to keep shutdown resilient.
+        }
+        finally
+        {
+            cts.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Stops the runtime asynchronously with graceful shutdown.
+    /// </summary>
+    public async Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        CancellationTokenSource? cts;
+        Task? loopTask;
+
+        lock (_gate)
+        {
+            cts = _cts;
+            loopTask = _loopTask;
+            _cts = null;
+            _loopTask = null;
+        }
+
+        if (cts == null)
+            return;
+
+        try
+        {
+            cts.Cancel();
+            if (loopTask != null)
+                await loopTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            // Cancellation is expected - propagate to caller
+            throw;
+        }
+        catch
+        {
+            // Ignore other stop exceptions to keep shutdown resilient.
         }
         finally
         {

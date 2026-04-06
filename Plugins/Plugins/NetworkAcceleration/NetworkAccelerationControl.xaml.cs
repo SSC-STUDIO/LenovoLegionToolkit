@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,8 +26,6 @@ public partial class NetworkAccelerationControl : UserControl
     private bool _isServiceRunning;
     private DateTimeOffset? _sessionStartedAt;
     private bool _isSelectionSyncInProgress;
-    private static readonly FieldInfo? RuntimeCancellationTokenSourceField =
-        typeof(NetworkAccelerationRuntime).GetField("_cts", BindingFlags.Instance | BindingFlags.NonPublic);
 
     private static CultureInfo Culture => NetworkAccelerationText.Culture;
 
@@ -198,24 +195,33 @@ public partial class NetworkAccelerationControl : UserControl
 
     private async void ServiceToggleButton_Click(object sender, RoutedEventArgs e)
     {
-        if (IsRuntimeRunning())
+        try
         {
-            _plugin.Runtime.Stop();
-            _isServiceRunning = false;
-            _sessionStartedAt = null;
-            SetStatus(NetworkAccelerationText.StatusServiceStopped, false);
-        }
-        else
-        {
-            _plugin.Runtime.Start();
-            _isServiceRunning = true;
-            _sessionStartedAt = GetRuntimeSessionStartTime() ?? DateTimeOffset.Now;
-            SetStatus(NetworkAccelerationText.StatusServiceStarted, false);
-            await Task.Yield();
-        }
+            if (IsRuntimeRunning())
+            {
+                _plugin.Runtime.Stop();
+                _isServiceRunning = false;
+                _sessionStartedAt = null;
+                SetStatus(NetworkAccelerationText.StatusServiceStopped, false);
+            }
+            else
+            {
+                _plugin.Runtime.Start();
+                _isServiceRunning = true;
+                _sessionStartedAt = GetRuntimeSessionStartTime() ?? DateTimeOffset.Now;
+                SetStatus(NetworkAccelerationText.StatusServiceStarted, false);
+                await Task.Yield();
+            }
 
-        SynchronizeRuntimeState();
-        UpdateSessionPresentation();
+            SynchronizeRuntimeState();
+            UpdateSessionPresentation();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ServiceToggleButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -232,41 +238,68 @@ public partial class NetworkAccelerationControl : UserControl
 
     private async void QuickOptimizeButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = await _plugin.RunQuickOptimizationAsync().ConfigureAwait(true);
-        SetStatus(
-            success ? NetworkAccelerationText.StatusQuickOptimizationCompleted : NetworkAccelerationText.StatusQuickOptimizationFailed,
-            !success);
-        RefreshTelemetry();
+        try
+        {
+            var success = await _plugin.RunQuickOptimizationAsync().ConfigureAwait(true);
+            SetStatus(
+                success ? NetworkAccelerationText.StatusQuickOptimizationCompleted : NetworkAccelerationText.StatusQuickOptimizationFailed,
+                !success);
+            RefreshTelemetry();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"QuickOptimizeButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private async void ResetStackButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = await _plugin.ResetNetworkStackAsync().ConfigureAwait(true);
-        SetStatus(
-            success ? NetworkAccelerationText.StatusResetCompleted : NetworkAccelerationText.StatusResetFailed,
-            !success);
-        RefreshTelemetry();
+        try
+        {
+            var success = await _plugin.ResetNetworkStackAsync().ConfigureAwait(true);
+            SetStatus(
+                success ? NetworkAccelerationText.StatusResetCompleted : NetworkAccelerationText.StatusResetFailed,
+                !success);
+            RefreshTelemetry();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ResetStackButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private async void SaveModeButton_Click(object sender, RoutedEventArgs e)
     {
-        var mode = ParseSelectedMode();
-        if (mode is null)
+        try
         {
-            SetStatus(NetworkAccelerationText.StatusSelectValidMode, true);
-            return;
+            var mode = ParseSelectedMode();
+            if (mode is null)
+            {
+                SetStatus(NetworkAccelerationText.StatusSelectValidMode, true);
+                return;
+            }
+
+            _plugin.SetPreferredMode(mode.Value);
+            _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
+            _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
+            _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
+            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+
+            UpdateModeDescription();
+            UpdateSavedModeSummary();
+            UpdatePresetDetails();
+            SetStatus(NetworkAccelerationText.StatusModeSaved, false);
         }
-
-        _plugin.SetPreferredMode(mode.Value);
-        _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
-        _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
-        _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
-        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-
-        UpdateModeDescription();
-        UpdateSavedModeSummary();
-        UpdatePresetDetails();
-        SetStatus(NetworkAccelerationText.StatusModeSaved, false);
+        catch (Exception ex)
+        {
+            SetStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveModeButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void RefreshTelemetry()
@@ -406,7 +439,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private bool IsRuntimeRunning()
     {
-        return RuntimeCancellationTokenSourceField?.GetValue(_plugin.Runtime) is not null;
+        return _plugin.Runtime.IsRunning;
     }
 
     private DateTimeOffset? GetRuntimeSessionStartTime()

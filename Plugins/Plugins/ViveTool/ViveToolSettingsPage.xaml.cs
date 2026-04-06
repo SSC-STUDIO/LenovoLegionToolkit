@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
@@ -22,25 +23,10 @@ public partial class ViveToolSettingsPage
 
     public ViveToolSettingsPage()
     {
-        TryInitializeComponent();
+        WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         _viveToolService = new ViveToolService();
         _settings = new Services.Settings.ViveToolSettings();
         Loaded += ViveToolSettingsPage_Loaded;
-    }
-
-    private void TryInitializeComponent()
-    {
-        try
-        {
-            InitializeComponent();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveToolSettingsPage InitializeComponent fallback: {ex.Message}", ex);
-
-            BuildFallbackUi();
-        }
     }
 
     private void BuildFallbackUi()
@@ -228,7 +214,7 @@ public partial class ViveToolSettingsPage
                 var selectedPath = openFileDialog.FileName;
                 var fileName = Path.GetFileName(selectedPath);
                 
-                if (!fileName.Equals(ViveToolService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
+                if (!fileName.Equals(ViveToolPathService.ViveToolExeName, StringComparison.OrdinalIgnoreCase))
                 {
                     System.Windows.MessageBox.Show(Resource.ViveTool_InvalidViveToolFile, Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -259,7 +245,15 @@ public partial class ViveToolSettingsPage
 
     private async void RefreshStatusButton_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshStatusAsync();
+        try
+        {
+            await RefreshStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void GitHubButton_Click(object sender, RoutedEventArgs e)
@@ -306,7 +300,7 @@ public partial class ViveToolSettingsPage
             // Start download
             var progress = new Progress<long>(bytesDownloaded =>
             {
-                const long estimatedTotalBytes = 3 * 1024 * 1024;
+                const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 _downloadProgress = (int)Math.Min(100, bytesDownloaded * 100 / estimatedTotalBytes);
                 if (_downloadProgressBar != null)
                     _downloadProgressBar.Value = _downloadProgress;

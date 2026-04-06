@@ -1,8 +1,10 @@
+using System;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
@@ -13,22 +15,10 @@ public partial class NetworkAccelerationSettingsControl : UserControl
     public NetworkAccelerationSettingsControl(NetworkAccelerationPlugin plugin)
     {
         _plugin = plugin;
-        TryInitializeComponent();
+        WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         LoadCurrentValues();
         UpdateSummary();
         SetStatus(NetworkAccelerationText.SettingsSummaryDescription, false);
-    }
-
-    private void TryInitializeComponent()
-    {
-        try
-        {
-            InitializeComponent();
-        }
-        catch
-        {
-            BuildFallbackUi();
-        }
     }
 
     private void BuildFallbackUi()
@@ -425,13 +415,22 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         if (_autoOptimizeOnStartupCheckBox is null || _resetWinsockCheckBox is null || _resetTcpIpCheckBox is null)
             return;
 
-        _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
-        _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
-        _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
+        try
+        {
+            _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
+            _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
+            _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
 
-        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        UpdateSummary();
-        SetStatus(NetworkAccelerationText.SettingsSaved, false);
+            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+            UpdateSummary();
+            SetStatus(NetworkAccelerationText.SettingsSaved, false);
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void SetStatus(string text, bool isError)

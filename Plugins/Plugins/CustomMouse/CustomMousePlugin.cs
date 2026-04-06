@@ -381,7 +381,12 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             return true;
         }
         catch (OperationCanceledException) { throw; }
-        catch { return false; }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"CustomMouse: INF installation failed: {ex.Message}", ex);
+            return false;
+        }
     }
 
     private void ApplyCursorThemeFromResources(CursorTheme theme)

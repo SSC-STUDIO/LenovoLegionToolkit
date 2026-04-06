@@ -16,7 +16,7 @@ public class ViveToolServicePathTests
 
         var resolvedPath = await service.GetViveToolPathAsync();
         var assemblyDir = Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location) ?? AppContext.BaseDirectory;
-        var bundledPath = Path.Combine(assemblyDir, "Bundled", ViveToolService.ViveToolExeName);
+        var bundledPath = Path.Combine(assemblyDir, "Bundled", ViveToolPathService.ViveToolExeName);
 
         Assert.True(File.Exists(bundledPath));
         Assert.NotNull(resolvedPath);
@@ -30,7 +30,7 @@ public class ViveToolServicePathTests
         var tempDir = Path.Combine(Path.GetTempPath(), "llt-vivetool-test-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDir);
 
-        var customPath = Path.Combine(tempDir, ViveToolService.ViveToolExeName);
+        var customPath = Path.Combine(tempDir, ViveToolPathService.ViveToolExeName);
         await File.WriteAllTextAsync(customPath, "test");
 
         try

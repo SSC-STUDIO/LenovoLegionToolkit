@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-04-05
+
+### Fixed / 修复
+- Removed hardcoded Chinese strings from NetworkAccelerationText.cs fallback values, ensuring all UI text uses proper resource-based localization / 移除 NetworkAccelerationText.cs 中的硬编码中文字符串回退值，确保所有 UI 文本使用正确的资源化本地化
+
 ## [1.1.3] - 2026-03-18
 
 ### Fixed / 修复

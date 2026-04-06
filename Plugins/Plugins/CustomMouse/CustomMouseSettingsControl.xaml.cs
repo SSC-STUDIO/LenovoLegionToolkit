@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
 
@@ -13,20 +14,8 @@ public partial class CustomMouseSettingsControl : UserControl
     public CustomMouseSettingsControl(CustomMousePlugin plugin)
     {
         _plugin = plugin;
-        TryInitializeComponent();
+        WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         LoadCurrentValues();
-    }
-
-    private void TryInitializeComponent()
-    {
-        try
-        {
-            InitializeComponent();
-        }
-        catch
-        {
-            BuildFallbackUi();
-        }
     }
 
     private void BuildFallbackUi()
@@ -178,74 +167,101 @@ public partial class CustomMouseSettingsControl : UserControl
 
     private async void CursorThemeModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_cursorThemeModeComboBox?.SelectedItem is not ComboBoxItem selected)
-            return;
-
-        var mode = (selected.Tag as string) switch
+        try
         {
-            "Light" => CursorThemeMode.Light,
-            "Dark" => CursorThemeMode.Dark,
-            _ => CursorThemeMode.Auto
-        };
+            if (_cursorThemeModeComboBox?.SelectedItem is not ComboBoxItem selected)
+                return;
 
-        var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
-        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-
-        if (applied)
-        {
-            var modeText = mode switch
+            var mode = (selected.Tag as string) switch
             {
-                CursorThemeMode.Light => CustomMouseText.CursorThemeModeLight,
-                CursorThemeMode.Dark => CustomMouseText.CursorThemeModeDark,
-                _ => CustomMouseText.CursorThemeModeAuto
+                "Light" => CursorThemeMode.Light,
+                "Dark" => CursorThemeMode.Dark,
+                _ => CursorThemeMode.Auto
             };
-            SetStatus(string.Format(CustomMouseText.CursorThemeModeApplied, modeText), false);
-        }
-        else
-        {
-            SetStatus(CustomMouseText.StatusCursorApplyFailed, true);
-        }
 
-        UpdateSummaryCards();
+            var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
+            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+
+            if (applied)
+            {
+                var modeText = mode switch
+                {
+                    CursorThemeMode.Light => CustomMouseText.CursorThemeModeLight,
+                    CursorThemeMode.Dark => CustomMouseText.CursorThemeModeDark,
+                    _ => CustomMouseText.CursorThemeModeAuto
+                };
+                SetStatus(string.Format(CustomMouseText.CursorThemeModeApplied, modeText), false);
+            }
+            else
+            {
+                SetStatus(CustomMouseText.StatusCursorApplyFailed, true);
+            }
+
+            UpdateSummaryCards();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"{CustomMouseText.StatusCursorApplyFailed}: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"CursorThemeModeComboBox_SelectionChanged error: {ex.Message}", ex);
+        }
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _statusTextBlock is null)
-            return;
-
-        var speed = (int)Math.Round(_pointerSpeedSlider.Value);
-        var swapButtons = _swapButtonsCheckBox.IsChecked == true;
-
-        if (!_plugin.SetWindowsPointerSpeed(speed))
+        try
         {
-            SetStatus(CustomMouseText.StatusApplyPointerFail, true);
-            UpdateSummaryCards();
-            return;
-        }
+            if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _statusTextBlock is null)
+                return;
 
-        if (!_plugin.SetSwapButtons(swapButtons))
+            var speed = (int)Math.Round(_pointerSpeedSlider.Value);
+            var swapButtons = _swapButtonsCheckBox.IsChecked == true;
+
+            if (!_plugin.SetWindowsPointerSpeed(speed))
+            {
+                SetStatus(CustomMouseText.StatusApplyPointerFail, true);
+                UpdateSummaryCards();
+                return;
+            }
+
+            if (!_plugin.SetSwapButtons(swapButtons))
+            {
+                SetStatus(CustomMouseText.StatusApplySwapFail, true);
+                UpdateSummaryCards();
+                return;
+            }
+
+            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+            SetStatus(CustomMouseText.StatusWindowsApplied, false);
+            UpdateSummaryCards();
+        }
+        catch (Exception ex)
         {
-            SetStatus(CustomMouseText.StatusApplySwapFail, true);
-            UpdateSummaryCards();
-            return;
+            SetStatus($"Apply failed: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ApplyButton_Click error: {ex.Message}", ex);
         }
-
-        await _plugin.SaveSettingsAsync().ConfigureAwait(true);
-        SetStatus(CustomMouseText.StatusWindowsApplied, false);
-        UpdateSummaryCards();
     }
 
     private async void ApplyCursorThemeNowButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_statusTextBlock is null)
-            return;
+        try
+        {
+            if (_statusTextBlock is null)
+                return;
 
-        var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
-        SetStatus(
-            applied ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme) : CustomMouseText.StatusCursorApplyFailed,
-            !applied);
-        UpdateSummaryCards();
+            var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
+            SetStatus(
+                applied ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme) : CustomMouseText.StatusCursorApplyFailed,
+                !applied);
+            UpdateSummaryCards();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Apply cursor theme failed: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ApplyCursorThemeNowButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void ReloadButton_Click(object sender, RoutedEventArgs e)

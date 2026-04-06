@@ -121,6 +121,8 @@ Then:
 
 ## Documents
 
+- [Architecture](./Docs/ARCHITECTURE.md) — 系统架构与设计原则
+- [Coding Standards](./Docs/CODING_STANDARDS.md) — 代码风格与最佳实践
 - [Quick Start](./Docs/PLUGIN_QUICKSTART.md)
 - [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md)
 - [CHANGELOG](./CHANGELOG.md)

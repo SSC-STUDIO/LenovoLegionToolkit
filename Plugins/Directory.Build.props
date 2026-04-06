@@ -3,9 +3,9 @@
 
 
   <PropertyGroup>
-    <Version>1.0.35</Version>
-    <FileVersion>1.0.35</FileVersion>
-    <AssemblyVersion>1.0.35</AssemblyVersion>
+    <Version>1.0.36</Version>
+    <FileVersion>1.0.36</FileVersion>
+    <AssemblyVersion>1.0.36</AssemblyVersion>
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
     <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.Template'">True</IsTemplatePluginProject>

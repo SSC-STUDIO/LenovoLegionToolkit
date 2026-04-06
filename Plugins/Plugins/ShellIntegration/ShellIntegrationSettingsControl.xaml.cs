@@ -1,7 +1,9 @@
+using System;
 using System.Windows;
 #nullable enable
 
 using System.Windows.Controls;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
@@ -12,20 +14,8 @@ public partial class ShellIntegrationSettingsControl : UserControl
     public ShellIntegrationSettingsControl(ShellIntegrationPlugin plugin)
     {
         _plugin = plugin;
-        TryInitializeComponent();
+        WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         RefreshStatus();
-    }
-
-    private void TryInitializeComponent()
-    {
-        try
-        {
-            InitializeComponent();
-        }
-        catch
-        {
-            BuildFallbackUi();
-        }
     }
 
     private void BuildFallbackUi()
@@ -167,14 +157,32 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private async void EnableButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
-        RefreshStatus(success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed, !success);
+        try
+        {
+            var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
+            RefreshStatus(success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed, !success);
+        }
+        catch (Exception ex)
+        {
+            RefreshStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"EnableButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private async void DisableButton_Click(object sender, RoutedEventArgs e)
     {
-        var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
-        RefreshStatus(success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed, !success);
+        try
+        {
+            var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
+            RefreshStatus(success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed, !success);
+        }
+        catch (Exception ex)
+        {
+            RefreshStatus($"Error: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"DisableButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void OpenStyleButton_Click(object sender, RoutedEventArgs e)

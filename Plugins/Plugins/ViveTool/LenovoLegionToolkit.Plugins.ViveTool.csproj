@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <Version>1.1.9</Version>
     <FileVersion>1.1.9</FileVersion>
     <AssemblyVersion>1.1.9</AssemblyVersion>
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
     <Reference Include="Lenovo Legion Toolkit">
       <HintPath>$(HostWpfPath)</HintPath>
       <Private>false</Private>
@@ -59,26 +61,6 @@
     </EmbeddedResource>
     <!-- Resource.zh-hans.resx is automatically included by .NET SDK and will generate satellite assembly -->
   </ItemGroup>
-
-  <!-- Clean up all unwanted files and directories from plugin output directory -->
-  <Target Name="CleanupPluginFiles" AfterTargets="Build">
-    <ItemGroup>
-      <FilesToDelete Include="$(OutputPath)Lenovo Legion Toolkit.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.WPF.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Macro.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.Lib.Automation.*" />
-      <FilesToDelete Include="$(OutputPath)LenovoLegionToolkit.CLI.Lib.*" />
-      <FilesToDelete Include="$(OutputPath)*.deps.json" />
-    </ItemGroup>
-    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
-    
-    <!-- Remove unwanted language directories, but keep plugin language folders (zh-hans, etc.) -->
-    <!-- Note: Plugin language folders will be created automatically during build for satellite assemblies -->
-    
-    <!-- Remove tools directory if it exists -->
-    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
-  </Target>
 
 </Project>
 
