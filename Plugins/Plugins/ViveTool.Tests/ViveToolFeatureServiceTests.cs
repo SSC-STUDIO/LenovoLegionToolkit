@@ -354,11 +354,13 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public async Task ListFeaturesAsync_WithNoVivetool_ReturnsEmptyList()
     {
-        var service = CreateService();
-
-        // Ensure no vivetool available
+        // Create pathService and ensure vivetool path is cleared
         var pathService = new ViveToolPathService();
         await pathService.SetViveToolPathAsync(null!);
+
+        // Create service with the pathService that has no vivetool
+        var processService = new ViveToolProcessService();
+        var service = new ViveToolFeatureService(pathService, processService);
 
         var result = await service.ListFeaturesAsync();
 
