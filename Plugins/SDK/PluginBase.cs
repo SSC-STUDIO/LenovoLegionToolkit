@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.SDK;
 
@@ -11,26 +12,27 @@ namespace LenovoLegionToolkit.Plugins.SDK;
 /// </summary>
 public abstract class PluginBase : LenovoLegionToolkit.Lib.Plugins.PluginBase
 {
-    private static readonly Lazy<HttpClient> _sharedHttpClient =
-        new Lazy<HttpClient>(() => new HttpClient
-        {
-            Timeout = TimeSpan.FromSeconds(30)
-        });
-
     /// <summary>
     /// Gets a shared HttpClient instance for making HTTP requests.
     /// Use this instead of creating new HttpClient instances to prevent socket exhaustion.
     /// </summary>
-    protected HttpClient GetSharedHttpClient() => _sharedHttpClient.Value;
+    /// <remarks>
+    /// Delegates to HttpClientManager singleton to ensure consistent HttpClient usage across all plugins.
+    /// </remarks>
+    protected HttpClient GetSharedHttpClient() => HttpClientManager.GetSharedClient();
 
     /// <summary>
     /// Gets the runtime cancellation token if the plugin has an active runtime.
     /// Returns CancellationToken.None if no runtime is active.
     /// </summary>
-    protected CancellationToken GetRuntimeCancellationToken()
+    /// <remarks>
+    /// Override this method in derived classes to provide the actual runtime cancellation token.
+    /// Base implementation returns CancellationToken.None as a safe default.
+    /// </remarks>
+    protected virtual CancellationToken GetRuntimeCancellationToken()
     {
-        // Access the runtime through the plugin infrastructure
-        // This will be overridden by specific runtime implementations
+        // Base implementation returns None as safe default
+        // Derived classes with runtime implementations should override this
         return CancellationToken.None;
     }
 

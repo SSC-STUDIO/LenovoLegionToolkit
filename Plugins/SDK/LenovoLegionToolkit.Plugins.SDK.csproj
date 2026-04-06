@@ -19,6 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plugins\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
     <Reference Include="LenovoLegionToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>

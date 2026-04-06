@@ -20,6 +20,8 @@ public static class WpfFallbackHelper
     /// <returns>True if initialization succeeded, false if fallback was used</returns>
     public static bool TryInitializeComponent<T>(T control, Action fallbackBuilder) where T : FrameworkElement
     {
+        ArgumentNullException.ThrowIfNull(fallbackBuilder);
+
         try
         {
             var method = typeof(T).GetMethod("InitializeComponent", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);

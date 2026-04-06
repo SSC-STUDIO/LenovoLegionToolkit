@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation Index / 文档索引**: Updated `README.md` to reference new architecture and coding standards documentation / 更新 `README.md` 以引用新的架构和编码规范文档
 - **Test Quality Improvements / 测试质量改进**: Removed `ConfigureAwait(false)` from xUnit tests (xUnit1030), replaced `Assert.True().EndsWith()` with `Assert.EndsWith()` (xUnit2009), converted blocking `.Result` calls to async `await` (xUnit1031), fixed unused theory parameters (xUnit1026/xUnit1011) / 移除 xUnit 测试中的 `ConfigureAwait(false)`（xUnit1030），将 `Assert.True().EndsWith()` 替换为 `Assert.EndsWith()`（xUnit2009），将阻塞的 `.Result` 调用转换为异步 `await`（xUnit1031），修复未使用的理论参数（xUnit1026/xUnit1011）
 
+### Fixed / 修复
+- **SDK Dependency Architecture / SDK 依赖架构**: Fixed circular dependency between SDK and Shared projects by reversing the dependency flow; SDK now correctly references Shared instead of Shared referencing SDK, enabling proper HttpClient singleton usage across all plugins / 修复 SDK 与 Shared 项目间的循环依赖，反转依赖流向；SDK 现正确引用 Shared 而非 Shared 引用 SDK，使所有插件能正确使用 HttpClient singleton
+- **HttpClient Consolidation / HttpClient 合并**: Removed duplicate HttpClient singleton from SDK PluginBase; GetSharedHttpClient() now delegates to HttpClientManager.GetSharedClient() for centralized socket exhaustion prevention / 移除 SDK PluginBase 中的重复 HttpClient singleton；GetSharedHttpClient() 现委托给 HttpClientManager.GetSharedClient() 以集中防止 socket 耗尽
+- **Runtime Token API / 运行时令牌 API**: Made GetRuntimeCancellationToken() virtual in SDK PluginBase to allow derived classes with runtime implementations to properly override instead of misleading placeholder that always returns CancellationToken.None / 将 GetRuntimeCancellationToken() 在 SDK PluginBase 中改为 virtual，使有运行时实现的派生类能正确覆写，而非总是返回 CancellationToken.None 的误导性占位符
+- **Parameter Validation / 参数验证**: Added ArgumentNullException.ThrowIfNull() to WpfFallbackHelper.TryInitializeComponent() for proper fallbackBuilder parameter validation (CA1062) / 为 WpfFallbackHelper.TryInitializeComponent() 添加 ArgumentNullException.ThrowIfNull() 以正确验证 fallbackBuilder 参数（CA1062）
+
 ## [1.0.35] - 2026-03-31
 
 ### Changed / 变更
