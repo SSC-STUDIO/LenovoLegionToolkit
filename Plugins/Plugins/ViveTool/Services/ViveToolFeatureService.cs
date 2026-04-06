@@ -90,6 +90,14 @@ public class ViveToolFeatureService
 
     public async Task<FeatureFlagStatus?> GetFeatureStatusAsync(int featureId)
     {
+        // Validate feature ID
+        if (featureId <= 0)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"ViveTool: Invalid feature ID {featureId}, must be positive");
+            return null;
+        }
+
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
             return null;
