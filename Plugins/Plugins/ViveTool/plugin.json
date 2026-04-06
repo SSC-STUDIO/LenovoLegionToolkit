@@ -1,10 +1,10 @@
 ﻿{
-  "id": "vive-tool",
-  "name": "ViveTool",
-  "version": "1.1.8",
-  "minLLTVersion": "3.6.1",
-  "author": "SSC-STUDIO",
-  "isSystemPlugin": false,
-  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
+    "id":  "vive-tool",
+    "name":  "ViVeTool",
+    "version":  "1.1.9",
+    "minLLTVersion":  "3.6.1",
+    "author":  "SSC-STUDIO",
+    "isSystemPlugin":  false,
+    "repository":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+    "issues":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
 }
