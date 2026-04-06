@@ -30,12 +30,30 @@ public class PluginInstallationService
     /// <returns>True if installation was successful.</returns>
     public async Task<bool> ExtractAndInstallPluginAsync(string zipFilePath, string pluginsDir)
     {
+        // SECURITY: Validate zip file path
+        if (string.IsNullOrWhiteSpace(zipFilePath) || !File.Exists(zipFilePath))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("SECURITY: Invalid or non-existent ZIP file path");
+            return false;
+        }
+
+        // SECURITY: Validate plugins directory
+        if (string.IsNullOrWhiteSpace(pluginsDir))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("SECURITY: Invalid plugins directory");
+            return false;
+        }
+
         var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
 
         try
         {
             Directory.CreateDirectory(tempDir);
-            ZipFile.ExtractToDirectory(zipFilePath, tempDir);
+            
+            // SECURITY: Use safe ZIP extraction to prevent path traversal
+            ExtractZipSafely(zipFilePath, tempDir);
 
             // Analyze and fix the plugin structure
             var pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir).ConfigureAwait(false);
@@ -272,7 +290,26 @@ public class PluginInstallationService
     {
         try
         {
+            // SECURITY: Validate pluginDir is within allowed base directory
+            var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var pluginsBaseDir = Path.Combine(appBaseDir, "plugins");
+            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, pluginsBaseDir))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Plugin directory outside allowed path: {pluginDir}");
+                return null;
+            }
+
             var manifestPath = Path.Combine(pluginDir, "plugin.json");
+            
+            // SECURITY: Verify manifest path is still within allowed directory after combining
+            if (!PathSecurity.IsPathWithinAllowedDirectory(manifestPath, pluginsBaseDir))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Manifest path traversal detected: {manifestPath}");
+                return null;
+            }
+            
             if (!File.Exists(manifestPath))
                 return null;
 
@@ -349,6 +386,58 @@ public class PluginInstallationService
         foreach (var dir in Directory.GetDirectories(sourceDir))
         {
             CopyDirectory(dir, Path.Combine(targetDir, Path.GetFileName(dir)));
+        }
+    /// <summary>
+    /// Extracts ZIP file safely by validating entry paths to prevent path traversal attacks.
+    /// </summary>
+    private static void ExtractZipSafely(string zipFilePath, string extractDir)
+    {
+        using var archive = ZipFile.OpenRead(zipFilePath);
+        
+        foreach (var entry in archive.Entries)
+        {
+            // Skip directories (entries ending with /)
+            if (string.IsNullOrEmpty(entry.Name) && entry.FullName.EndsWith("/"))
+                continue;
+
+            // SECURITY: Validate entry path to prevent path traversal
+            // Check for dangerous patterns in entry full name
+            if (entry.FullName.Contains("..") || 
+                entry.FullName.Contains(':') || 
+                entry.FullName.StartsWith("/") || 
+                entry.FullName.StartsWith("\\"))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Skipping ZIP entry with suspicious path: {entry.FullName}");
+                continue;
+            }
+
+            // Build the destination path
+            var destinationPath = Path.Combine(extractDir, entry.FullName);
+            
+            // SECURITY: Verify the destination is within the extract directory
+            var fullExtractDir = Path.GetFullPath(extractDir);
+            var fullDestinationPath = Path.GetFullPath(destinationPath);
+            
+            if (!fullDestinationPath.StartsWith(fullExtractDir, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: ZIP entry escapes extract directory: {entry.FullName}");
+                continue;
+            }
+
+            // Create directory if needed
+            var destDir = Path.GetDirectoryName(destinationPath);
+            if (!string.IsNullOrEmpty(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+
+            // Extract the entry
+            if (!string.IsNullOrEmpty(entry.Name))
+            {
+                entry.ExtractToFile(destinationPath, overwrite: true);
+            }
         }
     }
 }

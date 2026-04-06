@@ -236,7 +236,25 @@ public class PluginManager : IPluginManager
 
     private bool IsPluginDll(string filePath, string? parentDirectoryName = null)
     {
+        // SECURITY: Validate file path is within plugins directory
+        var pluginsDirectory = GetPluginsDirectory();
+        if (!PathSecurity.IsPathWithinAllowedDirectory(filePath, pluginsDirectory))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"SECURITY: Plugin DLL path outside allowed directory: {filePath}");
+            return false;
+        }
+
         var fileName = Path.GetFileName(filePath);
+        
+        // SECURITY: Validate file name
+        if (!PathSecurity.IsValidFileName(fileName))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"SECURITY: Invalid plugin DLL file name: {fileName}");
+            return false;
+        }
+
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
         var fullPath = Path.GetFullPath(filePath);
         var fileInfo = new FileInfo(filePath);
@@ -375,6 +393,24 @@ public class PluginManager : IPluginManager
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {pluginFilePath}");
+
+            // SECURITY: Validate the plugin file path is within the allowed plugins directory
+            var pluginsDirectory = GetPluginsDirectory();
+            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginFilePath, pluginsDirectory))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Plugin file path is outside allowed directory: {pluginFilePath}");
+                return;
+            }
+
+            // SECURITY: Validate the file name itself
+            var fileName = Path.GetFileName(pluginFilePath);
+            if (!PathSecurity.IsValidFileName(fileName))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Invalid plugin file name: {fileName}");
+                return;
+            }
 
             // Load the assembly from bytes to avoid file locking (enables plugin updates without restart)
             Assembly? assembly = null;
@@ -668,6 +704,14 @@ public class PluginManager : IPluginManager
 
     public bool IsInstalled(string pluginId)
     {
+        // SECURITY: Validate plugin ID format
+        if (!PathSecurity.IsValidPluginId(pluginId))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IsInstalled({pluginId}): Invalid plugin ID format");
+            return false;
+        }
+
         var isInstalled = _applicationSettings.Store.InstalledExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase);
         
         if (Log.Instance.IsTraceEnabled)
@@ -686,14 +730,43 @@ public class PluginManager : IPluginManager
         try
         {
             var pluginsDirectory = GetPluginsDirectory();
-            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
-            var localPluginDirectory = Path.Combine(pluginsDirectory, "local", pluginId);
+            
+            // SECURITY: Sanitize pluginId for use in path construction
+            var sanitizedPluginId = PathSecurity.SanitizeFileName(pluginId);
+            if (string.IsNullOrWhiteSpace(sanitizedPluginId))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"IsInstalled({pluginId}): Sanitized plugin ID is empty");
+                return false;
+            }
+            
+            var pluginDirectory = Path.Combine(pluginsDirectory, sanitizedPluginId);
+            var localPluginDirectory = Path.Combine(pluginsDirectory, "local", sanitizedPluginId);
+            
+            // SECURITY: Verify constructed paths are within allowed directory
+            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDirectory, pluginsDirectory) ||
+                !PathSecurity.IsPathWithinAllowedDirectory(localPluginDirectory, pluginsDirectory))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected");
+                return false;
+            }
             
             // Check for alternative directory naming (LenovoLegionToolkit.Plugins.{Id})
             if (!Directory.Exists(pluginDirectory) && !Directory.Exists(localPluginDirectory))
             {
-                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}");
-                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", "")}");
+                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{sanitizedPluginId}");
+                var sanitizedNoHyphen = PathSecurity.SanitizeFileName(pluginId.Replace("-", ""));
+                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{sanitizedNoHyphen}");
+                
+                // SECURITY: Verify alternative paths are within allowed directory
+                if (!PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectory, pluginsDirectory) ||
+                    !PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectoryNoHyphen, pluginsDirectory))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected in alternative paths");
+                    return false;
+                }
                 
                 if (Directory.Exists(altPluginDirectory))
                 {
@@ -763,6 +836,14 @@ public class PluginManager : IPluginManager
 
     public void InstallPlugin(string pluginId)
     {
+        // SECURITY: Validate plugin ID format
+        if (!PathSecurity.IsValidPluginId(pluginId))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"InstallPlugin: Invalid plugin ID format: {pluginId}");
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
@@ -829,6 +910,14 @@ public class PluginManager : IPluginManager
 
     public bool UninstallPlugin(string pluginId)
     {
+        // SECURITY: Validate plugin ID format
+        if (!PathSecurity.IsValidPluginId(pluginId))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"UninstallPlugin: Invalid plugin ID format: {pluginId}");
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(pluginId))
             return false;
 
@@ -891,6 +980,14 @@ public class PluginManager : IPluginManager
 
     public bool PermanentlyDeletePlugin(string pluginId)
     {
+        // SECURITY: Validate plugin ID format
+        if (!PathSecurity.IsValidPluginId(pluginId))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"PermanentlyDeletePlugin: Invalid plugin ID format: {pluginId}");
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(pluginId))
             return false;
 

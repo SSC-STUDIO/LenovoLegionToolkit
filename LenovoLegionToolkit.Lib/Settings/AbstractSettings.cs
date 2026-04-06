@@ -32,6 +32,12 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     protected AbstractSettings(string filename)
     {
+        // SECURITY: Validate filename to prevent path traversal
+        if (!PathSecurity.IsValidFileName(filename))
+        {
+            throw new ArgumentException($"Invalid settings filename: {filename}", nameof(filename));
+        }
+
         JsonSerializerSettings = new()
         {
             Formatting = Formatting.Indented,
@@ -43,6 +49,12 @@ public abstract class AbstractSettings<T> where T : class, new()
 
         _fileName = filename;
         _settingsStorePath = Path.Combine(Folders.AppData, _fileName);
+        
+        // SECURITY: Verify the constructed path is within AppData directory
+        if (!PathSecurity.IsPathWithinAllowedDirectory(_settingsStorePath, Folders.AppData))
+        {
+            throw new InvalidOperationException($"Settings path escapes allowed directory: {_settingsStorePath}");
+        }
     }
 
     public void SynchronizeStore()

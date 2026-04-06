@@ -514,8 +514,24 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
+            // SECURITY: Validate plugin ID before using in path construction
+            if (!PathSecurity.IsValidPluginId(manifest.Id))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Invalid plugin ID format: {manifest.Id}");
+                return false;
+            }
+
             // Copy to plugins directory
             var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
+            
+            // SECURITY: Verify the constructed path is within allowed directory
+            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, _pluginsDirectory))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"SECURITY: Plugin directory path traversal detected: {pluginDir}");
+                return false;
+            }
             if (Directory.Exists(pluginDir))
             {
                 try
