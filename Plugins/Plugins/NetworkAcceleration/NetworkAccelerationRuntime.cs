@@ -139,6 +139,18 @@ public sealed class NetworkAccelerationRuntime
         }
     }
 
+    /// <summary>
+    /// Gets the cancellation token for the current runtime operation.
+    /// Returns CancellationToken.None if the runtime is not running.
+    /// </summary>
+    public CancellationToken GetCancellationToken()
+    {
+        lock (_gate)
+        {
+            return _cts?.Token ?? CancellationToken.None;
+        }
+    }
+
     private async Task RunAsync(CancellationToken cancellationToken)
     {
         var previousTotals = ReadTotals();

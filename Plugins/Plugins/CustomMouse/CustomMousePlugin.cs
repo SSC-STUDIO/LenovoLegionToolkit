@@ -150,6 +150,11 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         StopThemeWatcher();
     }
 
+    protected override CancellationToken GetRuntimeCancellationToken()
+    {
+        return _themeWatcher.GetCancellationToken();
+    }
+
     public bool SetDpi(int dpi)
     {
         if (dpi < 100 || dpi > 16000)

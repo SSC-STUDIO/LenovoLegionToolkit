@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Plugins.SDK;
 
@@ -65,6 +66,11 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     public override void Stop()
     {
         _runtime.Stop();
+    }
+
+    protected override CancellationToken GetRuntimeCancellationToken()
+    {
+        return _runtime.GetCancellationToken();
     }
 
     public bool SetPreferredMode(NetworkAccelerationMode mode)

@@ -167,7 +167,8 @@ public class ViveToolPathService
             var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
             try
             {
-                using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(60);
+                using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
+                    LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
                 var zipBytes = await httpClient.GetByteArrayAsync(ViveToolDownloadService.DefaultViveToolDownloadUrl).ConfigureAwait(false);
                 await File.WriteAllBytesAsync(tempZipPath, zipBytes).ConfigureAwait(false);
 

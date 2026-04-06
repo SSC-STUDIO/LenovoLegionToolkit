@@ -162,7 +162,7 @@ public class ViveToolDownloadService
     {
         try
         {
-            using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(30);
+            var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.GetSharedClient();
             var content = await httpClient.GetStringAsync(url).ConfigureAwait(false);
             return ParseImportContent(content);
         }
