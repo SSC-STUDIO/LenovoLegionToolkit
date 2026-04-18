@@ -36,10 +36,19 @@ jobs:
         shell: pwsh
         run: |
           [xml]$props = Get-Content -Raw 'Directory.Build.props'
-          $expectedVersion = $props.Project.PropertyGroup.ReleaseVersion
-          if ([string]::IsNullOrWhiteSpace($expectedVersion)) {
-            $group = $props.Project.PropertyGroup | Select-Object -First 1
-            $expectedVersion = "$($group.MajorVersion).$($group.MinorVersion).$($group.PatchVersion)"
+          $group = $props.Project.PropertyGroup | Select-Object -First 1
+
+          $expectedVersion = [string]$group.ReleaseVersion
+          if ([string]::IsNullOrWhiteSpace($expectedVersion) -or $expectedVersion -match '\$\(') {
+            $majorVersion = [string]$group.MajorVersion
+            $minorVersion = [string]$group.MinorVersion
+            $patchVersion = [string]$group.PatchVersion
+
+            if ([string]::IsNullOrWhiteSpace($majorVersion) -or [string]::IsNullOrWhiteSpace($minorVersion) -or [string]::IsNullOrWhiteSpace($patchVersion)) {
+              throw 'Could not resolve expected CLI version from Directory.Build.props.'
+            }
+
+            $expectedVersion = "$majorVersion.$minorVersion.$patchVersion"
           }
 
           $cliExePath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows\win-x64\llt.exe'
