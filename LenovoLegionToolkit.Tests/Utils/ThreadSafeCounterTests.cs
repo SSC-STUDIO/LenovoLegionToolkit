@@ -143,7 +143,7 @@ public class ThreadSafeCounterTests
     #region Thread Safety Tests
 
     [Fact]
-    public void Counter_WhenAccessedConcurrently_ShouldBeThreadSafe()
+    public async Task Counter_WhenAccessedConcurrently_ShouldBeThreadSafe()
     {
         // Arrange
         var counter = new ThreadSafeCounter();
@@ -168,18 +168,18 @@ public class ThreadSafeCounterTests
         };
 
         // Act
-        Task.WaitAll(tasks);
+        await Task.WhenAll(tasks);
 
         // Assert - Final counter should be close to expected value
         // After 1000 increments and 1000 decrements, counter should be 0
         // But due to timing, it could be anywhere between 0 and 1000
         // Just verify it doesn't throw exceptions
-        var result = counter.Decrement();
+        _ = counter.Decrement();
         // No exception means thread safety worked
     }
 
     [Fact]
-    public void Increment_WhenCalledFromMultipleThreads_ShouldNotOverflow()
+    public async Task Increment_WhenCalledFromMultipleThreads_ShouldNotOverflow()
     {
         // Arrange
         var counter = new ThreadSafeCounter();
@@ -195,7 +195,7 @@ public class ThreadSafeCounterTests
             });
         }
 
-        Task.WaitAll(tasks);
+        await Task.WhenAll(tasks);
 
         // Assert - Should have incremented 1000 times
         // Decrement 1000 times to verify

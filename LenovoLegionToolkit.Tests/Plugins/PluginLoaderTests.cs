@@ -54,6 +54,25 @@ public class PluginLoaderTests : IDisposable
         return path;
     }
 
+    private static MethodInfo GetPrivateStaticMethod(string methodName)
+    {
+        var method = typeof(PluginLoader).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+        return method!;
+    }
+
+    private static string InvokePrivateStringMethod(MethodInfo method, object? argument)
+    {
+        var result = method.Invoke(null, new object?[] { argument });
+        return result.Should().BeOfType<string>().Which;
+    }
+
+    private static bool InvokePrivateBoolMethod(MethodInfo method, object? argument)
+    {
+        var result = method.Invoke(null, new object?[] { argument });
+        return result.Should().BeOfType<bool>().Which;
+    }
+
     #region Constructor Tests
 
     [Fact]
@@ -295,12 +314,10 @@ public class PluginLoaderTests : IDisposable
     public void NormalizePluginToken_WithMixedCaseAndSymbols_ShouldNormalize()
     {
         // Arrange - Access private method via reflection
-        var method = typeof(PluginLoader).GetMethod("NormalizePluginToken",
-            BindingFlags.NonPublic | BindingFlags.Static);
-        method.Should().NotBeNull();
+        var method = GetPrivateStaticMethod("NormalizePluginToken");
 
         // Act
-        var result = (string)method!.Invoke(null, new object[] { "Test-Plugin_Name_v1.0" });
+        var result = InvokePrivateStringMethod(method, "Test-Plugin_Name_v1.0");
 
         // Assert
         result.Should().Be("testpluginnamev10");
@@ -310,11 +327,10 @@ public class PluginLoaderTests : IDisposable
     public void NormalizePluginToken_WithNull_ShouldReturnEmpty()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("NormalizePluginToken",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("NormalizePluginToken");
 
         // Act
-        var result = (string)method!.Invoke(null, new object[] { null });
+        var result = InvokePrivateStringMethod(method, null);
 
         // Assert
         result.Should().BeEmpty();
@@ -324,11 +340,10 @@ public class PluginLoaderTests : IDisposable
     public void NormalizePluginToken_WithWhitespace_ShouldReturnEmpty()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("NormalizePluginToken",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("NormalizePluginToken");
 
         // Act
-        var result = (string)method!.Invoke(null, new object[] { "   " });
+        var result = InvokePrivateStringMethod(method, "   ");
 
         // Assert
         result.Should().BeEmpty();
@@ -338,11 +353,10 @@ public class PluginLoaderTests : IDisposable
     public void NormalizePluginToken_WithOnlyLetters_ShouldReturnLowercase()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("NormalizePluginToken",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("NormalizePluginToken");
 
         // Act
-        var result = (string)method!.Invoke(null, new object[] { "TestPlugin" });
+        var result = InvokePrivateStringMethod(method, "TestPlugin");
 
         // Assert
         result.Should().Be("testplugin");
@@ -356,12 +370,10 @@ public class PluginLoaderTests : IDisposable
     public void IsVersionCompatible_WithValidMinimumVersion_ShouldCheckCompatibility()
     {
         // Arrange - Access private method via reflection
-        var method = typeof(PluginLoader).GetMethod("IsVersionCompatible",
-            BindingFlags.NonPublic | BindingFlags.Static);
-        method.Should().NotBeNull();
+        var method = GetPrivateStaticMethod("IsVersionCompatible");
 
         // Act - Test with a reasonable minimum version
-        var result = (bool)method!.Invoke(null, new object[] { "1.0.0" });
+        var result = InvokePrivateBoolMethod(method, "1.0.0");
 
         // Assert - Should return true (current version >= 1.0.0)
         result.Should().BeTrue();
@@ -371,11 +383,10 @@ public class PluginLoaderTests : IDisposable
     public void IsVersionCompatible_WithInvalidVersion_ShouldReturnTrue()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("IsVersionCompatible",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("IsVersionCompatible");
 
         // Act - Invalid version format should default to allowing
-        var result = (bool)method!.Invoke(null, new object[] { "invalid-version" });
+        var result = InvokePrivateBoolMethod(method, "invalid-version");
 
         // Assert - Returns true for backward compatibility
         result.Should().BeTrue();
@@ -385,11 +396,10 @@ public class PluginLoaderTests : IDisposable
     public void IsVersionCompatible_WithEmptyVersion_ShouldReturnTrue()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("IsVersionCompatible",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("IsVersionCompatible");
 
         // Act
-        var result = (bool)method!.Invoke(null, new object[] { "" });
+        var result = InvokePrivateBoolMethod(method, string.Empty);
 
         // Assert - Empty version should be allowed
         result.Should().BeTrue();
@@ -399,11 +409,10 @@ public class PluginLoaderTests : IDisposable
     public void IsVersionCompatible_WithNullVersion_ShouldReturnTrue()
     {
         // Arrange
-        var method = typeof(PluginLoader).GetMethod("IsVersionCompatible",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var method = GetPrivateStaticMethod("IsVersionCompatible");
 
         // Act
-        var result = (bool)method!.Invoke(null, new object[] { null });
+        var result = InvokePrivateBoolMethod(method, null);
 
         // Assert - Null should be allowed
         result.Should().BeTrue();
