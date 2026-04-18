@@ -18,15 +18,15 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
     - name: Install Inno Setup
       run: choco install innosetup -y
 
@@ -190,7 +190,7 @@ jobs:
         Set-Content -Path (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md") -Value $releaseNotes
 
     - name: Create GitHub release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         name: Lenovo Legion Toolkit v${{ env.VERSION }}
         body_path: release-assets/release-notes.md
@@ -202,7 +202,7 @@ jobs:
         prerelease: ${{ contains(github.ref_name, '-') }}
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: release-assets-v${{ env.VERSION }}
         path: release-assets/

@@ -316,14 +316,14 @@ public class ThrottleFirstDispatcherTests
     }
 
     [Fact]
-    public void Interval_ShouldNotChangeAfterDispatch()
+    public async Task Interval_ShouldNotChangeAfterDispatch()
     {
         // Arrange
         var expectedInterval = TimeSpan.FromSeconds(1);
         var dispatcher = new ThrottleFirstDispatcher(expectedInterval);
 
         // Act
-        dispatcher.DispatchAsync(async () => await Task.CompletedTask).Wait();
+        await dispatcher.DispatchAsync(async () => await Task.CompletedTask);
 
         // Assert
         dispatcher.Interval.Should().Be(expectedInterval);

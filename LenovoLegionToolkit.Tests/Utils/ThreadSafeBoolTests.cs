@@ -83,7 +83,7 @@ public class ThreadSafeBoolTests
     #region Thread Safety Tests
 
     [Fact]
-    public void Value_WhenAccessedConcurrently_ShouldBeThreadSafe()
+    public async Task Value_WhenAccessedConcurrently_ShouldBeThreadSafe()
     {
         // Arrange
         var threadSafeBool = new ThreadSafeBool();
@@ -105,14 +105,14 @@ public class ThreadSafeBoolTests
         }
 
         // Wait for all tasks
-        Task.WaitAll(tasks);
+        await Task.WhenAll(tasks);
 
         // Assert - No exceptions should occur
         errors.Should().Be(0);
     }
 
     [Fact]
-    public void Value_WhenSetFromMultipleThreads_ShouldMaintainConsistency()
+    public async Task Value_WhenSetFromMultipleThreads_ShouldMaintainConsistency()
     {
         // Arrange
         var threadSafeBool = new ThreadSafeBool();
@@ -132,7 +132,7 @@ public class ThreadSafeBoolTests
         };
 
         // Act
-        Task.WaitAll(tasks);
+        await Task.WhenAll(tasks);
 
         // Assert - Final value should be either true or false, not corrupted
         (threadSafeBool.Value == true || threadSafeBool.Value == false).Should().BeTrue();

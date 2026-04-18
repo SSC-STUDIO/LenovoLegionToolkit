@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- 升级 GitHub Actions 工作流依赖到支持 Node 24 的新版本，并修复 CI 中测试项目对预构建/预还原输出的脆弱依赖，减少后续 runner 运行时升级带来的流水线风险 / Upgraded GitHub Actions workflow dependencies to Node 24-capable versions and removed fragile CI assumptions about prebuilt/prerestored test outputs to reduce risk from future runner runtime upgrades
+- 清理测试项目中的 nullable 与 xUnit analyzer 告警，提升测试代码可维护性并减少 CI 噪声 / Cleaned nullable and xUnit analyzer warnings in the test project to improve test maintainability and reduce CI noise
+
 ## [3.6.13] - 2026-04-18
 
 ### Added / 新增
