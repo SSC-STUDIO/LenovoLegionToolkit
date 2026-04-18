@@ -30,7 +30,7 @@ jobs:
         run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
 
       - name: Test stable paths
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-restore --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx"
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx"
 
       - name: Smoke CLI help and version
         shell: pwsh
