@@ -34,10 +34,19 @@ jobs:
       shell: pwsh
       run: |
         [xml]$props = Get-Content -Raw 'Directory.Build.props'
-        $releaseVersion = $props.Project.PropertyGroup.ReleaseVersion
-        if ([string]::IsNullOrWhiteSpace($releaseVersion)) {
-          $group = $props.Project.PropertyGroup | Select-Object -First 1
-          $releaseVersion = "$($group.MajorVersion).$($group.MinorVersion).$($group.PatchVersion)"
+        $group = $props.Project.PropertyGroup | Select-Object -First 1
+
+        $releaseVersion = [string]$group.ReleaseVersion
+        if ([string]::IsNullOrWhiteSpace($releaseVersion) -or $releaseVersion -match '\$\(') {
+          $majorVersion = [string]$group.MajorVersion
+          $minorVersion = [string]$group.MinorVersion
+          $patchVersion = [string]$group.PatchVersion
+
+          if ([string]::IsNullOrWhiteSpace($majorVersion) -or [string]::IsNullOrWhiteSpace($minorVersion) -or [string]::IsNullOrWhiteSpace($patchVersion)) {
+            throw 'Could not resolve release version from Directory.Build.props.'
+          }
+
+          $releaseVersion = "$majorVersion.$minorVersion.$patchVersion"
         }
 
         $tagVersion = "${{ github.ref_name }}" -replace '^v', ''
