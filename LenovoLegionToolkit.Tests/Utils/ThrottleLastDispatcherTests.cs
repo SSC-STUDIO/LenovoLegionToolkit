@@ -101,7 +101,7 @@ public class ThrottleLastDispatcherTests
         for (int i = 0; i < 5; i++)
         {
             var value = i;
-            dispatcher.DispatchAsync(async () =>
+            _ = dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(10);
                 lastExecutedValue = value;

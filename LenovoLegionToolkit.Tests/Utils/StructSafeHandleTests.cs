@@ -379,7 +379,7 @@ public class StructSafeHandleTests
     #region Thread Safety Tests
 
     [Fact]
-    public void Dispose_WhenCalledConcurrently_ShouldNotThrow()
+    public async Task Dispose_WhenCalledConcurrently_ShouldNotThrow()
     {
         // Arrange
         var str = new SimpleStruct { Value = 42 };
@@ -393,7 +393,7 @@ public class StructSafeHandleTests
             System.Threading.Tasks.Task.Run(() => handle.Dispose())
         };
 
-        System.Threading.Tasks.Task.WaitAll(tasks);
+        await System.Threading.Tasks.Task.WhenAll(tasks);
 
         // Assert - No exception means success
         handle.IsClosed.Should().BeTrue();
