@@ -29,7 +29,7 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
 
         await TryValidateChecksum(package, tempPath, httpClient, token).ConfigureAwait(false);
 
-        var filename = SanitizeFileName(package.Title) + " - " + package.FileName;
+        var filename = SanitizeFileName(package.Title) + " - " + SanitizeFileName(Path.GetFileName(package.FileName));
         var finalPath = Path.Combine(location, filename);
 
         File.Move(tempPath, finalPath, true);

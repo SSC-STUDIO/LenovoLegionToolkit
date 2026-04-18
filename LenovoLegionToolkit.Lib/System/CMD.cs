@@ -80,6 +80,10 @@ public static class CMD
             if (!string.IsNullOrWhiteSpace(arguments))
                 cmd.StartInfo.Arguments = arguments;
 
+            var workingDirectory = GetWorkingDirectory(file);
+            if (!string.IsNullOrWhiteSpace(workingDirectory))
+                cmd.StartInfo.WorkingDirectory = workingDirectory;
+
             if (environment is not null)
             {
                 foreach (var (key, value) in environment)
@@ -237,6 +241,35 @@ public static class CMD
 
         return executableName.Equals("powershell", StringComparison.OrdinalIgnoreCase)
             || executableName.Equals("pwsh", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Returns a safe working directory for shell executables when the current directory is a UNC path.
+    /// </summary>
+    private static string? GetWorkingDirectory(string fileName)
+    {
+        var currentDirectory = Environment.CurrentDirectory;
+        if (string.IsNullOrWhiteSpace(currentDirectory))
+            return null;
+
+        if (!currentDirectory.StartsWith(@"\\", StringComparison.Ordinal))
+            return currentDirectory;
+
+        var executableName = Path.GetFileName(fileName);
+        if (string.IsNullOrWhiteSpace(executableName))
+            return currentDirectory;
+
+        if (executableName.Equals("cmd.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("cmd", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("powershell", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("pwsh.exe", StringComparison.OrdinalIgnoreCase)
+            || executableName.Equals("pwsh", StringComparison.OrdinalIgnoreCase))
+        {
+            return Environment.SystemDirectory;
+        }
+
+        return currentDirectory;
     }
 
     /// <summary>

@@ -73,7 +73,24 @@ public partial class PackageControl : IProgress<float>
     {
         // Actual downloaded file name format: "{SanitizedTitle} - {FileName}"
         var sanitizedTitle = SanitizeFileName(_package.Title);
-        return $"{sanitizedTitle} - {_package.FileName}";
+        return $"{sanitizedTitle} - {GetSafePackageFileName()}";
+    }
+
+    private string GetSafePackageFileName() => SanitizeFileName(Path.GetFileName(_package.FileName));
+
+    private string? FindDownloadedPackagePath(string downloadPath)
+    {
+        if (!Directory.Exists(downloadPath))
+            return null;
+
+        var expectedName = GetActualFileName();
+        foreach (var candidate in Directory.EnumerateFiles(downloadPath, "*", SearchOption.TopDirectoryOnly))
+        {
+            if (string.Equals(Path.GetFileName(candidate), expectedName, StringComparison.OrdinalIgnoreCase))
+                return candidate;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -218,10 +235,10 @@ public partial class PackageControl : IProgress<float>
             // If still not found, try searching for matching files
             if (!File.Exists(filePath) && Directory.Exists(downloadPath))
             {
-                var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                if (files.Length > 0)
+                var locatedPath = FindDownloadedPackagePath(downloadPath);
+                if (!string.IsNullOrEmpty(locatedPath))
                 {
-                    filePath = files[0];
+                    filePath = locatedPath;
                     _actualDownloadedFilePath = filePath;
                 }
             }
@@ -287,10 +304,10 @@ public partial class PackageControl : IProgress<float>
 
         if (!File.Exists(filePath) && Directory.Exists(downloadPath))
         {
-            var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-            if (files.Length > 0)
+            var locatedPath = FindDownloadedPackagePath(downloadPath);
+            if (!string.IsNullOrEmpty(locatedPath))
             {
-                filePath = files[0];
+                filePath = locatedPath;
                 _actualDownloadedFilePath = filePath;
             }
         }
@@ -473,11 +490,11 @@ public partial class PackageControl : IProgress<float>
                 var downloadPath = _getDownloadPath();
                 if (Directory.Exists(downloadPath))
                 {
-                    var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                    if (files.Length > 0)
+                    var locatedPath = FindDownloadedPackagePath(downloadPath);
+                    if (!string.IsNullOrEmpty(locatedPath))
                     {
                         // Found matching files, use the first one
-                        filePath = files[0];
+                        filePath = locatedPath;
                         _actualDownloadedFilePath = filePath;
                         
                         if (Log.Instance.IsTraceEnabled)
@@ -536,11 +553,11 @@ public partial class PackageControl : IProgress<float>
             var downloadPath = _getDownloadPath();
             if (Directory.Exists(downloadPath))
             {
-                var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                if (files.Length > 0)
+                var locatedPath = FindDownloadedPackagePath(downloadPath);
+                if (!string.IsNullOrEmpty(locatedPath))
                 {
                     // Found matching files, use the first one
-                    filePath = files[0];
+                    filePath = locatedPath;
                     _actualDownloadedFilePath = filePath;
                     
                     if (Log.Instance.IsTraceEnabled)
@@ -560,10 +577,23 @@ public partial class PackageControl : IProgress<float>
                 return;
             }
             
+            var expectedInstallerFileName = GetActualFileName();
+            var configuredDownloadPath = _getDownloadPath();
+            if (!InstallerLaunchPathValidator.TryValidateForExecution(filePath, configuredDownloadPath, expectedInstallerFileName, out var safeInstallerPath, out var validationError))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Installer path validation failed. [filePath={filePath}, downloadPath={configuredDownloadPath}, reason={validationError}]");
+
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, validationError, SnackbarType.Error);
+                Status = PackageStatus.NotStarted;
+                UpdateStatusDisplay();
+                return;
+            }
+
             // 运行安装程序
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = filePath,
+                FileName = safeInstallerPath,
                 UseShellExecute = true,
                 Verb = "runas" // 以管理员权限运行
             };

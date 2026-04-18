@@ -3,8 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
-      - "[0-9]*"
+      - "v*.*.*"
 
 jobs:
   build:
@@ -12,6 +11,10 @@ jobs:
       contents: write
 
     runs-on: windows-2022
+    env:
+      BUILD_OUTPUT: Build
+      INSTALLER_OUTPUT: BuildInstaller
+      RELEASE_OUTPUT: release-assets
 
     steps:
     - name: Checkout
@@ -26,22 +29,171 @@ jobs:
       uses: microsoft/setup-msbuild@v2
     - name: Install Inno Setup
       run: choco install innosetup -y
-    - name: Prepare Version
+
+    - name: Resolve release version
       shell: pwsh
       run: |
-        $version = "${{ github.ref_name }}" -replace "^v", ""
-        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-    - name: Build
-      run: .\make.bat ${{ env.VERSION }}
-    - name: Release
+        [xml]$props = Get-Content -Raw 'Directory.Build.props'
+        $releaseVersion = $props.Project.PropertyGroup.ReleaseVersion
+        if ([string]::IsNullOrWhiteSpace($releaseVersion)) {
+          $group = $props.Project.PropertyGroup | Select-Object -First 1
+          $releaseVersion = "$($group.MajorVersion).$($group.MinorVersion).$($group.PatchVersion)"
+        }
+
+        $tagVersion = "${{ github.ref_name }}" -replace '^v', ''
+        if ($tagVersion -ne $releaseVersion) {
+          throw "Git tag version '$tagVersion' does not match Directory.Build.props version '$releaseVersion'."
+        }
+
+        "VERSION=$releaseVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "SETUP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "ZIP_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_win-x64.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "HASH_ASSET=LenovoLegionToolkit_v$releaseVersion" + "_SHA256.txt" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Restore solution
+      run: dotnet restore LenovoLegionToolkit.sln
+
+    - name: Publish release payload
+      shell: pwsh
+      run: |
+        Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT -ErrorAction SilentlyContinue
+
+        dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
+        if ($LASTEXITCODE -ne 0) { throw "WPF publish failed." }
+
+        dotnet publish LenovoLegionToolkit.SpectrumTester/LenovoLegionToolkit.SpectrumTester.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
+        if ($LASTEXITCODE -ne 0) { throw "Spectrum Tester publish failed." }
+
+        dotnet publish LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
+        if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
+
+    - name: Smoke CLI help and version
+      shell: pwsh
+      run: |
+        $cliExePath = Join-Path $PWD "$env:BUILD_OUTPUT\llt.exe"
+        $cliDllPath = Join-Path $PWD "$env:BUILD_OUTPUT\llt.dll"
+        if (-not (Test-Path $cliExePath)) {
+          throw "CLI executable not found at $cliExePath"
+        }
+        if (-not (Test-Path $cliDllPath)) {
+          throw "CLI assembly not found at $cliDllPath"
+        }
+
+        $help = (& dotnet $cliDllPath --help 2>&1 | Out-String).Trim()
+        if ($LASTEXITCODE -ne 0) {
+          throw "CLI help failed with exit code $LASTEXITCODE`n$help"
+        }
+        if ($help -notmatch 'Usage:' -or $help -notmatch 'Commands:') {
+          throw "CLI help output missing expected sections.`n$help"
+        }
+
+        $version = (& dotnet $cliDllPath --version 2>&1 | Out-String).Trim()
+        if ($LASTEXITCODE -ne 0) {
+          throw "CLI version failed with exit code $LASTEXITCODE`n$version"
+        }
+        if (-not $version.StartsWith($env:VERSION)) {
+          throw "CLI version '$version' does not start with expected '$env:VERSION'."
+        }
+
+    - name: Build installer
+      shell: pwsh
+      run: |
+        iscc MakeInstaller.iss /DMyAppVersion=$env:VERSION
+        if ($LASTEXITCODE -ne 0) {
+          throw "Inno Setup build failed."
+        }
+
+    - name: Package release assets
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Path $env:RELEASE_OUTPUT -Force | Out-Null
+
+        $setupSource = Join-Path $PWD "$env:INSTALLER_OUTPUT\LenovoLegionToolkitSetup.exe"
+        if (-not (Test-Path $setupSource)) {
+          throw "Installer not found at $setupSource"
+        }
+
+        $setupTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:SETUP_ASSET"
+        Copy-Item $setupSource $setupTarget
+
+        $buildDir = Join-Path $PWD $env:BUILD_OUTPUT
+        if (-not (Test-Path $buildDir)) {
+          throw "Build output not found at $buildDir"
+        }
+
+        $zipTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:ZIP_ASSET"
+        Compress-Archive -Path (Join-Path $buildDir '*') -DestinationPath $zipTarget -CompressionLevel Optimal
+
+        $hashTarget = Join-Path $PWD "$env:RELEASE_OUTPUT\$env:HASH_ASSET"
+        $hashLines = @(
+          "{0}  {1}" -f (Get-FileHash $setupTarget -Algorithm SHA256).Hash, [System.IO.Path]::GetFileName($setupTarget)
+          "{0}  {1}" -f (Get-FileHash $zipTarget -Algorithm SHA256).Hash, [System.IO.Path]::GetFileName($zipTarget)
+        )
+        Set-Content -Path $hashTarget -Value $hashLines
+
+    - name: Generate release notes
+      shell: pwsh
+      run: |
+        $lines = Get-Content 'CHANGELOG.md'
+        $versionPattern = '^## \[' + [regex]::Escape($env:VERSION) + '\] - (?<date>\d{4}-\d{2}-\d{2})$'
+        $startIndex = -1
+        $endIndex = $lines.Count
+        $releaseDate = $null
+
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+          if ($lines[$i] -match $versionPattern) {
+            $startIndex = $i + 1
+            $releaseDate = $Matches['date']
+            break
+          }
+        }
+
+        if ($startIndex -lt 0 -or [string]::IsNullOrWhiteSpace($releaseDate)) {
+          throw "Could not find CHANGELOG section for version $env:VERSION"
+        }
+
+        for ($i = $startIndex; $i -lt $lines.Count; $i++) {
+          if ($lines[$i] -match '^## \[') {
+            $endIndex = $i
+            break
+          }
+        }
+
+        $section = ($lines[$startIndex..($endIndex - 1)] -join "`n").Trim()
+        $releaseNotes = @"
+# Lenovo Legion Toolkit v$env:VERSION
+
+Release date: $releaseDate
+
+$section
+
+## Downloads / 下载
+- $env:SETUP_ASSET
+- $env:ZIP_ASSET
+- $env:HASH_ASSET
+
+## Compatibility / 兼容性
+- OS: Windows 10/11 x64
+
+## Verification / 校验
+- `CertUtil -hashfile <file> SHA256`
+"@
+        Set-Content -Path (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md") -Value $releaseNotes
+
+    - name: Create GitHub release
       uses: softprops/action-gh-release@v2
       with:
-        files: BuildInstaller/LenovoLegionToolkitSetup.exe
+        name: Lenovo Legion Toolkit v${{ env.VERSION }}
+        body_path: release-assets/release-notes.md
+        files: |
+          release-assets/${{ env.SETUP_ASSET }}
+          release-assets/${{ env.ZIP_ASSET }}
+          release-assets/${{ env.HASH_ASSET }}
         fail_on_unmatched_files: true
-        prerelease: ${{ contains(github.ref, '-') }}
+        prerelease: ${{ contains(github.ref_name, '-') }}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: installer
-        path: BuildInstaller/LenovoLegionToolkitSetup.exe
+        name: release-assets-v${{ env.VERSION }}
+        path: release-assets/
