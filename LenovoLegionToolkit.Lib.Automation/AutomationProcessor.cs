@@ -157,7 +157,7 @@ public class AutomationProcessor(
     {
         AutomationPipeline? pipeline;
         using (await _ioLock.LockAsync().ConfigureAwait(false))
-            pipeline = _pipelines.Where(p => p.Trigger is null).FirstOrDefault(p => p.Id == pipelineId);
+            pipeline = _pipelines.FirstOrDefault(p => p.Trigger is null && p.Id == pipelineId);
 
         if (pipeline is null)
             return;

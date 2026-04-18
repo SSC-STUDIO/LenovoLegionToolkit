@@ -45,4 +45,16 @@ public static class Drivers
 
         return _energy;
     }
+
+    /// <summary>
+    /// Releases the energy driver handle. Should be called during application shutdown.
+    /// </summary>
+    public static void Cleanup()
+    {
+        lock (Lock)
+        {
+            _energy?.Dispose();
+            _energy = null;
+        }
+    }
 }

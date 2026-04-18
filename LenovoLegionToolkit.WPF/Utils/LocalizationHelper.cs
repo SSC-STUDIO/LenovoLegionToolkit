@@ -24,7 +24,26 @@ public static class LocalizationHelper
     private static readonly string LanguagePath = Path.Combine(Folders.AppData, "lang");
 
     private static readonly CultureInfo DefaultLanguage = new("en");
-    public static event EventHandler? PluginResourceCulturesChanged;
+    private static readonly object _eventLock = new();
+    private static EventHandler? _pluginResourceCulturesChanged;
+
+    public static event EventHandler? PluginResourceCulturesChanged
+    {
+        add
+        {
+            lock (_eventLock)
+            {
+                _pluginResourceCulturesChanged += value;
+            }
+        }
+        remove
+        {
+            lock (_eventLock)
+            {
+                _pluginResourceCulturesChanged -= value;
+            }
+        }
+    }
 
     public static readonly CultureInfo[] Languages = [
         DefaultLanguage,
@@ -248,7 +267,12 @@ public static class LocalizationHelper
         }
         finally
         {
-            PluginResourceCulturesChanged?.Invoke(null, EventArgs.Empty);
+            EventHandler? handler;
+            lock (_eventLock)
+            {
+                handler = _pluginResourceCulturesChanged;
+            }
+            handler?.Invoke(null, EventArgs.Empty);
         }
     }
 

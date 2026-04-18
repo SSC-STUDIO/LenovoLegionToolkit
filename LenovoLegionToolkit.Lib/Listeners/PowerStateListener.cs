@@ -16,7 +16,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
 
-public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
+public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>, IDisposable
 {
     public class ChangedEventArgs(PowerStateEvent powerStateEvent, bool powerAdapterStateChanged) : EventArgs
     {
@@ -36,6 +36,7 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
     private bool _started;
     private HPOWERNOTIFY _handle;
     private PowerAdapterStatus? _lastPowerAdapterState;
+    private bool _disposed;
 
     public event EventHandler<ChangedEventArgs>? Changed;
 
@@ -56,7 +57,7 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
 
     public async Task StartAsync()
     {
-        if (_started)
+        if (_started || _disposed)
             return;
 
         _lastPowerAdapterState = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
@@ -69,12 +70,35 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
 
     public Task StopAsync()
     {
+        if (!_started)
+            return Task.CompletedTask;
+
         SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
         UnRegisterSuspendResumeNotification();
 
         _started = false;
 
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            StopAsync().GetAwaiter().GetResult();
+            _recipientHandle.Dispose();
+        }
+
+        _disposed = true;
     }
 
 private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeChangedEventArgs e)

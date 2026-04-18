@@ -340,6 +340,9 @@ private static void UpdateAvailableAction()
             {
                 try
                 {
+                    // Unsubscribe from MessagingCenter to prevent memory leak
+                    MessagingCenter.Unsubscribe<NotificationMessage>(this);
+
                     foreach (var window in _windows)
                     {
                         window?.Close(true);

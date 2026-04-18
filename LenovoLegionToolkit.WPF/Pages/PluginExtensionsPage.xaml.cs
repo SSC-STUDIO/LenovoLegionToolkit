@@ -31,8 +31,8 @@ public partial class PluginExtensionsPage
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
-    private readonly PluginRepositoryService _pluginRepositoryService;
-    
+    private readonly PluginRepositoryService _pluginRepositoryService = IoCContainer.Resolve<PluginRepositoryService>();
+
 private string _currentSearchText = string.Empty;
     private string _currentFilter = "All";
     private List<IPlugin> _allPlugins = new();
@@ -45,8 +45,6 @@ private string _currentSearchText = string.Empty;
 
     public PluginExtensionsPage()
     {
-        _pluginRepositoryService = new PluginRepositoryService(_pluginManager);
-
         InitializeComponent();
         Loaded += PluginExtensionsPage_Loaded;
         IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;

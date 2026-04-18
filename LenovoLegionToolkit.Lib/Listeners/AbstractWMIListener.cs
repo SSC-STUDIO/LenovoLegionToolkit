@@ -6,10 +6,11 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Listeners;
 
 public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Action<TRawValue>, IDisposable> listen)
-    : IListener<TEventArgs>
+    : IListener<TEventArgs>, IDisposable
     where TEventArgs : EventArgs
 {
     private IDisposable? _disposable;
+    private bool _disposed;
     private bool _isUnsupported;
 
     public event EventHandler<TEventArgs>? Changed;
@@ -108,5 +109,24 @@ private async Task HandlerAsync(TRawValue properties)
     private void Handler(TRawValue properties)
     {
         _ = HandlerAsync(properties);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            StopAsync().GetAwaiter().GetResult();
+        }
+
+        _disposed = true;
     }
 }

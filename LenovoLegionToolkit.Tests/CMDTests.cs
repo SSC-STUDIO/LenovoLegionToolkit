@@ -25,6 +25,8 @@ public class CMDTests
         // Assert
         exitCode.Should().Be(0);
         output.Should().Contain("test");
+        output.Should().NotContain("UNC paths are not supported");
+        output.Should().NotContain("current directory");
     }
 
     [Fact]

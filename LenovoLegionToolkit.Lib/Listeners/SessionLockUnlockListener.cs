@@ -9,7 +9,7 @@ using Windows.Win32.System.RemoteDesktop;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
 
-public class SessionLockUnlockListener : IListener<SessionLockUnlockListener.ChangedEventArgs>
+public class SessionLockUnlockListener : IListener<SessionLockUnlockListener.ChangedEventArgs>, IDisposable
 {
     public class ChangedEventArgs(bool locked) : EventArgs
     {
@@ -18,10 +18,15 @@ public class SessionLockUnlockListener : IListener<SessionLockUnlockListener.Cha
 
     public event EventHandler<ChangedEventArgs>? Changed;
 
+    private bool _disposed;
+
     public bool? IsLocked { get; private set; }
 
     public Task StartAsync()
     {
+        if (_disposed)
+            return Task.CompletedTask;
+
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         return Task.CompletedTask;
     }
@@ -71,5 +76,24 @@ public class SessionLockUnlockListener : IListener<SessionLockUnlockListener.Cha
 
         PInvoke.WTSFreeMemory(ppBuffer);
         return sessionFlags;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        }
+
+        _disposed = true;
     }
 }

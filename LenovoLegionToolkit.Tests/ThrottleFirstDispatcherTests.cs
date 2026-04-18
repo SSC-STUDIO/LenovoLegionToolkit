@@ -186,13 +186,13 @@ public class ThrottleFirstDispatcherTests
     }
     
     [Fact]
-    public async Task DispatchAsync_TaskWithException_ShouldNotUpdateLastEventTime()
+    public async Task DispatchAsync_TaskWithException_ShouldStillUpdateLastEventTime()
     {
-        // Arrange
+        // Arrange - Use interval > DateTime.UtcNow precision (16ms on Windows)
         var interval = TimeSpan.FromMilliseconds(100);
         var dispatcher = new ThrottleFirstDispatcher(interval);
         var exception = new InvalidOperationException("Test exception");
-        
+
         // Act - First task throws exception
         try
         {
@@ -202,15 +202,17 @@ public class ThrottleFirstDispatcherTests
         {
             // Expected exception for test scenario, no action needed
         }
-        
-        // Try to execute another task immediately
+
+        // Try to execute another task immediately - should be throttled since _lastEvent was updated
         bool secondTaskExecuted = false;
         await dispatcher.DispatchAsync(() => {
             secondTaskExecuted = true;
             return Task.CompletedTask;
         });
-        
-        // Assert - Second task should have executed because first task failed
-        secondTaskExecuted.Should().BeTrue();
+
+        // Assert - Second task should NOT have executed because _lastEvent was updated
+        // ThrottleFirstDispatcher records execution time BEFORE the task runs,
+        // so throttling applies regardless of whether the task throws
+        secondTaskExecuted.Should().BeFalse();
     }
 }

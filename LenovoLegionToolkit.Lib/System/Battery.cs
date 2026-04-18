@@ -13,9 +13,9 @@ namespace LenovoLegionToolkit.Lib.System;
 public static class Battery
 {
     private static readonly ApplicationSettings Settings = IoCContainer.Resolve<ApplicationSettings>();
-    private static int MinDischargeRate { get; set; } = int.MaxValue;
-    private static int MaxDischargeRate { get; set; }
-
+    private static readonly object _batteryDataLock = new();
+    private static int _minDischargeRate = int.MaxValue;
+    private static int _maxDischargeRate = 0;
     private static double _totalTemp = 0;
     private static int _tempSampleCount = 0;
 
@@ -49,20 +49,23 @@ public static class Battery
             status = GetBatteryStatus(batteryTag);
         }
 
-        if (status.Value.Rate == 0
-            || (status.Value.Rate > 0 && (MinDischargeRate < 0 || MaxDischargeRate < 0))
-            || (status.Value.Rate < 0 && (MinDischargeRate > 0 || MaxDischargeRate > 0)))
+        lock (_batteryDataLock)
         {
-            MinDischargeRate = int.MaxValue;
-            MaxDischargeRate = 0;
-        }
+            if (status.Value.Rate == 0
+                || (status.Value.Rate > 0 && (_minDischargeRate < 0 || _maxDischargeRate < 0))
+                || (status.Value.Rate < 0 && (_minDischargeRate > 0 || _maxDischargeRate > 0)))
+            {
+                _minDischargeRate = int.MaxValue;
+                _maxDischargeRate = 0;
+            }
 
-        if (status.Value.Rate != 0)
-        {
-            if (Math.Abs(status.Value.Rate) < Math.Abs(MinDischargeRate))
-                MinDischargeRate = status.Value.Rate;
-            if (Math.Abs(status.Value.Rate) > Math.Abs(MaxDischargeRate))
-                MaxDischargeRate = status.Value.Rate;
+            if (status.Value.Rate != 0)
+            {
+                if (Math.Abs(status.Value.Rate) < Math.Abs(_minDischargeRate))
+                    _minDischargeRate = status.Value.Rate;
+                if (Math.Abs(status.Value.Rate) > Math.Abs(_maxDischargeRate))
+                    _maxDischargeRate = status.Value.Rate;
+            }
         }
     }
 
@@ -81,31 +84,39 @@ public static class Battery
 
         SetMinMaxDischargeRate(status);
 
-        try
+        double minDischargeRate;
+        double maxDischargeRate;
+        double? avgTemp;
+        lock (_batteryDataLock)
         {
-            var lenovoBatteryInformation = FindLenovoBatteryInformation();
-            if (lenovoBatteryInformation.HasValue)
+            try
             {
-                temperatureC = DecodeTemperatureC(lenovoBatteryInformation.Value.Temperature);
-                
-                // Update average temp
-                if (temperatureC.HasValue)
+                var lenovoBatteryInformation = FindLenovoBatteryInformation();
+                if (lenovoBatteryInformation.HasValue)
                 {
-                    _totalTemp += temperatureC.Value;
-                    _tempSampleCount++;
+                    temperatureC = DecodeTemperatureC(lenovoBatteryInformation.Value.Temperature);
+
+                    // Update average temp
+                    if (temperatureC.HasValue)
+                    {
+                        _totalTemp += temperatureC.Value;
+                        _tempSampleCount++;
+                    }
+
+                    manufactureDate = DecodeDateTime(lenovoBatteryInformation.Value.ManufactureDate);
+                    firstUseDate = DecodeDateTime(lenovoBatteryInformation.Value.FirstUseDate);
                 }
-                
-                manufactureDate = DecodeDateTime(lenovoBatteryInformation.Value.ManufactureDate);
-                firstUseDate = DecodeDateTime(lenovoBatteryInformation.Value.FirstUseDate);
             }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get temperature of battery.", ex);
+            }
+
+            avgTemp = _tempSampleCount > 0 ? _totalTemp / _tempSampleCount : null;
+            minDischargeRate = (status.Rate == 0) ? 0 : _minDischargeRate;
+            maxDischargeRate = _maxDischargeRate;
         }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get temperature of battery.", ex);
-        }
-        
-        double? avgTemp = _tempSampleCount > 0 ? _totalTemp / _tempSampleCount : null;
 
         return new BatteryInformation(
             powerStatus.ACLineStatus == 1,
@@ -113,8 +124,8 @@ public static class Battery
             (int)powerStatus.BatteryLifeTime,
             (int)powerStatus.BatteryFullLifeTime,
             status.Rate,
-            (status.Rate == 0) ? 0 : MinDischargeRate,
-            MaxDischargeRate,
+            (int)minDischargeRate,
+            (int)maxDischargeRate,
             (int)status.Capacity,
             (int)information.DesignedCapacity,
             (int)information.FullChargedCapacity,

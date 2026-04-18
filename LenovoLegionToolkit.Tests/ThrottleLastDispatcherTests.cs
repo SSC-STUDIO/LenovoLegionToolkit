@@ -664,7 +664,7 @@ public class ThrottleLastDispatcherTests
                 throw new InvalidOperationException("First attempt");
             });
         }
-        catch { }
+        catch { /* Expected exception from first attempt - test validates retry behavior */ }
         
         await dispatcher.DispatchAsync(() => {
             attemptCount++;

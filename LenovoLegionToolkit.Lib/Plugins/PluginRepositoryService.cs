@@ -33,16 +33,16 @@ public class PluginRepositoryService : IDisposable
     public event EventHandler<string>? DownloadCompleted;
     public event EventHandler<string>? DownloadFailed;
 
-    public PluginRepositoryService(IPluginManager pluginManager)
+    public PluginRepositoryService(IPluginManager pluginManager, HttpClientFactory httpClientFactory)
     {
         _pluginManager = pluginManager;
-        _httpClient = new HttpClient();
+        _httpClient = httpClientFactory.Create();
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "LenovoLegionToolkit-PluginManager");
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 
         _pluginsDirectory = GetPluginsDirectory();
         _tempDownloadDirectory = Path.Combine(Path.GetTempPath(), "LLTPluginDownloads");
-        
+
         if (!Directory.Exists(_tempDownloadDirectory))
         {
             Directory.CreateDirectory(_tempDownloadDirectory);

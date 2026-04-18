@@ -3,7 +3,7 @@
 namespace LenovoLegionToolkit.Lib.Features.Hybrid;
 
 public class IGPUModeFeature(IGPUModeGamezoneFeature feature1, IGPUModeCapabilityFeature feature2, IGPUModeFeatureFlagsFeature feature3)
-    : AbstractCompositeFeature<IGPUModeState>(feature1, feature2, feature3)
+    : AbstractCompositeFeature<IGPUModeState>(feature1, feature2, feature3), IIGPUModeFeature
 {
     public bool ExperimentalGPUWorkingMode { get; set; }
 

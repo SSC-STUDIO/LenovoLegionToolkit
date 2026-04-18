@@ -11,7 +11,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace LenovoLegionToolkit.Lib.Macro;
 
-public class MacroController
+public class MacroController : IDisposable
 {
     public class RecorderReceivedEventArgs : EventArgs
     {
@@ -33,6 +33,7 @@ public class MacroController
     private readonly MacroSettings _settings;
 
     private HHOOK _kbHook;
+    private bool _disposed;
 
     public event EventHandler<RecorderReceivedEventArgs>? RecorderReceived;
     public event EventHandler<RecorderStoppedEventArgs>? RecorderStopped;
@@ -189,5 +190,26 @@ public class MacroController
         }
 
         return sequence with { Events = [.. macroEvents] };
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            Stop();
+            _recorder.Received -= Recorder_Received;
+            _recorder.Stopped -= Recorder_Stopped;
+        }
+
+        _disposed = true;
     }
 }

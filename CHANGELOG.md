@@ -10,6 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- 升级 GitHub Actions 工作流依赖到支持 Node 24 的新版本，并修复 CI 中测试项目对预构建/预还原输出的脆弱依赖，减少后续 runner 运行时升级带来的流水线风险 / Upgraded GitHub Actions workflow dependencies to Node 24-capable versions and removed fragile CI assumptions about prebuilt/prerestored test outputs to reduce risk from future runner runtime upgrades
+- 清理测试项目中的 nullable 与 xUnit analyzer 告警，提升测试代码可维护性并减少 CI 噪声 / Cleaned nullable and xUnit analyzer warnings in the test project to improve test maintainability and reduce CI noise
+
+## [3.6.13] - 2026-04-18
+
+### Added / 新增
+- 为插件加载新增可配置的签名校验模式，在开发与生产场景下都能更明确地拦截未签名插件 / Added configurable signature validation modes for plugin loading so unsigned plugins are blocked more explicitly in both development and production scenarios
+
+### Fixed / 修复
+- 恢复 Panel Logo 灯效功能及其宿主/CLI 注册链路，避免受支持设备上的相关控制项缺失或引入构建回归 / Restored Panel Logo lighting features and their host/CLI registrations so supported devices no longer lose the controls or hit the related build regression
+- 为下载的更新包增加 SHA256 完整性校验，避免篡改包在安装前通过校验 / Added SHA256 integrity verification for downloaded update packages so tampered payloads are rejected before installation
+
+### Improved / 改进
+- 发布下载现在提供带版本号的安装包、便携 ZIP 和 SHA256 清单，便于校验、归档与问题排查 / Release downloads now ship with versioned setup, portable ZIP, and SHA256 manifest assets for easier verification, archiving, and support
+
 ## [3.6.12] - 2026-03-28
 
 ### Fixed / 修复

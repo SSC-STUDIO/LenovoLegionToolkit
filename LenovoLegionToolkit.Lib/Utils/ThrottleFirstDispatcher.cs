@@ -42,9 +42,9 @@ public class ThrottleFirstDispatcher
             if (_tag is not null && Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Allowing... [tag={_tag}, diff={diff.TotalMilliseconds}ms]");
 
-            await task().ConfigureAwait(false);
-
             _lastEvent = DateTime.UtcNow;
+
+            await task().ConfigureAwait(false);
         }
     }
 
