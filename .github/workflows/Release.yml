@@ -161,23 +161,23 @@ jobs:
 
         $section = ($lines[$startIndex..($endIndex - 1)] -join "`n").Trim()
         $releaseNotes = @"
-# Lenovo Legion Toolkit v$env:VERSION
+        # Lenovo Legion Toolkit v$env:VERSION
 
-Release date: $releaseDate
+        Release date: $releaseDate
 
-$section
+        $section
 
-## Downloads / 下载
-- $env:SETUP_ASSET
-- $env:ZIP_ASSET
-- $env:HASH_ASSET
+        ## Downloads / 下载
+        - $env:SETUP_ASSET
+        - $env:ZIP_ASSET
+        - $env:HASH_ASSET
 
-## Compatibility / 兼容性
-- OS: Windows 10/11 x64
+        ## Compatibility / 兼容性
+        - OS: Windows 10/11 x64
 
-## Verification / 校验
-- `CertUtil -hashfile <file> SHA256`
-"@
+        ## Verification / 校验
+        - `CertUtil -hashfile <file> SHA256`
+        "@
         Set-Content -Path (Join-Path $PWD "$env:RELEASE_OUTPUT\release-notes.md") -Value $releaseNotes
 
     - name: Create GitHub release
