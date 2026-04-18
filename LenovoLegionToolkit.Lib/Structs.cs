@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using LenovoLegionToolkit.Lib.Extensions;
 using Newtonsoft.Json;
 using Octokit;
@@ -965,10 +966,68 @@ public readonly struct Update(Release release)
     public string Description { get; } = release.Body;
     public DateTimeOffset Date { get; } = release.PublishedAt ?? release.CreatedAt;
     public string? Url { get; } = release.Assets
-        .Where(ra => ra.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) || 
-                     ra.Name.EndsWith("setup.exe", StringComparison.InvariantCultureIgnoreCase))
+        .Where(IsSetupAsset)
         .Select(ra => ra.BrowserDownloadUrl)
         .FirstOrDefault();
+
+    /// <summary>
+    /// SHA256 hash of the update package parsed from the release body.
+    /// </summary>
+    public string? Sha256Hash { get; } = ExtractSha256Hash(release);
+
+    /// <summary>
+    /// URL to the SHA256 hash file for integrity verification.
+    /// Supports both current `_SHA256.txt` release assets and legacy `.sha256` files.
+    /// </summary>
+    public string? Sha256Url { get; } = release.Assets
+        .Where(IsSha256Asset)
+        .Select(ra => ra.BrowserDownloadUrl)
+        .FirstOrDefault();
+
+    private static bool IsSetupAsset(ReleaseAsset releaseAsset) =>
+        releaseAsset.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.InvariantCultureIgnoreCase) ||
+        releaseAsset.Name.EndsWith("setup.exe", StringComparison.InvariantCultureIgnoreCase);
+
+    private static bool IsSha256Asset(ReleaseAsset releaseAsset) =>
+        releaseAsset.Name.EndsWith(".sha256", StringComparison.InvariantCultureIgnoreCase) ||
+        releaseAsset.Name.EndsWith("_SHA256.txt", StringComparison.InvariantCultureIgnoreCase);
+
+    private static string? ExtractSha256Hash(Release release)
+    {
+        if (string.IsNullOrWhiteSpace(release.Body))
+            return null;
+
+        var packageFileNames = release.Assets
+            .Where(IsSetupAsset)
+            .Select(ra => ra.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        foreach (var line in release.Body.Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (packageFileNames.Length != 0 &&
+                !packageFileNames.Any(fileName => line.Contains(fileName, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            var fileSpecificHash = TryExtractFirstSha256Hash(line);
+            if (fileSpecificHash is not null)
+                return fileSpecificHash;
+        }
+
+        return TryExtractFirstSha256Hash(release.Body);
+    }
+
+    private static string? TryExtractFirstSha256Hash(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var match = Regex.Match(text, @"(?<![a-fA-F0-9])([a-fA-F0-9]{64})(?![a-fA-F0-9])", RegexOptions.IgnoreCase);
+        return match.Success
+            ? match.Groups[1].Value.ToLowerInvariant()
+            : null;
+    }
 
     private static Version ParseVersion(string tagName)
     {

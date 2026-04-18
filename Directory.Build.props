@@ -1,49 +1,32 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project>
   <PropertyGroup>
-    
     <MajorVersion>3</MajorVersion>
     <MinorVersion>6</MinorVersion>
-    <PatchVersion>12</PatchVersion>
-    
-    
-    <GitCommitCount>0</GitCommitCount>
+    <PatchVersion>13</PatchVersion>
+    <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
+    <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
     <GitCommitHash>unknown</GitCommitHash>
-    
-    
-    <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</Version>
-    <FileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</FileVersion>
-    <AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</AssemblyVersion>
-    <InformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-$(GitCommitHash)+$(Configuration)</InformationalVersion>
+
+    <Version Condition="'$(Version)' == ''">$(ReleaseVersion)</Version>
+    <FileVersion Condition="'$(FileVersion)' == ''">$(WindowsVersion)</FileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(WindowsVersion)</AssemblyVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <InformationalVersion>$(Version)+$(GitCommitHash)</InformationalVersion>
   </PropertyGroup>
-  
-  
+
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">
-    <Exec Command="git rev-list --count HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCountRaw" />
-    </Exec>
     <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHashRaw" />
     </Exec>
-    
-    
+
     <PropertyGroup>
-      <GitCommitCountRaw>$([System.String]::new($(GitCommitCountRaw)).Trim())</GitCommitCountRaw>
       <GitCommitHashRaw>$([System.String]::new($(GitCommitHashRaw)).Trim())</GitCommitHashRaw>
     </PropertyGroup>
-    
-    
+
     <PropertyGroup>
-      <GitCommitCount Condition=" '$(GitCommitCountRaw)' != '' ">$(GitCommitCountRaw)</GitCommitCount>
       <GitCommitHash Condition=" '$(GitCommitHashRaw)' != '' ">$(GitCommitHashRaw)</GitCommitHash>
-    </PropertyGroup>
-    
-    
-    <PropertyGroup>
-      <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</Version>
-      <FileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</FileVersion>
-      <AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).$(GitCommitCount)</AssemblyVersion>
-      <InformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)-$(GitCommitHash)+$(Configuration)+build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</InformationalVersion>
+      <InformationalVersion>$(Version)+$(GitCommitHash)</InformationalVersion>
     </PropertyGroup>
   </Target>
 </Project>

@@ -18,7 +18,7 @@
 		<RollForward>Major</RollForward>
 	</PropertyGroup>
 	<PropertyGroup>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationManifest>App.manifest</ApplicationManifest>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>
 		<SatelliteResourceLanguages>ar;bg;cs;de;en;el;es;fr;hu;it;ja;lv;nl;nl-nl;pl;pt;pt-br;ro;ru;sk;uk;tr;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>

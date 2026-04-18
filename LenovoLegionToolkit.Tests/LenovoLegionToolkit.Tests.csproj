@@ -32,4 +32,10 @@
     <ProjectReference Include="..\Tools\MainAppPluginUi.Smoke\MainAppPluginUi.Smoke.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
