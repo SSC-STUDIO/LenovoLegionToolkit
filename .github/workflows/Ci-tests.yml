@@ -11,15 +11,60 @@ on:
       - 'plugins/**'
 
 jobs:
-  build-and-test:
-    runs-on: windows-latest
+  build-test-and-smoke:
+    runs-on: windows-2022
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      - name: Restore
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+
+      - name: Restore solution
+        run: dotnet restore LenovoLegionToolkit.sln
+
+      - name: Build solution
+        run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
+
+      - name: Test stable paths
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx"
+
+      - name: Smoke CLI help and version
+        shell: pwsh
+        run: |
+          [xml]$props = Get-Content -Raw 'Directory.Build.props'
+          $expectedVersion = $props.Project.PropertyGroup.ReleaseVersion
+          if ([string]::IsNullOrWhiteSpace($expectedVersion)) {
+            $group = $props.Project.PropertyGroup | Select-Object -First 1
+            $expectedVersion = "$($group.MajorVersion).$($group.MinorVersion).$($group.PatchVersion)"
+          }
+
+          $cliExePath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows\win-x64\llt.exe'
+          $cliDllPath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows\win-x64\llt.dll'
+          if (-not (Test-Path $cliExePath)) {
+            throw "CLI executable not found at $cliExePath"
+          }
+          if (-not (Test-Path $cliDllPath)) {
+            throw "CLI assembly not found at $cliDllPath"
+          }
+
+          $help = (& dotnet $cliDllPath --help 2>&1 | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0) {
+            throw "CLI help failed with exit code $LASTEXITCODE`n$help"
+          }
+          if ($help -notmatch 'Usage:' -or $help -notmatch 'Commands:') {
+            throw "CLI help output missing expected sections.`n$help"
+          }
+
+          $version = (& dotnet $cliDllPath --version 2>&1 | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0) {
+            throw "CLI version failed with exit code $LASTEXITCODE`n$version"
+          }
+          if (-not $version.StartsWith($expectedVersion)) {
+            throw "CLI version '$version' does not start with expected '$expectedVersion'."
+          }
+
+          Write-Host "CLI smoke passed for version $version"

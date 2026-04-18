@@ -6,19 +6,23 @@ using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features.Hybrid;
 
-public class HybridModeFeature(GSyncFeature gSyncFeature, IGPUModeFeature igpuModeFeature, DGPUNotify dgpuNotify) : IFeature<HybridModeState>
+public class HybridModeFeature(
+    IGSyncFeature gSyncFeature,
+    IIGPUModeFeature igpuModeFeature,
+    IDGPUNotify dgpuNotify,
+    ICompatibilityService compatibilityService) : IFeature<HybridModeState>
 {
     private readonly CancellationTokenSource _ensureDGPUEjectedIfNeededCancellationTokenSource = new();
 
     public async Task<bool> IsSupportedAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var mi = await compatibilityService.GetMachineInformationAsync().ConfigureAwait(false);
         return mi.Properties.SupportsGSync || mi.Properties.SupportsIGPUMode;
     }
 
     public async Task<HybridModeState[]> GetAllStatesAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var mi = await compatibilityService.GetMachineInformationAsync().ConfigureAwait(false);
 
         return (mi.Properties.SupportsGSync, mi.Properties.SupportsIGPUMode) switch
         {

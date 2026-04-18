@@ -591,3 +591,7 @@ UPDATE_CHANGELOG.md
 findings.md
 progress.md
 task_plan.md
+
+# Local AI assistant scratch/report directories (do not publish)
+.claude/
+docs/superpowers/

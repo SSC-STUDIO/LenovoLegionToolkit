@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features.PanelLogo;
@@ -7,8 +7,8 @@ public class PanelLogoLenovoLightingBacklightFeature() : AbstractLenovoLightingF
 {
     public override async Task<bool> IsSupportedAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        if (mi.Properties.IsExcludedFromPanelLogoLenovoLighting)
+        var machineInformation = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        if (machineInformation.Properties.IsExcludedFromPanelLogoLenovoLighting)
             return false;
 
         return await base.IsSupportedAsync().ConfigureAwait(false);
