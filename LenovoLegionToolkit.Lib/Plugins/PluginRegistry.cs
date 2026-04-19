@@ -137,10 +137,12 @@ public class PluginRegistry : IPluginRegistry
             return;
 
         IPlugin? plugin = null;
+        PluginMetadata? metadata = null;
         lock (_lock)
         {
             if (_registeredPlugins.TryGetValue(pluginId, out plugin))
             {
+                _pluginMetadataCache.TryGetValue(pluginId, out metadata);
                 _registeredPlugins.Remove(pluginId);
                 _pluginMetadataCache.Remove(pluginId);
                 _startedPlugins.Remove(pluginId);
@@ -159,7 +161,17 @@ public class PluginRegistry : IPluginRegistry
                     Log.Instance.Trace($"Failed to stop plugin {pluginId}: {ex.Message}", ex);
             }
 
-            plugin.OnUninstalled();
+            // Preserve metadata access during uninstall callback
+            // Some plugins may need to read their own metadata during cleanup
+            try
+            {
+                plugin.OnUninstalled();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to call OnUninstalled for plugin {pluginId}: {ex.Message}", ex);
+            }
         }
 
         if (Log.Instance.IsTraceEnabled)
