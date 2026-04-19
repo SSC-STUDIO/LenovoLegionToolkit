@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
@@ -69,33 +70,17 @@ public sealed class NetworkAccelerationRuntime
 
     public void Stop()
     {
-        CancellationTokenSource? cts;
-        Task? loopTask;
-
-        lock (_gate)
-        {
-            cts = _cts;
-            loopTask = _loopTask;
-            _cts = null;
-            _loopTask = null;
-        }
-
-        if (cts == null)
-            return;
-
         try
         {
-            cts.Cancel();
-            // Use WaitAsync to avoid blocking the calling thread
-            _ = loopTask?.WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+            StopAsync().GetAwaiter().GetResult();
+        }
+        catch (OperationCanceledException)
+        {
+            // Cancellation is expected during shutdown.
         }
         catch
         {
             // Ignore stop exceptions to keep shutdown resilient.
-        }
-        finally
-        {
-            cts.Dispose();
         }
     }
 
@@ -122,7 +107,18 @@ public sealed class NetworkAccelerationRuntime
         {
             cts.Cancel();
             if (loopTask != null)
-                await loopTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+            {
+                try
+                {
+                    await loopTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+                }
+                catch (TimeoutException)
+                {
+                    // Loop task didn't complete within timeout - log but don't block shutdown
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
+                }
+            }
         }
         catch (OperationCanceledException)
         {
@@ -153,19 +149,31 @@ public sealed class NetworkAccelerationRuntime
 
     private async Task RunAsync(CancellationToken cancellationToken)
     {
-        var previousTotals = ReadTotals();
+        NetworkTotals? previousTotals = null;
+        if (TryReadTotals(out var initialTotals))
+            previousTotals = initialTotals;
+
         var previousTimestamp = DateTime.UtcNow;
 
         using var timer = new PeriodicTimer(SampleInterval);
 
         while (await timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
         {
-            var currentTotals = ReadTotals();
             var now = DateTime.UtcNow;
+            if (!TryReadTotals(out var currentTotals))
+                continue;
+
+            if (previousTotals is null)
+            {
+                previousTotals = currentTotals;
+                previousTimestamp = now;
+                continue;
+            }
+
             var elapsedSeconds = Math.Max((now - previousTimestamp).TotalSeconds, 0.001);
 
-            var downloadDelta = Math.Max(0, currentTotals.BytesReceived - previousTotals.BytesReceived);
-            var uploadDelta = Math.Max(0, currentTotals.BytesSent - previousTotals.BytesSent);
+            var downloadDelta = Math.Max(0, currentTotals.BytesReceived - previousTotals.Value.BytesReceived);
+            var uploadDelta = Math.Max(0, currentTotals.BytesSent - previousTotals.Value.BytesSent);
 
             var sample = new NetworkAccelerationSample(
                 now,
@@ -200,7 +208,7 @@ public sealed class NetworkAccelerationRuntime
         }
     }
 
-    private static NetworkTotals ReadTotals()
+    private static bool TryReadTotals(out NetworkTotals totals)
     {
         try
         {
@@ -221,11 +229,16 @@ public sealed class NetworkAccelerationRuntime
                 bytesSent += stats.BytesSent;
             }
 
-            return new NetworkTotals(bytesReceived, bytesSent);
+            totals = new NetworkTotals(bytesReceived, bytesSent);
+            return true;
         }
-        catch
+        catch (Exception ex)
         {
-            return new NetworkTotals(0, 0);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"NetworkAcceleration: Failed to read network totals: {ex.Message}", ex);
+
+            totals = default;
+            return false;
         }
     }
 

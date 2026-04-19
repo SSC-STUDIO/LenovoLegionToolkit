@@ -24,6 +24,7 @@ public static class HttpClientManager
     /// <summary>
     /// Creates a new HttpClient with custom timeout for specific use cases.
     /// Use sparingly - prefer GetSharedClient() for most scenarios.
+    /// Caller is responsible for disposing the returned client.
     /// </summary>
     /// <param name="timeoutSeconds">Timeout in seconds (must be positive)</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when timeoutSeconds is zero or negative</exception>
@@ -36,5 +37,17 @@ public static class HttpClientManager
         {
             Timeout = TimeSpan.FromSeconds(timeoutSeconds)
         };
+    }
+
+    /// <summary>
+    /// Disposes the shared HttpClient instance.
+    /// Should be called during application shutdown to release resources.
+    /// </summary>
+    public static void DisposeSharedClient()
+    {
+        if (_sharedClient.IsValueCreated)
+        {
+            _sharedClient.Value.Dispose();
+        }
     }
 }
