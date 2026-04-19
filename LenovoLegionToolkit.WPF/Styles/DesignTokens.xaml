@@ -17,6 +17,12 @@
     <CornerRadius x:Key="CornerRadiusXL">16</CornerRadius>
     <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
 
+    <!-- Font Size Tokens -->
+    <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
+    <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
+    <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
+    <sys:Double x:Key="FontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
+
     <!-- Icon Size Tokens -->
     <sys:Double x:Key="IconSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
     <sys:Double x:Key="IconSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
