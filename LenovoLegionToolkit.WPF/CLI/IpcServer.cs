@@ -68,15 +68,7 @@ public class IpcServer(
     {
         try
         {
-            var security = new PipeSecurity();
-            
-            // 只允许管理员组成员访问
-            var adminIdentity = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
-            security.AddAccessRule(new(adminIdentity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
-            
-            // 拒绝其他所有用户
-            var everyoneIdentity = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-            security.AddAccessRule(new(everyoneIdentity, PipeAccessRights.ReadWrite, AccessControlType.Deny));
+            var security = CreatePipeSecurity();
 
             await using var pipe = NamedPipeServerStreamAcl.Create(LenovoLegionToolkit.CLI.Lib.Constants.PIPE_NAME,
                 PipeDirection.InOut,
@@ -131,6 +123,17 @@ public class IpcServer(
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Unknown failure.", ex);
         }
+    }
+
+    private static PipeSecurity CreatePipeSecurity()
+    {
+        var security = new PipeSecurity();
+        security.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
+
+        var adminIdentity = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
+        security.AddAccessRule(new(adminIdentity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+
+        return security;
     }
 
     private async Task<IpcResponse> HandleRequest(IpcRequest req)

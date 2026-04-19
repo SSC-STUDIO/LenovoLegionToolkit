@@ -93,17 +93,33 @@ public class AutomationPipeline
     }
 
     private IEnumerable<IAutomationStep> GetAllSteps(List<AutomationPipeline> pipelines)
+        => GetAllSteps(pipelines, [Id]);
+
+    private IEnumerable<IAutomationStep> GetAllSteps(List<AutomationPipeline> pipelines, HashSet<Guid> pipelineChain)
     {
         foreach (var step in Steps)
         {
-            if (step is QuickActionAutomationStep qas)
+            if (step is QuickActionAutomationStep qas && qas.PipelineId is Guid pipelineId)
             {
-                var matchingPipeline = pipelines.FirstOrDefault(p => p.Id != Id && p.Id == qas.PipelineId && p.AllTriggers.IsEmpty());
+                var matchingPipeline = pipelines.FirstOrDefault(p => p.Id == pipelineId && p.AllTriggers.IsEmpty());
                 if (matchingPipeline is null)
+                {
+                    yield return step;
                     continue;
+                }
 
-                foreach (var matchingPipelineStep in matchingPipeline.GetAllSteps(pipelines))
-                    yield return matchingPipelineStep;
+                if (!pipelineChain.Add(matchingPipeline.Id))
+                    throw new InvalidOperationException($"Detected a Quick Action cycle while expanding pipeline '{matchingPipeline.Name ?? matchingPipeline.Id.ToString()}'.");
+
+                try
+                {
+                    foreach (var matchingPipelineStep in matchingPipeline.GetAllSteps(pipelines, pipelineChain))
+                        yield return matchingPipelineStep;
+                }
+                finally
+                {
+                    _ = pipelineChain.Remove(matchingPipeline.Id);
+                }
             }
 
             yield return step;

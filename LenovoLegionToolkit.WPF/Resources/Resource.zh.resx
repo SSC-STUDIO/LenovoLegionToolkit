@@ -950,6 +950,9 @@
   <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
     <value>文件未找到，请先下载</value>
   </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>安装程序以退出代码 {0} 结束</value>
+  </data>
   <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
     <value>安装已启动</value>
   </data>

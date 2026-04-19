@@ -193,31 +193,55 @@ public partial class MainWindow
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Closing started...");
 
+        var suppressClosingEventHandler = SuppressClosingEventHandler;
+        var minimizeOnClose = !suppressClosingEventHandler && _applicationSettings.Store.MinimizeOnClose;
+
+        // Cancel before awaiting persistence so the close request cannot slip through.
+        if (minimizeOnClose)
+            e.Cancel = true;
+
         var stopwatch = Stopwatch.StartNew();
 
-        await SaveSizeAsync();
+        try
+        {
+            await SaveSizeAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"SaveSize failed during closing.", ex);
+        }
+        finally
+        {
+            stopwatch.Stop();
+        }
 
-        stopwatch.Stop();
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"SaveSize completed in {stopwatch.ElapsedMilliseconds}ms");
 
-        if (SuppressClosingEventHandler)
-            return;
-
-        if (_applicationSettings.Store.MinimizeOnClose)
+        try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Minimizing...");
+            if (suppressClosingEventHandler)
+                return;
 
-            WindowState = WindowState.Minimized;
-            e.Cancel = true;
-        }
-        else
-        {
+            if (minimizeOnClose)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Minimizing...");
+
+                WindowState = WindowState.Minimized;
+                return;
+            }
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Closing...");
 
             await App.Current.ShutdownAsync(true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed while handling window close.", ex);
         }
     }
 

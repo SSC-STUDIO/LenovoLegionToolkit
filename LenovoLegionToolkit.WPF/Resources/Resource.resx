@@ -2674,6 +2674,9 @@ Supported formats are: {1}.</value>
   <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
     <value>File not found, please download first</value>
   </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Installer exited with code {0}</value>
+  </data>
   <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
     <value>Installation started</value>
   </data>
