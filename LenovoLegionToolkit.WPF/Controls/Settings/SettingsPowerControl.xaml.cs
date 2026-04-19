@@ -39,6 +39,7 @@ public partial class SettingsPowerControl
         var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
 
         // Check GodModeFnQSwitchable capability and get value if supported
+        // Note: If WMI call fails, the card will be hidden to avoid showing broken UI
         var hasGodModeFnQ = mi.Features[CapabilityID.GodModeFnQSwitchable];
         int? fnQValue = null;
 
@@ -50,6 +51,7 @@ public partial class SettingsPowerControl
             }
             catch (Exception ex)
             {
+                // Log failure but continue - card will be hidden since fnQValue remains null
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
             }

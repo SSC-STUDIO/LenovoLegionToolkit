@@ -17,7 +17,8 @@
     <CornerRadius x:Key="CornerRadiusXL">16</CornerRadius>
     <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
 
-    <!-- Font Size Tokens -->
+    <!-- Font Size Tokens (for Button and other controls that need FontSize property) -->
+    <!-- Note: Typography.xaml defines TextBlock styles with same font sizes for text content -->
     <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
     <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
     <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
