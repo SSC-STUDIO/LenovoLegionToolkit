@@ -38,26 +38,25 @@ public partial class SettingsPowerControl
         var mi = miTask.Result;
         var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
 
-        try
-        {
-            if (mi.Features[CapabilityID.GodModeFnQSwitchable])
-            {
-                var fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
-                _godModeFnQSwitchableCard.Visibility = Visibility.Visible;
-                _godModeFnQSwitchableToggle.IsChecked = fnQValue == 1;
-            }
-            else
-            {
-                _godModeFnQSwitchableCard.Visibility = Visibility.Collapsed;
-            }
-        }
-        catch (Exception ex)
-        {
-            _godModeFnQSwitchableCard.Visibility = Visibility.Collapsed;
+        // Check GodModeFnQSwitchable capability and get value if supported
+        var hasGodModeFnQ = mi.Features[CapabilityID.GodModeFnQSwitchable];
+        int? fnQValue = null;
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
+        if (hasGodModeFnQ)
+        {
+            try
+            {
+                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
+            }
         }
+
+        _godModeFnQSwitchableCard.Visibility = hasGodModeFnQ && fnQValue.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        _godModeFnQSwitchableToggle.IsChecked = fnQValue == 1;
 
         _powerModeMappingComboBox.SetItems(Enum.GetValues<PowerModeMappingMode>(), _settings.Store.PowerModeMappingMode, t => t.GetDisplayName());
 
