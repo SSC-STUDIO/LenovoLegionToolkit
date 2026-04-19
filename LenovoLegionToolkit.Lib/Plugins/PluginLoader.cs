@@ -49,6 +49,19 @@ public class PluginLoader : IPluginLoader
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {dllPath}");
 
+            var normalizedDllPath = Path.GetFullPath(dllPath);
+            var pluginDirectory = Path.GetDirectoryName(normalizedDllPath);
+
+            // Register AssemblyResolve handler early to handle dependencies that may be loaded
+            // during signature validation or assembly loading.
+            // Note: X509Certificate.CreateFromSignedFile uses native APIs and typically doesn't
+            // trigger managed assembly resolution, but we register early for defense in depth.
+            if (!string.IsNullOrWhiteSpace(pluginDirectory))
+            {
+                assemblyResolveHandler = (_, args) => ResolvePluginDependencyAssembly(args.Name, normalizedDllPath, pluginDirectory, signatureValidator);
+                AppDomain.CurrentDomain.AssemblyResolve += assemblyResolveHandler;
+            }
+
             // Validate plugin signature before loading (security check)
             var signatureResult = await signatureValidator.ValidateAsync(dllPath);
             if (!signatureResult.IsValid)
@@ -57,14 +70,6 @@ public class PluginLoader : IPluginLoader
                     Log.Instance.Trace($"Plugin signature validation failed for {dllPath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
 
                 return null;
-            }
-
-            var normalizedDllPath = Path.GetFullPath(dllPath);
-            var pluginDirectory = Path.GetDirectoryName(normalizedDllPath);
-            if (!string.IsNullOrWhiteSpace(pluginDirectory))
-            {
-                assemblyResolveHandler = (_, args) => ResolvePluginDependencyAssembly(args.Name, normalizedDllPath, pluginDirectory, signatureValidator);
-                AppDomain.CurrentDomain.AssemblyResolve += assemblyResolveHandler;
             }
 
             // Load the assembly from bytes to avoid file locking
@@ -168,6 +173,10 @@ public class PluginLoader : IPluginLoader
             if (string.IsNullOrWhiteSpace(candidatePath) || !File.Exists(candidatePath))
                 return null;
 
+            // Note: AssemblyResolve event handlers must return synchronously.
+            // We use GetAwaiter().GetResult() here because the event signature requires a synchronous return.
+            // This is a known limitation of AppDomain.AssemblyResolve - the alternative would be
+            // to skip signature validation for dependencies, which is a security risk.
             var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
             if (!signatureResult.IsValid)
             {
