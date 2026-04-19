@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -103,4 +104,3 @@ public class PluginEventArgs : EventArgs
         IsInstalled = isInstalled;
     }
 }
-

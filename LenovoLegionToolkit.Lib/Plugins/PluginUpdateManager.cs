@@ -304,6 +304,10 @@ public class PluginUpdateManager : IDisposable
     /// </summary>
     private string GetPluginsDirectory()
     {
+        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
+        if (!string.IsNullOrWhiteSpace(overridePath))
+            return overridePath;
+
         var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
         var possiblePaths = new[]
         {

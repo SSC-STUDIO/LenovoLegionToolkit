@@ -1,5 +1,6 @@
 using System;
 using System.Management;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -10,6 +11,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
     where TEventArgs : EventArgs
 {
     private IDisposable? _disposable;
+    private readonly SemaphoreSlim _eventHandlerLock = new(1, 1);
     private bool _disposed;
     private bool _isUnsupported;
 
@@ -88,6 +90,8 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
 private async Task HandlerAsync(TRawValue properties)
     {
+        await _eventHandlerLock.WaitAsync().ConfigureAwait(false);
+
         try
         {
             var value = GetValue(properties);
@@ -102,6 +106,10 @@ private async Task HandlerAsync(TRawValue properties)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to handle event.  [listener={GetType().Name}]", ex);
+        }
+        finally
+        {
+            _eventHandlerLock.Release();
         }
     }
 

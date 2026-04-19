@@ -27,7 +27,7 @@ namespace LenovoLegionToolkit.WPF.Controls.Automation;
 
 public class AutomationPipelineControl : UserControl
 {
-    private readonly TaskCompletionSource _initializedTaskCompletionSource = new();
+    private readonly TaskCompletionSource _initializedTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
     private readonly GodModeSettings _godModeSettings = IoCContainer.Resolve<GodModeSettings>();
@@ -136,61 +136,71 @@ public class AutomationPipelineControl : UserControl
 
     private async void AutomationPipelineControl_Initialized(object? sender, EventArgs e)
     {
-        _cardExpander.Header = _cardHeaderControl;
-
-        foreach (var step in AutomationPipeline.Steps)
+        try
         {
-            var control = await GenerateStepControlAsync(step);
-            _stepsStackPanel.Children.Add(control);
+            _cardExpander.Header = _cardHeaderControl;
+
+            foreach (var step in AutomationPipeline.Steps)
+            {
+                var control = await GenerateStepControlAsync(step);
+                _stepsStackPanel.Children.Add(control);
+            }
+
+            if (AutomationPipeline.Trigger is not null)
+            {
+                _isExclusiveCheckBox.IsChecked = AutomationPipeline.IsExclusive;
+                _isExclusiveCheckBox.Checked += (_, _) => OnChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                _isExclusiveCheckBox.Visibility = Visibility.Hidden;
+            }
+
+            _runNowButton.Click += async (_, _) => await RunAsync();
+
+            _addStepButton.Click += async (_, _) =>
+            {
+                var stepControls = new List<AbstractAutomationStepControl>();
+                foreach (var step in _supportedAutomationSteps)
+                    stepControls.Add(await GenerateStepControlAsync(step));
+
+                var window = new AddAutomationStepWindow(stepControls, AddStep) { Owner = Window.GetWindow(this) };
+                window.ShowDialog();
+            };
+
+            _deletePipelineButton.Click += (_, _) => OnDelete?.Invoke(this, EventArgs.Empty);
+
+            Grid.SetColumn(_isExclusiveCheckBox, 0);
+            Grid.SetColumn(_runNowButton, 1);
+            Grid.SetColumn(_addStepButton, 2);
+            Grid.SetColumn(_deletePipelineButton, 3);
+
+            _buttonsStackPanel.Children.Add(_isExclusiveCheckBox);
+            _buttonsStackPanel.Children.Add(_runNowButton);
+            _buttonsStackPanel.Children.Add(_addStepButton);
+            _buttonsStackPanel.Children.Add(_deletePipelineButton);
+
+            _stackPanel.Children.Add(_stepsStackPanel);
+            _stackPanel.Children.Add(_buttonsStackPanel);
+
+            _cardExpander.Icon = GenerateIcon();
+            _cardHeaderControl.Title = GenerateHeader();
+            _cardHeaderControl.Subtitle = GenerateSubtitle();
+            _cardHeaderControl.Accessory = GenerateAccessory();
+            _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
+            _cardExpander.Content = _stackPanel;
+
+            Content = _cardExpander;
         }
-
-        if (AutomationPipeline.Trigger is not null)
+        catch (Exception ex)
         {
-            _isExclusiveCheckBox.IsChecked = AutomationPipeline.IsExclusive;
-            _isExclusiveCheckBox.Checked += (_, _) => OnChanged?.Invoke(this, EventArgs.Empty);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to initialize automation pipeline control for pipeline {AutomationPipeline.Id}.", ex);
         }
-        else
+        finally
         {
-            _isExclusiveCheckBox.Visibility = Visibility.Hidden;
+            _initializedTaskCompletionSource.TrySetResult();
         }
-
-        _runNowButton.Click += async (_, _) => await RunAsync();
-
-        _addStepButton.Click += async (_, _) =>
-        {
-            var stepControls = new List<AbstractAutomationStepControl>();
-            foreach (var step in _supportedAutomationSteps)
-                stepControls.Add(await GenerateStepControlAsync(step));
-
-            var window = new AddAutomationStepWindow(stepControls, AddStep) { Owner = Window.GetWindow(this) };
-            window.ShowDialog();
-        };
-
-        _deletePipelineButton.Click += (_, _) => OnDelete?.Invoke(this, EventArgs.Empty);
-
-        Grid.SetColumn(_isExclusiveCheckBox, 0);
-        Grid.SetColumn(_runNowButton, 1);
-        Grid.SetColumn(_addStepButton, 2);
-        Grid.SetColumn(_deletePipelineButton, 3);
-
-        _buttonsStackPanel.Children.Add(_isExclusiveCheckBox);
-        _buttonsStackPanel.Children.Add(_runNowButton);
-        _buttonsStackPanel.Children.Add(_addStepButton);
-        _buttonsStackPanel.Children.Add(_deletePipelineButton);
-
-        _stackPanel.Children.Add(_stepsStackPanel);
-        _stackPanel.Children.Add(_buttonsStackPanel);
-
-        _cardExpander.Icon = GenerateIcon();
-        _cardHeaderControl.Title = GenerateHeader();
-        _cardHeaderControl.Subtitle = GenerateSubtitle();
-        _cardHeaderControl.Accessory = GenerateAccessory();
-        _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
-        _cardExpander.Content = _stackPanel;
-
-        Content = _cardExpander;
-
-        _initializedTaskCompletionSource.TrySetResult();
     }
 
     private async Task RunAsync()
@@ -202,9 +212,6 @@ public class AutomationPipelineControl : UserControl
             var pipeline = CreateAutomationPipeline();
             await _automationProcessor.RunNowAsync(pipeline);
 
-            _runNowButton.Content = Resource.AutomationPipelineControl_RunNow;
-            _runNowButton.IsEnabled = true;
-
             await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Success_Title, Resource.AutomationPipelineControl_RunNow_Success_Message);
         }
         catch (Exception ex)
@@ -212,10 +219,12 @@ public class AutomationPipelineControl : UserControl
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Run now completed with errors", ex);
 
+            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Error_Title, Resource.AutomationPipelineControl_RunNow_Error_Message);
+        }
+        finally
+        {
             _runNowButton.Content = Resource.AutomationPipelineControl_RunNow;
             _runNowButton.IsEnabled = true;
-
-            await SnackbarHelper.ShowAsync(Resource.AutomationPipelineControl_RunNow_Error_Title, Resource.AutomationPipelineControl_RunNow_Error_Message);
         }
     }
 

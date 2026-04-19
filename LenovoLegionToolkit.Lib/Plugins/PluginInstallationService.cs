@@ -31,6 +31,8 @@ public class PluginInstallationService
     public async Task<bool> ExtractAndInstallPluginAsync(string zipFilePath, string pluginsDir)
     {
         var tempDir = Path.Combine(Path.GetTempPath(), "LLTPluginImport", Guid.NewGuid().ToString());
+        string? backupDir = null;
+        string? targetDir = null;
 
         try
         {
@@ -45,12 +47,12 @@ public class PluginInstallationService
             }
 
             // Install ZIP-imported plugins to a 'local' subdirectory
-            var targetDir = Path.Combine(pluginsDir, "local", pluginId);
+            targetDir = Path.Combine(pluginsDir, "local", pluginId);
             if (Directory.Exists(targetDir))
             {
                 try
                 {
-                    var backupDir = $"{targetDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
+                    backupDir = $"{targetDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
                     Directory.Move(targetDir, backupDir);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Renamed existing plugin directory {targetDir} to {backupDir} to resolve conflict during import.");
@@ -76,10 +78,49 @@ public class PluginInstallationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Successfully installed plugin {pluginId} to {targetDir}");
 
+            // Mirror marketplace installs so local ZIP imports participate in the same
+            // InstalledExtensions-based state and startup lifecycle.
+            _pluginManager.InstallPlugin(pluginId);
+
+            if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
+            {
+                try
+                {
+                    Directory.Delete(backupDir, true);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to clean up plugin import backup directory {backupDir}: {ex.Message}", ex);
+                }
+            }
+
             return true;
         }
         catch (Exception ex)
         {
+            if (!string.IsNullOrWhiteSpace(targetDir))
+            {
+                try
+                {
+                    if (Directory.Exists(targetDir))
+                        Directory.Delete(targetDir, true);
+
+                    if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
+                    {
+                        Directory.Move(backupDir, targetDir);
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Rolled back imported plugin directory for {Path.GetFileName(targetDir)} from backup {backupDir}.");
+                    }
+                }
+                catch (Exception rollbackEx)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to roll back imported plugin directory {targetDir}: {rollbackEx.Message}", rollbackEx);
+                }
+            }
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to install plugin from {zipFilePath}: {ex.Message}", ex);
             throw;

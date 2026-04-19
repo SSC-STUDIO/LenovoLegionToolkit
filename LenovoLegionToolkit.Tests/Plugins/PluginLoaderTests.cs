@@ -306,6 +306,38 @@ public class PluginLoaderTests : IDisposable
         result.Should().BeNull();
     }
 
+    [Fact]
+    public void GetPluginAssemblyCandidatePath_WithManagedDependency_ShouldReturnSidecarDllPath()
+    {
+        // Arrange
+        var method = GetPrivateStaticMethod("GetPluginAssemblyCandidatePath");
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.TestPlugin.dll");
+        var requestedAssemblyName = new AssemblyName("Helper.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+
+        // Act
+        var result = method.Invoke(null, new object?[] { requestedAssemblyName, pluginMainAssemblyPath, pluginDirectory }) as string;
+
+        // Assert
+        result.Should().Be(Path.GetFullPath(Path.Combine(pluginDirectory, "Helper.Library.dll")));
+    }
+
+    [Fact]
+    public void GetPluginAssemblyCandidatePath_WithSatelliteAssembly_ShouldReturnCultureSpecificPath()
+    {
+        // Arrange
+        var method = GetPrivateStaticMethod("GetPluginAssemblyCandidatePath");
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.TestPlugin.dll");
+        var requestedAssemblyName = new AssemblyName("Helper.Library.resources, Version=1.0.0.0, Culture=fr, PublicKeyToken=null");
+
+        // Act
+        var result = method.Invoke(null, new object?[] { requestedAssemblyName, pluginMainAssemblyPath, pluginDirectory }) as string;
+
+        // Assert
+        result.Should().Be(Path.GetFullPath(Path.Combine(pluginDirectory, "fr", "Helper.Library.resources.dll")));
+    }
+
     #endregion
 
     #region NormalizePluginToken Tests

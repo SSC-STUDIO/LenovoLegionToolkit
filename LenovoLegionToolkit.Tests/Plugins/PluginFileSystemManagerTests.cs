@@ -45,6 +45,29 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
         path1.Should().Be(path2);
     }
 
+    [Fact]
+    public void GetPluginsDirectory_ShouldHonorEnvironmentOverride()
+    {
+        // Arrange
+        var originalValue = Environment.GetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable);
+        var overrideDirectory = CreateTempDirectory();
+        Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, overrideDirectory);
+
+        try
+        {
+            // Act
+            var path = _fileSystemManager.GetPluginsDirectory();
+
+            // Assert
+            path.Should().Be(Path.GetFullPath(overrideDirectory));
+            Directory.Exists(path).Should().BeTrue();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(PluginPaths.PluginsDirectoryOverrideEnvironmentVariable, originalValue);
+        }
+    }
+
     #endregion
 
     #region GetPluginDllFiles Tests
