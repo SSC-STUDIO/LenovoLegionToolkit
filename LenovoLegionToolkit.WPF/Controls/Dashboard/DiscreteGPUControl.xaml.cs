@@ -157,13 +157,39 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
     private async void KillAppsMenuItem_Click(object sender, RoutedEventArgs e)
     {
         _deactivateGPUButton.IsEnabled = false;
-        await _gpuController.KillGPUProcessesAsync();
+
+        try
+        {
+            await _gpuController.KillGPUProcessesAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Failed to kill GPU processes.", ex);
+        }
+        finally
+        {
+            _deactivateGPUButton.IsEnabled = true;
+        }
     }
 
     private async void RestartGPUMenuItem_Click(object sender, RoutedEventArgs e)
     {
         _deactivateGPUButton.IsEnabled = false;
-        await _gpuController.RestartGPUAsync();
+
+        try
+        {
+            await _gpuController.RestartGPUAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Failed to restart GPU.", ex);
+        }
+        finally
+        {
+            _deactivateGPUButton.IsEnabled = true;
+        }
     }
 }
 }

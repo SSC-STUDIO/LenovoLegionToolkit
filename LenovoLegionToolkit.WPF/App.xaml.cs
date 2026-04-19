@@ -221,7 +221,7 @@ public partial class App
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
         // Initialize plugins
-        InitializePlugins();
+        await InitializePluginsAsync();
         
         // Apply plugin-specific language settings after plugins are loaded
         LocalizationHelper.SetPluginResourceCultures();
@@ -265,7 +265,7 @@ public partial class App
             Log.Instance.Trace($"Start up complete");
     }
 
-    private static void InitializePlugins()
+    private static async Task InitializePluginsAsync()
     {
         try
         {
@@ -277,7 +277,7 @@ public partial class App
 
             // Scan and load plugins from the plugins directory
             // This will automatically discover and register external plugins
-            pluginManager.ScanAndLoadPlugins();
+            await pluginManager.ScanAndLoadPluginsAsync();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugins initialized successfully.");

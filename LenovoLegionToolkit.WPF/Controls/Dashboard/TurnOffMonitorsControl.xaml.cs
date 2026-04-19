@@ -15,8 +15,20 @@ public partial class TurnOffMonitorsControl : AbstractRefreshingControl
     private async void TurnOffButton_Click(object sender, RoutedEventArgs e)
     {
         _turnOffButton.IsEnabled = false;
-        await _nativeWindowsMessageListener.TurnOffMonitorAsync();
-        _turnOffButton.IsEnabled = true;
+
+        try
+        {
+            await _nativeWindowsMessageListener.TurnOffMonitorAsync();
+        }
+        catch (System.Exception ex)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"Failed to turn off monitors.", ex);
+        }
+        finally
+        {
+            _turnOffButton.IsEnabled = true;
+        }
     }
 
     protected override Task OnRefreshAsync() => Task.CompletedTask;

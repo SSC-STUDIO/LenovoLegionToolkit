@@ -116,6 +116,31 @@ public class FoldersTests
         path2.Should().Be(path3);
     }
 
+    [Fact]
+    public void AppData_ShouldHonorEnvironmentOverride()
+    {
+        // Arrange
+        var originalValue = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        var overrideDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, overrideDirectory);
+
+        try
+        {
+            // Act
+            var appData = Folders.AppData;
+
+            // Assert
+            appData.Should().Be(Path.GetFullPath(overrideDirectory));
+            Directory.Exists(appData).Should().BeTrue();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, originalValue);
+            if (Directory.Exists(overrideDirectory))
+                Directory.Delete(overrideDirectory, recursive: true);
+        }
+    }
+
     #endregion
 
     #region Temp Property Tests

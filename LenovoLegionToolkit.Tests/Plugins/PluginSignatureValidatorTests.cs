@@ -266,6 +266,62 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         settings.CheckRevocationStatus.Should().BeFalse();
     }
 
+    [Theory]
+    [InlineData("require", PluginSignatureValidationMode.RequireSignature)]
+    [InlineData("require-signature", PluginSignatureValidationMode.RequireSignature)]
+    [InlineData("production", PluginSignatureValidationMode.RequireSignature)]
+    [InlineData("allowunsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("allow-unsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("development", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("disable", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disable-validation", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disabled", PluginSignatureValidationMode.DisableValidation)]
+    public void PluginSignatureSettings_TryCreateFromEnvironmentValue_ShouldParseKnownModes(
+        string value,
+        PluginSignatureValidationMode expectedMode)
+    {
+        // Act
+        var parsed = PluginSignatureSettings.TryCreateFromEnvironmentValue(value, out var settings);
+
+        // Assert
+        parsed.Should().BeTrue();
+        settings.ValidationMode.Should().Be(expectedMode);
+    }
+
+    [Fact]
+    public void PluginSignatureSettings_TryCreateFromEnvironmentValue_ShouldRejectUnknownModes()
+    {
+        // Act
+        var parsed = PluginSignatureSettings.TryCreateFromEnvironmentValue("unexpected", out var settings);
+
+        // Assert
+        parsed.Should().BeFalse();
+        settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
+    }
+
+    [Fact]
+    public void PluginSignatureSettings_CreateForCurrentProcess_ShouldHonorEnvironmentOverride()
+    {
+        // Arrange
+        var originalValue = Environment.GetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable);
+        Environment.SetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable, "allow-unsigned");
+
+        try
+        {
+            // Act
+            var settings = PluginSignatureSettings.CreateForCurrentProcess();
+
+            // Assert
+            settings.ValidationMode.Should().Be(PluginSignatureValidationMode.AllowUnsigned);
+            settings.AllowTestCertificates.Should().BeTrue();
+            settings.CheckRevocationStatus.Should().BeFalse();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(PluginSignatureSettings.ValidationModeEnvironmentVariable, originalValue);
+        }
+    }
+
     #endregion
 
     #region PluginSignatureStatus Enum Tests

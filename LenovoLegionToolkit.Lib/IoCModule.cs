@@ -156,7 +156,9 @@ public class IoCModule : Module
         builder.Register<WindowsOptimizationService>();
 
         // 注册插件签名验证器
-        builder.Register<PluginSignatureValidator>().As<IPluginSignatureValidator>().SingleInstance();
+        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.CreateForCurrentProcess()))
+            .As<IPluginSignatureValidator>()
+            .SingleInstance();
 
         // 注册插件系统组件
         builder.Register<PluginLoader>().As<IPluginLoader>().SingleInstance();

@@ -68,6 +68,14 @@ public class PluginFileSystemManager : IPluginFileSystemManager
     /// </summary>
     public string GetPluginsDirectory()
     {
+        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
+        if (!string.IsNullOrWhiteSpace(overridePath))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Using overridden plugins directory: {overridePath}");
+            return overridePath;
+        }
+
         // Try to find the plugins directory relative to the application base directory
         var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
 

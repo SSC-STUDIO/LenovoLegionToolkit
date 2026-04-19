@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -16,6 +17,11 @@ namespace MainAppPluginUi.Smoke;
 [SupportedOSPlatform("windows")]
 internal static class Program
 {
+    private const string AppDataOverrideEnvironmentVariable = "LLT_APPDATA_OVERRIDE";
+    private const string PluginDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
+    private const string PluginImportFilesEnvironmentVariable = "LLT_PLUGIN_IMPORT_FILES";
+    private const string PluginSignatureModeEnvironmentVariable = "LLT_PLUGIN_SIGNATURE_MODE";
+    private const string PluginSourcesEnvironmentVariable = "LLT_SMOKE_PLUGIN_SOURCES";
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
     private const int SwRestore = 9;
@@ -25,11 +31,35 @@ internal static class Program
     private const int SmCyVirtualScreen = 79;
     private static int? _mainProcessId;
 
+    private enum PluginInstallSource
+    {
+        Online,
+        Local
+    }
+
     private sealed record PreparedPluginInstallState(
         string SettingsPath,
         bool SettingsFileExisted,
         Dictionary<string, JsonNode?> OriginalProperties,
         HashSet<string> EnsuredPluginIds);
+
+    private sealed record SmokeSandboxState(
+        string RootDirectory,
+        string AppDataDirectory,
+        string PluginsDirectory);
+
+    private sealed record LocalPluginPackageState(
+        string PluginId,
+        string PackagePath);
+
+    private sealed record LocalPluginPackageBundle(
+        string RootDirectory,
+        IReadOnlyList<LocalPluginPackageState> Packages);
+
+    private sealed record PluginInstallPlan(
+        string PluginId,
+        PluginInstallSource Source,
+        string? LocalPackagePath);
 
     private sealed record RuntimePluginFixtureState(
         string PluginId,
@@ -75,40 +105,33 @@ internal static class Program
     private static int Main(string[] args)
     {
         Process? process = null;
-        PreparedPluginInstallState? preparedPluginInstallState = null;
-        List<RuntimePluginFixtureState>? preparedRuntimePluginFixtures = null;
-        RuntimeFileFixtureState? preparedRuntimeSdkFixture = null;
+        SmokeSandboxState? smokeSandboxState = null;
+        LocalPluginPackageBundle? localPluginPackageBundle = null;
+        var preserveArtifacts = false;
 
         try
         {
             var repositoryRoot = ResolveRepositoryRoot(args);
             Console.WriteLine($"[main-smoke] Repository root: {repositoryRoot}");
 
-            var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
-            var pluginsDirectory = ResolveRuntimePluginsDirectory(appRuntimeDirectory);
             var preferredPlugins = ResolvePreferredPlugins(args);
-            preparedRuntimePluginFixtures = PrepareRuntimePluginFixtures(repositoryRoot, appRuntimeDirectory, pluginsDirectory, preferredPlugins);
-            var fixtureWarningsByPlugin = preparedRuntimePluginFixtures
-                .Where(state => !state.FixturePrepared && !string.IsNullOrWhiteSpace(state.WarningMessage))
-                .SelectMany(state => new[]
-                {
-                    new KeyValuePair<string, string>(state.PluginId, state.WarningMessage!),
-                    new KeyValuePair<string, string>(NormalizeRuntimeFixturePluginId(state.PluginId), state.WarningMessage!)
-                })
-                .Where(entry => !string.IsNullOrWhiteSpace(entry.Key))
-                .GroupBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(group => group.Key, group => group.First().Value, StringComparer.OrdinalIgnoreCase);
-            var fixtureReadyPluginIds = preparedRuntimePluginFixtures
-                .Where(state => state.FixturePrepared)
-                .SelectMany(state => new[] { state.PluginId, NormalizeRuntimeFixturePluginId(state.PluginId) })
-                .Where(id => !string.IsNullOrWhiteSpace(id))
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-            preparedRuntimeSdkFixture = PrepareRuntimeSdkFixture(repositoryRoot, appRuntimeDirectory);
-            preparedPluginInstallState = PreparePluginInstallState(
-                preferredPlugins.Where(pluginId => !fixtureWarningsByPlugin.ContainsKey(pluginId)).ToArray(),
-                pluginsDirectory);
+            var requestedPluginSources = ResolveRequestedPluginSources(args);
+            var desiredPluginSources = preferredPlugins
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(
+                    pluginId => pluginId,
+                    pluginId => ResolveRequestedPluginSource(pluginId, requestedPluginSources),
+                    StringComparer.OrdinalIgnoreCase);
+            var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
+            smokeSandboxState = PrepareSmokeSandbox();
+            localPluginPackageBundle = PrepareLocalPluginPackages(
+                repositoryRoot,
+                desiredPluginSources
+                    .Where(pair => pair.Value == PluginInstallSource.Local)
+                    .Select(pair => pair.Key)
+                    .ToArray());
 
-            var startInfo = CreateMainAppStartInfo(appRuntimeDirectory);
+            var startInfo = CreateMainAppStartInfo(appRuntimeDirectory, smokeSandboxState, localPluginPackageBundle);
             Console.WriteLine($"[main-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
 
             process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start main app process.");
@@ -118,78 +141,38 @@ internal static class Program
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(60));
             Console.WriteLine("[main-smoke] Main window ready");
 
-            var pluginFilterActive = IsPluginFilterActive();
-            var marketplaceAvailable = true;
-            var availablePlugins = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            try
-            {
-                NavigateToPluginExtensionsPage(mainWindow, refresh: true);
-                availablePlugins = GetAvailablePluginIds(mainWindow).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            }
-            catch (Exception ex) when (pluginFilterActive)
-            {
-                marketplaceAvailable = false;
-                Console.WriteLine($"[main-smoke] Plugin marketplace unavailable with explicit filter; falling back to direct routes. ({ex.GetType().Name}: {ex.Message})");
-            }
-
-            var pluginsUnderTest = preferredPlugins.Where(availablePlugins.Contains).ToList();
-
-            if (pluginsUnderTest.Count == 0)
-            {
-                if (marketplaceAvailable)
-                    pluginsUnderTest = availablePlugins.OrderBy(id => id, StringComparer.OrdinalIgnoreCase).ToList();
-                else if (pluginFilterActive)
-                    pluginsUnderTest = preferredPlugins.ToList();
-            }
-
-            var skippedPlugins = pluginsUnderTest
-                .Where(pluginId => fixtureWarningsByPlugin.ContainsKey(pluginId))
+            NavigateToPluginExtensionsPage(mainWindow, refresh: true);
+            WaitForRequestedOnlinePluginEntries(
+                mainWindow,
+                desiredPluginSources
+                    .Where(pair => pair.Value == PluginInstallSource.Online)
+                    .Select(pair => pair.Key)
+                    .ToArray());
+            var availablePlugins = GetAvailablePluginIds(mainWindow).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var pluginsUnderTest = preferredPlugins
+                .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
-            pluginsUnderTest = pluginsUnderTest
-                .Where(pluginId => !fixtureWarningsByPlugin.ContainsKey(pluginId))
-                .ToList();
-
-            foreach (var pluginId in skippedPlugins)
-                Console.WriteLine($"[main-smoke] Skipping plugin '{pluginId}' because runtime fixture preparation failed: {fixtureWarningsByPlugin[pluginId]}");
-
-            if (pluginsUnderTest.Count == 0)
-                throw new InvalidOperationException("No plugins remain eligible for UI validation after runtime fixture preparation.");
 
             Console.WriteLine($"[main-smoke] Plugins under test: [{string.Join(", ", pluginsUnderTest)}]");
+            var installPlans = ResolvePluginInstallPlans(
+                pluginsUnderTest,
+                availablePlugins,
+                requestedPluginSources,
+                localPluginPackageBundle.Packages);
+            Console.WriteLine($"[main-smoke] Install plan: [{string.Join(", ", installPlans.Select(plan => $"{plan.PluginId}={plan.Source.ToString().ToLowerInvariant()}"))}]");
 
-            var initiallyInstalled = pluginsUnderTest.ToDictionary(
-                id => id,
-                id => marketplaceAvailable && IsPluginInstalledInUi(mainWindow, id),
-                StringComparer.OrdinalIgnoreCase);
+            ImportPluginsFromLocalPackages(
+                mainWindow,
+                installPlans.Where(plan => plan.Source == PluginInstallSource.Local).ToArray());
 
-            foreach (var pluginId in pluginsUnderTest)
-            {
-                if (marketplaceAvailable)
-                    EnsurePluginInstalled(mainWindow, pluginId);
-            }
+            foreach (var plan in installPlans.Where(plan => plan.Source == PluginInstallSource.Online))
+                EnsurePluginInstalled(mainWindow, plan.PluginId);
 
             for (var index = 0; index < pluginsUnderTest.Count; index++)
             {
                 var pluginId = pluginsUnderTest[index];
                 var isLastPlugin = index == pluginsUnderTest.Count - 1;
-                var isKnownInstalled = initiallyInstalled.GetValueOrDefault(pluginId)
-                    || preparedPluginInstallState?.EnsuredPluginIds.Contains(pluginId) == true
-                    || fixtureReadyPluginIds.Contains(pluginId);
-                TestPluginEntryUi(mainWindow, process.Id, pluginId, isLastPlugin, marketplaceAvailable, isKnownInstalled);
-            }
-
-            var pluginsInstalledBySmoke = marketplaceAvailable
-                ? pluginsUnderTest.Where(id => !initiallyInstalled.GetValueOrDefault(id)).ToList()
-                : new List<string>();
-
-            if (marketplaceAvailable && pluginsInstalledBySmoke.Count > 0)
-            {
-                NavigateToPluginExtensionsPage(mainWindow, refresh: false);
-                foreach (var pluginId in pluginsInstalledBySmoke)
-                {
-                    UninstallPluginFromMarketplace(mainWindow, pluginId);
-                }
+                TestPluginEntryUi(mainWindow, process.Id, pluginId, isLastPlugin, marketplaceAvailable: true, isKnownInstalled: true);
             }
 
             CloseWindow(mainWindow);
@@ -199,6 +182,7 @@ internal static class Program
         }
         catch (Exception ex)
         {
+            preserveArtifacts = true;
             Console.Error.WriteLine("[main-smoke] FAIL");
             Console.Error.WriteLine(ex);
             return 1;
@@ -208,9 +192,18 @@ internal static class Program
             if (process is not null && !process.HasExited)
                 process.Kill(entireProcessTree: true);
 
-            RestorePluginInstallState(preparedPluginInstallState);
-            RestoreRuntimePluginFixtures(preparedRuntimePluginFixtures);
-            RestoreRuntimeFileFixture(preparedRuntimeSdkFixture);
+            if (preserveArtifacts)
+            {
+                if (localPluginPackageBundle is not null)
+                    Console.WriteLine($"[main-smoke] Preserved local package bundle: {localPluginPackageBundle.RootDirectory}");
+                if (smokeSandboxState is not null)
+                    Console.WriteLine($"[main-smoke] Preserved smoke sandbox: {smokeSandboxState.RootDirectory}");
+            }
+            else
+            {
+                CleanupLocalPluginPackages(localPluginPackageBundle);
+                CleanupSmokeSandbox(smokeSandboxState);
+            }
         }
     }
 
@@ -306,8 +299,68 @@ internal static class Program
         return new[] { "custom-mouse", "shell-integration", "vive-tool", "network-acceleration" };
     }
 
-    private static bool IsPluginFilterActive() =>
-        !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("LLT_SMOKE_PLUGIN_IDS"));
+    private static IReadOnlyDictionary<string, PluginInstallSource> ResolveRequestedPluginSources(string[] args)
+    {
+        var rawValue = TryReadOptionValue(args, "--plugin-source")
+                       ?? Environment.GetEnvironmentVariable(PluginSourcesEnvironmentVariable);
+        if (string.IsNullOrWhiteSpace(rawValue))
+            return new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase);
+
+        var sources = new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase);
+        foreach (var token in rawValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var separatorIndex = token.IndexOf('=');
+            if (separatorIndex < 0)
+            {
+                sources["*"] = ParsePluginInstallSource(token);
+                continue;
+            }
+
+            var pluginId = token[..separatorIndex].Trim();
+            var sourceValue = token[(separatorIndex + 1)..].Trim();
+            if (string.IsNullOrWhiteSpace(pluginId))
+                throw new ArgumentException($"Invalid plugin source token '{token}'. Expected '<pluginId>=online|local'.");
+
+            sources[pluginId] = ParsePluginInstallSource(sourceValue);
+        }
+
+        Console.WriteLine($"[main-smoke] Plugin sources: [{string.Join(", ", sources.Select(pair => $"{pair.Key}={pair.Value.ToString().ToLowerInvariant()}"))}]");
+        return sources;
+    }
+
+    private static PluginInstallSource ParsePluginInstallSource(string value)
+    {
+        return value.Trim().ToLowerInvariant() switch
+        {
+            "online" => PluginInstallSource.Online,
+            "local" => PluginInstallSource.Local,
+            _ => throw new ArgumentException($"Unsupported plugin source '{value}'. Expected 'online' or 'local'.")
+        };
+    }
+
+    private static PluginInstallSource GetDefaultPluginInstallSource(string pluginId)
+    {
+        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase) ||
+            pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
+        {
+            return PluginInstallSource.Local;
+        }
+
+        return PluginInstallSource.Online;
+    }
+
+    private static PluginInstallSource ResolveRequestedPluginSource(
+        string pluginId,
+        IReadOnlyDictionary<string, PluginInstallSource> requestedSources)
+    {
+        if (requestedSources.TryGetValue(pluginId, out var source))
+            return source;
+
+        if (requestedSources.TryGetValue("*", out var wildcardSource))
+            return wildcardSource;
+
+        return GetDefaultPluginInstallSource(pluginId);
+    }
 
     private static string NormalizeRuntimeFixturePluginId(string pluginId)
     {
@@ -379,36 +432,163 @@ internal static class Program
         return candidates[0];
     }
 
-    private static ProcessStartInfo CreateMainAppStartInfo(string runtimeDirectory)
+    private static SmokeSandboxState PrepareSmokeSandbox()
+    {
+        var rootDirectory = Path.Combine(Path.GetTempPath(), $"llt-plugin-smoke-{DateTime.Now:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
+        var appDataDirectory = Path.Combine(rootDirectory, "appdata");
+        var pluginsDirectory = Path.Combine(rootDirectory, "plugins");
+
+        Directory.CreateDirectory(appDataDirectory);
+        Directory.CreateDirectory(pluginsDirectory);
+        File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "en");
+
+        Console.WriteLine($"[main-smoke] Smoke sandbox appdata: {appDataDirectory}");
+        Console.WriteLine($"[main-smoke] Smoke sandbox plugins: {pluginsDirectory}");
+
+        return new SmokeSandboxState(rootDirectory, appDataDirectory, pluginsDirectory);
+    }
+
+    private static void CleanupSmokeSandbox(SmokeSandboxState? state)
+    {
+        if (state is null)
+            return;
+
+        try
+        {
+            if (Directory.Exists(state.RootDirectory))
+                Directory.Delete(state.RootDirectory, recursive: true);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[main-smoke] Failed to clean smoke sandbox '{state.RootDirectory}': {ex.Message}");
+        }
+    }
+
+    private static LocalPluginPackageBundle PrepareLocalPluginPackages(string repositoryRoot, IReadOnlyList<string> preferredPlugins)
+    {
+        var packageRoot = Path.Combine(Path.GetTempPath(), $"llt-plugin-local-packages-{DateTime.Now:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(packageRoot);
+
+        if (preferredPlugins.Count == 0)
+        {
+            Console.WriteLine("[main-smoke] No plugins requested for local ZIP import");
+            return new LocalPluginPackageBundle(packageRoot, Array.Empty<LocalPluginPackageState>());
+        }
+
+        var sourceCandidates = new[]
+        {
+            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
+            Path.Combine(repositoryRoot, "Build", "plugins")
+        };
+
+        var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
+        if (string.IsNullOrWhiteSpace(sourceRoot))
+        {
+            Console.WriteLine("[main-smoke] Local plugin package source not found; continuing without local ZIP packages");
+            return new LocalPluginPackageBundle(packageRoot, Array.Empty<LocalPluginPackageState>());
+        }
+
+        var pluginSourceDirectories = Directory.GetDirectories(sourceRoot, "*", SearchOption.TopDirectoryOnly)
+            .ToDictionary(path => Path.GetFileName(path), StringComparer.OrdinalIgnoreCase);
+        var pluginDirectoryNames = ResolveFixturePluginDirectoryNames(preferredPlugins, pluginSourceDirectories.Keys)
+            .ToArray();
+        if (pluginDirectoryNames.Length == 0)
+        {
+            Console.WriteLine("[main-smoke] No matching local plugin directories were found for requested ZIP imports");
+            return new LocalPluginPackageBundle(packageRoot, Array.Empty<LocalPluginPackageState>());
+        }
+
+        var packages = new List<LocalPluginPackageState>();
+        foreach (var pluginDirectoryName in pluginDirectoryNames)
+        {
+            if (!pluginSourceDirectories.TryGetValue(pluginDirectoryName, out var sourcePluginDirectory))
+                continue;
+
+            var pluginId = NormalizeRuntimeFixturePluginId(pluginDirectoryName);
+            var packagePath = Path.Combine(packageRoot, $"{pluginId}.zip");
+            if (File.Exists(packagePath))
+                File.Delete(packagePath);
+
+            ZipFile.CreateFromDirectory(sourcePluginDirectory, packagePath, CompressionLevel.Optimal, includeBaseDirectory: false);
+            packages.Add(new LocalPluginPackageState(pluginId, packagePath));
+        }
+
+        Console.WriteLine($"[main-smoke] Prepared local plugin ZIP packages: [{string.Join(", ", packages.Select(package => package.PluginId))}]");
+        return new LocalPluginPackageBundle(packageRoot, packages);
+    }
+
+    private static void CleanupLocalPluginPackages(LocalPluginPackageBundle? bundle)
+    {
+        if (bundle is null)
+            return;
+
+        try
+        {
+            if (Directory.Exists(bundle.RootDirectory))
+                Directory.Delete(bundle.RootDirectory, recursive: true);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[main-smoke] Failed to clean local plugin package bundle '{bundle.RootDirectory}': {ex.Message}");
+        }
+    }
+
+    private static ProcessStartInfo CreateMainAppStartInfo(
+        string runtimeDirectory,
+        SmokeSandboxState sandboxState,
+        LocalPluginPackageBundle localPluginPackageBundle)
     {
         var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
         var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
         if (File.Exists(dllPath) && File.Exists(runtimeConfigPath))
         {
-            return new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
                 // Smoke runs need to get past the unsupported-device gate on this workstation
                 // so the plugin UI can still be validated end-to-end.
-                Arguments = $"\"{dllPath}\" --skip-compat-check",
+                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
+
+            ApplySmokeEnvironmentOverrides(startInfo, sandboxState, localPluginPackageBundle);
+            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
+            return startInfo;
         }
 
         var exePath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.exe");
         if (File.Exists(exePath))
         {
-            return new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 FileName = exePath,
-                Arguments = "--skip-compat-check",
+                Arguments = "--skip-compat-check --trace --disable-update-checker",
                 WorkingDirectory = runtimeDirectory,
                 UseShellExecute = false
             };
+
+            ApplySmokeEnvironmentOverrides(startInfo, sandboxState, localPluginPackageBundle);
+            startInfo.EnvironmentVariables[PluginSignatureModeEnvironmentVariable] = "AllowUnsigned";
+            return startInfo;
         }
 
         throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
+    }
+
+    private static void ApplySmokeEnvironmentOverrides(
+        ProcessStartInfo startInfo,
+        SmokeSandboxState sandboxState,
+        LocalPluginPackageBundle localPluginPackageBundle)
+    {
+        startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = sandboxState.AppDataDirectory;
+        startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = sandboxState.PluginsDirectory;
+
+        if (localPluginPackageBundle.Packages.Count > 0)
+        {
+            startInfo.EnvironmentVariables[PluginImportFilesEnvironmentVariable] =
+                string.Join(Path.PathSeparator, localPluginPackageBundle.Packages.Select(package => package.PackagePath));
+        }
     }
 
     private static PreparedPluginInstallState? PreparePluginInstallState(IReadOnlyList<string> preferredPlugins, string runtimePluginsDirectory)
@@ -968,7 +1148,8 @@ internal static class Program
                 mainWindow = ResolveLiveWindow(mainWindow);
                 return GetPluginIdsByButtonPrefix(mainWindow, "PluginInstallButton_").Any()
                        || GetPluginIdsByButtonPrefix(mainWindow, "PluginOpenButton_").Any()
-                       || GetPluginIdsByButtonPrefix(mainWindow, "PluginConfigureButton_").Any();
+                       || GetPluginIdsByButtonPrefix(mainWindow, "PluginConfigureButton_").Any()
+                       || IsVisible(FindByAutomationId(mainWindow, "PluginBulkImportButton"));
             },
             TimeSpan.FromSeconds(45),
             TimeSpan.FromMilliseconds(350));
@@ -976,7 +1157,7 @@ internal static class Program
         if (!cardReady)
         {
             DumpAutomationSnapshot(mainWindow, 300);
-            throw new TimeoutException("Plugin action buttons did not appear in plugin marketplace view.");
+            throw new TimeoutException("Plugin marketplace controls did not appear in plugin marketplace view.");
         }
     }
 
@@ -1096,6 +1277,122 @@ internal static class Program
             .Distinct(StringComparer.OrdinalIgnoreCase);
     }
 
+    private static void WaitForRequestedOnlinePluginEntries(AutomationElement mainWindow, IReadOnlyList<string> pluginIds)
+    {
+        if (pluginIds.Count == 0)
+            return;
+
+        var unresolvedPluginIds = pluginIds
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        for (var attempt = 1; attempt <= 3; attempt++)
+        {
+            var ready = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    unresolvedPluginIds.RemoveWhere(pluginId => IsPluginMarketplaceEntryVisible(mainWindow, pluginId));
+                    return unresolvedPluginIds.Count == 0;
+                },
+                TimeSpan.FromSeconds(45),
+                TimeSpan.FromMilliseconds(350));
+
+            if (ready)
+                return;
+
+            Console.WriteLine($"[main-smoke] Online marketplace entries still missing after wait attempt {attempt}/3: [{string.Join(", ", unresolvedPluginIds)}]");
+
+            if (attempt == 3)
+                return;
+
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var refreshButton = FindByAutomationId(mainWindow, "PluginRefreshButton");
+            if (IsVisible(refreshButton))
+            {
+                try
+                {
+                    Click(refreshButton!);
+                }
+                catch (InvalidOperationException)
+                {
+                    try
+                    {
+                        mainWindow = ResolveLiveWindow(mainWindow);
+                        BringToForeground(mainWindow);
+                        refreshButton = FindByAutomationId(mainWindow, "PluginRefreshButton");
+                        if (IsInteractable(refreshButton))
+                            MouseClick(refreshButton!);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        Console.WriteLine($"[main-smoke] Skipping marketplace refresh fallback after interactability failure: {ex.Message}");
+                    }
+                }
+
+                Console.WriteLine($"[main-smoke] Retrying online marketplace refresh ({attempt}/2)");
+            }
+
+            Thread.Sleep(1000);
+        }
+    }
+
+    private static bool IsPluginMarketplaceEntryVisible(AutomationElement mainWindow, string pluginId)
+    {
+        return IsVisible(FindByAutomationId(mainWindow, $"PluginInstallButton_{pluginId}"))
+               || IsVisible(FindByAutomationId(mainWindow, $"PluginOpenButton_{pluginId}"))
+               || IsVisible(FindByAutomationId(mainWindow, $"PluginConfigureButton_{pluginId}"))
+               || IsVisible(FindByAutomationId(mainWindow, $"PluginUninstallButton_{pluginId}"))
+               || IsVisible(FindByAutomationId(mainWindow, $"PluginCard_{pluginId}"));
+    }
+
+    private static IReadOnlyList<PluginInstallPlan> ResolvePluginInstallPlans(
+        IReadOnlyList<string> pluginIds,
+        IReadOnlySet<string> availablePlugins,
+        IReadOnlyDictionary<string, PluginInstallSource> requestedSources,
+        IReadOnlyList<LocalPluginPackageState> localPluginPackages)
+    {
+        var localPackagesByPluginId = localPluginPackages.ToDictionary(package => package.PluginId, StringComparer.OrdinalIgnoreCase);
+        var plans = new List<PluginInstallPlan>(pluginIds.Count);
+
+        foreach (var pluginId in pluginIds)
+        {
+            var requestedSource = ResolveRequestedPluginSource(pluginId, requestedSources);
+            localPackagesByPluginId.TryGetValue(pluginId, out var localPackage);
+            var availableOnline = availablePlugins.Contains(pluginId);
+
+            if (requestedSource == PluginInstallSource.Local)
+            {
+                if (localPackage is null)
+                {
+                    if (!availableOnline)
+                        throw new InvalidOperationException($"Plugin '{pluginId}' was requested as local, but no local ZIP package could be prepared.");
+
+                    Console.WriteLine($"[main-smoke] Local package missing for '{pluginId}', falling back to online installation.");
+                    plans.Add(new PluginInstallPlan(pluginId, PluginInstallSource.Online, null));
+                    continue;
+                }
+
+                plans.Add(new PluginInstallPlan(pluginId, PluginInstallSource.Local, localPackage.PackagePath));
+                continue;
+            }
+
+            if (!availableOnline)
+            {
+                if (localPackage is null)
+                    throw new InvalidOperationException($"Plugin '{pluginId}' is not available in the marketplace and no local ZIP package could be prepared.");
+
+                Console.WriteLine($"[main-smoke] Marketplace entry missing for '{pluginId}', falling back to local ZIP import.");
+                plans.Add(new PluginInstallPlan(pluginId, PluginInstallSource.Local, localPackage.PackagePath));
+                continue;
+            }
+
+            plans.Add(new PluginInstallPlan(pluginId, PluginInstallSource.Online, null));
+        }
+
+        return plans;
+    }
+
     private static void EnsurePluginInstalled(AutomationElement mainWindow, string pluginId)
     {
         if (IsPluginInstalledInUi(mainWindow, pluginId))
@@ -1105,6 +1402,29 @@ internal static class Program
         }
 
         InstallPluginFromMarketplace(mainWindow, pluginId);
+    }
+
+    private static void ImportPluginsFromLocalPackages(AutomationElement mainWindow, IReadOnlyList<PluginInstallPlan> localPlans)
+    {
+        if (localPlans.Count == 0)
+            return;
+
+        var bulkImportButton = WaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(20));
+        Click(bulkImportButton);
+        Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", localPlans.Select(plan => plan.PluginId))}]");
+
+        foreach (var plan in localPlans)
+        {
+            var installed = WaitUntil(
+                () => IsPluginInstalledInUi(mainWindow, plan.PluginId),
+                TimeSpan.FromSeconds(90),
+                TimeSpan.FromMilliseconds(350));
+
+            if (!installed)
+                throw new TimeoutException($"Local ZIP import did not reach installed state: {plan.PluginId}");
+
+            Console.WriteLine($"[main-smoke] Local ZIP import verified for plugin: {plan.PluginId}");
+        }
     }
 
     private static void TestPluginEntryUi(AutomationElement mainWindow, int processId, string pluginId, bool isLastPlugin, bool marketplaceAvailable, bool isKnownInstalled)
@@ -2111,7 +2431,7 @@ internal static class Program
 
         var installed = WaitUntil(
             () => IsPluginInstalledInUi(mainWindow, pluginId),
-            TimeSpan.FromSeconds(60),
+            TimeSpan.FromSeconds(330),
             TimeSpan.FromMilliseconds(300));
 
         if (!installed)
@@ -2462,13 +2782,63 @@ internal static class Program
 
     private static void NavigateToWindowsOptimizationPage(AutomationElement mainWindow)
     {
-        var nav = WaitForWindowsOptimizationNavigationElement(mainWindow, TimeSpan.FromSeconds(20));
-        Click(nav);
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var arrived = false;
 
-        WaitForAutomationId(mainWindow, "WindowsOptimizationCategoryList", TimeSpan.FromSeconds(30));
-        WaitForAutomationId(mainWindow, "WindowsOptimizationOptimizationTabButton", TimeSpan.FromSeconds(20));
+        for (var attempt = 1; attempt <= 5; attempt++)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var nav = WaitForWindowsOptimizationNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
+            Click(nav);
+
+            var quickReady = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsWindowsOptimizationPageReady(mainWindow);
+                },
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromMilliseconds(200));
+
+            if (!quickReady)
+            {
+                BringToForeground(mainWindow);
+                MouseClick(nav);
+            }
+
+            var ready = WaitUntil(
+                () =>
+                {
+                    mainWindow = ResolveLiveWindow(mainWindow);
+                    return IsWindowsOptimizationPageReady(mainWindow);
+                },
+                TimeSpan.FromSeconds(12),
+                TimeSpan.FromMilliseconds(250));
+
+            if (ready)
+            {
+                arrived = true;
+                break;
+            }
+
+            Console.WriteLine($"[main-smoke] Windows Optimization navigation retry {attempt}/5");
+            Thread.Sleep(700);
+        }
+
+        if (!arrived)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            DumpAutomationSnapshot(mainWindow, 300);
+            throw new TimeoutException("Timed out waiting for Windows Optimization page.");
+        }
 
         Console.WriteLine("[main-smoke] Navigated to Windows Optimization page");
+    }
+
+    private static bool IsWindowsOptimizationPageReady(AutomationElement mainWindow)
+    {
+        return IsVisible(FindByAutomationId(mainWindow, "WindowsOptimizationCategoryList"))
+               && IsVisible(FindByAutomationId(mainWindow, "WindowsOptimizationOptimizationTabButton"));
     }
 
     private static AutomationElement WaitForWindowsOptimizationNavigationElement(AutomationElement root, TimeSpan timeout)

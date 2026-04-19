@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -21,13 +24,23 @@ public class PluginRepositoryService : IDisposable
     private readonly IPluginManager _pluginManager;
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
+    private readonly string _storeCachePath;
     // The plugin store is currently published from master.
-    // Keep the source list explicit so the app does not waste time hitting the missing main/store.json endpoint first.
+    // Keep the source list explicit so the app does not waste time hitting the missing main/store.json endpoint first,
+    // and include a CDN mirror because raw.githubusercontent.com can intermittently reset connections on Windows.
     private static readonly string[] PluginStoreUrls =
     {
-        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json"
+        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json",
+        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json",
+        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json"
     };
     private const string PluginReleasesApiUrl = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50";
+    private const int RemoteRequestRetryCount = 3;
+    private const int RemoteDownloadRetryCount = 1;
+    private static readonly TimeSpan StoreRequestTimeout = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan ReleaseMetadataRequestTimeout = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan ApiAssetDownloadRequestTimeout = TimeSpan.FromSeconds(45);
+    private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(150);
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -42,6 +55,7 @@ public class PluginRepositoryService : IDisposable
 
         _pluginsDirectory = GetPluginsDirectory();
         _tempDownloadDirectory = Path.Combine(Path.GetTempPath(), "LLTPluginDownloads");
+        _storeCachePath = Path.Combine(Folders.AppData, "plugin-store-cache.json");
 
         if (!Directory.Exists(_tempDownloadDirectory))
         {
@@ -84,7 +98,8 @@ public class PluginRepositoryService : IDisposable
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to deserialize plugin store response");
-                return new List<PluginManifest>();
+
+                throw new InvalidDataException("Failed to deserialize plugin store response.");
             }
 
             // Filter out already installed plugins or show their status
@@ -107,7 +122,7 @@ public class PluginRepositoryService : IDisposable
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error fetching plugins from store: {ex.Message}", ex);
-            return new List<PluginManifest>();
+            throw;
         }
     }
 
@@ -163,13 +178,10 @@ public class PluginRepositoryService : IDisposable
 
             if (installed)
             {
-                DownloadCompleted?.Invoke(this, manifest.Id);
-                
-                // Mark as installed in settings
+                // Mark as installed before the scan so startup hooks can run during reload.
                 _pluginManager.InstallPlugin(manifest.Id);
-                
-                // Trigger plugin scan to reload plugins
-                _pluginManager.ScanAndLoadPlugins();
+                await _pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
+                DownloadCompleted?.Invoke(this, manifest.Id);
             }
 
             return installed;
@@ -189,6 +201,26 @@ public class PluginRepositoryService : IDisposable
     private async Task<bool> DownloadPluginAsync(PluginManifest manifest, string destinationPath)
     {
         var candidateUrls = GetDownloadUrlCandidates(manifest);
+        var publishedAsset = await TryResolvePublishedAssetAsync(manifest).ConfigureAwait(false);
+
+        if (publishedAsset is not null)
+        {
+            var preferredCandidateUrls = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(publishedAsset.ApiDownloadUrl))
+                preferredCandidateUrls.Add(publishedAsset.ApiDownloadUrl);
+
+            if (!string.IsNullOrWhiteSpace(publishedAsset.DownloadUrl))
+                preferredCandidateUrls.Add(publishedAsset.DownloadUrl);
+
+            candidateUrls = preferredCandidateUrls
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(publishedAsset.Version))
+                manifest.Version = publishedAsset.Version;
+        }
 
         foreach (var candidateUrl in candidateUrls)
         {
@@ -197,19 +229,10 @@ public class PluginRepositoryService : IDisposable
                 return true;
         }
 
-        var publishedAsset = await TryResolvePublishedAssetAsync(manifest).ConfigureAwait(false);
         if (publishedAsset is not null)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Retrying plugin {manifest.Id} download from published asset {publishedAsset.AssetName} ({publishedAsset.DownloadUrl})");
-
-            manifest.DownloadUrl = publishedAsset.DownloadUrl;
-            if (!string.IsNullOrWhiteSpace(publishedAsset.Version))
-                manifest.Version = publishedAsset.Version;
-
-            var downloaded = await TryDownloadPluginFromUrlAsync(manifest, publishedAsset.DownloadUrl, destinationPath).ConfigureAwait(false);
-            if (downloaded)
-                return true;
+                Log.Instance.Trace($"Published asset candidates for plugin {manifest.Id} were already attempted: {publishedAsset.AssetName}");
         }
 
         // Development fallback: if online assets are unavailable (for example HTTP 404),
@@ -265,47 +288,82 @@ public class PluginRepositoryService : IDisposable
                 return true;
             }
 
-            using var response = await _httpClient.GetAsync(candidateUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
+            for (var attempt = 1; attempt <= RemoteDownloadRetryCount; attempt++)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Download URL failed for plugin {manifest.Id}: {candidateUrl} returned {(int)response.StatusCode} {response.StatusCode}");
-                return false;
-            }
-
-            var totalBytes = response.Content.Headers.ContentLength ?? -1L;
-            var bytesDownloaded = 0L;
-
-            using var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-
-            var buffer = new byte[8192];
-            int bytesRead;
-
-            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
-            {
-                await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-                bytesDownloaded += bytesRead;
-
-                var progress = totalBytes > 0 ? (double)bytesDownloaded / totalBytes * 100 : 0;
-
-                DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                try
                 {
-                    PluginId = manifest.Id,
-                    BytesDownloaded = bytesDownloaded,
-                    TotalBytes = totalBytes > 0 ? totalBytes : 0,
-                    ProgressPercentage = progress
-                });
+                    DeletePartialDownload(destinationPath);
+
+                    using var request = CreateGetRequest(candidateUrl);
+                    using var cts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl));
+                    using var response = await _httpClient
+                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                        .ConfigureAwait(false);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        if (attempt < RemoteDownloadRetryCount && IsRetryableStatusCode(response.StatusCode))
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Download attempt {attempt}/{RemoteDownloadRetryCount} for plugin {manifest.Id} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
+
+                            await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                            continue;
+                        }
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Download URL failed for plugin {manifest.Id}: {candidateUrl} returned {(int)response.StatusCode} {response.StatusCode}");
+                        return false;
+                    }
+
+                    var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                    var bytesDownloaded = 0L;
+
+                    using var contentStream = await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false);
+                    using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                    var buffer = new byte[8192];
+                    int bytesRead;
+
+                    while ((bytesRead = await contentStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cts.Token).ConfigureAwait(false)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cts.Token).ConfigureAwait(false);
+                        bytesDownloaded += bytesRead;
+
+                        var progress = totalBytes > 0 ? (double)bytesDownloaded / totalBytes * 100 : 0;
+
+                        DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                        {
+                            PluginId = manifest.Id,
+                            BytesDownloaded = bytesDownloaded,
+                            TotalBytes = totalBytes > 0 ? totalBytes : 0,
+                            ProgressPercentage = progress
+                        });
+                    }
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Downloaded plugin {manifest.Id} to {destinationPath}");
+
+                    manifest.DownloadUrl = candidateUrl;
+                    return true;
+                }
+                catch (Exception ex) when (attempt < RemoteDownloadRetryCount && IsTransientRemoteException(ex))
+                {
+                    DeletePartialDownload(destinationPath);
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Transient error downloading plugin {manifest.Id} from {candidateUrl} on attempt {attempt}/{RemoteDownloadRetryCount}: {ex.Message}. Retrying...", ex);
+
+                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                }
             }
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Downloaded plugin {manifest.Id} to {destinationPath}");
-
-            manifest.DownloadUrl = candidateUrl;
-            return true;
+            return false;
         }
         catch (Exception ex)
         {
+            DeletePartialDownload(destinationPath);
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error downloading plugin {manifest.Id} from candidate URL: {candidateUrl}, error: {ex.Message}", ex);
             return false;
@@ -455,6 +513,9 @@ public class PluginRepositoryService : IDisposable
     /// </summary>
     private async Task<bool> ExtractAndInstallPluginAsync(string zipPath, string extractPath, PluginManifest manifest)
     {
+        string? backupDir = null;
+        var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
+
         try
         {
             // Clean up previous extraction
@@ -536,7 +597,7 @@ public class PluginRepositoryService : IDisposable
             {
                 try
                 {
-                    var backupDir = $"{pluginDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
+                    backupDir = $"{pluginDir}_backup_{DateTime.Now:yyyyMMddHHmmss}";
                     Directory.Move(pluginDir, backupDir);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Renamed existing plugin directory {pluginDir} to {backupDir} to resolve conflict.");
@@ -596,14 +657,53 @@ public class PluginRepositoryService : IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Installed plugin {manifest.Id} to {pluginDir}");
 
+            if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
+            {
+                try
+                {
+                    Directory.Delete(backupDir, true);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to clean up plugin backup directory {backupDir}: {ex.Message}", ex);
+                }
+            }
+
             return true;
         }
         catch (Exception ex)
         {
+            await RestorePluginDirectoryAsync(pluginDir, backupDir, manifest.Id).ConfigureAwait(false);
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error extracting plugin {manifest.Id}: {ex.Message}", ex);
             return false;
         }
+    }
+
+    private static Task RestorePluginDirectoryAsync(string pluginDir, string? backupDir, string pluginId)
+    {
+        try
+        {
+            if (Directory.Exists(pluginDir))
+                Directory.Delete(pluginDir, true);
+
+            if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
+            {
+                Directory.Move(backupDir, pluginDir);
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rolled back plugin directory for {pluginId} from backup {backupDir}.");
+            }
+        }
+        catch (Exception restoreEx)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to roll back plugin directory for {pluginId}: {restoreEx.Message}", restoreEx);
+        }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -630,21 +730,62 @@ public class PluginRepositoryService : IDisposable
 
         foreach (var url in PluginStoreUrls)
         {
-            try
+            for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Fetching store.json from GitHub: {url}");
+                try
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Fetching store.json from GitHub: {url} (attempt {attempt}/{RemoteRequestRetryCount})");
 
-                using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    using var request = CreateGetRequest(url);
+                    using var cts = new CancellationTokenSource(StoreRequestTimeout);
+                    using var response = await _httpClient
+                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                        .ConfigureAwait(false);
+
+                    if (attempt < RemoteRequestRetryCount && IsRetryableStatusCode(response.StatusCode))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Store metadata request to {url} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
+
+                        await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                        continue;
+                    }
+
+                    response.EnsureSuccessStatusCode();
+
+                    var storeJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    TryWriteStoreCache(storeJson);
+                    return storeJson;
+                }
+                catch (Exception ex) when (attempt < RemoteRequestRetryCount && IsTransientRemoteException(ex))
+                {
+                    lastException = ex;
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Transient failure fetching store.json from {url} on attempt {attempt}/{RemoteRequestRetryCount}: {ex.Message}. Retrying...", ex);
+
+                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    lastException = ex;
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to fetch store.json from {url}: {ex.Message}", ex);
+
+                    break;
+                }
             }
-            catch (Exception ex)
-            {
-                lastException = ex;
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to fetch store.json from {url}: {ex.Message}");
-            }
+        }
+
+        var cachedStoreJson = TryReadStoreCache();
+        if (!string.IsNullOrWhiteSpace(cachedStoreJson))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Using cached plugin store metadata from {_storeCachePath}");
+
+            return cachedStoreJson;
         }
 
         throw new HttpRequestException("Failed to fetch plugin store metadata from all known URLs.", lastException);
@@ -652,56 +793,86 @@ public class PluginRepositoryService : IDisposable
 
     private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest)
     {
-        try
+        for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
         {
-            using var response = await _httpClient.GetAsync(PluginReleasesApiUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            using var document = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
-
-            foreach (var release in document.RootElement.EnumerateArray())
+            try
             {
-                if (release.TryGetProperty("draft", out var draftElement) && draftElement.GetBoolean())
-                    continue;
+                using var request = CreateGetRequest(PluginReleasesApiUrl);
+                using var cts = new CancellationTokenSource(ReleaseMetadataRequestTimeout);
+                using var response = await _httpClient
+                    .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                    .ConfigureAwait(false);
 
-                if (release.TryGetProperty("prerelease", out var prereleaseElement) && prereleaseElement.GetBoolean())
-                    continue;
-
-                if (!release.TryGetProperty("assets", out var assetsElement) || assetsElement.ValueKind != JsonValueKind.Array)
-                    continue;
-
-                var tagName = release.TryGetProperty("tag_name", out var tagNameElement)
-                    ? tagNameElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                foreach (var asset in assetsElement.EnumerateArray())
+                if (attempt < RemoteRequestRetryCount && IsRetryableStatusCode(response.StatusCode))
                 {
-                    var assetName = asset.TryGetProperty("name", out var assetNameElement)
-                        ? assetNameElement.GetString() ?? string.Empty
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Published asset metadata request for plugin {manifest.Id} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
+
+                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                    continue;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                using var document = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
+
+                foreach (var release in document.RootElement.EnumerateArray())
+                {
+                    if (release.TryGetProperty("draft", out var draftElement) && draftElement.GetBoolean())
+                        continue;
+
+                    if (release.TryGetProperty("prerelease", out var prereleaseElement) && prereleaseElement.GetBoolean())
+                        continue;
+
+                    if (!release.TryGetProperty("assets", out var assetsElement) || assetsElement.ValueKind != JsonValueKind.Array)
+                        continue;
+
+                    var tagName = release.TryGetProperty("tag_name", out var tagNameElement)
+                        ? tagNameElement.GetString() ?? string.Empty
                         : string.Empty;
 
-                    if (!IsMatchingPublishedPluginAsset(assetName, manifest.Id))
-                        continue;
+                    foreach (var asset in assetsElement.EnumerateArray())
+                    {
+                        var assetName = asset.TryGetProperty("name", out var assetNameElement)
+                            ? assetNameElement.GetString() ?? string.Empty
+                            : string.Empty;
 
-                    var browserDownloadUrl = asset.TryGetProperty("browser_download_url", out var browserDownloadUrlElement)
-                        ? browserDownloadUrlElement.GetString()
-                        : null;
+                        if (!IsMatchingPublishedPluginAsset(assetName, manifest.Id))
+                            continue;
 
-                    if (string.IsNullOrWhiteSpace(browserDownloadUrl))
-                        continue;
+                        var browserDownloadUrl = asset.TryGetProperty("browser_download_url", out var browserDownloadUrlElement)
+                            ? browserDownloadUrlElement.GetString()
+                            : null;
+                        var apiDownloadUrl = asset.TryGetProperty("url", out var apiUrlElement)
+                            ? apiUrlElement.GetString()
+                            : null;
 
-                    return new PublishedPluginAsset(
-                        browserDownloadUrl,
-                        assetName,
-                        ExtractPublishedAssetVersion(assetName, tagName, manifest.Id));
+                        if (string.IsNullOrWhiteSpace(browserDownloadUrl) && string.IsNullOrWhiteSpace(apiDownloadUrl))
+                            continue;
+
+                        return new PublishedPluginAsset(
+                            browserDownloadUrl,
+                            apiDownloadUrl,
+                            assetName,
+                            ExtractPublishedAssetVersion(assetName, tagName, manifest.Id));
+                    }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to resolve published GitHub asset for plugin {manifest.Id}: {ex.Message}", ex);
+            catch (Exception ex) when (attempt < RemoteRequestRetryCount && IsTransientRemoteException(ex))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Transient failure resolving published GitHub asset for plugin {manifest.Id} on attempt {attempt}/{RemoteRequestRetryCount}: {ex.Message}. Retrying...", ex);
+
+                await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to resolve published GitHub asset for plugin {manifest.Id}: {ex.Message}", ex);
+
+                return null;
+            }
         }
 
         return null;
@@ -735,7 +906,111 @@ public class PluginRepositoryService : IDisposable
         return null;
     }
 
-    private sealed record PublishedPluginAsset(string DownloadUrl, string AssetName, string? Version);
+    private sealed record PublishedPluginAsset(string? DownloadUrl, string? ApiDownloadUrl, string AssetName, string? Version);
+
+    private static HttpRequestMessage CreateGetRequest(string url)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        {
+            Version = HttpVersion.Version11,
+            VersionPolicy = HttpVersionPolicy.RequestVersionOrLower,
+        };
+
+        if (IsGitHubReleaseAssetApiUrl(url))
+        {
+            request.Headers.Accept.Clear();
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
+        }
+
+        return request;
+    }
+
+    private static bool IsTransientRemoteException(Exception ex)
+    {
+        return ex is HttpRequestException
+            or IOException
+            or TaskCanceledException
+            or TimeoutException;
+    }
+
+    private static bool IsRetryableStatusCode(HttpStatusCode statusCode)
+    {
+        return statusCode == HttpStatusCode.RequestTimeout
+               || statusCode == (HttpStatusCode)429
+               || statusCode == HttpStatusCode.BadGateway
+               || statusCode == HttpStatusCode.ServiceUnavailable
+               || statusCode == HttpStatusCode.GatewayTimeout
+               || (int)statusCode >= 500;
+    }
+
+    private static TimeSpan GetRetryDelay(int attempt)
+    {
+        var milliseconds = Math.Min(4000, 500 * attempt * attempt);
+        return TimeSpan.FromMilliseconds(milliseconds);
+    }
+
+    private static bool IsGitHubReleaseAssetApiUrl(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return false;
+
+        return uri.Host.Equals("api.github.com", StringComparison.OrdinalIgnoreCase)
+               && uri.AbsolutePath.Contains("/releases/assets/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static TimeSpan GetDownloadTimeout(string candidateUrl)
+    {
+        return IsGitHubReleaseAssetApiUrl(candidateUrl)
+            ? ApiAssetDownloadRequestTimeout
+            : BrowserDownloadRequestTimeout;
+    }
+
+    private void TryWriteStoreCache(string storeJson)
+    {
+        try
+        {
+            var directory = Path.GetDirectoryName(_storeCachePath);
+            if (!string.IsNullOrWhiteSpace(directory))
+                Directory.CreateDirectory(directory);
+
+            File.WriteAllText(_storeCachePath, storeJson, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to update plugin store cache at {_storeCachePath}: {ex.Message}", ex);
+        }
+    }
+
+    private string? TryReadStoreCache()
+    {
+        try
+        {
+            if (!File.Exists(_storeCachePath))
+                return null;
+
+            return File.ReadAllText(_storeCachePath, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read plugin store cache at {_storeCachePath}: {ex.Message}", ex);
+            return null;
+        }
+    }
+
+    private static void DeletePartialDownload(string destinationPath)
+    {
+        try
+        {
+            if (File.Exists(destinationPath))
+                File.Delete(destinationPath);
+        }
+        catch
+        {
+            // Ignore partial cleanup failures; a later successful download uses overwrite semantics.
+        }
+    }
 
     private static string? FindPluginMainDll(string extractPath, string pluginId)
     {
@@ -799,6 +1074,10 @@ public class PluginRepositoryService : IDisposable
     /// </summary>
     private string GetPluginsDirectory()
     {
+        var overridePath = PluginPaths.GetPluginsDirectoryOverride();
+        if (!string.IsNullOrWhiteSpace(overridePath))
+            return overridePath;
+
         var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
         
         var possiblePaths = new[]

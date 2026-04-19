@@ -3,7 +3,7 @@
   <PropertyGroup>
     <MajorVersion>3</MajorVersion>
     <MinorVersion>6</MinorVersion>
-    <PatchVersion>13</PatchVersion>
+    <PatchVersion>14</PatchVersion>
     <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
     <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
     <GitCommitHash>unknown</GitCommitHash>
