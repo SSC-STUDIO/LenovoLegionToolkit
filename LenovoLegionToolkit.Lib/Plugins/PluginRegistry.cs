@@ -26,7 +26,7 @@ public interface IPluginRegistry
     IPlugin? Get(string pluginId);
 
     /// <summary>
-    /// Get all registered plugins
+    /// Get all registered plugins (returns a snapshot copy for thread safety)
     /// </summary>
     IEnumerable<IPlugin> GetAll();
 
@@ -69,17 +69,28 @@ public interface IPluginRegistry
 /// <summary>
 /// Plugin registry implementation
 /// Manages plugin registration, metadata, and lifecycle
+/// Thread-safe implementation using locks
 /// </summary>
 public class PluginRegistry : IPluginRegistry
 {
     private readonly Dictionary<string, IPlugin> _registeredPlugins = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, PluginMetadata> _pluginMetadataCache = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _startedPlugins = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _lock = new();
 
     /// <summary>
     /// Get count of registered plugins
     /// </summary>
-    public int Count => _registeredPlugins.Count;
+    public int Count
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _registeredPlugins.Count;
+            }
+        }
+    }
 
     /// <summary>
     /// Register a plugin with its metadata
@@ -89,26 +100,29 @@ public class PluginRegistry : IPluginRegistry
         if (string.IsNullOrWhiteSpace(plugin.Id))
             throw new ArgumentException("Plugin ID cannot be null or empty", nameof(plugin));
 
-        if (_registeredPlugins.TryGetValue(plugin.Id, out var existingPlugin))
+        lock (_lock)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin {plugin.Id} is already registered. Replacing existing registration.");
-
-            try
-            {
-                existingPlugin.Stop();
-            }
-            catch (Exception ex)
+            if (_registeredPlugins.TryGetValue(plugin.Id, out var existingPlugin))
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to stop existing plugin {plugin.Id}: {ex.Message}", ex);
+                    Log.Instance.Trace($"Plugin {plugin.Id} is already registered. Replacing existing registration.");
+
+                try
+                {
+                    existingPlugin.Stop();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to stop existing plugin {plugin.Id}: {ex.Message}", ex);
+                }
+
+                _startedPlugins.Remove(plugin.Id);
             }
 
-            _startedPlugins.Remove(plugin.Id);
+            _registeredPlugins[plugin.Id] = plugin;
+            _pluginMetadataCache[plugin.Id] = metadata;
         }
-
-        _registeredPlugins[plugin.Id] = plugin;
-        _pluginMetadataCache[plugin.Id] = metadata;
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Registered plugin: {plugin.Id} ({plugin.Name})");
@@ -122,7 +136,18 @@ public class PluginRegistry : IPluginRegistry
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
-        if (_registeredPlugins.TryGetValue(pluginId, out var plugin))
+        IPlugin? plugin = null;
+        lock (_lock)
+        {
+            if (_registeredPlugins.TryGetValue(pluginId, out plugin))
+            {
+                _registeredPlugins.Remove(pluginId);
+                _pluginMetadataCache.Remove(pluginId);
+                _startedPlugins.Remove(pluginId);
+            }
+        }
+
+        if (plugin != null)
         {
             try
             {
@@ -137,10 +162,6 @@ public class PluginRegistry : IPluginRegistry
             plugin.OnUninstalled();
         }
 
-        _registeredPlugins.Remove(pluginId);
-        _pluginMetadataCache.Remove(pluginId);
-        _startedPlugins.Remove(pluginId);
-
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Unregistered plugin: {pluginId}");
     }
@@ -150,15 +171,21 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public IPlugin? Get(string pluginId)
     {
-        return _registeredPlugins.TryGetValue(pluginId, out var plugin) ? plugin : null;
+        lock (_lock)
+        {
+            return _registeredPlugins.TryGetValue(pluginId, out var plugin) ? plugin : null;
+        }
     }
 
     /// <summary>
-    /// Get all registered plugins
+    /// Get all registered plugins (returns a snapshot copy for thread safety)
     /// </summary>
     public IEnumerable<IPlugin> GetAll()
     {
-        return _registeredPlugins.Values;
+        lock (_lock)
+        {
+            return _registeredPlugins.Values.ToList();
+        }
     }
 
     /// <summary>
@@ -166,7 +193,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public PluginMetadata? GetMetadata(string pluginId)
     {
-        return _pluginMetadataCache.TryGetValue(pluginId, out var metadata) ? metadata : null;
+        lock (_lock)
+        {
+            return _pluginMetadataCache.TryGetValue(pluginId, out var metadata) ? metadata : null;
+        }
     }
 
     /// <summary>
@@ -174,7 +204,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public bool IsRegistered(string pluginId)
     {
-        return _registeredPlugins.ContainsKey(pluginId);
+        lock (_lock)
+        {
+            return _registeredPlugins.ContainsKey(pluginId);
+        }
     }
 
     /// <summary>
@@ -182,7 +215,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public bool IsStarted(string pluginId)
     {
-        return _startedPlugins.Contains(pluginId);
+        lock (_lock)
+        {
+            return _startedPlugins.Contains(pluginId);
+        }
     }
 
     /// <summary>
@@ -190,7 +226,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public bool MarkStarted(string pluginId)
     {
-        return _startedPlugins.Add(pluginId);
+        lock (_lock)
+        {
+            return _startedPlugins.Add(pluginId);
+        }
     }
 
     /// <summary>
@@ -198,7 +237,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public void MarkStopped(string pluginId)
     {
-        _startedPlugins.Remove(pluginId);
+        lock (_lock)
+        {
+            _startedPlugins.Remove(pluginId);
+        }
     }
 
     /// <summary>
@@ -206,7 +248,10 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public IEnumerable<string> GetStartedPluginIds()
     {
-        return _startedPlugins;
+        lock (_lock)
+        {
+            return _startedPlugins.ToList();
+        }
     }
 
     /// <summary>
@@ -214,7 +259,16 @@ public class PluginRegistry : IPluginRegistry
     /// </summary>
     public void Clear()
     {
-        foreach (var plugin in _registeredPlugins.Values)
+        List<IPlugin> plugins;
+        lock (_lock)
+        {
+            plugins = _registeredPlugins.Values.ToList();
+            _registeredPlugins.Clear();
+            _pluginMetadataCache.Clear();
+            _startedPlugins.Clear();
+        }
+
+        foreach (var plugin in plugins)
         {
             try
             {
@@ -226,10 +280,6 @@ public class PluginRegistry : IPluginRegistry
                     Log.Instance.Trace($"Failed to trigger OnUninstalled for plugin {plugin.Id}: {ex.Message}", ex);
             }
         }
-
-        _registeredPlugins.Clear();
-        _pluginMetadataCache.Clear();
-        _startedPlugins.Clear();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace("Cleared all plugin registrations");

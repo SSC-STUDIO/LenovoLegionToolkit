@@ -42,7 +42,7 @@ public class PluginManager : IPluginManager
     /// <summary>
     /// Scan and load plugins from the plugins directory
     /// </summary>
-    public async void ScanAndLoadPlugins()
+    public async Task ScanAndLoadPluginsAsync()
     {
         try
         {
@@ -84,6 +84,15 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error scanning plugins directory: {ex.Message}", ex);
         }
+    }
+
+    /// <summary>
+    /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)
+    /// </summary>
+    [Obsolete("Use ScanAndLoadPluginsAsync() instead. This method is fire-and-forget and cannot be awaited.")]
+    public void ScanAndLoadPlugins()
+    {
+        _ = ScanAndLoadPluginsAsync();
     }
 
     private void RegisterAssemblyResolver(string pluginsDirectory)
