@@ -7575,6 +7575,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installer exited with code {0}.
+        /// </summary>
+        public static string PackageControl_InstallError_ExitCode {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallError_ExitCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installation started.
         /// </summary>
         public static string PackageControl_InstallStarted_Title {

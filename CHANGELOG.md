@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- 修复驱动特性写入后校验失败仍报告成功、自动化 Quick Action 循环引用导致的无限递归，以及进程自动监听器缓存清理时的枚举删除异常，避免核心功能误报成功、卡死或在高事件压力下直接抛错 / Fixed driver-feature state writes reporting success after verification failure, infinite recursion from cyclic Quick Action pipelines, and process auto-listener cache cleanup mutating during enumeration to prevent false-success core operations, hangs, and runtime failures under event pressure
+- 修复 IPC 命名管道 ACL 配置错误（DENY Everyone 会阻止管理员访问），以及设置页 toggle 控件在异常后永久禁用的问题 / Fixed IPC named pipe ACL misconfiguration (DENY Everyone blocked admin access) and toggle controls remaining permanently disabled after errors in settings page
+- 修复主窗口“关闭时最小化”在异步保存窗口尺寸期间可能直接关闭，以及软件安装器忽略非零退出码误报成功的问题，避免窗口设置丢失和失败安装显示为已完成 / Fixed the main window close-to-tray flow potentially closing during async size persistence and package installers reporting success despite non-zero exit codes to prevent lost window state and failed installs appearing completed
+
 ### Improved / 改进
 - 升级 GitHub Actions 工作流依赖到支持 Node 24 的新版本，并修复 CI 中测试项目对预构建/预还原输出的脆弱依赖，减少后续 runner 运行时升级带来的流水线风险 / Upgraded GitHub Actions workflow dependencies to Node 24-capable versions and removed fragile CI assumptions about prebuilt/prerestored test outputs to reduce risk from future runner runtime upgrades
 - 清理测试项目中的 nullable 与 xUnit analyzer 告警，提升测试代码可维护性并减少 CI 噪声 / Cleaned nullable and xUnit analyzer warnings in the test project to improve test maintainability and reduce CI noise

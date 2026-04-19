@@ -141,6 +141,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableVantage_Error_Title, Resource.SettingsPage_DisableVantage_Error_Message, SnackbarType.Error);
+                _vantageToggle.IsEnabled = true;
                 return;
             }
 
@@ -229,6 +230,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableVantage_Error_Title, Resource.SettingsPage_EnableVantage_Error_Message, SnackbarType.Error);
+                _vantageToggle.IsEnabled = true;
                 return;
             }
         }
@@ -256,6 +258,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableLegionZone_Error_Title, Resource.SettingsPage_DisableLegionZone_Error_Message, SnackbarType.Error);
+                _legionZoneToggle.IsEnabled = true;
                 return;
             }
         }
@@ -268,6 +271,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableLegionZone_Error_Title, Resource.SettingsPage_EnableLegionZone_Error_Message, SnackbarType.Error);
+                _legionZoneToggle.IsEnabled = true;
                 return;
             }
         }
@@ -295,6 +299,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableLenovoHotkeys_Error_Title, Resource.SettingsPage_DisableLenovoHotkeys_Error_Message, SnackbarType.Error);
+                _fnKeysToggle.IsEnabled = true;
                 return;
             }
         }
@@ -307,6 +312,7 @@ public partial class SettingsApplicationBehaviorControl
             catch
             {
                 await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableLenovoHotkeys_Error_Title, Resource.SettingsPage_EnableLenovoHotkeys_Error_Message, SnackbarType.Error);
+                _fnKeysToggle.IsEnabled = true;
                 return;
             }
         }

@@ -600,46 +600,23 @@ public partial class PackageControl : IProgress<float>
             
             try
             {
-                _installProcess = Process.Start(processStartInfo);
-                if (_installProcess != null)
+                var installProcess = Process.Start(processStartInfo);
+                _installProcess = installProcess;
+
+                if (installProcess != null)
                 {
-                    _installProcess.EnableRaisingEvents = true;
-                    _installProcess.Exited += async (s, e) =>
+                    installProcess.EnableRaisingEvents = true;
+                    installProcess.Exited += async (s, e) =>
                     {
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            try
-                            {
-                                Status = PackageStatus.Completed;
-                                UpdateStatusDisplay();
-                                
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Install process exited. Status set to Completed. Badge should be visible.");
-                                
-                                _installProcess = null;
-                            }
-                            catch (Exception ex)
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Error updating status after install exit.", ex);
-                            }
-                        });
+                        await HandleInstallProcessExitAsync(installProcess);
                     };
                 }
                 
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallStarted_Title, string.Format(Resource.PackageControl_InstallStarted_Message, _package.FileName), SnackbarType.Success);
                 
                 // 如果进程立即退出，认为安装完成
-                if (_installProcess != null && _installProcess.HasExited)
-                {
-                    Status = PackageStatus.Completed;
-                    UpdateStatusDisplay();
-                    
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Install process exited immediately. Status set to Completed.");
-                    
-                    _installProcess = null;
-                }
+                if (installProcess != null && installProcess.HasExited)
+                    await HandleInstallProcessExitAsync(installProcess);
             }
             catch (Exception ex)
             {
@@ -657,6 +634,46 @@ public partial class PackageControl : IProgress<float>
             Status = PackageStatus.NotStarted;
         }
     }
+
+    private async Task HandleInstallProcessExitAsync(Process installProcess)
+    {
+        var exitCode = installProcess.ExitCode;
+        var status = GetStatusForInstallerExitCode(exitCode);
+        var failureMessage = GetInstallerExitFailureMessage(exitCode);
+
+        try
+        {
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (!ReferenceEquals(_installProcess, installProcess))
+                    return;
+
+                Status = status;
+                UpdateStatusDisplay();
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Install process exited with code {exitCode}. Status set to {status}.");
+
+                _installProcess = null;
+            });
+
+            if (failureMessage is not null)
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error updating status after install exit.", ex);
+        }
+    }
+
+    private static PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
+        ? PackageStatus.Completed
+        : PackageStatus.NotStarted;
+
+    private static string? GetInstallerExitFailureMessage(int exitCode) => exitCode == 0
+        ? null
+        : string.Format(Resource.PackageControl_InstallError_ExitCode, exitCode);
 
     private void StopInstallation()
     {
