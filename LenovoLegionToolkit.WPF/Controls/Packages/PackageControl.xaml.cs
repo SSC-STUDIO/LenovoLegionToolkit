@@ -643,10 +643,10 @@ public partial class PackageControl : IProgress<float>
 
         try
         {
-            await Dispatcher.InvokeAsync(() =>
+            var handled = await Dispatcher.InvokeAsync(() =>
             {
                 if (!ReferenceEquals(_installProcess, installProcess))
-                    return;
+                    return false;
 
                 Status = status;
                 UpdateStatusDisplay();
@@ -655,7 +655,11 @@ public partial class PackageControl : IProgress<float>
                     Log.Instance.Trace($"Install process exited with code {exitCode}. Status set to {status}.");
 
                 _installProcess = null;
+                return true;
             });
+
+            if (!handled)
+                return;
 
             if (failureMessage is not null)
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error);
