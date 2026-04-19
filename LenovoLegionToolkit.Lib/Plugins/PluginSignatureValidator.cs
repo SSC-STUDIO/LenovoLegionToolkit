@@ -31,7 +31,17 @@ public class PluginSignatureResult
     public string? Issuer { get; set; }
     public DateTime? ExpirationDate { get; set; }
 
-    public bool IsValid => Status == PluginSignatureStatus.Valid;
+    /// <summary>
+    /// Indicates whether the plugin should be allowed to load
+    /// This is true for Valid status, or NotSigned when AllowUnsigned policy is in effect
+    /// </summary>
+    public bool IsValid => Status == PluginSignatureStatus.Valid ||
+                          (Status == PluginSignatureStatus.NotSigned && IsAllowedByPolicy);
+
+    /// <summary>
+    /// Indicates if the result is allowed by policy (e.g., AllowUnsigned mode)
+    /// </summary>
+    public bool IsAllowedByPolicy { get; set; }
 
     public PluginSignatureResult(PluginSignatureStatus status, string? errorMessage = null)
     {
@@ -107,7 +117,8 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                         Log.Instance.Trace($"Plugin {dllPath} is not signed. Allowing unsigned plugins (development mode).");
 
                     return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        "Plugin is not signed. Allowed per policy.");
+                        "Plugin is not signed. Allowed per policy.")
+                    { IsAllowedByPolicy = true };
                 }
 
                 if (Log.Instance.IsTraceEnabled)
@@ -174,7 +185,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
 
             // Validate certificate chain and trust
             using var chain = new X509Chain();
-            chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+            chain.ChainPolicy.RevocationMode = _settings.CheckRevocationStatus ? X509RevocationMode.Online : X509RevocationMode.NoCheck;
             chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
             chain.ChainPolicy.VerificationTime = DateTime.UtcNow;
             chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;

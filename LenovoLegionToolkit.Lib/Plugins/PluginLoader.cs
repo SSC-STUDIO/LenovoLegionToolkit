@@ -42,6 +42,8 @@ public class PluginLoader : IPluginLoader
     /// </summary>
     public async Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator)
     {
+        ResolveEventHandler? assemblyResolveHandler = null;
+
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -57,11 +59,19 @@ public class PluginLoader : IPluginLoader
                 return null;
             }
 
+            var normalizedDllPath = Path.GetFullPath(dllPath);
+            var pluginDirectory = Path.GetDirectoryName(normalizedDllPath);
+            if (!string.IsNullOrWhiteSpace(pluginDirectory))
+            {
+                assemblyResolveHandler = (_, args) => ResolvePluginDependencyAssembly(args.Name, normalizedDllPath, pluginDirectory, signatureValidator);
+                AppDomain.CurrentDomain.AssemblyResolve += assemblyResolveHandler;
+            }
+
             // Load the assembly from bytes to avoid file locking
             Assembly? assembly = null;
             try
             {
-                var assemblyBytes = File.ReadAllBytes(dllPath);
+                var assemblyBytes = File.ReadAllBytes(normalizedDllPath);
                 assembly = Assembly.Load(assemblyBytes);
             }
             catch (Exception ex)
@@ -128,6 +138,146 @@ public class PluginLoader : IPluginLoader
                 Log.Instance.Trace($"Failed to load plugin assembly from {dllPath}: {ex.Message}", ex);
             return null;
         }
+        finally
+        {
+            if (assemblyResolveHandler != null)
+                AppDomain.CurrentDomain.AssemblyResolve -= assemblyResolveHandler;
+        }
+    }
+
+    private static Assembly? ResolvePluginDependencyAssembly(
+        string requestedAssemblyFullName,
+        string pluginMainAssemblyPath,
+        string pluginDirectory,
+        IPluginSignatureValidator signatureValidator)
+    {
+        try
+        {
+            var requestedAssemblyName = new AssemblyName(requestedAssemblyFullName);
+            var assemblyName = requestedAssemblyName.Name;
+            if (string.IsNullOrWhiteSpace(assemblyName) || !IsSafeAssemblyName(assemblyName))
+                return null;
+
+            // Try to find a version-compatible loaded assembly
+            // Compare name, version, and public key token for proper binding
+            var loadedAssembly = FindCompatibleLoadedAssembly(requestedAssemblyName);
+            if (loadedAssembly != null)
+                return loadedAssembly;
+
+            var candidatePath = GetPluginAssemblyCandidatePath(requestedAssemblyName, pluginMainAssemblyPath, pluginDirectory);
+            if (string.IsNullOrWhiteSpace(candidatePath) || !File.Exists(candidatePath))
+                return null;
+
+            var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
+            if (!signatureResult.IsValid)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected plugin dependency due to invalid signature. [path={candidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
+                return null;
+            }
+
+            return Assembly.LoadFrom(candidatePath);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve plugin dependency assembly {requestedAssemblyFullName}.", ex);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Find a loaded assembly that is compatible with the requested assembly name.
+    /// Compares name, version (if specified), and public key token (if specified).
+    /// </summary>
+    private static Assembly? FindCompatibleLoadedAssembly(AssemblyName requestedName)
+    {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var requestedVersion = requestedName.Version;
+        var requestedPublicKey = requestedName.GetPublicKeyToken();
+
+        foreach (var assembly in assemblies)
+        {
+            var assemblyName = assembly.GetName();
+
+            // Name must match (case-insensitive)
+            if (!string.Equals(assemblyName.Name, requestedName.Name, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            // If version is specified, check for version compatibility
+            // Accept exact match or higher version (binding redirect behavior)
+            if (requestedVersion != null && assemblyName.Version != null)
+            {
+                if (assemblyName.Version < requestedVersion)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping loaded assembly {assemblyName.Name} v{assemblyName.Version} - requested version {requestedVersion} is higher");
+                    continue;
+                }
+            }
+
+            // If public key token is specified, it must match
+            if (requestedPublicKey != null && requestedPublicKey.Length > 0)
+            {
+                var assemblyPublicKey = assemblyName.GetPublicKeyToken();
+                if (assemblyPublicKey == null || !requestedPublicKey.SequenceEqual(assemblyPublicKey))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping loaded assembly {assemblyName.Name} - public key token mismatch");
+                    continue;
+                }
+            }
+
+            return assembly;
+        }
+
+        return null;
+    }
+
+    private static string? GetPluginAssemblyCandidatePath(AssemblyName requestedAssemblyName, string pluginMainAssemblyPath, string pluginDirectory)
+    {
+        var assemblyName = requestedAssemblyName.Name;
+        if (string.IsNullOrWhiteSpace(assemblyName) || string.IsNullOrWhiteSpace(pluginDirectory))
+            return null;
+
+        var candidatePath = assemblyName.EndsWith(".resources", StringComparison.OrdinalIgnoreCase) &&
+                            requestedAssemblyName.CultureInfo is { Name.Length: > 0 } cultureInfo
+            ? Path.Combine(pluginDirectory, cultureInfo.Name, $"{assemblyName[..^".resources".Length]}.resources.dll")
+            : Path.Combine(pluginDirectory, $"{assemblyName}.dll");
+
+        var normalizedCandidatePath = Path.GetFullPath(candidatePath);
+        if (string.Equals(normalizedCandidatePath, Path.GetFullPath(pluginMainAssemblyPath), StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        return IsPathWithinDirectory(normalizedCandidatePath, pluginDirectory)
+            ? normalizedCandidatePath
+            : null;
+    }
+
+    private static bool IsPathWithinDirectory(string path, string directoryPath)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var fullDirectory = EnsureTrailingSeparator(Path.GetFullPath(directoryPath));
+        return fullPath.StartsWith(fullDirectory, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string EnsureTrailingSeparator(string path)
+    {
+        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+            return path;
+
+        return path + Path.DirectorySeparatorChar;
+    }
+
+    private static bool IsSafeAssemblyName(string assemblyName)
+    {
+        foreach (var c in assemblyName)
+        {
+            if (!(char.IsLetterOrDigit(c) || c == '.' || c == '_' || c == '-'))
+                return false;
+        }
+
+        return true;
     }
 
     /// <summary>

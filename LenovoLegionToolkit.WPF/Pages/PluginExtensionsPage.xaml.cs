@@ -721,58 +721,65 @@ private string _currentSearchText = string.Empty;
         {
             var rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var pluginsDirectory = Path.Combine(rootDirectory, "plugins");
-            
+
             if (!Directory.Exists(pluginsDirectory))
                 return;
-            
+
             var pluginDirectories = Directory.GetDirectories(pluginsDirectory);
             if (pluginDirectories.Length == 0)
                 return;
-            
+
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow == null)
                 return;
-            
-            var loadCount = 0;
+
+            // Count potential new plugins (not already installed)
+            var newPluginCount = 0;
             foreach (var pluginDir in pluginDirectories)
             {
                 var pluginId = Path.GetFileName(pluginDir);
-                
+
                 // Check if plugin is already installed
                 if (_pluginManager.IsInstalled(pluginId))
                     continue;
-                
+
                 // Check if this is a plugin directory (has DLL file)
                 var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
                 if (dllFiles.Length == 0)
                     continue;
-                
-                try
-                {
-                    // Try to load the plugin
-                    await Task.Run(() => _pluginManager.ScanAndLoadPlugins());
-                    loadCount++;
-                    
-                    if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                    {
-                        Lib.Utils.Log.Instance.Trace($"Auto-loaded plugin from root directory: {pluginId}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Lib.Utils.Log.Instance.Trace($"Error auto-loading plugin {pluginId}: {ex.Message}", ex);
-                }
-            }
-            
-            if (loadCount > 0)
-            {
-                await Task.Delay(500);
-                UpdateAllPluginsUI();
-                
+
+                newPluginCount++;
+
                 if (Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    Lib.Utils.Log.Instance.Trace($"Auto-loaded {loadCount} plugins from root directory");
+                    Lib.Utils.Log.Instance.Trace($"Found potential new plugin in root directory: {pluginId}");
                 }
+            }
+
+            if (newPluginCount == 0)
+                return;
+
+            // Scan and load all plugins once (not per-directory)
+            try
+            {
+                await _pluginManager.ScanAndLoadPluginsAsync();
+
+                if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                {
+                    Lib.Utils.Log.Instance.Trace($"Scanned plugins directory, found {newPluginCount} potential new plugins");
+                }
+            }
+            catch (Exception ex)
+            {
+                Lib.Utils.Log.Instance.Trace($"Error scanning plugins: {ex.Message}", ex);
+            }
+
+            await Task.Delay(500);
+            UpdateAllPluginsUI();
+
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                Lib.Utils.Log.Instance.Trace($"Auto-loaded {newPluginCount} plugins from root directory");
             }
         }
         catch (Exception ex)

@@ -100,6 +100,8 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         result.Should().NotBeNull();
         result.Status.Should().Be(PluginSignatureStatus.NotSigned);
         result.ErrorMessage.Should().Contain("not signed");
+        result.IsAllowedByPolicy.Should().BeTrue();
+        result.IsValid.Should().BeTrue(); // Should be valid when AllowUnsigned policy is in effect
     }
 
     [Fact]
