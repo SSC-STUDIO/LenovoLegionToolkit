@@ -89,8 +89,8 @@
             </Setter>
         </Style>
         <Style TargetType="Border" x:Key="CardContainerStyle">
-            <Setter Property="Padding" Value="20" />
-            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="{StaticResource SpacingMD}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLG}" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -105,14 +105,8 @@
         <Style TargetType="TextBlock" x:Key="SectionTitleTextStyle" BasedOn="{StaticResource AppSectionTitleTextBlockStyle}">
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
-        <Style x:Key="PrimaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-            <Setter Property="Appearance" Value="Primary" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-                <Setter Property="MinWidth" Value="180" />
-                <Setter Property="MinHeight" Value="36" />
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonPrimary}">
+            <Setter Property="MinWidth" Value="180" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">

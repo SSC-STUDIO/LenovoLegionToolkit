@@ -16,16 +16,14 @@
     mc:Ignorable="d">
     <wpfui:UiWindow.Resources>
         <system:Double x:Key="SymbolFontSize">24</system:Double>
-        <system:Double x:Key="PrimaryFontSize">14</system:Double>
-        <system:Double x:Key="SecondaryFontSize">14</system:Double>
-        <system:Double x:Key="TertiaryFontSize">12</system:Double>
+        <system:Double x:Key="BodyFontSize">14</system:Double>
     </wpfui:UiWindow.Resources>
 
     <StackPanel Background="{DynamicResource SystemFillColorSolidNeutralBackgroundBrush}">
         <TextBlock
             x:Name="_title"
             Margin="16,16,16,0"
-            FontSize="{StaticResource TertiaryFontSize}"
+            Style="{StaticResource AppCaptionTextBlockStyle}"
             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
             Text="{x:Static resources:Resource.AppName}" />
 
@@ -51,9 +49,8 @@
                 Margin="8,0,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_PowerMode}"
-                FontSize="{StaticResource PrimaryFontSize}"
-                FontWeight="Medium"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
+                FontWeight="Medium" />
             <StackPanel
                 Grid.Row="0"
                 Grid.Column="3"
@@ -70,7 +67,7 @@
                     x:Name="_powerModeValueLabel"
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
-                    FontSize="{StaticResource PrimaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             </StackPanel>
 
@@ -81,7 +78,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_Preset}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                 Visibility="Collapsed" />
@@ -91,7 +88,7 @@
                 Grid.Column="3"
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                 Visibility="Collapsed" />
         </Grid>
@@ -119,7 +116,7 @@
                 Margin="8,0,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_DiscreteGPU}"
-                FontSize="{StaticResource PrimaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <StackPanel
@@ -140,7 +137,7 @@
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
                     Content="{x:Static resources:Resource.Active}"
-                    FontSize="{StaticResource PrimaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             </StackPanel>
             <StackPanel
@@ -161,7 +158,7 @@
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
                     Content="{x:Static resources:Resource.Inactive}"
-                    FontSize="{StaticResource PrimaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             </StackPanel>
             <StackPanel
@@ -182,7 +179,7 @@
                     Margin="8,0,0,0"
                     VerticalContentAlignment="Center"
                     Content="{x:Static resources:Resource.PoweredOff}"
-                    FontSize="{StaticResource PrimaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             </StackPanel>
 
@@ -193,7 +190,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_PowerState}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -202,7 +199,7 @@
                 Grid.Column="3"
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         </Grid>
 
@@ -234,7 +231,7 @@
                 Margin="8,0,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_Battery}"
-                FontSize="{StaticResource PrimaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <Label
@@ -245,7 +242,7 @@
                 HorizontalAlignment="Right"
                 VerticalContentAlignment="Center"
                 FlowDirection="LeftToRight"
-                FontSize="{StaticResource PrimaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <Label
@@ -254,7 +251,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_Mode}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -263,7 +260,7 @@
                 Grid.Column="3"
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
             <Label
@@ -273,7 +270,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_DischargeRate}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -283,7 +280,7 @@
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
                 FlowDirection="LeftToRight"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
                 x:Name="_batteryMinDischargeLabel"
@@ -292,7 +289,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_MinDischargeRate}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -302,7 +299,7 @@
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
                 FlowDirection="LeftToRight"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
                 x:Name="_batteryMaxDischargeLabel"
@@ -311,7 +308,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_MaxDischargeRate}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -321,7 +318,7 @@
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
                 FlowDirection="LeftToRight"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
                 Grid.Row="5"
@@ -329,7 +326,7 @@
                 Margin="8,4,0,0"
                 VerticalContentAlignment="Center"
                 Content="{x:Static resources:Resource.StatusTrayPopup_UsageTime}"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Label
@@ -339,7 +336,7 @@
                 Margin="16,4,0,0"
                 HorizontalAlignment="Right"
                 FlowDirection="LeftToRight"
-                FontSize="{StaticResource SecondaryFontSize}"
+                FontSize="{StaticResource BodyFontSize}"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         </Grid>
 
@@ -352,11 +349,11 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <wpfui:SymbolIcon
                     Margin="0,0,4,0"
-                    FontSize="{StaticResource PrimaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Symbol="ArrowSync24" />
                 <TextBlock
-                    FontSize="{StaticResource SecondaryFontSize}"
+                    FontSize="{StaticResource BodyFontSize}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.StatusTrayPopup_UpdateAvailable}" />
             </StackPanel>

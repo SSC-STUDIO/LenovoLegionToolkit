@@ -20,8 +20,7 @@
         <TextBlock
             Padding="0,0,0,8"
             Focusable="True"
-            FontSize="16"
-            FontWeight="Medium"
+            Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
             Text="{x:Static resources:Resource.AboutPage_AppName}" />
         <TextBlock
             x:Name="_version"

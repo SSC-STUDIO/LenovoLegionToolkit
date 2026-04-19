@@ -29,15 +29,22 @@ public partial class SettingsPowerControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
+        // Run all async operations in parallel
+        var miTask = Compatibility.GetMachineInformationAsync();
+        var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
+
+        await Task.WhenAll(miTask, powerModeSupportedTask);
+
+        var mi = miTask.Result;
+        var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
 
         try
         {
-            var mi = await Compatibility.GetMachineInformationAsync();
             if (mi.Features[CapabilityID.GodModeFnQSwitchable])
             {
+                var fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
                 _godModeFnQSwitchableCard.Visibility = Visibility.Visible;
-                _godModeFnQSwitchableToggle.IsChecked = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable) == 1;
+                _godModeFnQSwitchableToggle.IsChecked = fnQValue == 1;
             }
             else
             {
@@ -54,15 +61,12 @@ public partial class SettingsPowerControl
 
         _powerModeMappingComboBox.SetItems(Enum.GetValues<PowerModeMappingMode>(), _settings.Store.PowerModeMappingMode, t => t.GetDisplayName());
 
-        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
         _powerModeMappingCard.Visibility = isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
 
         _onBatterySinceResetToggle.IsChecked = _settings.Store.ResetBatteryOnSinceTimerOnReboot;
-
-        await loadingTask;
 
         _isRefreshing = false;
     }
@@ -78,9 +82,19 @@ public partial class SettingsPowerControl
 
         _godModeFnQSwitchableToggle.IsEnabled = false;
 
-        await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
-
-        _godModeFnQSwitchableToggle.IsEnabled = true;
+        try
+        {
+            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set GodModeFnQSwitchable.", ex);
+        }
+        finally
+        {
+            _godModeFnQSwitchableToggle.IsEnabled = true;
+        }
     }
 
     private async void PowerModeMappingComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

@@ -30,20 +30,8 @@ public partial class SettingsAppearanceControl
     {
         _isRefreshing = true;
 
-        // Reduced delay for faster initial display
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(100));
-
         var languages = LocalizationHelper.Languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase).ToArray();
-        var language = await LocalizationHelper.GetLanguageAsync();
-        if (languages.Length > 1)
-        {
-            _langComboBox.SetItems(languages, language, LocalizationHelper.LanguageDisplayName);
-            _langComboBox.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            _langCardControl.Visibility = Visibility.Collapsed;
-        }
+        var languageTask = LocalizationHelper.GetLanguageAsync();
 
         _temperatureComboBox.SetItems(Enum.GetValues<TemperatureUnit>(), _settings.Store.TemperatureUnit, t => t switch
         {
@@ -60,7 +48,16 @@ public partial class SettingsAppearanceControl
         _temperatureComboBox.Visibility = Visibility.Visible;
         _themeComboBox.Visibility = Visibility.Visible;
 
-        await loadingTask;
+        var language = await languageTask;
+        if (languages.Length > 1)
+        {
+            _langComboBox.SetItems(languages, language, LocalizationHelper.LanguageDisplayName);
+            _langComboBox.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            _langCardControl.Visibility = Visibility.Collapsed;
+        }
 
         _isRefreshing = false;
     }
