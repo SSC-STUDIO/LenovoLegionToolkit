@@ -633,37 +633,68 @@
                 HorizontalAlignment="Center"
                 Visibility="Collapsed"
                 Margin="24">
-                <wpfui:SymbolIcon
-                    Symbol="ArrowSync24"
-                    FontSize="48"
-                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                <Grid HorizontalAlignment="Center" Margin="0,0,0,16">
+                    <!-- Outer ring -->
+                    <Ellipse
+                        Width="56"
+                        Height="56"
+                        Stroke="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        StrokeThickness="3"
+                        Opacity="0.3" />
+                    <!-- Spinning arc -->
+                    <wpfui:SymbolIcon
+                        Symbol="ArrowSync24"
+                        FontSize="32"
+                        Foreground="{DynamicResource SystemAccentColorBrush}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        RenderTransformOrigin="0.5,0.5">
+                        <wpfui:SymbolIcon.RenderTransform>
+                            <RotateTransform Angle="0" />
+                        </wpfui:SymbolIcon.RenderTransform>
+                        <wpfui:SymbolIcon.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                            From="0"
+                                            To="360"
+                                            Duration="0:0:1.2"
+                                            RepeatBehavior="Forever">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuadraticEase EasingMode="EaseInOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </wpfui:SymbolIcon.Triggers>
+                    </wpfui:SymbolIcon>
+                </Grid>
+                <TextBlock
+                    x:Name="_loadingText"
+                    FontSize="15"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     HorizontalAlignment="Center"
-                    Margin="0,0,0,16">
-                    <wpfui:SymbolIcon.RenderTransform>
-                        <RotateTransform Angle="0" />
-                    </wpfui:SymbolIcon.RenderTransform>
-                    <wpfui:SymbolIcon.Triggers>
+                    TextAlignment="Center"
+                    Opacity="0">
+                    <TextBlock.Triggers>
                         <EventTrigger RoutedEvent="Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation
-                                        Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                        Storyboard.TargetProperty="Opacity"
                                         From="0"
-                                        To="360"
-                                        Duration="0:0:1"
-                                        RepeatBehavior="Forever" />
+                                        To="1"
+                                        Duration="0:0:0.4"
+                                        BeginTime="0:0:0.2" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
-                    </wpfui:SymbolIcon.Triggers>
-                </wpfui:SymbolIcon>
-                <TextBlock
-                    x:Name="_loadingText"
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center" />
+                    </TextBlock.Triggers>
+                </TextBlock>
             </StackPanel>
 
             <!-- No Plugins Message -->
