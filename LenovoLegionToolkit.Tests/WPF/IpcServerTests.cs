@@ -27,15 +27,16 @@ public class IpcServerTests
             .Cast<PipeAccessRule>()
             .ToList();
 
-        rules.Should().ContainSingle(rule =>
+        var adminRules = rules.Where(rule =>
             rule.AccessControlType == AccessControlType.Allow &&
             rule.IdentityReference is SecurityIdentifier sid &&
             sid.IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid) &&
             rule.PipeAccessRights.HasFlag(PipeAccessRights.ReadWrite));
 
+        adminRules.Should().ContainSingle();
         rules.Should().NotContain(rule =>
             rule.AccessControlType == AccessControlType.Deny &&
-            rule.IdentityReference is SecurityIdentifier sid &&
-            sid.IsWellKnown(WellKnownSidType.WorldSid));
+            rule.IdentityReference is SecurityIdentifier &&
+            ((SecurityIdentifier)rule.IdentityReference).IsWellKnown(WellKnownSidType.WorldSid));
     }
 }
