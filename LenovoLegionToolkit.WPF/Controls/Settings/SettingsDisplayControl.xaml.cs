@@ -25,17 +25,19 @@ public partial class SettingsDisplayControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
+        var fnKeysTask = _fnKeysDisabler.GetStatusAsync();
+        var bootLogoTask = BootLogo.IsSupportedAsync();
 
-        var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
-        _notificationsCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
-        _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _synchronizeBrightnessToAllPowerPlansToggle.IsChecked = _settings.Store.SynchronizeBrightnessToAllPowerPlans;
         _forceSoftwareRenderingToggle.IsChecked = _settings.Store.ForceSoftwareRendering;
 
-        _bootLogoCard.Visibility = await BootLogo.IsSupportedAsync() ? Visibility.Visible : Visibility.Collapsed;
+        await Task.WhenAll(fnKeysTask, bootLogoTask);
 
-        await loadingTask;
+        var fnKeysStatus = fnKeysTask.Result;
+        _notificationsCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
+        _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
+
+        _bootLogoCard.Visibility = bootLogoTask.Result ? Visibility.Visible : Visibility.Collapsed;
 
         _isRefreshing = false;
     }

@@ -10,7 +10,6 @@ public class CardHeaderControl : UserControl
 {
     private readonly TextBlock _titleTextBlock = new()
     {
-        FontSize = 14,
         FontWeight = FontWeights.Medium,
         VerticalAlignment = VerticalAlignment.Center,
         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -18,7 +17,6 @@ public class CardHeaderControl : UserControl
 
     private readonly TextBlock _subtitleTextBlock = new()
     {
-        FontSize = 12,
         Margin = new(0, 4, 0, 0),
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -26,7 +24,6 @@ public class CardHeaderControl : UserControl
 
     private readonly TextBlock _warningTextBlock = new()
     {
-        FontSize = 12,
         Margin = new(0, 4, 0, 0),
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -140,6 +137,11 @@ public class CardHeaderControl : UserControl
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
+
+        // Apply Typography styles
+        _titleTextBlock.SetResourceReference(StyleProperty, "AppPageDescriptionTextBlockStyle");
+        _subtitleTextBlock.SetResourceReference(StyleProperty, "AppCaptionTextBlockStyle");
+        _warningTextBlock.SetResourceReference(StyleProperty, "AppCaptionTextBlockStyle");
 
         Grid.SetColumn(_titleTextBlock, 0);
         Grid.SetColumn(_stackPanel, 0);

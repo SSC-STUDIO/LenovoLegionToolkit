@@ -33,14 +33,20 @@ public partial class SettingsApplicationBehaviorControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
-
         _autorunComboBox.SetItems(Enum.GetValues<AutorunState>(), Autorun.State, t => t.GetDisplayName());
         _minimizeToTrayToggle.IsChecked = _settings.Store.MinimizeToTray;
         _minimizeOnCloseToggle.IsChecked = _settings.Store.MinimizeOnClose;
 
-        // Only show compatibility warning setting on incompatible devices
-        var (isCompatible, _) = await Compatibility.IsCompatibleAsync();
+        // Run all async operations in parallel
+        var compatibilityTask = Compatibility.IsCompatibleAsync();
+        var miTask = Compatibility.GetMachineInformationAsync();
+        var vantageTask = _vantageDisabler.GetStatusAsync();
+        var legionZoneTask = _legionZoneDisabler.GetStatusAsync();
+        var fnKeysTask = _fnKeysDisabler.GetStatusAsync();
+
+        await Task.WhenAll(compatibilityTask, miTask, vantageTask, legionZoneTask, fnKeysTask);
+
+        var (isCompatible, _) = compatibilityTask.Result;
         if (!isCompatible)
         {
             _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
@@ -51,24 +57,36 @@ public partial class SettingsApplicationBehaviorControl
             _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
         }
 
-        var mi = await Compatibility.GetMachineInformationAsync();
+        var mi = miTask.Result;
         var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
 
-        var vantageStatus = await _vantageDisabler.GetStatusAsync();
+        var vantageStatus = vantageTask.Result;
         _vantageCard.Visibility = isSupportedLegionMachine && vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _vantageToggle.IsChecked = vantageStatus == SoftwareStatus.Disabled;
 
-        var legionZoneStatus = await _legionZoneDisabler.GetStatusAsync();
+        var legionZoneStatus = legionZoneTask.Result;
         _legionZoneCard.Visibility = isSupportedLegionMachine && legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _legionZoneToggle.IsChecked = legionZoneStatus == SoftwareStatus.Disabled;
 
-        var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+        var fnKeysStatus = fnKeysTask.Result;
         _fnKeysCard.Visibility = isSupportedLegionMachine && fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
 
-        await loadingTask;
-
         _isRefreshing = false;
+    }
+
+    private static async Task RunWithToggleDisabledAsync(UIElement toggle, Func<Task> action)
+    {
+        toggle.IsEnabled = false;
+
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            toggle.IsEnabled = true;
+        }
     }
 
     private void AutorunComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -126,116 +144,120 @@ public partial class SettingsApplicationBehaviorControl
         if (_isRefreshing)
             return;
 
-        _vantageToggle.IsEnabled = false;
-
         var state = _vantageToggle.IsChecked;
         if (state is null)
             return;
 
-        if (state.Value)
+        try
         {
-            try
+            await RunWithToggleDisabledAsync(_vantageToggle, async () =>
             {
-                await _vantageDisabler.DisableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableVantage_Error_Title, Resource.SettingsPage_DisableVantage_Error_Message, SnackbarType.Error);
-                _vantageToggle.IsEnabled = true;
-                return;
-            }
-
-            try
-            {
-                if (await _rgbKeyboardBacklightController.IsSupportedAsync())
+                if (state.Value)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Setting light control owner and restoring preset...");
+                    try
+                    {
+                        await _vantageDisabler.DisableAsync();
+                    }
+                    catch
+                    {
+                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableVantage_Error_Title, Resource.SettingsPage_DisableVantage_Error_Message, SnackbarType.Error);
+                        return;
+                    }
 
-                    await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(true, true);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Couldn't set light control owner or current preset.", ex);
-            }
+                    try
+                    {
+                        if (await _rgbKeyboardBacklightController.IsSupportedAsync())
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Setting light control owner and restoring preset...");
 
-            try
-            {
-                var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-                if (await controller.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Starting Aurora if needed...");
-
-                    var result = await controller.StartAuroraIfNeededAsync();
-                    if (result)
+                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(true, true);
+                        }
+                    }
+                    catch (System.Exception ex)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Aurora started.");
+                            Log.Instance.Trace($"Couldn't set light control owner or current preset.", ex);
                     }
-                    else
+
+                    try
+                    {
+                        var controller = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
+                        if (await controller.IsSupportedAsync())
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Starting Aurora if needed...");
+
+                            var result = await controller.StartAuroraIfNeededAsync();
+                            if (result)
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Aurora started.");
+                            }
+                            else
+                            {
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Aurora not needed.");
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
                     {
                         if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Aurora not needed.");
+                            Log.Instance.Trace($"Couldn't start Aurora if needed.", ex);
                     }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Couldn't start Aurora if needed.", ex);
-            }
+                else
+                {
+                    try
+                    {
+                        if (await _rgbKeyboardBacklightController.IsSupportedAsync())
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Setting light control owner...");
+
+                            await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(false);
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Couldn't set light control owner.", ex);
+                    }
+
+                    try
+                    {
+                        if (IoCContainer.TryResolve<SpectrumKeyboardBacklightController>() is { } spectrumKeyboardBacklightController)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Making sure Aurora is stopped...");
+
+                            if (await spectrumKeyboardBacklightController.IsSupportedAsync())
+                                await spectrumKeyboardBacklightController.StopAuroraIfNeededAsync();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Couldn't stop Aurora.", ex);
+                    }
+
+                    try
+                    {
+                        await _vantageDisabler.EnableAsync();
+                    }
+                    catch
+                    {
+                        await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableVantage_Error_Title, Resource.SettingsPage_EnableVantage_Error_Message, SnackbarType.Error);
+                    }
+                }
+            });
         }
-        else
+        catch (Exception ex)
         {
-            try
-            {
-                if (await _rgbKeyboardBacklightController.IsSupportedAsync())
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Setting light control owner...");
-
-                    await _rgbKeyboardBacklightController.SetLightControlOwnerAsync(false);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Couldn't set light control owner.", ex);
-            }
-
-            try
-            {
-                if (IoCContainer.TryResolve<SpectrumKeyboardBacklightController>() is { } spectrumKeyboardBacklightController)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Making sure Aurora is stopped...");
-
-                    if (await spectrumKeyboardBacklightController.IsSupportedAsync())
-                        await spectrumKeyboardBacklightController.StopAuroraIfNeededAsync();
-                }
-            }
-            catch (System.Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Couldn't stop Aurora.", ex);
-            }
-
-            try
-            {
-                await _vantageDisabler.EnableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableVantage_Error_Title, Resource.SettingsPage_EnableVantage_Error_Message, SnackbarType.Error);
-                _vantageToggle.IsEnabled = true;
-                return;
-            }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unexpected failure while toggling Vantage state.", ex);
         }
-
-        _vantageToggle.IsEnabled = true;
     }
 
     private async void LegionZoneToggle_Click(object sender, RoutedEventArgs e)
@@ -243,40 +265,35 @@ public partial class SettingsApplicationBehaviorControl
         if (_isRefreshing)
             return;
 
-        _legionZoneToggle.IsEnabled = false;
-
         var state = _legionZoneToggle.IsChecked;
         if (state is null)
             return;
 
-        if (state.Value)
+        try
         {
-            try
+            await RunWithToggleDisabledAsync(_legionZoneToggle, async () =>
             {
-                await _legionZoneDisabler.DisableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableLegionZone_Error_Title, Resource.SettingsPage_DisableLegionZone_Error_Message, SnackbarType.Error);
-                _legionZoneToggle.IsEnabled = true;
-                return;
-            }
+                try
+                {
+                    if (state.Value)
+                        await _legionZoneDisabler.DisableAsync();
+                    else
+                        await _legionZoneDisabler.EnableAsync();
+                }
+                catch
+                {
+                    await SnackbarHelper.ShowAsync(
+                        state.Value ? Resource.SettingsPage_DisableLegionZone_Error_Title : Resource.SettingsPage_EnableLegionZone_Error_Title,
+                        state.Value ? Resource.SettingsPage_DisableLegionZone_Error_Message : Resource.SettingsPage_EnableLegionZone_Error_Message,
+                        SnackbarType.Error);
+                }
+            });
         }
-        else
+        catch (Exception ex)
         {
-            try
-            {
-                await _legionZoneDisabler.EnableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableLegionZone_Error_Title, Resource.SettingsPage_EnableLegionZone_Error_Message, SnackbarType.Error);
-                _legionZoneToggle.IsEnabled = true;
-                return;
-            }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unexpected failure while toggling Legion Zone state.", ex);
         }
-
-        _legionZoneToggle.IsEnabled = true;
     }
 
     private async void FnKeysToggle_Click(object sender, RoutedEventArgs e)
@@ -284,44 +301,40 @@ public partial class SettingsApplicationBehaviorControl
         if (_isRefreshing)
             return;
 
-        _fnKeysToggle.IsEnabled = false;
-
         var state = _fnKeysToggle.IsChecked;
         if (state is null)
             return;
 
-        if (state.Value)
+        try
         {
-            try
+            await RunWithToggleDisabledAsync(_fnKeysToggle, async () =>
             {
-                await _fnKeysDisabler.DisableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_DisableLenovoHotkeys_Error_Title, Resource.SettingsPage_DisableLenovoHotkeys_Error_Message, SnackbarType.Error);
-                _fnKeysToggle.IsEnabled = true;
-                return;
-            }
+                try
+                {
+                    if (state.Value)
+                        await _fnKeysDisabler.DisableAsync();
+                    else
+                        await _fnKeysDisabler.EnableAsync();
+                }
+                catch
+                {
+                    await SnackbarHelper.ShowAsync(
+                        state.Value ? Resource.SettingsPage_DisableLenovoHotkeys_Error_Title : Resource.SettingsPage_EnableLenovoHotkeys_Error_Title,
+                        state.Value ? Resource.SettingsPage_DisableLenovoHotkeys_Error_Message : Resource.SettingsPage_EnableLenovoHotkeys_Error_Message,
+                        SnackbarType.Error);
+                    return;
+                }
+
+                // Notify other controls about FnKeys status change
+                var newFnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+                FnKeysStatusChanged?.Invoke(this, newFnKeysStatus);
+            });
         }
-        else
+        catch (Exception ex)
         {
-            try
-            {
-                await _fnKeysDisabler.EnableAsync();
-            }
-            catch
-            {
-                await SnackbarHelper.ShowAsync(Resource.SettingsPage_EnableLenovoHotkeys_Error_Title, Resource.SettingsPage_EnableLenovoHotkeys_Error_Message, SnackbarType.Error);
-                _fnKeysToggle.IsEnabled = true;
-                return;
-            }
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unexpected failure while toggling FnKeys state.", ex);
         }
-
-        _fnKeysToggle.IsEnabled = true;
-
-        // Notify other controls about FnKeys status change
-        var newFnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
-        FnKeysStatusChanged?.Invoke(this, newFnKeysStatus);
     }
 }
 }

@@ -26,8 +26,6 @@ public partial class SettingsSmartKeysControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
-
         _smartFnLockComboBox.SetItems([ModifierKey.None, ModifierKey.Alt, ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift],
             _settings.Store.SmartFnLockFlags,
             m => m is ModifierKey.None ? Resource.Off : m.GetFlagsDisplayName(ModifierKey.None));
@@ -35,8 +33,6 @@ public partial class SettingsSmartKeysControl
         var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
         _smartKeySinglePressActionCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _smartKeyDoublePressActionCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
-
-        await loadingTask;
 
         _isRefreshing = false;
     }

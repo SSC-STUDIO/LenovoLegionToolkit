@@ -71,13 +71,12 @@ public static class SnackbarHelper
         if (snackBar is null)
             return;
 
-        await Application.Current.Dispatcher.InvokeAsync(() =>
+        await Application.Current.Dispatcher.InvokeAsync(async () =>
         {
             SetupSnackbarAppearance(snackBar, msg.Title, msg.Message, msg.Type);
             SetTitleAndMessage(snackBar, msg.Title, msg.Message);
+            await snackBar.ShowAsync();
         });
-
-        await snackBar.ShowAsync();
 
         // Wait for the snackbar to close before showing the next one
         // Snackbar has a Timeout property, we should wait at least that long

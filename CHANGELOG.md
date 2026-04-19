@@ -10,10 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / 新增
+- 新增设计令牌系统（DesignTokens.xaml），统一间距、圆角、图标大小、按钮尺寸和字体大小令牌，为 UI 一致性奠定基础 / Added design token system (DesignTokens.xaml) with unified spacing, corner radius, icon size, button size, and font size tokens to establish foundation for UI consistency
+- 新增 ButtonStyles.xaml，定义 AppButtonCompact、AppButtonStandard、AppButtonPrimary、AppButtonLarge 四种标准按钮样式 / Added ButtonStyles.xaml defining four standard button styles: AppButtonCompact, AppButtonStandard, AppButtonPrimary, AppButtonLarge
+- 新增 Typography.xaml 字体样式：AppBodyTextBlockStyle（13pt）、AppSmallBodyTextBlockStyle（11pt）填补字体大小空白 / Added Typography.xaml font styles: AppBodyTextBlockStyle (13pt), AppSmallBodyTextBlockStyle (11pt) to fill font size gaps
+
+### Improved / 改进
+- 统一 PluginExtensionsPage 局部样式，将 10+ 个局部样式迁移到全局 DesignTokens/Typography 引用 / Unified PluginExtensionsPage local styles, migrated 10+ local styles to global DesignTokens/Typography references
+- 统一 WindowsOptimizationPage 卡片容器、按钮样式使用设计令牌 / Unified WindowsOptimizationPage card container and button styles using design tokens
+- 统一 CardHeaderControl 字体样式引用 Typography 全局样式 / Unified CardHeaderControl font styles to reference global Typography styles
+- 统一 AboutPage、MacroPage、ErrorDialogWindow、StatusWindow、AddAutomationStepWindow、SensorsControl 等页面的字体样式 / Unified font styles across AboutPage, MacroPage, ErrorDialogWindow, StatusWindow, AddAutomationStepWindow, SensorsControl and other pages
+
 ### Fixed / 修复
 - 修复驱动特性写入后校验失败仍报告成功、自动化 Quick Action 循环引用导致的无限递归，以及进程自动监听器缓存清理时的枚举删除异常，避免核心功能误报成功、卡死或在高事件压力下直接抛错 / Fixed driver-feature state writes reporting success after verification failure, infinite recursion from cyclic Quick Action pipelines, and process auto-listener cache cleanup mutating during enumeration to prevent false-success core operations, hangs, and runtime failures under event pressure
 - 修复 IPC 命名管道 ACL 配置错误（DENY Everyone 会阻止管理员访问），以及设置页 toggle 控件在异常后永久禁用的问题 / Fixed IPC named pipe ACL misconfiguration (DENY Everyone blocked admin access) and toggle controls remaining permanently disabled after errors in settings page
 - 修复主窗口“关闭时最小化”在异步保存窗口尺寸期间可能直接关闭，以及软件安装器忽略非零退出码误报成功的问题，避免窗口设置丢失和失败安装显示为已完成 / Fixed the main window close-to-tray flow potentially closing during async size persistence and package installers reporting success despite non-zero exit codes to prevent lost window state and failed installs appearing completed
+- 修复插件加载器在直接从插件 DLL 读入时缺少同目录依赖解析的问题，避免带 sidecar DLL 或卫星资源的插件在普通加载路径下半加载或直接失败 / Fixed the plugin loader missing sidecar dependency resolution when loading plugin DLLs directly so plugins with colocated helper DLLs or satellite resources no longer half-load or fail on the normal load path
+- 修复 WMI listener 底层事件处理 fire-and-forget 导致同一 listener 实例内事件并发重叠的问题，避免热模式等硬件事件在高频变化时乱序执行 / Fixed the base WMI listener processing path allowing overlapping fire-and-forget event handling per listener instance so hardware events such as thermal-mode changes no longer execute out of order under rapid bursts
+- 修复自动化“立即运行”、独显停用菜单和关闭显示器按钮在异常或中断后可能永久禁用的问题，避免相关快捷操作点一次后卡死 / Fixed the automation Run Now action, discrete-GPU deactivation menu, and turn-off-monitors button staying disabled after errors or interruptions so those quick actions no longer get stuck after a single use
 
 ### Improved / 改进
 - 升级 GitHub Actions 工作流依赖到支持 Node 24 的新版本，并修复 CI 中测试项目对预构建/预还原输出的脆弱依赖，减少后续 runner 运行时升级带来的流水线风险 / Upgraded GitHub Actions workflow dependencies to Node 24-capable versions and removed fragile CI assumptions about prebuilt/prerestored test outputs to reduce risk from future runner runtime upgrades

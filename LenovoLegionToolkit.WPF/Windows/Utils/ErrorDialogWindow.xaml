@@ -26,8 +26,7 @@
             <TextBlock
                 x:Name="_titleText"
                 Text="{x:Static resources:Resource.UnexpectedException}"
-                FontSize="20"
-                FontWeight="SemiBold"
+                Style="{StaticResource AppDisplaySectionTitleTextBlockStyle}"
                 Margin="12,0,0,0"
                 VerticalAlignment="Center" />
         </StackPanel>
@@ -41,17 +40,16 @@
             <TextBlock
                 x:Name="_promptText"
                 Grid.Row="0"
-                FontSize="14"
+                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                 Margin="0,0,0,12"
-                TextWrapping="Wrap"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                TextWrapping="Wrap" />
 
             <Border
                 Grid.Row="1"
                 Background="{DynamicResource ControlFillColorTertiaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                CornerRadius="8">
+                CornerRadius="{StaticResource CornerRadiusMD}">
                 <ScrollViewer
                     x:Name="_scrollViewer"
                     VerticalScrollBarVisibility="Auto"
@@ -59,10 +57,9 @@
                     Padding="12">
                     <TextBlock
                         x:Name="_exceptionText"
-                        FontSize="12"
+                        Style="{StaticResource AppCaptionTextBlockStyle}"
                         FontFamily="Consolas, Monaco, monospace"
-                        TextWrapping="Wrap"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        TextWrapping="Wrap" />
                 </ScrollViewer>
             </Border>
         </Grid>
