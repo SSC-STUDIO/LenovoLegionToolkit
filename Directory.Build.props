@@ -13,10 +13,11 @@
     <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(WindowsVersion)</AssemblyVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <InformationalVersion>$(Version)+$(GitCommitHash)</InformationalVersion>
+    <SkipGitInfoLookup>$([System.String]::Copy('$(MSBuildThisFileDirectory)').StartsWith('\\wsl.localhost\', System.StringComparison.OrdinalIgnoreCase))</SkipGitInfoLookup>
   </PropertyGroup>
 
   <Target Name="GetGitInfo" BeforeTargets="BeforeBuild">
-    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true" WorkingDirectory="$(MSBuildThisFileDirectory)" Condition="'$(SkipGitInfoLookup)' != 'True'">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHashRaw" />
     </Exec>
 
