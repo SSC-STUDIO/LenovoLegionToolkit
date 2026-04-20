@@ -138,7 +138,7 @@ public static class PathSecurity
             return "unnamed";
 
         // Remove directory separators first
-        var sanitized = fileName.Replace('/', replacement).Replace('\\', replacement);
+        var sanitized = fileName.Replace("/", replacement).Replace("\\", replacement);
 
         // Remove dangerous patterns
         foreach (var pattern in DangerousPathPatterns)

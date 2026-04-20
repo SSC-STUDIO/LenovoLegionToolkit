@@ -23,7 +23,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
@@ -31,7 +31,7 @@ namespace LenovoLegionToolkit.WPF.Resources {
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resource() {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -7574,6 +7574,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Installer exited with code {0}.
+        /// </summary>
+        public static string PackageControl_InstallError_ExitCode {
+            get {
+                return ResourceManager.GetString("PackageControl_InstallError_ExitCode", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Installation started.
         /// </summary>

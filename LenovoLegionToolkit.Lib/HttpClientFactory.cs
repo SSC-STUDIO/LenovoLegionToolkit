@@ -14,7 +14,7 @@ public class HttpClientFactory
     private string? _password;
     private bool _allowAllCerts;
 
-    public HttpClientHandler CreateHandler()
+    public virtual HttpClientHandler CreateHandler()
     {
         var handler = new HttpClientHandler();
 
@@ -62,7 +62,7 @@ public class HttpClientFactory
         return handler;
     }
 
-    public HttpClient Create() => new(CreateHandler(), true);
+    public virtual HttpClient Create() => new(CreateHandler(), true);
 
     public void SetProxy(Uri? url, string? username, string? password, bool allowAllCerts)
     {

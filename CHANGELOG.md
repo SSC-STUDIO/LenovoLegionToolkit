@@ -10,6 +10,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.14] - 2026-04-19
+
+### Added / 新增
+- 新增设计令牌系统（DesignTokens.xaml），统一间距、圆角、图标大小、按钮尺寸和字体大小令牌，为 UI 一致性奠定基础 / Added design token system (DesignTokens.xaml) with unified spacing, corner radius, icon size, button size, and font size tokens to establish foundation for UI consistency
+- 新增 ButtonStyles.xaml，定义 AppButtonCompact、AppButtonStandard、AppButtonPrimary、AppButtonLarge 四种标准按钮样式 / Added ButtonStyles.xaml defining four standard button styles: AppButtonCompact, AppButtonStandard, AppButtonPrimary, AppButtonLarge
+- 新增 Typography.xaml 字体样式：AppBodyTextBlockStyle（13pt）、AppSmallBodyTextBlockStyle（11pt）填补字体大小空白 / Added Typography.xaml font styles: AppBodyTextBlockStyle (13pt), AppSmallBodyTextBlockStyle (11pt) to fill font size gaps
+
+### Improved / 改进
+- 统一 PluginExtensionsPage 局部样式，将 10+ 个局部样式迁移到全局 DesignTokens/Typography 引用 / Unified PluginExtensionsPage local styles, migrated 10+ local styles to global DesignTokens/Typography references
+- 统一 WindowsOptimizationPage 卡片容器、按钮样式使用设计令牌 / Unified WindowsOptimizationPage card container and button styles using design tokens
+- 统一 CardHeaderControl 字体样式引用 Typography 全局样式 / Unified CardHeaderControl font styles to reference global Typography styles
+- 统一 AboutPage、MacroPage、ErrorDialogWindow、StatusWindow、AddAutomationStepWindow、SensorsControl 等页面的字体样式 / Unified font styles across AboutPage, MacroPage, ErrorDialogWindow, StatusWindow, AddAutomationStepWindow, SensorsControl and other pages
+- 支持通过 `LLT_PLUGIN_SIGNATURE_MODE` 环境变量在开发或冒烟测试中显式切换插件签名校验模式，使本地未签名插件可以在不放宽默认生产策略的前提下完成真实 UI 验证 / Added an explicit `LLT_PLUGIN_SIGNATURE_MODE` environment override for development and smoke runs so local unsigned plugins can be exercised end-to-end without relaxing the default production signature policy
+- 插件界面冒烟现在在隔离沙箱中同时支持真实在线安装和真实本地 ZIP 导入，不再依赖预置安装状态或直接拷贝本地构建产物来伪装已安装插件 / Plugin UI smoke now exercises real online installs and real local ZIP imports inside an isolated sandbox instead of pre-seeding install state or copying local build outputs to fake installed plugins
+- 改进插件市场在线元数据与安装包下载的抗抖动能力：增加多源 store 镜像、瞬时网络错误重试和缓存回退，减少 GitHub 连接重置导致的空市场页或在线安装失败 / Improved plugin marketplace resilience for online metadata and package downloads with multi-source store mirrors, transient-network retries, and cached-store fallback to reduce blank marketplace pages or failed online installs caused by GitHub connection resets
+- 升级 GitHub Actions 工作流依赖到支持 Node 24 的新版本，并修复 CI 中测试项目对预构建/预还原输出的脆弱依赖，减少后续 runner 运行时升级带来的流水线风险 / Upgraded GitHub Actions workflow dependencies to Node 24-capable versions and removed fragile CI assumptions about prebuilt/prerestored test outputs to reduce risk from future runner runtime upgrades
+- 清理测试项目中的 nullable 与 xUnit analyzer 告警，提升测试代码可维护性并减少 CI 噪声 / Cleaned nullable and xUnit analyzer warnings in the test project to improve test maintainability and reduce CI noise
+
+### Fixed / 修复
+- 修复驱动特性写入后校验失败仍报告成功、自动化 Quick Action 循环引用导致的无限递归，以及进程自动监听器缓存清理时的枚举删除异常，避免核心功能误报成功、卡死或在高事件压力下直接抛错 / Fixed driver-feature state writes reporting success after verification failure, infinite recursion from cyclic Quick Action pipelines, and process auto-listener cache cleanup mutating during enumeration to prevent false-success core operations, hangs, and runtime failures under event pressure
+- 修复 IPC 命名管道 ACL 配置错误（DENY Everyone 会阻止管理员访问），以及设置页 toggle 控件在异常后永久禁用的问题 / Fixed IPC named pipe ACL misconfiguration (DENY Everyone blocked admin access) and toggle controls remaining permanently disabled after errors in settings page
+- 修复主窗口“关闭时最小化”在异步保存窗口尺寸期间可能直接关闭，以及软件安装器忽略非零退出码误报成功的问题，避免窗口设置丢失和失败安装显示为已完成 / Fixed the main window close-to-tray flow potentially closing during async size persistence and package installers reporting success despite non-zero exit codes to prevent lost window state and failed installs appearing completed
+- 修复插件加载器在直接从插件 DLL 读入时缺少同目录依赖解析的问题，避免带 sidecar DLL 或卫星资源的插件在普通加载路径下半加载或直接失败 / Fixed the plugin loader missing sidecar dependency resolution when loading plugin DLLs directly so plugins with colocated helper DLLs or satellite resources no longer half-load or fail on the normal load path
+- 修复 WMI listener 底层事件处理 fire-and-forget 导致同一 listener 实例内事件并发重叠的问题，避免热模式等硬件事件在高频变化时乱序执行 / Fixed the base WMI listener processing path allowing overlapping fire-and-forget event handling per listener instance so hardware events such as thermal-mode changes no longer execute out of order under rapid bursts
+- 修复自动化“立即运行”、独显停用菜单和关闭显示器按钮在异常或中断后可能永久禁用的问题，避免相关快捷操作点一次后卡死 / Fixed the automation Run Now action, discrete-GPU deactivation menu, and turn-off-monitors button staying disabled after errors or interruptions so those quick actions no longer get stuck after a single use
+- 修复插件市场在线安装与更新会先卸载旧插件、安装失败后遗留半复制目录，以及重新扫描未等待完成导致界面状态乱跳的问题，避免插件在失败更新后消失或显示状态与实际不一致 / Fixed plugin marketplace installs and updates eagerly uninstalling existing plugins, leaving half-copied directories after failed installs, and racing plugin rescans so plugins no longer disappear after failed updates or show UI state that does not match reality
+- 修复插件商店元数据请求失败被静默当作空列表，以及自动化页/仪表盘部分异步初始化路径会挂起或跨线程操作 WPF 控件的问题，避免插件列表误显示为空和页面卡在加载中 / Fixed plugin store metadata failures being silently treated as an empty list and async initialization paths in automation/dashboard hanging or touching WPF controls from the wrong thread to prevent false-empty plugin lists and pages getting stuck loading
+
+## [3.6.13] - 2026-04-18
+
+### Added / 新增
+- 为插件加载新增可配置的签名校验模式，在开发与生产场景下都能更明确地拦截未签名插件 / Added configurable signature validation modes for plugin loading so unsigned plugins are blocked more explicitly in both development and production scenarios
+
+### Fixed / 修复
+- 恢复 Panel Logo 灯效功能及其宿主/CLI 注册链路，避免受支持设备上的相关控制项缺失或引入构建回归 / Restored Panel Logo lighting features and their host/CLI registrations so supported devices no longer lose the controls or hit the related build regression
+- 为下载的更新包增加 SHA256 完整性校验，避免篡改包在安装前通过校验 / Added SHA256 integrity verification for downloaded update packages so tampered payloads are rejected before installation
+
+### Improved / 改进
+- 发布下载现在提供带版本号的安装包、便携 ZIP 和 SHA256 清单，便于校验、归档与问题排查 / Release downloads now ship with versioned setup, portable ZIP, and SHA256 manifest assets for easier verification, archiving, and support
+
 ## [3.6.12] - 2026-03-28
 
 ### Fixed / 修复

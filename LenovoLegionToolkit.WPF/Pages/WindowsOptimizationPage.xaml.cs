@@ -69,7 +69,25 @@ public partial class WindowsOptimizationPage : UiPage
 
     private void WindowsOptimizationPage_Loaded(object sender, RoutedEventArgs e)
     {
+        SyncNavButtonToCurrentMode();
         TryApplyPendingPluginFocusRequest();
+    }
+
+    private void SyncNavButtonToCurrentMode()
+    {
+        // Sync UI RadioButton to ViewModel's CurrentMode (which may be restored from settings)
+        switch (ViewModel.CurrentMode)
+        {
+            case WindowsOptimizationViewModel.PageMode.Optimization:
+                _optimizationNavButton.IsChecked = true;
+                break;
+            case WindowsOptimizationViewModel.PageMode.Cleanup:
+                _cleanupNavButton.IsChecked = true;
+                break;
+            case WindowsOptimizationViewModel.PageMode.DriverDownload:
+                _driverDownloadNavButton.IsChecked = true;
+                break;
+        }
     }
 
     private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)

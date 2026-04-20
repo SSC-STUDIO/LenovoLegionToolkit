@@ -10,33 +10,43 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Plugins;
 
 /// <summary>
-/// Plugin manager implementation
+/// Plugin manager implementation - coordinates plugin lifecycle operations
+/// Delegates loading, registration, and file operations to specialized components
 /// </summary>
 public class PluginManager : IPluginManager
 {
     private readonly ApplicationSettings _applicationSettings;
-    private readonly Dictionary<string, IPlugin> _registeredPlugins = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, PluginMetadata> _pluginMetadataCache = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
-    private readonly HashSet<string> _startedPlugins = new(StringComparer.OrdinalIgnoreCase);
+    private readonly IPluginSignatureValidator _signatureValidator;
+    private readonly IPluginLoader _loader;
+    private readonly IPluginRegistry _registry;
+    private readonly IPluginFileSystemManager _fileSystemManager;
     private ResolveEventHandler? _assemblyResolveHandler;
     private bool _disposed;
 
     public event EventHandler<PluginEventArgs>? PluginStateChanged;
 
-    public PluginManager(ApplicationSettings applicationSettings)
+    public PluginManager(
+        ApplicationSettings applicationSettings,
+        IPluginSignatureValidator signatureValidator,
+        IPluginLoader loader,
+        IPluginRegistry registry,
+        IPluginFileSystemManager fileSystemManager)
     {
         _applicationSettings = applicationSettings;
+        _signatureValidator = signatureValidator ?? throw new ArgumentNullException(nameof(signatureValidator));
+        _loader = loader ?? throw new ArgumentNullException(nameof(loader));
+        _registry = registry ?? throw new ArgumentNullException(nameof(registry));
+        _fileSystemManager = fileSystemManager ?? throw new ArgumentNullException(nameof(fileSystemManager));
     }
 
     /// <summary>
     /// Scan and load plugins from the plugins directory
     /// </summary>
-    public void ScanAndLoadPlugins()
+    public async Task ScanAndLoadPluginsAsync()
     {
         try
         {
-            var pluginsDirectory = GetPluginsDirectory();
+            var pluginsDirectory = _fileSystemManager.GetPluginsDirectory();
             if (!Directory.Exists(pluginsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -49,13 +59,13 @@ public class PluginManager : IPluginManager
 
             RegisterAssemblyResolver(pluginsDirectory);
 
-            var pluginFiles = GetPluginDllFiles(pluginsDirectory);
-            
+            var pluginFiles = _fileSystemManager.GetPluginDllFiles();
+
             foreach (var pluginFile in pluginFiles)
             {
                 try
                 {
-                    LoadPluginFromFile(pluginFile);
+                    await LoadPluginFromFileAsync(pluginFile);
                 }
                 catch (Exception ex)
                 {
@@ -67,13 +77,22 @@ public class PluginManager : IPluginManager
             StartInstalledPlugins();
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin scan completed. Total registered plugins: {_registeredPlugins.Count}");
+                Log.Instance.Trace($"Plugin scan completed. Total registered plugins: {_registry.Count}");
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error scanning plugins directory: {ex.Message}", ex);
         }
+    }
+
+    /// <summary>
+    /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)
+    /// </summary>
+    [Obsolete("Use ScanAndLoadPluginsAsync() instead. This method is fire-and-forget and cannot be awaited.")]
+    public void ScanAndLoadPlugins()
+    {
+        _ = ScanAndLoadPluginsAsync();
     }
 
     private void RegisterAssemblyResolver(string pluginsDirectory)
@@ -89,6 +108,13 @@ public class PluginManager : IPluginManager
                 var assemblyName = requestedAssemblyName.Name;
                 if (string.IsNullOrWhiteSpace(assemblyName))
                     return null;
+
+                if (!IsSafeAssemblyName(assemblyName))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Rejected assembly resolve request with unsafe name: {assemblyName}");
+                    return null;
+                }
                 
                 var isSatelliteAssembly = requestedAssemblyName.CultureInfo != null && 
                                           !string.IsNullOrEmpty(requestedAssemblyName.CultureInfo.Name) &&
@@ -138,22 +164,22 @@ public class PluginManager : IPluginManager
     {
         var cultureName = requestedAssemblyName.CultureInfo!.Name;
         var baseName = assemblyName.Substring(0, assemblyName.Length - ".resources".Length);
-        
+
         var subdirectories = Directory.GetDirectories(pluginsDirectory);
-        var cultureFolders = GetCultureFolders();
-        
+        var cultureFolders = _fileSystemManager.GetCultureFolders();
+
         foreach (var subdir in subdirectories)
         {
             var dirName = Path.GetFileName(subdir);
             if (cultureFolders.Contains(dirName))
                 continue;
-            
+
             var satellitePath = Path.Combine(subdir, cultureName, $"{baseName}.resources.dll");
             if (File.Exists(satellitePath))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Resolving satellite assembly: {requestedAssemblyName.Name} from {satellitePath}");
-                return Assembly.LoadFrom(satellitePath);
+                return TryLoadTrustedPluginAssembly(satellitePath, pluginsDirectory, $"satellite assembly {requestedAssemblyName.Name}");
             }
         }
         return null;
@@ -163,24 +189,26 @@ public class PluginManager : IPluginManager
     {
         var dllPath = Path.Combine(pluginsDirectory, $"{assemblyName}.dll");
         if (File.Exists(dllPath))
-            return Assembly.LoadFrom(dllPath);
+            return TryLoadTrustedPluginAssembly(dllPath, pluginsDirectory, $"dependency assembly {assemblyName}");
 
         var subdirectories = Directory.GetDirectories(pluginsDirectory);
         foreach (var subdir in subdirectories)
         {
             var subDirDllPath = Path.Combine(subdir, $"{assemblyName}.dll");
             if (File.Exists(subDirDllPath))
-                return Assembly.LoadFrom(subDirDllPath);
+                return TryLoadTrustedPluginAssembly(subDirDllPath, pluginsDirectory, $"dependency assembly {assemblyName}");
         }
 
-        var appBaseDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{assemblyName}.dll");
+        var appBaseDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
+        var appBaseDllPath = Path.Combine(appBaseDirectory, $"{assemblyName}.dll");
         if (File.Exists(appBaseDllPath))
-            return Assembly.LoadFrom(appBaseDllPath);
+            return Assembly.LoadFrom(Path.GetFullPath(appBaseDllPath));
 
         // Check SDK directory relative to plugins directory
-        var sdkPath = Path.Combine(pluginsDirectory, "..", "SDK", $"{assemblyName}.dll");
-        if (File.Exists(sdkPath))
-            return Assembly.LoadFrom(Path.GetFullPath(sdkPath));
+        var sdkDirectory = Path.GetFullPath(Path.Combine(pluginsDirectory, "..", "SDK"));
+        var sdkPath = Path.GetFullPath(Path.Combine(sdkDirectory, $"{assemblyName}.dll"));
+        if (IsPathWithinDirectory(sdkPath, sdkDirectory) && File.Exists(sdkPath))
+            return Assembly.LoadFrom(sdkPath);
 
         // For SDK assembly, try to resolve from already loaded assemblies
         // The SDK types forward to LenovoLegionToolkit.Lib which is already loaded
@@ -192,210 +220,78 @@ public class PluginManager : IPluginManager
         return null;
     }
 
-    private List<string> GetPluginDllFiles(string pluginsDirectory)
-    {
-        var candidates = new List<(string FilePath, string? ParentDirectoryName)>();
-        var subdirectories = Directory.GetDirectories(pluginsDirectory);
-        var cultureFolders = GetCultureFolders();
-        
-        foreach (var subdir in subdirectories)
-        {
-            var dirName = Path.GetFileName(subdir);
-            if (cultureFolders.Contains(dirName) || dirName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            // If this is the "local" directory, scan its subdirectories
-            if (dirName.Equals("local", StringComparison.OrdinalIgnoreCase))
-            {
-                var localSubDirs = Directory.GetDirectories(subdir);
-                foreach (var localSubDir in localSubDirs)
-                {
-                    var localDirName = Path.GetFileName(localSubDir);
-                    candidates.AddRange(
-                        Directory.GetFiles(localSubDir, "*.dll", SearchOption.TopDirectoryOnly)
-                            .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)localDirName)));
-                }
-                continue;
-            }
-                
-            candidates.AddRange(
-                Directory.GetFiles(subdir, "*.dll", SearchOption.TopDirectoryOnly)
-                    .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)dirName)));
-        }
-        
-        candidates.AddRange(
-            Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly)
-                .Select(filePath => (FilePath: filePath, ParentDirectoryName: (string?)null)));
-        
-        return candidates
-            .Where(candidate => IsPluginDll(candidate.FilePath, candidate.ParentDirectoryName))
-            .Select(candidate => candidate.FilePath)
-            .Distinct()
-            .ToList();
-    }
-
-    private bool IsPluginDll(string filePath, string? parentDirectoryName = null)
-    {
-        // SECURITY: Validate file path is within plugins directory
-        var pluginsDirectory = GetPluginsDirectory();
-        if (!PathSecurity.IsPathWithinAllowedDirectory(filePath, pluginsDirectory))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Plugin DLL path outside allowed directory: {filePath}");
-            return false;
-        }
-
-        var fileName = Path.GetFileName(filePath);
-        
-        // SECURITY: Validate file name
-        if (!PathSecurity.IsValidFileName(fileName))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Invalid plugin DLL file name: {fileName}");
-            return false;
-        }
-
-        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
-        var fullPath = Path.GetFullPath(filePath);
-        var fileInfo = new FileInfo(filePath);
-        
-        if (_pluginFileCache.TryGetValue(fullPath, out var cachedTime) && fileInfo.LastWriteTimeUtc <= cachedTime)
-            return false;
-
-        if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        if (fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (string.IsNullOrWhiteSpace(parentDirectoryName))
-            return false;
-
-        var normalizedDllName = NormalizePluginToken(fileNameWithoutExtension);
-        var normalizedParentName = NormalizePluginToken(parentDirectoryName);
-        var normalizedParentShortName = NormalizePluginToken(parentDirectoryName.Replace("LenovoLegionToolkit.Plugins.", string.Empty, StringComparison.OrdinalIgnoreCase));
-
-        if (string.IsNullOrWhiteSpace(normalizedDllName))
-            return false;
-
-        return normalizedDllName.Equals(normalizedParentName, StringComparison.OrdinalIgnoreCase) ||
-               normalizedDllName.Equals(normalizedParentShortName, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string NormalizePluginToken(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return string.Empty;
-
-        return new string(value.Where(char.IsLetterOrDigit).ToArray()).ToLowerInvariant();
-    }
-
-    private static string[] GetMainPluginDllNameCandidates(string pluginId)
-    {
-        var normalized = NormalizePluginToken(pluginId);
-        var pascalCase = ToPascalCasePluginId(pluginId);
-
-        var candidates = new[]
-        {
-            $"{pluginId}.dll",
-            $"LenovoLegionToolkit.Plugins.{pluginId}.dll",
-            $"{normalized}.dll",
-            $"LenovoLegionToolkit.Plugins.{normalized}.dll",
-            $"LenovoLegionToolkit.Plugins.{pascalCase}.dll"
-        };
-
-        return candidates
-            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-    }
-
-    private static DateTime GetPluginFileWriteTimeUtc(string? filePath)
+    private Assembly? TryLoadTrustedPluginAssembly(string candidatePath, string pluginsDirectory, string context)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                return DateTime.MinValue;
+            var normalizedCandidatePath = Path.GetFullPath(candidatePath);
+            var normalizedPluginsDirectory = Path.GetFullPath(pluginsDirectory);
 
-            return File.GetLastWriteTimeUtc(filePath);
-        }
-        catch
-        {
-            return DateTime.MinValue;
-        }
-    }
-
-    private static string ToPascalCasePluginId(string pluginId)
-    {
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return string.Empty;
-
-        var segments = pluginId
-            .Split(new[] { '-', '_', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-            .Select(segment => char.ToUpperInvariant(segment[0]) + segment[1..].ToLowerInvariant());
-
-        return string.Concat(segments);
-    }
-
-    private HashSet<string> GetCultureFolders() => new(StringComparer.OrdinalIgnoreCase)
-    {
-        "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-        "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-        "vi", "zh-hans", "zh-hant", "tools"
-    };
-
-    /// <summary>
-    /// Get the plugins directory path
-    /// </summary>
-    private string GetPluginsDirectory()
-    {
-        // Try to find the plugins directory relative to the application base directory
-        var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-        
-        // Check for Build/plugins directory (development/build scenario)
-        // Try multiple relative paths to handle different build configurations
-        var possiblePaths = new[]
-        {
-            Path.Combine(appBaseDir, "plugins"),  // Same directory as executable (release)
-            Path.Combine(appBaseDir, "Plugins"),  // Same directory as executable (release, legacy)
-            Path.Combine(appBaseDir, "Build", "plugins"),  // Direct Build/plugins
-            Path.Combine(appBaseDir, "..", "..", "..", "Build", "plugins"),  // Relative to bin
-            Path.Combine(appBaseDir, "..", "Build", "plugins"),  // One level up
-        };
-
-        foreach (var possiblePath in possiblePaths)
-        {
-            var fullPath = Path.GetFullPath(possiblePath);
-            if (Directory.Exists(fullPath))
+            if (!IsPathWithinDirectory(normalizedCandidatePath, normalizedPluginsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Found plugins directory: {fullPath}");
-                return fullPath;
+                    Log.Instance.Trace($"Rejected {context} outside plugins directory: {normalizedCandidatePath}");
+                return null;
             }
+
+            var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
+            if (!signatureResult.IsValid)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Rejected {context} due to invalid signature. [path={normalizedCandidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
+                return null;
+            }
+
+            return Assembly.LoadFrom(normalizedCandidatePath);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to resolve trusted {context} from {candidatePath}: {ex.Message}", ex);
+            return null;
+        }
+    }
+
+    private static bool IsPathWithinDirectory(string path, string directoryPath)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var fullDirectory = EnsureTrailingSeparator(Path.GetFullPath(directoryPath));
+        return fullPath.StartsWith(fullDirectory, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string EnsureTrailingSeparator(string path)
+    {
+        if (path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar))
+            return path;
+
+        return path + Path.DirectorySeparatorChar;
+    }
+
+    private static bool IsSafeAssemblyName(string assemblyName)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyName))
+            return false;
+
+        foreach (var c in assemblyName)
+        {
+            if (!(char.IsLetterOrDigit(c) || c == '.' || c == '_' || c == '-'))
+                return false;
         }
 
-        // Default to plugins relative to app base directory (will be created if needed)
-        var defaultPath = Path.Combine(appBaseDir, "plugins");
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Using default plugins directory: {defaultPath}");
-        return defaultPath;
+        return true;
     }
 
     /// <summary>
     /// Load a plugin from a DLL file
     /// </summary>
-    private void LoadPluginFromFile(string pluginFilePath)
+    private async Task LoadPluginFromFileAsync(string pluginFilePath)
     {
         try
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Attempting to load plugin from: {pluginFilePath}");
 
-            // SECURITY: Validate the plugin file path is within the allowed plugins directory
-            var pluginsDirectory = GetPluginsDirectory();
+            var pluginsDirectory = _fileSystemManager.GetPluginsDirectory();
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginFilePath, pluginsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -412,191 +308,117 @@ public class PluginManager : IPluginManager
                 return;
             }
 
-            // Load the assembly from bytes to avoid file locking (enables plugin updates without restart)
-            Assembly? assembly = null;
-            try
-            {
-                var assemblyBytes = File.ReadAllBytes(pluginFilePath);
-                assembly = Assembly.Load(assemblyBytes);
-            }
-            catch (Exception ex)
+            // Validate plugin signature before loading (security check)
+            var signatureResult = await _signatureValidator.ValidateAsync(pluginFilePath);
+            if (!signatureResult.IsValid)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to load assembly from {pluginFilePath}: {ex.Message}", ex);
+                    Log.Instance.Trace($"Plugin signature validation failed for {pluginFilePath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
+
+                // Reject plugin if signature is invalid
+                throw new global::System.Security.SecurityException($"Plugin signature validation failed: {signatureResult.ErrorMessage}");
+            }
+
+            // Use the plugin loader to load the plugin
+            var plugin = await _loader.LoadFromFileAsync(pluginFilePath, _signatureValidator);
+            if (plugin == null)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to load plugin from {pluginFilePath}");
                 return;
             }
 
-            // Find all types that implement IPlugin
-            Type[] pluginTypes;
-            try
+            // Check if this plugin has the GetFeatureExtension method (SDK plugin)
+            var pluginType = plugin.GetType();
+            var hasGetFeatureExtension = pluginType.GetMethod("GetFeatureExtension",
+                BindingFlags.Public | BindingFlags.Instance,
+                null,
+                Type.EmptyTypes,
+                null) != null;
+
+            // Try to get PluginAttribute for version and compatibility info
+            string pluginVersion = "1.0.0";
+            string minimumHostVersion = "1.0.0";
+            string? author = null;
+            var pluginAttribute = pluginType.GetCustomAttributes(true)
+                .FirstOrDefault(attr => attr.GetType().Name == "PluginAttribute");
+
+            if (pluginAttribute != null)
             {
-                pluginTypes = assembly.GetTypes();
+                var versionProp = pluginAttribute.GetType().GetProperty("Version");
+                var minHostVersionProp = pluginAttribute.GetType().GetProperty("MinimumHostVersion");
+                var authorProp = pluginAttribute.GetType().GetProperty("Author");
+
+                if (versionProp != null)
+                    pluginVersion = versionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
+
+                if (minHostVersionProp != null)
+                    minimumHostVersion = minHostVersionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
+
+                if (authorProp != null)
+                    author = authorProp.GetValue(pluginAttribute)?.ToString();
             }
-            catch (ReflectionTypeLoadException ex)
+
+            // Check version compatibility
+            if (!IsVersionCompatible(minimumHostVersion))
             {
                 if (Log.Instance.IsTraceEnabled)
-                {
-                    Log.Instance.Trace($"Failed to get types from assembly {pluginFilePath}. Loader exceptions:", ex);
-                    if (ex.LoaderExceptions != null)
-                    {
-                        foreach (var loaderEx in ex.LoaderExceptions)
-                        {
-                            Log.Instance.Trace($"  Loader exception: {loaderEx?.Message}", loaderEx);
-                        }
-                    }
-                }
-                // Try to continue with successfully loaded types
-                pluginTypes = ex.Types.Where(t => t != null).OfType<Type>().ToArray();
+                    Log.Instance.Trace($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
+                return;
             }
 
-            var validPluginTypes = pluginTypes
-                .Where(t => t != null && typeof(IPlugin).IsAssignableFrom(t) 
-                    && !t.IsInterface 
-                    && !t.IsAbstract
-                    && t.GetConstructor(Type.EmptyTypes) != null)
-                .ToList();
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Found {validPluginTypes.Count} plugin type(s) in {pluginFilePath}");
-
-            var loadedPluginFromFile = false;
-
-            foreach (var pluginType in validPluginTypes)
+            // Store plugin metadata with version and compatibility info
+            var metadata = new PluginMetadata
             {
-                try
-                {
-                    // Try to get PluginAttribute for version and compatibility info
-                    string pluginVersion = "1.0.0";
-                    string minimumHostVersion = "1.0.0";
-                    var pluginAttribute = pluginType.GetCustomAttributes(true)
-                        .FirstOrDefault(attr => attr.GetType().Name == "PluginAttribute");
-                    
-                    if (pluginAttribute != null)
-                    {
-                        // Use reflection to get version and MinimumHostVersion from attribute
-                        var versionProp = pluginAttribute.GetType().GetProperty("Version");
-                        var minHostVersionProp = pluginAttribute.GetType().GetProperty("MinimumHostVersion");
-                        
-                        if (versionProp != null)
-                        {
-                            pluginVersion = versionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
-                        }
-                        
-                        if (minHostVersionProp != null)
-                        {
-                            minimumHostVersion = minHostVersionProp.GetValue(pluginAttribute)?.ToString() ?? "1.0.0";
-                        }
-                    }
-                    
-                    // Check version compatibility
-                    if (!IsVersionCompatible(minimumHostVersion))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
-                        continue;
-                    }
-                    
-                    // Create an instance of the plugin
-                    IPlugin? plugin = null;
-                    try
-                    {
-                        plugin = Activator.CreateInstance(pluginType) as IPlugin;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to create instance of plugin type {pluginType.Name}: {ex.Message}", ex);
-                        continue;
-                    }
-                    
-                    if (plugin is not null)
-                    {
-                        // Check if this plugin has the GetFeatureExtension method (SDK plugin)
-                        var hasGetFeatureExtension = pluginType.GetMethod("GetFeatureExtension", 
-                            BindingFlags.Public | BindingFlags.Instance, 
-                            null, 
-                            Type.EmptyTypes, 
-                            null) != null;
+                Id = plugin.Id,
+                Name = plugin.Name,
+                Description = plugin.Description,
+                Icon = plugin.Icon,
+                IsSystemPlugin = plugin.IsSystemPlugin,
+                Dependencies = plugin.Dependencies,
+                Version = pluginVersion,
+                MinimumHostVersion = minimumHostVersion,
+                Author = author,
+                FilePath = pluginFilePath
+            };
 
-                        // Store plugin metadata with version and compatibility info
-                        var metadata = new PluginMetadata
-                        {
-                            Id = plugin.Id,
-                            Name = plugin.Name,
-                            Description = plugin.Description,
-                            Icon = plugin.Icon,
-                            IsSystemPlugin = plugin.IsSystemPlugin,
-                            Dependencies = plugin.Dependencies,
-                            Version = pluginVersion,
-                            MinimumHostVersion = minimumHostVersion,
-                            FilePath = pluginFilePath
-                        };
-                        
-                        // Try to get Author from attribute
-                        if (pluginAttribute != null)
-                        {
-                            var authorProp = pluginAttribute.GetType().GetProperty("Author");
-                            if (authorProp != null)
-                            {
-                                metadata.Author = authorProp.GetValue(pluginAttribute)?.ToString();
-                            }
-                        }
-
-                        if (_pluginMetadataCache.TryGetValue(plugin.Id, out var existingMetadata))
-                        {
-                            var versionComparison = ComparePluginVersions(pluginVersion, existingMetadata.Version);
-                            if (versionComparison < 0)
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Skipping plugin {plugin.Id} v{pluginVersion} from {pluginFilePath} because newer version {existingMetadata.Version} is already loaded from {existingMetadata.FilePath}.");
-                                continue;
-                            }
-
-                            if (versionComparison == 0 && _registeredPlugins.ContainsKey(plugin.Id))
-                            {
-                                var currentWriteTime = GetPluginFileWriteTimeUtc(pluginFilePath);
-                                var existingWriteTime = GetPluginFileWriteTimeUtc(existingMetadata.FilePath);
-
-                                if (currentWriteTime <= existingWriteTime)
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
-                                    continue;
-                                }
-
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Replacing duplicate plugin {plugin.Id} v{pluginVersion} with newer file {pluginFilePath} ({currentWriteTime:O}) over {existingMetadata.FilePath} ({existingWriteTime:O}).");
-                            }
-                        }
-                        
-                        _pluginMetadataCache[plugin.Id] = metadata;
-
-                        // Register the plugin (both SDK and direct IPlugin implementations)
-                        RegisterPlugin(plugin);
-                        loadedPluginFromFile = true;
-                        
-                        if (Log.Instance.IsTraceEnabled)
-                        {
-                            var pluginTypeInfo = hasGetFeatureExtension ? "SDK" : "direct";
-                            Log.Instance.Trace($"Successfully loaded {pluginTypeInfo} plugin: {plugin.Id} ({plugin.Name}) v{pluginVersion} (MinHost: {minimumHostVersion}) from {pluginFilePath}");
-                        }
-                    }
-                    else
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to create plugin instance from type {pluginType.Name}: Activator.CreateInstance returned null");
-                    }
-                }
-                catch (Exception ex)
+            // Check for existing plugin with same ID
+            var existingMetadata = _registry.GetMetadata(plugin.Id);
+            if (existingMetadata != null)
+            {
+                var versionComparison = ComparePluginVersions(pluginVersion, existingMetadata.Version);
+                if (versionComparison < 0)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to create instance of plugin type {pluginType.Name}: {ex.Message}", ex);
+                        Log.Instance.Trace($"Skipping plugin {plugin.Id} v{pluginVersion} from {pluginFilePath} because newer version {existingMetadata.Version} is already loaded from {existingMetadata.FilePath}.");
+                    return;
+                }
+
+                if (versionComparison == 0 && _registry.IsRegistered(plugin.Id))
+                {
+                    var currentWriteTime = GetPluginFileWriteTimeUtc(pluginFilePath);
+                    var existingWriteTime = GetPluginFileWriteTimeUtc(existingMetadata.FilePath);
+
+                    if (currentWriteTime <= existingWriteTime)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
+                        return;
+                    }
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Replacing duplicate plugin {plugin.Id} v{pluginVersion} with newer file {pluginFilePath} ({currentWriteTime:O}) over {existingMetadata.FilePath} ({existingWriteTime:O}).");
                 }
             }
 
-            if (loadedPluginFromFile)
+            // Register the plugin
+            _registry.Register(plugin, metadata);
+            _fileSystemManager.UpdateFileCache(pluginFilePath);
+
+            if (Log.Instance.IsTraceEnabled)
             {
-                _pluginFileCache[Path.GetFullPath(pluginFilePath)] = new FileInfo(pluginFilePath).LastWriteTimeUtc;
+                var pluginTypeInfo = hasGetFeatureExtension ? "SDK" : "direct";
+                Log.Instance.Trace($"Successfully loaded {pluginTypeInfo} plugin: {plugin.Id} ({plugin.Name}) v{pluginVersion} (MinHost: {minimumHostVersion}) from {pluginFilePath}");
             }
         }
         catch (Exception ex)
@@ -606,37 +428,25 @@ public class PluginManager : IPluginManager
         }
     }
 
-    public void RegisterPlugin(IPlugin plugin)
+    private static DateTime GetPluginFileWriteTimeUtc(string? filePath)
     {
-        if (string.IsNullOrWhiteSpace(plugin.Id))
-            throw new ArgumentException("Plugin ID cannot be null or empty", nameof(plugin));
-
-        if (_registeredPlugins.TryGetValue(plugin.Id, out var existingPlugin))
+        try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin {plugin.Id} is already registered. Replacing existing registration.");
-
-            try
-            {
-                existingPlugin.Stop();
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to stop existing plugin {plugin.Id}: {ex.Message}", ex);
-            }
-
-            _startedPlugins.Remove(plugin.Id);
+            if (string.IsNullOrWhiteSpace(filePath))
+                return DateTime.MinValue;
+            return File.GetLastWriteTimeUtc(filePath);
         }
-
-        _registeredPlugins[plugin.Id] = plugin;
+        catch
+        {
+            return DateTime.MinValue;
+        }
     }
 
     public void StartInstalledPlugins()
     {
         try
         {
-            foreach (var plugin in _registeredPlugins.Values)
+            foreach (var plugin in _registry.GetAll())
             {
                 if (!IsInstalled(plugin.Id))
                     continue;
@@ -644,7 +454,7 @@ public class PluginManager : IPluginManager
                 if (plugin is not IAppStartupPlugin startupPlugin)
                     continue;
 
-                if (!_startedPlugins.Add(plugin.Id))
+                if (!_registry.MarkStarted(plugin.Id))
                     continue;
 
                 try
@@ -653,7 +463,7 @@ public class PluginManager : IPluginManager
                 }
                 catch (Exception ex)
                 {
-                    _startedPlugins.Remove(plugin.Id);
+                    _registry.MarkStopped(plugin.Id);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Failed to start plugin {plugin.Id}: {ex.Message}", ex);
                 }
@@ -668,38 +478,19 @@ public class PluginManager : IPluginManager
 
     public IEnumerable<IPlugin> GetRegisteredPlugins()
     {
-        return _registeredPlugins.Values;
+        return _registry.GetAll();
     }
 
     /// <inheritdoc />
     public bool TryGetPlugin(string pluginId, out IPlugin? plugin)
     {
-        return _registeredPlugins.TryGetValue(pluginId, out plugin);
+        plugin = _registry.Get(pluginId);
+        return plugin != null;
     }
 
     public PluginMetadata? GetPluginMetadata(string pluginId)
     {
-        // First try to get from cache (contains version info)
-        if (_pluginMetadataCache.TryGetValue(pluginId, out var cachedMetadata))
-        {
-            return cachedMetadata;
-        }
-        
-        // Fallback to creating from plugin instance
-        if (!_registeredPlugins.TryGetValue(pluginId, out var plugin))
-            return null;
-
-        return new PluginMetadata
-        {
-            Id = plugin.Id,
-            Name = plugin.Name,
-            Description = plugin.Description,
-            Icon = plugin.Icon,
-            IsSystemPlugin = plugin.IsSystemPlugin,
-            Dependencies = plugin.Dependencies,
-            Version = "1.0.0",
-            MinimumHostVersion = "1.0.0"
-        };
+        return _registry.GetMetadata(pluginId);
     }
 
     public bool IsInstalled(string pluginId)
@@ -713,37 +504,34 @@ public class PluginManager : IPluginManager
         }
 
         var isInstalled = _applicationSettings.Store.InstalledExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase);
-        
+
         if (Log.Instance.IsTraceEnabled)
         {
             Log.Instance.Trace($"IsInstalled({pluginId}) = {isInstalled} (from settings)");
             Log.Instance.Trace($"  - Installed extensions count: {_applicationSettings.Store.InstalledExtensions.Count}");
             Log.Instance.Trace($"  - Installed extensions: [{string.Join(", ", _applicationSettings.Store.InstalledExtensions)}]");
         }
-        
+
         // If not in installed list, definitely not installed
         if (!isInstalled)
             return false;
-            
+
         // Check if plugin files actually exist on disk
-        // This prevents showing "installed" state when files have been deleted manually
         try
         {
-            var pluginsDirectory = GetPluginsDirectory();
-            
-            // SECURITY: Sanitize pluginId for use in path construction
-            var sanitizedPluginId = PathSecurity.SanitizeFileName(pluginId);
-            if (string.IsNullOrWhiteSpace(sanitizedPluginId))
+            var pluginsDirectory = _fileSystemManager.GetPluginsDirectory();
+            var mainDllNameCandidates = _fileSystemManager.GetMainPluginDllNameCandidates(pluginId);
+            if (mainDllNameCandidates.Length == 0)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"IsInstalled({pluginId}): Sanitized plugin ID is empty");
+                    Log.Instance.Trace($"IsInstalled({pluginId}): No safe DLL name candidates generated");
                 return false;
             }
-            
-            var pluginDirectory = Path.Combine(pluginsDirectory, sanitizedPluginId);
-            var localPluginDirectory = Path.Combine(pluginsDirectory, "local", sanitizedPluginId);
-            
-            // SECURITY: Verify constructed paths are within allowed directory
+
+            // Check plugin directory
+            var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
+            var localPluginDirectory = Path.Combine(pluginsDirectory, "local", pluginId);
+
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDirectory, pluginsDirectory) ||
                 !PathSecurity.IsPathWithinAllowedDirectory(localPluginDirectory, pluginsDirectory))
             {
@@ -751,15 +539,13 @@ public class PluginManager : IPluginManager
                     Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected");
                 return false;
             }
-            
+
             // Check for alternative directory naming (LenovoLegionToolkit.Plugins.{Id})
             if (!Directory.Exists(pluginDirectory) && !Directory.Exists(localPluginDirectory))
             {
-                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{sanitizedPluginId}");
-                var sanitizedNoHyphen = PathSecurity.SanitizeFileName(pluginId.Replace("-", ""));
-                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{sanitizedNoHyphen}");
-                
-                // SECURITY: Verify alternative paths are within allowed directory
+                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}");
+                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", "")}");
+
                 if (!PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectory, pluginsDirectory) ||
                     !PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectoryNoHyphen, pluginsDirectory))
                 {
@@ -767,7 +553,7 @@ public class PluginManager : IPluginManager
                         Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected in alternative paths");
                     return false;
                 }
-                
+
                 if (Directory.Exists(altPluginDirectory))
                 {
                     pluginDirectory = altPluginDirectory;
@@ -779,8 +565,10 @@ public class PluginManager : IPluginManager
                 else
                 {
                     // Check for root level DLLs (backward compatibility)
-                    var rootDllCandidates = GetMainPluginDllNameCandidates(pluginId)
-                        .Select(fileName => Path.Combine(pluginsDirectory, fileName));
+                    var rootDllCandidates = mainDllNameCandidates
+                        .Where(PathSecurity.IsValidFileName)
+                        .Select(fileName => Path.Combine(pluginsDirectory, fileName))
+                        .Where(path => PathSecurity.IsPathWithinAllowedDirectory(path, pluginsDirectory));
 
                     if (rootDllCandidates.Any(File.Exists))
                     {
@@ -790,7 +578,7 @@ public class PluginManager : IPluginManager
                     }
 
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"IsInstalled({pluginId}): Plugin directory does not exist: {pluginDirectory} or {localPluginDirectory} (or alternative path)");
+                        Log.Instance.Trace($"IsInstalled({pluginId}): Plugin directory does not exist");
                     return false;
                 }
             }
@@ -798,38 +586,44 @@ public class PluginManager : IPluginManager
             {
                 pluginDirectory = localPluginDirectory;
             }
-            
+
+            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDirectory, pluginsDirectory))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"IsInstalled({pluginId}): Resolved plugin directory is outside plugins root");
+                return false;
+            }
+
             // Check for DLL files in the plugin directory
-            var dllFiles = Directory.GetFiles(pluginDirectory, "*.dll", SearchOption.TopDirectoryOnly);
+            var dllFiles = Directory.GetFiles(pluginDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+                .Where(filePath => PathSecurity.IsPathWithinAllowedDirectory(filePath, pluginsDirectory))
+                .Where(filePath => PathSecurity.IsValidFileName(Path.GetFileName(filePath)))
+                .ToArray();
             if (dllFiles.Length == 0)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"IsInstalled({pluginId}): No DLL files found in plugin directory");
                 return false;
             }
-            
-            // Check for the main plugin DLL (either pluginId.dll or LenovoLegionToolkit.Plugins.{pluginId}.dll)
-            var mainDllNameCandidates = GetMainPluginDllNameCandidates(pluginId);
+
+            // Check for the main plugin DLL
             var hasMainDll = dllFiles.Any(f => mainDllNameCandidates.Contains(Path.GetFileName(f), StringComparer.OrdinalIgnoreCase));
-            
+
             if (!hasMainDll)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"IsInstalled({pluginId}): Main plugin DLL not found. Available DLLs: [{string.Join(", ", dllFiles.Select(Path.GetFileName))}]");
-                // Still return true if there are DLL files (might be different naming convention)
-                // But log warning
             }
-            
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"IsInstalled({pluginId}): Plugin files exist, returning true");
-            
+
             return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"IsInstalled({pluginId}): Error checking plugin files: {ex.Message}");
-            // If we can't check files, fall back to settings-based check
             return isInstalled;
         }
     }
@@ -848,64 +642,51 @@ public class PluginManager : IPluginManager
             return;
 
         if (Log.Instance.IsTraceEnabled)
-        {
             Log.Instance.Trace($"InstallPlugin called for {pluginId}");
-        }
 
         var installedExtensions = _applicationSettings.Store.InstalledExtensions;
         var pendingDeletionExtensions = _applicationSettings.Store.PendingDeletionExtensions;
-        var pendingDeletionRemoved = pendingDeletionExtensions.RemoveAll(id => id.Equals(pluginId, StringComparison.OrdinalIgnoreCase)) > 0;
+        var pendingDeletionRemoved = pendingDeletionExtensions.RemoveAll(id => StringComparer.OrdinalIgnoreCase.Equals(id, pluginId)) > 0;
 
         if (!installedExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
         {
             if (Log.Instance.IsTraceEnabled)
-            {
                 Log.Instance.Trace($"Adding {pluginId} to installed extensions list");
-            }
-            
+
             installedExtensions.Add(pluginId);
             _applicationSettings.SynchronizeStore();
 
             // Check and install dependencies
-            if (_registeredPlugins.TryGetValue(pluginId, out var plugin) && plugin.Dependencies != null)
+            var plugin = _registry.Get(pluginId);
+            if (plugin?.Dependencies != null)
             {
                 foreach (var dependency in plugin.Dependencies)
                 {
                     if (!IsInstalled(dependency))
-                    {
                         InstallPlugin(dependency);
-                    }
                 }
             }
 
             // Trigger install callback
-            if (_registeredPlugins.TryGetValue(pluginId, out var installedPlugin))
-            {
-                installedPlugin.OnInstalled();
-            }
+            var installedPlugin = _registry.Get(pluginId);
+            installedPlugin?.OnInstalled();
 
             if (Log.Instance.IsTraceEnabled)
-            {
                 Log.Instance.Trace($"Triggering PluginStateChanged for {pluginId} (installed=true)");
-            }
-            
+
             OnPluginStateChanged(pluginId, true);
         }
         else
         {
             if (Log.Instance.IsTraceEnabled)
-            {
                 Log.Instance.Trace($"Plugin {pluginId} is already installed");
-            }
 
             if (pendingDeletionRemoved)
                 _applicationSettings.SynchronizeStore();
         }
 
         if (pendingDeletionRemoved && Log.Instance.IsTraceEnabled)
-        {
             Log.Instance.Trace($"Removed {pluginId} from pending deletion list during install/reinstall.");
-        }
     }
 
     public bool UninstallPlugin(string pluginId)
@@ -927,10 +708,10 @@ public class PluginManager : IPluginManager
             return false;
 
         // Get plugin instance
-        _registeredPlugins.TryGetValue(pluginId, out var plugin);
+        var plugin = _registry.Get(pluginId);
 
         // Check if any other plugins depend on this plugin
-        var dependentPlugins = _registeredPlugins.Values
+        var dependentPlugins = _registry.GetAll()
             .Where(p => p.Dependencies != null && p.Dependencies.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
             .Where(p => IsInstalled(p.Id))
             .ToList();
@@ -943,13 +724,13 @@ public class PluginManager : IPluginManager
         }
 
         installedExtensions.Remove(pluginId);
-        
+
         // Add to pending deletion list for actual deletion on app exit
         if (!_applicationSettings.Store.PendingDeletionExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
         {
             _applicationSettings.Store.PendingDeletionExtensions.Add(pluginId);
         }
-        
+
         _applicationSettings.SynchronizeStore();
 
         // Stop plugin before uninstall callback
@@ -963,7 +744,7 @@ public class PluginManager : IPluginManager
                 Log.Instance.Trace($"Error stopping plugin {pluginId}: {ex.Message}", ex);
         }
 
-        _startedPlugins.Remove(pluginId);
+        _registry.MarkStopped(pluginId);
 
         // Trigger uninstall callback
         plugin?.OnUninstalled();
@@ -978,7 +759,26 @@ public class PluginManager : IPluginManager
         return _applicationSettings.Store.InstalledExtensions;
     }
 
-    public bool PermanentlyDeletePlugin(string pluginId)
+    /// <inheritdoc/>
+    public void RegisterPlugin(IPlugin plugin)
+    {
+        if (plugin == null)
+            return;
+
+        var metadata = new PluginMetadata
+        {
+            Id = plugin.Id,
+            Name = plugin.Name,
+            Description = plugin.Description,
+            Icon = plugin.Icon,
+            IsSystemPlugin = plugin.IsSystemPlugin,
+            Dependencies = plugin.Dependencies
+        };
+
+        _registry.Register(plugin, metadata);
+    }
+
+    public async Task<bool> PermanentlyDeletePluginAsync(string pluginId)
     {
         // SECURITY: Validate plugin ID format
         if (!PathSecurity.IsValidPluginId(pluginId))
@@ -993,12 +793,11 @@ public class PluginManager : IPluginManager
 
         try
         {
-            // Remove from registered plugins and metadata cache
-            _registeredPlugins.Remove(pluginId);
-            _pluginMetadataCache.Remove(pluginId);
+            // Unregister the plugin from the registry
+            _registry.Unregister(pluginId);
 
             // Get plugins directory
-            var pluginsDirectory = GetPluginsDirectory();
+            var pluginsDirectory = _fileSystemManager.GetPluginsDirectory();
             if (!Directory.Exists(pluginsDirectory))
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -1007,18 +806,12 @@ public class PluginManager : IPluginManager
             }
 
             // Try to find plugin file by scanning all plugin DLLs and matching by ID
-            // We need to check both the expected naming pattern and scan for actual plugin IDs
             var foundFiles = new List<string>();
             var pluginDirectoryToDelete = new List<string>();
 
             // Check subdirectories (plugins are often in their own folder)
             var subdirectories = Directory.GetDirectories(pluginsDirectory);
-            var cultureFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-                "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-                "vi", "zh-hans", "zh-hant", "tools"
-            };
+            var cultureFolders = _fileSystemManager.GetCultureFolders();
 
             foreach (var subdir in subdirectories)
             {
@@ -1027,7 +820,7 @@ public class PluginManager : IPluginManager
                     continue;
 
                 var directoriesToScan = new List<string> { subdir };
-                
+
                 // If this is the "local" directory, we need to scan its subdirectories
                 if (dirName.Equals("local", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1039,7 +832,7 @@ public class PluginManager : IPluginManager
                 {
                     // Check all DLL files in this directory
                     var dllFiles = Directory.GetFiles(scanDir, "*.dll", SearchOption.TopDirectoryOnly)
-                        .Where(f => 
+                        .Where(f =>
                         {
                             var fileName = Path.GetFileName(f);
                             return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
@@ -1058,7 +851,7 @@ public class PluginManager : IPluginManager
 
                             foreach (var pluginType in pluginTypes)
                             {
-                                if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
+                                if (Activator.CreateInstance(pluginType) is IPlugin testPlugin &&
                                     testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
                                 {
                                     foundFiles.Add(dllFile);
@@ -1084,7 +877,7 @@ public class PluginManager : IPluginManager
 
             // Also check root plugins directory
             var rootDllFiles = Directory.GetFiles(pluginsDirectory, "*.dll", SearchOption.TopDirectoryOnly)
-                .Where(f => 
+                .Where(f =>
                 {
                     var fileName = Path.GetFileName(f);
                     return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
@@ -1102,7 +895,7 @@ public class PluginManager : IPluginManager
 
                     foreach (var pluginType in pluginTypes)
                     {
-                        if (Activator.CreateInstance(pluginType) is IPlugin testPlugin && 
+                        if (Activator.CreateInstance(pluginType) is IPlugin testPlugin &&
                             testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
                         {
                             foundFiles.Add(dllFile);
@@ -1130,12 +923,12 @@ public class PluginManager : IPluginManager
                     var allFiles = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
                         .Where(f => !f.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
                         .ToList();
-                    
+
                     var pluginBaseName = Path.GetFileNameWithoutExtension(foundFiles.FirstOrDefault(f => f.StartsWith(dir)) ?? "");
-                    if (!string.IsNullOrEmpty(pluginBaseName) && 
+                    if (!string.IsNullOrEmpty(pluginBaseName) &&
                         allFiles.All(f => Path.GetFileName(f).StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase)))
                     {
-                        Directory.Delete(dir, true);
+                        await _fileSystemManager.DeleteDirectoryWithRetryAsync(dir);
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Deleted plugin directory: {dir}");
                         // Remove files from foundFiles list since directory is deleted
@@ -1153,9 +946,9 @@ public class PluginManager : IPluginManager
             var deletedAny = false;
             foreach (var filePath in foundFiles)
             {
-                try
+                var deleted = await _fileSystemManager.DeleteFileWithRetryAsync(filePath);
+                if (deleted)
                 {
-                    File.Delete(filePath);
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Deleted plugin file: {filePath}");
                     deletedAny = true;
@@ -1171,17 +964,9 @@ public class PluginManager : IPluginManager
                             var relatedFile = basePath + ext;
                             if (File.Exists(relatedFile))
                             {
-                                try
-                                {
-                                    File.Delete(relatedFile);
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Deleted related file: {relatedFile}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (Log.Instance.IsTraceEnabled)
-                                        Log.Instance.Trace($"Failed to delete related file {relatedFile}: {ex.Message}", ex);
-                                }
+                                await _fileSystemManager.DeleteFileWithRetryAsync(relatedFile);
+                                if (Log.Instance.IsTraceEnabled)
+                                    Log.Instance.Trace($"Deleted related file: {relatedFile}");
                             }
                         }
 
@@ -1199,27 +984,18 @@ public class PluginManager : IPluginManager
                                     var satelliteFileName = Path.GetFileNameWithoutExtension(satelliteFile);
                                     if (satelliteFileName.StartsWith(pluginBaseName, StringComparison.OrdinalIgnoreCase))
                                     {
-                                        try
-                                        {
-                                            File.Delete(satelliteFile);
-                                            if (Log.Instance.IsTraceEnabled)
-                                                Log.Instance.Trace($"Deleted satellite assembly: {satelliteFile}");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            if (Log.Instance.IsTraceEnabled)
-                                                Log.Instance.Trace($"Failed to delete satellite assembly {satelliteFile}: {ex.Message}", ex);
-                                        }
+                                        await _fileSystemManager.DeleteFileWithRetryAsync(satelliteFile);
+                                        if (Log.Instance.IsTraceEnabled)
+                                            Log.Instance.Trace($"Deleted satellite assembly: {satelliteFile}");
                                     }
                                 }
                             }
                         }
                     }
                 }
-                catch (Exception ex)
+                else if (Log.Instance.IsTraceEnabled)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to delete plugin file {filePath}: {ex.Message}", ex);
+                    Log.Instance.Trace($"Failed to delete plugin file: {filePath}");
                 }
             }
 
@@ -1233,77 +1009,20 @@ public class PluginManager : IPluginManager
         }
     }
 
-    /// <summary>
-    /// Delete a file with retry mechanism to handle locked files
-    /// </summary>
-    private async Task<bool> DeleteFileWithRetryAsync(string filePath, int maxRetries = 10, int delayMs = 200)
+    /// <inheritdoc/>
+    public bool PermanentlyDeletePlugin(string pluginId)
     {
-        for (int i = 0; i < maxRetries; i++)
-        {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return true;
-            }
-            catch (IOException)
-            {
-                if (i == maxRetries - 1)
-                    return false;
-                await Task.Delay(delayMs).ConfigureAwait(false);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                if (i == maxRetries - 1)
-                    return false;
-                await Task.Delay(delayMs).ConfigureAwait(false);
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Delete a directory with retry mechanism to handle locked files
-    /// </summary>
-    private async Task<bool> DeleteDirectoryWithRetryAsync(string directoryPath, int maxRetries = 10, int delayMs = 200)
-    {
-        for (int i = 0; i < maxRetries; i++)
-        {
-            try
-            {
-                if (Directory.Exists(directoryPath))
-                {
-                    Directory.Delete(directoryPath, true);
-                    return true;
-                }
-                return true;
-            }
-            catch (IOException)
-            {
-                if (i == maxRetries - 1)
-                    return false;
-                await Task.Delay(delayMs).ConfigureAwait(false);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                if (i == maxRetries - 1)
-                    return false;
-                await Task.Delay(delayMs).ConfigureAwait(false);
-            }
-        }
-        return false;
+        // Synchronous wrapper for interface compatibility
+        return PermanentlyDeletePluginAsync(pluginId).GetAwaiter().GetResult();
     }
 
     /// <summary>
     /// Perform actual deletion of plugins marked for deletion (call on app exit)
     /// </summary>
-    public void PerformPendingDeletions()
+    public async Task PerformPendingDeletionsAsync()
     {
         var pendingDeletions = _applicationSettings.Store.PendingDeletionExtensions.ToList();
-        
+
         if (!pendingDeletions.Any())
         {
             if (Log.Instance.IsTraceEnabled)
@@ -1320,9 +1039,9 @@ public class PluginManager : IPluginManager
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Deleting plugin files for: {pluginId}");
-                
-                PermanentlyDeletePlugin(pluginId);
-                
+
+                await PermanentlyDeletePluginAsync(pluginId);
+
                 // Remove from pending deletions list
                 _applicationSettings.Store.PendingDeletionExtensions.Remove(pluginId);
             }
@@ -1340,6 +1059,14 @@ public class PluginManager : IPluginManager
             Log.Instance.Trace($"Pending plugin deletions completed.");
     }
 
+    /// <summary>
+    /// Perform actual deletion of plugins marked for deletion (sync wrapper)
+    /// </summary>
+    public void PerformPendingDeletions()
+    {
+        PerformPendingDeletionsAsync().GetAwaiter().GetResult();
+    }
+
     public void UnloadAllPlugins()
     {
         try
@@ -1347,25 +1074,8 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Unloading all plugins...");
 
-            // Trigger OnUninstalled for all registered plugins
-            foreach (var plugin in _registeredPlugins.Values)
-            {
-                try
-                {
-                    plugin.OnUninstalled();
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to trigger OnUninstalled for plugin {plugin.Id}: {ex.Message}", ex);
-                }
-            }
-
-            // Clear all registered plugins and metadata
-            _registeredPlugins.Clear();
-            _pluginMetadataCache.Clear();
-            _pluginFileCache.Clear();
-            _startedPlugins.Clear();
+            // Use registry.Clear() which triggers OnUninstalled for all plugins
+            _registry.Clear();
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"All plugins unloaded successfully");
@@ -1385,18 +1095,18 @@ public class PluginManager : IPluginManager
             if (string.IsNullOrWhiteSpace(pluginId))
                 return false;
 
-            if (!_registeredPlugins.TryGetValue(pluginId, out var plugin))
+            var plugin = _registry.Get(pluginId);
+            if (plugin == null)
                 return false;
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping plugin: {pluginId}");
 
             plugin.Stop();
+            _registry.MarkStopped(pluginId);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin {pluginId} stopped successfully");
-
-            _startedPlugins.Remove(pluginId);
 
             return true;
         }
@@ -1416,7 +1126,7 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping all plugins...");
 
-            foreach (var plugin in _registeredPlugins.Values)
+            foreach (var plugin in _registry.GetAll())
             {
                 try
                 {
@@ -1429,7 +1139,11 @@ public class PluginManager : IPluginManager
                 }
             }
 
-            _startedPlugins.Clear();
+            // Mark all plugins as stopped
+            foreach (var startedId in _registry.GetStartedPluginIds().ToList())
+            {
+                _registry.MarkStopped(startedId);
+            }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"All plugins stopped successfully");

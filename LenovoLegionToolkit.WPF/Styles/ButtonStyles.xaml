@@ -1,0 +1,42 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <!-- Compact Button Style -->
+    <Style x:Key="AppButtonCompact" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+        <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthCompact}" />
+        <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+    </Style>
+
+    <!-- Standard Button Style -->
+    <Style x:Key="AppButtonStandard" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+        <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
+        <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+    </Style>
+
+    <!-- Primary Button Style -->
+    <Style x:Key="AppButtonPrimary" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+        <Setter Property="Appearance" Value="Primary" />
+        <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
+        <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+        <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <!-- Large Button Style -->
+    <Style x:Key="AppButtonLarge" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+        <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthLarge}" />
+        <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSubsection}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+    </Style>
+
+</ResourceDictionary>

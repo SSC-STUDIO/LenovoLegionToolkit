@@ -591,3 +591,19 @@ UPDATE_CHANGELOG.md
 findings.md
 progress.md
 task_plan.md
+
+# Local AI assistant scratch/report directories (do not publish)
+.claude/
+docs/superpowers/
+
+# Playwright CLI test artifacts
+.playwright-cli/
+
+# Temporary build/test outputs
+.tmp-build/
+
+# Browser automation sandbox directories
+true/
+
+# Screenshot artifacts
+screenshot.png

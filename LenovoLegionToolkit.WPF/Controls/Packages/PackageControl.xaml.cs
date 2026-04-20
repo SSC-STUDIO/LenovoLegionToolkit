@@ -73,7 +73,24 @@ public partial class PackageControl : IProgress<float>
     {
         // Actual downloaded file name format: "{SanitizedTitle} - {FileName}"
         var sanitizedTitle = SanitizeFileName(_package.Title);
-        return $"{sanitizedTitle} - {_package.FileName}";
+        return $"{sanitizedTitle} - {GetSafePackageFileName()}";
+    }
+
+    private string GetSafePackageFileName() => SanitizeFileName(Path.GetFileName(_package.FileName));
+
+    private string? FindDownloadedPackagePath(string downloadPath)
+    {
+        if (!Directory.Exists(downloadPath))
+            return null;
+
+        var expectedName = GetActualFileName();
+        foreach (var candidate in Directory.EnumerateFiles(downloadPath, "*", SearchOption.TopDirectoryOnly))
+        {
+            if (string.Equals(Path.GetFileName(candidate), expectedName, StringComparison.OrdinalIgnoreCase))
+                return candidate;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -218,10 +235,10 @@ public partial class PackageControl : IProgress<float>
             // If still not found, try searching for matching files
             if (!File.Exists(filePath) && Directory.Exists(downloadPath))
             {
-                var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                if (files.Length > 0)
+                var locatedPath = FindDownloadedPackagePath(downloadPath);
+                if (!string.IsNullOrEmpty(locatedPath))
                 {
-                    filePath = files[0];
+                    filePath = locatedPath;
                     _actualDownloadedFilePath = filePath;
                 }
             }
@@ -287,10 +304,10 @@ public partial class PackageControl : IProgress<float>
 
         if (!File.Exists(filePath) && Directory.Exists(downloadPath))
         {
-            var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-            if (files.Length > 0)
+            var locatedPath = FindDownloadedPackagePath(downloadPath);
+            if (!string.IsNullOrEmpty(locatedPath))
             {
-                filePath = files[0];
+                filePath = locatedPath;
                 _actualDownloadedFilePath = filePath;
             }
         }
@@ -473,11 +490,11 @@ public partial class PackageControl : IProgress<float>
                 var downloadPath = _getDownloadPath();
                 if (Directory.Exists(downloadPath))
                 {
-                    var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                    if (files.Length > 0)
+                    var locatedPath = FindDownloadedPackagePath(downloadPath);
+                    if (!string.IsNullOrEmpty(locatedPath))
                     {
                         // Found matching files, use the first one
-                        filePath = files[0];
+                        filePath = locatedPath;
                         _actualDownloadedFilePath = filePath;
                         
                         if (Log.Instance.IsTraceEnabled)
@@ -536,11 +553,11 @@ public partial class PackageControl : IProgress<float>
             var downloadPath = _getDownloadPath();
             if (Directory.Exists(downloadPath))
             {
-                var files = Directory.GetFiles(downloadPath, $"*{_package.FileName}");
-                if (files.Length > 0)
+                var locatedPath = FindDownloadedPackagePath(downloadPath);
+                if (!string.IsNullOrEmpty(locatedPath))
                 {
                     // Found matching files, use the first one
-                    filePath = files[0];
+                    filePath = locatedPath;
                     _actualDownloadedFilePath = filePath;
                     
                     if (Log.Instance.IsTraceEnabled)
@@ -560,56 +577,46 @@ public partial class PackageControl : IProgress<float>
                 return;
             }
             
+            var expectedInstallerFileName = GetActualFileName();
+            var configuredDownloadPath = _getDownloadPath();
+            if (!InstallerLaunchPathValidator.TryValidateForExecution(filePath, configuredDownloadPath, expectedInstallerFileName, out var safeInstallerPath, out var validationError))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Installer path validation failed. [filePath={filePath}, downloadPath={configuredDownloadPath}, reason={validationError}]");
+
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, validationError, SnackbarType.Error);
+                Status = PackageStatus.NotStarted;
+                UpdateStatusDisplay();
+                return;
+            }
+
             // 运行安装程序
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = filePath,
+                FileName = safeInstallerPath,
                 UseShellExecute = true,
                 Verb = "runas" // 以管理员权限运行
             };
             
             try
             {
-                _installProcess = Process.Start(processStartInfo);
-                if (_installProcess != null)
+                var installProcess = Process.Start(processStartInfo);
+                _installProcess = installProcess;
+
+                if (installProcess != null)
                 {
-                    _installProcess.EnableRaisingEvents = true;
-                    _installProcess.Exited += async (s, e) =>
+                    installProcess.EnableRaisingEvents = true;
+                    installProcess.Exited += async (s, e) =>
                     {
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            try
-                            {
-                                Status = PackageStatus.Completed;
-                                UpdateStatusDisplay();
-                                
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Install process exited. Status set to Completed. Badge should be visible.");
-                                
-                                _installProcess = null;
-                            }
-                            catch (Exception ex)
-                            {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Error updating status after install exit.", ex);
-                            }
-                        });
+                        await HandleInstallProcessExitAsync(installProcess);
                     };
                 }
                 
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallStarted_Title, string.Format(Resource.PackageControl_InstallStarted_Message, _package.FileName), SnackbarType.Success);
                 
                 // 如果进程立即退出，认为安装完成
-                if (_installProcess != null && _installProcess.HasExited)
-                {
-                    Status = PackageStatus.Completed;
-                    UpdateStatusDisplay();
-                    
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Install process exited immediately. Status set to Completed.");
-                    
-                    _installProcess = null;
-                }
+                if (installProcess != null && installProcess.HasExited)
+                    await HandleInstallProcessExitAsync(installProcess);
             }
             catch (Exception ex)
             {
@@ -627,6 +634,50 @@ public partial class PackageControl : IProgress<float>
             Status = PackageStatus.NotStarted;
         }
     }
+
+    private async Task HandleInstallProcessExitAsync(Process installProcess)
+    {
+        var exitCode = installProcess.ExitCode;
+        var status = GetStatusForInstallerExitCode(exitCode);
+        var failureMessage = GetInstallerExitFailureMessage(exitCode);
+
+        try
+        {
+            var handled = await Dispatcher.InvokeAsync(() =>
+            {
+                if (!ReferenceEquals(_installProcess, installProcess))
+                    return false;
+
+                Status = status;
+                UpdateStatusDisplay();
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Install process exited with code {exitCode}. Status set to {status}.");
+
+                _installProcess = null;
+                return true;
+            });
+
+            if (!handled)
+                return;
+
+            if (failureMessage is not null)
+                await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error updating status after install exit.", ex);
+        }
+    }
+
+    private static PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
+        ? PackageStatus.Completed
+        : PackageStatus.NotStarted;
+
+    private static string? GetInstallerExitFailureMessage(int exitCode) => exitCode == 0
+        ? null
+        : string.Format(Resource.PackageControl_InstallError_ExitCode, exitCode);
 
     private void StopInstallation()
     {

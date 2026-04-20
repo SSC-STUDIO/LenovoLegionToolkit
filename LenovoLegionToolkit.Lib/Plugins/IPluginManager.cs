@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -51,6 +52,13 @@ public interface IPluginManager : IDisposable
     /// <summary>
     /// Scan and load plugins from the plugins directory
     /// </summary>
+    /// <returns>A task that completes when the scan is finished</returns>
+    Task ScanAndLoadPluginsAsync();
+
+    /// <summary>
+    /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)
+    /// </summary>
+    [Obsolete("Use ScanAndLoadPluginsAsync() instead. This method is fire-and-forget and cannot be awaited.")]
     void ScanAndLoadPlugins();
 
     /// <summary>
@@ -96,4 +104,3 @@ public class PluginEventArgs : EventArgs
         IsInstalled = isInstalled;
     }
 }
-

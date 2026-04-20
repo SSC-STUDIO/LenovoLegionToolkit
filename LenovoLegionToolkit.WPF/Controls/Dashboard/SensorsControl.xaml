@@ -12,9 +12,7 @@
     d:DesignWidth="1200"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="Medium" />
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource AppSectionTitleTextBlockStyle}">
             <Setter Property="Margin" Value="0,0,0,16" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
@@ -51,7 +49,7 @@
                     <StackPanel Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                              <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
-                             <TextBlock x:Name="_cpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
+                             <TextBlock x:Name="_cpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -103,17 +101,17 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuWattage" Text="N/A" Margin="0,0,0,8" />
-                                    
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltage" Text="N/A" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuTempRange" Text="N/A" Margin="0,0,0,8" />
-                                    
-                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+
+                                    <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                     <TextBlock x:Name="_cpuVoltageRange" Text="N/A" Margin="0,0,0,8" />
                                 </StackPanel>
                              </Grid>
@@ -127,7 +125,7 @@
                     <StackPanel Grid.Column="2">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
-                            <TextBlock x:Name="_batteryModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
+                            <TextBlock x:Name="_batteryModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -173,10 +171,10 @@
 
                          <!-- Battery Warnings -->
                         <StackPanel Margin="0,8,0,0">
-                            <TextBlock x:Name="_batteryStatusLabel" Text="" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" />
-                            <TextBlock x:Name="_lowBatteryWarning" Text="{x:Static resources:Resource.BatteryPage_LowLevel}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" FontSize="12"/>
-                            <TextBlock x:Name="_lowWattageWarning" Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" FontSize="12"/>
-                            <wpfui:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="24" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="Collapsed" /> 
+                            <TextBlock x:Name="_batteryStatusLabel" Text="" Style="{StaticResource AppCaptionTextBlockStyle}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" />
+                            <TextBlock x:Name="_lowBatteryWarning" Text="{x:Static resources:Resource.BatteryPage_LowLevel}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}"/>
+                            <TextBlock x:Name="_lowWattageWarning" Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource AppCaptionTextBlockStyle}"/>
+                            <wpfui:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="24" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="Collapsed" />
                         </StackPanel>
 
                         <!-- Battery Details -->
@@ -184,21 +182,21 @@
                              <Grid>
                                  <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                                  <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Style="{StaticResource AppSmallBodyTextBlockStyle}"/>
                                      <TextBlock x:Name="_batteryRateRange" Text="-"/>
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10" Margin="0,4,0,0"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0"/>
                                      <TextBlock x:Name="_batteryCycles" Text="-"/>
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10" Margin="0,4,0,0"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0"/>
                                      <TextBlock x:Name="_batteryDate" Text="-"/>
                                  </StackPanel>
                                  <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Capacity}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Capacity}" Style="{StaticResource AppSmallBodyTextBlockStyle}"/>
                                      <TextBlock x:Name="_batteryCap" Text="-"/>
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_FullCapacity}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10" Margin="0,4,0,0"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_FullCapacity}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0"/>
                                      <TextBlock x:Name="_batteryFullCap" Text="-"/>
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_DesignCapacity}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10" Margin="0,4,0,0"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_DesignCapacity}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0"/>
                                      <TextBlock x:Name="_batteryDesignCap" Text="-"/>
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_AvgTemp}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="10" Margin="0,4,0,0"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_AvgTemp}" Style="{StaticResource AppSmallBodyTextBlockStyle}" Margin="0,4,0,0"/>
                                      <TextBlock x:Name="_batteryAvgTemp" Text="-"/>
                                  </StackPanel>
                              </Grid>
@@ -212,7 +210,7 @@
                     <StackPanel Grid.Column="4">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
-                            <TextBlock x:Name="_gpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
+                            <TextBlock x:Name="_gpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -258,7 +256,7 @@
 
                         <!-- GPU Details -->
                         <StackPanel x:Name="_gpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
-                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                              <Grid>
                                  <Grid.ColumnDefinitions>
                                      <ColumnDefinition Width="*"/>
@@ -276,17 +274,17 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}"/>
                                      <TextBlock x:Name="_gpuWattage" Text="N/A" Margin="0,0,0,8" />
-                                     
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                      <TextBlock x:Name="_gpuVoltage" Text="N/A" Margin="0,0,0,8" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                      <TextBlock x:Name="_gpuTempRange" Text="N/A" Margin="0,0,0,8" />
 
-                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
                                      <TextBlock x:Name="_gpuVoltageRange" Text="N/A" Margin="0,0,0,8" />
                                 </StackPanel>
                              </Grid>

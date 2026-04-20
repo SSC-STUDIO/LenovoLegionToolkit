@@ -14,8 +14,10 @@
                 <wpfui:ControlsDictionary />
                 <wpfui:ThemesDictionary Theme="Dark" />
                 <ResourceDictionary Source="pack://application:,,,/ColorPicker;component/Styles/DefaultColorPickerStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/DesignTokens.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/AnimationTokens.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Animations.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/ButtonStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Typography.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Badge.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardAction.xaml" />

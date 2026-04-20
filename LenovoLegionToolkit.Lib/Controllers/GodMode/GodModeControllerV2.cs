@@ -383,7 +383,7 @@ public class GodModeControllerV2(
             })
             .ToArray();
 
-        var length = fanTableData.Where(ftd => ftd.Type != FanTableType.Unknown).Count();
+        var length = fanTableData.Count(ftd => ftd.Type != FanTableType.Unknown);
 
         if (fanTableData.Length != length)
         {

@@ -29,40 +29,45 @@ public partial class SettingsPowerControl
     {
         _isRefreshing = true;
 
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
+        // Run all async operations in parallel
+        var miTask = Compatibility.GetMachineInformationAsync();
+        var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
 
-        try
+        await Task.WhenAll(miTask, powerModeSupportedTask);
+
+        var mi = miTask.Result;
+        var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
+
+        // Check GodModeFnQSwitchable capability and get value if supported
+        // Note: If WMI call fails, the card will be hidden to avoid showing broken UI
+        var hasGodModeFnQ = mi.Features[CapabilityID.GodModeFnQSwitchable];
+        int? fnQValue = null;
+
+        if (hasGodModeFnQ)
         {
-            var mi = await Compatibility.GetMachineInformationAsync();
-            if (mi.Features[CapabilityID.GodModeFnQSwitchable])
+            try
             {
-                _godModeFnQSwitchableCard.Visibility = Visibility.Visible;
-                _godModeFnQSwitchableToggle.IsChecked = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable) == 1;
+                fnQValue = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable);
             }
-            else
+            catch (Exception ex)
             {
-                _godModeFnQSwitchableCard.Visibility = Visibility.Collapsed;
+                // Log failure but continue - card will be hidden since fnQValue remains null
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
             }
         }
-        catch (Exception ex)
-        {
-            _godModeFnQSwitchableCard.Visibility = Visibility.Collapsed;
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get GodModeFnQSwitchable status.", ex);
-        }
+        _godModeFnQSwitchableCard.Visibility = hasGodModeFnQ && fnQValue.HasValue ? Visibility.Visible : Visibility.Collapsed;
+        _godModeFnQSwitchableToggle.IsChecked = fnQValue == 1;
 
         _powerModeMappingComboBox.SetItems(Enum.GetValues<PowerModeMappingMode>(), _settings.Store.PowerModeMappingMode, t => t.GetDisplayName());
 
-        var isPowerModeFeatureSupported = await _powerModeFeature.IsSupportedAsync();
         _powerModeMappingCard.Visibility = isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _powerModesCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
         _windowsPowerPlansControlPanelCard.Visibility = _settings.Store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan && isPowerModeFeatureSupported ? Visibility.Visible : Visibility.Collapsed;
 
         _onBatterySinceResetToggle.IsChecked = _settings.Store.ResetBatteryOnSinceTimerOnReboot;
-
-        await loadingTask;
 
         _isRefreshing = false;
     }
@@ -78,9 +83,19 @@ public partial class SettingsPowerControl
 
         _godModeFnQSwitchableToggle.IsEnabled = false;
 
-        await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
-
-        _godModeFnQSwitchableToggle.IsEnabled = true;
+        try
+        {
+            await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable, state.Value ? 1 : 0);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to set GodModeFnQSwitchable.", ex);
+        }
+        finally
+        {
+            _godModeFnQSwitchableToggle.IsEnabled = true;
+        }
     }
 
     private async void PowerModeMappingComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

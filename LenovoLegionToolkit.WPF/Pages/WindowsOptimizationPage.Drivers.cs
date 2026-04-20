@@ -515,7 +515,7 @@ public partial class WindowsOptimizationPage
         if (_driverPackagesStackPanel?.Children is null)
             return true;
 
-        if (_driverPackagesStackPanel.Children.OfType<PackageControl>().Where(pc => pc.IsDownloading).Count() == 0)
+        if (!_driverPackagesStackPanel.Children.OfType<PackageControl>().Any(pc => pc.IsDownloading))
             return true;
 
         return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);

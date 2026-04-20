@@ -21,19 +21,17 @@ public partial class SettingsIntegrationsControl
         InitializeComponent();
     }
 
-    public async Task RefreshAsync()
+    public Task RefreshAsync()
     {
         _isRefreshing = true;
-
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(500));
 
         _hwinfoIntegrationToggle.IsChecked = _integrationsSettings.Store.HWiNFO;
         _cliInterfaceToggle.IsChecked = _integrationsSettings.Store.CLI;
         _cliPathToggle.IsChecked = SystemPath.HasCLI();
 
-        await loadingTask;
-
         _isRefreshing = false;
+
+        return Task.CompletedTask;
     }
 
     private async void HWiNFOIntegrationToggle_Click(object sender, RoutedEventArgs e)

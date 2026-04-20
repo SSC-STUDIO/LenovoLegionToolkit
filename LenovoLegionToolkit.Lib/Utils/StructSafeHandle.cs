@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
 public sealed class StructSafeHandle<T> : SafeHandle where T : struct
 {
-    private readonly IntPtr _ptr;
+    private IntPtr _ptr;
 
     public StructSafeHandle(T str) : base(IntPtr.Zero, true)
     {
@@ -20,7 +21,11 @@ public sealed class StructSafeHandle<T> : SafeHandle where T : struct
 
     protected override bool ReleaseHandle()
     {
-        Marshal.FreeHGlobal(_ptr);
+        var ptr = Interlocked.Exchange(ref _ptr, IntPtr.Zero);
+        if (ptr != IntPtr.Zero)
+            Marshal.FreeHGlobal(ptr);
+
+        handle = IntPtr.Zero;
         return true;
     }
 }

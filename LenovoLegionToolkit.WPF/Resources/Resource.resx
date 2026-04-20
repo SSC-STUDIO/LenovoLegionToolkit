@@ -1154,7 +1154,10 @@ Make sure that your script runs correctly first.</value>
     <value>Accent color</value>
   </data>
   <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Start minimized to tray when you log in to Windows.</value>
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Customize language, temperature unit, theme and accent color.</value>
   </data>
   <data name="SettingsPage_Autorun_Title" xml:space="preserve">
     <value>Autorun</value>
@@ -1833,6 +1836,12 @@ Restart is recommended after changing this option.</value>
   </data>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
     <value>Theme</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Application</value>
   </data>
   <data name="SettingsPage_Title" xml:space="preserve">
     <value>Settings</value>
@@ -2673,6 +2682,9 @@ Supported formats are: {1}.</value>
   </data>
   <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
     <value>File not found, please download first</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Installer exited with code {0}</value>
   </data>
   <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
     <value>Installation started</value>

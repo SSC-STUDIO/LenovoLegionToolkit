@@ -137,7 +137,7 @@ public class ProcessAutoListener(
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Cleaning up process cache. Current size: {_processCache.Count}.");
 
-        foreach (var (processId, _) in _processCache)
+        foreach (var processId in _processCache.Keys.ToArray())
         {
             try
             {

@@ -20,6 +20,8 @@ using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using LenovoLegionToolkit.Lib.System.Driver;
+using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib;
@@ -29,6 +31,13 @@ public class IoCModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.Register<HttpClientFactory>();
+
+        // Register compatibility service
+        builder.Register<CompatibilityService>().As<ICompatibilityService>().SingleInstance();
+
+        // Register hardware abstraction wrappers
+        builder.Register<WMIWrapper>().As<IWMIWrapper>().SingleInstance();
+        builder.Register<DriverWrapper>().As<IDriverWrapper>().SingleInstance();
 
         builder.Register<FnKeysDisabler>();
         builder.Register<LegionZoneDisabler>();
@@ -145,6 +154,16 @@ public class IoCModule : Module
         builder.Register<BatteryDischargeRateMonitorService>();
         builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
+
+        // 注册插件签名验证器
+        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.CreateForCurrentProcess()))
+            .As<IPluginSignatureValidator>()
+            .SingleInstance();
+
+        // 注册插件系统组件
+        builder.Register<PluginLoader>().As<IPluginLoader>().SingleInstance();
+        builder.Register<PluginRegistry>().As<IPluginRegistry>().SingleInstance();
+        builder.Register<PluginFileSystemManager>().As<IPluginFileSystemManager>().SingleInstance();
 
         // 注册插件管理器
         builder.Register<PluginManager>().As<IPluginManager>().SingleInstance();

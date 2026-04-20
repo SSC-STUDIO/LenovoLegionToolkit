@@ -43,7 +43,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="12"
+                Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.AddAutomationStepWindow_Title}" />
 

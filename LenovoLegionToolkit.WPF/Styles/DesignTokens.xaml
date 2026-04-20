@@ -1,0 +1,42 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Spacing Tokens (Thickness) -->
+    <Thickness x:Key="SpacingXXS">4</Thickness>
+    <Thickness x:Key="SpacingXS">8</Thickness>
+    <Thickness x:Key="SpacingSM">12</Thickness>
+    <Thickness x:Key="SpacingMD">16</Thickness>
+    <Thickness x:Key="SpacingLG">24</Thickness>
+    <Thickness x:Key="SpacingXL">32</Thickness>
+
+    <!-- Corner Radius Tokens -->
+    <CornerRadius x:Key="CornerRadiusSM">4</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMD">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLG">12</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusXL">16</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
+
+    <!-- Font Size Tokens (for Button and other controls that need FontSize property) -->
+    <!-- Note: Typography.xaml defines TextBlock styles with same font sizes for text content -->
+    <sys:Double x:Key="FontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
+    <sys:Double x:Key="FontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">13</sys:Double>
+    <sys:Double x:Key="FontSizeSubsection" xmlns:sys="clr-namespace:System;assembly=mscorlib">16</sys:Double>
+    <sys:Double x:Key="FontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
+
+    <!-- Icon Size Tokens -->
+    <sys:Double x:Key="IconSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
+    <sys:Double x:Key="IconSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
+    <sys:Double x:Key="IconSizeLG" xmlns:sys="clr-namespace:System;assembly=mscorlib">24</sys:Double>
+    <sys:Double x:Key="IconSizeXL" xmlns:sys="clr-namespace:System;assembly=mscorlib">32</sys:Double>
+    <sys:Double x:Key="IconSizeHero" xmlns:sys="clr-namespace:System;assembly=mscorlib">48</sys:Double>
+
+    <!-- Button Size Tokens -->
+    <sys:Double x:Key="ButtonMinWidthCompact" xmlns:sys="clr-namespace:System;assembly=mscorlib">80</sys:Double>
+    <sys:Double x:Key="ButtonMinWidthStandard" xmlns:sys="clr-namespace:System;assembly=mscorlib">120</sys:Double>
+    <sys:Double x:Key="ButtonMinWidthLarge" xmlns:sys="clr-namespace:System;assembly=mscorlib">160</sys:Double>
+    <sys:Double x:Key="ButtonHeightCompact" xmlns:sys="clr-namespace:System;assembly=mscorlib">28</sys:Double>
+    <sys:Double x:Key="ButtonHeightStandard" xmlns:sys="clr-namespace:System;assembly=mscorlib">32</sys:Double>
+    <sys:Double x:Key="ButtonHeightLarge" xmlns:sys="clr-namespace:System;assembly=mscorlib">36</sys:Double>
+
+</ResourceDictionary>
