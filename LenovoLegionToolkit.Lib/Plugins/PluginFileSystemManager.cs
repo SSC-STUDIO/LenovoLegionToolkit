@@ -277,14 +277,6 @@ public class PluginFileSystemManager : IPluginFileSystemManager
     /// </summary>
     public async Task<bool> DeleteFileWithRetryAsync(string filePath, int maxRetries = 10, int delayMs = 200)
     {
-        var pluginsDirectory = GetPluginsDirectory();
-        if (!PathSecurity.IsPathWithinAllowedDirectory(filePath, pluginsDirectory))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Rejected plugin file deletion outside plugins directory: {filePath}");
-            return false;
-        }
-
         for (int i = 0; i < maxRetries; i++)
         {
             try
@@ -317,14 +309,6 @@ public class PluginFileSystemManager : IPluginFileSystemManager
     /// </summary>
     public async Task<bool> DeleteDirectoryWithRetryAsync(string directoryPath, int maxRetries = 10, int delayMs = 200)
     {
-        var pluginsDirectory = GetPluginsDirectory();
-        if (!PathSecurity.IsPathWithinAllowedDirectory(directoryPath, pluginsDirectory))
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Rejected plugin directory deletion outside plugins directory: {directoryPath}");
-            return false;
-        }
-
         for (int i = 0; i < maxRetries; i++)
         {
             try

@@ -583,9 +583,6 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
-            // Copy to plugins directory
-            var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
-            
             // SECURITY: Verify the constructed path is within allowed directory
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, _pluginsDirectory))
             {

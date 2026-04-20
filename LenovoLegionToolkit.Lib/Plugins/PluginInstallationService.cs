@@ -331,20 +331,17 @@ public class PluginInstallationService
     {
         try
         {
-            // SECURITY: Validate pluginDir is within allowed base directory
-            var appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginsBaseDir = Path.Combine(appBaseDir, "plugins");
-            if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, pluginsBaseDir))
+            if (!PathSecurity.IsValidDirectoryPath(pluginDir))
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Plugin directory outside allowed path: {pluginDir}");
+                    Log.Instance.Trace($"SECURITY: Invalid plugin directory path: {pluginDir}");
                 return null;
             }
 
-            var manifestPath = Path.Combine(pluginDir, "plugin.json");
-            
-            // SECURITY: Verify manifest path is still within allowed directory after combining
-            if (!PathSecurity.IsPathWithinAllowedDirectory(manifestPath, pluginsBaseDir))
+            var fullPluginDir = Path.GetFullPath(pluginDir);
+            var manifestPath = Path.Combine(fullPluginDir, "plugin.json");
+
+            if (!PathSecurity.IsPathWithinAllowedDirectory(manifestPath, fullPluginDir))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"SECURITY: Manifest path traversal detected: {manifestPath}");
@@ -428,6 +425,9 @@ public class PluginInstallationService
         {
             CopyDirectory(dir, Path.Combine(targetDir, Path.GetFileName(dir)));
         }
+
+    }
+
     /// <summary>
     /// Extracts ZIP file safely by validating entry paths to prevent path traversal attacks.
     /// </summary>
