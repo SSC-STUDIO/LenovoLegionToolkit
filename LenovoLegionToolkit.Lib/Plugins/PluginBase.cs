@@ -8,13 +8,18 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 public abstract class PluginBase : IPlugin
 {
     private IPluginConfiguration? _configuration;
-    
+
     public abstract string Id { get; }
     public abstract string Name { get; }
     public abstract string Description { get; }
     public abstract string Icon { get; }
     public abstract bool IsSystemPlugin { get; }
     public virtual string[]? Dependencies => null;
+
+    /// <summary>
+    /// Gets the current host context exposed by the active application.
+    /// </summary>
+    protected IPluginHostContext HostContext => PluginHostContext.Current;
 
     /// <summary>
     /// 获取插件配置实例

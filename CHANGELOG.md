@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- 为插件运行时新增非破坏性的宿主上下文入口，主程序现在会在启动时注册 `PluginHostContext`，供插件在不直接依赖具体宿主实现的前提下打开设置页或显示宿主对话框 / Added a non-breaking plugin host context entry point so the main app now registers `PluginHostContext` at startup, allowing plugins to open settings or show host-managed dialogs without depending directly on a concrete host implementation
+
 ## [3.6.14] - 2026-04-19
 
 ### Added / 新增
