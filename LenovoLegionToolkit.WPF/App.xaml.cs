@@ -206,6 +206,8 @@ public partial class App
             new IoCModule()
         );
 
+        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => Application.Current?.MainWindow));
+
         IoCContainer.Resolve<HttpClientFactory>().SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
 
         IoCContainer.Resolve<PowerModeFeature>().AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
@@ -241,6 +243,7 @@ public partial class App
             DisableConflictingSoftwareWarning = flags.DisableConflictingSoftwareWarning
         };
         MainWindow = mainWindow;
+        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => MainWindow as Window));
 
         IoCContainer.Resolve<ThemeManager>().Apply();
 
@@ -486,6 +489,8 @@ public partial class App
         lock (_shutdownLock)
             _inExitHandler = true;
 
+        PluginHostContext.Reset();
+
         try { ShutdownAsync(true).GetAwaiter().GetResult(); }
         catch { /* Shutdown failed - continue with exit anyway */ }
 
@@ -520,6 +525,7 @@ public partial class App
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
         MainWindow = mainWindow;
+        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => MainWindow as Window));
         mainWindow.Show();
     }
 

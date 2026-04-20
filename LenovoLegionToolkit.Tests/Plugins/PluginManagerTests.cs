@@ -128,7 +128,7 @@ public class PluginManagerTests : IDisposable
     #region ScanAndLoadPlugins Tests
 
     [Fact]
-    public void ScanAndLoadPlugins_WhenDirectoryDoesNotExist_ShouldNotLoad()
+    public async Task ScanAndLoadPlugins_WhenDirectoryDoesNotExist_ShouldNotLoad()
     {
         // Arrange
         var nonExistentPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -139,14 +139,14 @@ public class PluginManagerTests : IDisposable
         var manager = CreateManager();
 
         // Act
-        manager.ScanAndLoadPlugins();
+        await manager.ScanAndLoadPluginsAsync();
 
         // Assert - Should not throw
         _mockLoader.Verify(l => l.LoadFromFileAsync(It.IsAny<string>(), It.IsAny<IPluginSignatureValidator>()), Times.Never);
     }
 
     [Fact]
-    public void ScanAndLoadPlugins_WhenDirectoryExists_ShouldScan()
+    public async Task ScanAndLoadPlugins_WhenDirectoryExists_ShouldScan()
     {
         // Arrange
         var tempDir = CreateTempDirectory();
@@ -163,14 +163,14 @@ public class PluginManagerTests : IDisposable
         var manager = CreateManager();
 
         // Act
-        manager.ScanAndLoadPlugins();
+        await manager.ScanAndLoadPluginsAsync();
 
         // Assert
         _mockFileSystemManager.Verify(f => f.GetPluginDllFiles(), Times.Once);
     }
 
     [Fact]
-    public void ScanAndLoadPlugins_WithPluginFiles_ShouldAttemptLoad()
+    public async Task ScanAndLoadPlugins_WithPluginFiles_ShouldAttemptLoad()
     {
         // Arrange
         var tempDir = CreateTempDirectory();
@@ -196,12 +196,9 @@ public class PluginManagerTests : IDisposable
         var manager = CreateManager();
 
         // Act
-        manager.ScanAndLoadPlugins();
+        await manager.ScanAndLoadPluginsAsync();
 
-        // Assert - Wait for async void method to complete
-        // Since ScanAndLoadPlugins is async void, we can't await it
-        // We verify the loader was called (may need delay for async operation)
-        Thread.Sleep(100);
+        // Assert
         _mockLoader.Verify(l => l.LoadFromFileAsync(pluginFile, _mockSignatureValidator.Object), Times.Once);
     }
 
@@ -278,7 +275,7 @@ public class PluginManagerTests : IDisposable
     }
 
     [Fact]
-    public void ScanAndLoadPlugins_WithEmptyDirectory_ShouldCompleteSuccessfully()
+    public async Task ScanAndLoadPlugins_WithEmptyDirectory_ShouldCompleteSuccessfully()
     {
         // Arrange
         var tempDir = CreateTempDirectory();
@@ -295,10 +292,10 @@ public class PluginManagerTests : IDisposable
         var manager = CreateManager();
 
         // Act
-        Action act = () => manager.ScanAndLoadPlugins();
+        Func<Task> act = () => manager.ScanAndLoadPluginsAsync();
 
         // Assert
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
     }
 
     #endregion

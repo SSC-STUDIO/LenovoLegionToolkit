@@ -12,6 +12,8 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 /// </summary>
 public class PluginConfiguration : IPluginConfiguration
 {
+    public const string ConfigurationRootEnvironmentVariable = "LLT_PLUGIN_CONFIG_ROOT";
+
     private readonly string _pluginId;
     private readonly string _configFilePath;
     private Dictionary<string, object?> _configuration;
@@ -163,6 +165,10 @@ public class PluginConfiguration : IPluginConfiguration
 
     private static string GetConfigDirectory()
     {
+        var configuredRoot = Environment.GetEnvironmentVariable(ConfigurationRootEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(configuredRoot))
+            return Path.Combine(configuredRoot, "plugin-config");
+
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         return Path.Combine(appDataPath, "LenovoLegionToolkit", "plugin-config");
     }
