@@ -1,0 +1,18 @@
+<Project>
+
+  <Target Name="CreatePluginTestReferenceDirectories"
+          BeforeTargets="_CopyFilesMarkedCopyLocal"
+          Condition="'$(IsTestProject)' == 'true' Or '$(IsTestProject)' == 'True'">
+    <ItemGroup>
+      <PluginTestSatelliteLanguages Include="$(PluginSatelliteResourceLanguages)"
+                                    Condition="'$(PluginSatelliteResourceLanguages)' != ''" />
+      <PluginTestReferenceDirectories Include="@(PluginTestSatelliteLanguages->'$(OutDir)%(Identity)\')" />
+      <PluginTestReferenceDirectories Include="$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubDirectory)"
+                                      Condition="'%(ReferenceCopyLocalPaths.DestinationSubDirectory)' != ''" />
+    </ItemGroup>
+
+    <!-- Test projects copy localized plugin resources into culture subfolders. -->
+    <MakeDir Directories="@(PluginTestReferenceDirectories)" />
+  </Target>
+
+</Project>

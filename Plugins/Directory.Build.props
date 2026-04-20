@@ -6,6 +6,7 @@
     <Version>1.0.36</Version>
     <FileVersion>1.0.36</FileVersion>
     <AssemblyVersion>1.0.36</AssemblyVersion>
+    <PluginSatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</PluginSatelliteResourceLanguages>
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
     <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.Template'">True</IsTemplatePluginProject>
@@ -69,7 +70,7 @@
 
 
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
-    <SatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>$(PluginSatelliteResourceLanguages)</SatelliteResourceLanguages>
   </PropertyGroup>
 
 
@@ -115,4 +116,3 @@
   </Target>
 
 </Project>
-

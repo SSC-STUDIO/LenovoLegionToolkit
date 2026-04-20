@@ -114,8 +114,10 @@ Release steps:
 2. Update plugin `.csproj` version metadata
 3. Update plugin `CHANGELOG.md`
 4. Update `store.json` source entry if needed
-5. Run `plugin-completion-check.ps1`
-6. Trigger `build.yml` manually with:
+5. Update the repository root `CHANGELOG.md`
+6. Run `plugin-completion-check.ps1`
+7. For the current official working set, validate with `powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse shell-integration vive-tool -OutputJson artifacts\plugin-completion-check-latest.json`
+8. Trigger `build.yml` manually with:
 
 - `plugin`: optional folder name(s)
 - `version`: required for release publishing and must match `plugin.json`

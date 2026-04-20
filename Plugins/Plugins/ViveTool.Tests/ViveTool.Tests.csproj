@@ -42,6 +42,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="CleanupPluginOutput" />
 
 </Project>

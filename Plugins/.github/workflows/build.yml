@@ -64,6 +64,56 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Validate published store metadata
+        if: github.event_name != 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $storePath = Join-Path $PWD 'store.json'
+          $store = Get-Content $storePath -Raw | ConvertFrom-Json -AsHashtable
+
+          foreach ($plugin in @($store.plugins)) {
+            $pluginId = [string]$plugin.id
+            $pluginVersion = [string]$plugin.version
+            $downloadUrl = [string]$plugin.downloadUrl
+            $changelogUrl = [string]$plugin.changelog
+
+            if (-not $pluginId) {
+              throw "store.json contains a plugin entry without an id."
+            }
+
+            if (-not $pluginVersion) {
+              throw "store.json entry '$pluginId' is missing version metadata."
+            }
+
+            $expectedTagName = "$pluginId-v$pluginVersion"
+            $expectedAssetName = "$expectedTagName.zip"
+
+            $release = gh api "repos/${{ env.PLUGIN_REPO }}/releases/tags/$expectedTagName" | ConvertFrom-Json -AsHashtable
+            if ($LASTEXITCODE -ne 0) {
+              throw "store.json entry '$pluginId' points at missing release '$expectedTagName'."
+            }
+
+            $asset = @($release.assets) | Where-Object { $_.name -eq $expectedAssetName } | Select-Object -First 1
+            if (-not $asset) {
+              throw "Release '$expectedTagName' does not contain expected asset '$expectedAssetName'."
+            }
+
+            if ([string]$asset.state -ne 'uploaded') {
+              throw "Release asset '$expectedAssetName' for '$expectedTagName' is not uploaded."
+            }
+
+            if ([string]$asset.browser_download_url -ne $downloadUrl) {
+              throw "store.json downloadUrl mismatch for '$pluginId'. Expected '$([string]$asset.browser_download_url)', found '$downloadUrl'."
+            }
+
+            if ([string]$release.html_url -ne $changelogUrl) {
+              throw "store.json changelog mismatch for '$pluginId'. Expected '$([string]$release.html_url)', found '$changelogUrl'."
+            }
+          }
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v5.2.0
         with:

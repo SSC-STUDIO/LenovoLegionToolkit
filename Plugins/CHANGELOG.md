@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased]
+
+### Fixed / 修复
+- **Plugin Store Release Drift / 插件商店发布漂移**: Backfilled the missing GitHub releases for `network-acceleration v1.1.6` and `vive-tool v1.1.9` so published `store.json` metadata no longer points to 404 downloads during real online installs / 补齐 `network-acceleration v1.1.6` 与 `vive-tool v1.1.9` 缺失的 GitHub Release 资产，避免已发布的 `store.json` 在真实在线安装时指向 404 下载地址
+- **Network Acceleration Sampling Resilience / 网络加速采样韧性**: Isolate per-adapter statistics failures so one bad network interface no longer blocks the entire sampling loop, which keeps history and live updates flowing when other adapters still report successfully / 将统计异常隔离到单个网卡级别，避免单个异常适配器拖垮整轮采样，从而在其他网卡仍可正常读取时继续产出历史与实时更新
+
+### Improved / 改进
+- **Plugin Test Output Reliability / 插件测试输出可靠性**: Ensure plugin test projects pre-create culture-specific output directories before copying localized plugin assemblies, reducing false-negative Windows test failures in release validation / 在复制本地化插件程序集前为测试项目预先创建语言输出目录，降低 Windows 发布校验中因目录缺失导致的假失败
+- **Store Metadata Release Validation / 商店元数据发布校验**: Validate official `store.json` download and changelog URLs against live GitHub release assets before the workflow proceeds, so broken store metadata fails CI instead of reaching users / 在工作流继续执行前，将官方 `store.json` 的下载与更新日志链接与真实 GitHub Release 资产进行比对校验，使损坏的商店元数据在 CI 阶段失败而不是流到用户侧
+
 ## [1.0.36] - 2026-04-05
 
 ### Added / 添加
