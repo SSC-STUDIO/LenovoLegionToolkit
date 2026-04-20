@@ -27,32 +27,20 @@ public class ViveToolServicePathTests
     public async Task GetViveToolPathAsync_PrefersUserSpecifiedPath()
     {
         var service = new ViveToolService();
-        var tempDir = Path.Combine(Path.GetTempPath(), "llt-vivetool-test-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(tempDir);
-
-        var customPath = Path.Combine(tempDir, ViveToolPathService.ViveToolExeName);
-        await File.WriteAllTextAsync(customPath, "test");
+        await using var runtime = await ViveToolTestRuntimeHelper.CreateCompleteRuntimeScopeAsync();
 
         try
         {
-            var setResult = await service.SetViveToolPathAsync(customPath);
+            var setResult = await service.SetViveToolPathAsync(runtime.ExePath);
             var resolvedPath = await service.GetViveToolPathAsync();
 
             Assert.True(setResult);
             Assert.NotNull(resolvedPath);
-            Assert.Equal(Path.GetFullPath(customPath), Path.GetFullPath(resolvedPath!));
+            Assert.Equal(Path.GetFullPath(runtime.ExePath), Path.GetFullPath(resolvedPath!));
         }
         finally
         {
             await service.SetViveToolPathAsync(string.Empty);
-            try
-            {
-                Directory.Delete(tempDir, true);
-            }
-            catch
-            {
-                // cleanup best effort
-            }
         }
     }
 }

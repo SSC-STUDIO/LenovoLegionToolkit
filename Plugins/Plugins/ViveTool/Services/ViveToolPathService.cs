@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -15,6 +13,13 @@ public class ViveToolPathService
 {
     public const string ViveToolExeName = "ViVeTool.exe";
     private const string BundledViveToolDirectoryName = "Bundled";
+    private static readonly string[] BuiltInRequiredFileNames =
+    [
+        ViveToolExeName,
+        "Albacore.ViVe.dll",
+        "Newtonsoft.Json.dll",
+        "FeatureDictionary.pfs"
+    ];
 
     private string? _cachedViveToolPath;
     private readonly Settings.ViveToolSettings _settings;
@@ -33,13 +38,13 @@ public class ViveToolPathService
 
     public async Task<string?> GetViveToolPathAsync()
     {
-        if (!string.IsNullOrEmpty(_cachedViveToolPath) && File.Exists(_cachedViveToolPath))
+        if (IsTrustedViveToolPath(_cachedViveToolPath))
             return _cachedViveToolPath;
 
         // First check user-specified path from settings
         await _settings.LoadAsync().ConfigureAwait(false);
         var userSpecifiedPath = _settings.ViveToolPath;
-        if (!string.IsNullOrEmpty(userSpecifiedPath) && File.Exists(userSpecifiedPath))
+        if (IsTrustedViveToolPath(userSpecifiedPath))
         {
             _cachedViveToolPath = userSpecifiedPath;
             return _cachedViveToolPath;
@@ -47,7 +52,7 @@ public class ViveToolPathService
 
         // Then check bundled runtime shipped with plugin package.
         var bundledPath = GetBundledViveToolPath();
-        if (File.Exists(bundledPath))
+        if (IsTrustedViveToolPath(bundledPath))
         {
             _cachedViveToolPath = bundledPath;
             return _cachedViveToolPath;
@@ -55,34 +60,11 @@ public class ViveToolPathService
 
         // Try built-in (download to AppData if missing)
         var builtInPath = GetBuiltInViveToolPath();
+        var builtInDirectory = Path.GetDirectoryName(builtInPath);
         var builtInAvailable = await EnsureBuiltInViveToolAsync().ConfigureAwait(false);
-        if (builtInAvailable && File.Exists(builtInPath))
+        if (builtInAvailable && IsInstallComplete(builtInDirectory))
         {
             _cachedViveToolPath = builtInPath;
-            return _cachedViveToolPath;
-        }
-
-        // Check in PATH
-        var pathEnv = Environment.GetEnvironmentVariable("PATH");
-        if (!string.IsNullOrEmpty(pathEnv))
-        {
-            var paths = pathEnv.Split(Path.PathSeparator);
-            foreach (var path in paths)
-            {
-                var fullPath = Path.Combine(path, ViveToolExeName);
-                if (File.Exists(fullPath))
-                {
-                    _cachedViveToolPath = fullPath;
-                    return _cachedViveToolPath;
-                }
-            }
-        }
-
-        // Check current directory
-        var currentPath = Path.Combine(Directory.GetCurrentDirectory(), ViveToolExeName);
-        if (File.Exists(currentPath))
-        {
-            _cachedViveToolPath = currentPath;
             return _cachedViveToolPath;
         }
 
@@ -108,6 +90,7 @@ public class ViveToolPathService
             {
                 _settings.ViveToolPath = null;
                 _cachedViveToolPath = null;
+                await _settings.SaveAsync().ConfigureAwait(false);
                 return true;
             }
 
@@ -124,6 +107,13 @@ public class ViveToolPathService
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"ViveTool: Specified file is not vivetool.exe: {filePath}");
+                return false;
+            }
+
+            if (!IsInstallComplete(Path.GetDirectoryName(filePath)))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Specified path does not include the full ViVeTool runtime: {filePath}");
                 return false;
             }
 
@@ -156,79 +146,14 @@ public class ViveToolPathService
             }
 
             var builtInPath = GetBuiltInViveToolPath();
-            if (File.Exists(builtInPath))
-                return true;
-
             var builtInDir = Path.GetDirectoryName(builtInPath);
-            if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
-                Directory.CreateDirectory(builtInDir);
-
-            // Download ZIP file to temporary location
-            var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
-            try
+            if (IsInstallComplete(builtInDir))
             {
-                using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
-                    LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
-                var zipBytes = await httpClient.GetByteArrayAsync(ViveToolDownloadService.DefaultViveToolDownloadUrl).ConfigureAwait(false);
-                await File.WriteAllBytesAsync(tempZipPath, zipBytes).ConfigureAwait(false);
-
-                // Extract all files from ZIP to the built-in directory
-                // ViVeTool.exe needs its dependencies (DLLs) in the same directory
-                using var archive = System.IO.Compression.ZipFile.OpenRead(tempZipPath);
-
-                // Verify ViVeTool.exe exists in the archive
-                var exeEntry = archive.GetEntry(ViveToolExeName);
-                if (exeEntry == null)
-                {
-                    // Try case-insensitive search
-                    exeEntry = archive.Entries.FirstOrDefault(e =>
-                        e.Name.Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (exeEntry == null)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"ViveTool: {ViveToolExeName} not found in ZIP archive");
-                    return false;
-                }
-
-                // Extract all entries to the built-in directory
-                foreach (var entry in archive.Entries)
-                {
-                    // Skip directories
-                    if (string.IsNullOrEmpty(entry.Name))
-                        continue;
-
-                    // SECURITY: Validate entry name to prevent path traversal in ZIP
-                    if (entry.Name.Contains("..") || entry.Name.Contains('/') || entry.Name.Contains('\\'))
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"SECURITY: Skipping suspicious entry name in ZIP: {entry.Name}");
-                        continue;
-                    }
-
-                    var destinationPath = Path.Combine(builtInDir!, entry.Name);
-                    entry.ExtractToFile(destinationPath, overwrite: true);
-                }
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
-
+                _cachedViveToolPath = builtInPath;
                 return true;
             }
-            finally
-            {
-                // Clean up temporary ZIP file
-                try
-                {
-                    if (File.Exists(tempZipPath))
-                        File.Delete(tempZipPath);
-                }
-                catch
-                {
-                    // Ignore cleanup errors
-                }
-            }
+
+            return await new ViveToolDownloadService(this).DownloadViveToolAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -236,5 +161,25 @@ public class ViveToolPathService
                 Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
             return false;
         }
+    }
+
+    internal static bool IsInstallComplete(string? viveToolDirectoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(viveToolDirectoryPath) || !Directory.Exists(viveToolDirectoryPath))
+            return false;
+
+        return BuiltInRequiredFileNames.All(fileName =>
+            File.Exists(Path.Combine(viveToolDirectoryPath, fileName)));
+    }
+
+    private static bool IsTrustedViveToolPath(string? viveToolPath)
+    {
+        if (string.IsNullOrWhiteSpace(viveToolPath) || !File.Exists(viveToolPath))
+            return false;
+
+        if (!Path.GetFileName(viveToolPath).Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return IsInstallComplete(Path.GetDirectoryName(viveToolPath));
     }
 }

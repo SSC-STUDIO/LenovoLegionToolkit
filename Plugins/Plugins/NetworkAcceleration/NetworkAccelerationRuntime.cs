@@ -212,21 +212,27 @@ public sealed class NetworkAccelerationRuntime
     {
         try
         {
-            long bytesReceived = 0;
-            long bytesSent = 0;
+            var interfaceSnapshots = new List<(string Name, OperationalStatus Status, NetworkInterfaceType InterfaceType, long BytesReceived, long BytesSent, Exception? Error)>();
 
             foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (networkInterface.OperationalStatus != OperationalStatus.Up)
-                    continue;
+                var (name, status, interfaceType) = GetInterfaceMetadata(networkInterface);
 
-                var interfaceType = networkInterface.NetworkInterfaceType;
-                if (interfaceType == NetworkInterfaceType.Loopback || interfaceType == NetworkInterfaceType.Tunnel)
-                    continue;
+                try
+                {
+                    var stats = networkInterface.GetIPStatistics();
+                    interfaceSnapshots.Add((name, status, interfaceType, stats.BytesReceived, stats.BytesSent, null));
+                }
+                catch (Exception ex)
+                {
+                    interfaceSnapshots.Add((name, status, interfaceType, 0, 0, ex));
+                }
+            }
 
-                var stats = networkInterface.GetIPStatistics();
-                bytesReceived += stats.BytesReceived;
-                bytesSent += stats.BytesSent;
+            if (!TryReadTotals(interfaceSnapshots, out var bytesReceived, out var bytesSent))
+            {
+                totals = default;
+                return false;
             }
 
             totals = new NetworkTotals(bytesReceived, bytesSent);
@@ -240,6 +246,85 @@ public sealed class NetworkAccelerationRuntime
             totals = default;
             return false;
         }
+    }
+
+    internal static bool TryReadTotals(
+        IEnumerable<(string Name, OperationalStatus Status, NetworkInterfaceType InterfaceType, long BytesReceived, long BytesSent, Exception? Error)> interfaceSnapshots,
+        out long totalBytesReceived,
+        out long totalBytesSent)
+    {
+        long bytesReceived = 0;
+        long bytesSent = 0;
+        var sawEligibleInterface = false;
+        var sawSuccessfulEligibleInterface = false;
+
+        foreach (var interfaceSnapshot in interfaceSnapshots)
+        {
+            if (interfaceSnapshot.Status != OperationalStatus.Up)
+                continue;
+
+            if (interfaceSnapshot.InterfaceType == NetworkInterfaceType.Loopback || interfaceSnapshot.InterfaceType == NetworkInterfaceType.Tunnel)
+                continue;
+
+            sawEligibleInterface = true;
+
+            if (interfaceSnapshot.Error is not null)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"NetworkAcceleration: Failed to read stats for interface '{interfaceSnapshot.Name}': {interfaceSnapshot.Error.Message}", interfaceSnapshot.Error);
+                continue;
+            }
+
+            bytesReceived += interfaceSnapshot.BytesReceived;
+            bytesSent += interfaceSnapshot.BytesSent;
+            sawSuccessfulEligibleInterface = true;
+        }
+
+        if (sawEligibleInterface && !sawSuccessfulEligibleInterface)
+        {
+            totalBytesReceived = 0;
+            totalBytesSent = 0;
+            return false;
+        }
+
+        totalBytesReceived = bytesReceived;
+        totalBytesSent = bytesSent;
+        return true;
+    }
+
+    private static (string Name, OperationalStatus Status, NetworkInterfaceType InterfaceType) GetInterfaceMetadata(NetworkInterface networkInterface)
+    {
+        string name;
+        try
+        {
+            name = networkInterface.Name;
+        }
+        catch
+        {
+            name = "unknown";
+        }
+
+        OperationalStatus status;
+        try
+        {
+            status = networkInterface.OperationalStatus;
+        }
+        catch
+        {
+            status = OperationalStatus.Unknown;
+        }
+
+        NetworkInterfaceType interfaceType;
+        try
+        {
+            interfaceType = networkInterface.NetworkInterfaceType;
+        }
+        catch
+        {
+            interfaceType = NetworkInterfaceType.Unknown;
+        }
+
+        return (name, status, interfaceType);
     }
 
     private readonly struct NetworkTotals

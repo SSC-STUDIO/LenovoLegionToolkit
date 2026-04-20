@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -44,7 +44,7 @@
     <value>ViVeTool found at: {0}</value>
   </data>
   <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
-    <value>ViVeTool not found. Please download vivetool.exe and place it in the plugin directory or system PATH.</value>
+    <value>ViVeTool not found. Please download or configure a trusted ViVeTool runtime.</value>
   </data>
   <data name="ViveTool_ViveToolError" xml:space="preserve">
     <value>Error checking ViVeTool status</value>
@@ -185,7 +185,7 @@
     <value>ViVeTool.exe Path</value>
   </data>
   <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, bundled/runtime PATH fallback will be used.</value>
+    <value>The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, only the bundled or verified built-in runtime will be used.</value>
   </data>
   <data name="ViveTool_BrowseError" xml:space="preserve">
     <value>Error browsing files: {0}</value>

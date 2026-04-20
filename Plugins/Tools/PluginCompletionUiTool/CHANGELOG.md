@@ -10,6 +10,7 @@ The format is based on Keep a Changelog and this tool follows Semantic Versionin
 
 ### Improved / 改进
 - Added explicit UI Automation IDs on primary controls to support deterministic desktop automation and smoke testing / 为主要控件补充显式 UI Automation ID，支持稳定的桌面自动化与冒烟测试
+- Replaced the deleted PowerShell checker backend with native repository validation and JSON report generation / 用原生仓库校验和 JSON 报告生成替换已删除的 PowerShell checker 后端
 
 ## [1.0.0] - 2026-02-26
 

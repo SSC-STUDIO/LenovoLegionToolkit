@@ -12,7 +12,14 @@ namespace LenovoLegionToolkit.Plugins.Shared;
 /// <typeparam name="T">The type of settings to manage</typeparam>
 public class SettingsManager<T> where T : class, new()
 {
+    private const string SettingsFileName = "settings.json";
+    private static readonly string DefaultSettingsRoot = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "LenovoLegionToolkit",
+        "plugins");
+
     private readonly string _settingsFilePath;
+    private readonly string _legacySettingsFilePath;
     private readonly ILogger? _logger;
     private readonly object _lock = new object();
     private T? _cachedSettings;
@@ -27,18 +34,22 @@ public class SettingsManager<T> where T : class, new()
     /// </summary>
     /// <param name="pluginName">The name of the plugin (used to determine settings file location)</param>
     /// <param name="logger">Optional logger for diagnostic messages</param>
+    /// <param name="settingsRoot">Optional override for the settings root directory. Defaults to the current user's local application data.</param>
     /// <exception cref="ArgumentException">Thrown when pluginName is null or empty</exception>
-    public SettingsManager(string pluginName, ILogger? logger = null)
+    public SettingsManager(string pluginName, ILogger? logger = null, string? settingsRoot = null)
     {
         if (string.IsNullOrWhiteSpace(pluginName))
             throw new ArgumentException("Plugin name cannot be null or empty", nameof(pluginName));
 
         _logger = logger;
 
-        // Store settings in plugin's output directory
-        var pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName);
+        var effectiveSettingsRoot = string.IsNullOrWhiteSpace(settingsRoot)
+            ? DefaultSettingsRoot
+            : settingsRoot;
+        var pluginDirectory = Path.Combine(effectiveSettingsRoot, pluginName);
         Directory.CreateDirectory(pluginDirectory);
-        _settingsFilePath = Path.Combine(pluginDirectory, "settings.json");
+        _settingsFilePath = Path.Combine(pluginDirectory, SettingsFileName);
+        _legacySettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", pluginName, SettingsFileName);
     }
 
     /// <summary>
@@ -52,6 +63,8 @@ public class SettingsManager<T> where T : class, new()
             {
                 if (_cachedSettings != null)
                     return _cachedSettings;
+
+                EnsureLegacySettingsMigrated();
 
                 if (!File.Exists(_settingsFilePath))
                 {
@@ -94,6 +107,8 @@ public class SettingsManager<T> where T : class, new()
         {
             try
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
+
                 var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
                 {
                     WriteIndented = true
@@ -157,6 +172,29 @@ public class SettingsManager<T> where T : class, new()
                     _logger?.LogError(ex, "Failed to delete settings file");
                 }
             }
+        }
+    }
+
+    private void EnsureLegacySettingsMigrated()
+    {
+        if (File.Exists(_settingsFilePath))
+            return;
+
+        if (string.Equals(_settingsFilePath, _legacySettingsFilePath, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        if (!File.Exists(_legacySettingsFilePath))
+            return;
+
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
+            File.Copy(_legacySettingsFilePath, _settingsFilePath, overwrite: false);
+            _logger?.LogInformation("Migrated settings from legacy path {LegacyPath} to {SettingsPath}", _legacySettingsFilePath, _settingsFilePath);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to migrate settings from legacy path {LegacyPath} to {SettingsPath}", _legacySettingsFilePath, _settingsFilePath);
         }
     }
 }

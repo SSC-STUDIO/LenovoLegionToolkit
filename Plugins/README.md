@@ -1,128 +1,179 @@
 # Lenovo Legion Toolkit Plugins
 
-Official plugins and plugin development tooling for Lenovo Legion Toolkit (LLT).
+Official plugins and contributor tooling for Lenovo Legion Toolkit (LLT).
 
-## Repository Model
+## What Changed
 
-- This repository builds independently from the main `LenovoLegionToolkit` repo.
-- Plugin projects compile against vendored host references under `Dependencies/Host`.
-- Do not add `ProjectReference` links back to the sibling `LenovoLegionToolkit` source tree.
-- Official plugin outputs are expected under `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`.
+This repository now has one standard author workflow:
 
-To refresh host references after the main app changes:
+1. `doctor`
+2. `new`
+3. `build`
+4. `preview`
+5. `validate`
+6. `pack`
+7. `promote` only when a plugin should enter the official store
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\refresh-host-references.ps1 -UseSiblingRepoBuild
-```
+The standard entry point is `Tools/PluginTooling.Cli`.
 
 ## Prerequisites
 
-- .NET 10 SDK
 - Windows 10/11 x64
-- A valid `Dependencies/Host` baseline, or a sibling LLT checkout that can supply it
+- .NET 10 SDK
+- A valid host baseline under `Dependencies/Host`
+
+Bootstrap host references when needed:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
+```
+
+`Dependencies/Host/host-release.json` is the pinned host baseline for standalone plugin development.
+
+## Standard Author Workflow
+
+Check the environment:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
+```
+
+Create a new plugin:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  new `
+  --template feature-settings `
+  --folder MyPlugin `
+  --id my-plugin `
+  --name "My Plugin"
+```
+
+Build one plugin:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  build `
+  --plugin my-plugin
+```
+
+Preview it in the standalone host:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  preview `
+  --plugin my-plugin `
+  --theme system `
+  --view feature
+```
+
+Validate author requirements:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  validate `
+  --plugin my-plugin `
+  --profile contributor
+```
+
+Create a local ZIP:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  pack `
+  --plugin my-plugin `
+  --build-first
+```
+
+## Official Store Flow
+
+Only official plugins need `store-entry.json`.
+
+Create the official metadata scaffold:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  promote `
+  --plugin my-plugin
+```
+
+Then fill in the final store-facing metadata:
+
+- `description`
+- `icon`
+- `iconBackground`
+- `tags`
+- `dependencies`
+- `supportedLanguages`
+
+Validation profiles:
+
+- `contributor`: local author checks, no `store-entry.json` required
+- `official-candidate`: official metadata required
+- `official-release`: release/store alignment checks
+
+## PluginWorkbench
+
+`PluginWorkbench` is the standard preview UI for authors.
+
+It now:
+
+- loads built plugin outputs or local ZIPs
+- uses a host-style preview shell for feature/settings/optimization content
+- supports `System / Light / Dark`
+- defaults to safe `Preview` mode
+- requires explicit confirmation before `Real Runtime`
+
+Direct launch:
+
+```powershell
+dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
+  --repository-root . `
+  --plugin-id custom-mouse `
+  --theme dark `
+  --view settings
+```
+
+Smoke:
+
+```powershell
+make.bat workbench-smoke
+```
+
+## Store Metadata Model
+
+Runtime identity lives in each plugin's `plugin.json`.
+
+Official store-facing metadata now lives beside the plugin in `store-entry.json`.
+
+Root `store.json` should be treated as generated release output, not as the first thing authors edit for new plugins.
 
 ## Common Commands
 
-Build all plugins:
+Short wrapper commands are available through `make.bat`:
 
-```powershell
-dotnet build .\LenovoLegionToolkit-Plugins.sln -c Release
-```
+- `make.bat doctor`
+- `make.bat new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"`
+- `make.bat validate --plugin my-plugin --profile contributor`
+- `make.bat preview --plugin my-plugin --theme system`
+- `make.bat pack --plugin my-plugin --build-first`
+- `make.bat promote --plugin my-plugin`
 
-Validate store metadata, builds, outputs, and optional tests:
+## Release Model
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1
-```
+Preferred CI model:
 
-Validate specific plugin IDs only:
+- `validate.yml` for PR/push validation
+- `release.yml` for manual official publishing
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds custom-mouse,vive-tool
-```
+Official release assets must keep the stable naming contract:
 
-Scaffold a new plugin from the maintained template:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
-  -FolderName MyPlugin `
-  -PluginId my-plugin `
-  -DisplayName "My Plugin" `
-  -Author "Your Name"
-```
-
-Run the visual completion tool:
-
-```powershell
-dotnet run --project .\Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
-```
-
-## Plugin Conventions
-
-- Plugin folder: `Plugins/<FolderName>/`
-- Project file: `LenovoLegionToolkit.Plugins.<FolderName>.csproj`
-- Manifest file name: `plugin.json`
-- Output directory: `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`
-- Required manifest fields: `id`, `name`, `version`, `minLLTVersion`, `author`, `isSystemPlugin`
-- Official release ZIP name: `<plugin-id>-v<version>.zip`
-- Official release tag: `<plugin-id>-v<version>`
-
-Example `plugin.json`:
-
-```json
-{
-  "id": "my-plugin",
-  "name": "My Plugin",
-  "version": "1.0.0",
-  "minLLTVersion": "3.6.1",
-  "author": "Your Name",
-  "isSystemPlugin": false,
-  "repository": "https://github.com/yourname/your-plugin-repo",
-  "issues": "https://github.com/yourname/your-plugin-repo/issues"
-}
-```
-
-## Release Workflow
-
-This repository's release path is workflow-driven, not tag-driven.
-
-Current official flow:
-
-1. Update `plugin.json`, project version metadata, plugin `CHANGELOG.md`, and `store.json` source metadata as needed.
-2. Run `Scripts/plugin-completion-check.ps1`.
-3. Trigger `.github/workflows/build.yml` with `workflow_dispatch`.
-4. Provide:
-   - `plugin`: optional comma-separated folder names
-   - `version`: required for release publishing; must match `plugin.json`
-5. The workflow builds ZIP assets, publishes per-plugin GitHub releases, then updates `store.json`.
-
-Do not rely on `make.bat zip` or tag-only release instructions; those are not the current publication path.
-
-## Third-Party And New Plugin Onboarding
-
-Use the scaffold script first, then adjust generated UI/resources/tests:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
-  -FolderName SamplePlugin `
-  -PluginId sample-plugin `
-  -DisplayName "Sample Plugin" `
-  -Author "Your Name" `
-  -Description "Sample plugin for Lenovo Legion Toolkit"
-```
-
-Then:
-
-1. Review generated `plugin.json`
-2. Review generated test project under `Plugins/<FolderName>.Tests/`
-3. Build the new plugin
-4. Run completion check for its plugin ID
-5. Add or update the corresponding `store.json` entry if the plugin should be published from this repo
+- `<plugin-id>-v<version>.zip`
 
 ## Documents
 
-- [Architecture](./Docs/ARCHITECTURE.md) — 系统架构与设计原则
-- [Coding Standards](./Docs/CODING_STANDARDS.md) — 代码风格与最佳实践
 - [Quick Start](./Docs/PLUGIN_QUICKSTART.md)
 - [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md)
+- [Architecture](./Docs/ARCHITECTURE.md)
+- [Contributing](./CONTRIBUTING.md)
 - [CHANGELOG](./CHANGELOG.md)

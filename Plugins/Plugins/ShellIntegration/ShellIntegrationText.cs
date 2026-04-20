@@ -23,6 +23,7 @@ public static class ShellIntegrationText
     public static string OpenConfigButton => T(nameof(OpenConfigButton), "Open Config File");
     public static string OptimizationHint => T(nameof(OptimizationHint), "You can also access shell actions from Windows Optimization.");
     public static string StatusDetected => T(nameof(StatusDetected), "Nilesoft Shell detected.");
+    public static string StatusRegistrationMissing => T(nameof(StatusRegistrationMissing), "Nilesoft Shell is installed, but registration is missing.");
     public static string StatusNotDetected => T(nameof(StatusNotDetected), "Nilesoft Shell was not detected.");
     public static string RegisteredState => T(nameof(RegisteredState), "Detected");
     public static string MissingState => T(nameof(MissingState), "Missing");
@@ -38,6 +39,7 @@ public static class ShellIntegrationText
     public static string StatusShellFolderNotFound => T(nameof(StatusShellFolderNotFound), "Shell folder not found.");
     public static string StatusConfigNotFound => T(nameof(StatusConfigNotFound), "Config file not found.");
     public static string VersionLabel => T(nameof(VersionLabel), "Version");
+    public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
 
     private static readonly System.Resources.ResourceManager ResourceManager =
         new("LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(ShellIntegrationText).Assembly);

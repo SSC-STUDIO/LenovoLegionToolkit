@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.7] - 2026-04-20
+
+### Changed / 变更
+- Advanced the official store package to `1.1.7` for the current release wave so the manifest, packaged asset, and marketplace metadata stay aligned / 将当前发布批次的官方商店包提升到 `1.1.7`，确保清单、打包资产与商店元数据保持一致
+
 ## [1.1.4] - 2026-04-05
 
 ### Fixed / 修复
@@ -70,4 +75,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release
 - Basic network acceleration functionality
-

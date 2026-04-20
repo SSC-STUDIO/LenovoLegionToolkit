@@ -1,0 +1,132 @@
+name: Validate Plugins
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'Plugins/**'
+      - 'SDK/**'
+      - 'Tools/**'
+      - 'Scripts/**'
+      - 'Templates/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'Plugins/**'
+      - 'SDK/**'
+      - 'Tools/**'
+      - 'Scripts/**'
+      - 'Templates/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/validate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Resolve changed plugins
+        id: changes
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $shouldValidateAll = $false
+          $pluginIds = New-Object System.Collections.Generic.HashSet[string]([System.StringComparer]::OrdinalIgnoreCase)
+
+          if ("${{ github.event_name }}" -eq "pull_request") {
+            $base = "${{ github.event.pull_request.base.sha }}"
+            $head = "${{ github.event.pull_request.head.sha }}"
+          } else {
+            $base = "${{ github.event.before }}"
+            $head = "${{ github.sha }}"
+          }
+
+          if (-not $base -or $base -eq '0000000000000000000000000000000000000000') {
+            $shouldValidateAll = $true
+          } else {
+            $changedFiles = git diff --name-only $base $head
+
+            foreach ($changedFile in $changedFiles) {
+              if ($changedFile -match '^(SDK|Tools|Scripts|Templates)/' -or
+                  $changedFile -match '^Directory\.Build\.(props|targets)$') {
+                $shouldValidateAll = $true
+                break
+              }
+
+              if ($changedFile -notmatch '^Plugins/([^/]+)/') {
+                continue
+              }
+
+              $folder = $matches[1]
+              if ($folder -in @('Shared', 'TestCommon')) {
+                $shouldValidateAll = $true
+                break
+              }
+
+              if ($folder -like '*.Tests') {
+                $folder = $folder.Substring(0, $folder.Length - 6)
+              }
+
+              $manifestPath = Join-Path $PWD "Plugins/$folder/plugin.json"
+              if (-not (Test-Path $manifestPath)) {
+                continue
+              }
+
+              $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable
+              $pluginIds.Add([string]$manifest.id) | Out-Null
+            }
+          }
+
+          if ($shouldValidateAll) {
+            $pluginIds.Clear()
+            foreach ($manifestPath in Get-ChildItem -Path Plugins -Filter plugin.json -Recurse -File) {
+              if ($manifestPath.Directory.Name -in @('Shared', 'TestCommon') -or $manifestPath.Directory.Name -like '*.Tests') {
+                continue
+              }
+
+              $manifest = Get-Content $manifestPath.FullName -Raw | ConvertFrom-Json -AsHashtable
+              $pluginIds.Add([string]$manifest.id) | Out-Null
+            }
+          }
+
+          $selection = @($pluginIds) | Sort-Object
+          "plugin_ids=$($selection -join ',')" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Selected plugin ids: $($selection -join ',')"
+
+      - name: Build plugin tooling CLI
+        shell: pwsh
+        run: |
+          dotnet build .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -c Release --nologo
+
+      - name: Validate selected plugins
+        shell: pwsh
+        run: |
+          $pluginIds = "${{ steps.changes.outputs.plugin_ids }}".Trim()
+          if (-not $pluginIds) {
+            Write-Host "No plugin-affecting changes detected."
+            exit 0
+          }
+
+          dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+            validate `
+            --repository-root $PWD.Path `
+            --plugin-ids $pluginIds `
+            --profile contributor

@@ -52,18 +52,6 @@ public static class NetworkAccelerationText
     public static string ModeStreamingFocus => T(nameof(ModeStreamingFocus), "High throughput priority & TCP/IP stack reset");
     public static string PresetStateReady => T(nameof(PresetStateReady), "Ready");
     public static string PresetStateActive => T(nameof(PresetStateActive), "Active");
-    public static string DownloadLegend => T(nameof(DownloadLegend), "Download");
-    public static string UploadLegend => T(nameof(UploadLegend), "Upload");
-    public static string ChartEmptyState => T(nameof(ChartEmptyState), "Waiting for telemetry...");
-    public static string TrafficMixTitle => T(nameof(TrafficMixTitle), "Traffic Mix");
-    public static string TrafficMixDescription => T(nameof(TrafficMixDescription), "Current download and upload share based on the latest sample.");
-    public static string DownloadShareLabel => T(nameof(DownloadShareLabel), "Download Share");
-    public static string UploadShareLabel => T(nameof(UploadShareLabel), "Upload Share");
-    public static string BurstHistoryTitle => T(nameof(BurstHistoryTitle), "Burst History");
-    public static string BurstHistoryDescription => T(nameof(BurstHistoryDescription), "Recent combined throughput spikes from the latest telemetry window.");
-    public static string RollingAverageLabel => T(nameof(RollingAverageLabel), "Rolling Avg");
-    public static string BurstPeakLabel => T(nameof(BurstPeakLabel), "Burst Peak");
-    public static string BurstChartEmptyState => T(nameof(BurstChartEmptyState), "Need more samples to render burst history.");
     public static string DownloadTotalLabel => T(nameof(DownloadTotalLabel), "Total Downloaded");
     public static string UploadTotalLabel => T(nameof(UploadTotalLabel), "Total Uploaded");
     public static string UpdatedLabel => T(nameof(UpdatedLabel), "Updated");
@@ -102,6 +90,7 @@ public static class NetworkAccelerationText
     public static string StateEnabled => T(nameof(StateEnabled), "Enabled");
     public static string StateDisabled => T(nameof(StateDisabled), "Disabled");
     public static string MbpsValueFormat => T(nameof(MbpsValueFormat), "{0:0.0} Mbps");
+    public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
 
     private static readonly System.Resources.ResourceManager ResourceManager =
         new("LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource", typeof(NetworkAccelerationText).Assembly);

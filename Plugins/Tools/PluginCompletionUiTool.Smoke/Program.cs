@@ -101,9 +101,7 @@ internal static class Program
         var current = new DirectoryInfo(Environment.CurrentDirectory);
         for (var i = 0; i < 10 && current is not null; i++)
         {
-            var storePath = Path.Combine(current.FullName, "store.json");
-            var scriptPath = Path.Combine(current.FullName, @"scripts\plugin-completion-check.ps1");
-            if (File.Exists(storePath) && File.Exists(scriptPath))
+            if (IsRepositoryRoot(current.FullName))
             {
                 return current.FullName;
             }
@@ -116,9 +114,7 @@ internal static class Program
 
     private static void EnsureRepositoryRoot(string repositoryRoot)
     {
-        var storePath = Path.Combine(repositoryRoot, "store.json");
-        var scriptPath = Path.Combine(repositoryRoot, @"scripts\plugin-completion-check.ps1");
-        if (!File.Exists(storePath) || !File.Exists(scriptPath))
+        if (!IsRepositoryRoot(repositoryRoot))
         {
             throw new DirectoryNotFoundException($"Path is not plugin repository root: {repositoryRoot}");
         }
@@ -126,12 +122,45 @@ internal static class Program
 
     private static (ProcessStartInfo startInfo, string appDirectory) ResolveUiAppStartInfo(string repositoryRoot)
     {
-        var appDirectory = Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool\bin\Release");
-        var exePath = Path.Combine(appDirectory, "PluginCompletionUiTool.exe");
-        var dllPath = Path.Combine(appDirectory, "PluginCompletionUiTool.dll");
-
-        if (File.Exists(exePath))
+        var candidateRoots = new[]
         {
+            Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool\bin\Release"),
+            Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool\bin\Debug")
+        };
+
+        foreach (var candidateRoot in candidateRoots)
+        {
+            var resolved = TryResolveUiAppStartInfo(candidateRoot);
+            if (resolved is not null)
+            {
+                return resolved.Value;
+            }
+        }
+
+        throw new FileNotFoundException(
+            $"PluginCompletionUiTool build output not found under {string.Join(", ", candidateRoots)}. Build the UI tool first.");
+    }
+
+    private static bool IsRepositoryRoot(string repositoryRoot)
+    {
+        var storePath = Path.Combine(repositoryRoot, "store.json");
+        if (!File.Exists(storePath))
+            return false;
+
+        return File.Exists(Path.Combine(repositoryRoot, "LenovoLegionToolkit-Plugins.sln")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool"));
+    }
+
+    private static (ProcessStartInfo startInfo, string appDirectory)? TryResolveUiAppStartInfo(string buildRoot)
+    {
+        if (!Directory.Exists(buildRoot))
+            return null;
+
+        var exePath = FindUiArtifact(buildRoot, "PluginCompletionUiTool.exe");
+        if (!string.IsNullOrWhiteSpace(exePath))
+        {
+            var appDirectory = Path.GetDirectoryName(exePath)!;
             return (new ProcessStartInfo
             {
                 FileName = exePath,
@@ -140,8 +169,10 @@ internal static class Program
             }, appDirectory);
         }
 
-        if (File.Exists(dllPath))
+        var dllPath = FindUiArtifact(buildRoot, "PluginCompletionUiTool.dll");
+        if (!string.IsNullOrWhiteSpace(dllPath))
         {
+            var appDirectory = Path.GetDirectoryName(dllPath)!;
             return (new ProcessStartInfo
             {
                 FileName = "dotnet",
@@ -151,7 +182,14 @@ internal static class Program
             }, appDirectory);
         }
 
-        throw new FileNotFoundException($"PluginCompletionUiTool build output not found in {appDirectory}. Build the UI tool first.");
+        return null;
+    }
+
+    private static string? FindUiArtifact(string buildRoot, string fileName)
+    {
+        return Directory.EnumerateFiles(buildRoot, fileName, SearchOption.AllDirectories)
+            .OrderBy(path => path.Count(c => c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar))
+            .FirstOrDefault();
     }
 
     private static AutomationElement WaitForMainWindow(int processId, TimeSpan timeout)

@@ -80,11 +80,14 @@ public class ViveToolSettings
 
     public async Task LoadAsync()
     {
+        string? viveToolPathBeforeLoad = null;
+
         try
         {
             using (await _dataLock.LockAsync().ConfigureAwait(false))
             {
                 _isLoading = true;
+                viveToolPathBeforeLoad = _data.ViveToolPath;
             }
 
             SettingsData? loadedData = null;
@@ -96,7 +99,11 @@ public class ViveToolSettings
 
             using (await _dataLock.LockAsync().ConfigureAwait(false))
             {
-                _data = loadedData ?? new SettingsData();
+                // Preserve user mutations that happened while the settings file was loading.
+                var viveToolPathChangedDuringLoad = !string.Equals(_data.ViveToolPath, viveToolPathBeforeLoad, StringComparison.Ordinal);
+                if (!viveToolPathChangedDuringLoad)
+                    _data = loadedData ?? new SettingsData();
+
                 _isLoading = false;
             }
         }
@@ -107,7 +114,10 @@ public class ViveToolSettings
             
             using (await _dataLock.LockAsync().ConfigureAwait(false))
             {
-                _data = new SettingsData();
+                var viveToolPathChangedDuringLoad = !string.Equals(_data.ViveToolPath, viveToolPathBeforeLoad, StringComparison.Ordinal);
+                if (!viveToolPathChangedDuringLoad)
+                    _data = new SettingsData();
+
                 _isLoading = false;
             }
         }

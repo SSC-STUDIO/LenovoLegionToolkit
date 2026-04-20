@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
 using LenovoLegionToolkit.Lib.Optimization;
+using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ShellIntegration.Resources;
 using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
@@ -20,7 +20,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Shell Integration",
-    version: "1.0.9",
+    version: "1.0.10",
     description: "Integrate Lenovo Legion Toolkit with Windows shell context menu",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -31,6 +31,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     private const string PluginId = "shell-integration";
     private const string ShellClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
     private const string DisabledClsid = "{00000000-0000-0000-0000-000000000000}";
+    private static readonly TimeSpan ShellCommandTimeout = TimeSpan.FromSeconds(Constants.ProcessTimeoutSeconds);
     private static readonly string GlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LenovoLegionToolkit", "lang");
 
     private static readonly string[] ShellExeCandidates =
@@ -67,14 +68,11 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     public override object? GetSettingsPage()
     {
-        SyncManagedConfiguration();
         return new ShellIntegrationSettingsPluginPage(this);
     }
 
     public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
-        SyncManagedConfiguration();
-
         return new WindowsOptimizationCategoryDefinition(
             "shell.integration",
             "WindowsOptimization_Category_NilesoftShell_Title",
@@ -159,8 +157,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         if (string.IsNullOrWhiteSpace(folder))
             return null;
 
-        var candidate = Path.Combine(folder, "shell.nss");
-        return File.Exists(candidate) ? candidate : null;
+        return Path.Combine(folder, "shell.nss");
     }
 
     public string? GetShellVersion()
@@ -223,8 +220,10 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             await EnableShellAsync(CancellationToken.None).ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Enable failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -236,25 +235,21 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             await DisableShellAsync(CancellationToken.None).ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
             return false;
         }
     }
 
     public void OpenStyleSettingsWindow()
     {
-        if (Application.Current?.Dispatcher == null)
+        var dialog = SDK.PluginHostContext.CreateHostWindow("LenovoLegionToolkit.WPF.Windows.Utils.MenuStyleSettingsWindow");
+        if (dialog is not null && SDK.PluginHostContext.Current.ShowDialog(dialog, ShellIntegrationText.SettingsPageTitle))
             return;
 
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var window = new MenuStyleSettingsWindow();
-            var mainWindow = Application.Current.MainWindow;
-            if (mainWindow != null)
-                window.Owner = mainWindow;
-            window.ShowDialog();
-        });
+        SDK.PluginHostContext.Current.ShowDialog(new ShellIntegrationStyleSettingsWindow(this), ShellIntegrationText.SettingsPageTitle);
     }
 
     public bool OpenShellFolder()
@@ -289,32 +284,32 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     private async Task EnableShellAsync(CancellationToken cancellationToken)
     {
-        SyncManagedConfiguration();
+        EnsureManagedConfigurationSynchronized();
 
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-register -treat -restart", cancellationToken).ConfigureAwait(false);
-            SyncManagedConfiguration();
+            EnsureManagedConfigurationSynchronized();
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: true, cancellationToken).ConfigureAwait(false);
-        SyncManagedConfiguration();
+        EnsureManagedConfigurationSynchronized();
     }
 
     private async Task DisableShellAsync(CancellationToken cancellationToken)
     {
-        SyncManagedConfiguration();
+        EnsureManagedConfigurationSynchronized();
 
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-unregister -restart", cancellationToken).ConfigureAwait(false);
-            SyncManagedConfiguration();
+            EnsureManagedConfigurationSynchronized();
             return;
         }
 
         await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
-        SyncManagedConfiguration();
+        EnsureManagedConfigurationSynchronized();
     }
 
     private async Task<bool> IsShellRegisteredAsync(CancellationToken cancellationToken)
@@ -329,12 +324,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
             return false;
 
         var commandResult = await RunShellCommandAsync("-query", cancellationToken, swallowErrors: true).ConfigureAwait(false);
-        if (string.IsNullOrWhiteSpace(commandResult))
-            return IsShellRegisteredInMergedClasses();
-
-        return commandResult.Contains("register", StringComparison.OrdinalIgnoreCase) ||
-               commandResult.Contains("enabled", StringComparison.OrdinalIgnoreCase) ||
-               commandResult.Contains("active", StringComparison.OrdinalIgnoreCase);
+        return ParseShellRegistrationStatus(commandResult) ?? IsShellRegisteredInMergedClasses();
     }
 
     private async Task<string> RunShellCommandAsync(string arguments, CancellationToken cancellationToken, bool swallowErrors = false)
@@ -368,8 +358,29 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
             var outputTask = process.StandardOutput.ReadToEndAsync();
             var errorTask = process.StandardError.ReadToEndAsync();
+            using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeoutCts.CancelAfter(ShellCommandTimeout);
 
-            await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (swallowErrors)
+            {
+                TryTerminateProcess(process);
+                return string.Empty;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                TryTerminateProcess(process);
+                throw;
+            }
+            catch (OperationCanceledException)
+            {
+                TryTerminateProcess(process);
+                throw new TimeoutException($"shell.exe command timed out after {ShellCommandTimeout.TotalSeconds:0} seconds.");
+            }
+
             var output = await outputTask.ConfigureAwait(false);
             var error = await errorTask.ConfigureAwait(false);
 
@@ -383,6 +394,88 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         catch when (swallowErrors)
         {
             return string.Empty;
+        }
+    }
+
+    private static bool? ParseShellRegistrationStatus(string? commandResult)
+    {
+        if (string.IsNullOrWhiteSpace(commandResult))
+            return null;
+
+        var sawPositiveSignal = false;
+        foreach (var rawLine in commandResult.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries))
+        {
+            var line = rawLine.Trim();
+            if (line.Length == 0)
+                continue;
+
+            var lowerLine = line.ToLowerInvariant();
+            if (!ContainsRegistrationKeyword(lowerLine))
+                continue;
+
+            if (ContainsNegativeRegistrationState(lowerLine))
+                return false;
+
+            if (ContainsPositiveRegistrationState(lowerLine))
+                sawPositiveSignal = true;
+        }
+
+        return sawPositiveSignal ? true : null;
+    }
+
+    private static bool ContainsRegistrationKeyword(string line)
+    {
+        return line.Contains("registered", StringComparison.Ordinal) ||
+               line.Contains("registration", StringComparison.Ordinal) ||
+               line.Contains("enabled", StringComparison.Ordinal) ||
+               line.Contains("active", StringComparison.Ordinal);
+    }
+
+    private static bool ContainsNegativeRegistrationState(string line)
+    {
+        return line.Contains("not registered", StringComparison.Ordinal) ||
+               line.Contains("unregistered", StringComparison.Ordinal) ||
+               line.Contains("disabled", StringComparison.Ordinal) ||
+               line.Contains("inactive", StringComparison.Ordinal) ||
+               line.Contains("not active", StringComparison.Ordinal) ||
+               line.Contains("not enabled", StringComparison.Ordinal) ||
+               line.Contains(": false", StringComparison.Ordinal) ||
+               line.Contains("= false", StringComparison.Ordinal) ||
+               line.EndsWith(" false", StringComparison.Ordinal) ||
+               line.Contains(": no", StringComparison.Ordinal) ||
+               line.Contains("= no", StringComparison.Ordinal) ||
+               line.EndsWith(" no", StringComparison.Ordinal) ||
+               line.Contains(": off", StringComparison.Ordinal) ||
+               line.Contains("= off", StringComparison.Ordinal) ||
+               line.EndsWith(" off", StringComparison.Ordinal);
+    }
+
+    private static bool ContainsPositiveRegistrationState(string line)
+    {
+        return line.Contains("registered", StringComparison.Ordinal) ||
+               line.Contains("enabled", StringComparison.Ordinal) ||
+               line.Contains("active", StringComparison.Ordinal) ||
+               line.Contains(": true", StringComparison.Ordinal) ||
+               line.Contains("= true", StringComparison.Ordinal) ||
+               line.EndsWith(" true", StringComparison.Ordinal) ||
+               line.Contains(": yes", StringComparison.Ordinal) ||
+               line.Contains("= yes", StringComparison.Ordinal) ||
+               line.EndsWith(" yes", StringComparison.Ordinal) ||
+               line.Contains(": on", StringComparison.Ordinal) ||
+               line.Contains("= on", StringComparison.Ordinal) ||
+               line.EndsWith(" on", StringComparison.Ordinal);
+    }
+
+    private static void TryTerminateProcess(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+                process.Kill(entireProcessTree: true);
+        }
+        catch
+        {
+            // Best effort cleanup only.
         }
     }
 
@@ -449,18 +542,32 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     public bool SyncManagedConfiguration()
     {
         var shellInstallPath = GetShellInstallPath();
-        if (string.IsNullOrWhiteSpace(shellInstallPath) || string.IsNullOrWhiteSpace(GetShellConfigPath()))
+        if (string.IsNullOrWhiteSpace(shellInstallPath))
             return false;
+
+        if (!_configService.TryLoadProfile(out var profile, out var errorMessage))
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
+            return false;
+        }
 
         try
         {
-            _configService.ApplyProfile(shellInstallPath, _configService.LoadProfile(), ResolveManagedCulture());
-            return true;
+            return _configService.ApplyProfile(shellInstallPath, profile, ResolveManagedCulture()) is not null;
         }
-        catch
+        catch (Exception ex)
         {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
             return false;
         }
+    }
+
+    private void EnsureManagedConfigurationSynchronized()
+    {
+        if (!SyncManagedConfiguration())
+            throw new InvalidOperationException("Failed to synchronize managed shell configuration.");
     }
 
     private static CultureInfo? ResolveManagedCulture()

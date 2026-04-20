@@ -279,7 +279,8 @@ public class ShellIntegrationConfigServiceTests
 
         var paths = service.ResolveManagedPaths(installDir);
 
-        Assert.Contains("imports", paths!.ManagedDirectory);
+        Assert.StartsWith(_testDirectory, paths!.ManagedDirectory, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("managed", paths.ManagedDirectory, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("lenovo-legion-toolkit", paths.ManagedDirectory);
     }
 
@@ -413,7 +414,7 @@ public class ShellIntegrationConfigServiceTests
         var paths = service.ApplyProfile(installDir, profile);
 
         var shellContent = File.ReadAllText(paths!.ShellConfigPath);
-        Assert.Contains("imports/lenovo-legion-toolkit", shellContent);
+        Assert.Contains(paths.SettingsPath.Replace('\\', '/'), shellContent);
     }
 
     #endregion

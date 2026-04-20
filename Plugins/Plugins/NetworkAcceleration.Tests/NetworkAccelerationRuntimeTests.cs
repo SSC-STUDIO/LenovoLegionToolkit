@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -154,6 +155,23 @@ public class NetworkAccelerationRuntimeTests
         runtime.Stop();
 
         Assert.True(samples.Count > 0, "Should have collected at least one sample");
+    }
+
+    [Fact]
+    public void TryReadTotals_IgnoresFaultedEligibleInterface_WhenAnotherEligibleInterfaceSucceeds()
+    {
+        var interfaceSnapshots = new[]
+        {
+            (Name: "faulted", Status: OperationalStatus.Up, InterfaceType: NetworkInterfaceType.Ethernet, BytesReceived: 0L, BytesSent: 0L, Error: (Exception?)new InvalidOperationException("boom")),
+            (Name: "healthy", Status: OperationalStatus.Up, InterfaceType: NetworkInterfaceType.Wireless80211, BytesReceived: 120L, BytesSent: 45L, Error: (Exception?)null),
+            (Name: "loopback", Status: OperationalStatus.Up, InterfaceType: NetworkInterfaceType.Loopback, BytesReceived: 999L, BytesSent: 999L, Error: (Exception?)null),
+        };
+
+        var success = NetworkAccelerationRuntime.TryReadTotals(interfaceSnapshots, out var totalBytesReceived, out var totalBytesSent);
+
+        Assert.True(success);
+        Assert.Equal(120L, totalBytesReceived);
+        Assert.Equal(45L, totalBytesSent);
     }
 
     [Fact]

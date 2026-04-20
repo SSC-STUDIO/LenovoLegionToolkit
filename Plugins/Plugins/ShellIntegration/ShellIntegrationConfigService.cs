@@ -22,6 +22,7 @@ public sealed record ShellManagedConfigPaths(
 public sealed class ShellIntegrationConfigService
 {
     private const string ManagedDirectoryName = "lenovo-legion-toolkit";
+    private const string ManagedOutputDirectoryName = "managed";
     private const string ManagedBlockStart = "# region LenovoLegionToolkit.Managed";
     private const string ManagedBlockEnd = "# endregion LenovoLegionToolkit.Managed";
     private const string ManagedLanguageFileName = "language.nss";
@@ -57,23 +58,39 @@ public sealed class ShellIntegrationConfigService
 
     public ShellIntegrationProfile LoadProfile()
     {
+        _ = TryLoadProfile(out var profile, out _);
+        return profile;
+    }
+
+    public bool TryLoadProfile(out ShellIntegrationProfile profile, out string? errorMessage)
+    {
         try
         {
             if (!File.Exists(LocalProfilePath))
-                return ShellIntegrationProfile.CreateDefault();
+            {
+                profile = ShellIntegrationProfile.CreateDefault();
+                errorMessage = null;
+                return true;
+            }
 
             var json = File.ReadAllText(LocalProfilePath, Encoding.UTF8);
             var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions);
-            return loaded?.Normalize() ?? ShellIntegrationProfile.CreateDefault();
+            profile = loaded?.Normalize() ?? ShellIntegrationProfile.CreateDefault();
+            errorMessage = null;
+            return true;
         }
-        catch
+        catch (Exception ex)
         {
-            return ShellIntegrationProfile.CreateDefault();
+            profile = ShellIntegrationProfile.CreateDefault();
+            errorMessage = ex.Message;
+            return false;
         }
     }
 
     public void SaveProfile(ShellIntegrationProfile profile)
     {
+        ArgumentNullException.ThrowIfNull(profile);
+
         Directory.CreateDirectory(LocalProfileRoot);
         var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
         File.WriteAllText(LocalProfilePath, json, new UTF8Encoding(false));
@@ -91,7 +108,7 @@ public sealed class ShellIntegrationConfigService
         if (string.IsNullOrWhiteSpace(installDirectory))
             return null;
 
-        var managedDirectory = Path.Combine(installDirectory, "imports", ManagedDirectoryName);
+        var managedDirectory = Path.Combine(LocalProfileRoot, ManagedOutputDirectoryName, ManagedDirectoryName);
         return new ShellManagedConfigPaths(
             installDirectory,
             Path.Combine(installDirectory, "shell.nss"),
@@ -103,15 +120,18 @@ public sealed class ShellIntegrationConfigService
 
     public ShellManagedConfigPaths? ApplyProfile(string? shellInstallPath, ShellIntegrationProfile profile, CultureInfo? preferredCulture = null)
     {
+        ArgumentNullException.ThrowIfNull(profile);
+
         var paths = ResolveManagedPaths(shellInstallPath);
         if (paths is null)
             return null;
 
+        var normalizedProfile = profile.Normalize();
         Directory.CreateDirectory(paths.ManagedDirectory);
-        File.WriteAllText(paths.SettingsPath, RenderSettings(profile.Normalize()), new UTF8Encoding(false));
-        File.WriteAllText(paths.ThemePath, RenderTheme(profile.Normalize()), new UTF8Encoding(false));
-        File.WriteAllText(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture), new UTF8Encoding(false));
-        EnsureManagedImportBlock(paths.ShellConfigPath);
+        WriteFileIfChanged(paths.SettingsPath, RenderSettings(normalizedProfile));
+        WriteFileIfChanged(paths.ThemePath, RenderTheme(normalizedProfile));
+        WriteFileIfChanged(paths.LanguagePath, RenderLanguageOverride(paths.InstallDirectory, preferredCulture));
+        EnsureManagedImportBlock(paths);
 
         return paths;
     }
@@ -150,6 +170,8 @@ public sealed class ShellIntegrationConfigService
 
     public static string RenderSettings(ShellIntegrationProfile profile)
     {
+        ArgumentNullException.ThrowIfNull(profile);
+
         var normalized = profile.Normalize();
         var showDelay = normalized.EnableMotionEffects ? normalized.ShowDelay : 200;
         var tipTime = normalized.TipTimeSeconds.ToString("0.0", CultureInfo.InvariantCulture);
@@ -176,6 +198,8 @@ settings
 
     public static string RenderTheme(ShellIntegrationProfile profile)
     {
+        ArgumentNullException.ThrowIfNull(profile);
+
         var normalized = profile.Normalize();
 
         return
@@ -265,13 +289,12 @@ theme
 
     public static string UpsertManagedImportBlock(string existingContent)
     {
-        var block =
-$@"{ManagedBlockStart}
-import lang 'imports/{ManagedDirectoryName}/{ManagedLanguageFileName}'
-import 'imports/{ManagedDirectoryName}/settings.nss'
-import 'imports/{ManagedDirectoryName}/theme.nss'
-{ManagedBlockEnd}
-".TrimEnd();
+        return UpsertManagedImportBlock(existingContent, GetRelativeManagedImportStatements());
+    }
+
+    private static string UpsertManagedImportBlock(string existingContent, IEnumerable<string> importStatements)
+    {
+        var block = BuildManagedImportBlock(importStatements);
 
         var pattern = $"{Regex.Escape(ManagedBlockStart)}[\\s\\S]*?{Regex.Escape(ManagedBlockEnd)}";
         var cleaned = string.IsNullOrWhiteSpace(existingContent)
@@ -295,18 +318,69 @@ import 'imports/{ManagedDirectoryName}/theme.nss'
         return $"{cleaned}{Environment.NewLine}{Environment.NewLine}{block}{Environment.NewLine}";
     }
 
-    private static void EnsureManagedImportBlock(string shellConfigPath)
+    private static string BuildManagedImportBlock(IEnumerable<string> importStatements)
     {
-        var existingContent = File.Exists(shellConfigPath)
-            ? File.ReadAllText(shellConfigPath, Encoding.UTF8)
+        var builder = new StringBuilder();
+        builder.AppendLine(ManagedBlockStart);
+        foreach (var statement in importStatements)
+            builder.AppendLine(statement);
+        builder.Append(ManagedBlockEnd);
+        return builder.ToString();
+    }
+
+    private static IReadOnlyList<string> GetRelativeManagedImportStatements()
+    {
+        return
+        [
+            $"import lang 'imports/{ManagedDirectoryName}/{ManagedLanguageFileName}'",
+            $"import 'imports/{ManagedDirectoryName}/settings.nss'",
+            $"import 'imports/{ManagedDirectoryName}/theme.nss'"
+        ];
+    }
+
+    private static IReadOnlyList<string> GetAbsoluteManagedImportStatements(ShellManagedConfigPaths paths)
+    {
+        return
+        [
+            $"import lang '{NormalizeImportPath(paths.LanguagePath)}'",
+            $"import '{NormalizeImportPath(paths.SettingsPath)}'",
+            $"import '{NormalizeImportPath(paths.ThemePath)}'"
+        ];
+    }
+
+    private static string NormalizeImportPath(string path)
+    {
+        return path.Replace('\\', '/').Replace("'", "\\'");
+    }
+
+    private static void EnsureManagedImportBlock(ShellManagedConfigPaths paths)
+    {
+        var existingContent = File.Exists(paths.ShellConfigPath)
+            ? File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8)
             : string.Empty;
 
-        var updated = UpsertManagedImportBlock(existingContent);
-        var directory = Path.GetDirectoryName(shellConfigPath);
+        var updated = UpsertManagedImportBlock(existingContent, GetAbsoluteManagedImportStatements(paths));
+        var directory = Path.GetDirectoryName(paths.ShellConfigPath);
         if (!string.IsNullOrWhiteSpace(directory))
             Directory.CreateDirectory(directory);
 
-        File.WriteAllText(shellConfigPath, updated, new UTF8Encoding(false));
+        WriteFileIfChanged(paths.ShellConfigPath, updated);
+    }
+
+    private static void WriteFileIfChanged(string path, string content)
+    {
+        var existingContent = File.Exists(path)
+            ? File.ReadAllText(path, Encoding.UTF8)
+            : null;
+
+        if (string.Equals(existingContent, content, StringComparison.Ordinal))
+            return;
+
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
+
+        File.WriteAllText(path, content, new UTF8Encoding(false));
     }
 
     private static string RenderLanguageOverride(string installDirectory, CultureInfo? preferredCulture)

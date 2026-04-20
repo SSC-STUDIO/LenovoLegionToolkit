@@ -1,0 +1,130 @@
+param(
+    [string]$SourceDir = "",
+    [switch]$UseSiblingRepoBuild,
+    [switch]$ForceRefresh
+)
+
+$ErrorActionPreference = "Stop"
+
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$targetDir = Join-Path $repoRoot "Dependencies\Host"
+$manifestPath = Join-Path $targetDir "host-release.json"
+$refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
+
+$requiredFiles = @(
+    "LenovoLegionToolkit.Lib.dll",
+    "Lenovo Legion Toolkit.dll"
+)
+
+function Test-HostDependenciesComplete {
+    foreach ($file in $requiredFiles) {
+        if (-not (Test-Path (Join-Path $targetDir $file))) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
+function Resolve-SiblingSourceDir {
+    $candidates = @(
+        (Join-Path $repoRoot "..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Release\net10.0-windows\win-x64"),
+        (Join-Path $repoRoot "..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64")
+    )
+
+    foreach ($candidate in $candidates) {
+        $libCandidate = Join-Path $candidate "LenovoLegionToolkit.Lib.dll"
+        $wpfCandidate = Join-Path $candidate "Lenovo Legion Toolkit.dll"
+        if ((Test-Path $libCandidate) -and (Test-Path $wpfCandidate)) {
+            return $candidate
+        }
+    }
+
+    return $null
+}
+
+function Copy-FromSourceDir {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ResolvedSourceDir
+    )
+
+    & $refreshScript -SourceDir $ResolvedSourceDir
+}
+
+function Copy-FromReleaseZip {
+    if (-not (Test-Path $manifestPath)) {
+        throw "Host dependency manifest not found: $manifestPath"
+    }
+
+    $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    $downloadUrl = [string]$manifest.downloadUrl
+    if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
+        $hostVersion = [string]$manifest.hostVersion
+        $hostTag = [string]$manifest.hostTag
+        $packageName = [string]$manifest.artifacts.package
+
+        if ([string]::IsNullOrWhiteSpace($packageName) -and -not [string]::IsNullOrWhiteSpace($hostVersion)) {
+            $packageName = "LenovoLegionToolkit_v$hostVersion`_win-x64.zip"
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($hostTag) -and -not [string]::IsNullOrWhiteSpace($packageName)) {
+            $downloadUrl = "https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/download/$hostTag/$packageName"
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
+        throw "downloadUrl is missing from host-release.json and could not be derived from hostTag/hostVersion."
+    }
+
+    $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("llt-host-" + [guid]::NewGuid().ToString("N"))
+    $zipPath = Join-Path $tempRoot "host.zip"
+    $extractDir = Join-Path $tempRoot "extract"
+
+    New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+    New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+
+    try {
+        Write-Host "Downloading host dependencies from $downloadUrl"
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath
+        Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+
+        foreach ($file in $requiredFiles) {
+            $candidate = Get-ChildItem -Path $extractDir -Filter $file -File -Recurse | Select-Object -First 1
+            if ($null -eq $candidate) {
+                throw "Required host file '$file' was not found in downloaded archive."
+            }
+
+            Copy-Item -Path $candidate.FullName -Destination (Join-Path $targetDir $file) -Force
+            Write-Host "Updated $file from release archive"
+        }
+    }
+    finally {
+        if (Test-Path $tempRoot) {
+            Remove-Item -Path $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
+if ((Test-HostDependenciesComplete) -and -not $ForceRefresh) {
+    Write-Host "Host dependencies already available in $targetDir"
+    exit 0
+}
+
+if (-not [string]::IsNullOrWhiteSpace($SourceDir)) {
+    Copy-FromSourceDir -ResolvedSourceDir $SourceDir
+    exit 0
+}
+
+$siblingSourceDir = Resolve-SiblingSourceDir
+if ($UseSiblingRepoBuild -or -not [string]::IsNullOrWhiteSpace($siblingSourceDir)) {
+    if (-not [string]::IsNullOrWhiteSpace($siblingSourceDir)) {
+        Copy-FromSourceDir -ResolvedSourceDir $siblingSourceDir
+        exit 0
+    }
+
+    Write-Warning "UseSiblingRepoBuild was requested but no sibling LenovoLegionToolkit build output was found."
+}
+
+Copy-FromReleaseZip

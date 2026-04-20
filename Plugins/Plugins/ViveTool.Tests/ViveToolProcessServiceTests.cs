@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using Xunit;
@@ -11,13 +12,6 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
 /// </summary>
 public class ViveToolProcessServiceTests
 {
-    private ViveToolProcessService CreateService()
-    {
-        return new ViveToolProcessService();
-    }
-
-    #region Constructor Tests
-
     [Fact]
     public void Constructor_CreatesProcessRunner()
     {
@@ -26,282 +20,141 @@ public class ViveToolProcessServiceTests
         Assert.NotNull(service);
     }
 
-    #endregion
-
-    #region ExecuteCommandAsync Tests
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithNullPath_ReturnsFalse()
+    [Theory]
+    [InlineData(null, "/query")]
+    [InlineData("", "/query")]
+    [InlineData("   ", "/query")]
+    [InlineData("C:\\nonexistent\\vivetool.exe", "/query")]
+    [InlineData("C:\\test&calc.exe", "/query")]
+    [InlineData("invalid|path", "/query")]
+    [InlineData("vivetool.exe", null)]
+    public async Task ExecuteCommandAsync_WithRejectedInput_ReturnsFalseWithError(string? path, string? arguments)
     {
         var service = CreateService();
 
-        var result = await service.ExecuteCommandAsync(null!, "/query");
+        var result = await service.ExecuteCommandAsync(path!, arguments!);
 
         Assert.False(result.Success);
-        Assert.NotNull(result.Error);
+        Assert.False(string.IsNullOrWhiteSpace(result.Error));
     }
 
     [Fact]
-    public async Task ExecuteCommandAsync_WithEmptyPath_ReturnsFalse()
+    public async Task ExecuteCommandAsync_WithDangerousArguments_ReturnsFalseWithError()
     {
         var service = CreateService();
+        var commandProcessorPath = GetCommandProcessorPath();
 
-        var result = await service.ExecuteCommandAsync("", "/query");
+        var result = await service.ExecuteCommandAsync(commandProcessorPath, "/c echo safe&echo unsafe");
 
         Assert.False(result.Success);
-        Assert.NotNull(result.Error);
+        Assert.False(string.IsNullOrWhiteSpace(result.Error));
     }
 
     [Fact]
-    public async Task ExecuteCommandAsync_WithNonexistentPath_ReturnsFalse()
+    public async Task ExecuteCommandAsync_WithExistingExecutable_ReturnsCapturedOutput()
     {
         var service = CreateService();
+        var commandProcessorPath = GetCommandProcessorPath();
+
+        var result = await service.ExecuteCommandAsync(commandProcessorPath, "/c echo Feature List Output");
+
+        Assert.True(result.Success);
+        Assert.Contains("Feature List Output", result.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.True(string.IsNullOrWhiteSpace(result.Error));
+    }
+
+    [Fact]
+    public async Task ExecuteCommandAsync_CalledMultipleTimes_ReturnsSuccessfulOutputEachTime()
+    {
+        var service = CreateService();
+        var commandProcessorPath = GetCommandProcessorPath();
+
+        for (var i = 0; i < 5; i++)
+        {
+            var result = await service.ExecuteCommandAsync(commandProcessorPath, $"/c echo run-{i}");
+
+            Assert.True(result.Success);
+            Assert.Contains($"run-{i}", result.Output, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    [Fact]
+    public async Task ExecuteCommandAsync_ConcurrentCalls_AllCompleteSuccessfully()
+    {
+        var service = CreateService();
+        var commandProcessorPath = GetCommandProcessorPath();
+
+        var tasks = Enumerable.Range(0, 5)
+            .Select(index => service.ExecuteCommandAsync(commandProcessorPath, $"/c echo concurrent-{index}"))
+            .ToArray();
+
+        var results = await Task.WhenAll(tasks);
+
+        Assert.All(
+            results.Select((result, index) => (result, index)),
+            item =>
+            {
+                Assert.True(item.result.Success);
+                Assert.Contains($"concurrent-{item.index}", item.result.Output, StringComparison.OrdinalIgnoreCase);
+            });
+    }
+
+    [Fact]
+    public async Task ExecuteCommandAsync_WithMissingExecutable_FailsFast()
+    {
+        var service = CreateService();
+        var startTime = DateTime.UtcNow;
 
         var result = await service.ExecuteCommandAsync("C:\\nonexistent\\vivetool.exe", "/query");
 
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithInvalidPathCharacters_ReturnsFalse()
-    {
-        var service = CreateService();
-
-        // Path with dangerous characters that should be rejected by ProcessRunner
-        var result = await service.ExecuteCommandAsync("C:\\test&calc.exe", "/query");
-
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithNullArguments_ReturnsFalse()
-    {
-        var service = CreateService();
-
-        var result = await service.ExecuteCommandAsync("vivetool.exe", null!);
-
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithEmptyArguments_ReturnsSuccessOrFalse()
-    {
-        var service = CreateService();
-
-        // Empty arguments - may succeed or fail depending on vivetool behavior
-        var result = await service.ExecuteCommandAsync("vivetool.exe", "");
-
-        // Either success or failure is acceptable - vivetool may reject empty args
-        Assert.True(result.Success || !result.Success);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithValidPathFormat_ReturnsResult()
-    {
-        var service = CreateService();
-
-        // Create a temporary test executable (simulating vivetool.exe)
-        var tempDir = Path.Combine(Path.GetTempPath(), "llt-vivetool-test-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(tempDir);
-
-        var testExePath = Path.Combine(tempDir, "vivetool.exe");
-
-        try
-        {
-            // Create a simple batch file that echoes output
-            var batchPath = Path.Combine(tempDir, "test.bat");
-            await File.WriteAllTextAsync(batchPath, "@echo Feature List Output\r\n@exit /b 0");
-
-            // Copy cmd.exe as our test executable (it accepts arguments)
-            var cmdPath = Environment.GetEnvironmentVariable("ComSpec");
-            if (!string.IsNullOrEmpty(cmdPath) && File.Exists(cmdPath))
-            {
-                File.Copy(cmdPath, testExePath, overwrite: true);
-
-                // Execute with arguments that will succeed
-                var result = await service.ExecuteCommandAsync(testExePath, "/c @echo test");
-
-                // Should succeed and have output
-                Assert.True(result.Success || !result.Success); // Either result is acceptable
-                if (result.Success)
-                {
-                    Assert.NotNull(result.Output);
-                }
-            }
-        }
-        finally
-        {
-            try
-            {
-                Directory.Delete(tempDir, true);
-            }
-            catch
-            {
-                // Cleanup best effort
-            }
-        }
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithLongArguments_ReturnsResult()
-    {
-        var service = CreateService();
-
-        // Long arguments string
-        var longArgs = "/query /id:" + new string('1', 100);
-
-        var result = await service.ExecuteCommandAsync("vivetool.exe", longArgs);
-
-        // Should handle long arguments without crashing
-        Assert.True(result.Success || !result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithSpecialCharactersInArguments_ReturnsResult()
-    {
-        var service = CreateService();
-
-        // Arguments with special characters
-        var specialArgs = "/query /id:12345&test";
-
-        var result = await service.ExecuteCommandAsync("vivetool.exe", specialArgs);
-
-        // Should handle special characters safely
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_CalledMultipleTimes_DoesNotCrash()
-    {
-        var service = CreateService();
-
-        // Multiple consecutive calls
-        for (int i = 0; i < 5; i++)
-        {
-            var result = await service.ExecuteCommandAsync("vivetool.exe", "/query");
-            Assert.True(result.Success || !result.Success);
-        }
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_ConcurrentCalls_DoesNotCrash()
-    {
-        var service = CreateService();
-
-        var tasks = new Task[5];
-        for (int i = 0; i < 5; i++)
-        {
-            tasks[i] = service.ExecuteCommandAsync("vivetool.exe", "/query");
-        }
-
-        await Task.WhenAll(tasks);
-
-        // All tasks should complete without exception
-        Assert.True(true);
-    }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithTimeout_ReturnsWithinTimeout()
-    {
-        var service = CreateService();
-
-        var startTime = DateTime.UtcNow;
-
-        var result = await service.ExecuteCommandAsync("vivetool.exe", "/query");
-
         var elapsed = DateTime.UtcNow - startTime;
 
-        // Should complete within 30 seconds (default timeout)
-        Assert.True(elapsed.TotalSeconds < 35, $"Execution took {elapsed.TotalSeconds} seconds");
+        Assert.False(result.Success);
+        Assert.False(string.IsNullOrWhiteSpace(result.Error));
+        Assert.True(elapsed.TotalSeconds < 5, $"Execution took {elapsed.TotalSeconds} seconds");
     }
 
     [Fact]
-    public async Task ExecuteCommandAsync_ReturnsTupleWithThreeElements()
+    public async Task ExecuteCommandAsync_ReturnsExpectedTupleShape()
     {
         var service = CreateService();
+        var commandProcessorPath = GetCommandProcessorPath();
 
-        var result = await service.ExecuteCommandAsync("vivetool.exe", "/query");
+        var result = await service.ExecuteCommandAsync(commandProcessorPath, "/c echo tuple-shape");
 
-        // Result should be a tuple with Success, Output, Error
-        Assert.True(result.Success.GetType() == typeof(bool));
-        Assert.True(result.Output == null || result.Output.GetType() == typeof(string));
-        Assert.True(result.Error == null || result.Error.GetType() == typeof(string));
+        Assert.IsType<bool>(result.Success);
+        Assert.IsType<string>(result.Output);
+        Assert.IsType<string>(result.Error);
     }
 
-    #endregion
-
-    #region Integration Tests
-
     [Fact]
-    public async Task ExecuteCommandAsync_WithRealVivetool_ReturnsValidResult()
+    public async Task ExecuteCommandAsync_WithResolvedViveToolPath_ReturnsStructuredResult()
     {
         var service = CreateService();
-
-        // Try to find vivetool.exe in PATH or bundled
         var pathService = new ViveToolPathService();
         var viveToolPath = await pathService.GetViveToolPathAsync();
 
-        if (!string.IsNullOrEmpty(viveToolPath) && File.Exists(viveToolPath))
-        {
-            // Execute a real command
-            var result = await service.ExecuteCommandAsync(viveToolPath, "/query");
+        Assert.False(string.IsNullOrWhiteSpace(viveToolPath));
+        Assert.True(File.Exists(viveToolPath));
 
-            // Should not throw and return valid result
-            Assert.True(result.Success || !result.Success);
-            if (result.Success)
-            {
-                Assert.NotNull(result.Output);
-            }
-        }
+        var result = await service.ExecuteCommandAsync(viveToolPath!, "/query");
+
+        if (result.Success)
+            Assert.False(string.IsNullOrWhiteSpace(result.Output));
         else
-        {
-            // Skip if vivetool.exe not available
-            Assert.True(true, "ViVeTool.exe not available for integration test");
-        }
+            Assert.False(string.IsNullOrWhiteSpace(result.Error));
     }
 
-    #endregion
-
-    #region Error Handling Tests
-
-    [Fact]
-    public async Task ExecuteCommandAsync_WithWhitespacePath_ReturnsFalse()
+    private static ViveToolProcessService CreateService()
     {
-        var service = CreateService();
-
-        var result = await service.ExecuteCommandAsync("   ", "/query");
-
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
+        return new ViveToolProcessService();
     }
 
-    [Fact]
-    public async Task ExecuteCommandAsync_WithWhitespaceArguments_ReturnsResult()
+    private static string GetCommandProcessorPath()
     {
-        var service = CreateService();
-
-        var result = await service.ExecuteCommandAsync("vivetool.exe", "   ");
-
-        // Should handle whitespace arguments
-        Assert.True(result.Success || !result.Success);
+        var commandProcessorPath = Environment.GetEnvironmentVariable("ComSpec");
+        Assert.False(string.IsNullOrWhiteSpace(commandProcessorPath));
+        Assert.True(File.Exists(commandProcessorPath));
+        return commandProcessorPath!;
     }
-
-    [Fact]
-    public async Task ExecuteCommandAsync_ExceptionThrown_ReturnsFalseWithError()
-    {
-        var service = CreateService();
-
-        // Path that will cause exception (invalid format)
-        var result = await service.ExecuteCommandAsync("invalid|path", "/query");
-
-        Assert.False(result.Success);
-        Assert.NotNull(result.Error);
-    }
-
-    #endregion
 }

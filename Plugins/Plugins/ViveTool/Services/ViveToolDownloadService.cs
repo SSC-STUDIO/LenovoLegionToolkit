@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
+using System.Net.Sockets;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -17,6 +21,18 @@ public class ViveToolDownloadService
 {
     // Official ViVeTool release asset (ZIP file containing ViVeTool.exe)
     public const string DefaultViveToolDownloadUrl = "https://github.com/thebookisclosed/ViVe/releases/latest/download/ViVeTool-v0.3.4-IntelAmd.zip";
+    private const int MaxImportContentBytes = 1024 * 1024;
+    private const string ExpectedViveToolZipSha256 = "cc27f073f3fe5dd2c3d947faf558fd4b2f8e34454f812689b0d65ee8a52e4147";
+
+    private static readonly IReadOnlyDictionary<string, string> ExpectedBuiltInFileHashes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        [ViveToolPathService.ViveToolExeName] = "d3b69c982622a26ad0b37c65b8f006b5139e50aeb45fda68734a33ca28706dea",
+        ["Albacore.ViVe.dll"] = "f57e02e954244781d86a7c1a849be24142c4aa4883c07aa9cd93be0919d2e50c",
+        ["Newtonsoft.Json.dll"] = "e1e27af7b07eeedf5ce71a9255f0422816a6fc5849a483c6714e1b472044fa9d",
+        ["FeatureDictionary.pfs"] = "8ee86b7abd13390d06f251de998fb578e149cc42e7ea9114212ff6af4c956828"
+    };
+
+    private static readonly SemaphoreSlim DownloadLock = new(1, 1);
 
     private readonly ViveToolPathService _pathService;
 
@@ -27,29 +43,34 @@ public class ViveToolDownloadService
 
     public async Task<bool> DownloadViveToolAsync(System.IProgress<long>? progress = null)
     {
+        await DownloadLock.WaitAsync().ConfigureAwait(false);
         try
         {
             var bundledPath = _pathService.GetBundledViveToolPath();
-            if (File.Exists(bundledPath))
+            if (ViveToolPathService.IsInstallComplete(Path.GetDirectoryName(bundledPath)))
             {
                 _pathService.CachedPath = bundledPath;
                 return true;
             }
 
             var builtInPath = _pathService.GetBuiltInViveToolPath();
-            if (File.Exists(builtInPath))
-                return true;
-
             var builtInDir = Path.GetDirectoryName(builtInPath);
+            if (ViveToolPathService.IsInstallComplete(builtInDir))
+            {
+                _pathService.CachedPath = builtInPath;
+                return true;
+            }
+
             if (!string.IsNullOrEmpty(builtInDir) && !Directory.Exists(builtInDir))
                 Directory.CreateDirectory(builtInDir);
 
             // Download ZIP file to temporary location
             var tempZipPath = Path.Combine(Path.GetTempPath(), $"ViVeTool_{Guid.NewGuid()}.zip");
+            var stagingDirectory = Path.Combine(Path.GetTempPath(), $"ViVeTool_extract_{Guid.NewGuid():N}");
             try
             {
                 using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
-                LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
+                    LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
 
                 // Get the response as a stream to track progress
                 var response = await httpClient.GetAsync(DefaultViveToolDownloadUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
@@ -57,20 +78,33 @@ public class ViveToolDownloadService
 
                 long downloadedBytes = 0;
 
-                using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using var fileStream = new FileStream(tempZipPath, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                var buffer = new byte[8192];
-                int bytesRead;
-
-                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                using (var fileStream = new FileStream(tempZipPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var hashAlgorithm = SHA256.Create())
                 {
-                    await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-                    downloadedBytes += bytesRead;
-                    progress?.Report(downloadedBytes);
+                    var buffer = new byte[8192];
+                    int bytesRead;
+
+                    while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                        hashAlgorithm.TransformBlock(buffer, 0, bytesRead, null, 0);
+                        downloadedBytes += bytesRead;
+                        progress?.Report(downloadedBytes);
+                    }
+
+                    hashAlgorithm.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
+                    var actualZipHash = Convert.ToHexString(hashAlgorithm.Hash!).ToLowerInvariant();
+                    if (!actualZipHash.Equals(ExpectedViveToolZipSha256, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"ViveTool: ZIP hash mismatch. Expected {ExpectedViveToolZipSha256}, actual {actualZipHash}.");
+                        return false;
+                    }
                 }
 
                 // Extract all files from ZIP to the built-in directory
+                Directory.CreateDirectory(stagingDirectory);
                 using var archive = ZipFile.OpenRead(tempZipPath);
 
                 // Verify ViVeTool.exe exists in the archive
@@ -104,8 +138,42 @@ public class ViveToolDownloadService
                         continue;
                     }
 
-                    var destinationPath = Path.Combine(builtInDir!, entry.Name);
+                    var destinationPath = Path.Combine(stagingDirectory, entry.Name);
                     entry.ExtractToFile(destinationPath, overwrite: true);
+                }
+
+                if (!ViveToolPathService.IsInstallComplete(stagingDirectory))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("ViveTool: Extracted archive is missing required runtime files");
+                    return false;
+                }
+
+                if (!VerifyKnownInstallHashes(stagingDirectory))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("ViveTool: Extracted archive failed file hash verification");
+                    return false;
+                }
+
+                foreach (var stagedFilePath in Directory.GetFiles(stagingDirectory, "*", SearchOption.TopDirectoryOnly))
+                {
+                    var destinationPath = Path.Combine(builtInDir!, Path.GetFileName(stagedFilePath));
+                    File.Copy(stagedFilePath, destinationPath, overwrite: true);
+                }
+
+                if (!ViveToolPathService.IsInstallComplete(builtInDir))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("ViveTool: Built-in install directory is incomplete after extraction");
+                    return false;
+                }
+
+                if (!VerifyKnownInstallHashes(builtInDir))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("ViveTool: Built-in install directory failed file hash verification");
+                    return false;
                 }
 
                 if (Log.Instance.IsTraceEnabled)
@@ -121,6 +189,8 @@ public class ViveToolDownloadService
                 {
                     if (File.Exists(tempZipPath))
                         File.Delete(tempZipPath);
+                    if (Directory.Exists(stagingDirectory))
+                        Directory.Delete(stagingDirectory, recursive: true);
                 }
                 catch
                 {
@@ -134,16 +204,31 @@ public class ViveToolDownloadService
                 Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
             return false;
         }
+        finally
+        {
+            DownloadLock.Release();
+        }
     }
 
     public async Task<List<FeatureFlagInfo>> ImportFeaturesFromFileAsync(string filePath)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return new List<FeatureFlagInfo>();
+
             if (!File.Exists(filePath))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"ViveTool: Import file not found: {filePath}");
+                return new List<FeatureFlagInfo>();
+            }
+
+            var fileInfo = new FileInfo(filePath);
+            if (fileInfo.Length > MaxImportContentBytes)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Import file exceeds size limit: {filePath}");
                 return new List<FeatureFlagInfo>();
             }
 
@@ -162,8 +247,23 @@ public class ViveToolDownloadService
     {
         try
         {
-            var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.GetSharedClient();
-            var content = await httpClient.GetStringAsync(url).ConfigureAwait(false);
+            if (!TryValidateImportUri(url, out var uri))
+                return new List<FeatureFlagInfo>();
+
+            using var httpClient = LenovoLegionToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
+                LenovoLegionToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
+            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            if (response.Content.Headers.ContentLength is long contentLength && contentLength > MaxImportContentBytes)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Import URL content exceeds size limit: {uri}");
+                return new List<FeatureFlagInfo>();
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var content = await ReadContentWithLimitAsync(stream, MaxImportContentBytes).ConfigureAwait(false);
             return ParseImportContent(content);
         }
         catch (Exception ex)
@@ -309,5 +409,99 @@ public class ViveToolDownloadService
         }
 
         return features;
+    }
+
+    private static bool VerifyKnownInstallHashes(string? directoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(directoryPath))
+            return false;
+
+        foreach (var expectedFile in ExpectedBuiltInFileHashes)
+        {
+            var filePath = Path.Combine(directoryPath, expectedFile.Key);
+            if (!File.Exists(filePath))
+                return false;
+
+            using var stream = File.OpenRead(filePath);
+            var actualHash = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
+            if (!actualHash.Equals(expectedFile.Value, StringComparison.OrdinalIgnoreCase))
+                return false;
+        }
+
+        return true;
+    }
+
+    private static bool TryValidateImportUri(string? url, out Uri uri)
+    {
+        uri = null!;
+        if (string.IsNullOrWhiteSpace(url))
+            return false;
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var parsedUri))
+            return false;
+
+        uri = parsedUri;
+
+        if (!uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(uri.Host))
+            return false;
+
+        if (uri.IsLoopback || uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (IPAddress.TryParse(uri.Host, out var address) && IsPrivateOrReservedAddress(address))
+            return false;
+
+        return true;
+    }
+
+    private static bool IsPrivateOrReservedAddress(IPAddress address)
+    {
+        if (IPAddress.IsLoopback(address))
+            return true;
+
+        if (address.AddressFamily == AddressFamily.InterNetwork)
+        {
+            var bytes = address.GetAddressBytes();
+            return bytes[0] == 10 ||
+                   bytes[0] == 127 ||
+                   (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
+                   (bytes[0] == 192 && bytes[1] == 168) ||
+                   (bytes[0] == 169 && bytes[1] == 254) ||
+                   bytes[0] == 0;
+        }
+
+        if (address.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            return address.IsIPv6LinkLocal ||
+                   address.IsIPv6SiteLocal ||
+                   address.IsIPv6Multicast ||
+                   address.Equals(IPAddress.IPv6Any) ||
+                   address.Equals(IPAddress.IPv6None);
+        }
+
+        return false;
+    }
+
+    private static async Task<string> ReadContentWithLimitAsync(Stream stream, int maxBytes)
+    {
+        using var buffer = new MemoryStream();
+        var chunk = new byte[8192];
+
+        while (true)
+        {
+            var bytesRead = await stream.ReadAsync(chunk, 0, chunk.Length).ConfigureAwait(false);
+            if (bytesRead == 0)
+                break;
+
+            if (buffer.Length + bytesRead > maxBytes)
+                throw new InvalidOperationException("Import content exceeds size limit.");
+
+            await buffer.WriteAsync(chunk, 0, bytesRead).ConfigureAwait(false);
+        }
+
+        return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
     }
 }

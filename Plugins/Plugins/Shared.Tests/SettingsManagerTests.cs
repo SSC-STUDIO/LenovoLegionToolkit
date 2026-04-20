@@ -29,13 +29,13 @@ public class SettingsManagerTests
 
     private SettingsManager<TestSettings> CreateManager(string? pluginName = null, ILogger? logger = null)
     {
-        // Override the base directory for testing to use our temp directory
         var name = pluginName ?? _testPluginName;
-        var manager = new SettingsManager<TestSettings>(name, logger);
+        return new SettingsManager<TestSettings>(name, logger, _testDirectory);
+    }
 
-        // The manager uses AppDomain.CurrentDomain.BaseDirectory, so we need to ensure
-        // the test works with the actual directory structure
-        return manager;
+    private string GetSettingsPath(string pluginName)
+    {
+        return Path.Combine(_testDirectory, pluginName, "settings.json");
     }
 
     #region Constructor Tests
@@ -43,7 +43,7 @@ public class SettingsManagerTests
     [Fact]
     public void Constructor_ValidPluginName_CreatesInstance()
     {
-        var manager = new SettingsManager<TestSettings>(_testPluginName);
+        var manager = new SettingsManager<TestSettings>(_testPluginName, null, _testDirectory);
         Assert.NotNull(manager);
     }
 
@@ -72,7 +72,7 @@ public class SettingsManagerTests
     public void Constructor_WithLogger_CreatesInstance()
     {
         var loggerMock = new Mock<ILogger>();
-        var manager = new SettingsManager<TestSettings>(_testPluginName, loggerMock.Object);
+        var manager = new SettingsManager<TestSettings>(_testPluginName, loggerMock.Object, _testDirectory);
         Assert.NotNull(manager);
     }
 
@@ -80,13 +80,13 @@ public class SettingsManagerTests
     public void Constructor_CreatesPluginDirectory()
     {
         // Clean up any existing directory first
-        var expectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", _testPluginName);
+        var expectedPath = Path.Combine(_testDirectory, _testPluginName);
         if (Directory.Exists(expectedPath))
         {
             try { Directory.Delete(expectedPath, true); } catch { }
         }
 
-        var manager = new SettingsManager<TestSettings>(_testPluginName);
+        var manager = new SettingsManager<TestSettings>(_testPluginName, null, _testDirectory);
 
         // Trigger Load to ensure directory is created
         manager.Load();
@@ -150,13 +150,52 @@ public class SettingsManagerTests
     }
 
     [Fact]
+    public void Load_LegacySettingsFile_MigratesAndLoadsSettings()
+    {
+        var uniqueName = "LoadTest_Legacy_" + Guid.NewGuid().ToString();
+        var legacySettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var manager = CreateManager(uniqueName);
+
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(legacySettingsPath)!);
+            File.WriteAllText(legacySettingsPath, JsonSerializer.Serialize(new TestSettings
+            {
+                Name = "LegacyName",
+                Value = 314,
+                Enabled = false
+            }));
+
+            var loadedSettings = manager.Load();
+
+            Assert.Equal("LegacyName", loadedSettings.Name);
+            Assert.Equal(314, loadedSettings.Value);
+            Assert.False(loadedSettings.Enabled);
+            Assert.True(File.Exists(GetSettingsPath(uniqueName)));
+        }
+        finally
+        {
+            try
+            {
+                var legacyDirectory = Path.GetDirectoryName(legacySettingsPath);
+                if (!string.IsNullOrWhiteSpace(legacyDirectory) && Directory.Exists(legacyDirectory))
+                    Directory.Delete(legacyDirectory, true);
+            }
+            catch
+            {
+                // Cleanup best effort
+            }
+        }
+    }
+
+    [Fact]
     public void Load_CorruptedJson_ReturnsDefaultSettings()
     {
         var uniqueName = "LoadTest_Corrupted_" + Guid.NewGuid().ToString();
         var manager = CreateManager(uniqueName);
 
         // Write invalid JSON to the settings file
-        var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var settingsPath = GetSettingsPath(uniqueName);
         Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)!);
         File.WriteAllText(settingsPath, "invalid json content {{");
 
@@ -173,7 +212,7 @@ public class SettingsManagerTests
     {
         var loggerMock = new Mock<ILogger>();
         var uniqueName = "LoadTest_LogNoFile_" + Guid.NewGuid().ToString();
-        var manager = new SettingsManager<TestSettings>(uniqueName, loggerMock.Object);
+        var manager = new SettingsManager<TestSettings>(uniqueName, loggerMock.Object, _testDirectory);
         manager.Clear(true);
 
         manager.Load();
@@ -222,7 +261,7 @@ public class SettingsManagerTests
 
         manager.Save(settings);
 
-        var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var settingsPath = GetSettingsPath(uniqueName);
         Assert.True(File.Exists(settingsPath));
     }
 
@@ -296,7 +335,7 @@ public class SettingsManagerTests
     public void Save_WithLogger_LogsErrorOnNull()
     {
         var loggerMock = new Mock<ILogger>();
-        var manager = new SettingsManager<TestSettings>("SaveTest_LogNull", loggerMock.Object);
+        var manager = new SettingsManager<TestSettings>("SaveTest_LogNull", loggerMock.Object, _testDirectory);
 
         manager.Save(null!);
 
@@ -319,7 +358,7 @@ public class SettingsManagerTests
 
         manager.Save(settings);
 
-        var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var settingsPath = GetSettingsPath(uniqueName);
         var json = File.ReadAllText(settingsPath);
 
         // Indented JSON should contain newlines
@@ -387,7 +426,7 @@ public class SettingsManagerTests
     public void Update_WithLogger_LogsErrorOnNullAction()
     {
         var loggerMock = new Mock<ILogger>();
-        var manager = new SettingsManager<TestSettings>("UpdateTest_LogNull", loggerMock.Object);
+        var manager = new SettingsManager<TestSettings>("UpdateTest_LogNull", loggerMock.Object, _testDirectory);
 
         manager.Update(null!);
 
@@ -437,7 +476,7 @@ public class SettingsManagerTests
         manager.Save(new TestSettings { Name = "Persisted" });
         manager.Clear(false);
 
-        var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var settingsPath = GetSettingsPath(uniqueName);
         Assert.True(File.Exists(settingsPath));
     }
 
@@ -450,7 +489,7 @@ public class SettingsManagerTests
         manager.Save(new TestSettings { Name = "ToDelete" });
         manager.Clear(true);
 
-        var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", uniqueName, "settings.json");
+        var settingsPath = GetSettingsPath(uniqueName);
         Assert.False(File.Exists(settingsPath));
     }
 

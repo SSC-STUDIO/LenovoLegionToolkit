@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Plugins.Shared;
@@ -9,6 +10,9 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 public partial class CustomMouseSettingsControl : UserControl
 {
     private readonly CustomMousePlugin _plugin;
+    private bool _isHydratingCursorThemeSelection;
+    private int _cursorThemeSelectionChangeVersion;
+
     private static CultureInfo Culture => CustomMouseText.Culture;
 
     public CustomMouseSettingsControl(CustomMousePlugin plugin)
@@ -122,11 +126,20 @@ public partial class CustomMouseSettingsControl : UserControl
         if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null)
             return;
 
-        _pointerSpeedSlider.Value = _plugin.Settings.WindowsPointerSpeed;
-        _swapButtonsCheckBox.IsChecked = _plugin.Settings.SwapButtons;
-        LoadCursorThemeMode();
-        UpdateSummaryCards();
-        UpdatePointerSpeedValueLabel();
+        Interlocked.Increment(ref _cursorThemeSelectionChangeVersion);
+        _isHydratingCursorThemeSelection = true;
+        try
+        {
+            _pointerSpeedSlider.Value = _plugin.Settings.WindowsPointerSpeed;
+            _swapButtonsCheckBox.IsChecked = _plugin.Settings.SwapButtons;
+            LoadCursorThemeMode();
+            UpdateSummaryCards();
+            UpdatePointerSpeedValueLabel();
+        }
+        finally
+        {
+            _isHydratingCursorThemeSelection = false;
+        }
     }
 
     private void LoadCursorThemeMode()
@@ -169,9 +182,13 @@ public partial class CustomMouseSettingsControl : UserControl
     {
         try
         {
+            if (_isHydratingCursorThemeSelection)
+                return;
+
             if (_cursorThemeModeComboBox?.SelectedItem is not ComboBoxItem selected)
                 return;
 
+            var selectionVersion = Interlocked.Increment(ref _cursorThemeSelectionChangeVersion);
             var mode = (selected.Tag as string) switch
             {
                 "Light" => CursorThemeMode.Light,
@@ -180,7 +197,8 @@ public partial class CustomMouseSettingsControl : UserControl
             };
 
             var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
-            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+            if (selectionVersion != Volatile.Read(ref _cursorThemeSelectionChangeVersion))
+                return;
 
             if (applied)
             {
@@ -195,6 +213,7 @@ public partial class CustomMouseSettingsControl : UserControl
             else
             {
                 SetStatus(CustomMouseText.StatusCursorApplyFailed, true);
+                LoadCursorThemeMode();
             }
 
             UpdateSummaryCards();
@@ -202,6 +221,7 @@ public partial class CustomMouseSettingsControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{CustomMouseText.StatusCursorApplyFailed}: {ex.Message}", true);
+            LoadCursorThemeMode();
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"CursorThemeModeComboBox_SelectionChanged error: {ex.Message}", ex);
         }
@@ -216,18 +236,22 @@ public partial class CustomMouseSettingsControl : UserControl
 
             var speed = (int)Math.Round(_pointerSpeedSlider.Value);
             var swapButtons = _swapButtonsCheckBox.IsChecked == true;
+            var originalSpeed = _plugin.Settings.WindowsPointerSpeed;
 
             if (!_plugin.SetWindowsPointerSpeed(speed))
             {
                 SetStatus(CustomMouseText.StatusApplyPointerFail, true);
-                UpdateSummaryCards();
+                LoadCurrentValues();
                 return;
             }
 
             if (!_plugin.SetSwapButtons(swapButtons))
             {
+                if (_plugin.Settings.WindowsPointerSpeed != originalSpeed)
+                    _plugin.SetWindowsPointerSpeed(originalSpeed);
+
                 SetStatus(CustomMouseText.StatusApplySwapFail, true);
-                UpdateSummaryCards();
+                LoadCurrentValues();
                 return;
             }
 
@@ -308,7 +332,7 @@ public partial class CustomMouseSettingsControl : UserControl
 
         if (_cursorThemeValueTextBlock != null)
         {
-            var mode = GetSelectedCursorThemeMode();
+            var mode = _plugin.Settings.CursorThemeMode;
             _cursorThemeValueTextBlock.Text = mode switch
             {
                 CursorThemeMode.Light => CustomMouseText.CursorThemeModeLight,

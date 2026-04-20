@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPluginToolProject>true</IsPluginToolProject>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PluginTooling.Core\PluginTooling.Core.csproj" />
+    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Plugins\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <Reference Include="LenovoLegionToolkit.Lib">
+      <HintPath>$(HostLibPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="Lenovo Legion Toolkit">
+      <HintPath>$(HostWpfPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <PackageReference Include="WPF-UI" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

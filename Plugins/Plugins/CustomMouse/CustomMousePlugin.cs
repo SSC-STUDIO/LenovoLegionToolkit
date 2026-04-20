@@ -17,7 +17,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Custom Mouse",
-    version: "1.0.13",
+    version: "1.0.14",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -81,12 +81,17 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public CustomMousePlugin()
     {
         _settings = LoadSettings();
+        NormalizeCursorThemeSettings();
     }
 
     public void OnAppStarted()
     {
-        if (_settings.CursorThemeMode == CursorThemeMode.Auto)
-            StartThemeWatcher();
+        if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+            return;
+
+        StartThemeWatcher();
+        if (!IsCurrentThemeAlreadyApplied())
+            RunBackgroundTask(nameof(OnAppStarted), () => ApplyCursorStyleForCurrentThemeAsync(GetRuntimeCancellationToken()));
     }
 
     public override object? GetFeatureExtension()
@@ -198,7 +203,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     public bool SetAutoThemeCursorStyle(bool enabled)
     {
         _settings.AutoThemeCursorStyle = enabled;
-        _settings.CursorThemeMode = enabled ? CursorThemeMode.Auto : CursorThemeMode.Dark;
+        _settings.CursorThemeMode = enabled ? CursorThemeMode.Auto : GetExplicitCursorThemeMode();
 
         if (enabled)
             StartThemeWatcher();
@@ -210,17 +215,38 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public async Task<bool> SetCursorThemeModeAsync(CursorThemeMode mode)
     {
+        var previousMode = _settings.CursorThemeMode;
+        var previousAutoThemeCursorStyle = _settings.AutoThemeCursorStyle;
+        var previousLastAppliedTheme = _settings.LastAppliedTheme;
+
         _settings.CursorThemeMode = mode;
         _settings.AutoThemeCursorStyle = mode == CursorThemeMode.Auto;
 
+        bool applied;
         if (mode == CursorThemeMode.Auto)
         {
             StartThemeWatcher();
-            return await ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(false);
+            applied = await ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(false);
+        }
+        else
+        {
+            StopThemeWatcher();
+            applied = await ApplySpecificCursorThemeAsync(mode == CursorThemeMode.Light ? CursorTheme.Light : CursorTheme.Dark).ConfigureAwait(false);
         }
 
-        StopThemeWatcher();
-        return await ApplySpecificCursorThemeAsync(mode == CursorThemeMode.Light ? CursorTheme.Light : CursorTheme.Dark).ConfigureAwait(false);
+        if (applied)
+            return true;
+
+        _settings.CursorThemeMode = previousMode;
+        _settings.AutoThemeCursorStyle = previousAutoThemeCursorStyle;
+        _settings.LastAppliedTheme = previousLastAppliedTheme;
+
+        if (previousAutoThemeCursorStyle)
+            StartThemeWatcher();
+        else
+            StopThemeWatcher();
+
+        return false;
     }
 
     private async Task<bool> ApplySpecificCursorThemeAsync(CursorTheme theme, CancellationToken cancellationToken = default)
@@ -314,6 +340,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         cancellationToken.ThrowIfCancellationRequested();
         _settings.AutoThemeCursorStyle = true;
+        _settings.CursorThemeMode = CursorThemeMode.Auto;
+        StartThemeWatcher();
         await SaveSettingsAsync().ConfigureAwait(false);
 
         if (!await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false))
@@ -324,6 +352,8 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     {
         cancellationToken.ThrowIfCancellationRequested();
         _settings.AutoThemeCursorStyle = false;
+        _settings.CursorThemeMode = GetExplicitCursorThemeMode();
+        StopThemeWatcher();
         await SaveSettingsAsync().ConfigureAwait(false);
 
         await RestoreBackedUpCursorSchemeAsync(cancellationToken).ConfigureAwait(false);
@@ -491,6 +521,48 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
         }
+    }
+
+    private static void RunBackgroundTask(string operationName, Func<Task<bool>> action)
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await action().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // Ignore expected cancellation during shutdown/theme watcher disposal.
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"CustomMouse background operation '{operationName}' failed: {ex.Message}", ex);
+            }
+        });
+    }
+
+    private void NormalizeCursorThemeSettings()
+    {
+        _settings.AutoThemeCursorStyle = _settings.CursorThemeMode == CursorThemeMode.Auto;
+    }
+
+    private bool IsCurrentThemeAlreadyApplied()
+    {
+        var currentTheme = IsSystemLightTheme() ? "light" : "dark";
+        return string.Equals(_settings.LastAppliedTheme, currentTheme, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private CursorThemeMode GetExplicitCursorThemeMode()
+    {
+        if (string.Equals(_settings.LastAppliedTheme, "light", StringComparison.OrdinalIgnoreCase))
+            return CursorThemeMode.Light;
+
+        if (string.Equals(_settings.LastAppliedTheme, "dark", StringComparison.OrdinalIgnoreCase))
+            return CursorThemeMode.Dark;
+
+        return IsSystemLightTheme() ? CursorThemeMode.Light : CursorThemeMode.Dark;
     }
 
     private static string GetBackupConfigKey(string registryValueName)

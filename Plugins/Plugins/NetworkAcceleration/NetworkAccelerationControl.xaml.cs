@@ -50,7 +50,6 @@ public partial class NetworkAccelerationControl : UserControl
             0,
             0);
         UpdateTelemetrySummary(initialSnapshot);
-        UpdateAnalytics(initialSnapshot);
         SynchronizeRuntimeState();
         UpdateSessionPresentation();
 
@@ -78,9 +77,11 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void LoadSavedSettings()
     {
-        _autoOptimizeOnStartupCheckBox.IsChecked = _plugin.Settings.AutoOptimizeOnStartup;
-        _resetWinsockCheckBox.IsChecked = _plugin.Settings.ResetWinsockOnOptimize;
-        _resetTcpIpCheckBox.IsChecked = _plugin.Settings.ResetTcpIpOnOptimize;
+        NetworkAccelerationSettingsBinding.ApplyToggleSettings(
+            _plugin.Settings,
+            _autoOptimizeOnStartupCheckBox,
+            _resetWinsockCheckBox,
+            _resetTcpIpCheckBox);
     }
 
     private void LoadCurrentMode()
@@ -218,7 +219,7 @@ public partial class NetworkAccelerationControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}", true);
+            SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ServiceToggleButton_Click error: {ex.Message}", ex);
         }
@@ -248,7 +249,7 @@ public partial class NetworkAccelerationControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}", true);
+            SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"QuickOptimizeButton_Click error: {ex.Message}", ex);
         }
@@ -266,7 +267,7 @@ public partial class NetworkAccelerationControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}", true);
+            SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ResetStackButton_Click error: {ex.Message}", ex);
         }
@@ -283,11 +284,14 @@ public partial class NetworkAccelerationControl : UserControl
                 return;
             }
 
-            _plugin.SetPreferredMode(mode.Value);
-            _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
-            _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
-            _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
-            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+            var updatedSettings = NetworkAccelerationSettingsBinding.BuildUpdatedSettings(
+                _plugin.Settings,
+                _autoOptimizeOnStartupCheckBox,
+                _resetWinsockCheckBox,
+                _resetTcpIpCheckBox,
+                preferredMode: mode.Value);
+
+            await _plugin.ApplySettingsAsync(updatedSettings).ConfigureAwait(true);
 
             UpdateModeDescription();
             UpdateSavedModeSummary();
@@ -296,7 +300,7 @@ public partial class NetworkAccelerationControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}", true);
+            SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveModeButton_Click error: {ex.Message}", ex);
         }
@@ -311,7 +315,6 @@ public partial class NetworkAccelerationControl : UserControl
             _telemetrySamples.RemoveAt(0);
 
         UpdateTelemetrySummary(snapshot);
-        UpdateAnalytics(snapshot);
     }
 
     private void UpdateTelemetrySummary(NetworkAccelerationTelemetrySnapshot snapshot)
@@ -327,35 +330,10 @@ public partial class NetworkAccelerationControl : UserControl
         _updatedValueTextBlock.Text = snapshot.Timestamp.ToLocalTime().ToString("HH:mm:ss", Culture);
     }
 
-    private void UpdateAnalytics(NetworkAccelerationTelemetrySnapshot snapshot)
-    {
-        var combined = Math.Max(0, snapshot.DownloadMbps) + Math.Max(0, snapshot.UploadMbps);
-        var downloadShare = combined <= 0 ? 0 : (snapshot.DownloadMbps / combined) * 100d;
-        var uploadShare = combined <= 0 ? 0 : (snapshot.UploadMbps / combined) * 100d;
-        var rollingAverage = _telemetrySamples.Count == 0
-            ? 0
-            : _telemetrySamples.Average(sample => sample.DownloadMbps + sample.UploadMbps);
-        var burstPeak = _telemetrySamples.Count == 0
-            ? 0
-            : _telemetrySamples.Max(sample => sample.DownloadMbps + sample.UploadMbps);
-
-        _downloadShareValueTextBlock.Text = FormatPercent(downloadShare);
-        _uploadShareValueTextBlock.Text = FormatPercent(uploadShare);
-        _downloadShareBar.Value = downloadShare;
-        _uploadShareBar.Value = uploadShare;
-        _rollingAverageTextBlock.Text = FormatRate(rollingAverage);
-        _burstPeakTextBlock.Text = FormatRate(burstPeak);
-    }
-
     private void UpdateModeDescription()
     {
         var mode = ParseSelectedMode() ?? NetworkAccelerationMode.Balanced;
-        _modeDescriptionTextBlock.Text = mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingDescription,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingDescription,
-            _ => NetworkAccelerationText.ModeBalancedDescription
-        };
+        _modeDescriptionTextBlock.Text = NetworkAccelerationPresentation.GetModePresentation(mode).Description;
     }
 
     private void UpdateSavedModeSummary()
@@ -366,30 +344,11 @@ public partial class NetworkAccelerationControl : UserControl
     private void UpdatePresetDetails()
     {
         var mode = ParseSelectedMode() ?? NetworkAccelerationMode.Balanced;
-        _presetTitleTextBlock.Text = mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingTargetTitle,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingTargetTitle,
-            _ => NetworkAccelerationText.ModeBalancedTargetTitle
-        };
-        _presetSubtitleTextBlock.Text = mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingTargetDescription,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingTargetDescription,
-            _ => NetworkAccelerationText.ModeBalancedTargetDescription
-        };
-        _presetRecommendationTextBlock.Text = mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingRecommendedFor,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingRecommendedFor,
-            _ => NetworkAccelerationText.ModeBalancedRecommendedFor
-        };
-        _presetActionsTextBlock.Text = mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGamingFocus,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreamingFocus,
-            _ => NetworkAccelerationText.ModeBalancedFocus
-        };
+        var presentation = NetworkAccelerationPresentation.GetModePresentation(mode);
+        _presetTitleTextBlock.Text = presentation.TargetTitle;
+        _presetSubtitleTextBlock.Text = presentation.TargetDescription;
+        _presetRecommendationTextBlock.Text = presentation.RecommendedFor;
+        _presetActionsTextBlock.Text = presentation.Focus;
         _presetStateTextBlock.Text = _isServiceRunning
             ? NetworkAccelerationText.PresetStateActive
             : NetworkAccelerationText.PresetStateReady;
@@ -470,22 +429,12 @@ public partial class NetworkAccelerationControl : UserControl
 
     private static string GetModeDisplayName(NetworkAccelerationMode mode)
     {
-        return mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGaming,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreaming,
-            _ => NetworkAccelerationText.ModeBalanced
-        };
+        return NetworkAccelerationPresentation.GetModePresentation(mode).DisplayName;
     }
 
     private static string FormatRate(double mbps)
     {
         return string.Format(Culture, NetworkAccelerationText.MbpsValueFormat, mbps);
-    }
-
-    private static string FormatPercent(double value)
-    {
-        return string.Format(Culture, "{0:0}%", value);
     }
 
     private static string FormatDataSize(long bytes)
@@ -505,7 +454,12 @@ public partial class NetworkAccelerationControl : UserControl
     private static string FormatDuration(TimeSpan duration)
     {
         if (duration.TotalHours >= 1)
-            return duration.ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "{0:00}:{1:00}:{2:00}",
+                (int)duration.TotalHours,
+                duration.Minutes,
+                duration.Seconds);
 
         return duration.ToString(@"mm\:ss", CultureInfo.InvariantCulture);
     }

@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Version>1.0.9</Version>
-    <FileVersion>1.0.9</FileVersion>
-    <AssemblyVersion>1.0.9</AssemblyVersion>
+    <Version>1.0.10</Version>
+    <FileVersion>1.0.10</FileVersion>
+    <AssemblyVersion>1.0.10</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
@@ -26,10 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
-    <Reference Include="Lenovo Legion Toolkit">
-      <HintPath>$(HostWpfPath)</HintPath>
-      <Private>false</Private>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -87,6 +83,7 @@
           Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
     <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
           ConsoleToMSBuild="true"
           StandardOutputImportance="normal" />
     <!-- Re-evaluate after download so the ItemGroup picks up the files -->
@@ -98,4 +95,3 @@
   </Target>
 
 </Project>
-

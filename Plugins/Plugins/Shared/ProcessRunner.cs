@@ -36,6 +36,7 @@ public class ProcessRunner
     public bool TryRunProcess(string filePath, string arguments, out string result, int timeoutSeconds = Constants.DefaultTimeoutSeconds)
     {
         result = string.Empty;
+        var effectiveTimeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : Constants.DefaultTimeoutSeconds;
 
         try
         {
@@ -89,7 +90,7 @@ public class ProcessRunner
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            if (process.WaitForExit(timeoutSeconds * 1000))
+            if (process.WaitForExit(effectiveTimeoutSeconds * 1000))
             {
                 result = outputBuilder.ToString();
                 var error = errorBuilder.ToString();
@@ -105,8 +106,8 @@ public class ProcessRunner
             }
             else
             {
-                _logger?.LogError("Process timed out after {Timeout} seconds", timeoutSeconds);
-                process.Kill();
+                _logger?.LogError("Process timed out after {Timeout} seconds", effectiveTimeoutSeconds);
+                TryTerminateProcess(process);
                 return false;
             }
         }
@@ -126,6 +127,8 @@ public class ProcessRunner
         CancellationToken cancellationToken = default,
         int timeoutSeconds = Constants.DefaultTimeoutSeconds)
     {
+        var effectiveTimeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : Constants.DefaultTimeoutSeconds;
+
         try
         {
             // Input validation
@@ -172,9 +175,21 @@ public class ProcessRunner
             process.BeginErrorReadLine();
 
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            cts.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
+            cts.CancelAfter(TimeSpan.FromSeconds(effectiveTimeoutSeconds));
 
-            await process.WaitForExitAsync(cts.Token);
+            try
+            {
+                await process.WaitForExitAsync(cts.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                var wasCancelled = cancellationToken.IsCancellationRequested;
+                TryTerminateProcess(process);
+
+                var reason = wasCancelled ? "Process cancelled" : "Process timed out";
+                _logger?.LogError("{Reason}", reason);
+                return ProcessResult.Failure("Process cancelled or timed out");
+            }
 
             var output = outputBuilder.ToString();
             var error = errorBuilder.ToString();
@@ -187,11 +202,6 @@ public class ProcessRunner
             }
 
             return ProcessResult.Ok(output, process.ExitCode);
-        }
-        catch (OperationCanceledException)
-        {
-            _logger?.LogError("Process was cancelled or timed out");
-            return ProcessResult.Failure("Process cancelled or timed out");
         }
         catch (Exception ex)
         {
@@ -240,6 +250,22 @@ public class ProcessRunner
         }
 
         return false;
+    }
+
+    private static void TryTerminateProcess(Process process)
+    {
+        try
+        {
+            if (process.HasExited)
+                return;
+
+            process.Kill(entireProcessTree: true);
+            process.WaitForExit();
+        }
+        catch
+        {
+            // Best effort cleanup only.
+        }
     }
 }
 

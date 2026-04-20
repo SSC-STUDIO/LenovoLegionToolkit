@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Plugins.CustomMouse;
 using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.Plugins.TestCommon;
 using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
@@ -102,13 +103,11 @@ public class CustomMousePluginTests
 
         plugin.OnInstalled();
         var featurePage = plugin.GetFeatureExtension();
-        var settingsPage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetSettingsPage());
+        var settingsPage = PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), CustomMouseText.SettingsPageTitle);
         var category = plugin.GetOptimizationCategory();
 
         Assert.NotNull(featurePage);
-        var featurePluginPage = Assert.IsAssignableFrom<IPluginPage>(featurePage);
-        Assert.NotNull(settingsPage);
-        Assert.Equal(CustomMouseText.SettingsPageTitle, settingsPage.PageTitle);
+        var featurePluginPage = PluginPageAssertions.AssertPluginPage(featurePage);
         Assert.NotNull(category);
         Assert.Equal("custom.mouse", category!.Key);
         Assert.Equal(plugin.Id, category.PluginId);
@@ -128,5 +127,33 @@ public class CustomMousePluginTests
         Assert.True(changedToDisabled);
         Assert.True(changedToEnabled);
         Assert.True(plugin.Settings.AutoThemeCursorStyle);
+    }
+
+    [Fact]
+    public void SetAutoThemeCursorStyle_EnablingAutoSetsCursorThemeModeAuto()
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.Settings.LastAppliedTheme = "dark";
+
+        var changed = plugin.SetAutoThemeCursorStyle(true);
+
+        Assert.True(changed);
+        Assert.True(plugin.Settings.AutoThemeCursorStyle);
+        Assert.Equal(CursorThemeMode.Auto, plugin.Settings.CursorThemeMode);
+    }
+
+    [Theory]
+    [InlineData("light", CursorThemeMode.Light)]
+    [InlineData("dark", CursorThemeMode.Dark)]
+    public void SetAutoThemeCursorStyle_DisablingAutoPreservesLastAppliedTheme(string lastAppliedTheme, CursorThemeMode expectedMode)
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.Settings.LastAppliedTheme = lastAppliedTheme;
+
+        var changed = plugin.SetAutoThemeCursorStyle(false);
+
+        Assert.True(changed);
+        Assert.False(plugin.Settings.AutoThemeCursorStyle);
+        Assert.Equal(expectedMode, plugin.Settings.CursorThemeMode);
     }
 }

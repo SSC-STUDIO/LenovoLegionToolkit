@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
@@ -490,19 +491,15 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
-    private void GoToSettingsButton_Click(object sender, RoutedEventArgs e)
+    private async void GoToSettingsButton_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var window = new LenovoLegionToolkit.WPF.Windows.Settings.PluginSettingsWindow(LenovoLegionToolkit.Lib.Plugins.PluginConstants.ViveTool)
-            {
-                Owner = Window.GetWindow(this)
-            };
-            window.ShowDialog();
+            if (!SDK.PluginHostContext.Current.OpenPluginSettings(PluginConstants.ViveTool))
+                return;
             
             // Refresh status after settings window is closed
-            _ = RefreshViveToolStatusAsync();
-            _ = LoadFeaturesAsync();
+            await RefreshPageAsync(clearFeatureCache: false).ConfigureAwait(true);
         }
         catch (Exception ex)
         {
@@ -678,14 +675,10 @@ public partial class ViveToolPage : INotifyPropertyChanged
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            // Check if textbox is still focused before searching
-            await Dispatcher.InvokeAsync(async () =>
-            {
-                if (_searchTextBox.IsFocused && !cancellationToken.IsCancellationRequested)
-                {
-                    await SearchFeaturesAsync().ConfigureAwait(false);
-                }
-            });
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            await SearchFeaturesAsync().ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -14,6 +16,8 @@ public class ViveToolFeatureService
 {
     private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
 
+    private readonly object _cacheSync = new();
+    private readonly SemaphoreSlim _featureLoadGate = new(1, 1);
     private List<FeatureFlagInfo>? _cachedFeatures;
     private DateTime _cachedFeaturesTimestamp = DateTime.MinValue;
     private readonly TimeSpan _cacheDuration = DefaultCacheDuration;
@@ -34,8 +38,11 @@ public class ViveToolFeatureService
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"ViveTool: Clearing feature cache");
 
-        _cachedFeatures = null;
-        _cachedFeaturesTimestamp = DateTime.MinValue;
+        lock (_cacheSync)
+        {
+            _cachedFeatures = null;
+            _cachedFeaturesTimestamp = DateTime.MinValue;
+        }
     }
 
     public async Task<bool> EnableFeatureAsync(int featureId)
@@ -129,59 +136,49 @@ public class ViveToolFeatureService
 
     public async Task<List<FeatureFlagInfo>> ListFeaturesAsync()
     {
-        // Check cache first
-        var now = DateTime.Now;
-        if (_cachedFeatures != null && (now - _cachedFeaturesTimestamp) < _cacheDuration)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Returning {_cachedFeatures.Count} features from cache");
-            return new List<FeatureFlagInfo>(_cachedFeatures);
-        }
+        if (TryGetCachedFeatures(out var cachedFeatures))
+            return cachedFeatures;
 
-        var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
-        if (string.IsNullOrEmpty(viveToolPath))
-            return new List<FeatureFlagInfo>();
-
+        await _featureLoadGate.WaitAsync().ConfigureAwait(false);
         try
         {
-            // For ViVeTool v0.3.4, we need to use specific commands to get features
-            // The /list command is deprecated, and /query without parameters only shows modified features
+            if (TryGetCachedFeatures(out cachedFeatures))
+                return cachedFeatures;
 
-            // Try /query command (only shows modified features in v0.3.4)
-            var result = await _processService.ExecuteCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
+            var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
+            if (string.IsNullOrEmpty(viveToolPath))
+                return [];
 
-            if (Log.Instance.IsTraceEnabled)
+            var configuredFeatures = await QueryConfiguredFeaturesAsync(viveToolPath).ConfigureAwait(false);
+            var features = LoadFeatureDictionary(viveToolPath);
+            if (features.Count == 0)
             {
-                Log.Instance.Trace($"ViveTool: /query command result - Success: {result.Success}");
-                Log.Instance.Trace($"ViveTool: /query command output: {result.Output ?? "(null)"}");
-            }
-
-            List<FeatureFlagInfo> features;
-            if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: No output from query command, returning empty list");
-                features = new List<FeatureFlagInfo>();
+                features = configuredFeatures ?? [];
             }
             else
             {
-                features = ParseFeatureList(result.Output);
+                ApplyConfiguredStatuses(features, configuredFeatures);
             }
 
-            // Update cache
-            _cachedFeatures = features;
-            _cachedFeaturesTimestamp = now;
+            if (features.Count == 0)
+                return [];
+
+            UpdateCachedFeatures(features, DateTime.UtcNow);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ViveTool: Caching {features.Count} features for {_cacheDuration.TotalMinutes} minutes");
 
-            return new List<FeatureFlagInfo>(_cachedFeatures);
+            return new List<FeatureFlagInfo>(features);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ViveTool: Error listing features: {ex.Message}", ex);
-            return new List<FeatureFlagInfo>();
+            return [];
+        }
+        finally
+        {
+            _featureLoadGate.Release();
         }
     }
 
@@ -232,6 +229,99 @@ public class ViveToolFeatureService
         }
 
         return null;
+    }
+
+    private async Task<List<FeatureFlagInfo>?> QueryConfiguredFeaturesAsync(string viveToolPath)
+    {
+        // ViVeTool v0.3.4 exposes only the configured subset through /query.
+        var result = await _processService.ExecuteCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+        {
+            Log.Instance.Trace($"ViveTool: /query command result - Success: {result.Success}");
+            Log.Instance.Trace($"ViveTool: /query command output: {result.Output ?? "(null)"}");
+        }
+
+        if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("ViveTool: Query did not return configured feature data");
+
+            return null;
+        }
+
+        return ParseFeatureList(result.Output);
+    }
+
+    private static List<FeatureFlagInfo> LoadFeatureDictionary(string viveToolPath)
+    {
+        try
+        {
+            var dictionaryPath = Path.Combine(
+                Path.GetDirectoryName(viveToolPath) ?? string.Empty,
+                "FeatureDictionary.pfs");
+            if (!File.Exists(dictionaryPath))
+                return [];
+
+            return ParseFeatureDictionaryLines(File.ReadLines(dictionaryPath));
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    private static List<FeatureFlagInfo> ParseFeatureDictionaryLines(IEnumerable<string> lines)
+    {
+        var features = new List<FeatureFlagInfo>();
+        var seenIds = new HashSet<int>();
+
+        foreach (var rawLine in lines)
+        {
+            if (string.IsNullOrWhiteSpace(rawLine))
+                continue;
+
+            var separatorIndex = rawLine.LastIndexOf(',');
+            if (separatorIndex <= 0 || separatorIndex >= rawLine.Length - 1)
+                continue;
+
+            var name = rawLine[..separatorIndex].Trim();
+            var idText = rawLine[(separatorIndex + 1)..].Trim();
+            if (!int.TryParse(idText, out var id) || id <= 0 || !seenIds.Add(id))
+                continue;
+
+            features.Add(new FeatureFlagInfo
+            {
+                Id = id,
+                Name = string.IsNullOrWhiteSpace(name) ? $"Feature {id}" : name,
+                Status = FeatureFlagStatus.Default,
+                Description = string.Empty
+            });
+        }
+
+        return features;
+    }
+
+    private static void ApplyConfiguredStatuses(List<FeatureFlagInfo> features, List<FeatureFlagInfo>? configuredFeatures)
+    {
+        if (configuredFeatures is null || configuredFeatures.Count == 0)
+            return;
+
+        var configuredById = configuredFeatures.ToDictionary(feature => feature.Id);
+        for (var i = 0; i < features.Count; i++)
+        {
+            if (!configuredById.TryGetValue(features[i].Id, out var configuredFeature))
+                continue;
+
+            features[i].Status = configuredFeature.Status;
+            if (!string.IsNullOrWhiteSpace(configuredFeature.Description))
+                features[i].Description = configuredFeature.Description;
+            if (!string.IsNullOrWhiteSpace(configuredFeature.Name) &&
+                !configuredFeature.Name.Equals($"Feature {configuredFeature.Id}", StringComparison.OrdinalIgnoreCase))
+            {
+                features[i].Name = configuredFeature.Name;
+            }
+        }
     }
 
     private string? ParseVersionFromOutput(string output)
@@ -460,5 +550,33 @@ public class ViveToolFeatureService
             Status = status,
             Description = string.Empty
         };
+    }
+
+    private bool TryGetCachedFeatures(out List<FeatureFlagInfo> features)
+    {
+        var now = DateTime.UtcNow;
+        lock (_cacheSync)
+        {
+            if (_cachedFeatures != null && (now - _cachedFeaturesTimestamp) < _cacheDuration)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"ViveTool: Returning {_cachedFeatures.Count} features from cache");
+
+                features = new List<FeatureFlagInfo>(_cachedFeatures);
+                return true;
+            }
+        }
+
+        features = [];
+        return false;
+    }
+
+    private void UpdateCachedFeatures(List<FeatureFlagInfo> features, DateTime timestamp)
+    {
+        lock (_cacheSync)
+        {
+            _cachedFeatures = new List<FeatureFlagInfo>(features);
+            _cachedFeaturesTimestamp = timestamp;
+        }
     }
 }

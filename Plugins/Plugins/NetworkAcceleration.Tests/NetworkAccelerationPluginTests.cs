@@ -1,5 +1,7 @@
 using LenovoLegionToolkit.Plugins.NetworkAcceleration;
 using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.Plugins.TestCommon;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
@@ -65,16 +67,76 @@ public class NetworkAccelerationPluginTests
     }
 
     [Fact]
+    public void Settings_ReturnsSnapshot()
+    {
+        var plugin = new NetworkAccelerationPlugin();
+
+        var snapshot = plugin.Settings;
+        snapshot.PreferredMode = NetworkAccelerationMode.Streaming;
+        snapshot.AutoOptimizeOnStartup = true;
+        snapshot.ResetWinsockOnOptimize = false;
+        snapshot.ResetTcpIpOnOptimize = true;
+
+        Assert.Equal(NetworkAccelerationMode.Balanced, plugin.Settings.PreferredMode);
+        Assert.False(plugin.Settings.AutoOptimizeOnStartup);
+        Assert.True(plugin.Settings.ResetWinsockOnOptimize);
+        Assert.False(plugin.Settings.ResetTcpIpOnOptimize);
+    }
+
+    [Fact]
+    public async Task ApplySettingsAsync_ReplacesCurrentSettings()
+    {
+        var plugin = new NetworkAccelerationPlugin();
+        var updatedSettings = new NetworkAccelerationSettings
+        {
+            PreferredMode = NetworkAccelerationMode.Streaming,
+            AutoOptimizeOnStartup = true,
+            ResetWinsockOnOptimize = false,
+            ResetTcpIpOnOptimize = true
+        };
+
+        await plugin.ApplySettingsAsync(updatedSettings);
+
+        Assert.Equal(NetworkAccelerationMode.Streaming, plugin.Settings.PreferredMode);
+        Assert.True(plugin.Settings.AutoOptimizeOnStartup);
+        Assert.False(plugin.Settings.ResetWinsockOnOptimize);
+        Assert.True(plugin.Settings.ResetTcpIpOnOptimize);
+    }
+
+    [Fact]
+    public void NetworkAccelerationSettings_With_ReturnsUpdatedClone()
+    {
+        var original = new NetworkAccelerationSettings
+        {
+            PreferredMode = NetworkAccelerationMode.Balanced,
+            AutoOptimizeOnStartup = false,
+            ResetWinsockOnOptimize = true,
+            ResetTcpIpOnOptimize = false
+        };
+
+        var updated = original.With(
+            preferredMode: NetworkAccelerationMode.Streaming,
+            autoOptimizeOnStartup: true,
+            resetTcpIpOnOptimize: true);
+
+        Assert.NotSame(original, updated);
+        Assert.Equal(NetworkAccelerationMode.Balanced, original.PreferredMode);
+        Assert.False(original.AutoOptimizeOnStartup);
+        Assert.True(original.ResetWinsockOnOptimize);
+        Assert.False(original.ResetTcpIpOnOptimize);
+
+        Assert.Equal(NetworkAccelerationMode.Streaming, updated.PreferredMode);
+        Assert.True(updated.AutoOptimizeOnStartup);
+        Assert.True(updated.ResetWinsockOnOptimize);
+        Assert.True(updated.ResetTcpIpOnOptimize);
+    }
+
+    [Fact]
     public void FeatureAndSettingsPages_AreExposedAsPluginPages()
     {
         var plugin = new NetworkAccelerationPlugin();
 
-        var featurePage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetFeatureExtension());
-        var settingsPage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetSettingsPage());
-
-        Assert.Equal(NetworkAccelerationText.PageTitle, featurePage.PageTitle);
-        Assert.Equal("Rocket24", featurePage.PageIcon);
-        Assert.Equal(NetworkAccelerationText.SettingsPageTitle, settingsPage.PageTitle);
-        Assert.Equal("Settings24", settingsPage.PageIcon);
+        PluginPageAssertions.AssertPluginPage(plugin.GetFeatureExtension(), NetworkAccelerationText.PageTitle, "Rocket24");
+        PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), NetworkAccelerationText.SettingsPageTitle, "Settings24");
     }
 }

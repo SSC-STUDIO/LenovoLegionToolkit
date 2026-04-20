@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows;
 #nullable enable
 
@@ -73,19 +74,24 @@ public partial class ShellIntegrationSettingsControl : UserControl
         if (_statusTextBlock is null)
             return;
 
+        var allowSystemActions = LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.AllowSystemActions;
         var installed = _plugin.IsShellInstalled();
         var shellFolder = _plugin.GetShellFolderPath();
-        var configPath = _plugin.GetShellConfigPath() ?? ShellIntegrationText.NotFound;
+        var shellConfigPath = _plugin.GetShellConfigPath();
+        var configExists = !string.IsNullOrWhiteSpace(shellConfigPath) && File.Exists(shellConfigPath);
+        var configPath = configExists ? shellConfigPath! : ShellIntegrationText.NotFound;
         var version = _plugin.GetShellVersion() ?? ShellIntegrationText.NotFound;
         var path = _plugin.GetShellInstallPath() ?? ShellIntegrationText.NotFound;
-        var prefix = installed ? ShellIntegrationText.StatusDetected : ShellIntegrationText.StatusNotDetected;
-        var canManageShell = installed;
-        var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
-        var canOpenConfig = !string.IsNullOrWhiteSpace(_plugin.GetShellConfigPath());
-        var canOpenStyleSettings = canManageShell && canOpenConfig;
-
-        // Detect current registration state
         var isRegistered = installed && IsShellCurrentlyRegistered();
+        var prefix = !installed
+            ? ShellIntegrationText.StatusNotDetected
+            : isRegistered
+                ? ShellIntegrationText.StatusDetected
+                : ShellIntegrationText.StatusRegistrationMissing;
+        var canManageShell = installed && allowSystemActions;
+        var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
+        var canOpenConfig = configExists;
+        var canOpenStyleSettings = canManageShell;
 
         if (_registrationValueTextBlock != null)
             _registrationValueTextBlock.Text = installed
@@ -126,10 +132,12 @@ public partial class ShellIntegrationSettingsControl : UserControl
         _statusTextBlock.Text = $"{prefix}\n{ShellIntegrationText.PathLabel}: {path}";
         if (!string.IsNullOrWhiteSpace(version) && version != ShellIntegrationText.NotFound)
             _statusTextBlock.Text += $"\n{ShellIntegrationText.VersionLabel}: {version}";
+        if (!allowSystemActions)
+            _statusTextBlock.Text += "\nPreview mode: runtime actions are disabled.";
         if (!string.IsNullOrWhiteSpace(suffix))
             _statusTextBlock.Text += $"\n{suffix}";
 
-        var effectiveIsError = isError ?? !installed;
+        var effectiveIsError = isError ?? !installed || !isRegistered;
         _statusTextBlock.Foreground = effectiveIsError
             ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
             : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
@@ -164,7 +172,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            RefreshStatus($"Error: {ex.Message}", true);
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"EnableButton_Click error: {ex.Message}", ex);
         }
@@ -179,7 +187,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            RefreshStatus($"Error: {ex.Message}", true);
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"DisableButton_Click error: {ex.Message}", ex);
         }
@@ -187,8 +195,17 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private void OpenStyleButton_Click(object sender, RoutedEventArgs e)
     {
-        _plugin.OpenStyleSettingsWindow();
-        RefreshStatus(ShellIntegrationText.StatusOpenedStyleSettings, false);
+        try
+        {
+            _plugin.OpenStyleSettingsWindow();
+            RefreshStatus(ShellIntegrationText.StatusOpenedStyleSettings, false);
+        }
+        catch (Exception ex)
+        {
+            RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"OpenStyleButton_Click error: {ex.Message}", ex);
+        }
     }
 
     private void OpenShellFolderButton_Click(object sender, RoutedEventArgs e)

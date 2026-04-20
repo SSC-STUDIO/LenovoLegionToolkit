@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using Xunit;
@@ -14,11 +14,112 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
 /// </summary>
 public class ViveToolFeatureServiceTests
 {
-    private ViveToolFeatureService CreateService()
+    private static readonly MethodInfo ParseFeatureDictionaryLinesMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ParseFeatureDictionaryLines", BindingFlags.NonPublic | BindingFlags.Static)!;
+    private static readonly MethodInfo ApplyConfiguredStatusesMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ApplyConfiguredStatuses", BindingFlags.NonPublic | BindingFlags.Static)!;
+    private static readonly MethodInfo ParseVersionFromOutputMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ParseVersionFromOutput", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly MethodInfo ParseFeatureListMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ParseFeatureList", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly MethodInfo ParseStatusFromLineMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ParseStatusFromLine", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly MethodInfo ParseStatusFromStringMethod = typeof(ViveToolFeatureService)
+        .GetMethod("ParseStatusFromString", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly FieldInfo DefaultCacheDurationField = typeof(ViveToolFeatureService)
+        .GetField("DefaultCacheDuration", BindingFlags.NonPublic | BindingFlags.Static)!;
+    private static readonly FieldInfo CachedFeaturesField = typeof(ViveToolFeatureService)
+        .GetField("_cachedFeatures", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private static readonly FieldInfo CachedFeaturesTimestampField = typeof(ViveToolFeatureService)
+        .GetField("_cachedFeaturesTimestamp", BindingFlags.NonPublic | BindingFlags.Instance)!;
+
+    private ViveToolFeatureService CreateService(
+        ViveToolPathService? pathService = null,
+        ViveToolProcessService? processService = null)
+    {
+        pathService ??= new ViveToolPathService();
+        processService ??= new ViveToolProcessService();
+        return new ViveToolFeatureService(pathService, processService);
+    }
+
+    private static async Task<ViveToolFeatureServiceHarness> CreateDictionaryBackedServiceAsync(params string[] dictionaryLines)
+    {
+        var runtimeScope = await ViveToolTestRuntimeHelper.CreateCommandBackedRuntimeScopeAsync(dictionaryLines).ConfigureAwait(false);
+        return await CreateHarnessAsync(runtimeScope).ConfigureAwait(false);
+    }
+
+    private static async Task<ViveToolFeatureServiceHarness> CreateNonExecutableServiceAsync()
+    {
+        var runtimeScope = await ViveToolTestRuntimeHelper.CreateCompleteRuntimeScopeAsync().ConfigureAwait(false);
+        return await CreateHarnessAsync(runtimeScope).ConfigureAwait(false);
+    }
+
+    private static async Task<ViveToolFeatureServiceHarness> CreateHarnessAsync(ViveToolTestRuntimeScope runtimeScope)
     {
         var pathService = new ViveToolPathService();
-        var processService = new ViveToolProcessService();
-        return new ViveToolFeatureService(pathService, processService);
+        var setResult = await pathService.SetViveToolPathAsync(runtimeScope.ExePath).ConfigureAwait(false);
+        Assert.True(setResult);
+
+        return new ViveToolFeatureServiceHarness(
+            runtimeScope,
+            pathService,
+            new ViveToolFeatureService(pathService, new ViveToolProcessService()));
+    }
+
+    private ViveToolFeatureService CreateServiceWithCachedFeatures(params FeatureFlagInfo[] features)
+    {
+        var service = CreateService();
+        SetCachedFeatures(service, features);
+        return service;
+    }
+
+    private static void SetCachedFeatures(ViveToolFeatureService service, params FeatureFlagInfo[] features)
+    {
+        CachedFeaturesField.SetValue(service, features.ToList());
+        CachedFeaturesTimestampField.SetValue(service, DateTime.UtcNow);
+    }
+
+    private static string? InvokeParseVersionFromOutput(string output)
+    {
+        return (string?)ParseVersionFromOutputMethod.Invoke(
+            new ViveToolFeatureService(new ViveToolPathService(), new ViveToolProcessService()),
+            new object?[] { output });
+    }
+
+    private static List<FeatureFlagInfo> InvokeParseFeatureList(string? output)
+    {
+        return (List<FeatureFlagInfo>)ParseFeatureListMethod.Invoke(
+            new ViveToolFeatureService(new ViveToolPathService(), new ViveToolProcessService()),
+            new object?[] { output! })!;
+    }
+
+    private static FeatureFlagStatus InvokeParseStatusFromLine(string line)
+    {
+        return (FeatureFlagStatus)ParseStatusFromLineMethod.Invoke(
+            new ViveToolFeatureService(new ViveToolPathService(), new ViveToolProcessService()),
+            new object[] { line })!;
+    }
+
+    private static FeatureFlagStatus InvokeParseStatusFromString(string status)
+    {
+        return (FeatureFlagStatus)ParseStatusFromStringMethod.Invoke(
+            new ViveToolFeatureService(new ViveToolPathService(), new ViveToolProcessService()),
+            new object[] { status })!;
+    }
+
+    private static FeatureFlagInfo CreateFeature(
+        int id,
+        string name,
+        string description,
+        FeatureFlagStatus status = FeatureFlagStatus.Unknown)
+    {
+        return new FeatureFlagInfo
+        {
+            Id = id,
+            Name = name,
+            Description = description,
+            Status = status
+        };
     }
 
     #region Constructor Tests
@@ -41,25 +142,25 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public void ClearFeatureCache_DoesNotThrow()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(CreateFeature(100, "Alpha", string.Empty));
 
-        // Should not throw
         service.ClearFeatureCache();
 
-        Assert.True(true);
+        Assert.Null(CachedFeaturesField.GetValue(service));
+        Assert.Equal(DateTime.MinValue, (DateTime)CachedFeaturesTimestampField.GetValue(service)!);
     }
 
     [Fact]
     public void ClearFeatureCache_CalledMultipleTimes_DoesNotThrow()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(CreateFeature(100, "Alpha", string.Empty));
 
-        // Multiple calls should not throw
         service.ClearFeatureCache();
         service.ClearFeatureCache();
         service.ClearFeatureCache();
 
-        Assert.True(true);
+        Assert.Null(CachedFeaturesField.GetValue(service));
+        Assert.Equal(DateTime.MinValue, (DateTime)CachedFeaturesTimestampField.GetValue(service)!);
     }
 
     #endregion
@@ -67,113 +168,56 @@ public class ViveToolFeatureServiceTests
     #region EnableFeatureAsync Tests
 
     [Fact]
-    public async Task EnableFeatureAsync_WithNoVivetool_ReturnsFalse()
+    public async Task EnableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_WhenNoUsableRuntimeIsAvailable()
     {
-        // When vivetool.exe is not found, EnableFeatureAsync should return false
-        var pathService = new ViveToolPathService();
-        await pathService.SetViveToolPathAsync(null!);
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        // Try to check if vivetool is available
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        var result = await harness.Service.EnableFeatureAsync(12345);
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(12345);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available (bundled): returns true or false
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(12345);
-            Assert.True(result || !result); // vivetool may succeed or fail
-        }
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task EnableFeatureAsync_WithNegativeId_ReturnsFalse()
+    public async Task EnableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_ForNegativeId()
     {
-        var pathService = new ViveToolPathService();
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(-1);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available: returns true (vivetool may accept negative IDs)
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(-1);
-            Assert.True(result || !result); // vivetool may succeed or fail
-        }
+        var result = await harness.Service.EnableFeatureAsync(-1);
+
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task EnableFeatureAsync_WithZeroId_ReturnsFalse()
+    public async Task EnableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_ForZeroId()
     {
-        var pathService = new ViveToolPathService();
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(0);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available: returns true (vivetool may accept ID 0)
-            var service = CreateService();
-            var result = await service.EnableFeatureAsync(0);
-            Assert.True(result || !result); // vivetool may succeed or fail
-        }
+        var result = await harness.Service.EnableFeatureAsync(0);
+
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task EnableFeatureAsync_WithLargeId_ReturnsFalseOrTrue()
+    public async Task EnableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        var result = await service.EnableFeatureAsync(int.MaxValue);
+        var result = await harness.Service.EnableFeatureAsync(int.MaxValue);
 
-        // Should handle gracefully
-        Assert.True(result || !result);
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task EnableFeatureAsync_ClearsCacheOnSuccess()
+    public async Task EnableFeatureAsync_WithNonExecutableRuntime_PreservesCache()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
+        var service = harness.Service;
 
-        // First populate cache by calling ListFeaturesAsync
-        await service.ListFeaturesAsync();
+        SetCachedFeatures(service, CreateFeature(100, "CachedAlpha", string.Empty));
 
-        // Clear cache explicitly
-        service.ClearFeatureCache();
-
-        // EnableFeatureAsync should clear cache again
         await service.EnableFeatureAsync(12345);
 
-        Assert.True(true);
-    }
-
-    [Fact]
-    public async Task EnableFeatureAsync_WithValidPath_AttemptsExecution()
-    {
-        var service = CreateService();
-
-        // Try to enable a feature (may fail if vivetool not available)
-        var result = await service.EnableFeatureAsync(12345);
-
-        // Result depends on vivetool availability
-        Assert.True(result || !result);
+        Assert.NotNull(CachedFeaturesField.GetValue(service));
     }
 
     #endregion
@@ -181,99 +225,46 @@ public class ViveToolFeatureServiceTests
     #region DisableFeatureAsync Tests
 
     [Fact]
-    public async Task DisableFeatureAsync_WithNoVivetool_ReturnsFalse()
+    public async Task DisableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_WhenNoUsableRuntimeIsAvailable()
     {
-        var pathService = new ViveToolPathService();
-        await pathService.SetViveToolPathAsync(null!);
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        var result = await harness.Service.DisableFeatureAsync(12345);
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(12345);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available (bundled): returns true or false
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(12345);
-            Assert.True(result || !result);
-        }
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task DisableFeatureAsync_WithNegativeId_ReturnsFalse()
+    public async Task DisableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_ForNegativeId()
     {
-        var pathService = new ViveToolPathService();
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(-1);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available: returns true (vivetool may accept negative IDs)
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(-1);
-            Assert.True(result || !result); // vivetool may succeed or fail
-        }
+        var result = await harness.Service.DisableFeatureAsync(-1);
+
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task DisableFeatureAsync_WithZeroId_ReturnsFalse()
+    public async Task DisableFeatureAsync_WithNonExecutableRuntime_ReturnsFalse_ForZeroId()
     {
-        var pathService = new ViveToolPathService();
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns false
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(0);
-            Assert.False(result);
-        }
-        else
-        {
-            // If vivetool available: returns true (vivetool may accept ID 0)
-            var service = CreateService();
-            var result = await service.DisableFeatureAsync(0);
-            Assert.True(result || !result); // vivetool may succeed or fail
-        }
+        var result = await harness.Service.DisableFeatureAsync(0);
+
+        Assert.False(result);
     }
 
     [Fact]
-    public async Task DisableFeatureAsync_ClearsCacheOnSuccess()
+    public async Task DisableFeatureAsync_WithNonExecutableRuntime_PreservesCache()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
+        var service = harness.Service;
 
-        // First populate cache
-        await service.ListFeaturesAsync();
+        SetCachedFeatures(service, CreateFeature(100, "CachedAlpha", string.Empty));
 
-        // Clear cache
-        service.ClearFeatureCache();
-
-        // DisableFeatureAsync should work
         await service.DisableFeatureAsync(12345);
 
-        Assert.True(true);
-    }
-
-    [Fact]
-    public async Task DisableFeatureAsync_WithValidPath_AttemptsExecution()
-    {
-        var service = CreateService();
-
-        var result = await service.DisableFeatureAsync(12345);
-
-        // Result depends on vivetool availability
-        Assert.True(result || !result);
+        Assert.NotNull(CachedFeaturesField.GetValue(service));
     }
 
     #endregion
@@ -281,30 +272,13 @@ public class ViveToolFeatureServiceTests
     #region GetFeatureStatusAsync Tests
 
     [Fact]
-    public async Task GetFeatureStatusAsync_WithNoVivetool_ReturnsNull()
+    public async Task GetFeatureStatusAsync_WithNonExecutableRuntime_ReturnsNull()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        // Try to clear vivetool path (may not work if bundled vivetool exists)
-        var pathService = new ViveToolPathService();
-        await pathService.SetViveToolPathAsync(null!);
+        var result = await harness.Service.GetFeatureStatusAsync(12345);
 
-        var result = await service.GetFeatureStatusAsync(12345);
-
-        // If vivetool not available: returns null
-        // If vivetool available (bundled): returns status or Unknown
-        Assert.True(result == null || Enum.IsDefined(typeof(FeatureFlagStatus), result.Value));
-    }
-
-    [Fact]
-    public async Task GetFeatureStatusAsync_WithValidId_ReturnsStatusOrNull()
-    {
-        var service = CreateService();
-
-        var result = await service.GetFeatureStatusAsync(12345);
-
-        // Result is either null (error) or a valid status
-        Assert.True(result == null || Enum.IsDefined(typeof(FeatureFlagStatus), result.Value));
+        Assert.Null(result);
     }
 
     [Fact]
@@ -324,27 +298,27 @@ public class ViveToolFeatureServiceTests
 
         var result = await service.GetFeatureStatusAsync(0);
 
-        // If vivetool not available: returns null
-        // If vivetool available and query succeeds: returns Unknown (no recognizable status)
-        // If vivetool available and query fails: returns null
-        Assert.True(result == null || result == FeatureFlagStatus.Unknown);
+        Assert.Null(result);
     }
 
-    [Fact]
-    public async Task GetFeatureStatusAsync_ParsesEnabledOutput()
+    [Theory]
+    [InlineData("Feature state is Enabled", FeatureFlagStatus.Enabled)]
+    [InlineData("Feature state is Disabled", FeatureFlagStatus.Disabled)]
+    [InlineData("Feature state is Default", FeatureFlagStatus.Default)]
+    [InlineData("Feature state is Unknown", FeatureFlagStatus.Unknown)]
+    public void ParseStatusFromLine_RecognizesSupportedStates(string line, FeatureFlagStatus expectedStatus)
     {
-        // Test parsing logic by checking result type
-        var service = CreateService();
+        Assert.Equal(expectedStatus, InvokeParseStatusFromLine(line));
+    }
 
-        var result = await service.GetFeatureStatusAsync(12345);
-
-        // Result should be one of the valid enum values
-        Assert.True(
-            result == null ||
-            result == FeatureFlagStatus.Enabled ||
-            result == FeatureFlagStatus.Disabled ||
-            result == FeatureFlagStatus.Default ||
-            result == FeatureFlagStatus.Unknown);
+    [Theory]
+    [InlineData("Enabled", FeatureFlagStatus.Enabled)]
+    [InlineData("Disabled", FeatureFlagStatus.Disabled)]
+    [InlineData("Default", FeatureFlagStatus.Default)]
+    [InlineData("Other", FeatureFlagStatus.Unknown)]
+    public void ParseStatusFromString_RecognizesSupportedStates(string status, FeatureFlagStatus expectedStatus)
+    {
+        Assert.Equal(expectedStatus, InvokeParseStatusFromString(status));
     }
 
     #endregion
@@ -352,90 +326,144 @@ public class ViveToolFeatureServiceTests
     #region ListFeaturesAsync Tests
 
     [Fact]
-    public async Task ListFeaturesAsync_WithNoVivetool_ReturnsEmptyList()
+    public async Task ListFeaturesAsync_WithNonExecutableRuntime_ReturnsEmptyList()
     {
-        // Create pathService and clear user-specified path
-        var pathService = new ViveToolPathService();
-        await pathService.SetViveToolPathAsync(null!);
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        // Create service with the pathService
-        var processService = new ViveToolProcessService();
-        var service = new ViveToolFeatureService(pathService, processService);
+        var result = await harness.Service.ListFeaturesAsync();
 
-        var result = await service.ListFeaturesAsync();
-
-        Assert.NotNull(result);
-        // If bundled vivetool exists, it will be found and return results
-        // If no vivetool at all (including bundled), it will return empty list
-        // Both scenarios are valid behaviors
+        Assert.Empty(result);
     }
 
     [Fact]
     public async Task ListFeaturesAsync_ReturnsListInstance()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
 
-        var result = await service.ListFeaturesAsync();
+        var result = await harness.Service.ListFeaturesAsync();
 
         Assert.NotNull(result);
         Assert.IsType<List<FeatureFlagInfo>>(result);
+        Assert.Collection(
+            result.OrderBy(feature => feature.Id),
+            feature => Assert.Equal(100, feature.Id),
+            feature => Assert.Equal(200, feature.Id));
     }
 
     [Fact]
     public async Task ListFeaturesAsync_CachesResult()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
 
-        // First call
-        var result1 = await service.ListFeaturesAsync();
+        var result1 = await harness.Service.ListFeaturesAsync();
+        await File.WriteAllLinesAsync(harness.DictionaryPath, ["GammaFeature,300"]);
+        var result2 = await harness.Service.ListFeaturesAsync();
 
-        // Second call should return cached result
-        var result2 = await service.ListFeaturesAsync();
-
-        // Both should have the same count
-        Assert.Equal(result1.Count, result2.Count);
+        Assert.Equal(result1.Select(feature => feature.Id), result2.Select(feature => feature.Id));
+        Assert.DoesNotContain(result2, feature => feature.Id == 300);
     }
 
     [Fact]
     public async Task ListFeaturesAsync_ClearCacheForcesReload()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
+        var service = harness.Service;
 
-        // First call
-        await service.ListFeaturesAsync();
-
-        // Clear cache
+        var initial = await service.ListFeaturesAsync();
+        await File.WriteAllLinesAsync(harness.DictionaryPath, ["GammaFeature,300"]);
         service.ClearFeatureCache();
+        var reloaded = await service.ListFeaturesAsync();
 
-        // Next call should not use cache
-        var result = await service.ListFeaturesAsync();
-
-        Assert.NotNull(result);
+        Assert.Equal(2, initial.Count);
+        Assert.Single(reloaded);
+        Assert.Equal(300, reloaded[0].Id);
     }
 
     [Fact]
     public async Task ListFeaturesAsync_CalledMultipleTimes_ReturnsConsistentResults()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
 
-        var result1 = await service.ListFeaturesAsync();
-        var result2 = await service.ListFeaturesAsync();
-        var result3 = await service.ListFeaturesAsync();
+        var result1 = await harness.Service.ListFeaturesAsync();
+        var result2 = await harness.Service.ListFeaturesAsync();
+        var result3 = await harness.Service.ListFeaturesAsync();
 
-        Assert.Equal(result1.Count, result2.Count);
-        Assert.Equal(result2.Count, result3.Count);
+        Assert.Equal(result1.Select(feature => feature.Id), result2.Select(feature => feature.Id));
+        Assert.Equal(result2.Select(feature => feature.Id), result3.Select(feature => feature.Id));
     }
 
     [Fact]
     public async Task ListFeaturesAsync_ReturnsImmutableCopy()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
 
-        var result1 = await service.ListFeaturesAsync();
-        var result2 = await service.ListFeaturesAsync();
+        var result1 = await harness.Service.ListFeaturesAsync();
+        var result2 = await harness.Service.ListFeaturesAsync();
 
-        // Both should be independent list instances
-        Assert.Equal(result1.Count, result2.Count);
+        Assert.NotSame(result1, result2);
+        Assert.Equal(result1.Select(feature => feature.Id), result2.Select(feature => feature.Id));
+    }
+
+    [Fact]
+    public void ParseFeatureDictionaryLines_ReturnsFullFeatureDictionary()
+    {
+        var features = InvokeParseFeatureDictionaryLines(new[]
+        {
+            "AlphaFeature,100",
+            "BetaFeature,200"
+        });
+
+        Assert.Collection(
+            features,
+            feature =>
+            {
+                Assert.Equal(100, feature.Id);
+                Assert.Equal("AlphaFeature", feature.Name);
+                Assert.Equal(FeatureFlagStatus.Default, feature.Status);
+            },
+            feature =>
+            {
+                Assert.Equal(200, feature.Id);
+                Assert.Equal("BetaFeature", feature.Name);
+                Assert.Equal(FeatureFlagStatus.Default, feature.Status);
+            });
+    }
+
+    [Fact]
+    public void ParseFeatureDictionaryLines_SkipsInvalidAndDuplicateRows()
+    {
+        var features = InvokeParseFeatureDictionaryLines(new[]
+        {
+            "AlphaFeature,100",
+            "BrokenRow",
+            "DuplicateAlpha,100",
+            " ,200",
+            "ZeroFeature,0"
+        });
+
+        Assert.Equal(2, features.Count);
+        Assert.Equal("AlphaFeature", features[0].Name);
+        Assert.Equal("Feature 200", features[1].Name);
+    }
+
+    [Fact]
+    public void ApplyConfiguredStatuses_OverlaysConfiguredSubsetOnFullDictionary()
+    {
+        var dictionaryFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 100, Name = "AlphaFeature", Status = FeatureFlagStatus.Default },
+            new() { Id = 200, Name = "BetaFeature", Status = FeatureFlagStatus.Default }
+        };
+        var configuredFeatures = new List<FeatureFlagInfo>
+        {
+            new() { Id = 200, Name = "BetterBetaName", Status = FeatureFlagStatus.Enabled }
+        };
+
+        ApplyConfiguredStatusesMethod.Invoke(null, new object?[] { dictionaryFeatures, configuredFeatures });
+
+        Assert.Equal(FeatureFlagStatus.Default, dictionaryFeatures[0].Status);
+        Assert.Equal(FeatureFlagStatus.Enabled, dictionaryFeatures[1].Status);
+        Assert.Equal("BetterBetaName", dictionaryFeatures[1].Name);
     }
 
     #endregion
@@ -445,89 +473,101 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public async Task SearchFeaturesAsync_WithEmptyKeyword_ReturnsAllFeatures()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "BetaFeature", "Enables beta mode"));
 
-        var allFeatures = await service.ListFeaturesAsync();
         var searchResult = await service.SearchFeaturesAsync("");
 
-        Assert.True(searchResult.Count >= 0);
+        Assert.Equal([100, 200], searchResult.Select(feature => feature.Id));
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_WithWhitespace_ReturnsAllFeatures()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "BetaFeature", "Enables beta mode"));
 
         var searchResult = await service.SearchFeaturesAsync("   ");
 
-        // Whitespace should be treated as empty
-        Assert.True(searchResult.Count >= 0);
+        Assert.Equal([100, 200], searchResult.Select(feature => feature.Id));
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_WithNull_ReturnsAllFeatures()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "BetaFeature", "Enables beta mode"));
 
         var searchResult = await service.SearchFeaturesAsync(null!);
 
-        Assert.NotNull(searchResult);
+        Assert.Equal([100, 200], searchResult.Select(feature => feature.Id));
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_SearchesById()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(12345, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "BetaFeature", "Enables beta mode"));
 
-        // Search for a specific feature ID
         var result = await service.SearchFeaturesAsync("12345");
 
-        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.Equal(12345, result[0].Id);
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_SearchesByName()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "GammaToggle", "Enables beta mode"));
 
-        // Search for a common keyword that might match names
         var result = await service.SearchFeaturesAsync("feature");
 
-        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.Equal(100, result[0].Id);
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_SearchesByDescription()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "GammaToggle", "Disables gamma mode"));
 
-        // Search in description
-        var result = await service.SearchFeaturesAsync("enabled");
+        var result = await service.SearchFeaturesAsync("disables");
 
-        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.Equal(200, result[0].Id);
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_IsCaseInsensitive()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "GammaToggle", "Disables gamma mode"));
 
         var result1 = await service.SearchFeaturesAsync("FEATURE");
         var result2 = await service.SearchFeaturesAsync("feature");
 
-        // Both searches should return the same count (or both empty)
-        Assert.Equal(result1.Count, result2.Count);
+        Assert.Equal(result1.Select(feature => feature.Id), result2.Select(feature => feature.Id));
     }
 
     [Fact]
     public async Task SearchFeaturesAsync_WithNoMatches_ReturnsEmptyList()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", "Enables alpha mode"),
+            CreateFeature(200, "GammaToggle", "Disables gamma mode"));
 
-        // Search for something unlikely to match
         var result = await service.SearchFeaturesAsync("xyznonexistent123456789");
 
-        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
     #endregion
@@ -535,61 +575,44 @@ public class ViveToolFeatureServiceTests
     #region GetViveToolVersionAsync Tests
 
     [Fact]
-    public async Task GetViveToolVersionAsync_WithNoVivetool_ReturnsNull()
+    public async Task GetViveToolVersionAsync_WithNonExecutableRuntime_ReturnsNull()
     {
-        var pathService = new ViveToolPathService();
-        await pathService.SetViveToolPathAsync(null!);
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        var viveToolPath = await pathService.GetViveToolPathAsync();
+        var result = await harness.Service.GetViveToolVersionAsync();
 
-        if (string.IsNullOrEmpty(viveToolPath))
-        {
-            // If vivetool not available: returns null
-            var service = CreateService();
-            var result = await service.GetViveToolVersionAsync();
-            Assert.Null(result);
-        }
-        else
-        {
-            // If vivetool available (bundled): returns version string
-            var service = CreateService();
-            var result = await service.GetViveToolVersionAsync();
-            Assert.NotNull(result);
-        }
+        Assert.Null(result);
     }
 
     [Fact]
-    public async Task GetViveToolVersionAsync_ReturnsStringOrNull()
+    public async Task GetViveToolVersionAsync_WithCommandBackedRuntime_ReturnsNullWhenVersionCannotBeParsed()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100");
 
-        var result = await service.GetViveToolVersionAsync();
+        var result = await harness.Service.GetViveToolVersionAsync();
 
-        // Result is either null or a string
-        Assert.True(result == null || result.GetType() == typeof(string));
+        Assert.Null(result);
     }
 
     [Fact]
     public async Task GetViveToolVersionAsync_CalledMultipleTimes_ReturnsConsistentResults()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100");
 
-        var result1 = await service.GetViveToolVersionAsync();
-        var result2 = await service.GetViveToolVersionAsync();
+        var result1 = await harness.Service.GetViveToolVersionAsync();
+        var result2 = await harness.Service.GetViveToolVersionAsync();
 
-        // Both calls should return the same result
         Assert.Equal(result1, result2);
     }
 
     [Fact]
-    public async Task GetViveToolVersionAsync_WhenVivetoolAvailable_AttemptsToGetVersion()
+    public async Task GetViveToolVersionAsync_WithCommandBackedRuntime_RemainsNullAcrossCalls()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100");
 
-        var result = await service.GetViveToolVersionAsync();
+        var result = await harness.Service.GetViveToolVersionAsync();
 
-        // Result depends on vivetool availability
-        Assert.True(result == null || (result.GetType() == typeof(string) && result.Length > 0));
+        Assert.Null(result);
     }
 
     #endregion
@@ -597,22 +620,17 @@ public class ViveToolFeatureServiceTests
     #region Version Parsing Tests
 
     [Theory]
-    [InlineData("v0.3.4")]
-    [InlineData("Version: 0.3.4")]
-    [InlineData("0.3.4")]
-    [InlineData("v0.3")]
-    [InlineData("Version: 0.3")]
-    [InlineData("0.3")]
-    public void VersionParsing_HandlesVariousFormats(string input)
+    [InlineData("v0.3.4", "0.3.4")]
+    [InlineData("Version: 0.3.4", "0.3.4")]
+    [InlineData("0.3.4", "0.3.4")]
+    [InlineData("v0.3", "0.3")]
+    [InlineData("Version: 0.3", "0.3")]
+    [InlineData("0.3", "0.3")]
+    public void VersionParsing_HandlesVariousFormats(string input, string expectedVersion)
     {
-        // Test version parsing logic through public API behavior
-        var service = CreateService();
+        var version = InvokeParseVersionFromOutput(input);
 
-        // The parsing is done internally, we just verify the service handles various inputs
-        Assert.NotNull(service);
-
-        // Verify the input was accepted (non-empty)
-        Assert.False(string.IsNullOrEmpty(input));
+        Assert.Equal(expectedVersion, version);
     }
 
     #endregion
@@ -620,34 +638,27 @@ public class ViveToolFeatureServiceTests
     #region Feature List Parsing Tests
 
     [Fact]
-    public async Task ParseFeatureList_WithEmpty_ReturnsEmptyList()
+    public void ParseFeatureList_WithEmpty_ReturnsEmptyList()
     {
-        var service = CreateService();
+        var result = InvokeParseFeatureList(string.Empty);
 
-        var result = await service.ListFeaturesAsync();
-
-        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
     [Fact]
-    public async Task ParseFeatureList_WithNullOutput_ReturnsEmptyList()
+    public void ParseFeatureList_WithNullOutput_ReturnsEmptyList()
     {
-        var service = CreateService();
+        var result = InvokeParseFeatureList(null);
 
-        // This is tested through the public API
-        var result = await service.ListFeaturesAsync();
-
-        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
     [Fact]
-    public async Task ParseFeatureList_WithWhitespace_ReturnsEmptyList()
+    public void ParseFeatureList_WithWhitespace_ReturnsEmptyList()
     {
-        var service = CreateService();
+        var result = InvokeParseFeatureList("   \r\n   ");
 
-        var result = await service.ListFeaturesAsync();
-
-        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
     #endregion
@@ -657,9 +668,9 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public void DefaultCacheDuration_IsFiveMinutes()
     {
-        var expected = TimeSpan.FromMinutes(5);
+        var cacheDuration = Assert.IsType<TimeSpan>(DefaultCacheDurationField.GetValue(null));
 
-        Assert.Equal(expected, TimeSpan.FromMinutes(5));
+        Assert.Equal(TimeSpan.FromMinutes(5), cacheDuration);
     }
 
     #endregion
@@ -715,44 +726,43 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public async Task EnableFeatureAsync_HandlesException()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        // Large ID that would cause vivetool to fail
-        var result = await service.EnableFeatureAsync(int.MaxValue);
+        var result = await harness.Service.EnableFeatureAsync(int.MaxValue);
 
-        Assert.True(result || !result);
+        Assert.False(result);
     }
 
     [Fact]
     public async Task DisableFeatureAsync_HandlesException()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        var result = await service.DisableFeatureAsync(int.MaxValue);
+        var result = await harness.Service.DisableFeatureAsync(int.MaxValue);
 
-        Assert.True(result || !result);
+        Assert.False(result);
     }
 
     [Fact]
     public async Task GetFeatureStatusAsync_HandlesException()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
 
-        var result = await service.GetFeatureStatusAsync(int.MaxValue);
+        var result = await harness.Service.GetFeatureStatusAsync(int.MaxValue);
 
-        Assert.True(result == null || Enum.IsDefined(typeof(FeatureFlagStatus), result.Value));
+        Assert.Null(result);
     }
 
     [Fact]
     public async Task ListFeaturesAsync_HandlesException()
     {
-        var service = CreateService();
+        await using var harness = await CreateNonExecutableServiceAsync();
+        var service = harness.Service;
 
-        // Multiple calls should not crash
         for (int i = 0; i < 3; i++)
         {
             var result = await service.ListFeaturesAsync();
-            Assert.NotNull(result);
+            Assert.Empty(result);
         }
     }
 
@@ -763,23 +773,25 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public async Task ListFeaturesAsync_ConcurrentCalls_DoesNotCrash()
     {
-        var service = CreateService();
+        await using var harness = await CreateDictionaryBackedServiceAsync("AlphaFeature,100", "BetaFeature,200");
 
-        var tasks = new Task[5];
+        var tasks = new Task<List<FeatureFlagInfo>>[5];
         for (int i = 0; i < 5; i++)
         {
-            tasks[i] = service.ListFeaturesAsync();
+            tasks[i] = harness.Service.ListFeaturesAsync();
         }
 
-        await Task.WhenAll(tasks);
+        var results = await Task.WhenAll(tasks);
 
-        Assert.True(true);
+        Assert.All(results, result => Assert.Equal([100, 200], result.Select(feature => feature.Id)));
     }
 
     [Fact]
     public async Task ClearFeatureCache_ConcurrentCalls_DoesNotCrash()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", string.Empty),
+            CreateFeature(200, "BetaFeature", string.Empty));
 
         var tasks = new Task[10];
         for (int i = 0; i < 10; i++)
@@ -789,7 +801,8 @@ public class ViveToolFeatureServiceTests
 
         await Task.WhenAll(tasks);
 
-        Assert.True(true);
+        Assert.Null(CachedFeaturesField.GetValue(service));
+        Assert.Equal(DateTime.MinValue, (DateTime)CachedFeaturesTimestampField.GetValue(service)!);
     }
 
     #endregion
@@ -799,19 +812,38 @@ public class ViveToolFeatureServiceTests
     [Fact]
     public async Task ListFeaturesAsync_CacheHit_IsFast()
     {
-        var service = CreateService();
+        var service = CreateServiceWithCachedFeatures(
+            CreateFeature(100, "AlphaFeature", string.Empty),
+            CreateFeature(200, "BetaFeature", string.Empty));
 
-        // First call
-        await service.ListFeaturesAsync();
-
-        // Second call should be fast (cache hit)
         var startTime = DateTime.UtcNow;
-        await service.ListFeaturesAsync();
+        var result = await service.ListFeaturesAsync();
         var elapsed = DateTime.UtcNow - startTime;
 
-        // Cache hit should be very fast
+        Assert.Equal([100, 200], result.Select(feature => feature.Id));
         Assert.True(elapsed.TotalMilliseconds < 1000);
     }
 
     #endregion
+
+    private static List<FeatureFlagInfo> InvokeParseFeatureDictionaryLines(IEnumerable<string> lines)
+    {
+        return (List<FeatureFlagInfo>)ParseFeatureDictionaryLinesMethod.Invoke(null, new object[] { lines })!;
+    }
+
+    private sealed class ViveToolFeatureServiceHarness(
+        ViveToolTestRuntimeScope runtimeScope,
+        ViveToolPathService pathService,
+        ViveToolFeatureService service) : IAsyncDisposable
+    {
+        public ViveToolFeatureService Service { get; } = service;
+
+        public string DictionaryPath { get; } = Path.Combine(runtimeScope.DirectoryPath, "FeatureDictionary.pfs");
+
+        public async ValueTask DisposeAsync()
+        {
+            await pathService.SetViveToolPathAsync(string.Empty).ConfigureAwait(false);
+            await runtimeScope.DisposeAsync().ConfigureAwait(false);
+        }
+    }
 }

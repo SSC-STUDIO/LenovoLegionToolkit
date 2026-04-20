@@ -2,7 +2,12 @@
 
 ## 概述
 
-LenovoLegionToolkit-Plugins 是联想拯救者工具包的官方插件系统，采用独立构建模式，编译产物以ZIP包形式发布。
+LenovoLegionToolkit-Plugins 是联想拯救者工具包的官方插件系统，采用独立构建模式，编译产物以 ZIP 包形式发布。
+
+当前工具链围绕两条路径设计：
+
+1. 贡献者路径：`doctor -> new -> build -> preview -> validate -> pack`
+2. 官方收录路径：在贡献者路径基础上补 `promote`、`store-entry.json` 和官方发布流程
 
 ## 项目结构
 
@@ -36,10 +41,15 @@ LenovoLegionToolkit-Plugins/
 │   │       └── ViveToolProcessService.cs   # 进程服务 (48行)
 │   └── ViveTool.Tests/          # ViveTool测试 (217 tests)
 ├── Dependencies/                # 外部依赖
-│   └── Host/                    # 宿主应用引用
+│   └── Host/                    # 宿主应用引用与基线清单
+│       └── host-release.json    # 独立开发使用的主程序 release 基线
 ├── Build/                       # 构建输出
-├── Scripts/                     # 构建脚本
 └── Tools/                       # 工具项目
+    ├── PluginTooling.Core/      # 共享作者工具核心
+    ├── PluginTooling.Cli/       # 标准作者命令入口
+    ├── PluginCompletionUiTool/  # 维护者校验 UI
+    ├── PluginWorkbench/         # 宿主级预览工作台
+    └── PluginWorkbench.Smoke/   # 工作台 UI 冒烟验证
 ```
 
 ## 架构原则
@@ -47,12 +57,30 @@ LenovoLegionToolkit-Plugins/
 ### 1. 独立构建模式
 - 插件项目不引用主应用源码
 - 使用 `Dependencies/Host` 中的预编译引用
-- 通过 `refresh-host-references.ps1` 刷新宿主引用
+- 通过 `Scripts/ensure-host-dependencies.ps1` 刷新宿主引用
+- 若本机没有 sibling `LenovoLegionToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
 
 ### 2. SDK抽象层
 - 提供 `PluginBase` 作为所有插件的基类
 - 定义 `IPluginPage` 接口规范UI页面实现
 - `PluginAttribute` 标记插件元数据
+- `PluginHostContext` 为插件提供宿主无关的设置页打开、对话框承载与运行模式能力
+
+### 2.1 元数据分层
+
+插件元数据现在拆成三层：
+
+- `plugin.json`: 运行时身份与兼容性
+- `store-entry.json`: 官方商店展示元数据
+- 根 `store.json`: 发布输出，不再作为新插件作者的日常编辑入口
+
+### 2.1 独立宿主模式
+- `PluginWorkbench` 直接加载 `Build/plugins/...` 输出或本地 ZIP 包
+- 默认 `Preview` 模式只承载 UI，不执行系统变更
+- 切换到 `Real Runtime` 后才运行插件启动钩子和优化动作
+- 支持 `System / Light / Dark`，并桥接主程序的宿主样式资源
+- 插件配置隔离在 `Build/PluginWorkbenchState/<Mode>/...`
+- `PluginWorkbench.Smoke` 使用 Windows UI Automation 验证主题切换、宿主壳和 `Preview -> Real Runtime` 交互
 
 ### 3. 共享工具库 (Shared)
 消除跨插件代码重复，提供：
@@ -62,11 +90,19 @@ LenovoLegionToolkit-Plugins/
 - **SettingsManager**: 统一设置持久化策略
 - **Constants**: 魔法数字集中管理
 
-### 4. 服务拆分 (ViveTool)
-ViveToolService 从1026行拆分为5个专职服务：
-- 单一职责原则
-- 独立测试能力
-- 代码可维护性提升
+### 4. 作者工具链
+
+标准作者入口是 `PluginTooling.Cli`：
+
+- `doctor`
+- `new`
+- `build`
+- `preview`
+- `validate`
+- `pack`
+- `promote`
+
+`PluginCompletionUiTool` 继续保留，但定位为维护者/仓库侧校验 UI，而不是第一次贡献者的标准入口。
 
 ## 本地化架构
 
@@ -166,7 +202,7 @@ Load → Start → [Runtime Loop] → Stop → Unload
 ### 发布流程
 1. 更新所有版本文件
 2. 更新 `CHANGELOG.md`
-3. 运行 `plugin-completion-check.ps1`
+3. 运行 `dotnet build` / `dotnet test`
 4. 触发 `workflow_dispatch` 构建
 5. GitHub Actions 自动创建发布和ZIP
 

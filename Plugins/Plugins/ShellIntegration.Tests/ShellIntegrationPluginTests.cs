@@ -1,12 +1,24 @@
+using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Threading;
 using LenovoLegionToolkit.Plugins.SDK;
 using LenovoLegionToolkit.Plugins.ShellIntegration;
+using LenovoLegionToolkit.Plugins.TestCommon;
 using Xunit;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
 
 public class ShellIntegrationPluginTests
 {
+    private static bool? ParseShellRegistrationStatus(string commandOutput)
+    {
+        var method = typeof(ShellIntegrationPlugin).GetMethod("ParseShellRegistrationStatus", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(method);
+        return (bool?)method!.Invoke(null, [commandOutput]);
+    }
+
     [Fact]
     public void Plugin_HasExpectedMetadata()
     {
@@ -24,10 +36,7 @@ public class ShellIntegrationPluginTests
     {
         var plugin = new ShellIntegrationPlugin();
 
-        var settingsPage = Assert.IsAssignableFrom<IPluginPage>(plugin.GetSettingsPage());
-
-        Assert.Equal(ShellIntegrationText.SettingsPageTitle, settingsPage.PageTitle);
-        Assert.Equal("Settings24", settingsPage.PageIcon);
+        PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), ShellIntegrationText.SettingsPageTitle, "Settings24");
         Assert.Null(plugin.GetFeatureExtension());
     }
 
@@ -65,8 +74,37 @@ public class ShellIntegrationPluginTests
     public void OpenStyleSettingsWindow_WithoutApplication_DoesNotThrow()
     {
         var plugin = new ShellIntegrationPlugin();
+        var hostContext = new RecordingPluginHostContext();
 
-        plugin.OpenStyleSettingsWindow();
+        try
+        {
+            PluginHostContext.Current = hostContext;
+            RunSta(plugin.OpenStyleSettingsWindow);
+        }
+        finally
+        {
+            PluginHostContext.Reset();
+        }
+    }
+
+    [Fact]
+    public void OpenStyleSettingsWindow_UsesPluginHostContextWhenWindowIsAvailable()
+    {
+        var plugin = new ShellIntegrationPlugin();
+        var hostContext = new RecordingPluginHostContext();
+
+        try
+        {
+            PluginHostContext.Current = hostContext;
+
+            RunSta(plugin.OpenStyleSettingsWindow);
+
+            Assert.True(hostContext.ShowDialogCalled);
+        }
+        finally
+        {
+            PluginHostContext.Reset();
+        }
     }
 
     [Fact]
@@ -93,5 +131,82 @@ public class ShellIntegrationPluginTests
         Assert.Equal(once, twice);
         Assert.Contains("imports/lenovo-legion-toolkit/settings.nss", twice);
         Assert.Contains("imports/lenovo-legion-toolkit/theme.nss", twice);
+    }
+
+    [Theory]
+    [InlineData("Shell integration is not registered.")]
+    [InlineData("Registered: false")]
+    [InlineData("Enabled: false")]
+    [InlineData("State: inactive")]
+    public void ParseShellRegistrationStatus_WithNegativeSignals_ReturnsFalse(string output)
+    {
+        Assert.False(ParseShellRegistrationStatus(output));
+    }
+
+    [Theory]
+    [InlineData("Shell integration is registered.")]
+    [InlineData("Registered: true")]
+    [InlineData("Enabled: true")]
+    [InlineData("Status: active")]
+    public void ParseShellRegistrationStatus_WithPositiveSignals_ReturnsTrue(string output)
+    {
+        Assert.True(ParseShellRegistrationStatus(output));
+    }
+
+    [Fact]
+    public void ParseShellRegistrationStatus_PrefersExplicitNegativeSignals()
+    {
+        var output = """
+                     Status: active
+                     Registered: false
+                     """;
+
+        Assert.False(ParseShellRegistrationStatus(output));
+    }
+
+    [Fact]
+    public void ParseShellRegistrationStatus_WithUnrelatedOutput_ReturnsNull()
+    {
+        Assert.Null(ParseShellRegistrationStatus("Shell command completed successfully."));
+    }
+
+    private sealed class RecordingPluginHostContext : IPluginHostContext
+    {
+        public PluginHostMode Mode => PluginHostMode.RealRuntime;
+        public bool AllowSystemActions => true;
+        public object? OwnerWindow => null;
+        public bool ShowDialogCalled { get; private set; }
+
+        public bool OpenPluginSettings(string pluginId) => false;
+
+        public bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
+        {
+            ShowDialogCalled = dialogOrContent is not null;
+            return ShowDialogCalled;
+        }
+    }
+
+    private static void RunSta(Action action)
+    {
+        Exception? failure = null;
+
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                failure = ex;
+            }
+        });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        if (failure is not null)
+            ExceptionDispatchInfo.Capture(failure).Throw();
     }
 }

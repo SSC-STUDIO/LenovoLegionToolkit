@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ViveTool\LenovoLegionToolkit.Plugins.ViveTool.csproj" />
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="Lenovo Legion Toolkit">
       <HintPath>..\..\Dependencies\Host\Lenovo Legion Toolkit.dll</HintPath>
       <Private>true</Private>
@@ -40,6 +41,12 @@
       <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="CleanupPluginOutput" />

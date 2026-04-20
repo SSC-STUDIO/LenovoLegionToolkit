@@ -23,31 +23,18 @@ public partial class NetworkAccelerationSettingsControl : UserControl
 
     private void BuildFallbackUi()
     {
-        _autoOptimizeOnStartupCheckBox = new CheckBox
-        {
-            Content = NetworkAccelerationText.AutoOptimizeOnStartup,
-            Margin = new Thickness(0, 0, 0, 8)
-        };
-        _autoOptimizeOnStartupCheckBox.Checked += SettingsCheckBox_Changed;
-        _autoOptimizeOnStartupCheckBox.Unchecked += SettingsCheckBox_Changed;
-        AutomationProperties.SetAutomationId(_autoOptimizeOnStartupCheckBox, "NetworkAcceleration_AutoOptimizeCheckBox");
-
-        _resetWinsockCheckBox = new CheckBox
-        {
-            Content = NetworkAccelerationText.ResetWinsockOnOptimize,
-            Margin = new Thickness(0, 0, 0, 8)
-        };
-        _resetWinsockCheckBox.Checked += SettingsCheckBox_Changed;
-        _resetWinsockCheckBox.Unchecked += SettingsCheckBox_Changed;
-        AutomationProperties.SetAutomationId(_resetWinsockCheckBox, "NetworkAcceleration_ResetWinsockCheckBox");
-
-        _resetTcpIpCheckBox = new CheckBox
-        {
-            Content = NetworkAccelerationText.ResetTcpIpOnOptimize
-        };
-        _resetTcpIpCheckBox.Checked += SettingsCheckBox_Changed;
-        _resetTcpIpCheckBox.Unchecked += SettingsCheckBox_Changed;
-        AutomationProperties.SetAutomationId(_resetTcpIpCheckBox, "NetworkAcceleration_ResetTcpIpCheckBox");
+        _autoOptimizeOnStartupCheckBox = CreateSettingCheckBox(
+            NetworkAccelerationText.AutoOptimizeOnStartup,
+            "NetworkAcceleration_AutoOptimizeCheckBox",
+            addBottomMargin: true);
+        _resetWinsockCheckBox = CreateSettingCheckBox(
+            NetworkAccelerationText.ResetWinsockOnOptimize,
+            "NetworkAcceleration_ResetWinsockCheckBox",
+            addBottomMargin: true);
+        _resetTcpIpCheckBox = CreateSettingCheckBox(
+            NetworkAccelerationText.ResetTcpIpOnOptimize,
+            "NetworkAcceleration_ResetTcpIpCheckBox",
+            addBottomMargin: false);
 
         _statusTextBlock = new TextBlock
         {
@@ -55,15 +42,10 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         };
         AutomationProperties.SetAutomationId(_statusTextBlock, "NetworkAcceleration_SettingsStatusText");
 
-        _modeSummaryTextBlock = new TextBlock();
-        _startupSummaryTextBlock = new TextBlock();
-        _winsockSummaryTextBlock = new TextBlock();
-        _tcpSummaryTextBlock = new TextBlock();
-
-        StyleValueText(_modeSummaryTextBlock);
-        StyleValueText(_startupSummaryTextBlock);
-        StyleValueText(_winsockSummaryTextBlock);
-        StyleValueText(_tcpSummaryTextBlock);
+        _modeSummaryTextBlock = CreateValueTextBlock();
+        _startupSummaryTextBlock = CreateValueTextBlock();
+        _winsockSummaryTextBlock = CreateValueTextBlock();
+        _tcpSummaryTextBlock = CreateValueTextBlock();
 
         var root = new Grid { Margin = new Thickness(20) };
         AutomationProperties.SetAutomationId(root, "NetworkAcceleration_SettingsRoot");
@@ -119,9 +101,8 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         ApplyCardChrome(optionsCard, "ControlFillColorSecondaryBrush", borderKey: null);
 
         var optionsStack = new StackPanel();
-        optionsStack.Children.Add(_autoOptimizeOnStartupCheckBox);
-        optionsStack.Children.Add(_resetWinsockCheckBox);
-        optionsStack.Children.Add(_resetTcpIpCheckBox);
+        foreach (var checkBox in GetSettingCheckBoxes())
+            optionsStack.Children.Add(checkBox);
         optionsCard.Child = optionsStack;
         leftStack.Children.Add(optionsCard);
 
@@ -167,24 +148,13 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         summaryGrid.ColumnDefinitions.Add(new ColumnDefinition());
         summaryGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-        var modeTile = CreateSummaryTile("MODE", "#224F9CFF", NetworkAccelerationText.CurrentModeLabel, _modeSummaryTextBlock);
-        var startupTile = CreateSummaryTile("AUTO", "#1D27C7A8", NetworkAccelerationText.AutoOptimizeOnStartup, _startupSummaryTextBlock);
-        var winsockTile = CreateSummaryTile("WSK", "#22FF9C4F", NetworkAccelerationText.ResetWinsockOnOptimize, _winsockSummaryTextBlock);
-        var tcpTile = CreateSummaryTile("TCP", "#229A7BFF", NetworkAccelerationText.ResetTcpIpOnOptimize, _tcpSummaryTextBlock);
-
-        Grid.SetRow(modeTile, 0);
-        Grid.SetColumn(modeTile, 0);
-        Grid.SetRow(startupTile, 0);
-        Grid.SetColumn(startupTile, 1);
-        Grid.SetRow(winsockTile, 1);
-        Grid.SetColumn(winsockTile, 0);
-        Grid.SetRow(tcpTile, 1);
-        Grid.SetColumn(tcpTile, 1);
-
-        summaryGrid.Children.Add(modeTile);
-        summaryGrid.Children.Add(startupTile);
-        summaryGrid.Children.Add(winsockTile);
-        summaryGrid.Children.Add(tcpTile);
+        foreach (var summaryTile in GetSummaryTileDefinitions())
+        {
+            var tile = CreateSummaryTile(summaryTile.BadgeText, summaryTile.BadgeHex, summaryTile.Label, summaryTile.ValueTextBlock);
+            Grid.SetRow(tile, summaryTile.Row);
+            Grid.SetColumn(tile, summaryTile.Column);
+            summaryGrid.Children.Add(tile);
+        }
         rightStack.Children.Add(summaryGrid);
 
         var hintCard = new Border
@@ -227,6 +197,19 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         border.SetResourceReference(Border.BackgroundProperty, backgroundKey);
         if (!string.IsNullOrWhiteSpace(borderKey))
             border.SetResourceReference(Border.BorderBrushProperty, borderKey);
+    }
+
+    private CheckBox CreateSettingCheckBox(string content, string automationId, bool addBottomMargin)
+    {
+        var checkBox = new CheckBox
+        {
+            Content = content,
+            Margin = addBottomMargin ? new Thickness(0, 0, 0, 8) : new Thickness(0)
+        };
+        checkBox.Checked += SettingsCheckBox_Changed;
+        checkBox.Unchecked += SettingsCheckBox_Changed;
+        AutomationProperties.SetAutomationId(checkBox, automationId);
+        return checkBox;
     }
 
     private static TextBlock CreateTitleText(string text, Thickness? margin = null)
@@ -289,6 +272,13 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         stack.Children.Add(valueTextBlock);
         tile.Child = stack;
         return tile;
+    }
+
+    private static TextBlock CreateValueTextBlock()
+    {
+        var textBlock = new TextBlock();
+        StyleValueText(textBlock);
+        return textBlock;
     }
 
     private static FrameworkElement CreateTrafficIllustration()
@@ -382,12 +372,17 @@ public partial class NetworkAccelerationSettingsControl : UserControl
 
     private void LoadCurrentValues()
     {
-        if (_autoOptimizeOnStartupCheckBox is null || _resetWinsockCheckBox is null || _resetTcpIpCheckBox is null)
+        if (!NetworkAccelerationSettingsBinding.HasToggleCheckBoxes(
+                _autoOptimizeOnStartupCheckBox,
+                _resetWinsockCheckBox,
+                _resetTcpIpCheckBox))
             return;
 
-        _autoOptimizeOnStartupCheckBox.IsChecked = _plugin.Settings.AutoOptimizeOnStartup;
-        _resetWinsockCheckBox.IsChecked = _plugin.Settings.ResetWinsockOnOptimize;
-        _resetTcpIpCheckBox.IsChecked = _plugin.Settings.ResetTcpIpOnOptimize;
+        NetworkAccelerationSettingsBinding.ApplyToggleSettings(
+            _plugin.Settings,
+            _autoOptimizeOnStartupCheckBox!,
+            _resetWinsockCheckBox!,
+            _resetTcpIpCheckBox!);
     }
 
     private void SettingsCheckBox_Changed(object sender, RoutedEventArgs e)
@@ -398,36 +393,35 @@ public partial class NetworkAccelerationSettingsControl : UserControl
     private void UpdateSummary()
     {
         if (_modeSummaryTextBlock != null)
-            _modeSummaryTextBlock.Text = GetModeLabel(_plugin.Settings.PreferredMode);
+            _modeSummaryTextBlock.Text = NetworkAccelerationPresentation.GetModePresentation(_plugin.Settings.PreferredMode).DisplayName;
 
-        if (_startupSummaryTextBlock != null)
-            _startupSummaryTextBlock.Text = GetToggleLabel(_autoOptimizeOnStartupCheckBox?.IsChecked == true);
-
-        if (_winsockSummaryTextBlock != null)
-            _winsockSummaryTextBlock.Text = GetToggleLabel(_resetWinsockCheckBox?.IsChecked == true);
-
-        if (_tcpSummaryTextBlock != null)
-            _tcpSummaryTextBlock.Text = GetToggleLabel(_resetTcpIpCheckBox?.IsChecked == true);
+        foreach (var toggleSummary in GetToggleSummaries())
+            toggleSummary.SummaryTextBlock.Text = NetworkAccelerationPresentation.GetToggleLabel(toggleSummary.CheckBox?.IsChecked == true);
     }
 
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_autoOptimizeOnStartupCheckBox is null || _resetWinsockCheckBox is null || _resetTcpIpCheckBox is null)
+        if (!NetworkAccelerationSettingsBinding.HasToggleCheckBoxes(
+                _autoOptimizeOnStartupCheckBox,
+                _resetWinsockCheckBox,
+                _resetTcpIpCheckBox))
             return;
 
         try
         {
-            _plugin.SetAutoOptimizeOnStartup(_autoOptimizeOnStartupCheckBox.IsChecked == true);
-            _plugin.SetResetWinsockOnOptimize(_resetWinsockCheckBox.IsChecked == true);
-            _plugin.SetResetTcpIpOnOptimize(_resetTcpIpCheckBox.IsChecked == true);
+            var updatedSettings = NetworkAccelerationSettingsBinding.BuildUpdatedSettings(
+                _plugin.Settings,
+                _autoOptimizeOnStartupCheckBox,
+                _resetWinsockCheckBox,
+                _resetTcpIpCheckBox);
 
-            await _plugin.SaveSettingsAsync().ConfigureAwait(true);
+            await _plugin.ApplySettingsAsync(updatedSettings).ConfigureAwait(true);
             UpdateSummary();
             SetStatus(NetworkAccelerationText.SettingsSaved, false);
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}", true);
+            SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveButton_Click error: {ex.Message}", ex);
         }
@@ -452,17 +446,33 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         }
     }
 
-    private static string GetModeLabel(NetworkAccelerationMode mode)
+    private CheckBox[] GetSettingCheckBoxes()
     {
-        return mode switch
-        {
-            NetworkAccelerationMode.Gaming => NetworkAccelerationText.ModeGaming,
-            NetworkAccelerationMode.Streaming => NetworkAccelerationText.ModeStreaming,
-            _ => NetworkAccelerationText.ModeBalanced
-        };
+        return [_autoOptimizeOnStartupCheckBox!, _resetWinsockCheckBox!, _resetTcpIpCheckBox!];
     }
 
-    private static string GetToggleLabel(bool enabled) => enabled
-        ? NetworkAccelerationText.StateEnabled
-        : NetworkAccelerationText.StateDisabled;
+    private SummaryTileDefinition[] GetSummaryTileDefinitions()
+    {
+        return
+        [
+            new SummaryTileDefinition("MODE", "#224F9CFF", NetworkAccelerationText.CurrentModeLabel, _modeSummaryTextBlock!, Row: 0, Column: 0),
+            new SummaryTileDefinition("AUTO", "#1D27C7A8", NetworkAccelerationText.AutoOptimizeOnStartup, _startupSummaryTextBlock!, Row: 0, Column: 1),
+            new SummaryTileDefinition("WSK", "#22FF9C4F", NetworkAccelerationText.ResetWinsockOnOptimize, _winsockSummaryTextBlock!, Row: 1, Column: 0),
+            new SummaryTileDefinition("TCP", "#229A7BFF", NetworkAccelerationText.ResetTcpIpOnOptimize, _tcpSummaryTextBlock!, Row: 1, Column: 1)
+        ];
+    }
+
+    private ToggleSummaryDefinition[] GetToggleSummaries()
+    {
+        return
+        [
+            new ToggleSummaryDefinition(_startupSummaryTextBlock!, _autoOptimizeOnStartupCheckBox),
+            new ToggleSummaryDefinition(_winsockSummaryTextBlock!, _resetWinsockCheckBox),
+            new ToggleSummaryDefinition(_tcpSummaryTextBlock!, _resetTcpIpCheckBox)
+        ];
+    }
+
+    private sealed record SummaryTileDefinition(string BadgeText, string BadgeHex, string Label, TextBlock ValueTextBlock, int Row, int Column);
+
+    private sealed record ToggleSummaryDefinition(TextBlock SummaryTextBlock, CheckBox? CheckBox);
 }

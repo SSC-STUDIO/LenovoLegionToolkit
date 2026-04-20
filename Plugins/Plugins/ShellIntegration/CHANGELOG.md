@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2026-04-20
+
+### Changed / 变更
+- Advanced the official store package to `1.0.10` for the current release wave so the manifest, packaged asset, and marketplace metadata stay aligned / 将当前发布批次的官方商店包提升到 `1.0.10`，确保清单、打包资产与商店元数据保持一致
+
 ## [1.0.9] - 2026-03-28
 
 ### Fixed / 修复

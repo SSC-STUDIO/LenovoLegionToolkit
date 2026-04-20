@@ -6,6 +6,7 @@
     <Version>1.0.36</Version>
     <FileVersion>1.0.36</FileVersion>
     <AssemblyVersion>1.0.36</AssemblyVersion>
+    <PluginSatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</PluginSatelliteResourceLanguages>
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
     <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'LenovoLegionToolkit.Plugins.Template'">True</IsTemplatePluginProject>
@@ -14,10 +15,13 @@
 
   <PropertyGroup>
     <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
-    <HostLibPath Condition="Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll')">$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll</HostLibPath>
-    <HostLibPath Condition="'$(HostLibPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll</HostLibPath>
-    <HostWpfPath Condition="Exists('$(HostDependenciesDir)Lenovo Legion Toolkit.dll')">$(HostDependenciesDir)Lenovo Legion Toolkit.dll</HostWpfPath>
-    <HostWpfPath Condition="'$(HostWpfPath)' == '' AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll</HostWpfPath>
+    <HostLibPath Condition="'$(HostLibPath)' == ''">$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll</HostLibPath>
+    <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.Lib\bin\Debug\net10.0-windows\win-x64\LenovoLegionToolkit.Lib.dll</HostLibPath>
+    <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Lenovo Legion Toolkit.dll</HostWpfPath>
+    <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll')">$(MSBuildThisFileDirectory)..\LenovoLegionToolkit\LenovoLegionToolkit.WPF\bin\Debug\net10.0-windows\win-x64\Lenovo Legion Toolkit.dll</HostWpfPath>
+    <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
+    <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' == 'Windows_NT'">powershell</PowerShellExecutable>
+    <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' != 'Windows_NT'">pwsh</PowerShellExecutable>
   </PropertyGroup>
 
 
@@ -69,7 +73,7 @@
 
 
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
-    <SatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>$(PluginSatelliteResourceLanguages)</SatelliteResourceLanguages>
   </PropertyGroup>
 
 
@@ -90,6 +94,14 @@
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
+
+  <Target Name="EnsureHostDependencies"
+          BeforeTargets="ResolveReferences"
+          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostDependenciesDir)LenovoLegionToolkit.Lib.dll') OR !Exists('$(HostDependenciesDir)Lenovo Legion Toolkit.dll'))">
+    <Message Importance="high" Text="Host dependencies are missing from Dependencies\Host. Bootstrapping required host binaries..." />
+    <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
+          WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
 
 
   <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
@@ -115,4 +127,3 @@
   </Target>
 
 </Project>
-

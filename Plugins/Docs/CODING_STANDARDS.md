@@ -528,7 +528,8 @@ dotnet test --collect:"XPlat Code Coverage"
 ### 完成检查
 
 ```bash
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1
+dotnet build .\LenovoLegionToolkit-Plugins.sln -c Release
+dotnet test .\LenovoLegionToolkit-Plugins.sln -c Release
 ```
 
 ### 代码分析

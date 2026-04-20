@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -44,7 +44,7 @@
     <value>ViVeTool 已找到，路径：{0}</value>
   </data>
   <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
-    <value>未找到 ViVeTool。请下载 vivetool.exe 并将其放置在插件目录或系统 PATH 中。</value>
+    <value>未找到 ViVeTool。请下载或配置受信任的 ViVeTool 运行时。</value>
   </data>
   <data name="ViveTool_ViveToolError" xml:space="preserve">
     <value>检查 ViVeTool 状态时出错</value>
@@ -185,7 +185,7 @@
     <value>ViVeTool.exe 路径</value>
   </data>
   <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>插件默认已内置 ViVeTool 运行时。你仍可自定义 ViVeTool.exe 路径；若未指定自定义路径，将自动使用内置版本并回退到系统 PATH。</value>
+    <value>插件默认已内置 ViVeTool 运行时。你仍可自定义 ViVeTool.exe 路径；若未指定自定义路径，只会使用内置或经校验的运行时。</value>
   </data>
   <data name="ViveTool_BrowseError" xml:space="preserve">
     <value>浏览文件时出错: {0}</value>

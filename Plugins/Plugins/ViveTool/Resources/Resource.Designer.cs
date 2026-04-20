@@ -122,7 +122,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViVeTool not found. Please download vivetool.exe and place it in the plugin directory or system PATH..
+        ///   Looks up a localized string similar to ViVeTool not found. Please download or configure a trusted ViVeTool runtime..
         /// </summary>
         public static string ViveTool_ViveToolNotFound {
             get {
@@ -527,7 +527,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select path to ViVeTool.exe file. If not specified, built-in download or version in system PATH will be used..
+        ///   Looks up a localized string similar to The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, only the bundled or verified built-in runtime will be used..
         /// </summary>
         public static string ViveTool_PathDescription {
             get {

@@ -38,12 +38,16 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
         var elapsedSeconds = Math.Max(0.1, _lastTimestamp is null ? 0 : (now - _lastTimestamp.Value).TotalSeconds);
         NetworkAccelerationTelemetrySnapshot? bestSnapshot = null;
         var currentCounters = new Dictionary<string, (long ReceivedBytes, long SentBytes)>(StringComparer.OrdinalIgnoreCase);
+        long totalReceivedBytes = 0;
+        long totalSentBytes = 0;
 
         foreach (var networkInterface in interfaces)
         {
             var statistics = networkInterface.GetIPv4Statistics();
             var currentCounter = (statistics.BytesReceived, statistics.BytesSent);
             currentCounters[networkInterface.Id] = currentCounter;
+            totalReceivedBytes += currentCounter.BytesReceived;
+            totalSentBytes += currentCounter.BytesSent;
 
             _lastCounters.TryGetValue(networkInterface.Id, out var previousCounter);
             var receivedDelta = Math.Max(0, currentCounter.BytesReceived - previousCounter.ReceivedBytes);
@@ -71,7 +75,14 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
             _lastCounters[entry.Key] = entry.Value;
 
         _lastTimestamp = now;
-        return bestSnapshot ?? new NetworkAccelerationTelemetrySnapshot(now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0);
+        if (bestSnapshot is null)
+            return new NetworkAccelerationTelemetrySnapshot(now, NetworkAccelerationText.NoActiveAdapter, 0, 0, 0, 0);
+
+        return bestSnapshot with
+        {
+            TotalReceivedBytes = totalReceivedBytes,
+            TotalSentBytes = totalSentBytes
+        };
     }
 
     public void Dispose()

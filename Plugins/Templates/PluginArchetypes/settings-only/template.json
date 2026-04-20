@@ -1,0 +1,7 @@
+{
+  "name": "settings-only",
+  "hasFeaturePage": false,
+  "hasSettingsPage": true,
+  "hasRuntime": false,
+  "hasOptimizationCategory": false
+}

@@ -577,29 +577,6 @@
                 </StackPanel>
             </Border>
 
-            <StackPanel Grid.Row="4"
-                        Visibility="Collapsed">
-                <TextBlock x:Name="_downloadShareValueTextBlock" />
-                <ProgressBar x:Name="_downloadShareBar" Maximum="100" />
-                <TextBlock x:Name="_uploadShareValueTextBlock" />
-                <ProgressBar x:Name="_uploadShareBar" Maximum="100" />
-                <Canvas x:Name="_chartCanvas" Width="1" Height="1">
-                    <Polygon x:Name="_downloadFillPolygon" />
-                    <Polygon x:Name="_uploadFillPolygon" />
-                    <Polyline x:Name="_downloadLine" />
-                    <Polyline x:Name="_uploadLine" />
-                </Canvas>
-                <TextBlock x:Name="_chartCeilingTextBlock" />
-                <TextBlock x:Name="_chartFloorTextBlock" />
-                <TextBlock x:Name="_chartEmptyTextBlock" />
-                <Canvas x:Name="_burstCanvas" Width="1" Height="1">
-                    <Polygon x:Name="_burstFillPolygon" />
-                    <Polyline x:Name="_burstLine" />
-                </Canvas>
-                <TextBlock x:Name="_burstEmptyTextBlock" />
-                <TextBlock x:Name="_rollingAverageTextBlock" />
-                <TextBlock x:Name="_burstPeakTextBlock" />
-            </StackPanel>
         </Grid>
     </ScrollViewer>
 

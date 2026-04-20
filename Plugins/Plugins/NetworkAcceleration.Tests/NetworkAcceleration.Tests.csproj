@@ -32,6 +32,8 @@
   <ItemGroup>
     <ProjectReference Include="..\NetworkAcceleration\LenovoLegionToolkit.Plugins.NetworkAcceleration.csproj" />
     <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
+    <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="LenovoLegionToolkit.Lib">
       <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
       <Private>true</Private>

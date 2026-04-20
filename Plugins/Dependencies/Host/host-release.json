@@ -1,0 +1,12 @@
+{
+  "hostVersion": "3.6.14",
+  "hostTag": "v3.6.14",
+  "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/download/v3.6.14/LenovoLegionToolkit_v3.6.14_win-x64.zip",
+  "artifacts": {
+    "package": "LenovoLegionToolkit_v3.6.14_win-x64.zip",
+    "lib": "LenovoLegionToolkit.Lib.dll",
+    "wpf": "Lenovo Legion Toolkit.dll"
+  },
+  "source": "vendored-host-build",
+  "notes": "Refresh these host references from a matching LenovoLegionToolkit build before shipping plugin changes that depend on new host APIs."
+}

@@ -1,143 +1,151 @@
-# Lenovo Legion Toolkit Plugin Development Guide / 插件开发指南
+# Lenovo Legion Toolkit Plugin Development Guide
 
-This document describes the current plugin development and release model used by the `LenovoLegionToolkit-Plugins` repository.
-本文档说明 `LenovoLegionToolkit-Plugins` 仓库当前真实使用的插件开发与发布模型。
+This repository now supports two clear paths:
 
-## Build Model / 构建模型
+1. contributor path
+2. official store path
 
-- Plugins compile against vendored host references in `Dependencies/Host`.
-- Do not add source `ProjectReference` links back to the sibling `LenovoLegionToolkit` repository.
-- Official plugin outputs are expected in `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`.
+## Contributor Path
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\refresh-host-references.ps1 -UseSiblingRepoBuild
-```
+Use this when you are developing a plugin locally, in a fork, or for an early PR.
 
-## Creating A Plugin / 创建插件
-
-Preferred path:
-推荐路径：
+### Standard Commands
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\new-plugin.ps1 `
-  -FolderName MyPlugin `
-  -PluginId my-plugin `
-  -DisplayName "My Plugin" `
-  -Author "Your Name"
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- build --plugin my-plugin
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- preview --plugin my-plugin --theme system
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- validate --plugin my-plugin --profile contributor
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- pack --plugin my-plugin --build-first
 ```
 
-Generated structure:
-生成后的结构：
+### Validation Profile
+
+`contributor` checks:
+
+- `plugin.json`
+- project naming
+- version alignment
+- test project presence
+- build output shape
+- optional build/test execution
+
+It does not require `store-entry.json`.
+
+## Official Store Path
+
+Use this only when the plugin is intended to ship from the official repository.
+
+### Additional File Contract
+
+Each official plugin now owns its store-facing metadata in:
 
 ```text
-Plugins/
-├── MyPlugin/
-│   ├── LenovoLegionToolkit.Plugins.MyPlugin.csproj
-│   ├── plugin.json
-│   ├── MyPlugin.cs
-│   └── ...
-└── MyPlugin.Tests/
-    ├── MyPlugin.Tests.csproj
-    └── MyPluginPluginTests.cs
+Plugins/<FolderName>/store-entry.json
 ```
 
-## Required Conventions / 必须遵守的约定
+This file contains:
 
-- Folder name: `Plugins/<FolderName>/`
-- Project file: `LenovoLegionToolkit.Plugins.<FolderName>.csproj`
-- Manifest file name: `plugin.json`
-- Release ZIP: `<plugin-id>-v<version>.zip`
-- Release tag: `<plugin-id>-v<version>`
-- Output directory: `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`
+- `description`
+- `icon`
+- `iconBackground`
+- `tags`
+- `dependencies`
+- `supportedLanguages`
+- optional `repositoryUrl`
 
-## Manifest Contract / 清单约定
-
-Minimum required fields in `plugin.json`:
-`plugin.json` 最小必需字段：
-
-```json
-{
-  "id": "my-plugin",
-  "name": "My Plugin",
-  "version": "1.0.0",
-  "minLLTVersion": "3.6.1",
-  "author": "Your Name",
-  "isSystemPlugin": false,
-  "repository": "https://github.com/yourname/your-plugin",
-  "issues": "https://github.com/yourname/your-plugin/issues"
-}
-```
-
-Use `minLLTVersion`, not `minimumHostVersion`.
-请使用 `minLLTVersion`，不要再使用旧字段 `minimumHostVersion`。
-
-## Validation / 校验
-
-Run the completion checker before opening a PR or preparing a release:
-在提交 PR 或准备发布前，先跑完成度检查：
+Create the initial file with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- promote --plugin my-plugin
 ```
 
-Specific plugins:
-只校验指定插件：
+### Validation Profiles
+
+- `official-candidate`: plugin-local official metadata is required
+- `official-release`: release/store alignment checks
+
+Example:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\plugin-completion-check.ps1 -PluginIds my-plugin
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  validate `
+  --plugin my-plugin `
+  --profile official-candidate
 ```
 
-What it checks:
-它会检查：
+## PluginWorkbench
 
-- `store.json` and `plugin.json` metadata alignment
-- project naming and version alignment
-- build output presence
-- plugin changelog presence
-- sibling test project presence
+`PluginWorkbench` is the standard author preview host.
 
-## Release Workflow / 发布流程
+### Why It Exists
 
-Current official release flow is GitHub Actions `workflow_dispatch`.
-当前正式发布流程是 GitHub Actions 的 `workflow_dispatch`，不是 tag 自动触发。
+Authors should not need a live main-app source checkout just to preview plugin UI. The workbench provides:
 
-Workflow file:
+- host-style feature shell
+- host-style settings shell
+- optimization preview cards
+- dialog hosting through `PluginHostContext`
+- `System / Light / Dark`
+- safe `Preview` mode by default
 
-```text
-.github/workflows/build.yml
+### Launch Options
+
+```powershell
+dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
+  --repository-root . `
+  --plugin-id custom-mouse `
+  --theme dark `
+  --view settings
 ```
 
-Release steps:
-发布步骤：
+Arguments:
 
-1. Update `plugin.json`
-2. Update plugin `.csproj` version metadata
-3. Update plugin `CHANGELOG.md`
-4. Update `store.json` source entry if needed
-5. Run `plugin-completion-check.ps1`
-6. Trigger `build.yml` manually with:
+- `--plugin-id <id>`
+- `--theme system|light|dark`
+- `--view feature|settings|optimization`
 
-- `plugin`: optional folder name(s)
-- `version`: required for release publishing and must match `plugin.json`
+## Generated Plugin Structure
 
-The workflow will:
-该工作流会：
+New scaffolds use `Templates/PluginArchetypes/` as the capability source instead of copying `Plugins/Template`.
 
-1. validate completion
-2. build selected plugins
-3. create ZIP assets named from `plugin.json`
-4. publish per-plugin GitHub releases
-5. update `store.json`
+The CLI emits:
 
-## Notes For Third-Party Authors / 对第三方作者的说明
+- plugin project
+- test project
+- `plugin.json`
+- plugin `CHANGELOG.md`
+- resource files
+- previewable pages/controls
 
-- This repository now includes tooling that can scaffold and validate non-official plugins.
-- If your plugin is not meant to ship from this official repository, you can still reuse the scaffold and validation workflow locally or in your own fork.
-- If you want your plugin added to the official store, prepare a PR with:
+## Release Metadata Model
 
-  - plugin source
-  - `plugin.json`
-  - plugin `CHANGELOG.md`
-  - test project
-  - correct `store.json` entry
-  - evidence that `plugin-completion-check.ps1` passes
+Authoring metadata split:
+
+- `plugin.json`: runtime identity and compatibility
+- `store-entry.json`: official store-facing metadata
+- root `store.json`: generated release output
+
+That means new plugin contributors should not start by editing root `store.json`.
+
+## CI Model
+
+Recommended CI split:
+
+- `validate.yml`: contributor validation
+- `release.yml`: manual official publishing
+
+Manual official publishing should:
+
+1. validate the selected plugins
+2. build them
+3. pack stable ZIP assets
+4. publish GitHub releases
+5. regenerate root `store.json`
+
+## Notes
+
+- Do not add source `ProjectReference` links back to the sibling main repository.
+- Keep plugin outputs under `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`.
+- Keep release ZIP naming stable: `<plugin-id>-v<version>.zip`.

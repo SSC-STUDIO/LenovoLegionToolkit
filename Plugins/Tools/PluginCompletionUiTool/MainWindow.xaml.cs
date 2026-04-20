@@ -3,9 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -14,7 +12,6 @@ namespace PluginCompletionUiTool;
 [SupportedOSPlatform("windows")]
 public partial class MainWindow : Window
 {
-    private const string ScriptRelativePath = @"scripts\plugin-completion-check.ps1";
     private const string ReportRelativePath = @"artifacts\plugin-completion-ui-report.json";
 
     private readonly ObservableCollection<PluginResultRow> _pluginResults = new();
@@ -45,57 +42,41 @@ public partial class MainWindow : Window
             return;
         }
 
-        var scriptPath = Path.Combine(repositoryRoot, ScriptRelativePath);
-        if (!File.Exists(scriptPath))
-        {
-            System.Windows.MessageBox.Show(this, $"Checker script not found:\n{scriptPath}", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
         var reportPath = Path.Combine(repositoryRoot, ReportRelativePath);
         _lastReportPath = reportPath;
 
         _pluginResults.Clear();
         _stepLogs.Clear();
         LogTextBox.Clear();
+        OpenReportButton.IsEnabled = false;
         SummaryTextBlock.Text = "Running...";
-        StatusTextBlock.Text = "Executing checker script...";
+        StatusTextBlock.Text = "Running native completion checks...";
 
         SetRunningState(true);
         try
         {
-            var arguments = BuildPowerShellArguments(scriptPath, reportPath);
-            var processStartInfo = new ProcessStartInfo
+            var request = new CompletionCheckRequest
             {
-                FileName = "powershell",
-                WorkingDirectory = repositoryRoot,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                RepositoryRoot = repositoryRoot,
+                Configuration = (ConfigurationComboBox.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "Release",
+                SkipBuild = SkipBuildCheckBox.IsChecked == true,
+                SkipTests = SkipTestsCheckBox.IsChecked == true,
+                PluginIds = ParsePluginIds(PluginIdsTextBox.Text)
             };
 
-            using var process = new Process { StartInfo = processStartInfo };
-            process.OutputDataReceived += (_, args) =>
-            {
-                if (args.Data is not null)
+            var checker = new CompletionChecker(
+                AppendLog,
+                step =>
                 {
-                    AppendLog(args.Data);
-                }
-            };
-            process.ErrorDataReceived += (_, args) =>
-            {
-                if (args.Data is not null)
-                {
-                    AppendLog("[stderr] " + args.Data);
-                }
-            };
+                    Dispatcher.Invoke(() =>
+                    {
+                        var prefix = string.IsNullOrWhiteSpace(step.PluginId) ? string.Empty : $"[{step.PluginId}] ";
+                        StatusTextBlock.Text = prefix + step.Message;
+                    });
+                });
 
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-            await process.WaitForExitAsync();
+            var report = await checker.RunAsync(request);
+            await CompletionReportFile.WriteAsync(reportPath, report);
 
             if (File.Exists(reportPath))
             {
@@ -107,7 +88,9 @@ public partial class MainWindow : Window
                 AppendLog($"Report file was not generated: {reportPath}");
             }
 
-            StatusTextBlock.Text = process.ExitCode == 0 ? "Completed successfully." : $"Completed with failures (exit code {process.ExitCode}).";
+            StatusTextBlock.Text = report.Totals.Failures == 0
+                ? "Completed successfully."
+                : $"Completed with failures ({report.Totals.Failures} total).";
         }
         catch (Exception ex)
         {
@@ -169,44 +152,6 @@ public partial class MainWindow : Window
         });
     }
 
-    private string BuildPowerShellArguments(string scriptPath, string reportPath)
-    {
-        var arguments = new StringBuilder();
-        arguments.Append("-NoProfile -ExecutionPolicy Bypass ");
-        arguments.Append("-File ");
-        arguments.Append(Quote(scriptPath));
-        arguments.Append(" -Configuration ");
-
-        var selectedConfig = (ConfigurationComboBox.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString();
-        arguments.Append(Quote(string.IsNullOrWhiteSpace(selectedConfig) ? "Release" : selectedConfig));
-
-        if (SkipBuildCheckBox.IsChecked == true)
-        {
-            arguments.Append(" -SkipBuild");
-        }
-
-        if (SkipTestsCheckBox.IsChecked == true)
-        {
-            arguments.Append(" -SkipTests");
-        }
-
-        var pluginIds = ParsePluginIds(PluginIdsTextBox.Text);
-        if (pluginIds.Length > 0)
-        {
-            arguments.Append(" -PluginIds");
-            foreach (var pluginId in pluginIds)
-            {
-                arguments.Append(' ');
-                arguments.Append(Quote(pluginId));
-            }
-        }
-
-        arguments.Append(" -JsonReportPath ");
-        arguments.Append(Quote(reportPath));
-
-        return arguments.ToString();
-    }
-
     private static string[] ParsePluginIds(string rawText)
     {
         if (string.IsNullOrWhiteSpace(rawText))
@@ -218,11 +163,6 @@ public partial class MainWindow : Window
             .Split([',', ';', '\r', '\n', '\t', ' '], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
-    }
-
-    private static string Quote(string value)
-    {
-        return "\"" + value.Replace("\"", "\\\"") + "\"";
     }
 
     private void LoadReport(string reportPath)
@@ -322,8 +262,13 @@ public partial class MainWindow : Window
         for (var depth = 0; depth < 10 && directory is not null; depth++)
         {
             var storePath = Path.Combine(directory.FullName, "store.json");
-            var scriptPath = Path.Combine(directory.FullName, ScriptRelativePath);
-            if (File.Exists(storePath) && File.Exists(scriptPath))
+            var solutionPath = Path.Combine(directory.FullName, "LenovoLegionToolkit-Plugins.sln");
+            var pluginsDirectory = Path.Combine(directory.FullName, "Plugins");
+            var toolDirectory = Path.Combine(directory.FullName, @"Tools\PluginCompletionUiTool");
+            if (File.Exists(storePath) &&
+                File.Exists(solutionPath) &&
+                Directory.Exists(pluginsDirectory) &&
+                Directory.Exists(toolDirectory))
             {
                 return directory.FullName;
             }
@@ -333,61 +278,6 @@ public partial class MainWindow : Window
 
         return null;
     }
-
-    private sealed class CompletionReport
-    {
-        [JsonPropertyName("totals")]
-        public CompletionTotals? Totals { get; set; }
-
-        [JsonPropertyName("plugins")]
-        public List<PluginReportItem>? Plugins { get; set; }
-
-        [JsonPropertyName("steps")]
-        public List<StepReportItem>? Steps { get; set; }
-    }
-
-    private sealed class CompletionTotals
-    {
-        [JsonPropertyName("pluginCount")]
-        public int PluginCount { get; set; }
-
-        [JsonPropertyName("failures")]
-        public int Failures { get; set; }
-
-        [JsonPropertyName("warnings")]
-        public int Warnings { get; set; }
-    }
-
-    private sealed class PluginReportItem
-    {
-        [JsonPropertyName("pluginId")]
-        public string PluginId { get; set; } = string.Empty;
-
-        [JsonPropertyName("status")]
-        public string Status { get; set; } = string.Empty;
-
-        [JsonPropertyName("failures")]
-        public int Failures { get; set; }
-
-        [JsonPropertyName("warnings")]
-        public int Warnings { get; set; }
-    }
-
-    private sealed class StepReportItem
-    {
-        [JsonPropertyName("timestamp")]
-        public string Timestamp { get; set; } = string.Empty;
-
-        [JsonPropertyName("pluginId")]
-        public string PluginId { get; set; } = string.Empty;
-
-        [JsonPropertyName("status")]
-        public string Status { get; set; } = string.Empty;
-
-        [JsonPropertyName("message")]
-        public string Message { get; set; } = string.Empty;
-    }
-
     private sealed class PluginResultRow
     {
         public string PluginId { get; init; } = string.Empty;
