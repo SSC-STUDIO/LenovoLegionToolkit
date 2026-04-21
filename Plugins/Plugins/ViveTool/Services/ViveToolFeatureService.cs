@@ -329,24 +329,35 @@ public class ViveToolFeatureService
         if (string.IsNullOrWhiteSpace(output))
             return null;
 
-        // Try to find version patterns like "v0.3.4", "0.3.4", "Version: 0.3.4", etc.
+        foreach (var line in output.Split(["\r\n", "\n", "\r"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            var version = TryParseVersionLine(line);
+            if (!string.IsNullOrWhiteSpace(version))
+                return version;
+        }
+
+        return null;
+    }
+
+    private static string? TryParseVersionLine(string line)
+    {
         var versionRegexes = new[]
         {
-            @"v([0-9]+\.[0-9]+\.[0-9]+)",  // v0.3.4
-            @"Version: ([0-9]+\.[0-9]+\.[0-9]+)",  // Version: 0.3.4
-            @"([0-9]+\.[0-9]+\.[0-9]+)",  // 0.3.4
-            @"v([0-9]+\.[0-9]+)",  // v0.3
-            @"Version: ([0-9]+\.[0-9]+)",  // Version: 0.3
-            @"([0-9]+\.[0-9]+)"  // 0.3
+            @"^(?:ViVeTool|ViveTool)\s+v?(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+            @"^(?:ViVeTool|ViveTool)\s+version[:\s]+(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+            @"^Version:\s*(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)\b",
+            @"^v(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$",
+            @"^(?<version>[0-9]+\.[0-9]+\.[0-9]+|[0-9]+\.[0-9]+)$"
         };
 
         foreach (var regex in versionRegexes)
         {
-            var match = Regex.Match(output, regex, RegexOptions.IgnoreCase);
-            if (match.Success && match.Groups.Count > 1)
-            {
-                return match.Groups[1].Value;
-            }
+            var match = Regex.Match(line, regex, RegexOptions.IgnoreCase);
+            if (match.Success)
+                return match.Groups["version"].Value;
         }
 
         return null;

@@ -620,6 +620,7 @@ public class ViveToolFeatureServiceTests
     #region Version Parsing Tests
 
     [Theory]
+    [InlineData("ViVeTool v0.3.4", "0.3.4")]
     [InlineData("v0.3.4", "0.3.4")]
     [InlineData("Version: 0.3.4", "0.3.4")]
     [InlineData("0.3.4", "0.3.4")]
@@ -631,6 +632,19 @@ public class ViveToolFeatureServiceTests
         var version = InvokeParseVersionFromOutput(input);
 
         Assert.Equal(expectedVersion, version);
+    }
+
+    [Fact]
+    public void VersionParsing_IgnoresWindowsCommandProcessorBanner()
+    {
+        const string input = """
+Microsoft Windows [Version 10.0.26100.0]
+(c) Microsoft Corporation. All rights reserved.
+""";
+
+        var version = InvokeParseVersionFromOutput(input);
+
+        Assert.Null(version);
     }
 
     #endregion
