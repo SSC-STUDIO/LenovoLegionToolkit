@@ -42,7 +42,10 @@ public sealed class ProcessRunner
         Action<string>? log = null,
         CancellationToken cancellationToken = default)
     {
-        var dotnetHost = Environment.ProcessPath ?? "dotnet";
+        var dotnetHost = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+        if (string.IsNullOrWhiteSpace(dotnetHost))
+            dotnetHost = "dotnet";
+
         return RunAsync(dotnetHost, arguments, workingDirectory, log, cancellationToken);
     }
 

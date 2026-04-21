@@ -70,6 +70,7 @@ public class NetworkAccelerationPluginTests
     public void Settings_ReturnsSnapshot()
     {
         var plugin = new NetworkAccelerationPlugin();
+        plugin.OnInstalled();
 
         var snapshot = plugin.Settings;
         snapshot.PreferredMode = NetworkAccelerationMode.Streaming;
