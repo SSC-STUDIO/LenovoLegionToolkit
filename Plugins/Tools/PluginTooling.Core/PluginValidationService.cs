@@ -88,7 +88,7 @@ public sealed class PluginValidationService
         if (!request.SkipTests && !string.IsNullOrWhiteSpace(plugin.TestProjectPath))
         {
             var exitCode = await _processRunner.RunDotnetAsync(
-                ["test", plugin.TestProjectPath!, "-c", request.Configuration, "--no-restore", "--nologo"],
+                ["test", plugin.TestProjectPath!, "-c", request.Configuration, "--nologo"],
                 repository.RootPath,
                 message => state.Info(message),
                 cancellationToken);
