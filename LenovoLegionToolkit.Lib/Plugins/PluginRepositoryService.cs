@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -36,11 +37,12 @@ public class PluginRepositoryService : IDisposable
     };
     private const string PluginReleasesApiUrl = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50";
     private const int RemoteRequestRetryCount = 3;
-    private const int RemoteDownloadRetryCount = 1;
+    private const int RemoteDownloadRetryCount = 3;
     private static readonly TimeSpan StoreRequestTimeout = TimeSpan.FromSeconds(20);
     private static readonly TimeSpan ReleaseMetadataRequestTimeout = TimeSpan.FromSeconds(20);
-    private static readonly TimeSpan ApiAssetDownloadRequestTimeout = TimeSpan.FromSeconds(45);
-    private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(150);
+    private static readonly TimeSpan ApiAssetDownloadRequestTimeout = TimeSpan.FromSeconds(120);
+    private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(300);
+    private static readonly TimeSpan NativeCurlDownloadTimeoutPadding = TimeSpan.FromSeconds(30);
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -207,11 +209,11 @@ public class PluginRepositoryService : IDisposable
         {
             var preferredCandidateUrls = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(publishedAsset.ApiDownloadUrl))
-                preferredCandidateUrls.Add(publishedAsset.ApiDownloadUrl);
-
             if (!string.IsNullOrWhiteSpace(publishedAsset.DownloadUrl))
                 preferredCandidateUrls.Add(publishedAsset.DownloadUrl);
+
+            if (!string.IsNullOrWhiteSpace(publishedAsset.ApiDownloadUrl))
+                preferredCandidateUrls.Add(publishedAsset.ApiDownloadUrl);
 
             candidateUrls = preferredCandidateUrls
                 .Where(url => !string.IsNullOrWhiteSpace(url))
@@ -302,6 +304,12 @@ public class PluginRepositoryService : IDisposable
 
                     if (!response.IsSuccessStatusCode)
                     {
+                        if (ShouldUseNativeCurlDownloadFallback(candidateUrl)
+                            && await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
+                        {
+                            return true;
+                        }
+
                         if (attempt < RemoteDownloadRetryCount && IsRetryableStatusCode(response.StatusCode))
                         {
                             if (Log.Instance.IsTraceEnabled)
@@ -351,12 +359,18 @@ public class PluginRepositoryService : IDisposable
                 {
                     DeletePartialDownload(destinationPath);
 
+                    if (await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
+                        return true;
+
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Transient error downloading plugin {manifest.Id} from {candidateUrl} on attempt {attempt}/{RemoteDownloadRetryCount}: {ex.Message}. Retrying...", ex);
 
                     await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
                 }
             }
+
+            if (await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
+                return true;
 
             return false;
         }
@@ -414,6 +428,128 @@ public class PluginRepositoryService : IDisposable
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+    }
+
+    private async Task<bool> TryDownloadPluginWithNativeCurlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
+    {
+        if (!ShouldUseNativeCurlDownloadFallback(candidateUrl))
+            return false;
+
+        var curlPath = Path.Combine(Environment.SystemDirectory, "curl.exe");
+        if (!File.Exists(curlPath))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Skipping native curl fallback for plugin {manifest.Id}: curl.exe not found at {curlPath}");
+
+            return false;
+        }
+
+        Process? process = null;
+
+        try
+        {
+            DeletePartialDownload(destinationPath);
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = curlPath,
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+
+            startInfo.ArgumentList.Add("--location");
+            startInfo.ArgumentList.Add("--fail");
+            startInfo.ArgumentList.Add("--silent");
+            startInfo.ArgumentList.Add("--show-error");
+            startInfo.ArgumentList.Add("--output");
+            startInfo.ArgumentList.Add(destinationPath);
+            startInfo.ArgumentList.Add(candidateUrl);
+
+            process = Process.Start(startInfo);
+            if (process is null)
+                return false;
+
+            using var cts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl) + NativeCurlDownloadTimeoutPadding);
+            await process.WaitForExitAsync(cts.Token).ConfigureAwait(false);
+
+            var standardError = await process.StandardError.ReadToEndAsync().ConfigureAwait(false);
+            if (process.ExitCode != 0)
+            {
+                DeletePartialDownload(destinationPath);
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Native curl fallback failed for plugin {manifest.Id} from {candidateUrl} with exit code {process.ExitCode}: {standardError}");
+
+                return false;
+            }
+
+            if (!File.Exists(destinationPath))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Native curl fallback for plugin {manifest.Id} completed without producing {destinationPath}");
+
+                return false;
+            }
+
+            var fileInfo = new FileInfo(destinationPath);
+            if (fileInfo.Length <= 0)
+            {
+                DeletePartialDownload(destinationPath);
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Native curl fallback for plugin {manifest.Id} produced an empty file for {candidateUrl}");
+
+                return false;
+            }
+
+            DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+            {
+                PluginId = manifest.Id,
+                BytesDownloaded = fileInfo.Length,
+                TotalBytes = fileInfo.Length,
+                ProgressPercentage = 100
+            });
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Downloaded plugin {manifest.Id} via native curl fallback to {destinationPath}");
+
+            manifest.DownloadUrl = candidateUrl;
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                if (process is { HasExited: false })
+                    process.Kill(entireProcessTree: true);
+            }
+            catch
+            {
+                // Ignore cleanup failures for the native fallback.
+            }
+
+            DeletePartialDownload(destinationPath);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Native curl fallback timed out for plugin {manifest.Id} from {candidateUrl}");
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            DeletePartialDownload(destinationPath);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Native curl fallback failed for plugin {manifest.Id} from {candidateUrl}: {ex.Message}", ex);
+
+            return false;
+        }
+        finally
+        {
+            process?.Dispose();
+        }
     }
 
     private bool TryCreateLocalPackageFromInstalledFiles(PluginManifest manifest, string destinationPath)
@@ -953,6 +1089,18 @@ public class PluginRepositoryService : IDisposable
 
         return uri.Host.Equals("api.github.com", StringComparison.OrdinalIgnoreCase)
                && uri.AbsolutePath.Contains("/releases/assets/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ShouldUseNativeCurlDownloadFallback(string url)
+    {
+        if (!OperatingSystem.IsWindows())
+            return false;
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return false;
+
+        return uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)
+               && uri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static TimeSpan GetDownloadTimeout(string candidateUrl)

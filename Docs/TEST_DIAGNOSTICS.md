@@ -117,6 +117,42 @@ dotnet test LenovoLegionToolkit.Tests
 
 ## MainAppPluginUi.Smoke 执行与诊断
 
+### 不打扰本机桌面的推荐方案
+
+如果不希望 smoke 抢占你当前的鼠标、键盘和前台窗口，不要在你正在使用的桌面会话里直接运行 `MainAppPluginUi.Smoke`。
+
+推荐改为使用仓库内置的独立 UI runner 工作流：
+
+- Workflow: `.github/workflows/MainAppPluginUi.Smoke.yml`
+- 触发方式: `workflow_dispatch`
+- 目标 runner: `self-hosted`, `Windows`, `LLT-UI-SMOKE`
+
+这个 runner 应满足以下条件：
+
+1. 是独立的 Windows 主机、虚拟机或专用测试会话，而不是你当前正在操作的桌面。
+2. Runner 以交互式用户会话运行，不能只作为后台 service 跑 UIA。
+3. 允许主程序真正弹出窗口并执行前台自动化。
+
+工作流会自动：
+
+- 构建主程序和 `MainAppPluginUi.Smoke`
+- 在专用 runner 上执行真实 UI smoke
+- 把日志、截图目录和截图索引上传为 artifact
+- 可选开启 watch 模式，让 runner 桌面上的 smoke 过程按真实窗口效果放慢显示
+- 在截图目录里额外生成 `storyboard.html`，可直接打开按步骤回放整个 smoke 过程
+
+推荐的默认输入是：
+
+- `scenario`: `combo-local`
+- `plugin_ids`: `shell-integration,custom-mouse`
+- `plugin_sources`: `shell-integration=online,custom-mouse=local`
+- `theme`: `dark`
+- `screenshot_mode`: `always`
+- `watch`: `true`
+- `step_delay_ms`: `1200`
+
+工作流内部通过 `Tools/MainAppPluginUi.Smoke/Run-MainAppPluginUi.Smoke.ps1` 调用 smoke，并把产物落到 runner 临时目录后统一上传。
+
 ### 推荐执行顺序
 
 ```bash
@@ -129,6 +165,44 @@ LLT_SMOKE_PLUGIN_IDS=shell-integration dotnet run --project Tools/MainAppPluginU
 # 3. 再跑默认集合
 dotnet run --project Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release --no-build -- <repo-root>
 ```
+
+如果你必须本机直跑，建议至少加上：
+
+```bash
+dotnet Tools/MainAppPluginUi.Smoke/bin/Release/net10.0-windows/MainAppPluginUi.Smoke.dll \
+  --repo-root <repo-root> \
+  --scenario combo-local \
+  --theme dark \
+  --watch \
+  --step-delay-ms 1200 \
+  --success-hold-ms 5000 \
+  --failure-hold-ms 15000 \
+  --screenshots always \
+  --screenshot-dir Build/main-app-plugin-ui-smoke-local
+```
+
+但这仍然会打扰当前桌面，只是会把证据归档得更完整。
+
+`--watch` 模式会：
+
+- 每个关键页面切换后停留一小段时间，便于肉眼观察
+- 成功结束前保留主窗口一段时间
+- 失败时保留失败状态更久，便于直接看异常页面或错误提示
+
+截图产物会同时包含：
+
+- `index.md`: 文本索引
+- `storyboard.html`: 可直接打开的图片回放页
+- `*.png`: 每个关键步骤的真实窗口截图
+
+如果你需要逐页做 UI 审查，建议优先使用这两组本地预设：
+
+- `--scenario shell-local --theme dark|light`
+- `--scenario combo-local --theme dark|light`
+
+这样会在干净沙箱里走真实本地导入路径，并把 `Scenario` 与 `Theme` 一起写进截图索引，便于对照同一批页面的深浅色版本。
+
+这条模式的目标是“和真实桌面效果一致且可观看”，而不是为了最快速度执行。
 
 ### 2026-03-24 已验证现象
 

@@ -522,6 +522,12 @@
                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                     </Border>
                                     <Border Style="{StaticResource CapabilityChipStyle}"
+                                            Visibility="{Binding SupportsFeaturePage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_LocationSidebar}"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    </Border>
+                                    <Border Style="{StaticResource CapabilityChipStyle}"
                                             Visibility="{Binding SupportsOptimizationCategory, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilityOptimize}"
                                                    FontSize="11"
@@ -556,61 +562,69 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Right">
                                 <!-- Install/Update Button -->
-                                <Button Content="{Binding InstallButtonText}"
-                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="118"
-                                        Height="32"
-                                        Click="PluginInstallButton_Click"
-                                        Tag="{Binding PluginId}"
-                                        Margin="0,0,0,6"
-                                        Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <wpfui:Button Content="{Binding InstallButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
+                                              Icon="ArrowDownload24"
+                                              Appearance="Primary"
+                                              MinWidth="126"
+                                              Height="32"
+                                              Click="PluginInstallButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              Margin="0,0,0,6"
+                                              ToolTip="{Binding InstallButtonText}"
+                                              Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 
                                 <!-- Configuration Button -->
-                                <Button Content="{Binding ConfigureButtonText}"
-                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="118"
-                                        Height="30"
-                                        Margin="0,0,0,6">
-                                    <Button.Visibility>
+                                <wpfui:Button Content="{Binding ConfigureButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
+                                              Icon="Settings24"
+                                              Appearance="Secondary"
+                                              MinWidth="126"
+                                              Height="30"
+                                              Margin="0,0,0,6"
+                                              ToolTip="{Binding ConfigureButtonText}">
+                                    <wpfui:Button.Visibility>
                                         <MultiBinding Converter="{StaticResource BooleanAndConverter}">
                                             <Binding Path="IsInstalled" />
                                             <Binding Path="SupportsConfiguration" />
                                         </MultiBinding>
-                                    </Button.Visibility>
-                                    <Button.Click>PluginConfigureButton_Click</Button.Click>
-                                    <Button.Tag>
+                                    </wpfui:Button.Visibility>
+                                    <wpfui:Button.Click>PluginConfigureButton_Click</wpfui:Button.Click>
+                                    <wpfui:Button.Tag>
                                         <Binding Path="PluginId" />
-                                    </Button.Tag>
-                                </Button>
+                                    </wpfui:Button.Tag>
+                                </wpfui:Button>
                                 
                                 <!-- Open Button -->
-                                <Button Content="{Binding OpenButtonText}"
-                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="118"
-                                        Height="30"
-                                        Margin="0,0,0,6"
-                                        Click="PluginOpenButton_Click"
-                                        Tag="{Binding PluginId}">
-                                    <Button.Visibility>
+                                <wpfui:Button Content="{Binding OpenButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
+                                              Icon="Open24"
+                                              Appearance="Secondary"
+                                              MinWidth="126"
+                                              Height="30"
+                                              Margin="0,0,0,6"
+                                              Click="PluginOpenButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              ToolTip="{Binding OpenButtonText}">
+                                    <wpfui:Button.Visibility>
                                         <MultiBinding Converter="{StaticResource BooleanAndConverter}">
                                             <Binding Path="IsInstalled" />
                                             <Binding Path="SupportsOpenAction" />
                                         </MultiBinding>
-                                    </Button.Visibility>
-                                </Button>
+                                    </wpfui:Button.Visibility>
+                                </wpfui:Button>
                                 
                                 <!-- Uninstall Button -->
-                                <Button Content="{Binding UninstallButtonText}"
-                                        AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
-                                        Style="{DynamicResource DefaultButtonStyle}"
-                                        Width="118"
-                                        Height="30"
-                                        Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Click="PluginUninstallButton_Click"
-                                        Tag="{Binding PluginId}" />
+                                <wpfui:Button Content="{Binding UninstallButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
+                                              Icon="Delete24"
+                                              Appearance="Secondary"
+                                              MinWidth="126"
+                                              Height="30"
+                                              Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                              Click="PluginUninstallButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              ToolTip="{Binding UninstallButtonText}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

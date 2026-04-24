@@ -49,6 +49,7 @@ public partial class App
 
         private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE = "LLT_SINGLE_INSTANCE_KEY";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
     private Mutex? _singleInstanceMutex;
@@ -589,7 +590,12 @@ public partial class App
     {
         try
         {
-            _singleInstanceMutex?.ReleaseMutex();
+            if (_singleInstanceMutexOwned && _singleInstanceMutex != null)
+            {
+                _singleInstanceMutex.ReleaseMutex();
+                _singleInstanceMutexOwned = false;
+            }
+
             _singleInstanceMutex?.Close();
             _singleInstanceMutex = null;
         }
@@ -851,9 +857,11 @@ public partial class App
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Checking for other instances...");
 
-        _singleInstanceMutex = new Mutex(true, MUTEX_NAME, out var isOwned);
+        var mutexName = ResolveSingleInstanceObjectName(MUTEX_NAME);
+        var eventName = ResolveSingleInstanceObjectName(EVENT_NAME);
+        _singleInstanceMutex = new Mutex(true, mutexName, out var isOwned);
         _singleInstanceMutexOwned = isOwned;
-        _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, EVENT_NAME);
+        _singleInstanceWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
 
         if (!isOwned)
         {
@@ -917,6 +925,21 @@ public partial class App
             Name = "SingleInstanceThread"
         };
         _singleInstanceThread.Start();
+    }
+
+    private static string ResolveSingleInstanceObjectName(string baseName)
+    {
+        var key = Environment.GetEnvironmentVariable(SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE);
+        if (string.IsNullOrWhiteSpace(key))
+            return baseName;
+
+        var sanitizedKey = string.Concat(key
+            .Trim()
+            .Where(character => char.IsLetterOrDigit(character) || character is '-' or '_'));
+
+        return string.IsNullOrWhiteSpace(sanitizedKey)
+            ? baseName
+            : $"{baseName}_{sanitizedKey}";
     }
 
     private static async Task LogSoftwareStatusAsync()

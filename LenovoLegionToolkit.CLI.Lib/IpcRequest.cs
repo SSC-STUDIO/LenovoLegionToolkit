@@ -21,6 +21,7 @@ public class IpcRequest
         IsShellInstalled,
         InstallShell,
         UninstallShell,
+        CaptureWindowVisual,
     }
 
     public OperationType? Operation { get; init; }

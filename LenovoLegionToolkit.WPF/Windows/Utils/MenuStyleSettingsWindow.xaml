@@ -8,8 +8,10 @@
     xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     Title="{x:Static resources:Resource.SystemBeautification_MenuStyleSettings_Title}"
-    Height="600"
-    Width="800"
+    Height="760"
+    Width="980"
+    MinWidth="760"
+    MinHeight="560"
     WindowStartupLocation="CenterOwner"
     ResizeMode="CanResize"
     ShowInTaskbar="False"
@@ -88,7 +90,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -204,8 +206,8 @@
                         <!-- Tab Content Container -->
                         <Grid>
                             <!-- Shell.nss Content -->
-                            <Grid Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
+                            <Grid Visibility="{Binding IsChecked, ElementName=_shellNssTab, Converter={StaticResource BoolToVisibilityConverter}}" MinHeight="420" MaxWidth="820" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                <StackPanel Orientation="Vertical" Margin="24" VerticalAlignment="Center">
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ShellNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -218,9 +220,9 @@
                             </Grid>
                             
                             <!-- Theme.nss Content -->
-                            <Grid Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid Visibility="{Binding IsChecked, ElementName=_themeNssTab, Converter={StaticResource BoolToVisibilityConverter}}" MinHeight="420" MaxWidth="820" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <!-- Theme UI Settings -->
-                                <TabControl Width="750" Height="400" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                <TabControl Background="{DynamicResource ControlFillColorDefaultBrush}">
                                     <!-- UI Settings Tab -->
                                     <TabItem Header="{x:Static resources:Resource.MenuStyleSettingsWindow_UISettings}" Background="{DynamicResource ControlFillColorDefaultBrush}">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="8">
@@ -302,9 +304,9 @@
                                     
                                     <!-- Text Editor Tab -->
                                     <TabItem Header="{x:Static resources:Resource.MenuStyleSettingsWindow_TextEditor}" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                        <Grid Width="750" Height="400">
-                                            <StackPanel Orientation="Vertical" Height="400">
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+                                        <Grid MinHeight="420">
+                                            <DockPanel LastChildFill="True">
+                                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
                                                     <wpfui:Button x:Name="_openThemeNssBtn" Content="{x:Static resources:Resource.MenuStyleSettingsWindow_OpenInExternalEditor}" MinWidth="150" Click="OpenThemeNssBtn_Click" />
                                                 </StackPanel>
                                                 <TextBox
@@ -321,18 +323,16 @@
                                                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                                     BorderThickness="1"
                                                     Padding="8"
-                                                    Width="750"
-                                                    Height="350"
-                                                    HorizontalAlignment="Center" />
-                                            </StackPanel>
+                                                    Margin="8,0,8,8" />
+                                            </DockPanel>
                                         </Grid>
                                     </TabItem>
                                 </TabControl>
                             </Grid>
                             
                             <!-- Images.nss Content -->
-                            <Grid Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
+                            <Grid Visibility="{Binding IsChecked, ElementName=_imagesNssTab, Converter={StaticResource BoolToVisibilityConverter}}" MinHeight="420" MaxWidth="820" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                <StackPanel Orientation="Vertical" Margin="24" VerticalAlignment="Center">
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ImagesNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -345,8 +345,8 @@
                             </Grid>
                             
                             <!-- Modify.nss Content -->
-                            <Grid Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}" Width="750" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                <StackPanel Orientation="Vertical" Margin="20" VerticalAlignment="Center">
+                            <Grid Visibility="{Binding IsChecked, ElementName=_modifyNssTab, Converter={StaticResource BoolToVisibilityConverter}}" MinHeight="420" MaxWidth="820" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                <StackPanel Orientation="Vertical" Margin="24" VerticalAlignment="Center">
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssConfigFile}" Style="{StaticResource AppSubsectionTitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
                                     <TextBlock Text="{x:Static resources:Resource.MenuStyleSettingsWindow_ModifyNssDescription}" Style="{StaticResource AppPageDescriptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

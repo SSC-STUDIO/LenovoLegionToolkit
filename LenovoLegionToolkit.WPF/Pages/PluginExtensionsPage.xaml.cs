@@ -6,12 +6,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
@@ -44,6 +44,7 @@ private string _currentSearchText = string.Empty;
     private string _currentSelectedPluginId = string.Empty;
     private bool _isRefreshing = false;
     private string _currentDownloadingPluginId = string.Empty;
+    private readonly SemaphoreSlim _onlinePluginInstallGate = new(1, 1);
 
     public PluginExtensionsPage()
     {
@@ -457,23 +458,36 @@ private string _currentSearchText = string.Empty;
                     Lib.Utils.Log.Instance.Trace($"  - Online: {plugin.Id} v{plugin.Version} (DownloadUrl: {plugin.DownloadUrl})");
                 }
             }
-            
-            // Check for plugin updates against actually installed plugin IDs only.
-            var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
-            var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
-            _availableUpdates = updates;
-            
-            if (updates.Count > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
+
+            // Refresh the marketplace UI even if the optional update check later fails.
+            UpdateAllPluginsUI();
+
+            try
             {
-                Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {updates.Count} plugin updates");
-                foreach (var update in updates)
+                // Check for plugin updates against actually installed plugin IDs only.
+                var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
+                var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
+                _availableUpdates = updates;
+
+                if (updates.Count > 0 && Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    Lib.Utils.Log.Instance.Trace($"  - Update available: {update.Id} v{update.Version}");
+                    Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {updates.Count} plugin updates");
+                    foreach (var update in updates)
+                    {
+                        Lib.Utils.Log.Instance.Trace($"  - Update available: {update.Id} v{update.Version}");
+                    }
                 }
             }
-            
-            // Refresh UI
+            catch (Exception ex)
+            {
+                Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}", ex);
+                _availableUpdates.Clear();
+            }
+
+            // Refresh once more after update metadata settles so each card gets
+            // the latest update badge, version, and changelog state.
             UpdateAllPluginsUI();
+            UpdateBulkActionButtonsVisibility();
             
             // Hide loading indicator
             if (loadingIndicator != null)
@@ -1461,9 +1475,18 @@ private string _currentSearchText = string.Empty;
         {
             Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync started for {manifest.Id}");
         }
-        
+
+        var gateAcquired = await _onlinePluginInstallGate.WaitAsync(0);
+        if (!gateAcquired)
+        {
+            if (Lib.Utils.Log.Instance.IsTraceEnabled)
+                Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync ignored for {manifest.Id} because another online install is already running: {_currentDownloadingPluginId}");
+
+            return;
+        }
+
         var pluginViewModel = _pluginViewModels.FirstOrDefault(p => p.PluginId == manifest.Id);
-        
+
         try
         {
             var versionChecker = new VersionChecker();
@@ -1553,6 +1576,7 @@ private string _currentSearchText = string.Empty;
             UpdateSpecificPluginUI(manifest.Id);
             
             _currentDownloadingPluginId = string.Empty;
+            _onlinePluginInstallGate.Release();
         }
     }
 
@@ -1616,12 +1640,6 @@ private string _currentSearchText = string.Empty;
                     T("PluginExtensionsPage_UninstallDependencyMessage", "Plugin could not be uninstalled. It might be a dependency for another plugin."),
                     SnackbarType.Error);
                 return;
-            }
-            
-            var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
-            if (detailsPanel != null)
-            {
-                detailsPanel.Visibility = Visibility.Collapsed;
             }
             
             // Immediately update specific plugin's UI state
@@ -1765,24 +1783,18 @@ private string _currentSearchText = string.Empty;
             {
                 // Navigate to plugin page (if executable file doesn't exist)
                 var mainWindow2 = Application.Current.MainWindow as MainWindow;
-                if (mainWindow2 != null)
+                if (mainWindow2 != null && mainWindow2.NavigateToPluginPage(pluginId))
                 {
-                    // Use NavigationStore to navigate to plugin page
-                    var navigationStore = mainWindow2.FindName("_navigationStore") as NavigationStore;
-                    if (navigationStore != null)
-                    {
-                        var pageTag = $"plugin:{pluginId}";
-                        
-                        // Register page tag to plugin ID mapping
-                        PluginPageWrapper.RegisterPluginPageTag(pageTag, pluginId);
-                        
-                        // Ensure navigation items are up to date
-                        mainWindow2.UpdateInstalledPluginsNavigationItems();
-                        
-                        // Navigate to plugin page
-                        navigationStore.Navigate(pageTag);
-                    }
+                    return;
                 }
+
+                SnackbarHelper.Show(
+                    T("PluginExtensionsPage_NavigationFailed", "Navigation Failed"),
+                    string.Format(
+                        Resource.Culture ?? CultureInfo.CurrentUICulture,
+                        T("PluginExtensionsPage_FeatureNavigationFailedMessage", "Plugin {0} page could not be opened."),
+                        plugin?.Name ?? pluginId),
+                    SnackbarType.Warning);
             }
             else if (capabilities.SupportsOptimizationCategory)
             {
@@ -1884,23 +1896,6 @@ private string _currentSearchText = string.Empty;
             // Permanently delete from disk
             var deleted = await Task.Run(() => _pluginManager.PermanentlyDeletePlugin(pluginId));
             
-            var detailsPanel = this.FindName("PluginDetailsPanel") as Border;
-            if (detailsPanel != null)
-            {
-                var hideStoryboard = this.FindResource("HideDetailsPanel") as Storyboard;
-                if (hideStoryboard != null)
-                {
-                    hideStoryboard.Completed += (s, args) =>
-                    {
-                        detailsPanel.Visibility = Visibility.Collapsed;
-                    };
-                    hideStoryboard.Begin();
-                }
-                else
-                {
-                    detailsPanel.Visibility = Visibility.Collapsed;
-                }
-            }
             UpdateAllPluginsUI();
             
             if (deleted)
@@ -2217,60 +2212,8 @@ private string _currentSearchText = string.Empty;
 
     private bool TryResolvePluginExecutable(string pluginId, out string? exeFile, out string? workingDirectory)
     {
-        exeFile = null;
-        workingDirectory = null;
-
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
-        var pluginsDirectory = GetPluginsDirectory();
-        var candidateDirectories = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(metadata?.FilePath))
-        {
-            var metadataDirectory = Path.GetDirectoryName(metadata.FilePath);
-            if (!string.IsNullOrWhiteSpace(metadataDirectory))
-                candidateDirectories.Add(metadataDirectory);
-        }
-
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, pluginId));
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, "local", pluginId));
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"));
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"));
-
-        foreach (var candidateDirectory in candidateDirectories
-                     .Where(path => !string.IsNullOrWhiteSpace(path))
-                     .Distinct(StringComparer.OrdinalIgnoreCase))
-        {
-            if (!Directory.Exists(candidateDirectory))
-                continue;
-
-            var preferredCandidates = new[]
-            {
-                Path.Combine(candidateDirectory, $"{pluginId}.exe"),
-                Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.exe"),
-                Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.exe")
-            };
-
-            foreach (var preferredCandidate in preferredCandidates)
-            {
-                if (!File.Exists(preferredCandidate))
-                    continue;
-
-                exeFile = preferredCandidate;
-                workingDirectory = candidateDirectory;
-                return true;
-            }
-
-            var discoveredExecutable = Directory.GetFiles(candidateDirectory, "*.exe", SearchOption.TopDirectoryOnly)
-                .FirstOrDefault();
-            if (discoveredExecutable is null)
-                continue;
-
-            exeFile = discoveredExecutable;
-            workingDirectory = candidateDirectory;
-            return true;
-        }
-
-        return false;
+        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory);
     }
 
     private string GetPluginLocalizedName(IPlugin plugin)

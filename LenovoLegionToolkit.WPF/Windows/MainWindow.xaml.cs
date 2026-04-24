@@ -700,6 +700,16 @@ public partial class MainWindow
 
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
+                    var pluginId = plugin.Id;
+                    navItem.PreviewMouseLeftButtonUp += (_, _) => NavigateToPluginPage(pluginId);
+                    navItem.KeyDown += (_, e) =>
+                    {
+                        if (e.Key != Key.Enter && e.Key != Key.Space)
+                            return;
+
+                        e.Handled = true;
+                        NavigateToPluginPage(pluginId);
+                    };
 
                     // Find the position to insert (after windows optimization item, before plugin extensions item)
                     var insertIndex = -1;
@@ -752,6 +762,28 @@ public partial class MainWindow
             return symbol;
         }
         return SymbolRegular.Apps24;
+    }
+
+    public bool NavigateToPluginPage(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        try
+        {
+            var pageTag = $"plugin:{pluginId}";
+            PluginPageWrapper.RegisterPluginPageTag(pageTag, pluginId);
+            UpdateInstalledPluginsNavigationItems();
+            _navigationStore.Navigate(pageTag);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error navigating to plugin page: {pluginId}", ex);
+
+            return false;
+        }
     }
 
     private static bool ProvidesFeaturePage(IPlugin plugin)

@@ -8,4 +8,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
+  </ItemGroup>
+
 </Project>
