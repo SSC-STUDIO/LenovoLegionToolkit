@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased]
+
+### Improved / 改进
+- Refined the feature management page with icon-led import, refresh, settings, enable, and disable actions plus a clearer warning block for safer feature-flag workflows / 打磨功能管理页，为导入、刷新、设置、启用与禁用操作补充图标，并强化警告区呈现，让功能标志操作流程更清晰安全
+
 ## [1.2.0] - 2026-04-20
 
 ### Changed / 变更

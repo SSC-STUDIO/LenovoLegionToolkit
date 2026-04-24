@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- Tightened the settings overview into a compact single-row summary so the first viewport now keeps the key mouse controls and action buttons visible without scrolling in both host Light and Dark themes / 将设置页总览收紧为首屏单行摘要，使关键鼠标控件和操作按钮在宿主浅色/深色主题下都能尽量保持首屏可见，减少滚动后才能操作的情况
+- Tightened the host settings presentation to use lighter nesting, calmer status chrome, and spacing that better matches the main app plugin settings shell in both Dark and Light themes / 收紧宿主设置页呈现，减轻嵌套层级、状态条视觉重量，并让深浅色下的间距与主程序插件设置壳更一致
+
+### Fixed / 修复
+- Removed the accidental standalone feature page so Custom Mouse again behaves like a settings-plus-Windows Optimization plugin in host surfaces / 移除误暴露的独立功能页，使 Custom Mouse 在宿主界面中重新回到“仅设置页 + 系统优化扩展”的插件模型
+
 ## [1.0.14] - 2026-04-20
 
 ### Changed / 变更

@@ -91,7 +91,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         var canManageShell = installed && allowSystemActions;
         var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
         var canOpenConfig = configExists;
-        var canOpenStyleSettings = canManageShell;
+        var canOpenStyleSettings = canManageShell || LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.Mode == LenovoLegionToolkit.Plugins.SDK.PluginHostMode.Preview;
 
         if (_registrationValueTextBlock != null)
             _registrationValueTextBlock.Text = installed

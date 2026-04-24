@@ -5,6 +5,11 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Improved / 改进
+- Refined the feature dashboard actions with host-style icons and safer button sizing so service controls, refresh, preset actions, and save operations are easier to scan in the embedded plugin page / 打磨功能仪表盘操作区，增加宿主风格图标并调整按钮尺寸，使服务控制、刷新、预设动作与保存操作在嵌入式插件页中更易识别
+
 ## [1.1.7] - 2026-04-20
 
 ### Changed / 变更

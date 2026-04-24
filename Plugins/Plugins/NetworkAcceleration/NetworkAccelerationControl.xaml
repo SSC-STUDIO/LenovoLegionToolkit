@@ -91,21 +91,24 @@
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top">
                         <wpfui:Button x:Name="_serviceToggleButton"
-                                      Width="168"
+                                      MinWidth="184"
                                       Margin="0,0,10,10"
+                                      Icon="Rocket24"
                                       Appearance="Primary"
                                       AutomationProperties.AutomationId="NetworkAcceleration_ServiceToggleButton"
                                       Click="ServiceToggleButton_Click" />
 
-                        <wpfui:Button Width="128"
+                        <wpfui:Button MinWidth="132"
                                       Margin="0,0,10,10"
+                                      Icon="ArrowClockwise24"
                                       Appearance="Secondary"
                                       Content="{x:Static text:NetworkAccelerationText.RefreshButton}"
                                       AutomationProperties.AutomationId="NetworkAcceleration_RefreshButton"
                                       Click="RefreshButton_Click" />
 
-                        <wpfui:Button Width="120"
+                        <wpfui:Button MinWidth="120"
                                       Margin="0,0,0,10"
+                                      Icon="Settings24"
                                       Appearance="Secondary"
                                       Content="{x:Static text:NetworkAccelerationText.MenuButton}"
                                       AutomationProperties.AutomationId="NetworkAcceleration_MenuButton"
@@ -333,20 +336,23 @@
                             </Border>
 
                             <WrapPanel Margin="0,18,0,0">
-                                <wpfui:Button Width="176"
+                                <wpfui:Button MinWidth="204"
                                               Margin="0,0,10,10"
+                                              Icon="Rocket24"
                                               Appearance="Primary"
                                               Content="{x:Static text:NetworkAccelerationText.RunQuickOptimizationButton}"
                                               AutomationProperties.AutomationId="NetworkAcceleration_QuickOptimizeButton"
                                               Click="QuickOptimizeButton_Click" />
-                                <wpfui:Button Width="162"
+                                <wpfui:Button MinWidth="186"
                                               Margin="0,0,10,10"
+                                              Icon="ArrowCounterclockwise24"
                                               Appearance="Secondary"
                                               Content="{x:Static text:NetworkAccelerationText.ResetNetworkStackButton}"
                                               AutomationProperties.AutomationId="NetworkAcceleration_ResetStackButton"
                                               Click="ResetStackButton_Click" />
-                                <wpfui:Button Width="120"
+                                <wpfui:Button MinWidth="132"
                                               Margin="0,0,0,10"
+                                              Icon="Checkmark24"
                                               Appearance="Secondary"
                                               Content="{x:Static text:NetworkAccelerationText.SaveModeButton}"
                                               AutomationProperties.AutomationId="NetworkAcceleration_SaveModeButton"

@@ -148,7 +148,21 @@ internal sealed class PluginWorkbenchSession : IDisposable
         if (candidates.Count == 0)
             throw new FileNotFoundException($"No plugin DLL candidates were found in '{pluginDirectory}'.");
 
-        return candidates[0];
+        var exactDirectoryMatch = candidates.FirstOrDefault(path =>
+            string.Equals(Path.GetFileNameWithoutExtension(path), directoryName, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(exactDirectoryMatch))
+            return exactDirectoryMatch;
+
+        var filteredCandidates = candidates
+            .Where(path =>
+            {
+                var fileName = Path.GetFileNameWithoutExtension(path);
+                return !string.Equals(fileName, "LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase)
+                       && !string.Equals(fileName, "LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase);
+            })
+            .ToList();
+
+        return filteredCandidates.Count > 0 ? filteredCandidates[0] : candidates[0];
     }
 
     private void Start(LenovoLegionToolkit.Plugins.SDK.PluginHostMode mode)

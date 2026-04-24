@@ -94,10 +94,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             RunBackgroundTask(nameof(OnAppStarted), () => ApplyCursorStyleForCurrentThemeAsync(GetRuntimeCancellationToken()));
     }
 
-    public override object? GetFeatureExtension()
-    {
-        return new CustomMouseSettingsPluginPage(this);
-    }
+    public override object? GetFeatureExtension() => null;
 
     public override object? GetSettingsPage()
     {

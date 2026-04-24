@@ -471,8 +471,32 @@ public partial class MainWindow : Window
             OptimizationTabItem.Visibility = Visibility.Collapsed;
         }
 
+        EnsureSelectedTabIsAvailable();
         UpdateModeChrome();
         ApplyModeToHosts();
+    }
+
+    private void EnsureSelectedTabIsAvailable()
+    {
+        if (MainTabControl.SelectedItem is TabItem selectedItem &&
+            selectedItem.Visibility == Visibility.Visible)
+            return;
+
+        MainTabControl.SelectedItem = GetFirstVisibleTab();
+    }
+
+    private TabItem? GetFirstVisibleTab()
+    {
+        if (FeatureTabItem.Visibility == Visibility.Visible)
+            return FeatureTabItem;
+
+        if (SettingsTabItem.Visibility == Visibility.Visible)
+            return SettingsTabItem;
+
+        if (OptimizationTabItem.Visibility == Visibility.Visible)
+            return OptimizationTabItem;
+
+        return null;
     }
 
     private async Task RefreshOptimizationStatesAsync()

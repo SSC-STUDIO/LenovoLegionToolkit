@@ -11,7 +11,6 @@ namespace PluginWorkbench.Smoke;
 internal static class Program
 {
     private const string DefaultPluginId = "custom-mouse";
-    private const string StartupTheme = "Dark";
 
     private static int Main(string[] args)
     {
@@ -28,7 +27,7 @@ internal static class Program
 
             var (startInfo, appDirectory) = ResolveWorkbenchStartInfo(repositoryRoot);
             startInfo.Arguments = AppendArgument(startInfo.Arguments, $"--repository-root \"{repositoryRoot}\"");
-            startInfo.Arguments = AppendArgument(startInfo.Arguments, $"--theme {StartupTheme.ToLowerInvariant()}");
+            startInfo.Arguments = AppendArgument(startInfo.Arguments, $"--theme {options.Theme.ToLowerInvariant()}");
             startInfo.Arguments = AppendArgument(startInfo.Arguments, "--auto-accept-runtime-confirmation");
 
             Console.WriteLine($"[workbench-smoke] Launching: {startInfo.FileName} {startInfo.Arguments}");
@@ -43,7 +42,7 @@ internal static class Program
 
             var themeStatus = WaitForAutomationId(window, "ThemeStateTextBlock", TimeSpan.FromSeconds(5));
             WaitUntil(
-                () => ReadElementText(themeStatus).Contains(StartupTheme, StringComparison.OrdinalIgnoreCase),
+                () => ReadElementText(themeStatus).Contains(options.Theme, StringComparison.OrdinalIgnoreCase),
                 TimeSpan.FromSeconds(10),
                 TimeSpan.FromMilliseconds(250));
             Console.WriteLine("[workbench-smoke] Startup theme verified");
@@ -67,15 +66,36 @@ internal static class Program
             var optimizationTab = WaitForAutomationId(window, "OptimizationTabItem", TimeSpan.FromSeconds(10));
             Select(optimizationTab);
 
-            var runButton = WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15));
+            var runButton = plugin.Id.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
+                ? TryWaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(5))
+                : WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15));
 
-            if (!ReadElementText(status).Contains("Loaded", StringComparison.OrdinalIgnoreCase))
-                throw new InvalidOperationException("Workbench did not report a loaded plugin state.");
+            var statusText = ReadElementText(status);
+            if (string.IsNullOrWhiteSpace(statusText)
+                || statusText.Contains("failed", StringComparison.OrdinalIgnoreCase)
+                || statusText.Contains("error", StringComparison.OrdinalIgnoreCase))
+            {
+                var logTextBox = TryWaitForAutomationId(window, "LogTextBox", TimeSpan.FromSeconds(2));
+                if (logTextBox is not null)
+                    Console.WriteLine($"[workbench-smoke] Workbench log:\n{ReadElementText(logTextBox)}");
+
+                throw new InvalidOperationException($"Workbench reported an invalid plugin state: '{statusText}'.");
+            }
 
             if (!ReadElementText(subtitle).Contains("Mode: Preview", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("Workbench did not start in Preview mode for the loaded plugin.");
 
-            if (runButton.Current.IsEnabled)
+            if (plugin.Id.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
+            {
+                var featureTabHidden = WaitUntil(
+                    () => !IsVisible(FindByAutomationId(window, "FeatureTabItem")),
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromMilliseconds(250));
+                if (!featureTabHidden)
+                    throw new InvalidOperationException("custom-mouse should not expose a standalone feature preview tab.");
+            }
+
+            if (runButton is not null && runButton.Current.IsEnabled)
                 throw new InvalidOperationException("Optimization action button should be disabled in Preview mode.");
 
             Console.WriteLine("[workbench-smoke] Preview mode verified");
@@ -89,6 +109,31 @@ internal static class Program
                 TimeSpan.FromMilliseconds(250));
             Console.WriteLine("[workbench-smoke] Settings host shell verified");
 
+            if (plugin.Id.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
+            {
+                var settingsWindowHandle = window.Current.NativeWindowHandle;
+                var openStyleSettingsButton = TryWaitForAutomationId(window, "OpenStyleSettingsButton", TimeSpan.FromSeconds(5))
+                    ?? TryWaitForAutomationId(window, "_openStyleSettingsButton", TimeSpan.FromSeconds(2))
+                    ?? TryWaitForDescendantByName(window, "Open Style Settings", ControlType.Button, TimeSpan.FromSeconds(6))
+                    ?? WaitForDescendantByName(window, "Open Style", ControlType.Button, TimeSpan.FromSeconds(6));
+
+                if (openStyleSettingsButton.Current.IsEnabled)
+                {
+                    Click(openStyleSettingsButton);
+                    var styleWindow = WaitForAnyWindow(
+                        process.Id,
+                        new[] { "Menu Style Settings", "Shell Integration" },
+                        TimeSpan.FromSeconds(15),
+                        settingsWindowHandle);
+                    Console.WriteLine($"[workbench-smoke] Shell style window opened: {styleWindow.Current.Name}");
+                    CloseWindow(styleWindow);
+                }
+                else
+                {
+                    Console.WriteLine("[workbench-smoke] Shell style settings button is present but disabled in the current host state.");
+                }
+            }
+
             var modeToggleButton = WaitForAutomationId(window, "ModeToggleButton", TimeSpan.FromSeconds(5));
             Click(modeToggleButton);
             Console.WriteLine("[workbench-smoke] Real Runtime switch requested");
@@ -98,13 +143,16 @@ internal static class Program
                 TimeSpan.FromSeconds(30),
                 TimeSpan.FromMilliseconds(250));
 
-            optimizationTab = WaitForAutomationId(window, "OptimizationTabItem", TimeSpan.FromSeconds(10));
-            Select(optimizationTab);
-            runButton = WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15));
-            WaitUntil(
-                () => runButton.Current.IsEnabled,
-                TimeSpan.FromSeconds(15),
-                TimeSpan.FromMilliseconds(250));
+            if (runButton is not null)
+            {
+                optimizationTab = WaitForAutomationId(window, "OptimizationTabItem", TimeSpan.FromSeconds(10));
+                Select(optimizationTab);
+                runButton = WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15));
+                WaitUntil(
+                    () => runButton.Current.IsEnabled,
+                    TimeSpan.FromSeconds(15),
+                    TimeSpan.FromMilliseconds(250));
+            }
 
             Console.WriteLine("[workbench-smoke] Real Runtime mode verified");
 
@@ -130,17 +178,26 @@ internal static class Program
     {
         var repositoryRoot = ResolveRepositoryRoot(args);
         var pluginId = DefaultPluginId;
+        var theme = "Dark";
 
         for (var i = 0; i < args.Length; i++)
         {
-            if (!string.Equals(args[i], "--plugin-id", StringComparison.OrdinalIgnoreCase))
-                continue;
+            if (string.Equals(args[i], "--plugin-id", StringComparison.OrdinalIgnoreCase))
+            {
+                if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
+                    pluginId = args[i + 1];
 
-            if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
-                pluginId = args[i + 1];
+                continue;
+            }
+
+            if (string.Equals(args[i], "--theme", StringComparison.OrdinalIgnoreCase))
+            {
+                if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
+                    theme = args[i + 1];
+            }
         }
 
-        return new SmokeOptions(repositoryRoot, pluginId);
+        return new SmokeOptions(repositoryRoot, pluginId, theme);
     }
 
     private static string ResolveRepositoryRoot(string[] args)
@@ -325,6 +382,20 @@ internal static class Program
             ?? throw new InvalidOperationException($"Window '{windowName}' was not found.");
     }
 
+    private static AutomationElement WaitForAnyWindow(int processId, IReadOnlyList<string> windowNames, TimeSpan timeout, params int[] excludedHandles)
+    {
+        var found = WaitUntil(
+            () => FindAnyWindow(processId, windowNames, excludedHandles) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            throw new TimeoutException($"Timed out waiting for one of: {string.Join(", ", windowNames)}");
+
+        return FindAnyWindow(processId, windowNames, excludedHandles)
+            ?? throw new InvalidOperationException($"Window not found: {string.Join(", ", windowNames)}");
+    }
+
     private static AutomationElement? FindWindow(int processId, string windowName, string? automationId)
     {
         var windows = AutomationElement.RootElement.FindAll(
@@ -348,6 +419,27 @@ internal static class Program
         return null;
     }
 
+    private static AutomationElement? FindAnyWindow(int processId, IReadOnlyList<string> windowNames, params int[] excludedHandles)
+    {
+        var excluded = excludedHandles.Where(handle => handle != 0).ToHashSet();
+        var windows = AutomationElement.RootElement.FindAll(
+            TreeScope.Children,
+            new AndCondition(
+                new PropertyCondition(AutomationElement.ProcessIdProperty, processId),
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window)));
+
+        foreach (AutomationElement window in windows)
+        {
+            if (excluded.Contains(window.Current.NativeWindowHandle))
+                continue;
+
+            if (windowNames.Any(name => string.Equals(window.Current.Name, name, StringComparison.OrdinalIgnoreCase)))
+                return window;
+        }
+
+        return null;
+    }
+
     private static AutomationElement WaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
     {
         var found = WaitUntil(
@@ -362,9 +454,61 @@ internal static class Program
             ?? throw new InvalidOperationException($"Automation element '{automationId}' not found.");
     }
 
+    private static AutomationElement? TryWaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => FindByAutomationId(root, automationId) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        return found ? FindByAutomationId(root, automationId) : null;
+    }
+
     private static AutomationElement? FindByAutomationId(AutomationElement root, string automationId)
     {
-        return root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        var matches = root.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.AutomationIdProperty, automationId))
+            .Cast<AutomationElement>()
+            .ToArray();
+
+        if (matches.Length == 0)
+            return null;
+
+        return matches.FirstOrDefault(IsInteractable)
+               ?? matches.FirstOrDefault(IsVisible)
+               ?? matches[0];
+    }
+
+    private static bool IsVisible(AutomationElement? element)
+    {
+        if (element is null)
+            return false;
+
+        try
+        {
+            return !element.Current.IsOffscreen;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
+    }
+
+    private static bool IsInteractable(AutomationElement? element)
+    {
+        if (!IsVisible(element))
+            return false;
+
+        try
+        {
+            return element is not null
+                   && element.Current.IsEnabled
+                   && element.Current.BoundingRectangle.Width > 0
+                   && element.Current.BoundingRectangle.Height > 0;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
     }
 
     private static AutomationElement WaitForPluginListItem(AutomationElement pluginList, PluginDescriptor plugin, TimeSpan timeout)
@@ -400,23 +544,46 @@ internal static class Program
     private static AutomationElement WaitForDescendantByName(AutomationElement root, string name, ControlType controlType, TimeSpan timeout)
     {
         var found = WaitUntil(
-            () => root.FindFirst(
-                TreeScope.Descendants,
-                new AndCondition(
-                    new PropertyCondition(AutomationElement.NameProperty, name),
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, controlType))) is not null,
+            () => FindDescendantByName(root, name, controlType) is not null,
             timeout,
             TimeSpan.FromMilliseconds(250));
 
         if (!found)
             throw new TimeoutException($"Timed out waiting for descendant '{name}'.");
 
-        return root.FindFirst(
-                   TreeScope.Descendants,
-                   new AndCondition(
-                       new PropertyCondition(AutomationElement.NameProperty, name),
-                       new PropertyCondition(AutomationElement.ControlTypeProperty, controlType)))
+        return FindDescendantByName(root, name, controlType)
                ?? throw new InvalidOperationException($"Descendant '{name}' not found.");
+    }
+
+    private static AutomationElement? TryWaitForDescendantByName(AutomationElement root, string name, ControlType controlType, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => FindDescendantByName(root, name, controlType) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            return null;
+
+        return FindDescendantByName(root, name, controlType);
+    }
+
+    private static AutomationElement? FindDescendantByName(AutomationElement root, string name, ControlType controlType)
+    {
+        var matches = root.FindAll(
+                TreeScope.Descendants,
+                new AndCondition(
+                    new PropertyCondition(AutomationElement.NameProperty, name),
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, controlType)))
+            .Cast<AutomationElement>()
+            .ToArray();
+
+        if (matches.Length == 0)
+            return null;
+
+        return matches.FirstOrDefault(IsInteractable)
+               ?? matches.FirstOrDefault(IsVisible)
+               ?? matches[0];
     }
 
     private static void Select(AutomationElement element)
@@ -495,6 +662,6 @@ internal static class Program
         ((WindowPattern)pattern).Close();
     }
 
-    private sealed record SmokeOptions(string RepositoryRoot, string PluginId);
+    private sealed record SmokeOptions(string RepositoryRoot, string PluginId, string Theme);
     private sealed record PluginDescriptor(string FolderName, string Id, string Name, string Version);
 }

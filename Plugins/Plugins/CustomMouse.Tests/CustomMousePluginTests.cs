@@ -102,18 +102,24 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
 
         plugin.OnInstalled();
-        var featurePage = plugin.GetFeatureExtension();
         var settingsPage = PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), CustomMouseText.SettingsPageTitle);
         var category = plugin.GetOptimizationCategory();
 
-        Assert.NotNull(featurePage);
-        var featurePluginPage = PluginPageAssertions.AssertPluginPage(featurePage);
+        Assert.NotNull(settingsPage);
         Assert.NotNull(category);
         Assert.Equal("custom.mouse", category!.Key);
         Assert.Equal(plugin.Id, category.PluginId);
         Assert.Equal(2, category.Actions.Count);
         Assert.Equal("custom.mouse.cursor.auto-theme.enable", category.Actions[0].Key);
         Assert.Equal("custom.mouse.cursor.auto-theme.disable", category.Actions[1].Key);
+    }
+
+    [Fact]
+    public void Plugin_DoesNotExposeStandaloneFeaturePage()
+    {
+        var plugin = new CustomMousePlugin();
+
+        Assert.Null(plugin.GetFeatureExtension());
     }
 
     [Fact]

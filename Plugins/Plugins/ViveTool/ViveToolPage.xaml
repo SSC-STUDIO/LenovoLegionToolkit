@@ -75,14 +75,27 @@
                                 Padding="14"
                                 CornerRadius="16"
                                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                            <StackPanel>
-                                <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_WarningTitle}"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <TextBlock Margin="0,8,0,0"
-                                           Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
-                                           TextWrapping="Wrap"
-                                           Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <wpfui:SymbolIcon Symbol="Warning24"
+                                                  FontSize="18"
+                                                  Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                                  Margin="0,2,10,0"
+                                                  VerticalAlignment="Top" />
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_WarningTitle}"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock Margin="0,8,0,0"
+                                               Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
+                                               TextWrapping="Wrap"
+                                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
                     </StackPanel>
 
@@ -200,10 +213,12 @@
                                     VerticalAlignment="Center">
                             <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
                                           Appearance="Primary"
+                                          Icon="Settings24"
                                           Click="GoToSettingsButton_Click"
                                           Padding="22,8"
                                           Margin="0,0,0,8" />
                             <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_Refresh}"
+                                          Icon="ArrowClockwise24"
                                           Click="RefreshStatusButton_Click"
                                           Padding="22,8" />
                         </StackPanel>
@@ -242,17 +257,20 @@
                                 <wpfui:Button x:Name="_importButton"
                                               AutomationProperties.AutomationId="ViveToolImportButton"
                                               Appearance="Primary"
+                                              Icon="ArrowImport24"
                                               Content="{x:Static pluginRes:Resource.ViveTool_Import}"
                                               Click="ImportButton_Click"
                                               Margin="0,0,10,10"
                                               Padding="14,6" />
                                 <wpfui:Button x:Name="_refreshListButton"
                                               AutomationProperties.AutomationId="ViveToolRefreshListButton"
+                                              Icon="ArrowClockwise24"
                                               Content="{x:Static pluginRes:Resource.ViveTool_RefreshList}"
                                               Click="RefreshListButton_Click"
                                               Margin="0,0,10,10"
                                               Padding="14,6" />
                                 <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
+                                              Icon="Settings24"
                                               Click="GoToSettingsButton_Click"
                                               Margin="0,0,0,10"
                                               Padding="14,6" />
@@ -347,6 +365,7 @@
 
                                 <wpfui:Button Grid.Column="1"
                                               Content="{x:Static pluginRes:Resource.ViveTool_Refresh}"
+                                              Icon="ArrowClockwise24"
                                               Click="RefreshListButton_Click"
                                               Padding="12,6"
                                               VerticalAlignment="Top" />
@@ -426,7 +445,7 @@
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
                                         <DataGridTemplateColumn Header="{x:Static pluginRes:Resource.ViveTool_Actions}"
-                                                                Width="220">
+                                                                Width="260">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel HorizontalAlignment="Center"
@@ -436,12 +455,14 @@
                                                                       Click="EnableFeatureButton_Click"
                                                                       Content="{x:Static pluginRes:Resource.ViveTool_Enable}"
                                                                       FontSize="12"
+                                                                      Icon="Checkmark24"
                                                                       Margin="0,0,8,0"
                                                                       Padding="10,4"
                                                                       Tag="{Binding Id}" />
                                                         <wpfui:Button Click="DisableFeatureButton_Click"
                                                                       Content="{x:Static pluginRes:Resource.ViveTool_Disable}"
                                                                       FontSize="12"
+                                                                      Icon="Dismiss24"
                                                                       Padding="10,4"
                                                                       Tag="{Binding Id}" />
                                                     </StackPanel>
