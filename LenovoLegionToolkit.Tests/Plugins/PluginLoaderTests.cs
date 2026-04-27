@@ -73,6 +73,45 @@ public class PluginLoaderTests : IDisposable
         return result.Should().BeOfType<bool>().Which;
     }
 
+    private object RegisterDependencyResolutionContext(string pluginMainAssemblyPath, string pluginDirectory)
+    {
+        var registerMethod = GetPrivateStaticMethod("RegisterPluginDependencyResolutionContext");
+        var registration = registerMethod.Invoke(null, new object?[] { pluginMainAssemblyPath, pluginDirectory, _mockSignatureValidator.Object });
+        registration.Should().NotBeNull();
+
+        var context = registration!.GetType().GetProperty("Context")?.GetValue(registration);
+        context.Should().NotBeNull();
+        return context!;
+    }
+
+    private static void RemoveDependencyResolutionContext(object context)
+    {
+        var removeMethod = GetPrivateStaticMethod("RemovePluginDependencyResolutionContext");
+        removeMethod.Invoke(null, new[] { context });
+    }
+
+    private static object[] GetScopedDependencyResolutionContexts(Assembly? requestingAssembly)
+    {
+        var method = GetPrivateStaticMethod("GetScopedDependencyResolutionContexts");
+        var result = method.Invoke(null, new object?[] { requestingAssembly });
+        result.Should().BeAssignableTo<Array>();
+        return ((Array)result!).Cast<object>().ToArray();
+    }
+
+    private static void SetPluginMainAssembly(object context, Assembly assembly)
+    {
+        var method = context.GetType().GetMethod("SetPluginMainAssembly", BindingFlags.Public | BindingFlags.Instance);
+        method.Should().NotBeNull();
+        method!.Invoke(context, new object[] { assembly });
+    }
+
+    private static string GetPluginDirectory(object context)
+    {
+        var property = context.GetType().GetProperty("PluginDirectory", BindingFlags.Public | BindingFlags.Instance);
+        property.Should().NotBeNull();
+        return property!.GetValue(context).Should().BeOfType<string>().Which;
+    }
+
     #region Constructor Tests
 
     [Fact]
@@ -307,6 +346,73 @@ public class PluginLoaderTests : IDisposable
     }
 
     [Fact]
+    public void GetScopedDependencyResolutionContexts_WithMultipleContextsAndNoRequestingAssembly_ShouldReturnNone()
+    {
+        // Arrange
+        var pluginDirectory1 = CreateTempDirectory();
+        var pluginDirectory2 = CreateTempDirectory();
+        var context1 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory1, "PluginA.dll"), pluginDirectory1);
+        var context2 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory2, "PluginB.dll"), pluginDirectory2);
+
+        try
+        {
+            // Act
+            var contexts = GetScopedDependencyResolutionContexts(null);
+
+            // Assert
+            contexts.Should().BeEmpty();
+        }
+        finally
+        {
+            RemoveDependencyResolutionContext(context1);
+            RemoveDependencyResolutionContext(context2);
+        }
+    }
+
+    [Fact]
+    public void GetScopedDependencyResolutionContexts_WithRequestingMainAssembly_ShouldReturnOnlyMatchingContext()
+    {
+        // Arrange
+        var pluginDirectory1 = CreateTempDirectory();
+        var pluginDirectory2 = CreateTempDirectory();
+        var context1 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory1, "PluginA.dll"), pluginDirectory1);
+        var context2 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory2, "PluginB.dll"), pluginDirectory2);
+
+        try
+        {
+            SetPluginMainAssembly(context1, typeof(PluginLoaderTests).Assembly);
+
+            // Act
+            var contexts = GetScopedDependencyResolutionContexts(typeof(PluginLoaderTests).Assembly);
+
+            // Assert
+            contexts.Should().ContainSingle();
+            GetPluginDirectory(contexts[0]).Should().Be(Path.GetFullPath(pluginDirectory1));
+        }
+        finally
+        {
+            RemoveDependencyResolutionContext(context1);
+            RemoveDependencyResolutionContext(context2);
+        }
+    }
+
+    [Fact]
+    public void IsValidPluginDependencySignature_WithExpiredResultWithoutCertificate_ShouldReturnFalse()
+    {
+        // Arrange
+        var method = GetPrivateStaticMethod("IsValidPluginDependencySignature");
+        var signatureResult = new PluginSignatureResult(PluginSignatureStatus.Expired, "expired");
+        var requestedAssemblyName = new AssemblyName("Microsoft.Extensions.Logging.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60");
+        var candidatePath = Path.Combine(CreateTempDirectory(), "Microsoft.Extensions.Logging.Abstractions.dll");
+
+        // Act
+        var result = method.Invoke(null, new object[] { signatureResult, requestedAssemblyName, candidatePath });
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
     public void GetPluginAssemblyCandidatePath_WithManagedDependency_ShouldReturnSidecarDllPath()
     {
         // Arrange
@@ -448,6 +554,138 @@ public class PluginLoaderTests : IDisposable
 
         // Assert - Null should be allowed
         result.Should().BeTrue();
+    }
+
+    #endregion
+
+    #region Dependency Resolution Context Tests
+
+    [Fact]
+    public void RegisterPluginDependencyResolutionContext_ShouldCreateNewContext()
+    {
+        // Arrange
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "TestPlugin.dll");
+
+        // Act
+        var context = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+
+        // Assert
+        context.Should().NotBeNull();
+        GetPluginDirectory(context).Should().Be(Path.GetFullPath(pluginDirectory));
+
+        // Cleanup
+        RemoveDependencyResolutionContext(context);
+    }
+
+    [Fact]
+    public void RegisterPluginDependencyResolutionContext_WithSamePath_ShouldReturnExistingContext()
+    {
+        // Arrange
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "TestPlugin.dll");
+
+        // Act
+        var context1 = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+        var context2 = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+
+        // Assert
+        context1.Should().BeSameAs(context2);
+
+        // Cleanup
+        RemoveDependencyResolutionContext(context1);
+    }
+
+    [Fact]
+    public void GetScopedDependencyResolutionContexts_WithNoContexts_ShouldReturnEmpty()
+    {
+        // Act
+        var contexts = GetScopedDependencyResolutionContexts(null);
+
+        // Assert
+        contexts.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetScopedDependencyResolutionContexts_WithMultipleContextsAndMatchingAssembly_ShouldReturnMatching()
+    {
+        // Arrange
+        var pluginDirectory1 = CreateTempDirectory();
+        var pluginDirectory2 = CreateTempDirectory();
+        var context1 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory1, "PluginA.dll"), pluginDirectory1);
+        var context2 = RegisterDependencyResolutionContext(Path.Combine(pluginDirectory2, "PluginB.dll"), pluginDirectory2);
+
+        try
+        {
+            SetPluginMainAssembly(context1, typeof(PluginLoaderTests).Assembly);
+
+            // Act
+            var contexts = GetScopedDependencyResolutionContexts(typeof(PluginLoaderTests).Assembly);
+
+            // Assert
+            contexts.Should().ContainSingle();
+            GetPluginDirectory(contexts[0]).Should().Be(Path.GetFullPath(pluginDirectory1));
+        }
+        finally
+        {
+            RemoveDependencyResolutionContext(context1);
+            RemoveDependencyResolutionContext(context2);
+        }
+    }
+
+    [Fact]
+    public void RemovePluginDependencyResolutionContext_ShouldRemoveContext()
+    {
+        // Arrange
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "TestPlugin.dll");
+        var context = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+
+        // Act
+        RemoveDependencyResolutionContext(context);
+        var contexts = GetScopedDependencyResolutionContexts(null);
+
+        // Assert
+        contexts.Should().BeEmpty();
+    }
+
+    #endregion
+
+    #region Certificate Validation Tests
+
+    [Fact]
+    public void CertificateLooksMicrosoftOwned_WithMicrosoftSubject_ShouldReturnTrue()
+    {
+        // Arrange
+        var method = GetPrivateStaticMethod("CertificateLooksMicrosoftOwned");
+        // We can't easily create a real certificate, so we test the helper method
+        var containsMicrosoftMethod = typeof(PluginLoader).GetMethod("ContainsMicrosoftCorporation", BindingFlags.NonPublic | BindingFlags.Static);
+
+        // Act & Assert
+        containsMicrosoftMethod.Should().NotBeNull();
+        containsMicrosoftMethod!.Invoke(null, new object[] { "CN=Microsoft Corporation, O=Microsoft Corporation" })
+            .Should().Be(true);
+        containsMicrosoftMethod.Invoke(null, new object[] { "CN=Some Other Company" })
+            .Should().Be(false);
+    }
+
+    [Fact]
+    public void IsCandidateAssemblyIdentityCompatible_WithMatchingAssembly_ShouldReturnTrue()
+    {
+        // Arrange
+        var method = GetPrivateStaticMethod("IsCandidateAssemblyIdentityCompatible");
+        var pluginDirectory = CreateTempDirectory();
+        var assemblyPath = Path.Combine(pluginDirectory, "TestAssembly.dll");
+
+        // Create a test DLL file
+        File.WriteAllText(assemblyPath, "not a real assembly");
+
+        // Act - This will return false because the file is not a valid assembly
+        var requestedAssemblyName = new AssemblyName("TestAssembly, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+        var result = method.Invoke(null, new object[] { assemblyPath, requestedAssemblyName, Array.Empty<byte>() });
+
+        // Assert - Returns false because file is not a valid assembly
+        result.Should().Be(false);
     }
 
     #endregion

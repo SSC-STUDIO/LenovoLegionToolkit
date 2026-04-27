@@ -66,6 +66,8 @@ public class WindowsOptimizationService
         "reg"
     };
 
+    private const string HighPerformancePowerSchemeGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c";
+
     private readonly WindowsCleanupService _cleanupService;
     private readonly WindowsOptimizationCategoryProvider _categoryProvider;
 
@@ -293,7 +295,8 @@ public class WindowsOptimizationService
         string titleResourceKey,
         string descriptionResourceKey,
         IReadOnlyList<string> commands,
-        bool recommended = true)
+        bool recommended = true,
+        Func<CancellationToken, Task<bool>>? isAppliedAsync = null)
     {
         // Validate all commands at creation time
         foreach (var command in commands)
@@ -307,7 +310,8 @@ public class WindowsOptimizationService
             titleResourceKey,
             descriptionResourceKey,
             ct => ExecuteCommandsSequentiallyAsync(ct, commands.ToArray()),
-            recommended);
+            recommended,
+            isAppliedAsync);
     }
 
     private Task ApplyRegistryTweaksAsync(CancellationToken cancellationToken, IEnumerable<RegistryValueDefinition> tweaks)
@@ -386,7 +390,7 @@ public class WindowsOptimizationService
             }
 
             // Build process start info with parameterized arguments
-            var startInfo = BuildProcessStartInfo(fileName, arguments);
+            var startInfo = BuildProcessStartInfo(fileName, arguments, command);
 
             using var process = new Process { StartInfo = startInfo };
             process.Start();
@@ -462,14 +466,30 @@ public class WindowsOptimizationService
     /// <summary>
     /// Builds ProcessStartInfo with security settings.
     /// </summary>
-    private static ProcessStartInfo BuildProcessStartInfo(string fileName, string arguments)
+    private static ProcessStartInfo BuildProcessStartInfo(string fileName, string arguments, string originalCommand)
     {
-        var isHighRisk = HighRiskCommands.Contains(Path.GetFileNameWithoutExtension(fileName));
+        var isShellBuiltIn = IsShellBuiltInCommand(fileName);
+        var isHighRisk = ContainsCommandName(HighRiskCommands, fileName);
         
         // For high-risk commands, validate arguments more strictly
         if (isHighRisk && !string.IsNullOrEmpty(arguments))
         {
             ValidateHighRiskArguments(fileName, arguments);
+        }
+
+        if (isShellBuiltIn)
+        {
+            return new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/d /c {originalCommand}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                LoadUserProfile = false
+            };
         }
 
         var startInfo = new ProcessStartInfo
@@ -600,11 +620,65 @@ public class WindowsOptimizationService
         if (string.IsNullOrWhiteSpace(fileName))
             return false;
 
-        // Get just the filename without path
+        return ContainsCommandName(AllowedCommands, fileName);
+    }
+
+    private static bool ContainsCommandName(HashSet<string> commandNames, string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return false;
+
+        var baseName = Path.GetFileName(fileName);
+        var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+        return commandNames.Contains(fileName)
+               || commandNames.Contains(baseName)
+               || commandNames.Contains(nameWithoutExtension);
+    }
+
+    private static bool IsShellBuiltInCommand(string fileName)
+    {
         var name = Path.GetFileNameWithoutExtension(fileName);
-        
-        return AllowedCommands.Contains(name) || 
-               AllowedCommands.Contains(fileName);
+        return string.Equals(name, "del", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(name, "rd", StringComparison.OrdinalIgnoreCase);
+    }
+
+    internal async Task<bool> IsHighPerformancePowerPlanActiveAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "powercfg",
+                Arguments = "/getactivescheme",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+
+            using var process = new Process { StartInfo = startInfo };
+            process.Start();
+
+            var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+            var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+            await Task.WhenAll(process.WaitForExitAsync(cancellationToken), outputTask, errorTask).ConfigureAwait(false);
+
+            return process.ExitCode == 0
+                   && outputTask.Result.Contains(HighPerformancePowerSchemeGuid, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to evaluate active power plan.", ex);
+            return false;
+        }
     }
 
     /// <summary>
@@ -675,6 +749,8 @@ public static class CommandInjectionValidator
     // Dangerous patterns that could indicate command injection
     private static readonly string[] DangerousPatterns = new[]
     {
+        ">",       // Output redirection
+        "<",       // Input redirection
         "&&",      // Command chaining
         "||",      // Command chaining
         "|",       // Pipe (check individually for non-redirection cases)
@@ -692,6 +768,8 @@ public static class CommandInjectionValidator
     // Regex patterns for more complex detection
     private static readonly Regex[] DangerousRegexPatterns = new[]
     {
+        // Environment variable expansion (cmd.exe style)
+        new Regex(@"%[a-zA-Z0-9_]+%", RegexOptions.Compiled),
         // PowerShell encoding/execution patterns
         new Regex(@"-[eE][nN][cC]?\s+", RegexOptions.Compiled),
         // Base64 encoded commands

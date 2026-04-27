@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -30,6 +32,10 @@ public interface IPluginLoader
 /// </summary>
 public class PluginLoader : IPluginLoader
 {
+    private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> DependencyResolutionContexts = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly object DependencyResolverRegistrationLock = new();
+    private static bool _dependencyResolverRegistered;
+
     private readonly HashSet<string> _cultureFolders = new(StringComparer.OrdinalIgnoreCase)
     {
         "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
@@ -42,7 +48,8 @@ public class PluginLoader : IPluginLoader
     /// </summary>
     public async Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator)
     {
-        ResolveEventHandler? assemblyResolveHandler = null;
+        RegisteredPluginDependencyResolutionContext? registeredDependencyContext = null;
+        var keepDependencyContext = false;
 
         try
         {
@@ -58,8 +65,7 @@ public class PluginLoader : IPluginLoader
             // trigger managed assembly resolution, but we register early for defense in depth.
             if (!string.IsNullOrWhiteSpace(pluginDirectory))
             {
-                assemblyResolveHandler = (_, args) => ResolvePluginDependencyAssembly(args.Name, normalizedDllPath, pluginDirectory, signatureValidator);
-                AppDomain.CurrentDomain.AssemblyResolve += assemblyResolveHandler;
+                registeredDependencyContext = RegisterPluginDependencyResolutionContext(normalizedDllPath, pluginDirectory, signatureValidator);
             }
 
             // Validate plugin signature before loading (security check)
@@ -78,6 +84,8 @@ public class PluginLoader : IPluginLoader
             {
                 var assemblyBytes = File.ReadAllBytes(normalizedDllPath);
                 assembly = Assembly.Load(assemblyBytes);
+                registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);
+                keepDependencyContext = true;
             }
             catch (Exception ex)
             {
@@ -145,9 +153,69 @@ public class PluginLoader : IPluginLoader
         }
         finally
         {
-            if (assemblyResolveHandler != null)
-                AppDomain.CurrentDomain.AssemblyResolve -= assemblyResolveHandler;
+            if (!keepDependencyContext && registeredDependencyContext is { IsNew: true })
+                RemovePluginDependencyResolutionContext(registeredDependencyContext.Context);
         }
+    }
+
+    private static RegisteredPluginDependencyResolutionContext RegisterPluginDependencyResolutionContext(
+        string pluginMainAssemblyPath,
+        string pluginDirectory,
+        IPluginSignatureValidator signatureValidator)
+    {
+        var normalizedMainAssemblyPath = Path.GetFullPath(pluginMainAssemblyPath);
+        var normalizedPluginDirectory = Path.GetFullPath(pluginDirectory);
+
+        var isNew = DependencyResolutionContexts.TryAdd(normalizedMainAssemblyPath,
+            new PluginDependencyResolutionContext(
+                normalizedMainAssemblyPath,
+                normalizedPluginDirectory,
+                signatureValidator));
+
+        var context = DependencyResolutionContexts[normalizedMainAssemblyPath];
+
+        lock (DependencyResolverRegistrationLock)
+        {
+            if (!_dependencyResolverRegistered)
+            {
+                AppDomain.CurrentDomain.AssemblyResolve += ResolvePluginDependencyAssembly;
+                _dependencyResolverRegistered = true;
+            }
+        }
+
+        return new RegisteredPluginDependencyResolutionContext(context, isNew);
+    }
+
+    private static void RemovePluginDependencyResolutionContext(PluginDependencyResolutionContext context)
+    {
+        DependencyResolutionContexts.TryRemove(context.PluginMainAssemblyPath, out _);
+
+        lock (DependencyResolverRegistrationLock)
+        {
+            if (DependencyResolutionContexts.IsEmpty && _dependencyResolverRegistered)
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= ResolvePluginDependencyAssembly;
+                _dependencyResolverRegistered = false;
+            }
+        }
+    }
+
+    private static Assembly? ResolvePluginDependencyAssembly(object? sender, ResolveEventArgs args)
+    {
+        var contexts = GetScopedDependencyResolutionContexts(args.RequestingAssembly);
+
+        foreach (var context in contexts)
+        {
+            var assembly = ResolvePluginDependencyAssembly(
+                args.Name,
+                context.PluginMainAssemblyPath,
+                context.PluginDirectory,
+                context.SignatureValidator);
+            if (assembly != null)
+                return assembly;
+        }
+
+        return null;
     }
 
     private static Assembly? ResolvePluginDependencyAssembly(
@@ -165,7 +233,7 @@ public class PluginLoader : IPluginLoader
 
             // Try to find a version-compatible loaded assembly
             // Compare name, version, and public key token for proper binding
-            var loadedAssembly = FindCompatibleLoadedAssembly(requestedAssemblyName);
+            var loadedAssembly = FindCompatibleLoadedAssembly(requestedAssemblyName, pluginDirectory);
             if (loadedAssembly != null)
                 return loadedAssembly;
 
@@ -178,7 +246,7 @@ public class PluginLoader : IPluginLoader
             // This is a known limitation of AppDomain.AssemblyResolve - the alternative would be
             // to skip signature validation for dependencies, which is a security risk.
             var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
-            if (!signatureResult.IsValid)
+            if (!IsValidPluginDependencySignature(signatureResult, requestedAssemblyName, candidatePath))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Rejected plugin dependency due to invalid signature. [path={candidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
@@ -195,11 +263,104 @@ public class PluginLoader : IPluginLoader
         }
     }
 
+    private static bool IsValidPluginDependencySignature(
+        PluginSignatureResult signatureResult,
+        AssemblyName requestedAssemblyName,
+        string candidatePath)
+    {
+        if (signatureResult.IsValid)
+            return true;
+
+        if (signatureResult.Status != PluginSignatureStatus.Expired ||
+            signatureResult.Certificate == null ||
+            !IsMicrosoftSignedStrongNamedDependency(signatureResult.Certificate, requestedAssemblyName, candidatePath))
+        {
+            return false;
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Allowing expired but trusted Microsoft-signed plugin dependency. [path={candidatePath}, expires={signatureResult.ExpirationDate:O}]");
+
+        return true;
+    }
+
+    private static bool IsMicrosoftSignedStrongNamedDependency(
+        X509Certificate2 certificate,
+        AssemblyName requestedAssemblyName,
+        string candidatePath)
+    {
+        var requestedPublicKeyToken = requestedAssemblyName.GetPublicKeyToken();
+        if (requestedPublicKeyToken == null || requestedPublicKeyToken.Length == 0)
+            return false;
+
+        if (!IsCandidateAssemblyIdentityCompatible(candidatePath, requestedAssemblyName, requestedPublicKeyToken))
+            return false;
+
+        if (!CertificateLooksMicrosoftOwned(certificate))
+            return false;
+
+        return IsCertificateTrustedIgnoringExpiration(certificate);
+    }
+
+    private static bool IsCandidateAssemblyIdentityCompatible(
+        string candidatePath,
+        AssemblyName requestedAssemblyName,
+        byte[] requestedPublicKeyToken)
+    {
+        try
+        {
+            var candidateAssemblyName = AssemblyName.GetAssemblyName(candidatePath);
+            if (!string.Equals(candidateAssemblyName.Name, requestedAssemblyName.Name, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (requestedAssemblyName.Version != null &&
+                candidateAssemblyName.Version != null &&
+                candidateAssemblyName.Version < requestedAssemblyName.Version)
+            {
+                return false;
+            }
+
+            var candidatePublicKeyToken = candidateAssemblyName.GetPublicKeyToken();
+            return candidatePublicKeyToken != null &&
+                   candidatePublicKeyToken.SequenceEqual(requestedPublicKeyToken);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool CertificateLooksMicrosoftOwned(X509Certificate2 certificate)
+    {
+        return ContainsMicrosoftCorporation(certificate.Subject) ||
+               ContainsMicrosoftCorporation(certificate.Issuer);
+    }
+
+    private static bool ContainsMicrosoftCorporation(string value) =>
+        value.Contains("Microsoft Corporation", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsCertificateTrustedIgnoringExpiration(X509Certificate2 certificate)
+    {
+        try
+        {
+            using var chain = new X509Chain();
+            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+            chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+            chain.ChainPolicy.VerificationFlags = X509VerificationFlags.IgnoreNotTimeValid;
+            chain.ChainPolicy.VerificationTime = DateTime.UtcNow;
+            return chain.Build(certificate);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Find a loaded assembly that is compatible with the requested assembly name.
     /// Compares name, version (if specified), and public key token (if specified).
     /// </summary>
-    private static Assembly? FindCompatibleLoadedAssembly(AssemblyName requestedName)
+    private static Assembly? FindCompatibleLoadedAssembly(AssemblyName requestedName, string? pluginDirectory = null)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var requestedVersion = requestedName.Version;
@@ -237,10 +398,82 @@ public class PluginLoader : IPluginLoader
                 }
             }
 
+            if (!IsLoadedAssemblyCompatibleWithContext(assembly, pluginDirectory))
+                continue;
+
             return assembly;
         }
 
         return null;
+    }
+
+    private static PluginDependencyResolutionContext[] GetScopedDependencyResolutionContexts(Assembly? requestingAssembly)
+    {
+        var contexts = DependencyResolutionContexts.Values.ToArray();
+
+        if (contexts.Length == 0)
+            return [];
+
+        if (requestingAssembly == null)
+            return contexts.Length == 1 ? contexts : [];
+
+        return contexts
+            .Where(context => IsRequestingAssemblyInContext(requestingAssembly, context))
+            .ToArray();
+    }
+
+    private static bool IsRequestingAssemblyInContext(Assembly requestingAssembly, PluginDependencyResolutionContext context)
+    {
+        if (ReferenceEquals(requestingAssembly, context.PluginMainAssembly))
+            return true;
+
+        if (!string.IsNullOrWhiteSpace(context.PluginMainAssemblyFullName) &&
+            string.Equals(requestingAssembly.FullName, context.PluginMainAssemblyFullName, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        var requestingAssemblyLocation = GetAssemblyLocation(requestingAssembly);
+        return !string.IsNullOrWhiteSpace(requestingAssemblyLocation) &&
+               IsPathWithinDirectory(requestingAssemblyLocation, context.PluginDirectory);
+    }
+
+    private static bool IsLoadedAssemblyCompatibleWithContext(Assembly assembly, string? pluginDirectory)
+    {
+        if (string.IsNullOrWhiteSpace(pluginDirectory))
+            return true;
+
+        var location = GetAssemblyLocation(assembly);
+        if (string.IsNullOrWhiteSpace(location))
+            return IsContextOwnedLoadedAssemblyCompatibleWithContext(assembly, pluginDirectory);
+
+        if (IsPathWithinDirectory(location, pluginDirectory))
+            return true;
+
+        var contexts = DependencyResolutionContexts.Values.ToArray();
+        return !contexts.Any(context => IsPathWithinDirectory(location, context.PluginDirectory));
+    }
+
+    private static bool IsContextOwnedLoadedAssemblyCompatibleWithContext(Assembly assembly, string pluginDirectory)
+    {
+        var contexts = DependencyResolutionContexts.Values.ToArray();
+        var owningContext = contexts.FirstOrDefault(context => ReferenceEquals(assembly, context.PluginMainAssembly));
+        return owningContext == null ||
+               string.Equals(owningContext.PluginDirectory, Path.GetFullPath(pluginDirectory), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string? GetAssemblyLocation(Assembly assembly)
+    {
+        try
+        {
+            return string.IsNullOrWhiteSpace(assembly.Location)
+                ? null
+                : Path.GetFullPath(assembly.Location);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static string? GetPluginAssemblyCandidatePath(AssemblyName requestedAssemblyName, string pluginMainAssemblyPath, string pluginDirectory)
@@ -288,6 +521,28 @@ public class PluginLoader : IPluginLoader
 
         return true;
     }
+
+    private sealed class PluginDependencyResolutionContext(
+        string pluginMainAssemblyPath,
+        string pluginDirectory,
+        IPluginSignatureValidator signatureValidator)
+    {
+        public string PluginMainAssemblyPath { get; } = pluginMainAssemblyPath;
+        public string PluginDirectory { get; } = pluginDirectory;
+        public IPluginSignatureValidator SignatureValidator { get; } = signatureValidator;
+        public Assembly? PluginMainAssembly { get; private set; }
+        public string? PluginMainAssemblyFullName { get; private set; }
+
+        public void SetPluginMainAssembly(Assembly assembly)
+        {
+            PluginMainAssembly = assembly;
+            PluginMainAssemblyFullName = assembly.FullName;
+        }
+    }
+
+    private sealed record RegisteredPluginDependencyResolutionContext(
+        PluginDependencyResolutionContext Context,
+        bool IsNew);
 
     /// <summary>
     /// Create a plugin instance from a type

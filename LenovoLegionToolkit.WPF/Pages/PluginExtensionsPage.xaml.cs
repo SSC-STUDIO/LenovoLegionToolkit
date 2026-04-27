@@ -55,18 +55,10 @@ private string _currentSearchText = string.Empty;
         // Subscribe to plugin state changes
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
         
-        // Initialize loading text with multi-language support
-        var loadingText = this.FindName("_loadingText") as System.Windows.Controls.TextBlock;
-        if (loadingText != null)
-        {
-            loadingText.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Loading", "Loading plugins...", Resource.Culture);
-        }
-        
         // Initialize ListBox data binding
         if (_pluginsListBox != null)
         {
             _pluginsListBox.ItemsSource = _pluginViewModels;
-            _pluginsListBox.MouseDoubleClick += PluginListBox_MouseDoubleClick;
         }
         
         // Set page title and text (using dynamic resources to avoid auto-generated resource issues)
@@ -117,6 +109,12 @@ private string _currentSearchText = string.Empty;
         }
     }
 
+    private void PluginsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_pluginsListBox?.SelectedItem is PluginViewModel viewModel)
+            _currentSelectedPluginId = viewModel.PluginId;
+    }
+
     private async void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
         if (_isRefreshing)
@@ -145,6 +143,27 @@ private string _currentSearchText = string.Empty;
         }
     }
 
+    private void SetLoadingState(bool isLoading)
+    {
+        if (_loadingIndicator != null)
+            _loadingIndicator.Visibility = isLoading ? Visibility.Visible : Visibility.Collapsed;
+
+        if (_pluginListPanel != null)
+            _pluginListPanel.Visibility = isLoading ? Visibility.Hidden : Visibility.Visible;
+
+        if (_pluginDetailsPanel != null)
+            _pluginDetailsPanel.Visibility = isLoading ? Visibility.Hidden : Visibility.Visible;
+
+        if (!isLoading)
+            return;
+
+        if (_noPluginsMessage != null)
+            _noPluginsMessage.Visibility = Visibility.Collapsed;
+
+        if (_noResultsStackPanel != null)
+            _noResultsStackPanel.Visibility = Visibility.Collapsed;
+    }
+
     private int GetInstallableOnlinePluginCount() =>
         _onlinePlugins.Count(plugin => !_pluginManager.IsInstalled(plugin.Id));
 
@@ -167,6 +186,7 @@ private string _currentSearchText = string.Empty;
         if (_summaryTotalTextBlock == null ||
             _summaryInstalledTextBlock == null ||
             _summaryUpdatesTextBlock == null ||
+            _summaryStorePulseValueTextBlock == null ||
             _summaryHintTextBlock == null)
         {
             return;
@@ -180,18 +200,21 @@ private string _currentSearchText = string.Empty;
         _summaryTotalTextBlock.Text = totalPlugins.ToString(CultureInfo.InvariantCulture);
         _summaryInstalledTextBlock.Text = installedPlugins.ToString(CultureInfo.InvariantCulture);
         _summaryUpdatesTextBlock.Text = updatesReady.ToString(CultureInfo.InvariantCulture);
+        _summaryStorePulseValueTextBlock.Text = updatesReady > 0
+            ? updatesReady.ToString(CultureInfo.InvariantCulture)
+            : discoverablePlugins > 0
+                ? discoverablePlugins.ToString(CultureInfo.InvariantCulture)
+                : totalPlugins == 0
+                    ? "..."
+                    : "0";
 
         _summaryHintTextBlock.Text = updatesReady > 0
-            ? string.Format(
-                LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpdatesReadyMessage", "{0} plugin update(s) are ready to install.", Resource.Culture),
-                updatesReady)
+            ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpdatesAvailableLabel", "Updates available", Resource.Culture)
             : discoverablePlugins > 0
-                ? string.Format(
-                    LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryDiscoverableMessage", "{0} additional plugin(s) are available in the current feed.", Resource.Culture),
-                    discoverablePlugins)
+                ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryDiscoverableLabel", "Available to install", Resource.Culture)
                 : totalPlugins == 0
-                    ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryWaitingMetadata", "Waiting for plugin metadata to load.", Resource.Culture)
-                    : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpToDate", "All detected plugins are currently up to date.", Resource.Culture);
+                    ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryWaitingMetadataShort", "Loading metadata", Resource.Culture)
+                    : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_SummaryUpToDateShort", "Up to date", Resource.Culture);
     }
 
     private static string FormatReleaseDate(string releaseDateRaw)
@@ -430,21 +453,9 @@ private string _currentSearchText = string.Empty;
 
     private async Task FetchOnlinePluginsAsync()
     {
-        // Show loading indicator
-        var loadingIndicator = this.FindName("_loadingIndicator") as StackPanel;
-        var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
-        
         try
         {
-            if (loadingIndicator != null)
-            {
-                loadingIndicator.Visibility = Visibility.Visible;
-            }
-            
-            if (noPluginsMessage != null)
-            {
-                noPluginsMessage.Visibility = Visibility.Collapsed;
-            }
+            SetLoadingState(true);
             
             // Fetch online plugins
             _availableUpdates.Clear();
@@ -488,12 +499,6 @@ private string _currentSearchText = string.Empty;
             // the latest update badge, version, and changelog state.
             UpdateAllPluginsUI();
             UpdateBulkActionButtonsVisibility();
-            
-            // Hide loading indicator
-            if (loadingIndicator != null)
-            {
-                loadingIndicator.Visibility = Visibility.Collapsed;
-            }
         }
         catch (Exception ex)
         {
@@ -506,12 +511,13 @@ private string _currentSearchText = string.Empty;
                     T("PluginExtensionsPage_FetchFailedMessage", "Unable to get plugin list from store: {0}"),
                     ex.Message),
                 SnackbarType.Error);
-            
-            // Hide loading indicator
-            if (loadingIndicator != null)
-            {
-                loadingIndicator.Visibility = Visibility.Collapsed;
-            }
+        }
+        finally
+        {
+            SetLoadingState(false);
+
+            UpdateAllPluginsUI();
+            UpdateBulkActionButtonsVisibility();
         }
     }
     
@@ -560,19 +566,15 @@ private string _currentSearchText = string.Empty;
             }
         }
         
-        // Update visibility of the empty states
-        _noPluginsMessage.Visibility = uniquePlugins.Any() ? Visibility.Collapsed : Visibility.Visible;
-        
-        // Show search specific empty state if we have a search term and no results
-        if (!string.IsNullOrWhiteSpace(_currentSearchText) && !uniquePlugins.Any())
-        {
-            _noResultsStackPanel.Visibility = Visibility.Visible;
-            _noPluginsMessage.Visibility = Visibility.Collapsed;
-        }
-        else
-        {
-            _noResultsStackPanel.Visibility = Visibility.Collapsed;
-        }
+        var isLoading = _loadingIndicator?.Visibility == Visibility.Visible;
+        var hasVisiblePlugins = uniquePlugins.Any();
+        var hasAnyPlugins = _allPlugins.Any();
+
+        if (_noPluginsMessage != null)
+            _noPluginsMessage.Visibility = !isLoading && !hasVisiblePlugins && !hasAnyPlugins ? Visibility.Visible : Visibility.Collapsed;
+
+        if (_noResultsStackPanel != null)
+            _noResultsStackPanel.Visibility = !isLoading && !hasVisiblePlugins && hasAnyPlugins ? Visibility.Visible : Visibility.Collapsed;
 
         foreach (var plugin in uniquePlugins)
         {
@@ -698,6 +700,7 @@ private string _currentSearchText = string.Empty;
         
         // Set ListBox data source
         _pluginsListBox.ItemsSource = _pluginViewModels;
+        SelectPreferredPlugin(currentPluginIds);
         
         // Update results count
         if (_resultsCountTextBlock != null)
@@ -707,18 +710,43 @@ private string _currentSearchText = string.Empty;
         }
     }
 
+    private void SelectPreferredPlugin(HashSet<string> visiblePluginIds)
+    {
+        if (_pluginsListBox == null)
+            return;
+
+        var selectedPluginId = _currentSelectedPluginId;
+        if (string.IsNullOrWhiteSpace(selectedPluginId) &&
+            _pluginsListBox.SelectedItem is PluginViewModel currentSelection)
+        {
+            selectedPluginId = currentSelection.PluginId;
+        }
+
+        var selectedViewModel = !string.IsNullOrWhiteSpace(selectedPluginId)
+            ? _pluginViewModels.FirstOrDefault(vm =>
+                visiblePluginIds.Contains(vm.PluginId) &&
+                string.Equals(vm.PluginId, selectedPluginId, StringComparison.OrdinalIgnoreCase))
+            : null;
+
+        selectedViewModel ??= _pluginViewModels.FirstOrDefault(vm => visiblePluginIds.Contains(vm.PluginId));
+
+        if (selectedViewModel != null)
+        {
+            if (!ReferenceEquals(_pluginsListBox.SelectedItem, selectedViewModel))
+                _pluginsListBox.SelectedItem = selectedViewModel;
+
+            _currentSelectedPluginId = selectedViewModel.PluginId;
+            return;
+        }
+
+        _pluginsListBox.SelectedItem = null;
+        _currentSelectedPluginId = string.Empty;
+    }
+
     private void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
         LocalizationHelper.SetPluginResourceCultures();
-        
-        // Only show loading indicator first, don't show "no plugins" message until loaded
-        var loadingIndicator = this.FindName("_loadingIndicator") as StackPanel;
-        var noPluginsMessage = this.FindName("_noPluginsMessage") as StackPanel;
-        
-        if (loadingIndicator != null)
-            loadingIndicator.Visibility = Visibility.Visible;
-        if (noPluginsMessage != null)
-            noPluginsMessage.Visibility = Visibility.Collapsed;
+        SetLoadingState(true);
         
         // Auto-fetch online plugins in background
         _ = Task.Run(async () =>
@@ -1179,7 +1207,7 @@ private string _currentSearchText = string.Empty;
             if (getFeatureExtension != null)
             {
                 var featureExtension = getFeatureExtension.Invoke(plugin, null);
-                supportsFeaturePage = featureExtension is IPluginPage;
+                supportsFeaturePage = PluginPageWrapper.TryCreateHostedPluginPage(featureExtension, out _);
             }
 
             var getOptimizationCategory = pluginType.GetMethod("GetOptimizationCategory", BindingFlags.Public | BindingFlags.Instance);

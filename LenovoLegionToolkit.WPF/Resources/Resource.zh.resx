@@ -3351,6 +3351,18 @@
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
     <value>当前检测到的插件均已是最新版本。</value>
   </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>可安装更新</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>可安装插件</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>加载元数据</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>已是最新</value>
+  </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>作者：{0}</value>
   </data>

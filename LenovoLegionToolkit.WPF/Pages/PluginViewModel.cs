@@ -44,6 +44,7 @@ namespace LenovoLegionToolkit.WPF.Pages
                 {
                     _newVersion = value;
                     OnPropertyChanged(nameof(NewVersion));
+                    OnPropertyChanged(nameof(HasUpdateDetails));
                 }
             }
         }
@@ -58,6 +59,7 @@ namespace LenovoLegionToolkit.WPF.Pages
                     _releaseDate = value;
                     OnPropertyChanged(nameof(ReleaseDate));
                     OnPropertyChanged(nameof(HasReleaseDate));
+                    OnPropertyChanged(nameof(HasUpdateDetails));
                 }
             }
         }
@@ -73,6 +75,7 @@ namespace LenovoLegionToolkit.WPF.Pages
                     OnPropertyChanged(nameof(Changelog));
                     OnPropertyChanged(nameof(HasChangelog));
                     OnPropertyChanged(nameof(HasChangelogUrl));
+                    OnPropertyChanged(nameof(HasUpdateDetails));
                 }
             }
         }
@@ -85,6 +88,49 @@ namespace LenovoLegionToolkit.WPF.Pages
             Uri.TryCreate(_changelog, UriKind.Absolute, out var uri) &&
             (uri.Scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
              uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
+
+        public bool HasUpdateDetails => UpdateInfoVisible &&
+            (!string.IsNullOrWhiteSpace(NewVersion) ||
+             !string.IsNullOrWhiteSpace(ReleaseDate) ||
+             !string.IsNullOrWhiteSpace(Changelog));
+
+        public string StatusText
+        {
+            get
+            {
+                if (_updateAvailable)
+                    return Resource.PluginExtensionsPage_CapabilityUpdate;
+
+                if (IsInstalled)
+                    return Resource.PluginExtensionsPage_PluginInstalled;
+
+                return Resource.PluginExtensionsPage_InstallPlugin;
+            }
+        }
+
+        public string CapabilitySummary
+        {
+            get
+            {
+                var capabilities = new List<string>();
+
+                if (SupportsConfiguration)
+                    capabilities.Add(Resource.PluginExtensionsPage_CapabilitySettings);
+
+                if (SupportsOpenAction)
+                    capabilities.Add(Resource.PluginExtensionsPage_CapabilityQuickOpen);
+
+                if (SupportsOptimizationCategory)
+                    capabilities.Add(Resource.PluginExtensionsPage_CapabilityOptimize);
+
+                if (_updateAvailable)
+                    capabilities.Add(Resource.PluginExtensionsPage_CapabilityUpdate);
+
+                return capabilities.Count > 0
+                    ? string.Join(" / ", capabilities)
+                    : Resource.PluginExtensionsPage_InstallPlugin;
+            }
+        }
 
         public string Author
         {
@@ -233,6 +279,8 @@ public string PluginId
                     _isInstalled = value;
                     OnPropertyChanged(nameof(IsInstalled));
                     OnPropertyChanged(nameof(UpdateInfoVisible));
+                    OnPropertyChanged(nameof(HasUpdateDetails));
+                    OnPropertyChanged(nameof(StatusText));
                     
                     // Update button text when installation status changes
                     UpdateInstallButtonText();
@@ -253,6 +301,7 @@ public string PluginId
                 {
                     _supportsConfiguration = value;
                     OnPropertyChanged(nameof(SupportsConfiguration));
+                    OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
         }
@@ -267,6 +316,7 @@ public string PluginId
                     _supportsFeaturePage = value;
                     OnPropertyChanged(nameof(SupportsFeaturePage));
                     OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
         }
@@ -281,6 +331,7 @@ public string PluginId
                     _supportsOptimizationCategory = value;
                     OnPropertyChanged(nameof(SupportsOptimizationCategory));
                     OnPropertyChanged(nameof(SupportsOpenAction));
+                    OnPropertyChanged(nameof(CapabilitySummary));
                 }
             }
         }
@@ -393,6 +444,9 @@ public string PluginId
                 _updateAvailable = updateAvailable;
                 OnPropertyChanged(nameof(UpdateAvailable));
                 OnPropertyChanged(nameof(UpdateInfoVisible));
+                OnPropertyChanged(nameof(HasUpdateDetails));
+                OnPropertyChanged(nameof(StatusText));
+                OnPropertyChanged(nameof(CapabilitySummary));
                 UpdateInstallButtonText();
             }
         }

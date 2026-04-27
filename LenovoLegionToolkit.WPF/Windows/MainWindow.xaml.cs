@@ -701,6 +701,8 @@ public partial class MainWindow
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
                     var pluginId = plugin.Id;
+                    navItem.Invoked += (_, _) => NavigateToPluginPage(pluginId);
+                    navItem.Click += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.PreviewMouseLeftButtonUp += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.KeyDown += (_, e) =>
                     {
@@ -774,7 +776,21 @@ public partial class MainWindow
             var pageTag = $"plugin:{pluginId}";
             PluginPageWrapper.RegisterPluginPageTag(pageTag, pluginId);
             UpdateInstalledPluginsNavigationItems();
-            _navigationStore.Navigate(pageTag);
+
+            foreach (var item in _navigationStore.Items.OfType<NavigationItem>()
+                         .Concat(_navigationStore.Footer.OfType<NavigationItem>()))
+            {
+                item.IsActive = string.Equals(item.PageTag, pageTag, StringComparison.OrdinalIgnoreCase);
+            }
+
+            var plugin = _pluginManager.GetRegisteredPlugins()
+                .FirstOrDefault(p => string.Equals(p.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+            var page = new PluginPageWrapper(pluginId)
+            {
+                Title = plugin?.Name ?? pluginId
+            };
+
+            _rootFrame.Navigate(page);
             return true;
         }
         catch (Exception ex)
@@ -790,17 +806,7 @@ public partial class MainWindow
     {
         try
         {
-            var featureExtension = (plugin as PluginBase)?.GetFeatureExtension();
-            if (featureExtension is IPluginPage)
-                return true;
-
-            var getFeatureExtensionMethod = plugin.GetType().GetMethod(
-                "GetFeatureExtension",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            if (getFeatureExtensionMethod == null)
-                return false;
-
-            return getFeatureExtensionMethod.Invoke(plugin, null) is IPluginPage;
+            return PluginPageWrapper.ProvidesFeaturePage(plugin);
         }
         catch (Exception ex)
         {

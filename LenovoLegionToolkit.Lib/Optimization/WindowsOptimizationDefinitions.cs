@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Lib.Optimization;
@@ -12,8 +13,23 @@ public static class WindowsOptimizationDefinitions
     private const int DefaultDnsMaxCacheTtl = 3600;
     private const int DefaultDnsMaxNegativeCacheTtl = 300;
 
+    private static readonly string LocalAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    private static readonly string RoamingAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    private static readonly string ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+    private static readonly string WindowsPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+    private static readonly string SystemDrivePath = Path.GetPathRoot(Environment.SystemDirectory) ?? @"C:\";
+    private static readonly string TempFolderPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
     public static RegistryValueDefinition Reg(string hive, string subKey, string valueName, object value, RegistryValueKind kind)
         => new(hive, subKey, valueName, value, kind);
+
+    private static string Quote(string value) => $"\"{value}\"";
+
+    private static string Del(string pathPattern) => $"del /f /s /q {Quote(pathPattern)}";
+
+    private static string DelFile(string pathPattern) => $"del /f /q {Quote(pathPattern)}";
+
+    private static string Rd(string pathPattern) => $"rd /s /q {Quote(pathPattern)}";
 
     public static readonly IReadOnlyList<RegistryValueDefinition> ExplorerTaskbarTweaks =
     [
@@ -88,85 +104,85 @@ public static class WindowsOptimizationDefinitions
 
     public static readonly IReadOnlyList<string> RemoteDesktopCacheCommands =
     [
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Terminal Server Client\\Cache\\*\" >nul 2>&1"
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Terminal Server Client", "Cache", "*"))
     ];
 
     public static readonly IReadOnlyList<string> WindowsUpdateCacheCommands =
     [
-        "del /f /s /q \"%SystemRoot%\\SoftwareDistribution\\Download\\*\" >nul 2>&1",
-        "del /f /s /q \"%SystemRoot%\\SoftwareDistribution\\DeliveryOptimization\\*\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "SoftwareDistribution", "Download", "*")),
+        Del(Path.Combine(WindowsPath, "SoftwareDistribution", "DeliveryOptimization", "*"))
     ];
 
     public static readonly IReadOnlyList<string> BrowserCacheCommands =
     [
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\INetCache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\INetCookies\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Edge\\User Data\\Default\\Cache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Edge\\User Data\\Default\\Code Cache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Google\\Chrome\\User Data\\Default\\Cache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Google\\Chrome\\User Data\\Default\\Code Cache\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Mozilla\\Firefox\\Profiles\\*\\cache2\\*\" >nul 2>&1"
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Windows", "INetCache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Windows", "INetCookies", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Edge", "User Data", "Default", "Cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Edge", "User Data", "Default", "Code Cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Google", "Chrome", "User Data", "Default", "Cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Google", "Chrome", "User Data", "Default", "Code Cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Mozilla", "Firefox", "Profiles", "*", "cache2", "*"))
     ];
 
     public static readonly IReadOnlyList<string> AppLeftoverCommands =
     [
-        "del /f /s /q \"%LocalAppData%\\Temp\\*\" >nul 2>&1",
-        "del /f /s /q \"%AppData%\\Local\\Temp\\*\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\WER\\*\" >nul 2>&1",
-        "del /f /s /q \"%ProgramData%\\Microsoft\\Windows\\WER\\*\" >nul 2>&1"
+        Del(Path.Combine(LocalAppDataPath, "Temp", "*")),
+        Del(Path.Combine(Path.GetDirectoryName(RoamingAppDataPath) ?? LocalAppDataPath, "Local", "Temp", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Windows", "WER", "*")),
+        Del(Path.Combine(ProgramDataPath, "Microsoft", "Windows", "WER", "*"))
     ];
 
     public static readonly IReadOnlyList<string> ThumbnailCacheCommands =
     [
-        "del /f /s /q \"%LocalAppData%\\Microsoft\\Windows\\Explorer\\thumbcache_*.db\" >nul 2>&1",
-        "del /f /s /q \"%LocalAppData%\\Local\\D3DSCache\\*\" >nul 2>&1"
+        Del(Path.Combine(LocalAppDataPath, "Microsoft", "Windows", "Explorer", "thumbcache_*.db")),
+        Del(Path.Combine(LocalAppDataPath, "Local", "D3DSCache", "*"))
     ];
 
     public static readonly IReadOnlyList<string> DotnetNativeImageCommands =
     [
-        "rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_32\" >nul 2>&1",
-        "rd /s /q \"%WinDir%\\assembly\\NativeImages_v4.0.30319_64\" >nul 2>&1"
+        Rd(Path.Combine(WindowsPath, "assembly", "NativeImages_v4.0.30319_32")),
+        Rd(Path.Combine(WindowsPath, "assembly", "NativeImages_v4.0.30319_64"))
     ];
 
     public static readonly IReadOnlyList<string> SystemLogCommands =
     [
-        "del /f /s /q \"%SystemRoot%\\Logs\\*\" >nul 2>&1",
-        "del /f /s /q \"%ProgramData%\\Microsoft\\Windows\\WER\\ReportQueue\\*\" >nul 2>&1",
-        "del /f /s /q \"%ProgramData%\\Microsoft\\Diagnosis\\*\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "Logs", "*")),
+        Del(Path.Combine(ProgramDataPath, "Microsoft", "Windows", "WER", "ReportQueue", "*")),
+        Del(Path.Combine(ProgramDataPath, "Microsoft", "Diagnosis", "*"))
     ];
 
     public static readonly IReadOnlyList<string> CrashDumpCommands =
     [
-        "del /f /s /q \"%SystemRoot%\\Minidump\\*.dmp\" >nul 2>&1",
-        "del /f /q \"%SystemRoot%\\memory.dmp\" >nul 2>&1",
-        "del /f /s /q \"%SystemDrive%\\*.dmp\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "Minidump", "*.dmp")),
+        DelFile(Path.Combine(WindowsPath, "memory.dmp")),
+        Del(Path.Combine(SystemDrivePath, "*.dmp"))
     ];
 
     public static readonly IReadOnlyList<string> DefenderCommands =
     [
-        "del /f /s /q \"%ProgramData%\\Microsoft\\Windows Defender\\Scans\\*\" >nul 2>&1"
+        Del(Path.Combine(ProgramDataPath, "Microsoft", "Windows Defender", "Scans", "*"))
     ];
 
     public static readonly IReadOnlyList<string> TempCommands =
     [
-        "del /f /s /q \"%SystemRoot%\\Temp\\*\" >nul 2>&1",
-        "del /f /s /q \"%SystemDrive%\\Windows\\Temp\\*\" >nul 2>&1",
-        "del /f /s /q \"%TEMP%\\*\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "Temp", "*")),
+        Del(Path.Combine(SystemDrivePath, "Windows", "Temp", "*")),
+        Del(Path.Combine(TempFolderPath, "*"))
     ];
 
     public static readonly IReadOnlyList<string> RecycleBinCommands =
     [
-        "rd /s /q \"%SystemDrive%\\$Recycle.bin\" >nul 2>&1"
+        Rd(Path.Combine(SystemDrivePath, "$Recycle.bin"))
     ];
 
     public static readonly IReadOnlyList<string> PrefetchCommands =
     [
-        "del /f /s /q \"%SystemRoot%\\Prefetch\\*\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "Prefetch", "*"))
     ];
 
     public static readonly IReadOnlyList<string> PowerPlanCommands =
     [
-        "powercfg -setactive SCHEME_MIN",
+        "powercfg -setactive SCHEME_MAX",
         "powercfg -h off"
     ];
 
@@ -196,6 +212,6 @@ public static class WindowsOptimizationDefinitions
     public static readonly IReadOnlyList<string> ComponentStoreCommands =
     [
         "dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase",
-        "del /f /s /q \"%SystemRoot%\\WinSxS\\Temp\\*\" >nul 2>&1"
+        Del(Path.Combine(WindowsPath, "WinSxS", "Temp", "*"))
     ];
 }

@@ -19,7 +19,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
@@ -31,189 +30,162 @@
             Grid.Row="0"
             Height="24"
             Margin="12,8,12,8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
             <TextBlock
                 x:Name="_titleTextBlock"
-                Grid.Column="0"
                 VerticalAlignment="Center"
                 Style="{StaticResource AppCaptionTextBlockStyle}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.PluginSettingsWindow_Title}" />
         </Grid>
 
-        <Grid
-            Grid.Row="1"
-            Margin="20,0,20,12">
+        <Grid Grid.Row="1" Margin="20,0,20,18">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Border
-                Grid.Row="0"
-                Margin="0,0,0,12"
-                Padding="20"
-                CornerRadius="24"
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border
-                        Width="64"
-                        Height="64"
-                        Margin="0,0,16,0"
-                        VerticalAlignment="Top"
-                        CornerRadius="20"
-                        Background="{DynamicResource SystemAccentColorLight3Brush}">
-                        <TextBlock
-                            x:Name="_pluginIconTextBlock"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="28"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource SystemAccentColorDark1Brush}"
-                            Text="P" />
-                    </Border>
-
-                    <StackPanel Grid.Column="1">
-                        <TextBlock
-                            x:Name="_pluginNameTextBlock"
-                            Style="{StaticResource AppPageTitleTextBlockStyle}"
-                            Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}" />
-
-                        <TextBlock
-                            x:Name="_pluginDescriptionTextBlock"
-                            Margin="0,8,0,0"
-                            MaxWidth="560"
-                            Style="{StaticResource AppPageDescriptionTextBlockStyle}"
-                            Text="{x:Static resources:Resource.PluginSettingsWindow_PluginDescription}"
-                            TextWrapping="Wrap" />
-
-                        <WrapPanel Margin="0,12,0,0">
-                            <Border
-                                x:Name="_pluginVersionBadge"
-                                Margin="0,0,10,10"
-                                Padding="10,4"
-                                CornerRadius="999"
-                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                <TextBlock
-                                    x:Name="_pluginVersionTextBlock"
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="v1.0.0" />
-                            </Border>
-
-                            <Border
-                                x:Name="_pluginAuthorBadge"
-                                Margin="0,0,10,10"
-                                Padding="10,4"
-                                CornerRadius="999"
-                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                <TextBlock
-                                    x:Name="_pluginAuthorTextBlock"
-                                    FontSize="12"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="Author" />
-                            </Border>
-
-                            <Border
-                                Margin="0,0,0,10"
-                                Padding="10,4"
-                                CornerRadius="999"
-                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                <TextBlock
-                                    x:Name="_pluginIdTextBlock"
-                                    FontSize="12"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="plugin-id" />
-                            </Border>
-                        </WrapPanel>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Border
-                Grid.Row="1"
-                Padding="16"
-                CornerRadius="24"
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock
-                        x:Name="_settingsSectionTitleTextBlock"
-                        Text="{x:Static resources:Resource.PluginSettingsWindow_Settings}"
-                        Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-
-                    <Grid Grid.Row="1" Margin="0,12,0,0">
-                        <Border
-                            x:Name="_pluginSettingsContainer"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Visibility="Collapsed">
-                            <ContentControl
-                                x:Name="_pluginSettingsHost"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch"
-                                BorderThickness="0" />
-                        </Border>
-
-                        <Border
-                            x:Name="_emptyStateBorder"
-                            Padding="24"
-                            CornerRadius="24"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                            Visibility="Collapsed">
-                            <StackPanel>
-                                <TextBlock
-                                    x:Name="_emptyStateTitleTextBlock"
-                                    Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
-                                    Style="{StaticResource AppSubsectionTitleTextBlockStyle}" />
-                                <TextBlock
-                                    x:Name="_emptyStateHintTextBlock"
-                                    Margin="0,8,0,0"
-                                    Style="{StaticResource AppPageDescriptionTextBlockStyle}"
-                                    Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}" />
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                </Grid>
-            </Border>
-        </Grid>
-
-        <Border
-            Grid.Row="2"
-            Padding="16,10,16,14"
-            Background="{DynamicResource ControlFillColorDefaultBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="0,1,0,0">
-            <Grid>
+            <Grid Grid.Row="0" Margin="0,4,0,18">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <Border
+                    Width="56"
+                    Height="56"
+                    Margin="0,0,14,0"
+                    VerticalAlignment="Top"
+                    CornerRadius="8"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                    <ContentControl
+                        x:Name="_pluginIconHost"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="34"
+                        Height="34"
+                        Foreground="{DynamicResource SystemAccentColorBrush}" />
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="_pluginNameTextBlock"
+                        Style="{StaticResource AppPageTitleTextBlockStyle}"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <TextBlock
+                        x:Name="_pluginDescriptionTextBlock"
+                        Margin="0,6,24,0"
+                        MaxWidth="620"
+                        Style="{StaticResource AppPageDescriptionTextBlockStyle}"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_PluginDescription}"
+                        TextWrapping="Wrap" />
+
+                    <WrapPanel Margin="0,10,0,0">
+                        <Border
+                            x:Name="_pluginVersionBadge"
+                            Margin="0,0,8,8"
+                            Padding="9,4"
+                            CornerRadius="8"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock
+                                x:Name="_pluginVersionTextBlock"
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="v1.0.0" />
+                        </Border>
+
+                        <Border
+                            x:Name="_pluginAuthorBadge"
+                            Margin="0,0,8,8"
+                            Padding="9,4"
+                            CornerRadius="8"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock
+                                x:Name="_pluginAuthorTextBlock"
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="Author" />
+                        </Border>
+
+                        <Border
+                            Margin="0,0,0,8"
+                            Padding="9,4"
+                            CornerRadius="8"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock
+                                x:Name="_pluginIdTextBlock"
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="plugin-id" />
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
+
                 <wpfui:Button
                     x:Name="_closeButton"
-                    Grid.Column="1"
-                    Content="{x:Static resources:Resource.PluginSettingsWindow_Close}"
-                    Click="CloseButton_Click" />
+                    Grid.Column="2"
+                    AutomationProperties.AutomationId="PluginSettingsCloseButton"
+                    Icon="Dismiss24"
+                    Appearance="Secondary"
+                    VerticalAlignment="Top"
+                    Click="CloseButton_Click"
+                    ToolTip="{x:Static resources:Resource.PluginSettingsWindow_Close}" />
             </Grid>
-        </Border>
+
+            <Border
+                Grid.Row="1"
+                Height="1"
+                Margin="0,0,0,16"
+                Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
+
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    x:Name="_settingsSectionTitleTextBlock"
+                    Text="{x:Static resources:Resource.PluginSettingsWindow_Settings}"
+                    Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+
+                <Grid Grid.Row="1" Margin="0,12,0,0">
+                    <Border
+                        x:Name="_pluginSettingsContainer"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Visibility="Collapsed">
+                        <ContentControl
+                            x:Name="_pluginSettingsHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            BorderThickness="0" />
+                    </Border>
+
+                    <Border
+                        x:Name="_emptyStateBorder"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Visibility="Collapsed">
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock
+                                x:Name="_emptyStateTitleTextBlock"
+                                Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
+                                Style="{StaticResource AppSubsectionTitleTextBlockStyle}" />
+                            <TextBlock
+                                x:Name="_emptyStateHintTextBlock"
+                                Margin="0,8,0,0"
+                                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
+                                Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </local:BaseWindow>

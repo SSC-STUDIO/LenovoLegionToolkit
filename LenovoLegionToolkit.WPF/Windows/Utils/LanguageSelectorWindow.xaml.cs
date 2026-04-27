@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Humanizer;
 using LenovoLegionToolkit.WPF.Extensions;
+using LenovoLegionToolkit.WPF.Utils;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
@@ -19,9 +19,9 @@ public partial class LanguageSelectorWindow
     {
         InitializeComponent();
 
-        _languageComboBox.SetItems(languages.OrderBy(ci => ci.Name, StringComparer.InvariantCultureIgnoreCase),
+        _languageComboBox.SetItems(languages.OrderBy(LocalizationHelper.LanguageDisplayName, StringComparer.InvariantCultureIgnoreCase),
             defaultLanguage,
-            cc => cc.NativeName.Transform(cc, To.TitleCase));
+            LocalizationHelper.LanguageDisplayName);
     }
 
     private void LanguageSelectorWindow_OnClosed(object? sender, EventArgs e) => _taskCompletionSource.TrySetResult(null);

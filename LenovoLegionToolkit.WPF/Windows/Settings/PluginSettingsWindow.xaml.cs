@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
+using LenovoLegionToolkit.WPF.Pages;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
@@ -66,12 +68,21 @@ public partial class PluginSettingsWindow : BaseWindow
             Title = _titleTextBlock.Text;
             _pluginNameTextBlock.Text = pluginName;
             _pluginDescriptionTextBlock.Text = pluginDescription;
-            _pluginIconTextBlock.Text = GetPluginIconText(pluginName);
+            var pluginsDirectory = PluginIconResolver.ResolvePluginsDirectory();
+            var pluginIcon = PluginIconResolver.Resolve(
+                _pluginId,
+                pluginName,
+                !string.IsNullOrWhiteSpace(plugin.Icon) ? plugin.Icon : metadata?.Icon,
+                metadata?.FilePath,
+                pluginsDirectory);
+            _pluginIconHost.Content = PluginIconResolver.CreateElement(pluginIcon);
+            AutomationProperties.SetAutomationId(_pluginIconHost, $"PluginSettingsIcon_{_pluginId}");
             _pluginIdTextBlock.Text = _pluginId;
             _pluginVersionTextBlock.Text = !string.IsNullOrWhiteSpace(metadata?.Version) ? $"v{metadata.Version}" : "v1.0.0";
             _settingsSectionTitleTextBlock.Text = Resource.PluginSettingsWindow_Settings;
             _emptyStateTitleTextBlock.Text = Resource.PluginSettingsWindow_NoConfigMessage;
-            _closeButton.Content = Resource.PluginSettingsWindow_Close;
+            _closeButton.Content = null;
+            _closeButton.ToolTip = Resource.PluginSettingsWindow_Close;
 
             if (!string.IsNullOrWhiteSpace(metadata?.Author))
             {
@@ -98,7 +109,7 @@ public partial class PluginSettingsWindow : BaseWindow
                     {
                         var settingsPage = getSettingsPage.Invoke(plugin, null);
 
-                        if (settingsPage is IPluginPage pluginPage)
+                        if (PluginPageWrapper.TryCreateHostedPluginPage(settingsPage, out var pluginPage))
                         {
                             var pageObject = pluginPage.CreatePage();
                             if (pageObject is UIElement generatedElement)
@@ -178,7 +189,8 @@ public partial class PluginSettingsWindow : BaseWindow
         _settingsSectionTitleTextBlock.Text = Resource.PluginSettingsWindow_Settings;
         _emptyStateTitleTextBlock.Text = Resource.PluginSettingsWindow_NoConfigMessage;
         _emptyStateHintTextBlock.Text = Resource.PluginSettingsWindow_NoConfigMessage;
-        _closeButton.Content = Resource.PluginSettingsWindow_Close;
+        _closeButton.Content = null;
+        _closeButton.ToolTip = Resource.PluginSettingsWindow_Close;
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -186,10 +198,5 @@ public partial class PluginSettingsWindow : BaseWindow
         Close();
     }
 
-    private static string GetPluginIconText(string pluginName)
-    {
-        var candidate = (pluginName ?? string.Empty).Trim().FirstOrDefault(c => !char.IsWhiteSpace(c));
-        return candidate == default ? "P" : char.ToUpperInvariant(candidate).ToString();
-    }
 }
 }

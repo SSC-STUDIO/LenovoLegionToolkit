@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Humanizer;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
@@ -133,25 +134,13 @@ public static class LocalizationHelper
 
     public static async Task SetLanguageAsync(bool interactive = false)
     {
-        CultureInfo? cultureInfo = null;
+        var savedCultureInfo = await GetLanguageFromFile();
+        CultureInfo? cultureInfo = savedCultureInfo;
 
-        if (interactive && await GetLanguageFromFile() is null)
+        if (interactive && savedCultureInfo is null)
         {
-            // Apply system theme before showing language selection window
-            try
-            {
-                var isDarkMode = SystemTheme.IsDarkMode();
-                var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
-                var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
-                Wpf.Ui.Appearance.Theme.Apply(themeType, backgroundType, false);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to apply system theme before showing language selector window.", ex);
-            }
-
-            var window = new LanguageSelectorWindow(Languages, DefaultLanguage);
+            var window = new LanguageSelectorWindow(Languages, GetPreferredStartupLanguage(savedCultureInfo));
+            ApplyStartupTheme(window);
             window.Show();
             cultureInfo = await window.ShouldContinue;
             if (cultureInfo is not null)
@@ -161,6 +150,99 @@ public static class LocalizationHelper
         cultureInfo ??= await GetLanguageAsync();
 
         SetLanguageInternal(cultureInfo);
+    }
+
+    private static CultureInfo GetPreferredStartupLanguage(CultureInfo? savedCultureInfo)
+    {
+        if (savedCultureInfo is not null)
+            return savedCultureInfo;
+
+        try
+        {
+            var systemCulture = CultureInfo.CurrentUICulture;
+
+            if (systemCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
+            {
+                var traditionalChineseRegions = new[] { "TW", "HK", "MO" };
+                var isTraditionalChinese = traditionalChineseRegions.Any(region =>
+                    systemCulture.Name.Contains(region, StringComparison.OrdinalIgnoreCase));
+                var chineseCulture = isTraditionalChinese ? new CultureInfo("zh-hant") : new CultureInfo("zh-hans");
+                if (Languages.Contains(chineseCulture))
+                    return chineseCulture;
+            }
+
+            var exactMatch = Languages.FirstOrDefault(language =>
+                language.Name.Equals(systemCulture.Name, StringComparison.OrdinalIgnoreCase));
+            if (exactMatch is not null)
+                return exactMatch;
+
+            var parentMatch = Languages.FirstOrDefault(language =>
+                language.Name.Equals(systemCulture.Parent.Name, StringComparison.OrdinalIgnoreCase));
+            if (parentMatch is not null)
+                return parentMatch;
+
+            var neutralMatch = Languages.FirstOrDefault(language =>
+                language.TwoLetterISOLanguageName.Equals(systemCulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+            if (neutralMatch is not null)
+                return neutralMatch;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to resolve startup language from system culture.", ex);
+        }
+
+        return DefaultLanguage;
+    }
+
+    private static void ApplyStartupTheme(Window window)
+    {
+        try
+        {
+            var settings = new ApplicationSettings();
+            var isDarkMode = ResolveStartupDarkMode(settings.Store.Theme);
+
+            var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+            var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
+
+            if (Application.Current.MainWindow is null)
+                Application.Current.MainWindow = window;
+
+            Wpf.Ui.Appearance.Theme.Apply(themeType, backgroundType, false);
+            window.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
+            Application.Current.Resources["SnackbarShadowColor"] = isDarkMode
+                ? System.Windows.Media.Colors.Black
+                : System.Windows.Media.Color.FromArgb(64, 0, 0, 0);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to apply configured startup theme before showing language selector window.", ex);
+        }
+    }
+
+    private static bool ResolveStartupDarkMode(Theme configuredTheme)
+    {
+        switch (configuredTheme)
+        {
+            case Theme.Dark:
+                return true;
+            case Theme.Light:
+                return false;
+            case Theme.System:
+            default:
+                try
+                {
+                    return SystemTheme.IsDarkMode();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to resolve startup theme from system theme; using dark theme.", ex);
+
+                    return true;
+                }
+        }
     }
 
     public static async Task SetLanguageAsync(CultureInfo cultureInfo)

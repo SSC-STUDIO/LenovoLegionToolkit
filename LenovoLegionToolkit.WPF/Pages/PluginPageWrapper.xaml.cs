@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
@@ -13,9 +14,6 @@ using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
-// Use IPluginPage from Plugins.SDK (temporarily commented for compilation)
-// using IPluginPage = LenovoLegionToolkit.Plugins.SDK.IPluginPage;
-
 namespace LenovoLegionToolkit.WPF.Pages
 {
 /// <summary>
@@ -24,16 +22,21 @@ namespace LenovoLegionToolkit.WPF.Pages
 public partial class PluginPageWrapper : UiPage
 {
     private static readonly ConcurrentDictionary<string, string> PageTagToPluginIdMap = new();
-    
+
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private string? _pluginId;
-    private bool _listeningForLocalizationChanges;
+    private bool _loadingPluginPage;
 
     public PluginPageWrapper()
     {
         InitializeComponent();
         Loaded += PluginPageWrapper_Loaded;
         Unloaded += PluginPageWrapper_Unloaded;
+    }
+
+    public PluginPageWrapper(string pluginId) : this()
+    {
+        _pluginId = pluginId;
     }
 
     /// <summary>
@@ -46,8 +49,6 @@ public partial class PluginPageWrapper : UiPage
 
     private void PluginPageWrapper_Loaded(object sender, RoutedEventArgs e)
     {
-        EnsureLocalizationSubscription();
-
         // 从导航上下文中获取插件ID
         // NavigationStore 使用 PageTag 来标识页面，格式为 "plugin:{pluginId}"
         if (_pluginId == null)
@@ -88,17 +89,16 @@ public partial class PluginPageWrapper : UiPage
 
     private void PluginPageWrapper_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (!_listeningForLocalizationChanges)
-            return;
-
-        LocalizationHelper.PluginResourceCulturesChanged -= LocalizationHelper_PluginResourceCulturesChanged;
-        _listeningForLocalizationChanges = false;
     }
 
     private void LoadPluginPage()
     {
+        if (_loadingPluginPage)
+            return;
+
         try
         {
+            _loadingPluginPage = true;
             FlowDirection = LocalizationHelper.Direction;
 
             var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == _pluginId);
@@ -112,20 +112,7 @@ public partial class PluginPageWrapper : UiPage
                 return;
             }
 
-            IPluginPage? pluginPage = null;
-
-            // 检查插件是否支持 GetFeatureExtension 方法（SDK 插件）
-            var pluginType = plugin.GetType();
-            var getFeatureExtensionMethod = pluginType.GetMethod("GetFeatureExtension", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            
-            if (getFeatureExtensionMethod != null)
-            {
-                var featureExtension = getFeatureExtensionMethod.Invoke(plugin, null);
-                if (featureExtension is IPluginPage page)
-                {
-                    pluginPage = page;
-                }
-            }
+            var pluginPage = ResolvePluginPage(plugin);
             
             // System Optimization and Tools are now default interfaces, not plugins
             // They are accessed directly via NavigationItems in MainWindow.xaml
@@ -156,7 +143,7 @@ public partial class PluginPageWrapper : UiPage
                     var pluginIcon = this.FindName("_pluginIcon") as Wpf.Ui.Controls.SymbolIcon;
                     if (pluginIcon != null && !string.IsNullOrWhiteSpace(pluginPage.PageIcon))
                     {
-                        if (Enum.TryParse<SymbolRegular>(pluginPage.PageIcon, out var icon))
+                        if (Enum.TryParse<SymbolRegular>(pluginPage.PageIcon, ignoreCase: true, out var icon))
                         {
                             pluginIcon.Symbol = icon;
                             pluginIcon.Visibility = Visibility.Visible;
@@ -216,12 +203,98 @@ public partial class PluginPageWrapper : UiPage
         }
         catch (System.Exception ex)
         {
+            var displayException = UnwrapInvocationException(ex);
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to load plugin page for {_pluginId}", ex);
+                Log.Instance.Trace($"Failed to load plugin page for {_pluginId}: {displayException.Message}", ex);
             ShowEmptyState(string.Format(
                 T("PluginPageWrapper_LoadFailed", "Failed to load plugin page: {0}"),
-                ex.Message));
+                displayException.Message));
         }
+        finally
+        {
+            _loadingPluginPage = false;
+        }
+    }
+
+    internal static bool ProvidesFeaturePage(IPlugin plugin) => ResolvePluginPage(plugin) != null;
+
+    internal static bool TryCreateHostedPluginPage(object? pageSource, out HostedPluginPage hostedPage)
+    {
+        hostedPage = default!;
+
+        if (pageSource == null)
+            return false;
+
+        if (pageSource is IPluginPage pluginPage)
+        {
+            hostedPage = new HostedPluginPage(
+                pluginPage.PageTitle,
+                pluginPage.PageIcon,
+                pluginPage.CreatePage);
+            return true;
+        }
+
+        var reflectionPage = TryCreateReflectionPluginPage(pageSource);
+        if (reflectionPage == null)
+            return false;
+
+        hostedPage = reflectionPage;
+        return true;
+    }
+
+    private static HostedPluginPage? ResolvePluginPage(IPlugin plugin)
+    {
+        var pluginType = plugin.GetType();
+        var getFeatureExtensionMethod = pluginType.GetMethod("GetFeatureExtension", BindingFlags.Public | BindingFlags.Instance);
+        if (getFeatureExtensionMethod == null)
+            return null;
+
+        var featureExtension = InvokePluginMethod(getFeatureExtensionMethod, plugin);
+        if (featureExtension == null)
+            return null;
+
+        return TryCreateHostedPluginPage(featureExtension, out var pluginPage) ? pluginPage : null;
+    }
+
+    private static HostedPluginPage? TryCreateReflectionPluginPage(object featureExtension)
+    {
+        var pageType = featureExtension.GetType();
+        var createPageMethod = pageType.GetMethod("CreatePage", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes);
+        if (createPageMethod == null)
+            return null;
+
+        var title = ReadStringProperty(pageType, featureExtension, "PageTitle") ?? string.Empty;
+        var icon = ReadStringProperty(pageType, featureExtension, "PageIcon");
+
+        return new HostedPluginPage(
+            title,
+            icon,
+            () => InvokePluginMethod(createPageMethod, featureExtension) ?? new object());
+    }
+
+    private static string? ReadStringProperty(Type type, object instance, string propertyName)
+    {
+        var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+        return property?.GetValue(instance) as string;
+    }
+
+    private static object? InvokePluginMethod(MethodInfo method, object instance)
+    {
+        try
+        {
+            return method.Invoke(instance, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException != null)
+        {
+            throw new InvalidOperationException(ex.InnerException.Message, ex.InnerException);
+        }
+    }
+
+    private static Exception UnwrapInvocationException(Exception exception)
+    {
+        return exception is TargetInvocationException { InnerException: not null } targetInvocationException
+            ? targetInvocationException.InnerException!
+            : exception.InnerException ?? exception;
     }
 
     private void ShowEmptyState(string message)
@@ -251,27 +324,12 @@ public partial class PluginPageWrapper : UiPage
             emptyStateText.Text = string.Empty;
     }
 
-    private void EnsureLocalizationSubscription()
-    {
-        if (_listeningForLocalizationChanges)
-            return;
-
-        LocalizationHelper.PluginResourceCulturesChanged += LocalizationHelper_PluginResourceCulturesChanged;
-        _listeningForLocalizationChanges = true;
-    }
-
-    private void LocalizationHelper_PluginResourceCulturesChanged(object? sender, EventArgs e)
-    {
-        if (!IsLoaded)
-            return;
-
-        Dispatcher.InvokeAsync(LoadPluginPage);
-    }
-
     private static string T(string key, string fallback)
     {
         return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
     }
+
+    internal sealed record HostedPluginPage(string PageTitle, string? PageIcon, Func<object> CreatePage);
 
 }
 }

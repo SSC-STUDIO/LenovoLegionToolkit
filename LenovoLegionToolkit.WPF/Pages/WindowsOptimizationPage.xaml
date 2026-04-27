@@ -131,7 +131,6 @@
             Margin="0,0,16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,16,0,24">
@@ -150,31 +149,6 @@
                     TextTrimming="CharacterEllipsis"
                     />
             </StackPanel>
-
-            <wpfui:Button
-                Grid.Column="1"
-                Margin="32,0,0,0"
-                Padding="12"
-                VerticalAlignment="Center"
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="12"
-                Click="SelectedActionsButton_Click"
-                Cursor="Hand">
-                <StackPanel>
-                    <TextBlock
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
-                    <TextBlock
-                        Margin="0,2,0,0"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Text="{Binding SelectedActionsSummary, FallbackValue=''}"
-                        TextWrapping="Wrap" />
-                </StackPanel>
-            </wpfui:Button>
         </Grid>
 
         <Grid Grid.Row="1" Margin="0,0,16,12">
@@ -260,7 +234,25 @@
                             </StackPanel.Resources>
                             <WrapPanel ItemHeight="36" ItemWidth="Auto" Orientation="Horizontal">
                             <wpfui:Button
+                                AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
+                                MinWidth="148"
+                                Margin="0,0,12,0"
+                                Appearance="Secondary"
+                                ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
+                                AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
+                                Click="SelectedActionsButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <wpfui:SymbolIcon
+                                        Margin="0,0,8,0"
+                                        Symbol="DocumentBulletList24" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Text="{Binding SelectedActionsSummary, FallbackValue=''}" />
+                                </StackPanel>
+                            </wpfui:Button>
+                            <wpfui:Button
                                 x:Name="_selectRecommendedButton"
+                                AutomationProperties.AutomationId="WindowsOptimizationSelectRecommendedButton"
                                 MinWidth="36"
                                 Margin="0,0,12,0"
                                 Appearance="Secondary"
@@ -271,6 +263,7 @@
                             </wpfui:Button>
                             <wpfui:Button
                                 x:Name="_clearButton"
+                                AutomationProperties.AutomationId="WindowsOptimizationBulkActionButton"
                                 MinWidth="36"
                                 Margin="0,0,12,0"
                                 Appearance="Secondary"
