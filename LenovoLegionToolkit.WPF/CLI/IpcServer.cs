@@ -37,6 +37,8 @@ public class IpcServer(
     IntegrationsSettings settings
     )
 {
+    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
+
     private CancellationTokenSource _cancellationTokenSource = new();
     private Task _handler = Task.CompletedTask;
 
@@ -144,7 +146,17 @@ public class IpcServer(
         var adminIdentity = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
         security.AddAccessRule(new(adminIdentity, PipeAccessRights.ReadWrite, AccessControlType.Allow));
 
+        if (IsRelaxedIpcAclEnabled() && WindowsIdentity.GetCurrent().User is { } currentUser)
+            security.AddAccessRule(new(currentUser, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+
         return security;
+    }
+
+    private static bool IsRelaxedIpcAclEnabled()
+    {
+        var rawValue = Environment.GetEnvironmentVariable(RelaxedIpcAclEnvironmentVariable);
+        return string.Equals(rawValue, "1", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(rawValue, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task<IpcResponse> HandleRequest(IpcRequest req)

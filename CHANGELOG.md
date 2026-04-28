@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Improved / 改进
+- 驱动下载页改为更紧凑的表单、源选择和筛选工具条布局，加载态改用与最终驱动列表一致的骨架占位条，并优化驱动包条目的标题、元信息、状态标签和操作按钮层级 / Driver Download now uses a more compact form, source selector, and filter toolbar layout, replaces the loading state with skeleton placeholders that match the final driver list, and improves package item hierarchy for titles, metadata, state tags, and action buttons
 - 插件扩展页加载骨架现在与实际列表/详情背景对齐，只在图标、文字、徽章与按钮位置显示占位条；`custom-mouse` 与 `shell-integration` 也统一为配置窗口加系统优化分类入口，不再作为独立侧栏功能页出现 / Plugin Extensions loading skeletons now match the final list/detail backgrounds and only show placeholders where icons, text, badges, and buttons will appear; `custom-mouse` and `shell-integration` also share the settings-window plus System Optimization category entry model instead of appearing as standalone sidebar feature pages
 - 插件扩展页改为左侧紧凑列表、右侧详情的管理器式布局，详情操作按钮统一尺寸、图标和主次状态，并以列表/详情骨架占位和从左到右的高亮扫光替代首次加载动画 / Plugin Extensions now uses a manager-style compact list plus detail layout with aligned detail action buttons, and replaces the first-load animation with list/detail skeleton placeholders and a left-to-right shimmer
 - 插件扩展页顶部 `Store Pulse` 统计改为数字加短状态的紧凑布局，减少右侧卡片换行和视觉拥挤 / Plugin Extensions `Store Pulse` now uses a compact count-plus-status layout to reduce wrapping and visual crowding in the top summary row

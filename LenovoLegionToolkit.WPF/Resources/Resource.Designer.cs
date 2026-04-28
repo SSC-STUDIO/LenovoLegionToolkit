@@ -3496,6 +3496,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan.
+        /// </summary>
+        public static string WindowsOptimizationPage_Scan_Button {
+            get {
+                return ResourceManager.GetString("WindowsOptimizationPage_Scan_Button", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Run cleanup actions.
         /// </summary>
         public static string WindowsOptimizationPage_RunCleanup_Button {

@@ -39,6 +39,7 @@ internal static class Program
     private const string ThemeEnvironmentVariable = "LLT_SMOKE_THEME";
     private const string AnimationSpeedEnvironmentVariable = "LLT_SMOKE_ANIMATION_SPEED_MS";
     private const string DisableAnimationsEnvironmentVariable = "LLT_SMOKE_DISABLE_ANIMATIONS";
+    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
     private const uint MouseEventLeftDown = 0x0002;
     private const uint MouseEventLeftUp = 0x0004;
     private const byte VkControl = 0x11;
@@ -96,7 +97,8 @@ internal static class Program
     {
         None,
         ShellLocal,
-        ComboLocal
+        ComboLocal,
+        DriverDownload
     }
 
     private enum SmokeTheme
@@ -259,9 +261,14 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Scenario: {_activeScenario}");
             Console.WriteLine($"[main-smoke] Theme: {_activeTheme}");
 
+            var isDriverDownloadScenario = _activeScenario == SmokeScenario.DriverDownload;
             var scenarioPreset = ResolveScenarioPreset(_activeScenario);
-            var preferredPlugins = ResolvePreferredPlugins(args, scenarioPreset);
-            var requestedPluginSources = ResolveRequestedPluginSources(args, scenarioPreset);
+            var preferredPlugins = isDriverDownloadScenario
+                ? Array.Empty<string>()
+                : ResolvePreferredPlugins(args, scenarioPreset);
+            var requestedPluginSources = isDriverDownloadScenario
+                ? new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase)
+                : ResolveRequestedPluginSources(args, scenarioPreset);
             var desiredPluginSources = preferredPlugins
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(
@@ -271,6 +278,9 @@ internal static class Program
             var appRuntimeDirectory = ResolveMainAppRuntimeDirectory(repositoryRoot);
             smokeSandboxState = PrepareSmokeSandbox();
             ApplySmokeSettingsOverrides(smokeSandboxState, _activeTheme);
+            var smokeIpcPipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(smokeSandboxState.RootDirectory)}";
+            Environment.SetEnvironmentVariable(Constants.PIPE_NAME_ENVIRONMENT_VARIABLE, smokeIpcPipeName);
+            Console.WriteLine($"[main-smoke] IPC pipe: {smokeIpcPipeName}");
             localPluginPackageBundle = PrepareLocalPluginPackages(
                 repositoryRoot,
                 desiredPluginSources
@@ -289,6 +299,16 @@ internal static class Program
             Console.WriteLine("[main-smoke] Main window ready");
             CaptureMainWindow(mainWindow, "main-shell-home");
             ObserveStep("Main window ready", mainWindow);
+
+            if (isDriverDownloadScenario)
+            {
+                TestDriverDownloadUi(mainWindow);
+                HoldForObservation("Driver Download smoke completed successfully", mainWindow, _successHold);
+                CloseWindow(mainWindow);
+                process.WaitForExit(7000);
+                Console.WriteLine("[main-smoke] PASS");
+                return 0;
+            }
 
             NavigateToPluginExtensionsPage(mainWindow, refresh: true);
             TryCapturePluginExtensionsLoadingSkeleton(mainWindow, process.Id);
@@ -492,7 +512,8 @@ internal static class Program
         {
             "shell-local" => SmokeScenario.ShellLocal,
             "combo-local" => SmokeScenario.ComboLocal,
-            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local' or 'combo-local'.")
+            "driver-download" => SmokeScenario.DriverDownload,
+            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local', 'combo-local', or 'driver-download'.")
         };
     }
 
@@ -627,7 +648,7 @@ MainAppPluginUi.Smoke
 
 Usage:
 MainAppPluginUi.Smoke.dll [--repo-root <path>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
-                            [--scenario shell-local|combo-local] [--theme system|light|dark]
+                            [--scenario shell-local|combo-local|driver-download] [--theme system|light|dark]
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
@@ -637,7 +658,7 @@ Options:
   --repo-root            Main repository root. Defaults to the current repo when auto-detected.
   --plugin               Comma-separated plugin id filter. Defaults to the smoke-supported plugin set.
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Local sources require matching plugin build directories or the smoke fails fast.
-  --scenario             Predefined local smoke preset. 'shell-local' runs shell-integration only; 'combo-local' runs custom-mouse + shell-integration.
+  --scenario             Predefined smoke preset. 'shell-local' runs shell-integration only; 'combo-local' runs custom-mouse + shell-integration; 'driver-download' captures the Driver Download page without plugin install work.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
@@ -1049,6 +1070,8 @@ Environment variables:
         startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = sandboxState.AppDataDirectory;
         startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = sandboxState.PluginsDirectory;
         startInfo.EnvironmentVariables[SingleInstanceKeyEnvironmentVariable] = Path.GetFileName(sandboxState.RootDirectory);
+        startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = Constants.PIPE_NAME;
+        startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
 
         if (localPluginPackageBundle.Packages.Count > 0)
         {
@@ -4481,6 +4504,85 @@ Environment variables:
         string[] SettingsButtonAutomationIds,
         string[] ActionAutomationIds,
         string[]? CategoryAutomationIdFallbacks = null);
+
+    private static void TestDriverDownloadUi(AutomationElement mainWindow)
+    {
+        NavigateToWindowsOptimizationPage(mainWindow);
+        NavigateToDriverDownloadTab(mainWindow);
+        TryPopulateDriverMachineType(mainWindow, "82JQ");
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "driver-download-ready");
+        TryCaptureDriverDownloadLoadingSkeleton(mainWindow);
+        ObserveStep("Driver Download page ready", ResolveLiveWindow(mainWindow));
+    }
+
+    private static void NavigateToDriverDownloadTab(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var tab = WaitForAutomationId(mainWindow, "WindowsOptimizationDriverTabButton", TimeSpan.FromSeconds(12));
+        Click(tab);
+
+        var ready = WaitUntil(
+            () => IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationDriverSearchButton")),
+            TimeSpan.FromSeconds(8),
+            TimeSpan.FromMilliseconds(200));
+
+        if (!ready)
+        {
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 200);
+            throw new TimeoutException("Timed out waiting for Driver Download tab.");
+        }
+
+        Console.WriteLine("[main-smoke] Navigated to Driver Download tab");
+    }
+
+    private static void TryPopulateDriverMachineType(AutomationElement mainWindow, string machineType)
+    {
+        try
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var condition = new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
+                new PropertyCondition(AutomationElement.NameProperty, "Machine Type"));
+            var edit = FindBestMatchingDescendant(mainWindow, condition);
+            if (edit is null || !edit.TryGetCurrentPattern(ValuePattern.Pattern, out var valuePattern))
+            {
+                Console.WriteLine("[main-smoke] Driver machine type field not found; using whatever the app prefilled");
+                return;
+            }
+
+            ((ValuePattern)valuePattern).SetValue(machineType);
+            Console.WriteLine($"[main-smoke] Driver machine type set to {machineType}");
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException)
+        {
+            Console.WriteLine($"[main-smoke] Driver machine type prefill skipped: {ex.Message}");
+        }
+    }
+
+    private static void TryCaptureDriverDownloadLoadingSkeleton(AutomationElement mainWindow)
+    {
+        if (_screenshotMode != ScreenshotMode.Always)
+            return;
+
+        try
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var searchButton = TryWaitForAutomationId(mainWindow, "WindowsOptimizationDriverSearchButton", TimeSpan.FromSeconds(4));
+            if (searchButton is null)
+            {
+                Console.WriteLine("[main-smoke] Driver Download loading screenshot skipped: scan button not found");
+                return;
+            }
+
+            Click(searchButton);
+            Thread.Sleep(500);
+            CaptureMainWindow(ResolveLiveWindow(mainWindow), "driver-download-loading");
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException || ex is TimeoutException)
+        {
+            Console.WriteLine($"[main-smoke] Driver Download loading screenshot skipped: {ex.Message}");
+        }
+    }
 
     private static void NavigateToWindowsOptimizationPage(AutomationElement mainWindow)
     {
