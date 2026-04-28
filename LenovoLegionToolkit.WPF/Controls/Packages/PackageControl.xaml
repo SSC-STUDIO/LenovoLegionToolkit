@@ -68,6 +68,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock
@@ -91,6 +92,28 @@
                             <TextBlock Text="{x:Static resources:Resource.WindowsOptimization_Action_Recommended_Tag}" />
                         </wpfui:Badge.Content>
                     </wpfui:Badge>
+
+                    <Border
+                        x:Name="_statusBadge"
+                        Grid.Column="2"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource PackageStateBadgeStyle}"
+                        Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                x:Name="_statusIcon"
+                                Margin="0,0,4,0"
+                                FontSize="15"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Symbol="Clock24" />
+                            <TextBlock
+                                x:Name="_statusTextBlock"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
                 </Grid>
 
                 <Grid

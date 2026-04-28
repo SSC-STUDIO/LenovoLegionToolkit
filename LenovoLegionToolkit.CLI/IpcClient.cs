@@ -9,6 +9,17 @@ namespace LenovoLegionToolkit.CLI;
 
 public static class IpcClient
 {
+    public static async Task<string> GetAppStatusAsync()
+    {
+        var req = new IpcRequest
+        {
+            Operation = IpcRequest.OperationType.GetAppStatus
+        };
+
+        return await SendRequestAsync(req).ConfigureAwait(false)
+               ?? throw new IpcException("Missing return message");
+    }
+
     public static async Task<string> ListQuickActionsAsync()
     {
         var req = new IpcRequest

@@ -31,6 +31,7 @@ public class UpdateChecker
     private Update[] _updates = [];
 
     public bool Disable { get; set; }
+    public string? DisableReason { get; set; }
     public UpdateCheckStatus Status { get; set; }
 
     public UpdateChecker(HttpClientFactory httpClientFactory)

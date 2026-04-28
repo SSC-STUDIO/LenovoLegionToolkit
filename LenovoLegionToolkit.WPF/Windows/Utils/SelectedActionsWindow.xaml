@@ -72,10 +72,43 @@
                             BorderThickness="1"
                             CornerRadius="8">
                             <StackPanel>
-                                <TextBlock
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    FontWeight="Medium"
-                                    Text="{Binding CategoryTitle}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        FontWeight="Medium"
+                                        Text="{Binding CategoryTitle}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Margin="12,0,0,0"
+                                        Padding="8,3"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="6">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding StatusText}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding StatusText}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </Border>
+                                </Grid>
                                 <CheckBox
                                     Margin="0,6,0,0"
                                     FontWeight="Medium"

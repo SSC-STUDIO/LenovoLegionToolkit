@@ -50,6 +50,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
         CleanupCategories = new ObservableCollection<OptimizationCategoryViewModel>();
         SelectedOptimizationActions = new ObservableCollection<SelectedActionViewModel>();
         SelectedCleanupActions = new ObservableCollection<SelectedActionViewModel>();
+        SelectedDriverActions = new ObservableCollection<SelectedActionViewModel>();
         SelectedDriverPackages = new ObservableCollection<SelectedDriverPackageViewModel>();
         CustomCleanupRules = new ObservableCollection<CustomCleanupRuleViewModel>();
     }
@@ -208,6 +209,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     public ObservableCollection<OptimizationCategoryViewModel> CleanupCategories { get; }
     public ObservableCollection<SelectedActionViewModel> SelectedOptimizationActions { get; }
     public ObservableCollection<SelectedActionViewModel> SelectedCleanupActions { get; }
+    public ObservableCollection<SelectedActionViewModel> SelectedDriverActions { get; }
     public ObservableCollection<SelectedDriverPackageViewModel> SelectedDriverPackages { get; }
     public ObservableCollection<CustomCleanupRuleViewModel> CustomCleanupRules { get; }
 
@@ -221,13 +223,14 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
     public ObservableCollection<SelectedActionViewModel> VisibleSelectedActions => CurrentMode switch
     {
         PageMode.Cleanup => SelectedCleanupActions,
+        PageMode.DriverDownload => SelectedDriverActions,
         PageMode.Optimization => SelectedOptimizationActions,
         _ => SelectedOptimizationActions
     };
 
     public bool HasSelectedActions => CurrentMode switch
     {
-        PageMode.DriverDownload => SelectedDriverPackages.Count > 0,
+        PageMode.DriverDownload => SelectedDriverActions.Count > 0,
         PageMode.Cleanup => CleanupCategories
             .Where(c => c?.Actions != null)
             .SelectMany(c => c.Actions)
@@ -835,8 +838,34 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged
 
     public void NotifyDriverSelectionChanged()
     {
+        UpdateSelectedDriverActions();
+        OnPropertyChanged(nameof(VisibleSelectedActions));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
+    }
+
+    private void UpdateSelectedDriverActions()
+    {
+        var newDriverActions = SelectedDriverPackages
+            .Select(package =>
+            {
+                var action = new SelectedActionViewModel(
+                    "driver-download",
+                    package.Category,
+                    package.PackageId,
+                    package.Title,
+                    package.Description,
+                    null)
+                {
+                    Tag = package,
+                    IsSelected = true
+                };
+
+                return action;
+            })
+            .ToList();
+
+        UpdateCollection(SelectedDriverActions, newDriverActions);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

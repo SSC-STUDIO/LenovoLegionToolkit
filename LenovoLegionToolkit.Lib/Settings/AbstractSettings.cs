@@ -95,6 +95,16 @@ public abstract class AbstractSettings<T> where T : class, new()
                 if (store is null)
                     TryBackup();
             }
+            catch (FileNotFoundException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Settings file {_fileName} not found; using defaults.");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Settings file {_fileName} directory not found; using defaults.");
+            }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -125,6 +135,16 @@ public abstract class AbstractSettings<T> where T : class, new()
 
             if (store is null)
                 TryBackup();
+        }
+        catch (FileNotFoundException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Settings file {_fileName} not found; using defaults.");
+        }
+        catch (DirectoryNotFoundException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Settings file {_fileName} directory not found; using defaults.");
         }
         catch (Exception ex)
         {

@@ -1,13 +1,13 @@
 using System;
 using System.ComponentModel;
-using System.Windows;
 using LenovoLegionToolkit.WPF.Controls.Packages;
+using LenovoLegionToolkit.WPF.Resources;
 
 namespace LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 
 public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposable
 {
-    internal readonly PackageControl? _sourcePackageControl;
+    internal PackageControl? _sourcePackageControl;
 
     public SelectedDriverPackageViewModel(
         string packageId,
@@ -20,14 +20,29 @@ public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposabl
         Title = title;
         Description = description;
         Category = category;
-        _sourcePackageControl = sourcePackageControl;
-        _sourcePackageControl.PropertyChanged += SourcePackageControl_PropertyChanged;
+        AttachSource(sourcePackageControl);
     }
 
     public string PackageId { get; }
     public string Title { get; }
     public string Description { get; }
     public string Category { get; }
+
+    public void AttachSource(PackageControl sourcePackageControl)
+    {
+        if (ReferenceEquals(_sourcePackageControl, sourcePackageControl))
+            return;
+
+        if (_sourcePackageControl is not null)
+            _sourcePackageControl.PropertyChanged -= SourcePackageControl_PropertyChanged;
+
+        _sourcePackageControl = sourcePackageControl;
+        _sourcePackageControl.PropertyChanged += SourcePackageControl_PropertyChanged;
+
+        OnPropertyChanged(nameof(IsSelected));
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(IsCompleted));
+    }
 
     public bool IsSelected
     {
@@ -59,9 +74,11 @@ public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposabl
             {
                 return _sourcePackageControl.Status switch
                 {
-                    PackageControl.PackageStatus.Downloading => "Downloading",
-                    PackageControl.PackageStatus.Installing => "Installing",
-                    PackageControl.PackageStatus.Completed => "Completed",
+                    PackageControl.PackageStatus.Queued => Resource.ResourceManager.GetString("PackageControl_Queued") ?? "Queued",
+                    PackageControl.PackageStatus.NotStarted when _sourcePackageControl.IsSelected => Resource.ResourceManager.GetString("PackageControl_Queued") ?? "Queued",
+                    PackageControl.PackageStatus.Downloading => Resource.PackageControl_Downloading,
+                    PackageControl.PackageStatus.Installing => Resource.PackageControl_Installing,
+                    PackageControl.PackageStatus.Completed => Resource.PackageControl_Completed,
                     _ => string.Empty
                 };
             }
@@ -84,7 +101,10 @@ public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposabl
     public void Dispose()
     {
         if (_sourcePackageControl is not null)
+        {
             _sourcePackageControl.PropertyChanged -= SourcePackageControl_PropertyChanged;
+            _sourcePackageControl = null;
+        }
     }
 
     private void SourcePackageControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -95,11 +115,6 @@ public class SelectedDriverPackageViewModel : INotifyPropertyChanged, IDisposabl
         {
             OnPropertyChanged(nameof(StatusText));
             OnPropertyChanged(nameof(IsCompleted));
-
-            if (_sourcePackageControl != null && _sourcePackageControl.Status == PackageControl.PackageStatus.Completed)
-            {
-                _sourcePackageControl.Visibility = Visibility.Collapsed;
-            }
         }
     }
 

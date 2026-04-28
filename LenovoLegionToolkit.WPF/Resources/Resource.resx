@@ -1033,6 +1033,30 @@ Performance mode can also be changed with Fn+Q.</value>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Scanning for available driver packages, please wait...</value>
   </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Scan for driver packages</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Choose a source and scan to list compatible driver downloads.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>No driver downloads found</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Try a different source, operating system, or machine type.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>No matching downloads found</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Driver scan did not complete</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Check the selected source and network connection, then scan again.</value>
+  </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
     <value>Network error occurred. Retrying automatically...</value>
   </data>
@@ -2173,6 +2197,9 @@ Moving the mouse or pressing the keyboard will wake displays up.</value>
   <data name="PackageControl_Recommended" xml:space="preserve">
     <value>Recommended</value>
   </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Queued</value>
+  </data>
   <data name="PackageControl_Downloading" xml:space="preserve">
     <value>Downloading</value>
   </data>
@@ -2923,6 +2950,12 @@ Supported formats are: {1}.</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Update checks are disabled for this session</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Lenovo Legion Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>API rate limit reached, please try again later.</value>

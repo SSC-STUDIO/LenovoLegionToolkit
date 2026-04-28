@@ -7,6 +7,7 @@ namespace LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 public class SelectedActionViewModel : ISelectedActionViewModel, IDisposable
 {
     private readonly OptimizationActionViewModel? _sourceAction;
+    private object? _tag;
     private bool _isSelected;
 
     public SelectedActionViewModel(
@@ -32,7 +33,31 @@ public class SelectedActionViewModel : ISelectedActionViewModel, IDisposable
     public string ActionKey { get; }
     public string ActionTitle { get; }
     public string Description { get; }
-    public object? Tag { get; set; }
+    public object? Tag
+    {
+        get => _tag;
+        set
+        {
+            if (ReferenceEquals(_tag, value))
+                return;
+
+            if (_tag is SelectedDriverPackageViewModel oldDriverPackage)
+                oldDriverPackage.PropertyChanged -= DriverPackage_PropertyChanged;
+
+            _tag = value;
+
+            if (_tag is SelectedDriverPackageViewModel newDriverPackage)
+                newDriverPackage.PropertyChanged += DriverPackage_PropertyChanged;
+
+            OnPropertyChanged(nameof(Tag));
+            OnPropertyChanged(nameof(IsEnabled));
+            OnPropertyChanged(nameof(StatusText));
+        }
+    }
+
+    public string StatusText => Tag is SelectedDriverPackageViewModel driverPackage
+        ? driverPackage.StatusText
+        : string.Empty;
 
     public bool IsEnabled
     {
@@ -108,10 +133,23 @@ public class SelectedActionViewModel : ISelectedActionViewModel, IDisposable
             OnPropertyChanged(nameof(IsSelected));
     }
 
+    private void DriverPackage_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectedDriverPackageViewModel.StatusText))
+            OnPropertyChanged(nameof(StatusText));
+        else if (e.PropertyName == nameof(SelectedDriverPackageViewModel.IsCompleted))
+            OnPropertyChanged(nameof(IsEnabled));
+        else if (e.PropertyName == nameof(SelectedDriverPackageViewModel.IsSelected))
+            OnPropertyChanged(nameof(IsSelected));
+    }
+
     public void Dispose()
     {
         if (_sourceAction is not null)
             _sourceAction.PropertyChanged -= SourceAction_PropertyChanged;
+
+        if (_tag is SelectedDriverPackageViewModel driverPackage)
+            driverPackage.PropertyChanged -= DriverPackage_PropertyChanged;
     }
 
     protected virtual void OnPropertyChanged(string propertyName) =>

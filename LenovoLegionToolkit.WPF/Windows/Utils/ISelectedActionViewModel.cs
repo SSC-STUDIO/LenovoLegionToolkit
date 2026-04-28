@@ -12,11 +12,11 @@ public interface ISelectedActionViewModel : INotifyPropertyChanged
     string ActionKey { get; }
     string ActionTitle { get; }
     string Description { get; }
+    string StatusText { get; }
     bool IsSelected { get; set; }
     bool IsEnabled { get; }
     object? Tag { get; set; }
 }
-
 
 
 

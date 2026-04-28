@@ -28,8 +28,22 @@ public class Program
         root.AddCommand(BuildSpectrumCommand());
         root.AddCommand(BuildRGBCommand());
         root.AddCommand(BuildShellCommand()); // Add shell management command
+        root.AddCommand(BuildStatusCommand());
 
         return builder.Build();
+    }
+
+    private static Command BuildStatusCommand()
+    {
+        var cmd = new Command("status", "Show running app status and startup-related switches");
+        cmd.AddAlias("st");
+        cmd.SetHandler(async () =>
+        {
+            var result = await IpcClient.GetAppStatusAsync();
+            Console.WriteLine(result);
+        });
+
+        return cmd;
     }
 
     private static Command BuildQuickActionsCommand()

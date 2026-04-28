@@ -94,7 +94,7 @@ public partial class App
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Flags: IsTraceEnabled={flags.IsTraceEnabled}, Minimized={flags.Minimized}, SkipCompatibilityCheck={flags.SkipCompatibilityCheck}");
+            Log.Instance.Trace($"Flags: {flags}");
 
         EnsureSingleInstance();
 
@@ -219,7 +219,9 @@ public partial class App
         IoCContainer.Resolve<PortsBacklightFeature>().ForceDisable = flags.ForceDisableLenovoLighting;
         IoCContainer.Resolve<IGPUModeFeature>().ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
         IoCContainer.Resolve<DGPUNotify>().ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
-        IoCContainer.Resolve<UpdateChecker>().Disable = flags.DisableUpdateChecker;
+        var updateChecker = IoCContainer.Resolve<UpdateChecker>();
+        updateChecker.Disable = flags.DisableUpdateChecker;
+        updateChecker.DisableReason = flags.DisableUpdateChecker ? Flags.DisableUpdateCheckerSwitch : null;
 
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
@@ -592,12 +594,40 @@ public partial class App
         {
             if (_singleInstanceMutexOwned && _singleInstanceMutex != null)
             {
-                _singleInstanceMutex.ReleaseMutex();
-                _singleInstanceMutexOwned = false;
+                void ReleaseMutex()
+                {
+                    if (_singleInstanceMutexOwned && _singleInstanceMutex != null)
+                    {
+                        _singleInstanceMutex.ReleaseMutex();
+                        _singleInstanceMutexOwned = false;
+                    }
+                }
+
+                if (Dispatcher.CheckAccess())
+                {
+                    ReleaseMutex();
+                }
+                else if (!Dispatcher.HasShutdownStarted && !Dispatcher.HasShutdownFinished)
+                {
+                    Dispatcher.Invoke(ReleaseMutex);
+                }
+                else
+                {
+                    _singleInstanceMutexOwned = false;
+                }
             }
 
             _singleInstanceMutex?.Close();
             _singleInstanceMutex = null;
+        }
+        catch (ApplicationException ex) when (ex.Message.Contains("Object synchronization method", StringComparison.OrdinalIgnoreCase))
+        {
+            _singleInstanceMutexOwned = false;
+            _singleInstanceMutex?.Close();
+            _singleInstanceMutex = null;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Single instance mutex was not owned by the current thread; closed without explicit release.");
         }
         catch (Exception ex)
         {

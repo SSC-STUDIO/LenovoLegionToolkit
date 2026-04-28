@@ -10,6 +10,8 @@ namespace LenovoLegionToolkit.WPF;
 
 public class Flags
 {
+    public const string DisableUpdateCheckerSwitch = "--disable-update-checker";
+
     public bool IsTraceEnabled { get; }
     public bool Minimized { get; }
     public bool SkipCompatibilityCheck { get; }
@@ -45,7 +47,7 @@ public class Flags
         ProxyUsername = StringValue(args, "--proxy-username");
         ProxyPassword = StringValue(args, "--proxy-password");
         ProxyAllowAllCerts = BoolValue(args, "--proxy-allow-all-certs");
-        DisableUpdateChecker = BoolValue(args, "--disable-update-checker");
+        DisableUpdateChecker = BoolValue(args, DisableUpdateCheckerSwitch);
         DisableConflictingSoftwareWarning = BoolValue(args, "--disable-conflicting-software-warning");
     }
 

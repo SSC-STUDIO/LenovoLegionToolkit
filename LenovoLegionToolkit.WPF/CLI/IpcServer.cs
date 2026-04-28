@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
@@ -34,7 +35,9 @@ public class IpcServer(
     AutomationProcessor automationProcessor,
     SpectrumKeyboardBacklightController spectrumKeyboardBacklightController,
     RGBKeyboardBacklightController rgbKeyboardBacklightController,
-    IntegrationsSettings settings
+    IntegrationsSettings settings,
+    UpdateChecker updateChecker,
+    UpdateCheckSettings updateCheckSettings
     )
 {
     private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
@@ -217,9 +220,32 @@ public class IpcServer(
             case IpcRequest.OperationType.CaptureWindowVisual when req is { Name: not null, Value: not null }:
                 await CaptureWindowVisualAsync(req.Name, req.Value).ConfigureAwait(false);
                 return new IpcResponse { Success = true };
+            case IpcRequest.OperationType.GetAppStatus:
+                return new IpcResponse { Success = true, Message = BuildAppStatus() };
             default:
                 throw new IpcException("Invalid request");
         }
+    }
+
+    private string BuildAppStatus()
+    {
+        var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
+        var repositoryOwner = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryOwner)
+            ? updateCheckSettings.Store.UpdateRepositoryOwner
+            : LenovoLegionToolkit.WPF.Constants.UpdateRepositoryOwner;
+        var repositoryName = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryName)
+            ? updateCheckSettings.Store.UpdateRepositoryName
+            : LenovoLegionToolkit.WPF.Constants.UpdateRepositoryName;
+        var updateStatus = updateChecker.Disable
+            ? $"disabled ({updateChecker.DisableReason ?? LenovoLegionToolkit.WPF.Flags.DisableUpdateCheckerSwitch})"
+            : "enabled";
+
+        return string.Join(Environment.NewLine,
+            "Lenovo Legion Toolkit is running.",
+            $"Version: {version}",
+            "CLI IPC: enabled",
+            $"Update checker: {updateStatus}",
+            $"Update repository: {repositoryOwner}/{repositoryName}");
     }
 
     private static Task CaptureWindowVisualAsync(string windowHandleValue, string outputPath)

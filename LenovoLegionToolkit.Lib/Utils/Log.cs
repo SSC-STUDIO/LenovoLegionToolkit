@@ -139,7 +139,7 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        LogInternal(LogLevel.Error, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+        LogInternal(LogLevel.Error, PlainMessage(message), ex, file, lineNumber, caller);
     }
 
     public void Warning(FormattableString message,
@@ -159,7 +159,7 @@ public class Log
         [CallerMemberName] string? caller = null)
     {
         if (CurrentLogLevel >= LogLevel.Warning)
-            LogInternal(LogLevel.Warning, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+            LogInternal(LogLevel.Warning, PlainMessage(message), ex, file, lineNumber, caller);
     }
 
     public void Info(FormattableString message,
@@ -179,7 +179,7 @@ public class Log
         [CallerMemberName] string? caller = null)
     {
         if (CurrentLogLevel >= LogLevel.Info)
-            LogInternal(LogLevel.Info, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+            LogInternal(LogLevel.Info, PlainMessage(message), ex, file, lineNumber, caller);
     }
 
     public void Debug(FormattableString message,
@@ -199,7 +199,7 @@ public class Log
         [CallerMemberName] string? caller = null)
     {
         if (CurrentLogLevel >= LogLevel.Debug)
-            LogInternal(LogLevel.Debug, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+            LogInternal(LogLevel.Debug, PlainMessage(message), ex, file, lineNumber, caller);
     }
 
     public void Trace(FormattableString message,
@@ -219,8 +219,11 @@ public class Log
         [CallerMemberName] string? caller = null)
     {
         if (IsTraceEnabled || CurrentLogLevel >= LogLevel.Trace)
-            LogInternal(LogLevel.Trace, global::System.Runtime.CompilerServices.FormattableStringFactory.Create(message, Array.Empty<object>()), ex, file, lineNumber, caller);
+            LogInternal(LogLevel.Trace, PlainMessage(message), ex, file, lineNumber, caller);
     }
+
+    private static FormattableString PlainMessage(string message) =>
+        global::System.Runtime.CompilerServices.FormattableStringFactory.Create("{0}", message);
 
     private void LogInternal(LogLevel level,
         FormattableString message,

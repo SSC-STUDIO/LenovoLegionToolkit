@@ -11,6 +11,14 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
+            <custom:InfoBar
+                x:Name="_updateDisabledInfoBar"
+                Margin="0,0,0,8"
+                IsClosable="False"
+                IsOpen="False"
+                Severity="Informational"
+                Visibility="Collapsed" />
+
             <custom:CardControl x:Name="_checkUpdatesCard" Margin="0,0,0,8">
                 <custom:CardControl.Header>
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CheckUpdates_Title}" />

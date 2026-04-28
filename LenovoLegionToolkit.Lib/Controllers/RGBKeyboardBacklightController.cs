@@ -69,17 +69,27 @@ namespace LenovoLegionToolkit.Lib.Controllers
                 }
                 catch (Exception ex)
                 {
+                    // Unsupported RGB hardware and Vantage ownership are expected on many systems.
+                    // Keep them out of the exception log path so trace logs stay actionable.
+                    if (ex is InvalidOperationException && IsExpectedOwnershipFailure(ex))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Skipping RGB keyboard ownership: {ex.Message}");
+
+                        return;
+                    }
+
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Can't take ownership.", ex);
-
-                    // If RGB keyboard is unsupported or Vantage prevents control, don't rethrow to avoid noisy errors
-                    if (ex is InvalidOperationException && (ex.Message.Contains("RGB Keyboard unsupported") || ex.Message.Contains("Can't manage RGB keyboard with Vantage enabled")))
-                        return;
 
                     throw;
                 }
             }
         }
+
+        private static bool IsExpectedOwnershipFailure(Exception ex) =>
+            ex.Message.Contains("RGB Keyboard unsupported", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("Can't manage RGB keyboard with Vantage enabled", StringComparison.OrdinalIgnoreCase);
 
         public async Task<RGBKeyboardBacklightState> GetStateAsync()
         {

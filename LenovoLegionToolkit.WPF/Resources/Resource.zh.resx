@@ -1043,6 +1043,30 @@
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>正在扫描可用驱动包，请稍候...</value>
   </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>扫描驱动包</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>选择来源并开始扫描，以列出兼容的驱动下载项。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>未找到驱动下载项</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>请尝试切换来源、操作系统或机器型号。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>没有匹配的下载项</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>请调整筛选、仅显示更新或隐藏下载项设置。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>驱动扫描未完成</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>请检查当前来源和网络连接，然后重新扫描。</value>
+  </data>
   <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
     <value>网络出问题了，正在自动重试...</value>
   </data>
@@ -1626,6 +1650,9 @@
   </data>
   <data name="PackageControl_Recommended" xml:space="preserve">
     <value>推荐</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>已加入队列</value>
   </data>
   <data name="PackageControl_Downloading" xml:space="preserve">
     <value>下载中</value>
@@ -2350,6 +2377,12 @@
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>更新</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>本次会话已禁用更新检查</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Lenovo Legion Toolkit 启动时带有 {0} 参数。本次会话中自动和手动更新检查以及下方更新设置都会禁用；去掉该启动参数后重新启动即可恢复。</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>已达到 API 访问频率上限，请稍后再试。</value>

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -29,6 +30,7 @@ public partial class PackageControl : IProgress<float>
 
     private CancellationTokenSource? _downloadPackageTokenSource;
     private bool _isSelected;
+    private bool _isDownloading;
     private bool _isRecommended;
     private PackageStatus _status = PackageStatus.NotStarted;
     private Process? _installProcess;
@@ -37,12 +39,28 @@ public partial class PackageControl : IProgress<float>
     public enum PackageStatus
     {
         NotStarted,    // Not started
+        Queued,        // Queued for later start
         Downloading,   // Downloading
         Installing,    // Installing
         Completed      // Completed
     }
 
-    public bool IsDownloading { get; private set; }
+    public bool AutoStartOnSelection { get; set; } = true;
+
+    public bool HideWhenCompleted { get; set; } = true;
+
+    public bool IsDownloading
+    {
+        get => _isDownloading;
+        private set
+        {
+            if (_isDownloading == value)
+                return;
+
+            _isDownloading = value;
+            OnPropertyChanged();
+        }
+    }
 
     public PackageStatus Status
     {
@@ -56,8 +74,7 @@ public partial class PackageControl : IProgress<float>
             OnPropertyChanged(nameof(IsCompleted));
             UpdateStatusDisplay();
             
-            // If status changes to Completed, hide the control (in the main interface)
-            if (value == PackageStatus.Completed)
+            if (value == PackageStatus.Completed && HideWhenCompleted)
             {
                 Visibility = Visibility.Collapsed;
             }
@@ -111,6 +128,15 @@ public partial class PackageControl : IProgress<float>
             if (_isSelected == value)
                 return;
             _isSelected = value;
+            if (!AutoStartOnSelection)
+            {
+                if (_isSelected && Status == PackageStatus.NotStarted)
+                    Status = PackageStatus.Queued;
+                else if (!_isSelected && Status == PackageStatus.Queued)
+                    Status = PackageStatus.NotStarted;
+                else
+                    UpdateStatusDisplay();
+            }
             
             // Synchronize checkbox state in UI (avoid event loop)
             if (_selectCheckBox != null && _selectCheckBox.IsChecked != value)
@@ -327,12 +353,12 @@ public partial class PackageControl : IProgress<float>
         if (Status == PackageStatus.Downloading)
         {
             _downloadPackageTokenSource?.Cancel();
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         else if (Status == PackageStatus.Installing)
         {
             StopInstallation();
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
     }
 
@@ -346,6 +372,9 @@ public partial class PackageControl : IProgress<float>
         
         // If already downloading or installing, don't repeat
         if (Status == PackageStatus.Downloading || Status == PackageStatus.Installing)
+            return;
+
+        if (!AutoStartOnSelection)
             return;
         
         await StartAsync();
@@ -368,13 +397,22 @@ public partial class PackageControl : IProgress<float>
         if (Status == PackageStatus.Downloading)
         {
             _downloadPackageTokenSource?.Cancel();
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         else if (Status == PackageStatus.Installing)
         {
             StopInstallation();
+            ResetPendingStatus();
+        }
+        else if (Status == PackageStatus.Queued)
+        {
             Status = PackageStatus.NotStarted;
         }
+    }
+
+    private void ResetPendingStatus()
+    {
+        Status = !AutoStartOnSelection && IsSelected ? PackageStatus.Queued : PackageStatus.NotStarted;
     }
 
     private async Task DownloadAndInstallPackageAsync()
@@ -396,14 +434,13 @@ public partial class PackageControl : IProgress<float>
 
             var token = _downloadPackageTokenSource.Token;
 
-            // Save the actual downloaded file path
-        _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token);
+            _actualDownloadedFilePath = await _packageDownloader.DownloadPackageFileAsync(_package, _getDownloadPath(), this, token);
 
             result = true;
         }
         catch (OperationCanceledException)
         {
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
         {
@@ -411,7 +448,7 @@ public partial class PackageControl : IProgress<float>
                 Log.Instance.Trace($"Not found 404.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.PackageControl_Http404Error_Title, Resource.PackageControl_Http404Error_Message, SnackbarType.Error);
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         catch (HttpRequestException ex)
         {
@@ -419,7 +456,7 @@ public partial class PackageControl : IProgress<float>
                 Log.Instance.Trace($"Error occurred when downloading package file.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.PackageControl_HttpGeneralError_Title, Resource.PackageControl_HttpGeneralError_Message, SnackbarType.Error);
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         catch (Exception ex)
         {
@@ -427,7 +464,7 @@ public partial class PackageControl : IProgress<float>
                 Log.Instance.Trace($"Error occurred when downloading package file.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.PackageControl_GeneralError_Title, ex.Message, SnackbarType.Error);
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
         finally
         {
@@ -512,7 +549,7 @@ public partial class PackageControl : IProgress<float>
                         Log.Instance.Trace($"File not found. Expected: {filePath}, Actual downloaded: {_actualDownloadedFilePath}");
                     
                     await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error);
-                    Status = PackageStatus.NotStarted;
+                    ResetPendingStatus();
                 }
             }
         }
@@ -572,7 +609,7 @@ public partial class PackageControl : IProgress<float>
                     Log.Instance.Trace($"File not found in InstallPackageAsync. Expected: {filePath}, Actual downloaded: {_actualDownloadedFilePath}");
                 
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, Resource.PackageControl_InstallError_FileNotFound, SnackbarType.Error);
-                Status = PackageStatus.NotStarted;
+                ResetPendingStatus();
                 UpdateStatusDisplay(); // 更新状态显示
                 return;
             }
@@ -585,7 +622,7 @@ public partial class PackageControl : IProgress<float>
                     Log.Instance.Trace($"Installer path validation failed. [filePath={filePath}, downloadPath={configuredDownloadPath}, reason={validationError}]");
 
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, validationError, SnackbarType.Error);
-                Status = PackageStatus.NotStarted;
+                ResetPendingStatus();
                 UpdateStatusDisplay();
                 return;
             }
@@ -623,7 +660,7 @@ public partial class PackageControl : IProgress<float>
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to start installer.", ex);
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
-                Status = PackageStatus.NotStarted;
+                ResetPendingStatus();
             }
         }
         catch (Exception ex)
@@ -631,7 +668,7 @@ public partial class PackageControl : IProgress<float>
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when installing package.", ex);
             await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, ex.Message, SnackbarType.Error);
-            Status = PackageStatus.NotStarted;
+            ResetPendingStatus();
         }
     }
 
@@ -671,9 +708,9 @@ public partial class PackageControl : IProgress<float>
         }
     }
 
-    private static PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
+    private PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
         ? PackageStatus.Completed
-        : PackageStatus.NotStarted;
+        : !AutoStartOnSelection && IsSelected ? PackageStatus.Queued : PackageStatus.NotStarted;
 
     private static string? GetInstallerExitFailureMessage(int exitCode) => exitCode == 0
         ? null
@@ -698,23 +735,35 @@ public partial class PackageControl : IProgress<float>
 
     private void UpdateStatusDisplay()
     {
-        // 状态标签已移除，只处理推荐标签的显示逻辑
-        if (_recommendedBadge == null)
-            return;
-            
-        // 根据状态更新推荐标签的可见性
-        if (Status == PackageStatus.Completed)
+        if (_statusBadge is not null && _statusTextBlock is not null && _statusIcon is not null)
         {
-            // 已完成时隐藏推荐标签
-            _recommendedBadge.Visibility = Visibility.Collapsed;
+            var status = Status == PackageStatus.NotStarted && !AutoStartOnSelection && IsSelected
+                ? PackageStatus.Queued
+                : Status;
+
+            var statusText = GetStatusText(status);
+            _statusBadge.Visibility = string.IsNullOrEmpty(statusText) ? Visibility.Collapsed : Visibility.Visible;
+            _statusTextBlock.Text = statusText;
+            _statusIcon.Symbol = status switch
+            {
+                PackageStatus.Queued => SymbolRegular.Clock24,
+                PackageStatus.Downloading => SymbolRegular.ArrowDownload24,
+                PackageStatus.Installing => SymbolRegular.Play24,
+                PackageStatus.Completed => SymbolRegular.CheckmarkCircle24,
+                _ => SymbolRegular.Empty
+            };
         }
+
+        if (_recommendedBadge is null)
+            return;
+
+        if (Status == PackageStatus.Completed)
+            _recommendedBadge.Visibility = Visibility.Collapsed;
         else if (IsRecommended)
         {
-            // 未完成且是推荐项目时显示推荐标签
             if (string.IsNullOrEmpty(_recommendedBadge.Content?.ToString()))
-            {
                 _recommendedBadge.Content = Resource.PackageControl_Recommended;
-            }
+
             _recommendedBadge.Visibility = Visibility.Visible;
         }
         else
@@ -722,6 +771,19 @@ public partial class PackageControl : IProgress<float>
             _recommendedBadge.Visibility = Visibility.Collapsed;
         }
     }
+
+    private static string GetStatusText(PackageStatus status) => status switch
+    {
+        PackageStatus.Queued => LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "PackageControl_Queued",
+            "Queued",
+            Resource.Culture ?? CultureInfo.CurrentUICulture),
+        PackageStatus.Downloading => Resource.PackageControl_Downloading,
+        PackageStatus.Installing => Resource.PackageControl_Installing,
+        PackageStatus.Completed => Resource.PackageControl_Completed,
+        _ => string.Empty
+    };
 
     public void Report(float value) => Dispatcher.Invoke(() =>
     {

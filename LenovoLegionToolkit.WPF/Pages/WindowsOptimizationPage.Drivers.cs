@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,6 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.Utils;
 using System.IO;
 using System.Net.Http;
-using System.Windows.Media;
 using Wpf.Ui.Common;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 using System.Windows.Forms;
@@ -32,6 +32,10 @@ public partial class WindowsOptimizationPage
     private CancellationTokenSource? _driverGetPackagesTokenSource;
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private List<Package>? _driverPackages;
+    private static CultureInfo ActiveDriverCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
+
+    private static string DriverText(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveDriverCulture);
 
     private async void InitializeDriverDownloadPage()
     {
@@ -69,6 +73,11 @@ public partial class WindowsOptimizationPage
                 _driverSearchControlsGrid.Visibility = Visibility.Collapsed;
             if (_driverInfoBar != null)
                 _driverInfoBar.Visibility = Visibility.Collapsed;
+
+            if (_driverPackages is null || _driverPackages.Count == 0)
+                ShowDriverEmptyState(
+                    DriverText("WindowsOptimizationPage_DriverEmpty_NotScanned_Title", "Scan for driver packages"),
+                    DriverText("WindowsOptimizationPage_DriverEmpty_NotScanned_Message", "Choose a source and scan to list compatible driver downloads."));
     }
 
     private void DriverSelectRecommendedButton_Click(object sender, RoutedEventArgs e)
@@ -172,6 +181,37 @@ public partial class WindowsOptimizationPage
         DriverReload();
     }
 
+    private async Task StartOrPauseSelectedDriversAsync()
+    {
+        if (ViewModel.IsAnyDriverRunning)
+        {
+            foreach (var selectedPackage in ViewModel.SelectedDriverPackages.ToList())
+            {
+                var control = selectedPackage._sourcePackageControl;
+                if (control?.Status is PackageControl.PackageStatus.Downloading or PackageControl.PackageStatus.Installing)
+                    control.Pause();
+            }
+
+            UpdateDriverRunningState();
+            ViewModel.NotifyDriverSelectionChanged();
+            return;
+        }
+
+        foreach (var selectedPackage in ViewModel.SelectedDriverPackages.ToList())
+        {
+            if (selectedPackage.IsCompleted)
+                continue;
+
+            var control = selectedPackage._sourcePackageControl;
+            if (control is null)
+                continue;
+
+            await control.StartAsync();
+            UpdateDriverRunningState();
+            ViewModel.NotifyDriverSelectionChanged();
+        }
+    }
+
     private class DriverDownloadProgressReporter : IProgress<float>
     {
         private readonly WindowsOptimizationPage _page;
@@ -190,6 +230,37 @@ public partial class WindowsOptimizationPage
     private void StopDriverRetryTimer()
     {
         // No-op or implementation if timer exists
+    }
+
+    private void ShowDriverEmptyState(string title, string message)
+    {
+        if (_driverEmptyStateBorder is null)
+            return;
+
+        if (_driverEmptyStateTitleTextBlock is not null)
+            _driverEmptyStateTitleTextBlock.Text = title;
+
+        if (_driverEmptyStateMessageTextBlock is not null)
+            _driverEmptyStateMessageTextBlock.Text = message;
+
+        _driverEmptyStateBorder.Visibility = Visibility.Visible;
+    }
+
+    private void HideDriverEmptyState()
+    {
+        if (_driverEmptyStateBorder is not null)
+            _driverEmptyStateBorder.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearSelectedDriverPackages()
+    {
+        foreach (var selectedPackage in ViewModel.SelectedDriverPackages.ToList())
+        {
+            selectedPackage.Dispose();
+            ViewModel.SelectedDriverPackages.Remove(selectedPackage);
+        }
+
+        ViewModel.NotifyDriverSelectionChanged();
     }
 
     private async Task DriverDownloadPackagesButton_Click(object sender, RoutedEventArgs e)
@@ -213,6 +284,9 @@ public partial class WindowsOptimizationPage
 
             if (_driverPackagesStackPanel != null)
                 _driverPackagesStackPanel.Children.Clear();
+            ClearSelectedDriverPackages();
+            HideDriverEmptyState();
+
             if (_driverScrollViewer != null)
                 _driverScrollViewer.ScrollToHome();
 
@@ -271,7 +345,7 @@ public partial class WindowsOptimizationPage
             }
 
             _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
-            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token).ConfigureAwait(false);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
 
             _driverPackages = packages;
 
@@ -291,7 +365,7 @@ public partial class WindowsOptimizationPage
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error occurred when downloading packages.", ex);
 
-            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error).ConfigureAwait(false);
+            await SnackbarHelper.ShowAsync(Resource.PackagesPage_Error_Title, ex.Message, SnackbarType.Error);
             errorOccurred = true;
         }
         finally
@@ -302,7 +376,7 @@ public partial class WindowsOptimizationPage
                 try
                 {
                     if (!_driverGetPackagesTokenSource.Token.IsCancellationRequested)
-                        await _driverGetPackagesTokenSource.CancelAsync().ConfigureAwait(false);
+                        await _driverGetPackagesTokenSource.CancelAsync();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -323,6 +397,13 @@ public partial class WindowsOptimizationPage
 
                 if (errorOccurred && _driverPackagesStackPanel != null)
                     _driverPackagesStackPanel.Children.Clear();
+
+                if (errorOccurred)
+                {
+                    ShowDriverEmptyState(
+                        DriverText("WindowsOptimizationPage_DriverEmpty_Error_Title", "Driver scan did not complete"),
+                        DriverText("WindowsOptimizationPage_DriverEmpty_Error_Message", "Check the selected source and network connection, then scan again."));
+                }
             });
         }
     }
@@ -334,11 +415,27 @@ public partial class WindowsOptimizationPage
 
         // Clear existing children
         _driverPackagesStackPanel.Children.Clear();
+        HideDriverEmptyState();
 
         if (_driverPackages is null || _driverPackages.Count == 0)
+        {
+            ShowDriverEmptyState(
+                DriverText("WindowsOptimizationPage_DriverEmpty_NoResults_Title", "No driver downloads found"),
+                DriverText("WindowsOptimizationPage_DriverEmpty_NoResults_Message", "Try a different source, operating system, or machine type."));
+            AddDriverShowHiddenDownloadsLinkIfNeeded();
             return;
+        }
 
         var packages = DriverSortAndFilter(_driverPackages);
+
+        if (packages.Count == 0)
+        {
+            ShowDriverEmptyState(
+                DriverText("WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title", "No matching downloads found"),
+                DriverText("WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message", "Adjust the filter, update-only option, or hidden-download list."));
+            AddDriverShowHiddenDownloadsLinkIfNeeded();
+            return;
+        }
 
         // Pre-allocate list to reduce allocations during iteration
         var controlsToAdd = new List<UIElement>(packages.Count);
@@ -347,20 +444,29 @@ public partial class WindowsOptimizationPage
         {
             var control = new PackageControl(_driverPackageDownloader, package, GetDriverDownloadLocation)
             {
-                ContextMenu = GetDriverContextMenu(package, packages)
+                ContextMenu = GetDriverContextMenu(package, packages),
+                AutoStartOnSelection = false,
+                HideWhenCompleted = false
             };
+
+            var existingSelectedPackage = ViewModel.SelectedDriverPackages.FirstOrDefault(p => p.PackageId == package.Id);
+            if (existingSelectedPackage is not null)
+            {
+                control.IsSelected = true;
+                existingSelectedPackage.AttachSource(control);
+            }
 
             control.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(PackageControl.IsSelected))
                 {
-                    UpdateSelectedDriverPackages();
+                    SyncSelectedDriverPackage(control);
                 }
                 else if (e.PropertyName == nameof(PackageControl.Status) ||
                          e.PropertyName == nameof(PackageControl.IsDownloading))
                 {
-                    if (control.Status == PackageControl.PackageStatus.Completed)
-                        control.Visibility = Visibility.Collapsed;
+                    UpdateDriverRunningState();
+                    ViewModel.NotifyDriverSelectionChanged();
                 }
             };
 
@@ -373,27 +479,9 @@ public partial class WindowsOptimizationPage
             _driverPackagesStackPanel.Children.Add(control);
         }
 
-        UpdateSelectedDriverPackages();
-
-        // Update visibility for selected packages
-        foreach (var selectedPackage in ViewModel.SelectedDriverPackages)
-        {
-            if (selectedPackage?.IsCompleted == true && selectedPackage._sourcePackageControl != null)
-                selectedPackage._sourcePackageControl.Visibility = Visibility.Collapsed;
-        }
-
-        if (packages.Count == 0)
-        {
-            var tb = new TextBlock
-            {
-                Text = Resource.PackagesPage_NoMatchingDownloads,
-                Foreground = (SolidColorBrush)FindResource("TextFillColorSecondaryBrush"),
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                Margin = new(0, 32, 0, 32),
-                Focusable = true
-            };
-            _driverPackagesStackPanel.Children.Add(tb);
-        }
+        ViewModel.NotifyDriverSelectionChanged();
+        UpdateDriverRunningState();
+        AddDriverShowHiddenDownloadsLinkIfNeeded();
     }
 
     private List<Package> DriverSortAndFilter(List<Package> packages)
@@ -419,40 +507,82 @@ public partial class WindowsOptimizationPage
         return result.ToList();
     }
 
-    private void UpdateSelectedDriverPackages()
+    private void SyncSelectedDriverPackage(PackageControl control)
     {
-        if (_driverPackagesStackPanel?.Children == null)
-            return;
+        var existing = ViewModel.SelectedDriverPackages.FirstOrDefault(p => p.PackageId == control.Package.Id);
 
-        var newSelectedPackages = new List<SelectedDriverPackageViewModel>();
-        foreach (var child in _driverPackagesStackPanel.Children.OfType<PackageControl>())
+        if (control.IsSelected)
         {
-            if (child.IsSelected)
+            if (existing is not null)
             {
-                var existing = ViewModel.SelectedDriverPackages.FirstOrDefault(p => p.PackageId == child.Package.Id);
-                if (existing != null)
-                    newSelectedPackages.Add(existing);
-                else
-                    newSelectedPackages.Add(new SelectedDriverPackageViewModel(child.Package.Id, child.Package.Title, child.Package.Description, child.Package.Category, child));
+                existing.AttachSource(control);
+            }
+            else
+            {
+                ViewModel.SelectedDriverPackages.Add(new SelectedDriverPackageViewModel(
+                    control.Package.Id,
+                    control.Package.Title,
+                    control.Package.Description,
+                    control.Package.Category,
+                    control));
             }
         }
-
-        foreach (var existing in ViewModel.SelectedDriverPackages.ToList())
+        else if (existing is not null && !existing.IsCompleted)
         {
-            if (!newSelectedPackages.Any(p => p.PackageId == existing.PackageId))
-            {
-                existing.Dispose();
-                ViewModel.SelectedDriverPackages.Remove(existing);
-            }
-        }
-
-        foreach (var newPackage in newSelectedPackages)
-        {
-            if (!ViewModel.SelectedDriverPackages.Any(p => p.PackageId == newPackage.PackageId))
-                ViewModel.SelectedDriverPackages.Add(newPackage);
+            existing.Dispose();
+            ViewModel.SelectedDriverPackages.Remove(existing);
         }
 
         ViewModel.NotifyDriverSelectionChanged();
+        UpdateDriverRunningState();
+    }
+
+    private void RemoveSelectedDriverPackage(string packageId)
+    {
+        var selectedPackage = ViewModel.SelectedDriverPackages.FirstOrDefault(p => p.PackageId == packageId);
+        if (selectedPackage is null)
+            return;
+
+        if (selectedPackage._sourcePackageControl is not null)
+            selectedPackage._sourcePackageControl.IsSelected = false;
+
+        selectedPackage.Dispose();
+        ViewModel.SelectedDriverPackages.Remove(selectedPackage);
+        ViewModel.NotifyDriverSelectionChanged();
+        UpdateDriverRunningState();
+    }
+
+    private void UpdateDriverRunningState()
+    {
+        ViewModel.IsAnyDriverRunning = ViewModel.SelectedDriverPackages.Any(IsDriverPackageRunning);
+    }
+
+    private static bool IsDriverPackageRunning(SelectedDriverPackageViewModel package)
+    {
+        var control = package._sourcePackageControl;
+        return control?.Status is PackageControl.PackageStatus.Downloading or PackageControl.PackageStatus.Installing;
+    }
+
+    private void AddDriverShowHiddenDownloadsLinkIfNeeded()
+    {
+        if (_driverPackagesStackPanel is null || _packageDownloaderSettings.Store.HiddenPackages.Count == 0)
+            return;
+
+        var clearHidden = new Wpf.Ui.Controls.Hyperlink
+        {
+            Icon = SymbolRegular.Eye24,
+            Content = Resource.WindowsOptimizationPage_ShowHiddenDownloads,
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+        };
+        clearHidden.Click += (_, _) =>
+        {
+            _packageDownloaderSettings.Store.HiddenPackages.Clear();
+            _packageDownloaderSettings.SynchronizeStore();
+
+            DriverReload();
+        };
+
+        _driverPackagesStackPanel.Children.Add(clearHidden);
     }
 
     private string GetDriverDownloadLocation()
@@ -486,6 +616,7 @@ public partial class WindowsOptimizationPage
         };
         hideMenuItem.Click += (_, _) =>
         {
+            RemoveSelectedDriverPackage(package.Id);
             _packageDownloaderSettings.Store.HiddenPackages.Add(package.Id);
             _packageDownloaderSettings.SynchronizeStore();
             DriverReload();
@@ -499,7 +630,10 @@ public partial class WindowsOptimizationPage
         hideAllMenuItem.Click += (_, _) =>
         {
             foreach (var id in packages.Select(p => p.Id))
+            {
+                RemoveSelectedDriverPackage(id);
                 _packageDownloaderSettings.Store.HiddenPackages.Add(id);
+            }
             _packageDownloaderSettings.SynchronizeStore();
             DriverReload();
         };
@@ -515,7 +649,8 @@ public partial class WindowsOptimizationPage
         if (_driverPackagesStackPanel?.Children is null)
             return true;
 
-        if (!_driverPackagesStackPanel.Children.OfType<PackageControl>().Any(pc => pc.IsDownloading))
+        if (!_driverPackagesStackPanel.Children.OfType<PackageControl>().Any(pc =>
+                pc.Status is PackageControl.PackageStatus.Downloading or PackageControl.PackageStatus.Installing))
             return true;
 
         return await MessageBoxHelper.ShowAsync(this, Resource.PackagesPage_DownloadInProgress_Title, Resource.PackagesPage_DownloadInProgress_Message);

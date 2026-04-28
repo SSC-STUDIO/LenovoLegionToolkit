@@ -18,6 +18,9 @@ public partial class SettingsUpdateControl
     private readonly UpdateCheckSettings _updateCheckSettings = IoCContainer.Resolve<UpdateCheckSettings>();
     private bool _isRefreshing;
 
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
+
     public SettingsUpdateControl()
     {
         InitializeComponent();
@@ -25,12 +28,6 @@ public partial class SettingsUpdateControl
 
     public void Refresh()
     {
-        if (_updateChecker.Disable)
-        {
-            Visibility = Visibility.Collapsed;
-            return;
-        }
-
         Visibility = Visibility.Visible;
 
         _isRefreshing = true;
@@ -40,6 +37,21 @@ public partial class SettingsUpdateControl
         // Load update repository settings only when update checking is enabled
         _updateRepositoryOwnerTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryOwner ?? Constants.UpdateRepositoryOwner;
         _updateRepositoryNameTextBox.Text = _updateCheckSettings.Store.UpdateRepositoryName ?? string.Empty;
+
+        var isDisabledByStartupFlag = _updateChecker.Disable;
+        var disabledReason = _updateChecker.DisableReason ?? Flags.DisableUpdateCheckerSwitch;
+
+        _updateDisabledInfoBar.Title = T("SettingsPage_UpdateDisabled_Title", "Update checks are disabled for this session");
+        _updateDisabledInfoBar.Message = string.Format(
+            T("SettingsPage_UpdateDisabled_Message",
+                "Lenovo Legion Toolkit was started with {0}. Automatic and manual update checks are disabled until you relaunch without that startup argument."),
+            disabledReason);
+        _updateDisabledInfoBar.IsOpen = isDisabledByStartupFlag;
+        _updateDisabledInfoBar.Visibility = isDisabledByStartupFlag ? Visibility.Visible : Visibility.Collapsed;
+
+        _checkUpdatesCard.IsEnabled = !isDisabledByStartupFlag;
+        _updateCheckFrequencyCard.IsEnabled = !isDisabledByStartupFlag;
+        _updateRepositoryCard.IsEnabled = !isDisabledByStartupFlag;
 
         _isRefreshing = false;
     }

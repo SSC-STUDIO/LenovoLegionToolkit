@@ -22,6 +22,7 @@ public class IpcRequest
         InstallShell,
         UninstallShell,
         CaptureWindowVisual,
+        GetAppStatus,
     }
 
     public OperationType? Operation { get; init; }

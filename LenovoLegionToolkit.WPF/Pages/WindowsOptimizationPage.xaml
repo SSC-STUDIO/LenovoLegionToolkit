@@ -623,9 +623,10 @@
                                                     IsChecked="True"
                                                     Style="{StaticResource DriverSourceRadioStyle}">
                                                     <StackPanel>
-                                                        <TextBlock
-                                                            FontWeight="Medium"
-                                                            Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
+	                                                        <TextBlock
+	                                                            FontWeight="Medium"
+	                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+	                                                            Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
                                                         <TextBlock
                                                             FontSize="12"
                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -641,9 +642,10 @@
                                                     GroupName="driverSource"
                                                     Style="{StaticResource DriverSourceRadioStyle}">
                                                     <StackPanel>
-                                                        <TextBlock
-                                                            FontWeight="Medium"
-                                                            Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
+	                                                        <TextBlock
+	                                                            FontWeight="Medium"
+	                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+	                                                            Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
                                                         <TextBlock
                                                             FontSize="12"
                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -711,9 +713,10 @@
                                                         VerticalAlignment="Center"
                                                         Checked="DriverOnlyShowUpdatesCheckBox_OnChecked"
                                                         Unchecked="DriverOnlyShowUpdatesCheckBox_OnChecked">
-                                                        <TextBlock
-                                                            MaxWidth="220"
-                                                            Text="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
+	                                                        <TextBlock
+	                                                            MaxWidth="220"
+	                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+	                                                            Text="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
                                                             TextTrimming="CharacterEllipsis" />
                                                     </CheckBox>
 
@@ -917,6 +920,43 @@
                                                 </Grid>
                                             </Border>
                                         </StackPanel>
+
+                                        <Border
+                                            x:Name="_driverEmptyStateBorder"
+                                            AutomationProperties.AutomationId="WindowsOptimizationDriverEmptyState"
+                                            Margin="0,4,0,12"
+                                            Padding="24"
+                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Visibility="Collapsed">
+                                            <StackPanel
+                                                MaxWidth="520"
+                                                HorizontalAlignment="Center">
+                                                <wpfui:SymbolIcon
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="28"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    Symbol="Search24" />
+                                                <TextBlock
+                                                    x:Name="_driverEmptyStateTitleTextBlock"
+                                                    Margin="0,10,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="15"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                    TextAlignment="Center"
+                                                    TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    x:Name="_driverEmptyStateMessageTextBlock"
+                                                    Margin="0,6,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    TextAlignment="Center"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Border>
 
                                         <StackPanel x:Name="_driverPackagesStackPanel" Margin="0,0,0,12" />
 

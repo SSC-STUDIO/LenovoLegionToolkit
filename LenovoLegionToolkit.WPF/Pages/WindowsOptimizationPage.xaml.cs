@@ -231,17 +231,10 @@ public partial class WindowsOptimizationPage : UiPage
     {
         _selectedActionsWindow?.Close();
 
-        if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
+        _selectedActionsWindow = new SelectedActionsWindow(ViewModel.VisibleSelectedActions, Resource.WindowsOptimizationPage_SelectedActions_Empty)
         {
-            // Handle driver download selected actions display
-        }
-        else
-        {
-            _selectedActionsWindow = new SelectedActionsWindow(ViewModel.VisibleSelectedActions, Resource.WindowsOptimizationPage_SelectedActions_Empty)
-            {
-                Owner = Window.GetWindow(this)
-            };
-        }
+            Owner = Window.GetWindow(this)
+        };
 
         if (_selectedActionsWindow != null)
         {
@@ -327,11 +320,11 @@ public partial class WindowsOptimizationPage : UiPage
         }
     }
 
-    private void ClearSelectionButton_Click(object sender, RoutedEventArgs e)
+    private async void ClearSelectionButton_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)
         {
-            // Handle driver download clear/pause logic
+            await StartOrPauseSelectedDriversAsync();
         }
         else
         {
