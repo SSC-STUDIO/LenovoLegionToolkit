@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.15] - 2026-04-29
+
 ### Improved / 改进
 - CLI 新增 `status` 命令，可查看主程序连接状态、更新检查是否被启动参数禁用以及当前更新仓库，便于诊断设置页状态 / The CLI adds a `status` command that reports host connectivity, whether update checks are disabled by startup arguments, and the active update repository for easier settings diagnostics
 - 驱动下载页新增完整队列交互：勾选驱动仅加入队列，已选项弹窗可查看和取消未完成项，顶部按钮可开始或暂停全部，并补齐空状态、无结果、隐藏项恢复与完成状态展示 / Driver Download now has a complete queue flow: selecting drivers only queues them, the selected-actions dialog can review and cancel unfinished items, the toolbar can start or pause all, and empty states, no-result states, hidden-item restore, and completed status visibility are covered
@@ -71,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 修复应用内 IPC 截图路径会把全局 WPF 渲染模式重置为默认值的问题，避免兼容模式或软件渲染会话在首次截图后重新落回硬件渲染并复发空白窗口 / Fixed the in-app IPC screenshot path resetting the global WPF render mode to default so compatibility-mode and software-rendering sessions no longer fall back to hardware rendering after the first capture and reintroduce blank-window issues
 - 修复插件市场 `Open` 会把插件目录中的任意 `.exe` 误判为用户入口的问题，避免 `vive-tool` 这类插件错误启动内置运行时而不是进入宿主页面或正确入口 / Fixed plugin-marketplace `Open` misclassifying arbitrary `.exe` files inside a plugin directory as user entry points, preventing plugins like `vive-tool` from launching bundled runtimes instead of opening the intended host page or route
 - 为 `MainAppPluginUi.Smoke` 的 feature-page `Open` 路径增加物理点击回退，降低当前桌面环境下仅用 UIA Invoke 时偶发打不开页面的误报 / Added a physical-click fallback to `MainAppPluginUi.Smoke` feature-page `Open` validation to reduce false failures when UIA Invoke alone intermittently misses the page transition on the current desktop
+- 系统优化命令校验现在允许受控的 stdout/stderr 重定向写法，避免 `2>&1` 等合法命令片段被误判为注入风险 / System Optimization command validation now allows controlled stdout/stderr redirection patterns so valid fragments such as `2>&1` are not misclassified as injection risks
 
 ## [3.6.14] - 2026-04-19
 

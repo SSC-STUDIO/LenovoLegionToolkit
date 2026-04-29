@@ -675,7 +675,7 @@ public partial class PackageControl : IProgress<float>
     private async Task HandleInstallProcessExitAsync(Process installProcess)
     {
         var exitCode = installProcess.ExitCode;
-        var status = GetStatusForInstallerExitCode(exitCode);
+        var status = ResolveStatusForInstallerExitCode(exitCode);
         var failureMessage = GetInstallerExitFailureMessage(exitCode);
 
         try
@@ -708,9 +708,18 @@ public partial class PackageControl : IProgress<float>
         }
     }
 
-    private PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
+    private PackageStatus ResolveStatusForInstallerExitCode(int exitCode)
+    {
+        var status = GetStatusForInstallerExitCode(exitCode);
+        if (status == PackageStatus.NotStarted && !AutoStartOnSelection && IsSelected)
+            return PackageStatus.Queued;
+
+        return status;
+    }
+
+    private static PackageStatus GetStatusForInstallerExitCode(int exitCode) => exitCode == 0
         ? PackageStatus.Completed
-        : !AutoStartOnSelection && IsSelected ? PackageStatus.Queued : PackageStatus.NotStarted;
+        : PackageStatus.NotStarted;
 
     private static string? GetInstallerExitFailureMessage(int exitCode) => exitCode == 0
         ? null

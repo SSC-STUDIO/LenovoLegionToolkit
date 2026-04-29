@@ -749,8 +749,6 @@ public static class CommandInjectionValidator
     // Dangerous patterns that could indicate command injection
     private static readonly string[] DangerousPatterns = new[]
     {
-        ">",       // Output redirection
-        "<",       // Input redirection
         "&&",      // Command chaining
         "||",      // Command chaining
         "|",       // Pipe (check individually for non-redirection cases)
@@ -780,6 +778,10 @@ public static class CommandInjectionValidator
         new Regex(@"[iI][eE][xX]|[iI]nvoke-[eE]xpression", RegexOptions.Compiled),
     };
 
+    private static readonly Regex AllowedRedirectionPattern = new(
+        @"(?<!\S)(?:[12]?>nul|[12]?>&[12])(?=$|\s)",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     /// <summary>
     /// Checks if input contains dangerous patterns that could indicate command injection.
     /// </summary>
@@ -802,11 +804,21 @@ public static class CommandInjectionValidator
                 return true;
         }
 
+        if (ContainsUnsafeRedirection(input))
+            return true;
+
         // Check for single ampersand (command separator, not redirection)
         if (ContainsUnescapedAmpersand(input))
             return true;
 
         return false;
+    }
+
+    private static bool ContainsUnsafeRedirection(string input)
+    {
+        var withoutAllowedRedirection = AllowedRedirectionPattern.Replace(input, string.Empty);
+        return withoutAllowedRedirection.Contains('>', StringComparison.Ordinal) ||
+               withoutAllowedRedirection.Contains('<', StringComparison.Ordinal);
     }
 
     /// <summary>
