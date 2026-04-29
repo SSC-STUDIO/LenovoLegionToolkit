@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.15] - 2026-04-29
+
 ### Improved / 改进
 - Reworked the settings page into a lighter status strip, direct form, and action area so the host settings window avoids nested card chrome while keeping mouse controls visible / 将设置页改为更轻的状态条、直接表单和操作区，减少宿主设置窗口中的嵌套卡片装饰，同时保持鼠标控制项可见
 - Tightened the settings overview into a compact single-row summary so the first viewport now keeps the key mouse controls and action buttons visible without scrolling in both host Light and Dark themes / 将设置页总览收紧为首屏单行摘要，使关键鼠标控件和操作按钮在宿主浅色/深色主题下都能尽量保持首屏可见，减少滚动后才能操作的情况

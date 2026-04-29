@@ -1,7 +1,7 @@
 ﻿{
     "id":  "shell-integration",
     "name":  "Shell Integration",
-    "version":  "1.0.10",
+    "version":  "1.0.11",
     "minLLTVersion":  "3.6.1",
     "author":  "SSC-STUDIO",
     "isSystemPlugin":  true,

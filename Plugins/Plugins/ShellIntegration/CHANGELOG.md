@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.11] - 2026-04-29
+
 ### Improved / 改进
 - Reworked the settings page into a lightweight status strip, action row, and direct path/info sections so Shell Integration matches the host's de-carded settings shell with less nested chrome / 将设置页改为轻量状态条、操作行和直接路径/信息区，减少嵌套装饰以匹配主程序去卡片化后的设置壳
 - Tightened the settings overview into a compact first-screen summary so registration, version, config, and quick actions stay readable inside the host settings window without wasting vertical space in Light and Dark themes / 将设置页总览收紧为首屏紧凑摘要，让注册状态、版本、配置和快速操作在宿主设置窗口内的浅色/深色主题下都更易阅读，减少无效纵向留白

@@ -107,7 +107,7 @@ static async Task<int> ProgramMainAsync(string[] args)
             DisplayName = RequireValue(argv, "--name"),
             Author = OptionalValue(argv, "--author") ?? Environment.UserName,
             Description = OptionalValue(argv, "--description") ?? string.Empty,
-            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "3.6.14",
+            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "3.6.15",
             Official = HasFlag(argv, "--official"),
         };
 

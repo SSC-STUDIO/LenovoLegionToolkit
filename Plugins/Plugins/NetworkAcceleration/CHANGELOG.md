@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.8] - 2026-04-29
+
 ### Improved / 改进
 - Reworked the settings page and fallback path into a status strip, direct settings form, and command area so the host settings window uses less nested card chrome while preserving existing controls / 将设置页及回退路径改为状态条、直接设置表单和操作区，减少宿主设置窗口中的嵌套卡片装饰，同时保留现有控制项
 - Reworked the feature dashboard into a compact status strip, split preset/detail columns, direct telemetry rows, and a plain status footer so the embedded page matches the host's de-carded plugin style / 将功能仪表盘改为紧凑状态条、预设/详情分栏、直接遥测行和普通状态页脚，使嵌入式页面匹配主程序去卡片化后的插件风格

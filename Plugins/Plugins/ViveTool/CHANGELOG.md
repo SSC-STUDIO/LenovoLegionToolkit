@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-04-29
+
 ### Improved / 改进
 - Reworked the feature page around a DataGrid-first layout and simplified settings into one direct form with inline status and command rows, reducing nested card chrome while keeping smoke AutomationIds stable / 将功能页改为以 DataGrid 为主体的布局，并把设置页简化为单表单、内联状态和命令区，减少嵌套卡片同时保留冒烟 AutomationId 稳定性
 - Added stable AutomationIds to the feature/settings pages and kept fallback UI controls in parity so smoke automation can verify both render paths / 为功能页与设置页补充稳定 AutomationIds，并保持 fallback UI 控件对齐，使冒烟自动化可验证两种渲染路径

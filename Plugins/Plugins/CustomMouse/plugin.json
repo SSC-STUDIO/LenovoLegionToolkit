@@ -1,7 +1,7 @@
 ﻿{
     "id":  "custom-mouse",
     "name":  "Custom Mouse",
-    "version":  "1.0.14",
+    "version":  "1.0.15",
     "minLLTVersion":  "3.6.1",
     "author":  "SSC-STUDIO",
     "isSystemPlugin":  false,
