@@ -7,7 +7,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="700"
-             d:DesignWidth="860">
+             d:DesignWidth="860"
+             AutomationProperties.AutomationId="ShellIntegrationSettingsRoot">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -19,174 +20,125 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0"
-                    Margin="0,0,0,16"
-                    Padding="16"
-                    CornerRadius="20"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    Margin="0,0,0,18"
+                    Padding="12,9"
+                    CornerRadius="8"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.2*" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="0"
-                                Grid.ColumnSpan="3"
-                                Margin="0,0,0,14">
-                        <TextBlock Margin="0,0,0,0"
-                                   Text="{x:Static text:ShellIntegrationText.OverviewTitle}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-
-                        <TextBlock Margin="0,6,0,0"
-                                   Text="{x:Static text:ShellIntegrationText.OverviewDescription}"
-                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="{x:Static text:ShellIntegrationText.RegistrationLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_registrationValueTextBlock"
+                                   AutomationProperties.AutomationId="ShellIntegrationRegistrationText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                     </StackPanel>
 
-                    <Border Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="0,0,10,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.RegistrationLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_registrationValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="18"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="{x:Static text:ShellIntegrationText.VersionLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_versionValueTextBlock"
+                                   AutomationProperties.AutomationId="ShellIntegrationVersionText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </StackPanel>
 
-                    <Border Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,0,10,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.VersionLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_versionValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="18"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Row="1"
-                            Grid.Column="2"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.ConfigLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_configValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="16"
-                                       TextWrapping="Wrap"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="{x:Static text:ShellIntegrationText.ConfigLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_configValueTextBlock"
+                                   AutomationProperties.AutomationId="ShellIntegrationConfigText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="1"
-                  Margin="0,0,0,16">
+            <Grid Grid.Row="1" Margin="0,0,0,18">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.05*" />
+                    <ColumnDefinition Width="28" />
+                    <ColumnDefinition Width="0.95*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        Margin="0,0,8,0"
-                        Padding="18"
-                        CornerRadius="20"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static text:ShellIntegrationText.ActionsTitle}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                        <TextBlock Margin="0,6,0,0"
-                                   Text="{x:Static text:ShellIntegrationText.ActionsDescription}"
-                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.ActionsTitle}"
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <TextBlock Margin="0,6,0,18"
+                               Text="{x:Static text:ShellIntegrationText.ActionsDescription}"
+                               TextWrapping="Wrap"
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
-                        <WrapPanel Margin="0,14,0,0">
-                            <wpfui:Button x:Name="_enableButton"
-                                          Content="{x:Static text:ShellIntegrationText.EnableButton}"
-                                          AutomationProperties.AutomationId="EnableButton"
-                                          Width="130"
-                                          Appearance="Primary"
-                                          Margin="0,0,10,10"
-                                          Click="EnableButton_Click" />
-                            <wpfui:Button x:Name="_disableButton"
-                                          Content="{x:Static text:ShellIntegrationText.DisableButton}"
-                                          AutomationProperties.AutomationId="DisableButton"
-                                          Width="130"
-                                          Margin="0,0,10,10"
-                                          Click="DisableButton_Click" />
-                            <wpfui:Button x:Name="_openStyleSettingsButton"
-                                          Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
-                                          AutomationProperties.AutomationId="OpenStyleSettingsButton"
-                                          Margin="0,0,10,10"
-                                          Padding="12,6"
-                                          Click="OpenStyleButton_Click" />
-                            <wpfui:Button x:Name="_openShellFolderButton"
-                                          Content="{x:Static text:ShellIntegrationText.OpenShellFolderButton}"
-                                          AutomationProperties.AutomationId="OpenShellFolderButton"
-                                          Margin="0,0,10,10"
-                                          Padding="12,6"
-                                          Click="OpenShellFolderButton_Click" />
-                            <wpfui:Button x:Name="_openConfigButton"
-                                          Content="{x:Static text:ShellIntegrationText.OpenConfigButton}"
-                                          AutomationProperties.AutomationId="OpenConfigButton"
-                                          Margin="0,0,0,10"
-                                          Padding="12,6"
-                                          Click="OpenConfigButton_Click" />
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
+                    <WrapPanel>
+                        <wpfui:Button x:Name="_enableButton"
+                                      Content="{x:Static text:ShellIntegrationText.EnableButton}"
+                                      AutomationProperties.AutomationId="EnableButton"
+                                      Width="130"
+                                      Appearance="Primary"
+                                      Margin="0,0,10,10"
+                                      Click="EnableButton_Click" />
+                        <wpfui:Button x:Name="_disableButton"
+                                      Content="{x:Static text:ShellIntegrationText.DisableButton}"
+                                      AutomationProperties.AutomationId="DisableButton"
+                                      Width="130"
+                                      Margin="0,0,10,10"
+                                      Click="DisableButton_Click" />
+                        <wpfui:Button x:Name="_openStyleSettingsButton"
+                                      Content="{x:Static text:ShellIntegrationText.OpenStyleSettingsButton}"
+                                      AutomationProperties.AutomationId="OpenStyleSettingsButton"
+                                      Margin="0,0,10,10"
+                                      Padding="12,6"
+                                      Click="OpenStyleButton_Click" />
+                        <wpfui:Button x:Name="_openShellFolderButton"
+                                      Content="{x:Static text:ShellIntegrationText.OpenShellFolderButton}"
+                                      AutomationProperties.AutomationId="OpenShellFolderButton"
+                                      Margin="0,0,10,10"
+                                      Padding="12,6"
+                                      Click="OpenShellFolderButton_Click" />
+                        <wpfui:Button x:Name="_openConfigButton"
+                                      Content="{x:Static text:ShellIntegrationText.OpenConfigButton}"
+                                      AutomationProperties.AutomationId="OpenConfigButton"
+                                      Margin="0,0,0,10"
+                                      Padding="12,6"
+                                      Click="OpenConfigButton_Click" />
+                    </WrapPanel>
+                </StackPanel>
 
                 <Border Grid.Column="1"
-                        Margin="8,0,0,0"
-                        Padding="18"
-                        CornerRadius="20"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static text:ShellIntegrationText.PathLabel}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                        <TextBlock x:Name="_pathValueTextBlock"
-                                   Margin="0,12,0,0"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        Width="1"
+                        HorizontalAlignment="Center"
+                        Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
-                        <Border Margin="0,18,0,0"
-                                Padding="14"
-                                CornerRadius="18"
-                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                            <TextBlock Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
-                                       Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
-                        </Border>
-                    </StackPanel>
-                </Border>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.PathLabel}"
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <TextBlock x:Name="_pathValueTextBlock"
+                               AutomationProperties.AutomationId="ShellIntegrationPathText"
+                               Margin="0,10,0,16"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Static text:ShellIntegrationText.OptimizationHint}"
+                               TextWrapping="Wrap"
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                </StackPanel>
             </Grid>
 
             <Border Grid.Row="2"
-                    Padding="16"
-                    CornerRadius="20"
-                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
-                    BorderThickness="1">
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="0,16,0,0">
                 <StackPanel Orientation="Horizontal">
                     <wpfui:SymbolIcon x:Name="_statusIcon"
                                       Symbol="CheckmarkCircle24"
@@ -195,7 +147,7 @@
                                       VerticalAlignment="Top"
                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock x:Name="_statusTextBlock"
-                               AutomationProperties.AutomationId="StatusText"
+                               AutomationProperties.AutomationId="ShellIntegration_StatusText"
                                TextWrapping="Wrap" />
                 </StackPanel>
             </Border>

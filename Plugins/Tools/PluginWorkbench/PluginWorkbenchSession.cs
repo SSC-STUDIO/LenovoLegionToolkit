@@ -16,6 +16,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
     private const string PluginConfigurationRootEnvironmentVariable = "LLT_PLUGIN_CONFIG_ROOT";
 
     private readonly string? _temporaryDirectory;
+    private readonly ResolveEventHandler _assemblyResolveHandler;
     private bool _disposed;
 
     private PluginWorkbenchSession(
@@ -30,15 +31,26 @@ internal sealed class PluginWorkbenchSession : IDisposable
         PluginDirectory = pluginDirectory;
         IsArchiveSource = isArchiveSource;
         _temporaryDirectory = temporaryDirectory;
+        _assemblyResolveHandler = (_, args) => ResolveAssemblyFromPluginDirectory(args, PluginDirectory);
+        AppDomain.CurrentDomain.AssemblyResolve += _assemblyResolveHandler;
+
         var pluginAttribute = plugin.GetType().GetCustomAttributes(typeof(PluginAttribute), inherit: false)
             .OfType<PluginAttribute>()
             .FirstOrDefault();
         PluginVersion = pluginAttribute?.Version ?? "1.0.0";
         MinimumHostVersion = pluginAttribute?.MinimumHostVersion ?? "1.0.0";
 
-        FeaturePage = CreatePluginPage(GetPluginExtension(plugin, "GetFeatureExtension"));
-        SettingsPage = CreatePluginPage(GetPluginExtension(plugin, "GetSettingsPage"));
-        OptimizationCategory = GetOptimizationCategory(plugin);
+        try
+        {
+            FeaturePage = CreatePluginPage(GetPluginExtension(plugin, "GetFeatureExtension"));
+            SettingsPage = CreatePluginPage(GetPluginExtension(plugin, "GetSettingsPage"));
+            OptimizationCategory = GetOptimizationCategory(plugin);
+        }
+        catch
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= _assemblyResolveHandler;
+            throw;
+        }
     }
 
     public IPlugin Plugin { get; }
@@ -115,6 +127,8 @@ internal sealed class PluginWorkbenchSession : IDisposable
             // Best-effort session cleanup only.
         }
 
+        AppDomain.CurrentDomain.AssemblyResolve -= _assemblyResolveHandler;
+
         if (string.IsNullOrWhiteSpace(_temporaryDirectory) || !Directory.Exists(_temporaryDirectory))
             return;
 
@@ -163,6 +177,16 @@ internal sealed class PluginWorkbenchSession : IDisposable
             .ToList();
 
         return filteredCandidates.Count > 0 ? filteredCandidates[0] : candidates[0];
+    }
+
+    private static Assembly? ResolveAssemblyFromPluginDirectory(ResolveEventArgs args, string pluginDirectory)
+    {
+        var assemblyName = new AssemblyName(args.Name).Name;
+        if (string.IsNullOrWhiteSpace(assemblyName))
+            return null;
+
+        var assemblyPath = Path.Combine(pluginDirectory, $"{assemblyName}.dll");
+        return File.Exists(assemblyPath) ? Assembly.LoadFrom(assemblyPath) : null;
     }
 
     private void Start(LenovoLegionToolkit.Plugins.SDK.PluginHostMode mode)

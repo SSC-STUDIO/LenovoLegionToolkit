@@ -7,7 +7,11 @@ public sealed class DoctorService
     public DoctorResult Run(string repositoryRoot)
     {
         var repository = _repository.Load(repositoryRoot);
-        var result = new DoctorResult();
+        var result = new DoctorResult
+        {
+            RepositoryRoot = repository.RootPath,
+            GeneratedAt = DateTimeOffset.UtcNow.ToString("O"),
+        };
 
         Add(result, File.Exists(repository.SolutionPath), $"Solution found: {repository.SolutionPath}");
 

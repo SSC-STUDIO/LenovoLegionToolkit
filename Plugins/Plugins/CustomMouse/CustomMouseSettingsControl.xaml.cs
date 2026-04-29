@@ -2,7 +2,9 @@ using System;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
@@ -31,6 +33,7 @@ public partial class CustomMouseSettingsControl : UserControl
             TickFrequency = 1,
             IsSnapToTickEnabled = true
         };
+        AutomationProperties.SetAutomationId(_pointerSpeedSlider, "PointerSpeedSlider");
         _pointerSpeedSlider.ValueChanged += SettingsInputChanged;
 
         _swapButtonsCheckBox = new CheckBox
@@ -38,10 +41,12 @@ public partial class CustomMouseSettingsControl : UserControl
             Content = CustomMouseText.SwapButtonsLabel,
             Margin = new Thickness(0, 16, 0, 0)
         };
+        AutomationProperties.SetAutomationId(_swapButtonsCheckBox, "SwapButtonsCheckBox");
         _swapButtonsCheckBox.Checked += SettingsInputChanged;
         _swapButtonsCheckBox.Unchecked += SettingsInputChanged;
 
         _cursorThemeModeComboBox = new ComboBox { Margin = new Thickness(0, 12, 0, 0) };
+        AutomationProperties.SetAutomationId(_cursorThemeModeComboBox, "CursorThemeModeComboBox");
         _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeAuto, Tag = "Auto" });
         _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeLight, Tag = "Light" });
         _cursorThemeModeComboBox.Items.Add(new ComboBoxItem { Content = CustomMouseText.CursorThemeModeDark, Tag = "Dark" });
@@ -51,10 +56,12 @@ public partial class CustomMouseSettingsControl : UserControl
         {
             Margin = new Thickness(0, 12, 0, 0),
             TextWrapping = TextWrapping.Wrap,
-            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(46, 125, 50))
+            Foreground = ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush)
         };
+        AutomationProperties.SetAutomationId(_statusTextBlock, "CustomMouse_StatusText");
 
         var root = new Grid { Margin = new Thickness(16) };
+        AutomationProperties.SetAutomationId(root, "CustomMouseSettingsRoot");
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -97,17 +104,20 @@ public partial class CustomMouseSettingsControl : UserControl
         {
             Text = CustomMouseText.CursorHint,
             Margin = new Thickness(0, 12, 0, 0),
-            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(106, 106, 106))
+            Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush)
         };
         Grid.SetRow(hint, 5);
         root.Children.Add(hint);
 
         var actionPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 16, 0, 0) };
         var applyButton = new Button { Content = CustomMouseText.ApplyToWindowsButton, Width = 130 };
+        AutomationProperties.SetAutomationId(applyButton, "ApplyToWindowsButton");
         applyButton.Click += ApplyButton_Click;
         var applyCursorButton = new Button { Content = CustomMouseText.ApplyCursorThemeNowButton, Width = 170, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(applyCursorButton, "ApplyCursorThemeNowButton");
         applyCursorButton.Click += ApplyCursorThemeNowButton_Click;
         var reloadButton = new Button { Content = CustomMouseText.ReloadButton, Width = 90, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(reloadButton, "ReloadButton");
         reloadButton.Click += ReloadButton_Click;
         actionPanel.Children.Add(applyButton);
         actionPanel.Children.Add(applyCursorButton);
@@ -305,8 +315,8 @@ public partial class CustomMouseSettingsControl : UserControl
 
         _statusTextBlock.Text = text;
         _statusTextBlock.Foreground = isError
-            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
-            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+            ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
+            : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
 
         if (_statusIcon is not null)
         {
@@ -315,6 +325,11 @@ public partial class CustomMouseSettingsControl : UserControl
                 : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
+    }
+
+    private static Brush ResolveBrush(string resourceKey, Brush fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
 
     private void UpdateSummaryCards()

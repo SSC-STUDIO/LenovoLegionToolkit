@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Improved / 改进
-- Refined the feature dashboard actions with host-style icons and safer button sizing so service controls, refresh, preset actions, and save operations are easier to scan in the embedded plugin page / 打磨功能仪表盘操作区，增加宿主风格图标并调整按钮尺寸，使服务控制、刷新、预设动作与保存操作在嵌入式插件页中更易识别
+- Reworked the settings page and fallback path into a status strip, direct settings form, and command area so the host settings window uses less nested card chrome while preserving existing controls / 将设置页及回退路径改为状态条、直接设置表单和操作区，减少宿主设置窗口中的嵌套卡片装饰，同时保留现有控制项
+- Reworked the feature dashboard into a compact status strip, split preset/detail columns, direct telemetry rows, and a plain status footer so the embedded page matches the host's de-carded plugin style / 将功能仪表盘改为紧凑状态条、预设/详情分栏、直接遥测行和普通状态页脚，使嵌入式页面匹配主程序去卡片化后的插件风格
+- Switched status colors to host theme resources so feature and settings pages stay readable during Light and Dark automation reviews / 将状态颜色切换为宿主主题资源，使功能页和设置页在浅色与深色自动化审查中都保持可读
 
 ## [1.1.7] - 2026-04-20
 

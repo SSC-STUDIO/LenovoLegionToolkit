@@ -6,6 +6,8 @@ public sealed class StoreJsonGenerator
 
     public StoreDocument Generate(StoreGenerationRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var repository = _repository.Load(request.RepositoryRoot);
         var selectedPluginIds = request.PluginIds.Count == 0
             ? repository.Plugins.Values.Where(plugin => plugin.StoreEntry is not null).Select(plugin => plugin.Manifest.Id).ToArray()
@@ -60,6 +62,8 @@ public sealed class StoreJsonGenerator
 
     public string Write(StoreGenerationRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var repository = _repository.Load(request.RepositoryRoot);
         var outputPath = request.OutputPath is null
             ? Path.Combine(repository.RootPath, "store.json")
@@ -68,5 +72,35 @@ public sealed class StoreJsonGenerator
         var store = Generate(request);
         PluginRepository.WriteJsonFile(outputPath, store);
         return outputPath;
+    }
+
+    public StoreCheckResult Check(StoreGenerationRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var repository = _repository.Load(request.RepositoryRoot);
+        var storePath = request.OutputPath is null
+            ? Path.Combine(repository.RootPath, "store.json")
+            : Path.GetFullPath(request.OutputPath);
+
+        if (!File.Exists(storePath))
+            return new StoreCheckResult(storePath, false, $"Store file not found: {storePath}");
+
+        var generated = Generate(request);
+        var expected = PluginRepository.ToJson(generated);
+        var current = File.ReadAllText(storePath);
+
+        var matches = NormalizeForComparison(current) == NormalizeForComparison(expected);
+        return matches
+            ? new StoreCheckResult(storePath, true, "store.json matches generator output.")
+            : new StoreCheckResult(storePath, false, "store.json differs from generator output. Re-run generate-store with the same arguments to update it.");
+    }
+
+    private static string NormalizeForComparison(string value)
+    {
+        if (!string.IsNullOrEmpty(value) && value[0] == '\uFEFF')
+            value = value[1..];
+
+        return PluginRepository.NormalizeLineEndings(value).TrimEnd();
     }
 }

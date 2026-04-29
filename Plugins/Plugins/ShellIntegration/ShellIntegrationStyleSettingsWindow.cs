@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -20,6 +22,7 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         MinHeight = 520;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Background = ResolveBrush("ApplicationBackgroundBrush", SystemColors.WindowBrush);
+        AutomationProperties.SetAutomationId(this, "ShellIntegrationStyleSettingsWindow");
         Content = BuildContent(plugin);
     }
 
@@ -34,51 +37,26 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
 
         var stack = new StackPanel
         {
-            Margin = new Thickness(24)
+            Margin = new Thickness(20)
         };
 
-        stack.Children.Add(new Border
+        var titleTextBlock = new TextBlock
         {
             Margin = new Thickness(0, 0, 0, 18),
-            Padding = new Thickness(18),
-            CornerRadius = new CornerRadius(18),
-            Background = ResolveBrush("ControlFillColorDefaultBrush", SystemColors.ControlBrush),
-            BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", Brushes.Gainsboro),
-            BorderThickness = new Thickness(1),
-            Child = new StackPanel
-            {
-                Children =
-                {
-                    new TextBlock
-                    {
-                        Text = ShellIntegrationText.SettingsPageTitle,
-                        FontSize = 24,
-                        FontWeight = FontWeights.SemiBold
-                    },
-                    new TextBlock
-                    {
-                        Margin = new Thickness(0, 8, 0, 0),
-                        Text = ShellIntegrationText.Subtitle,
-                        TextWrapping = TextWrapping.Wrap,
-                        Foreground = ResolveBrush("TextFillColorSecondaryBrush", Brushes.DimGray)
-                    },
-                    new TextBlock
-                    {
-                        Margin = new Thickness(0, 12, 0, 0),
-                        Text = "Open the live shell style files directly from the plugin workbench. This fallback window stays available when the main application editor is unavailable.",
-                        TextWrapping = TextWrapping.Wrap,
-                        Foreground = ResolveBrush("TextFillColorSecondaryBrush", Brushes.DimGray)
-                    }
-                }
-            }
-        });
+            Text = ShellIntegrationText.SettingsPageTitle,
+            FontSize = 22,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap
+        };
+        AutomationProperties.SetAutomationId(titleTextBlock, "ShellIntegrationStyleSettingsTitle");
+        stack.Children.Add(titleTextBlock);
 
-        stack.Children.Add(CreatePathCard("shell.nss", configPath, "Open File"));
-        stack.Children.Add(CreatePathCard("theme.nss", themePath, "Open File"));
-        stack.Children.Add(CreatePathCard("images.nss", imagesPath, "Open File"));
-        stack.Children.Add(CreatePathCard("modify.nss", modifyPath, "Open File"));
-        stack.Children.Add(CreatePathCard("imports", importsFolder, "Open Folder", isDirectory: true));
-        stack.Children.Add(CreatePathCard("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, isDirectory: true));
+        stack.Children.Add(CreatePathRow("shell.nss", configPath, "Open File"));
+        stack.Children.Add(CreatePathRow("theme.nss", themePath, "Open File"));
+        stack.Children.Add(CreatePathRow("images.nss", imagesPath, "Open File"));
+        stack.Children.Add(CreatePathRow("modify.nss", modifyPath, "Open File"));
+        stack.Children.Add(CreatePathRow("imports", importsFolder, "Open Folder", isDirectory: true));
+        stack.Children.Add(CreatePathRow("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, isDirectory: true, isLast: true));
 
         return new ScrollViewer
         {
@@ -87,37 +65,41 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         };
     }
 
-    private static UIElement CreatePathCard(string title, string? path, string buttonLabel, bool isDirectory = false)
+    private static UIElement CreatePathRow(string title, string? path, string buttonLabel, bool isDirectory = false, bool isLast = false)
     {
+        var automationSegment = NormalizeAutomationSegment(title);
         var border = new Border
         {
-            Background = ResolveBrush("ControlFillColorDefaultBrush", SystemColors.ControlLightBrush),
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", Brushes.Gainsboro),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(18),
-            Padding = new Thickness(16),
-            Margin = new Thickness(0, 0, 0, 12)
+            BorderThickness = isLast ? new Thickness(0) : new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(0, 12, 0, 12)
         };
+        AutomationProperties.SetAutomationId(border, $"ShellIntegrationStyleRow_{automationSegment}");
 
         var grid = new Grid();
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
         var textPanel = new StackPanel();
-        textPanel.Children.Add(new TextBlock
+        var titleTextBlock = new TextBlock
         {
             Text = title,
             FontWeight = FontWeights.SemiBold
-        });
-        textPanel.Children.Add(new TextBlock
+        };
+        AutomationProperties.SetAutomationId(titleTextBlock, $"ShellIntegrationStyleTitle_{automationSegment}");
+        textPanel.Children.Add(titleTextBlock);
+
+        var pathTextBlock = new TextBlock
         {
             Margin = new Thickness(0, 6, 0, 0),
             Text = string.IsNullOrWhiteSpace(path) ? ShellIntegrationText.NotFound : path,
             TextWrapping = TextWrapping.Wrap,
             Foreground = string.IsNullOrWhiteSpace(path)
-                ? Brushes.IndianRed
+                ? ResolveBrush("SystemFillColorCriticalBrush", Brushes.IndianRed)
                 : ResolveBrush("TextFillColorSecondaryBrush", Brushes.DimGray)
-        });
+        };
+        AutomationProperties.SetAutomationId(pathTextBlock, $"ShellIntegrationStylePath_{automationSegment}");
+        textPanel.Children.Add(pathTextBlock);
         Grid.SetColumn(textPanel, 0);
         grid.Children.Add(textPanel);
 
@@ -131,6 +113,7 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", Brushes.Gainsboro),
             IsEnabled = !string.IsNullOrWhiteSpace(path)
         };
+        AutomationProperties.SetAutomationId(openButton, $"ShellIntegrationStyleOpen_{automationSegment}");
         openButton.Click += (_, _) => OpenPath(path, isDirectory);
         Grid.SetColumn(openButton, 1);
         grid.Children.Add(openButton);
@@ -165,5 +148,14 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
     private static Brush ResolveBrush(string resourceKey, Brush fallback)
     {
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
+    }
+
+    private static string NormalizeAutomationSegment(string value)
+    {
+        var chars = value
+            .Where(char.IsLetterOrDigit)
+            .ToArray();
+
+        return chars.Length == 0 ? "Path" : new string(chars);
     }
 }

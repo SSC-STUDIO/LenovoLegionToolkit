@@ -116,6 +116,7 @@ public sealed class PluginRepository
                     : null;
             })
             .Where(static language => !string.IsNullOrWhiteSpace(language))
+            .Select(static language => language!)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(static language => language, StringComparer.OrdinalIgnoreCase)
             .ToArray();
@@ -145,8 +146,13 @@ public sealed class PluginRepository
     public static void WriteJsonFile<T>(string path, T value)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, ToJson(value));
+    }
+
+    public static string ToJson<T>(T value)
+    {
         var json = JsonSerializer.Serialize(value, JsonOptions);
-        File.WriteAllText(path, json + Environment.NewLine);
+        return json + Environment.NewLine;
     }
 
     public static string ReadProjectProperty(string projectPath, string propertyName)

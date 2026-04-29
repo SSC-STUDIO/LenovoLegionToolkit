@@ -18,7 +18,8 @@ static async Task<int> ProgramMainAsync(string[] args)
     {
         return command switch
         {
-            "doctor" => RunDoctor(root),
+            "doctor" => await RunDoctorAsync(root, args),
+            "inspect" => await RunInspectAsync(root, args),
             "new" => await RunNewAsync(root, args),
             "build" => await RunBuildAsync(root, args),
             "preview" => await RunPreviewAsync(root, args),
@@ -51,14 +52,48 @@ static async Task<int> ProgramMainAsync(string[] args)
         return PluginRepository.FindRepositoryRoot(Environment.CurrentDirectory);
     }
 
-    int RunDoctor(string repositoryRoot)
+    async Task<int> RunDoctorAsync(string repositoryRoot, string[] argv)
     {
         var service = new DoctorService();
         var result = service.Run(repositoryRoot);
         foreach (var check in result.Checks)
             Console.WriteLine($"[{check.Status}] {check.Message}");
 
+        var outputPath = OptionalValue(argv, "--json-report-path");
+        if (!string.IsNullOrWhiteSpace(outputPath))
+            await JsonReportFile.WriteAsync(Path.GetFullPath(outputPath), result);
+
         return result.FailureCount == 0 ? 0 : 1;
+    }
+
+    async Task<int> RunInspectAsync(string repositoryRoot, string[] argv)
+    {
+        var service = new PluginInspectionService();
+        var report = service.Inspect(repositoryRoot, ParsePluginSelection(argv));
+
+        Console.WriteLine($"Repository: {report.RepositoryRoot}");
+        Console.WriteLine($"Plugins: {report.PluginCount}");
+        foreach (var plugin in report.Plugins)
+        {
+            var storeState = plugin.StoreJsonEntry is null
+                ? "store: missing"
+                : plugin.StoreJsonEntry.MatchesManifestVersion ? "store: aligned" : "store: version mismatch";
+            var outputState = plugin.HasPluginAssembly ? "build: ready" : "build: missing";
+            var testsState = plugin.HasTestProject ? "tests: present" : "tests: missing";
+            var changelogState = plugin.HasChangelog
+                ? plugin.HasUnreleasedChangelog ? "changelog: unreleased" : "changelog: present"
+                : "changelog: missing";
+
+            Console.WriteLine($"[{plugin.PluginId}] {plugin.Name} {plugin.Version} ({storeState}, {outputState}, {testsState}, {changelogState})");
+            Console.WriteLine($"  path: {plugin.DirectoryPath}");
+            Console.WriteLine($"  output: {plugin.OutputDirectory}");
+        }
+
+        var outputPath = OptionalValue(argv, "--json-report-path");
+        if (!string.IsNullOrWhiteSpace(outputPath))
+            await JsonReportFile.WriteAsync(Path.GetFullPath(outputPath), report);
+
+        return 0;
     }
 
     async Task<int> RunNewAsync(string repositoryRoot, string[] argv)
@@ -177,15 +212,25 @@ static async Task<int> ProgramMainAsync(string[] args)
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             ?? Array.Empty<string>();
 
-        var path = generator.Write(new StoreGenerationRequest
+        var request = new StoreGenerationRequest
         {
             RepositoryRoot = repositoryRoot,
             OutputPath = OptionalValue(argv, "--output"),
             ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases",
             AssetRoot = OptionalValue(argv, "--asset-root"),
             PluginIds = pluginIds,
-        });
+            ReleaseDate = ParseReleaseDate(OptionalValue(argv, "--release-date")),
+        };
 
+        if (HasFlag(argv, "--check"))
+        {
+            var result = generator.Check(request);
+            Console.WriteLine(result.Message);
+            Console.WriteLine(result.StorePath);
+            return result.Matches ? 0 : 1;
+        }
+
+        var path = generator.Write(request);
         Console.WriteLine(path);
         return 0;
     }
@@ -211,6 +256,26 @@ static PluginValidationProfile ParseProfile(string rawValue)
         "official-release" => PluginValidationProfile.OfficialRelease,
         _ => throw new InvalidOperationException($"Unknown validation profile '{rawValue}'."),
     };
+}
+
+static IReadOnlyList<string> ParsePluginSelection(string[] args)
+{
+    var rawPluginIds = OptionalValue(args, "--plugin-ids");
+    var pluginId = OptionalValue(args, "--plugin");
+    return rawPluginIds is not null
+        ? rawPluginIds.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+        : pluginId is not null ? [pluginId] : Array.Empty<string>();
+}
+
+static DateTimeOffset? ParseReleaseDate(string? rawValue)
+{
+    if (string.IsNullOrWhiteSpace(rawValue))
+        return null;
+
+    if (DateTimeOffset.TryParse(rawValue, out var releaseDate))
+        return releaseDate;
+
+    throw new InvalidOperationException($"Invalid ISO-8601 release date: {rawValue}");
 }
 
 static bool HasFlag(string[] args, string option)
@@ -254,13 +319,14 @@ static int Fail(string message)
 static void PrintHelp()
 {
     Console.WriteLine("""
-plugin-tooling doctor [--repository-root <path>]
+plugin-tooling doctor [--repository-root <path>] [--json-report-path <path>]
+plugin-tooling inspect [--repository-root <path>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--json-report-path <path>]
 plugin-tooling new --template <settings-only|feature-settings|runtime-optimization> --folder <FolderName> --id <plugin-id> --name <DisplayName> [--author <Author>] [--description <Text>] [--min-llt-version <X.Y.Z>] [--official]
 plugin-tooling build --plugin <plugin-id> [--configuration Release]
 plugin-tooling preview --plugin <plugin-id> [--theme system|light|dark] [--view feature|settings|optimization]
 plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile contributor|official-candidate|official-release] [--skip-build] [--skip-tests] [--json-report-path <path>]
 plugin-tooling pack --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
 plugin-tooling promote --plugin <plugin-id> [--overwrite]
-plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>]
+plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--check]
 """);
 }

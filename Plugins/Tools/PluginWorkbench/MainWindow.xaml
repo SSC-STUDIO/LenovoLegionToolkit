@@ -469,28 +469,32 @@
 
                         <TextBlock FontSize="20"
                                    FontWeight="SemiBold"
-                                   Text="Plugin Metadata" />
+                                   Text="Plugin Metadata"
+                                   AutomationProperties.AutomationId="PluginMetadataHeaderTextBlock" />
 
                         <TextBlock Margin="0,14,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                    Text="Plugin id" />
                         <TextBlock x:Name="PluginIdTextBlock"
                                    FontWeight="SemiBold"
-                                   Text="-" />
+                                   Text="-"
+                                   AutomationProperties.AutomationId="PluginIdTextBlock" />
 
                         <TextBlock Margin="0,14,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                    Text="Version" />
                         <TextBlock x:Name="PluginVersionTextBlock"
                                    FontWeight="SemiBold"
-                                   Text="-" />
+                                   Text="-"
+                                   AutomationProperties.AutomationId="PluginVersionTextBlock" />
 
                         <TextBlock Margin="0,14,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                    Text="Minimum LLT" />
                         <TextBlock x:Name="PluginMinVersionTextBlock"
                                    FontWeight="SemiBold"
-                                   Text="-" />
+                                   Text="-"
+                                   AutomationProperties.AutomationId="PluginMinVersionTextBlock" />
 
                         <TextBlock Margin="0,14,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"

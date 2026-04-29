@@ -3,7 +3,9 @@ using System.IO;
 using System.Windows;
 #nullable enable
 
+using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
@@ -26,8 +28,10 @@ public partial class ShellIntegrationSettingsControl : UserControl
             Margin = new Thickness(0, 12, 0, 0),
             TextWrapping = TextWrapping.Wrap
         };
+        AutomationProperties.SetAutomationId(_statusTextBlock, "ShellIntegration_StatusText");
 
         var root = new Grid { Margin = new Thickness(16) };
+        AutomationProperties.SetAutomationId(root, "ShellIntegrationSettingsRoot");
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -48,14 +52,19 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
         var buttonPanel = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 12, 0, 0) };
         _enableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.EnableButton, Width = 90 };
+        AutomationProperties.SetAutomationId(_enableButton, "EnableButton");
         _enableButton.Click += EnableButton_Click;
         _disableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.DisableButton, Width = 90, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_disableButton, "DisableButton");
         _disableButton.Click += DisableButton_Click;
         _openStyleSettingsButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenStyleShortButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_openStyleSettingsButton, "OpenStyleSettingsButton");
         _openStyleSettingsButton.Click += OpenStyleButton_Click;
         _openShellFolderButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenShellFolderButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_openShellFolderButton, "OpenShellFolderButton");
         _openShellFolderButton.Click += OpenShellFolderButton_Click;
         _openConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenConfigButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
+        AutomationProperties.SetAutomationId(_openConfigButton, "OpenConfigButton");
         _openConfigButton.Click += OpenConfigButton_Click;
         buttonPanel.Children.Add(_enableButton);
         buttonPanel.Children.Add(_disableButton);
@@ -139,8 +148,8 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
         var effectiveIsError = isError ?? !installed || !isRegistered;
         _statusTextBlock.Foreground = effectiveIsError
-            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
-            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+            ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
+            : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
 
         if (_statusIcon is not null)
         {
@@ -149,6 +158,11 @@ public partial class ShellIntegrationSettingsControl : UserControl
                 : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
+    }
+
+    private static Brush ResolveBrush(string resourceKey, Brush fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
 
     private bool IsShellCurrentlyRegistered()

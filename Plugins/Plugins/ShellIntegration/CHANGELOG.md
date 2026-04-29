@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Improved / 改进
+- Reworked the settings page into a lightweight status strip, action row, and direct path/info sections so Shell Integration matches the host's de-carded settings shell with less nested chrome / 将设置页改为轻量状态条、操作行和直接路径/信息区，减少嵌套装饰以匹配主程序去卡片化后的设置壳
 - Tightened the settings overview into a compact first-screen summary so registration, version, config, and quick actions stay readable inside the host settings window without wasting vertical space in Light and Dark themes / 将设置页总览收紧为首屏紧凑摘要，让注册状态、版本、配置和快速操作在宿主设置窗口内的浅色/深色主题下都更易阅读，减少无效纵向留白
-- Reworked the settings page and fallback style dialog to use cleaner card grouping, wrapped action rows, and a more host-consistent Dark/Light layout in both the main app and PluginWorkbench / 重做设置页与 fallback 样式弹窗，采用更清晰的卡片分组、可换行的操作区，以及在主程序与 PluginWorkbench 中都更贴近宿主的深浅色布局
+- Reworked the settings page and fallback style dialog toward direct path rows, wrapped action rows, and a more host-consistent Dark/Light layout in both the main app and PluginWorkbench / 重做设置页与 fallback 样式弹窗，改为直接路径行、可换行的操作区，以及在主程序与 PluginWorkbench 中都更贴近宿主的深浅色布局
 - Tightened standalone preview compatibility so PluginWorkbench now resolves the real Shell Integration assembly from build outputs and can keep the settings shell available in both Dark and Light reviews / 收紧独立预览兼容性，使 PluginWorkbench 现在会从构建输出中解析真正的 Shell Integration 程序集，并能在深浅色审查中稳定保留设置页宿主
+- Added stable AutomationIds and host theme status colors to settings and style-dialog controls so Workbench smoke and manual reviews can target Shell actions consistently / 为设置页和样式对话框控件补充稳定 AutomationId 与宿主主题状态颜色，使 Workbench 冒烟和人工审查能一致定位 Shell 操作
 
 ## [1.0.10] - 2026-04-20
 

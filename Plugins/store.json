@@ -11,7 +11,7 @@
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.14/custom-mouse-v1.0.14.zip",
       "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.14",
-      "fileSize": 3804184,
+      "fileSize": 3804711,
       "releaseDate": "2026-04-21T15:03:21.2902122\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
       "supportedLanguages": [
@@ -67,7 +67,7 @@
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.7/network-acceleration-v1.1.7.zip",
       "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.7",
-      "fileSize": 2389868,
+      "fileSize": 2390410,
       "releaseDate": "2026-04-21T15:03:21.2902122\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
       "supportedLanguages": [
@@ -122,7 +122,7 @@
       "isSystemPlugin": true,
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.10/shell-integration-v1.0.10.zip",
       "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.10",
-      "fileSize": 3121763,
+      "fileSize": 3281673,
       "releaseDate": "2026-04-21T15:03:21.2902122\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
       "supportedLanguages": [
@@ -178,7 +178,7 @@
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.2.0/vive-tool-v1.2.0.zip",
       "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.2.0",
-      "fileSize": 2944275,
+      "fileSize": 2941248,
       "releaseDate": "2026-04-21T15:03:21.2902122\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
       "supportedLanguages": [

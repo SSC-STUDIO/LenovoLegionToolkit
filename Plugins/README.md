@@ -38,6 +38,18 @@ Check the environment:
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
 ```
 
+Create machine-readable agent reports:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  doctor `
+  --json-report-path artifacts\agent\doctor.json
+
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  inspect `
+  --json-report-path artifacts\agent\inspect.json
+```
+
 Create a new plugin:
 
 ```powershell
@@ -137,7 +149,7 @@ dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
 Smoke:
 
 ```powershell
-make.bat workbench-smoke
+make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 ```
 
 ## Store Metadata Model
@@ -153,6 +165,7 @@ Root `store.json` should be treated as generated release output, not as the firs
 Short wrapper commands are available through `make.bat`:
 
 - `make.bat doctor`
+- `make.bat workbench-smoke --plugin-id custom-mouse --theme Dark`
 - `make.bat new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"`
 - `make.bat validate --plugin my-plugin --profile contributor`
 - `make.bat preview --plugin my-plugin --theme system`
@@ -175,5 +188,6 @@ Official release assets must keep the stable naming contract:
 - [Quick Start](./Docs/PLUGIN_QUICKSTART.md)
 - [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md)
 - [Architecture](./Docs/ARCHITECTURE.md)
+- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md)
 - [Contributing](./CONTRIBUTING.md)
 - [CHANGELOG](./CHANGELOG.md)

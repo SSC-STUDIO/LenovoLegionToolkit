@@ -7,7 +7,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="720"
-             d:DesignWidth="860">
+             d:DesignWidth="860"
+             AutomationProperties.AutomationId="CustomMouseSettingsRoot">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -19,191 +20,149 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0"
-                    Margin="0,0,0,16"
-                    Padding="16"
-                    CornerRadius="20"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    Margin="0,0,0,18"
+                    Padding="12,9"
+                    CornerRadius="8"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="0"
-                                Grid.ColumnSpan="3"
-                                Margin="0,0,0,14">
-                        <TextBlock Margin="0,0,0,0"
-                                   Text="{x:Static text:CustomMouseText.SettingsOverviewTitle}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-
-                        <TextBlock Margin="0,6,0,0"
-                                   Text="{x:Static text:CustomMouseText.WindowsSettingsDescription}"
-                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="{x:Static text:CustomMouseText.PointerPreviewLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_pointerPreviewValueTextBlock"
+                                   AutomationProperties.AutomationId="CustomMousePointerPreviewText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                     </StackPanel>
 
-                    <Border Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="0,0,10,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:CustomMouseText.PointerPreviewLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_pointerPreviewValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="18"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="{x:Static text:CustomMouseText.ButtonLayoutLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_buttonLayoutValueTextBlock"
+                                   AutomationProperties.AutomationId="CustomMouseButtonLayoutText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </StackPanel>
 
-                    <Border Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,0,10,0"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:CustomMouseText.ButtonLayoutLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_buttonLayoutValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="18"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Row="1"
-                            Grid.Column="2"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                        <StackPanel>
-                            <TextBlock Text="{x:Static text:CustomMouseText.CursorThemeStatusLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock x:Name="_cursorThemeValueTextBlock"
-                                       Margin="0,6,0,0"
-                                       FontSize="18"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="{x:Static text:CustomMouseText.CursorThemeStatusLabel}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="_cursorThemeValueTextBlock"
+                                   AutomationProperties.AutomationId="CustomMouseCursorThemeText"
+                                   Margin="8,0,0,0"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="1"
-                  Margin="0,0,0,16">
+            <Grid Grid.Row="1" Margin="0,0,0,18">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.05*" />
+                    <ColumnDefinition Width="28" />
+                    <ColumnDefinition Width="0.95*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        Margin="0,0,8,0"
-                        Padding="18"
-                        CornerRadius="20"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static text:CustomMouseText.SettingsSubtitle}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{x:Static text:CustomMouseText.SettingsOverviewTitle}"
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <TextBlock Margin="0,6,0,18"
+                               Text="{x:Static text:CustomMouseText.WindowsSettingsDescription}"
+                               TextWrapping="Wrap"
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
 
-                        <TextBlock Margin="0,18,0,6"
-                                   Text="{x:Static text:CustomMouseText.PointerSpeedLabel}"
+                    <TextBlock Text="{x:Static text:CustomMouseText.PointerSpeedLabel}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <Grid Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="_pointerSpeedSlider"
+                                Grid.Column="0"
+                                AutomationProperties.AutomationId="PointerSpeedSlider"
+                                Minimum="1"
+                                Maximum="20"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                ValueChanged="SettingsInputChanged" />
+                        <TextBlock x:Name="_pointerSpeedValueLabel"
+                                   Grid.Column="1"
+                                   MinWidth="46"
+                                   Margin="12,0,0,0"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Right"
+                                   FontSize="14"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="_pointerSpeedSlider"
-                                    Grid.Column="0"
-                                    AutomationProperties.AutomationId="PointerSpeedSlider"
-                                    Minimum="1"
-                                    Maximum="20"
-                                    TickFrequency="1"
-                                    IsSnapToTickEnabled="True"
-                                    ValueChanged="SettingsInputChanged" />
-                            <TextBlock x:Name="_pointerSpeedValueLabel"
-                                       Grid.Column="1"
-                                       MinWidth="46"
-                                       Margin="12,0,0,0"
-                                       VerticalAlignment="Center"
-                                       TextAlignment="Right"
-                                       FontSize="14"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Grid>
+                    </Grid>
 
-                        <CheckBox x:Name="_swapButtonsCheckBox"
-                                  AutomationProperties.AutomationId="SwapButtonsCheckBox"
-                                  Content="{x:Static text:CustomMouseText.SwapButtonsLabel}"
-                                  Margin="0,18,0,0"
-                                  Checked="SettingsInputChanged"
-                                  Unchecked="SettingsInputChanged" />
+                    <CheckBox x:Name="_swapButtonsCheckBox"
+                              AutomationProperties.AutomationId="SwapButtonsCheckBox"
+                              Content="{x:Static text:CustomMouseText.SwapButtonsLabel}"
+                              Margin="0,18,0,0"
+                              Checked="SettingsInputChanged"
+                              Unchecked="SettingsInputChanged" />
 
-                        <TextBlock Margin="0,18,0,6"
-                                   Text="{x:Static text:CustomMouseText.CursorThemeModeLabel}"
-                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <ComboBox x:Name="_cursorThemeModeComboBox"
-                                  AutomationProperties.AutomationId="CursorThemeModeComboBox"
-                                  SelectionChanged="CursorThemeModeComboBox_SelectionChanged">
-                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeAuto}" Tag="Auto" />
-                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeLight}" Tag="Light" />
-                            <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeDark}" Tag="Dark" />
-                        </ComboBox>
-                    </StackPanel>
-                </Border>
+                    <TextBlock Margin="0,18,0,6"
+                               Text="{x:Static text:CustomMouseText.CursorThemeModeLabel}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <ComboBox x:Name="_cursorThemeModeComboBox"
+                              AutomationProperties.AutomationId="CursorThemeModeComboBox"
+                              SelectionChanged="CursorThemeModeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeAuto}" Tag="Auto" />
+                        <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeLight}" Tag="Light" />
+                        <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeDark}" Tag="Dark" />
+                    </ComboBox>
+                </StackPanel>
 
                 <Border Grid.Column="1"
-                        Margin="8,0,0,0"
-                        Padding="18"
-                        CornerRadius="20"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static text:CustomMouseText.WindowsSettingsTitle}"
-                                   Style="{StaticResource AppSectionTitleTextBlockStyle}" />
-                        <TextBlock Margin="0,6,0,0"
-                                   Text="{x:Static text:CustomMouseText.CursorHint}"
-                                   Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+                        Width="1"
+                        HorizontalAlignment="Center"
+                        Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
-                        <WrapPanel Margin="0,14,0,0">
-                            <wpfui:Button Content="{x:Static text:CustomMouseText.ApplyToWindowsButton}"
-                                          AutomationProperties.AutomationId="ApplyToWindowsButton"
-                                          Width="150"
-                                          Appearance="Primary"
-                                          Margin="0,0,10,10"
-                                          Click="ApplyButton_Click" />
-                            <wpfui:Button Content="{x:Static text:CustomMouseText.ApplyCursorThemeNowButton}"
-                                          AutomationProperties.AutomationId="ApplyCursorThemeNowButton"
-                                          Width="190"
-                                          Margin="0,0,0,10"
-                                          Click="ApplyCursorThemeNowButton_Click" />
-                            <wpfui:Button Content="{x:Static text:CustomMouseText.ReloadButton}"
-                                          AutomationProperties.AutomationId="ReloadButton"
-                                          Width="110"
-                                          Margin="0,0,0,10"
-                                          Click="ReloadButton_Click" />
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{x:Static text:CustomMouseText.WindowsSettingsTitle}"
+                               Style="{StaticResource AppSectionTitleTextBlockStyle}" />
+                    <TextBlock Margin="0,6,0,18"
+                               Text="{x:Static text:CustomMouseText.CursorHint}"
+                               TextWrapping="Wrap"
+                               Style="{StaticResource AppPageDescriptionTextBlockStyle}" />
+
+                    <WrapPanel>
+                        <wpfui:Button Content="{x:Static text:CustomMouseText.ApplyToWindowsButton}"
+                                      AutomationProperties.AutomationId="ApplyToWindowsButton"
+                                      Width="150"
+                                      Appearance="Primary"
+                                      Margin="0,0,10,10"
+                                      Click="ApplyButton_Click" />
+                        <wpfui:Button Content="{x:Static text:CustomMouseText.ApplyCursorThemeNowButton}"
+                                      AutomationProperties.AutomationId="ApplyCursorThemeNowButton"
+                                      Width="190"
+                                      Margin="0,0,10,10"
+                                      Click="ApplyCursorThemeNowButton_Click" />
+                        <wpfui:Button Content="{x:Static text:CustomMouseText.ReloadButton}"
+                                      AutomationProperties.AutomationId="ReloadButton"
+                                      Width="110"
+                                      Margin="0,0,0,10"
+                                      Click="ReloadButton_Click" />
+                    </WrapPanel>
+                </StackPanel>
             </Grid>
 
             <Border Grid.Row="2"
-                    Padding="16"
-                    CornerRadius="20"
-                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
-                    BorderThickness="1">
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="0,16,0,0">
                 <StackPanel Orientation="Horizontal">
                     <wpfui:SymbolIcon x:Name="_statusIcon"
                                       Symbol="CheckmarkCircle24"
@@ -212,7 +171,7 @@
                                       VerticalAlignment="Top"
                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock x:Name="_statusTextBlock"
-                               AutomationProperties.AutomationId="StatusText"
+                               AutomationProperties.AutomationId="CustomMouse_StatusText"
                                TextWrapping="Wrap" />
                 </StackPanel>
             </Border>

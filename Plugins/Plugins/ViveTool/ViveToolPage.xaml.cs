@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
 using LenovoLegionToolkit.Lib;
@@ -169,29 +170,59 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
     private void BuildFallbackUi()
     {
+        var availabilityVisibilityConverter = new BooleanToVisibilityConverter();
+        var inverseAvailabilityVisibilityConverter =
+            new LenovoLegionToolkit.Plugins.ViveTool.Utils.InverseBooleanToVisibilityConverter();
+
         _searchTextBox = new Wpf.Ui.Controls.TextBox
         {
             PlaceholderText = Resource.ViveTool_SearchPlaceholder
         };
+        AutomationProperties.SetAutomationId(_searchTextBox, "ViveToolSearchTextBox");
         _searchTextBox.TextChanged += SearchTextBox_TextChanged;
 
         _importButton = new Wpf.Ui.Controls.Button
         {
             Content = Resource.ViveTool_Import
         };
+        AutomationProperties.SetAutomationId(_importButton, "ViveToolImportButton");
         _importButton.Click += ImportButton_Click;
 
         _refreshListButton = new Wpf.Ui.Controls.Button
         {
             Content = Resource.ViveTool_RefreshList
         };
+        AutomationProperties.SetAutomationId(_refreshListButton, "ViveToolRefreshListButton");
         _refreshListButton.Click += RefreshListButton_Click;
+
+        var settingsButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_GoToSettings
+        };
+        AutomationProperties.SetAutomationId(settingsButton, "ViveToolFeatureGoToSettingsButton");
+        settingsButton.Click += GoToSettingsButton_Click;
+
+        var missingSettingsButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_GoToSettings,
+            Margin = new Thickness(0, 0, 8, 0)
+        };
+        AutomationProperties.SetAutomationId(missingSettingsButton, "ViveToolMissingGoToSettingsButton");
+        missingSettingsButton.Click += GoToSettingsButton_Click;
+
+        var missingRefreshStatusButton = new Wpf.Ui.Controls.Button
+        {
+            Content = Resource.ViveTool_Refresh
+        };
+        AutomationProperties.SetAutomationId(missingRefreshStatusButton, "ViveToolMissingRefreshStatusButton");
+        missingRefreshStatusButton.Click += RefreshStatusButton_Click;
 
         _loadingPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Visibility = Visibility.Collapsed
         };
+        AutomationProperties.SetAutomationId(_loadingPanel, "ViveToolLoadingPanel");
         _loadingPanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_Loading,
@@ -203,11 +234,37 @@ public partial class ViveToolPage : INotifyPropertyChanged
             AutoGenerateColumns = false,
             IsReadOnly = true
         };
+        AutomationProperties.SetAutomationId(_featuresDataGrid, "ViveToolFeaturesDataGrid");
+        _featuresDataGrid.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(nameof(Features)));
+        _featuresDataGrid.Columns.Add(new DataGridTextColumn
+        {
+            Header = Resource.ViveTool_FeatureId,
+            Binding = new Binding(nameof(FeatureFlagInfo.Id))
+        });
+        _featuresDataGrid.Columns.Add(new DataGridTextColumn
+        {
+            Header = Resource.ViveTool_FeatureName,
+            Binding = new Binding(nameof(FeatureFlagInfo.Name))
+        });
+        _featuresDataGrid.Columns.Add(new DataGridTextColumn
+        {
+            Header = Resource.ViveTool_Status,
+            Binding = new Binding(nameof(FeatureFlagInfo.Status))
+            {
+                Converter = new FeatureStatusConverter()
+            }
+        });
+        _featuresDataGrid.Columns.Add(new DataGridTemplateColumn
+        {
+            Header = Resource.ViveTool_Actions,
+            CellTemplate = BuildFeatureActionsTemplate()
+        });
 
         _emptyStatePanel = new StackPanel
         {
             Visibility = Visibility.Collapsed
         };
+        AutomationProperties.SetAutomationId(_emptyStatePanel, "ViveToolEmptyStatePanel");
         _emptyStatePanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_NoFeaturesFound,
@@ -221,25 +278,118 @@ public partial class ViveToolPage : INotifyPropertyChanged
         };
         buttonRow.Children.Add(_importButton);
         buttonRow.Children.Add(_refreshListButton);
+        buttonRow.Children.Add(settingsButton);
+
+        var missingToolButtonRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 8, 0, 0)
+        };
+        missingToolButtonRow.Children.Add(missingSettingsButton);
+        missingToolButtonRow.Children.Add(missingRefreshStatusButton);
+
+        var missingToolPanel = new StackPanel
+        {
+            Margin = new Thickness(0, 0, 0, 12)
+        };
+        missingToolPanel.SetBinding(
+            UIElement.VisibilityProperty,
+            new Binding(nameof(IsViveToolAvailable))
+            {
+                Converter = inverseAvailabilityVisibilityConverter
+            });
+        missingToolPanel.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_MissingToolMessage,
+            TextWrapping = TextWrapping.Wrap
+        });
+        missingToolPanel.Children.Add(new TextBlock
+        {
+            Text = Resource.ViveTool_PathDescription,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 4, 0, 0)
+        });
+        missingToolPanel.Children.Add(missingToolButtonRow);
+
+        var featurePanel = new StackPanel();
+        featurePanel.SetBinding(
+            UIElement.VisibilityProperty,
+            new Binding(nameof(IsViveToolAvailable))
+            {
+                Converter = availabilityVisibilityConverter
+            });
+        featurePanel.Children.Add(buttonRow);
+        featurePanel.Children.Add(_searchTextBox);
+        featurePanel.Children.Add(_loadingPanel);
+        featurePanel.Children.Add(_featuresDataGrid);
+        featurePanel.Children.Add(_emptyStatePanel);
 
         var root = new StackPanel
         {
             Margin = new Thickness(16)
         };
+        AutomationProperties.SetAutomationId(this, "ViveToolPageRoot");
+        AutomationProperties.SetAutomationId(root, "ViveToolPageRoot");
         root.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_PageDescription,
             Margin = new Thickness(0, 0, 0, 12),
             TextWrapping = TextWrapping.Wrap
         });
-        root.Children.Add(buttonRow);
-        root.Children.Add(_searchTextBox);
-        root.Children.Add(_loadingPanel);
-        root.Children.Add(_featuresDataGrid);
-        root.Children.Add(_emptyStatePanel);
+        root.Children.Add(missingToolPanel);
+        root.Children.Add(featurePanel);
 
         Content = root;
         UpdateFeatureSummary();
+        UpdateFeaturesVisibility();
+    }
+
+    private DataTemplate BuildFeatureActionsTemplate()
+    {
+        var actionsPanel = new FrameworkElementFactory(typeof(StackPanel));
+        actionsPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
+        actionsPanel.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        actionsPanel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+        var enableButton = BuildFeatureActionButtonFactory(
+            Resource.ViveTool_Enable,
+            "ViveToolEnableFeatureButton_{0}",
+            EnableFeatureButton_Click);
+        enableButton.SetValue(FrameworkElement.MarginProperty, new Thickness(0, 0, 8, 0));
+        actionsPanel.AppendChild(enableButton);
+
+        actionsPanel.AppendChild(BuildFeatureActionButtonFactory(
+            Resource.ViveTool_Disable,
+            "ViveToolDisableFeatureButton_{0}",
+            DisableFeatureButton_Click));
+
+        return new DataTemplate(typeof(FeatureFlagInfo))
+        {
+            VisualTree = actionsPanel
+        };
+    }
+
+    private FrameworkElementFactory BuildFeatureActionButtonFactory(
+        string content,
+        string automationIdFormat,
+        RoutedEventHandler clickHandler)
+    {
+        var button = new FrameworkElementFactory(typeof(System.Windows.Controls.Button));
+        button.SetValue(ContentControl.ContentProperty, content);
+        button.SetValue(Control.FontSizeProperty, 12d);
+        button.SetValue(Control.PaddingProperty, new Thickness(10, 4, 10, 4));
+        button.SetBinding(FrameworkElement.TagProperty, new Binding(nameof(FeatureFlagInfo.Id)));
+        button.SetBinding(
+            AutomationProperties.AutomationIdProperty,
+            new Binding(nameof(FeatureFlagInfo.Id))
+            {
+                StringFormat = automationIdFormat
+            });
+        button.AddHandler(
+            System.Windows.Controls.Primitives.ButtonBase.ClickEvent,
+            clickHandler);
+
+        return button;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)

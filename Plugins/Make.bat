@@ -89,13 +89,14 @@ dotnet run --project "%TOOLING%" -- preview --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :WORKBENCH_SMOKE
-dotnet build "%REPO_ROOT%\Plugins\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj" -c Release
+SHIFT
+dotnet build "%SOLUTION%" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
 dotnet build "%REPO_ROOT%\Tools\PluginWorkbench\PluginWorkbench.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
 dotnet build "%REPO_ROOT%\Tools\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-"%REPO_ROOT%\Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe" --repository-root "%REPO_ROOT%"
+"%REPO_ROOT%\Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe" --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :SMOKE
@@ -142,7 +143,7 @@ ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.
 ECHO   powershell -NoProfile -ExecutionPolicy Bypass -File Scripts\ensure-host-dependencies.ps1
 ECHO   dotnet run --project Tools\PluginWorkbench\PluginWorkbench.csproj
 ECHO   dotnet build Tools\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj -c Release
-ECHO   Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe --repository-root .
+ECHO   Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe --repository-root . --plugin-id custom-mouse --theme Dark
 ECHO   dotnet build Tools\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj -c Release
 ECHO   Tools\PluginCompletionUiTool.Smoke\bin\Release\PluginCompletionUiTool.Smoke.exe .
 ECHO.
@@ -159,7 +160,7 @@ ECHO   make.bat workbench    - launch PluginWorkbench
 ECHO   make.bat preview      - open PluginWorkbench for a specific plugin
 ECHO   make.bat pack         - create a release ZIP from Build\plugins output
 ECHO   make.bat promote      - scaffold store-entry.json for an official candidate
-ECHO   make.bat workbench-smoke - run PluginWorkbench UI smoke
+ECHO   make.bat workbench-smoke --plugin-id custom-mouse --theme Dark - run PluginWorkbench UI smoke
 ECHO   make.bat smoke        - run UI smoke flow
 ECHO   make.bat clean        - dotnet clean solution
 ECHO.

@@ -203,14 +203,131 @@ public sealed class StepReportItem
 
 public sealed class DoctorCheck
 {
+    [JsonPropertyName("status")]
     public string Status { get; init; } = "INFO";
+
+    [JsonPropertyName("message")]
     public string Message { get; init; } = string.Empty;
 }
 
 public sealed class DoctorResult
 {
+    [JsonPropertyName("repositoryRoot")]
+    public string RepositoryRoot { get; init; } = string.Empty;
+
+    [JsonPropertyName("generatedAt")]
+    public string GeneratedAt { get; init; } = string.Empty;
+
+    [JsonPropertyName("checks")]
     public List<DoctorCheck> Checks { get; } = [];
+
+    [JsonPropertyName("failureCount")]
     public int FailureCount => Checks.Count(check => string.Equals(check.Status, "FAIL", StringComparison.OrdinalIgnoreCase));
+}
+
+public sealed class PluginInspectionReport
+{
+    [JsonPropertyName("repositoryRoot")]
+    public string RepositoryRoot { get; init; } = string.Empty;
+
+    [JsonPropertyName("generatedAt")]
+    public string GeneratedAt { get; init; } = string.Empty;
+
+    [JsonPropertyName("pluginCount")]
+    public int PluginCount => Plugins.Count;
+
+    [JsonPropertyName("plugins")]
+    public List<PluginInspectionItem> Plugins { get; init; } = [];
+}
+
+public sealed class PluginInspectionItem
+{
+    [JsonPropertyName("pluginId")]
+    public string PluginId { get; init; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("version")]
+    public string Version { get; init; } = string.Empty;
+
+    [JsonPropertyName("minLLTVersion")]
+    public string MinLltVersion { get; init; } = string.Empty;
+
+    [JsonPropertyName("folderName")]
+    public string FolderName { get; init; } = string.Empty;
+
+    [JsonPropertyName("directoryPath")]
+    public string DirectoryPath { get; init; } = string.Empty;
+
+    [JsonPropertyName("manifestPath")]
+    public string ManifestPath { get; init; } = string.Empty;
+
+    [JsonPropertyName("projectPath")]
+    public string? ProjectPath { get; init; }
+
+    [JsonPropertyName("testProjectPath")]
+    public string? TestProjectPath { get; init; }
+
+    [JsonPropertyName("changelogPath")]
+    public string? ChangelogPath { get; init; }
+
+    [JsonPropertyName("storeEntryPath")]
+    public string? StoreEntryPath { get; init; }
+
+    [JsonPropertyName("outputDirectory")]
+    public string OutputDirectory { get; init; } = string.Empty;
+
+    [JsonPropertyName("expectedAssemblyPath")]
+    public string ExpectedAssemblyPath { get; init; } = string.Empty;
+
+    [JsonPropertyName("hasBuildOutput")]
+    public bool HasBuildOutput { get; init; }
+
+    [JsonPropertyName("hasPluginAssembly")]
+    public bool HasPluginAssembly { get; init; }
+
+    [JsonPropertyName("hasOutputManifest")]
+    public bool HasOutputManifest { get; init; }
+
+    [JsonPropertyName("hasTestProject")]
+    public bool HasTestProject { get; init; }
+
+    [JsonPropertyName("hasChangelog")]
+    public bool HasChangelog { get; init; }
+
+    [JsonPropertyName("hasUnreleasedChangelog")]
+    public bool HasUnreleasedChangelog { get; init; }
+
+    [JsonPropertyName("hasStoreEntry")]
+    public bool HasStoreEntry { get; init; }
+
+    [JsonPropertyName("storeJsonEntry")]
+    public StoreInspectionItem? StoreJsonEntry { get; init; }
+}
+
+public sealed class StoreInspectionItem
+{
+    [JsonPropertyName("version")]
+    public string Version { get; init; } = string.Empty;
+
+    [JsonPropertyName("minLLTVersion")]
+    public string MinLltVersion { get; init; } = string.Empty;
+
+    [JsonPropertyName("downloadUrl")]
+    public string DownloadUrl { get; init; } = string.Empty;
+
+    [JsonPropertyName("changelog")]
+    public string Changelog { get; init; } = string.Empty;
+
+    [JsonPropertyName("fileSize")]
+    public long FileSize { get; init; }
+
+    [JsonPropertyName("releaseDate")]
+    public string ReleaseDate { get; init; } = string.Empty;
+
+    [JsonPropertyName("matchesManifestVersion")]
+    public bool MatchesManifestVersion { get; init; }
 }
 
 public sealed class ScaffoldRequest
@@ -259,6 +376,8 @@ public sealed class StoreGenerationRequest
     public IReadOnlyList<string> PluginIds { get; init; } = Array.Empty<string>();
     public DateTimeOffset? ReleaseDate { get; init; }
 }
+
+public sealed record StoreCheckResult(string StorePath, bool Matches, string Message);
 
 public sealed class ArchetypeDefinition
 {

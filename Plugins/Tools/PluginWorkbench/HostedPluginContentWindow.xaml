@@ -7,7 +7,8 @@
         MinHeight="420"
         MinWidth="640"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource ApplicationBackgroundBrush}">
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        AutomationProperties.AutomationId="HostedPluginContentWindow">
     <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -42,7 +43,8 @@
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Right"
                     Click="CloseButton_Click"
-                    Content="Close" />
+                    Content="Close"
+                    AutomationProperties.AutomationId="HostedDialogCloseButton" />
         </DockPanel>
     </Grid>
 </Window>

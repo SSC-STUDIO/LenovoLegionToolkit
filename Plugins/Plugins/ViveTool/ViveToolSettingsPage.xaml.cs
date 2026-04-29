@@ -3,7 +3,9 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
@@ -35,40 +37,52 @@ public partial class ViveToolSettingsPage
         {
             Margin = new Thickness(0, 6, 0, 12),
             TextWrapping = TextWrapping.Wrap,
-            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(96, 96, 96))
+            Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush)
         };
+        AutomationProperties.SetAutomationId(_statusTextBlock, "ViveToolSettingsStatusText");
 
         _viveToolPathTextBox = new Wpf.Ui.Controls.TextBox
         {
             IsReadOnly = true,
             Margin = new Thickness(0, 0, 8, 0)
         };
+        AutomationProperties.SetAutomationId(_viveToolPathTextBox, "ViveToolSettingsPathTextBox");
 
         _downloadProgressBar = new ProgressBar
         {
             Height = 8,
-            Margin = new Thickness(0, 0, 0, 0)
+            Margin = new Thickness(0, 0, 0, 0),
+            Foreground = ResolveBrush("SystemAccentColorPrimaryBrush", SystemColors.HighlightBrush)
         };
+        AutomationProperties.SetAutomationId(_downloadProgressBar, "ViveToolSettingsDownloadProgressBar");
         _downloadProgressText = new TextBlock
         {
-            Margin = new Thickness(0, 12, 0, 0)
+            Margin = new Thickness(0, 12, 0, 0),
+            Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush)
         };
+        AutomationProperties.SetAutomationId(_downloadProgressText, "ViveToolSettingsDownloadProgressText");
         _downloadProgressGrid = new StackPanel
         {
             Visibility = Visibility.Collapsed
         };
+        AutomationProperties.SetAutomationId(_downloadProgressGrid, "ViveToolSettingsDownloadProgressPanel");
         _downloadProgressGrid.Children.Add(_downloadProgressBar);
         _downloadProgressGrid.Children.Add(_downloadProgressText);
 
         _gitHubButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_GitHub, Margin = new Thickness(0, 0, 8, 0) };
+        AutomationProperties.SetAutomationId(_gitHubButton, "ViveToolSettingsGitHubButton");
         _gitHubButton.Click += GitHubButton_Click;
         _downloadViveToolButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Download, Margin = new Thickness(0, 0, 8, 0) };
+        AutomationProperties.SetAutomationId(_downloadViveToolButton, "ViveToolSettingsDownloadButton");
         _downloadViveToolButton.Click += DownloadViveToolButton_Click;
         _refreshStatusButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Refresh };
+        AutomationProperties.SetAutomationId(_refreshStatusButton, "ViveToolSettingsRefreshStatusButton");
         _refreshStatusButton.Click += RefreshStatusButton_Click;
         _browseViveToolButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_Browse, Margin = new Thickness(0, 0, 8, 0) };
+        AutomationProperties.SetAutomationId(_browseViveToolButton, "ViveToolSettingsBrowseButton");
         _browseViveToolButton.Click += BrowseViveToolButton_Click;
         _importConfigButton = new Wpf.Ui.Controls.Button { Content = Resource.ViveTool_ImportConfig };
+        AutomationProperties.SetAutomationId(_importConfigButton, "ViveToolSettingsImportConfigButton");
         _importConfigButton.Click += ImportConfigButton_Click;
 
         var actionRow = new WrapPanel();
@@ -89,9 +103,10 @@ public partial class ViveToolSettingsPage
 
         var statusCard = new Border
         {
-            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
+            BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(10),
+            Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14),
             Margin = new Thickness(0, 0, 0, 12)
         };
@@ -108,9 +123,10 @@ public partial class ViveToolSettingsPage
 
         var pathCard = new Border
         {
-            BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(210, 210, 210)),
+            BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(10),
+            Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14)
         };
         var pathStack = new StackPanel();
@@ -130,6 +146,8 @@ public partial class ViveToolSettingsPage
         pathCard.Child = pathStack;
 
         var root = new StackPanel { Margin = new Thickness(16) };
+        AutomationProperties.SetAutomationId(this, "ViveToolSettingsRoot");
+        AutomationProperties.SetAutomationId(root, "ViveToolSettingsRoot");
         root.Children.Add(statusCard);
         root.Children.Add(pathCard);
 
@@ -184,8 +202,8 @@ public partial class ViveToolSettingsPage
 
         _statusTextBlock.Text = text;
         _statusTextBlock.Foreground = isError
-            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(196, 43, 28))
-            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(15, 123, 90));
+            ? ResolveBrush("SystemFillColorCriticalBrush", SystemColors.ControlTextBrush)
+            : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
 
         if (_statusIcon is not null)
         {
@@ -194,6 +212,11 @@ public partial class ViveToolSettingsPage
                 : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
+    }
+
+    private static Brush ResolveBrush(string resourceKey, Brush fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
 
     private async void BrowseViveToolButton_Click(object sender, RoutedEventArgs e)

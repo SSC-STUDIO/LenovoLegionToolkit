@@ -12,7 +12,10 @@ public static class JsonReportFile
 
     public static async Task WriteAsync<T>(string path, T report, CancellationToken cancellationToken = default)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
+
         await using var stream = File.Create(path);
         await JsonSerializer.SerializeAsync(stream, report, JsonOptions, cancellationToken);
     }

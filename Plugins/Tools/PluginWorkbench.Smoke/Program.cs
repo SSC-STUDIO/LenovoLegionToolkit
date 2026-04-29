@@ -15,6 +15,7 @@ internal static class Program
     private static int Main(string[] args)
     {
         Process? process = null;
+        AutomationElement? mainWindow = null;
         try
         {
             var options = ParseOptions(args);
@@ -38,6 +39,7 @@ internal static class Program
             process.WaitForInputIdle(5000);
 
             var window = WaitForMainWindow(process.Id, TimeSpan.FromSeconds(30));
+            mainWindow = window;
             Console.WriteLine("[workbench-smoke] Main window ready");
 
             var themeStatus = WaitForAutomationId(window, "ThemeStateTextBlock", TimeSpan.FromSeconds(5));
@@ -63,21 +65,33 @@ internal static class Program
 
             var status = WaitForAutomationId(window, "StatusTextBlock", TimeSpan.FromSeconds(5));
             var subtitle = WaitForAutomationId(window, "PluginSubtitleTextBlock", TimeSpan.FromSeconds(5));
-            var optimizationTab = WaitForAutomationId(window, "OptimizationTabItem", TimeSpan.FromSeconds(10));
-            Select(optimizationTab);
+            var optimizationTab = TryWaitForAutomationId(window, "OptimizationTabItem", TimeSpan.FromSeconds(10));
+            AutomationElement? runButton = null;
+            var requiresOptimizationAction = RequiresOptimizationAction(plugin);
+            if (IsInteractable(optimizationTab))
+            {
+                Select(optimizationTab!);
+                runButton = requiresOptimizationAction
+                    ? WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15))
+                    : TryWaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(5));
 
-            var runButton = plugin.Id.Equals("shell-integration", StringComparison.OrdinalIgnoreCase)
-                ? TryWaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(5))
-                : WaitForAutomationId(window, "OptimizationRunButton", TimeSpan.FromSeconds(15));
+                if (runButton is null)
+                    Console.WriteLine("[workbench-smoke] Optimization preview tab has no runnable action rows");
+            }
+            else
+            {
+                if (requiresOptimizationAction)
+                    throw new InvalidOperationException($"{plugin.Id} should expose an optimization preview tab.");
+
+                Console.WriteLine("[workbench-smoke] Plugin does not expose an optimization preview tab");
+            }
 
             var statusText = ReadElementText(status);
             if (string.IsNullOrWhiteSpace(statusText)
                 || statusText.Contains("failed", StringComparison.OrdinalIgnoreCase)
                 || statusText.Contains("error", StringComparison.OrdinalIgnoreCase))
             {
-                var logTextBox = TryWaitForAutomationId(window, "LogTextBox", TimeSpan.FromSeconds(2));
-                if (logTextBox is not null)
-                    Console.WriteLine($"[workbench-smoke] Workbench log:\n{ReadElementText(logTextBox)}");
+                PrintWorkbenchLog(window);
 
                 throw new InvalidOperationException($"Workbench reported an invalid plugin state: '{statusText}'.");
             }
@@ -164,6 +178,18 @@ internal static class Program
         catch (Exception ex)
         {
             Console.Error.WriteLine("[workbench-smoke] FAIL");
+            if (mainWindow is not null)
+            {
+                try
+                {
+                    PrintWorkbenchLog(mainWindow);
+                }
+                catch (Exception logException)
+                {
+                    Console.Error.WriteLine($"[workbench-smoke] Unable to read Workbench log: {logException.Message}");
+                }
+            }
+
             Console.Error.WriteLine(ex);
             return 1;
         }
@@ -361,6 +387,26 @@ internal static class Program
         return string.IsNullOrWhiteSpace(existingArguments)
             ? argument
             : $"{existingArguments} {argument}";
+    }
+
+    private static bool RequiresOptimizationAction(PluginDescriptor plugin)
+    {
+        return plugin.Id.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase) ||
+               plugin.Id.Equals("shell-integration", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void PrintWorkbenchLog(AutomationElement window)
+    {
+        var logExpander = TryWaitForAutomationId(window, "LogExpander", TimeSpan.FromSeconds(2));
+        if (logExpander is not null &&
+            logExpander.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var pattern))
+        {
+            ((ExpandCollapsePattern)pattern).Expand();
+        }
+
+        var logTextBox = TryWaitForAutomationId(window, "LogTextBox", TimeSpan.FromSeconds(10));
+        if (logTextBox is not null)
+            Console.WriteLine($"[workbench-smoke] Workbench log:\n{ReadElementText(logTextBox)}");
     }
 
     private static AutomationElement WaitForMainWindow(int processId, TimeSpan timeout)
