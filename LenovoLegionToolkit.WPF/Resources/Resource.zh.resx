@@ -1252,7 +1252,7 @@
     <value>无法启用 Lenovo Hotkeys</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
-    <value>Lenovo Vantage 与 ImController 可能没有被正确禁用。</value>
+    <value>Lenovo Vantage 与/或 ImController 可能未被正确启用。</value>
   </data>
   <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
     <value>无法启用 Lenovo Vantage 与 ImController</value>
@@ -1337,19 +1337,19 @@
     <value>键盘背光亮度调节</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
-    <value>新增灯效主题</value>
+    <value>添加灯效</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
-    <value>无法应用此主题</value>
+    <value>无法应用配置文件</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
-    <value>无法应用灯效主题。</value>
+    <value>无法应用照明配置文件。</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
     <value>亮度</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
-    <value>取消全选所有灯区</value>
+    <value>取消全选所有区域</value>
   </data>
   <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
     <value>效果</value>
@@ -1518,7 +1518,7 @@
     <value>禁用 Win 键</value>
   </data>
   <data name="WinKeyControl_Message" xml:space="preserve">
-    <value>仅在内置键盘上生效。开启后 Win 键按下不再有反应。</value>
+    <value>仅在内置键盘上生效。启用后，Win 键将不再响应。</value>
   </data>
   <data name="WinKeyControl_Title" xml:space="preserve">
     <value>禁用 Win 键</value>
@@ -1536,7 +1536,7 @@
     <value>麦克风</value>
   </data>
   <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
-    <value>关闭此选项将静音所有可用的麦克风。</value>
+    <value>关闭此项将静音所有可用的麦克风。</value>
   </data>
   <data name="ResolutionControl_Title" xml:space="preserve">
     <value>分辨率</value>
@@ -1550,7 +1550,7 @@
   <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
     <value>切换内置屏幕分辨率。
 
-警告！当内置屏幕关闭时此选项无法生效。</value>
+警告：如果内置屏幕已关闭，此操作将无法正确执行。</value>
   </data>
   <data name="DpiScaleControl_Title" xml:space="preserve">
     <value>DPI 缩放</value>
@@ -1564,7 +1564,7 @@
   <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
     <value>切换内置屏幕缩放。
 
-警告！当内置屏幕关闭时此选项无法生效。</value>
+警告：如果内置屏幕已关闭，此操作将无法正确执行。</value>
   </data>
   <data name="DashboardPage_Display_Title" xml:space="preserve">
     <value>显示</value>
@@ -1579,7 +1579,7 @@
     <value>键盘背光</value>
   </data>
   <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
-    <value>开关背光。</value>
+    <value>使用 Fn + 空格键开关背光。</value>
   </data>
   <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
     <value>没有匹配的结果</value>
@@ -1597,7 +1597,7 @@
     <value>新建组</value>
   </data>
   <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
-    <value>点此输入名称</value>
+    <value>在此处输入名称</value>
   </data>
   <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
     <value>不同设备的功能支持情况各不相同，所以一些功能可能不会显示在控制台中。</value>
@@ -1625,7 +1625,7 @@
     <value>修改分组名称</value>
   </data>
   <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
-    <value>点此输入名称</value>
+    <value>名称</value>
   </data>
   <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
     <value>拯救者 LOGO 灯 开</value>
@@ -1646,7 +1646,7 @@
     <value>需要关机</value>
   </data>
   <data name="PackageControl_RebootRecommended" xml:space="preserve">
-    <value>需要重启以更新</value>
+    <value>建议重启</value>
   </data>
   <data name="PackageControl_Recommended" xml:space="preserve">
     <value>推荐</value>
@@ -1716,13 +1716,13 @@
     <value>预设名称</value>
   </data>
   <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
-    <value>点此输入名称</value>
+    <value>名称</value>
   </data>
   <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
     <value>预设</value>
   </data>
   <data name="AboutPage_ApplicationFolders" xml:space="preserve">
-    <value>应用数据文件夹</value>
+    <value>应用文件夹</value>
   </data>
   <data name="AboutPage_Data" xml:space="preserve">
     <value>数据</value>
@@ -2187,7 +2187,7 @@
     <value>等待至程序或脚本运行结束</value>
   </data>
   <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
-    <value>静音此项将静音所有可用的音频输出设备。</value>
+    <value>静音此项将静音所有活动的音频输出设备。</value>
   </data>
   <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
     <value>扬声器</value>
@@ -2211,7 +2211,7 @@
     <value>电源模式同步</value>
   </data>
   <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
-    <value>在切换性能模式时，同步自动切换 Windows 电源计划或 Windows 电源模式。</value>
+    <value>切换性能模式时，同步自动切换 Windows 电源计划或 Windows 电源模式。</value>
   </data>
   <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
     <value>Windows 电源模式</value>
@@ -2271,13 +2271,13 @@
     <value>不重复</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>只有在本程序运行时，键盘宏才可生效。</value>
+    <value>只有在本程序运行时，宏才能生效。</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
-    <value>启用键盘宏</value>
+    <value>启用宏</value>
   </data>
   <data name="MacroPage_Subtitle" xml:space="preserve">
-    <value>你可以录制一系列按键并使用键盘上的数字小键盘调用它们。</value>
+    <value>你可以录制一系列按键，并使用键盘上的数字小键盘调用它们。</value>
   </data>
   <data name="MacroAutomationStepControl_Title" xml:space="preserve">
     <value>宏</value>
@@ -2286,7 +2286,7 @@
     <value>启用或禁用宏。</value>
   </data>
   <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
-    <value>当按下其他按键后中断</value>
+    <value>若按下其他按键则中断</value>
   </data>
   <data name="Hide" xml:space="preserve">
     <value>隐藏</value>
@@ -2473,7 +2473,7 @@
     <value>清理失败。</value>
   </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
-    <value>这些操作将修改系统服务和文件，可能需要管理员权限。双击子项目可以打开对应的设置窗口或查看技术实现细节。</value>
+    <value>这些操作将修改系统服务和文件，可能需要管理员权限。</value>
   </data>
   <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
     <value>应用所选操作</value>
@@ -2515,7 +2515,7 @@
     <value>系统美化</value>
   </data>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
-    <value>驱动更新</value>
+    <value>驱动下载</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
     <value>安全确认</value>
@@ -3001,7 +3001,7 @@
     <value>配置文件编辑器</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
-    <value>shell。nss</value>
+    <value>shell.nss</value>
   </data>
   <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
     <value>主题。nss</value>
@@ -3242,19 +3242,19 @@
   </data>
 
   <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
-    <value>状态：经典菜单已安装并启用</value>
+    <value>已安装</value>
   </data>
 
   <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
-    <value>状态：已安装但未启用</value>
+    <value>已安装但未启用</value>
   </data>
 
   <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
-    <value>状态：经典菜单未安装</value>
+    <value>未安装</value>
   </data>
 
   <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
-    <value>在默认和经典右键菜单样式之间切换。</value>
+    <value>自定义右键菜单的外观和行为。</value>
   </data>
 
   <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
@@ -3266,7 +3266,7 @@
   </data>
 
   <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>自定义 Windows 外观，包括右键菜单样式。</value>
+    <value>自定义 Windows 外观和行为。</value>
   </data>
 
   <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
@@ -3519,7 +3519,7 @@
     <value>打开失败</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
-    <value>无法打开插件设置: {0}</value>
+    <value>无法打开插件：{0}</value>
   </data>
   <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
     <value>请先安装插件</value>
@@ -3528,7 +3528,7 @@
     <value>插件需要先安装才能使用</value>
   </data>
 <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
-    <value>最低兼容版本: {0}</value>
+    <value>需要最低主机版本 {0}</value>
   </data>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>永久删除</value>
@@ -3744,13 +3744,13 @@
     <value>使用说明</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve">
-    <value>此编辑器用于直接编辑 shell.nss 配置文件。修改后点击</value>
+    <value>此编辑器用于直接编辑 shell.nss 配置文件。修改后，请单击</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve">
     <value>应用</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve">
-    <value>按钮将保存所有更改并重启资源管理器使配置生效。</value>
+    <value>按钮以保存所有更改并重启资源管理器使配置生效。</value>
   </data>
   <data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve">
     <value>• 配置文件路径：</value>
@@ -3765,7 +3765,7 @@
     <value>shell.nss 配置文件</value>
   </data>
   <data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve">
-    <value>shell.nss 文件用于定义右键菜单的整体结构和行为</value>
+    <value>shell.nss 文件用于定义右键菜单的整体结构和行为。</value>
   </data>
   <data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve">
     <value>打开 shell.nss 文件</value>
@@ -3822,7 +3822,7 @@
     <value>images.nss 配置文件</value>
   </data>
   <data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve">
-    <value>images.nss 文件用于定义右键菜单的图标和图像</value>
+    <value>images.nss 文件用于定义右键菜单的图标和图像。</value>
   </data>
   <data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve">
     <value>打开 images.nss 文件</value>
