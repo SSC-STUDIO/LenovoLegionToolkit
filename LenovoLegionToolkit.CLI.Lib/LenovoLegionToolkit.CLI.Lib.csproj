@@ -5,7 +5,7 @@
         <Platforms>x64</Platforms>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-	    <Copyright>© 2025 Lenovo Legion Toolkit Contributors</Copyright>
+	    <Copyright>© 2026 Lenovo Legion Toolkit Contributors</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
 	<ItemGroup>

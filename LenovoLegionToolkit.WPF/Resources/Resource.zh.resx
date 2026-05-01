@@ -653,13 +653,13 @@
 警告：如内置屏幕关闭则本项无法正常运行。</value>
   </data>
   <data name="HDRAutomationStepControl_Title" xml:space="preserve">
-    <value>《人类发展报告》</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Message" xml:space="preserve">
     <value>为内置屏幕启用高动态范围显示（HDR）。</value>
   </data>
   <data name="HDRControl_Title" xml:space="preserve">
-    <value>《人类发展报告》</value>
+    <value>HDR</value>
   </data>
   <data name="HDRControl_Warning" xml:space="preserve">
     <value>Windows 设置已阻止启用 HDR。</value>
@@ -4049,4 +4049,4 @@
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>应用 {0} 失败：{1}</value>
   </data>
-<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>??????</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>???????????????????????</value></data></root>
+<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>强制软件渲染</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>检测到远程桌面或无显示器输出时使用软件渲染。建议重启。</value></data></root>
