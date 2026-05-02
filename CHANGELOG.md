@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved / 改进
+- 扩展 2025 年 Lenovo Legion 与 LOQ 机型识别，补齐 Gen 10 `15AKP`、`15IRX`、`16ADR`、`16AFR`、`17IRX`、`18IAX` 型号前缀 / Expanded 2025 Lenovo Legion and LOQ model detection by adding Gen 10 `15AKP`, `15IRX`, `16ADR`, `16AFR`, `17IRX`, and `18IAX` model prefixes
+- 加固发布和仓库治理：安装器改为检测 .NET 10 Desktop Runtime，发布流水线在打包前运行测试，并新增 CodeQL、Dependabot、Issue/PR 模板和分支保护配置 / Hardened release and repository governance by switching the installer to .NET 10 Desktop Runtime detection, running tests before release packaging, and adding CodeQL, Dependabot, Issue/PR templates, and branch protection configuration
+- 更新已验证兼容的 NuGet 依赖版本，并修正贡献指南、部署文档和安装器元数据中的旧仓库链接 / Updated verified-compatible NuGet dependency versions and corrected stale repository links in contribution guides, deployment docs, and installer metadata
+- 将 CLI 迁移到 `System.CommandLine` 2.0.7 稳定 API，保留现有命令、别名、验证错误和 IPC 失败提示行为 / Migrated the CLI to the stable `System.CommandLine` 2.0.7 APIs while preserving existing commands, aliases, validation errors, and IPC failure messages
+
 ## [3.6.15] - 2026-04-29
 
 ### Improved / 改进

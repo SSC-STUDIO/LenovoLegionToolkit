@@ -156,17 +156,17 @@ on:
 # Jobs (current repository workflow)
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
       - name: Build
         run: .\Make.bat
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: installer
           path: BuildInstaller/LenovoLegionToolkitSetup.exe
@@ -177,10 +177,10 @@ jobs:
 ```yaml
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
       - run: dotnet restore
@@ -191,21 +191,22 @@ jobs:
 
 ```yaml
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   release:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Build and Package
         run: |
           dotnet build --configuration Release
           dotnet publish -c Release -o ./publish
       - name: Create Installer
-        run: iscc make_installer.iss
+        run: iscc MakeInstaller.iss
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             installer/*.exe
@@ -216,11 +217,11 @@ jobs:
 
 ### Using Inno Setup
 
-The project uses Inno Setup (`make_installer.iss`) to create Windows installers:
+The project uses Inno Setup (`MakeInstaller.iss`) to create Windows installers:
 
 ```bash
 # Build installer (requires Inno Setup installed)
-iscc make_installer.iss
+iscc MakeInstaller.iss
 
 # Output location
 output/

@@ -62,6 +62,12 @@ jobs:
     - name: Restore solution
       run: dotnet restore LenovoLegionToolkit.sln
 
+    - name: Build solution
+      run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
+
+    - name: Test solution
+      run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Release.Tests.trx"
+
     - name: Publish release payload
       shell: pwsh
       run: |

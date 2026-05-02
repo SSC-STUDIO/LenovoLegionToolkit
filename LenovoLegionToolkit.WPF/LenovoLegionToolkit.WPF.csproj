@@ -42,7 +42,7 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Automation\LenovoLegionToolkit.Lib.Automation.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
-		<!-- Plugins are now in separate repository: https://github.com/Crs10259/LenovoLegionToolkit-Plugins -->
+		<!-- Plugins are now in separate repository: https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins -->
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\Icon.ico" />

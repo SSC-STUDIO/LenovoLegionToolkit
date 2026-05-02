@@ -1,8 +1,8 @@
 #define DotNetPrettyName "Microsoft .NET Desktop Runtime"
-#define DotNetName "Microsoft.WindowsDesktop.App 8"
-#define DotNetVersion "8.0.15"
-#define DotNetURL "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/8.0.15/windowsdesktop-runtime-8.0.15-win-x64.exe"
-#define DotNetExeName "dotnet8.exe"
+#define DotNetName "Microsoft.WindowsDesktop.App 10"
+#define DotNetVersion "10.0.7"
+#define DotNetURL "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/10.0.7/windowsdesktop-runtime-10.0.7-win-x64.exe"
+#define DotNetExeName "dotnet10.exe"
 #define DotNetExeArgs "/install /repair /passive /norestart"
 
 [Code]
@@ -95,7 +95,7 @@ begin
   DeleteFile(fileName);
 end;
 
-procedure InstallDotNet6DesktopRuntime;
+procedure InstallDotNetDesktopRuntime;
 begin
   if not IsDotNetInstalled('{#DotNetName}', '{#DotNetVersion}') then begin 
     NeedsInstall := True;

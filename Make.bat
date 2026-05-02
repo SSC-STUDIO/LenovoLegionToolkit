@@ -9,9 +9,14 @@ IF "%1"=="-d" (
 )
 
 IF "%1"=="" (
-    SET VERSION=0.0.0
+    CALL :RESOLVE_VERSION
 ) ELSE (
     SET VERSION=%1
+)
+
+IF "%VERSION%"=="" (
+    echo Failed to resolve version.
+    exit /b 1
 )
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
@@ -27,7 +32,8 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 iscc MakeInstaller.iss /DMyAppVersion=%VERSION%
 IF %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup failed, skipping installer creation.
+    echo Inno Setup failed.
+    set ERROR_COUNT=1
 )
 
 GOTO END
@@ -39,9 +45,14 @@ REM Usage: Make.bat -d [version]
 echo Building DEBUG version...
 
 IF "%2"=="" (
-    SET VERSION=0.0.0
+    CALL :RESOLVE_VERSION
 ) ELSE (
     SET VERSION=%2
+)
+
+IF "%VERSION%"=="" (
+    echo Failed to resolve version.
+    exit /b 1
 )
 
 echo.
@@ -80,5 +91,8 @@ IF %ERROR_COUNT% EQU 0 (
     echo Build completed with errors! Exiting in 5 seconds...
 )
 ping -n 6 127.0.0.1 >nul 2>&1
-endlocal
-exit /b 0
+endlocal & exit /b %ERROR_COUNT%
+
+:RESOLVE_VERSION
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$props=[xml](Get-Content -Raw 'Directory.Build.props'); $group=$props.Project.PropertyGroup[0]; $version=[string]$group.ReleaseVersion; if ([string]::IsNullOrWhiteSpace($version) -or $version.Contains('$(')) { $version='{0}.{1}.{2}' -f [string]$group.MajorVersion,[string]$group.MinorVersion,[string]$group.PatchVersion }; if ([string]::IsNullOrWhiteSpace($version) -or $version.Contains('$(')) { exit 1 }; $version"`) do SET VERSION=%%v
+exit /b %ERRORLEVEL%

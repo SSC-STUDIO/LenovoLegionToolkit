@@ -1,8 +1,5 @@
 using System;
 using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Invocation;
-using System.CommandLine.IO;
 using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.CLI.Lib;
@@ -11,35 +8,47 @@ namespace LenovoLegionToolkit.CLI;
 
 public class Program
 {
-    public static Task<int> Main(string[] args) => BuildCommandLine().InvokeAsync(args);
+    public static async Task<int> Main(string[] args)
+    {
+        try
+        {
+            return await BuildCommandLine()
+                .Parse(args)
+                .InvokeAsync(new InvocationConfiguration
+                {
+                    EnableDefaultExceptionHandler = false
+                }, default)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            return OnException(ex);
+        }
+    }
 
-    private static Parser BuildCommandLine()
+    private static RootCommand BuildCommandLine()
     {
         var root = new RootCommand("Utility that controls Lenovo Legion Toolkit from command line.\n\n" +
                                    "Lenovo Legion Toolkit must be running in the background and CLI setting must be " +
                                    "turned on for this utility to work.");
 
-        var builder = new CommandLineBuilder(root)
-            .UseDefaults()
-            .UseExceptionHandler(OnException);
+        root.Add(BuildQuickActionsCommand());
+        root.Add(BuildFeatureCommand());
+        root.Add(BuildSpectrumCommand());
+        root.Add(BuildRGBCommand());
+        root.Add(BuildShellCommand());
+        root.Add(BuildStatusCommand());
 
-        root.AddCommand(BuildQuickActionsCommand());
-        root.AddCommand(BuildFeatureCommand());
-        root.AddCommand(BuildSpectrumCommand());
-        root.AddCommand(BuildRGBCommand());
-        root.AddCommand(BuildShellCommand()); // Add shell management command
-        root.AddCommand(BuildStatusCommand());
-
-        return builder.Build();
+        return root;
     }
 
     private static Command BuildStatusCommand()
     {
         var cmd = new Command("status", "Show running app status and startup-related switches");
-        cmd.AddAlias("st");
-        cmd.SetHandler(async () =>
+        cmd.Aliases.Add("st");
+        cmd.SetAction(async _ =>
         {
-            var result = await IpcClient.GetAppStatusAsync();
+            var result = await IpcClient.GetAppStatusAsync().ConfigureAwait(false);
             Console.WriteLine(result);
         });
 
@@ -48,35 +57,43 @@ public class Program
 
     private static Command BuildQuickActionsCommand()
     {
-        var nameArgument = new Argument<string>("name", "Name of the Quick Action") { Arity = ArgumentArity.ZeroOrOne };
+        var nameArgument = new Argument<string>("name")
+        {
+            Description = "Name of the Quick Action",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
-        var listOption = new Option<bool>("--list", "List available Quick Actions") { Arity = ArgumentArity.ZeroOrOne };
-        listOption.AddAlias("-l");
+        var listOption = new Option<bool>("--list", "-l")
+        {
+            Description = "List available Quick Actions",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
         var cmd = new Command("quickAction", "Run Quick Action");
-        cmd.AddAlias("qa");
-        cmd.AddArgument(nameArgument);
-        cmd.AddOption(listOption);
-        cmd.SetHandler(async (name, list) =>
+        cmd.Aliases.Add("qa");
+        cmd.Add(nameArgument);
+        cmd.Add(listOption);
+        cmd.SetAction(async parseResult =>
         {
-            if (list)
+            if (parseResult.GetValue(listOption))
             {
-                var result = await IpcClient.ListQuickActionsAsync();
+                var result = await IpcClient.ListQuickActionsAsync().ConfigureAwait(false);
                 Console.WriteLine(result);
                 return;
             }
 
-            await IpcClient.RunQuickActionAsync(name);
-        }, nameArgument, listOption);
-        cmd.AddValidator(result =>
+            var name = parseResult.GetRequiredValue(nameArgument);
+            await IpcClient.RunQuickActionAsync(name).ConfigureAwait(false);
+        });
+        cmd.Validators.Add(result =>
         {
-            if (result.FindResultFor(nameArgument) is not null)
+            if (HasArgument(result, nameArgument))
                 return;
 
-            if (result.FindResultFor(listOption) is not null)
+            if (HasOption(result, listOption))
                 return;
 
-            result.ErrorMessage = $"{nameArgument.Name} or --{listOption.Name} should be specified";
+            result.AddError($"{nameArgument.Name} or --list should be specified");
         });
 
         return cmd;
@@ -87,34 +104,37 @@ public class Program
         var getCmd = BuildGetFeatureCommand();
         var setCmd = BuildSetFeatureCommand();
 
-        var listOption = new Option<bool?>("--list", "List available features") { Arity = ArgumentArity.ZeroOrOne };
-        listOption.AddAlias("-l");
+        var listOption = new Option<bool>("--list", "-l")
+        {
+            Description = "List available features",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
         var cmd = new Command("feature", "Control features");
-        cmd.AddAlias("f");
-        cmd.AddCommand(getCmd);
-        cmd.AddCommand(setCmd);
-        cmd.AddOption(listOption);
-        cmd.SetHandler(async list =>
+        cmd.Aliases.Add("f");
+        cmd.Add(getCmd);
+        cmd.Add(setCmd);
+        cmd.Add(listOption);
+        cmd.SetAction(async parseResult =>
         {
-            if (!list.HasValue || !list.Value)
+            if (!parseResult.GetValue(listOption))
                 return;
 
-            var value = await IpcClient.ListFeaturesAsync();
+            var value = await IpcClient.ListFeaturesAsync().ConfigureAwait(false);
             Console.WriteLine(value);
-        }, listOption);
-        cmd.AddValidator(result =>
+        });
+        cmd.Validators.Add(result =>
         {
-            if (result.FindResultFor(getCmd) is not null)
+            if (HasCommand(result, getCmd))
                 return;
 
-            if (result.FindResultFor(setCmd) is not null)
+            if (HasCommand(result, setCmd))
                 return;
 
-            if (result.FindResultFor(listOption) is not null)
+            if (HasOption(result, listOption))
                 return;
 
-            result.ErrorMessage = $"{getCmd.Name}, {setCmd.Name} or --{listOption.Name} should be specified";
+            result.AddError($"{getCmd.Name}, {setCmd.Name} or --list should be specified");
         });
 
         return cmd;
@@ -122,53 +142,72 @@ public class Program
 
     private static Command BuildGetFeatureCommand()
     {
-        var nameArgument = new Argument<string>("name", "Name of the feature") { Arity = ArgumentArity.ExactlyOne };
+        var nameArgument = new Argument<string>("name")
+        {
+            Description = "Name of the feature",
+            Arity = ArgumentArity.ExactlyOne
+        };
 
         var cmd = new Command("get", "Get value of a feature");
-        cmd.AddAlias("g");
-        cmd.AddArgument(nameArgument);
-        cmd.SetHandler(async name =>
+        cmd.Aliases.Add("g");
+        cmd.Add(nameArgument);
+        cmd.SetAction(async parseResult =>
         {
-            var result = await IpcClient.GetFeatureValueAsync(name);
+            var name = parseResult.GetRequiredValue(nameArgument);
+            var result = await IpcClient.GetFeatureValueAsync(name).ConfigureAwait(false);
             Console.WriteLine(result);
-        }, nameArgument);
+        });
 
         return cmd;
     }
 
     private static Command BuildSetFeatureCommand()
     {
-        var nameArgument = new Argument<string>("name", "Name of the feature") { Arity = ArgumentArity.ExactlyOne };
-        var valueArgument = new Argument<string>("value", "Value of the feature") { Arity = ArgumentArity.ZeroOrOne };
+        var nameArgument = new Argument<string>("name")
+        {
+            Description = "Name of the feature",
+            Arity = ArgumentArity.ExactlyOne
+        };
+        var valueArgument = new Argument<string>("value")
+        {
+            Description = "Value of the feature",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
-        var listOption = new Option<bool>("--list", "List available feature values") { Arity = ArgumentArity.ZeroOrOne };
-        listOption.AddAlias("-l");
+        var listOption = new Option<bool>("--list", "-l")
+        {
+            Description = "List available feature values",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
         var cmd = new Command("set", "Set value of a feature");
-        cmd.AddAlias("s");
-        cmd.AddArgument(nameArgument);
-        cmd.AddArgument(valueArgument);
-        cmd.AddOption(listOption);
-        cmd.SetHandler(async (name, value, list) =>
+        cmd.Aliases.Add("s");
+        cmd.Add(nameArgument);
+        cmd.Add(valueArgument);
+        cmd.Add(listOption);
+        cmd.SetAction(async parseResult =>
         {
-            if (list)
+            var name = parseResult.GetValue(nameArgument);
+
+            if (parseResult.GetValue(listOption))
             {
-                var result = await IpcClient.ListFeatureValuesAsync(name);
+                var result = await IpcClient.ListFeatureValuesAsync(name!).ConfigureAwait(false);
                 Console.WriteLine(result);
                 return;
             }
 
-            await IpcClient.SetFeatureValueAsync(name, value);
-        }, nameArgument, valueArgument, listOption);
-        cmd.AddValidator(result =>
+            var value = parseResult.GetValue(valueArgument);
+            await IpcClient.SetFeatureValueAsync(name!, value!).ConfigureAwait(false);
+        });
+        cmd.Validators.Add(result =>
         {
-            if (result.FindResultFor(nameArgument) is not null)
+            if (HasArgument(result, nameArgument))
                 return;
 
-            if (result.FindResultFor(listOption) is not null)
+            if (HasOption(result, listOption))
                 return;
 
-            result.ErrorMessage = $"{nameArgument.Name} or --{listOption.Name} should be specified";
+            result.AddError($"{nameArgument.Name} or --list should be specified");
         });
 
         return cmd;
@@ -180,9 +219,9 @@ public class Program
         var brightnessCommand = BuildSpectrumBrightnessCommand();
 
         var cmd = new Command("spectrum", "Control Spectrum backlight");
-        cmd.AddAlias("s");
-        cmd.AddCommand(profileCommand);
-        cmd.AddCommand(brightnessCommand);
+        cmd.Aliases.Add("s");
+        cmd.Add(profileCommand);
+        cmd.Add(brightnessCommand);
         return cmd;
     }
 
@@ -192,9 +231,9 @@ public class Program
         var setCmd = BuildSetSpectrumProfileCommand();
 
         var cmd = new Command("profile", "Control Spectrum backlight profile");
-        cmd.AddAlias("p");
-        cmd.AddCommand(getCmd);
-        cmd.AddCommand(setCmd);
+        cmd.Aliases.Add("p");
+        cmd.Add(getCmd);
+        cmd.Add(setCmd);
 
         return cmd;
     }
@@ -202,10 +241,10 @@ public class Program
     private static Command BuildGetSpectrumProfileCommand()
     {
         var cmd = new Command("get", "Get current Spectrum profile");
-        cmd.AddAlias("g");
-        cmd.SetHandler(async _ =>
+        cmd.Aliases.Add("g");
+        cmd.SetAction(async _ =>
         {
-            var result = await IpcClient.GetSpectrumProfileAsync();
+            var result = await IpcClient.GetSpectrumProfileAsync().ConfigureAwait(false);
             Console.WriteLine(result);
         });
 
@@ -214,15 +253,20 @@ public class Program
 
     private static Command BuildSetSpectrumProfileCommand()
     {
-        var valueArgument = new Argument<int>("profile", "Profile to set") { Arity = ArgumentArity.ExactlyOne };
+        var valueArgument = new Argument<int>("profile")
+        {
+            Description = "Profile to set",
+            Arity = ArgumentArity.ExactlyOne
+        };
 
         var cmd = new Command("set", "Set current Spectrum profile");
-        cmd.AddAlias("s");
-        cmd.AddArgument(valueArgument);
-        cmd.SetHandler(async value =>
+        cmd.Aliases.Add("s");
+        cmd.Add(valueArgument);
+        cmd.SetAction(async parseResult =>
         {
-            await IpcClient.SetSpectrumProfileAsync($"{value}");
-        }, valueArgument);
+            var value = parseResult.GetRequiredValue(valueArgument);
+            await IpcClient.SetSpectrumProfileAsync($"{value}").ConfigureAwait(false);
+        });
 
         return cmd;
     }
@@ -233,9 +277,9 @@ public class Program
         var setCmd = BuildSetSpectrumBrightnessCommand();
 
         var cmd = new Command("brightness", "Control Spectrum brightness");
-        cmd.AddAlias("b");
-        cmd.AddCommand(getCmd);
-        cmd.AddCommand(setCmd);
+        cmd.Aliases.Add("b");
+        cmd.Add(getCmd);
+        cmd.Add(setCmd);
 
         return cmd;
     }
@@ -243,10 +287,10 @@ public class Program
     private static Command BuildGetSpectrumBrightnessCommand()
     {
         var cmd = new Command("get", "Get current Spectrum brightness");
-        cmd.AddAlias("g");
-        cmd.SetHandler(async _ =>
+        cmd.Aliases.Add("g");
+        cmd.SetAction(async _ =>
         {
-            var result = await IpcClient.GetSpectrumBrightnessAsync();
+            var result = await IpcClient.GetSpectrumBrightnessAsync().ConfigureAwait(false);
             Console.WriteLine(result);
         });
 
@@ -255,15 +299,20 @@ public class Program
 
     private static Command BuildSetSpectrumBrightnessCommand()
     {
-        var valueArgument = new Argument<int>("brightness", "Brightness to set") { Arity = ArgumentArity.ExactlyOne };
+        var valueArgument = new Argument<int>("brightness")
+        {
+            Description = "Brightness to set",
+            Arity = ArgumentArity.ExactlyOne
+        };
 
         var cmd = new Command("set", "Set current Spectrum brightness");
-        cmd.AddAlias("s");
-        cmd.AddArgument(valueArgument);
-        cmd.SetHandler(async value =>
+        cmd.Aliases.Add("s");
+        cmd.Add(valueArgument);
+        cmd.SetAction(async parseResult =>
         {
-            await IpcClient.SetSpectrumBrightnessAsync($"{value}");
-        }, valueArgument);
+            var value = parseResult.GetRequiredValue(valueArgument);
+            await IpcClient.SetSpectrumBrightnessAsync($"{value}").ConfigureAwait(false);
+        });
 
         return cmd;
     }
@@ -274,9 +323,9 @@ public class Program
         var setCmd = BuildSetRGBCommand();
 
         var cmd = new Command("rgb", "Control RGB backlight preset");
-        cmd.AddAlias("r");
-        cmd.AddCommand(getCmd);
-        cmd.AddCommand(setCmd);
+        cmd.Aliases.Add("r");
+        cmd.Add(getCmd);
+        cmd.Add(setCmd);
 
         return cmd;
     }
@@ -284,10 +333,10 @@ public class Program
     private static Command BuildGetRGBCommand()
     {
         var cmd = new Command("get", "Get current RGB preset");
-        cmd.AddAlias("g");
-        cmd.SetHandler(async _ =>
+        cmd.Aliases.Add("g");
+        cmd.SetAction(async _ =>
         {
-            var result = await IpcClient.GetRGBPresetAsync();
+            var result = await IpcClient.GetRGBPresetAsync().ConfigureAwait(false);
             Console.WriteLine(result);
         });
 
@@ -296,88 +345,84 @@ public class Program
 
     private static Command BuildSetRGBCommand()
     {
-        var valueArgument = new Argument<int>("preset", "Preset to set") { Arity = ArgumentArity.ExactlyOne };
+        var valueArgument = new Argument<int>("preset")
+        {
+            Description = "Preset to set",
+            Arity = ArgumentArity.ExactlyOne
+        };
 
         var cmd = new Command("set", "Set current RGB preset");
-        cmd.AddAlias("s");
-        cmd.AddArgument(valueArgument);
-        cmd.SetHandler(async value =>
+        cmd.Aliases.Add("s");
+        cmd.Add(valueArgument);
+        cmd.SetAction(async parseResult =>
         {
-            await IpcClient.SetRGBPresetAsync($"{value}");
-        }, valueArgument);
+            var value = parseResult.GetRequiredValue(valueArgument);
+            await IpcClient.SetRGBPresetAsync($"{value}").ConfigureAwait(false);
+        });
 
         return cmd;
     }
 
     private static Command BuildShellCommand()
     {
-        var registerOption = new Option<bool>("--register", "Register shell context menu extension") { Arity = ArgumentArity.ZeroOrOne };
-        registerOption.AddAlias("-r");
-
-        var unregisterOption = new Option<bool>("--unregister", "Unregister shell context menu extension") { Arity = ArgumentArity.ZeroOrOne };
-        unregisterOption.AddAlias("-u");
-
-        var restartOption = new Option<bool>("--restart", "Restart explorer after changes") { Arity = ArgumentArity.ZeroOrOne };
-        restartOption.AddAlias("-e");
-
-        var treatOption = new Option<bool>("--treat", "Apply theme treatment") { Arity = ArgumentArity.ZeroOrOne };
-        treatOption.AddAlias("-t");
-
-        var statusOption = new Option<bool>("--status", "Check current registration status") { Arity = ArgumentArity.ZeroOrOne };
-        statusOption.AddAlias("-s");
-
-        var installOption = new Option<bool>("--install", "Install Nilesoft Shell") { Arity = ArgumentArity.ZeroOrOne };
-        installOption.AddAlias("-i");
-
-        var uninstallOption = new Option<bool>("--uninstall", "Uninstall Nilesoft Shell") { Arity = ArgumentArity.ZeroOrOne };
-        uninstallOption.AddAlias("-x");
-
-        var installStatusOption = new Option<bool>("--install-status", "Check current installation status") { Arity = ArgumentArity.ZeroOrOne };
-        installStatusOption.AddAlias("-is");
+        var registerOption = CreateFlagOption("--register", "-r", "Register shell context menu extension");
+        var unregisterOption = CreateFlagOption("--unregister", "-u", "Unregister shell context menu extension");
+        var restartOption = CreateFlagOption("--restart", "-e", "Restart explorer after changes");
+        var treatOption = CreateFlagOption("--treat", "-t", "Apply theme treatment");
+        var statusOption = CreateFlagOption("--status", "-s", "Check current registration status");
+        var installOption = CreateFlagOption("--install", "-i", "Install Nilesoft Shell");
+        var uninstallOption = CreateFlagOption("--uninstall", "-x", "Uninstall Nilesoft Shell");
+        var installStatusOption = CreateFlagOption("--install-status", "-is", "Check current installation status");
 
         var cmd = new Command("shell", "Manage shell context menu extension (Nilesoft Shell)");
-        cmd.AddAlias("sh");
-        cmd.AddOption(registerOption);
-        cmd.AddOption(unregisterOption);
-        cmd.AddOption(restartOption);
-        cmd.AddOption(treatOption);
-        cmd.AddOption(statusOption);
-        cmd.AddOption(installOption);
-        cmd.AddOption(uninstallOption);
-        cmd.AddOption(installStatusOption);
-        cmd.SetHandler(async (register, unregister, restart, treat, status, install, uninstall, installStatus) =>
+        cmd.Aliases.Add("sh");
+        cmd.Add(registerOption);
+        cmd.Add(unregisterOption);
+        cmd.Add(restartOption);
+        cmd.Add(treatOption);
+        cmd.Add(statusOption);
+        cmd.Add(installOption);
+        cmd.Add(uninstallOption);
+        cmd.Add(installStatusOption);
+        cmd.SetAction(async parseResult =>
         {
-            // 处理状态查询
+            var register = parseResult.GetValue(registerOption);
+            var unregister = parseResult.GetValue(unregisterOption);
+            var restart = parseResult.GetValue(restartOption);
+            var treat = parseResult.GetValue(treatOption);
+            var status = parseResult.GetValue(statusOption);
+            var install = parseResult.GetValue(installOption);
+            var uninstall = parseResult.GetValue(uninstallOption);
+            var installStatus = parseResult.GetValue(installStatusOption);
+
             if (status)
             {
-                var isRegistered = await IpcClient.IsShellRegisteredAsync();
+                var isRegistered = await IpcClient.IsShellRegisteredAsync().ConfigureAwait(false);
                 Console.WriteLine(isRegistered ? "Shell is registered" : "Shell is not registered");
                 return;
             }
 
             if (installStatus)
             {
-                var isInstalled = await IpcClient.IsShellInstalledAsync();
+                var isInstalled = await IpcClient.IsShellInstalledAsync().ConfigureAwait(false);
                 Console.WriteLine(isInstalled ? "Shell is installed" : "Shell is not installed");
                 return;
             }
 
-            // 处理安装/卸载
             if (install)
             {
-                await IpcClient.InstallShellAsync();
+                await IpcClient.InstallShellAsync().ConfigureAwait(false);
                 Console.WriteLine("Shell installation initiated");
                 return;
             }
 
             if (uninstall)
             {
-                await IpcClient.UninstallShellAsync();
+                await IpcClient.UninstallShellAsync().ConfigureAwait(false);
                 Console.WriteLine("Shell uninstallation initiated");
                 return;
             }
 
-            // Shell command execution removed - use install/uninstall instead
             if (register || unregister || restart || treat)
             {
                 Console.WriteLine("Shell command execution has been removed. Please use:");
@@ -385,104 +430,83 @@ public class Program
                 Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell (includes unregistration)");
                 return;
             }
-            else
-            {
-                Console.WriteLine("Please specify an action:");
-                Console.WriteLine("  --status (-s): Check current registration status");
-                Console.WriteLine("  --install (-i): Install Nilesoft Shell");
-                Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell");
-                Console.WriteLine("  --install-status (-is): Check current installation status");
-            }
-        }, registerOption, unregisterOption, restartOption, treatOption, statusOption, installOption, uninstallOption, installStatusOption);
-        cmd.AddValidator(result =>
+
+            Console.WriteLine("Please specify an action:");
+            Console.WriteLine("  --status (-s): Check current registration status");
+            Console.WriteLine("  --install (-i): Install Nilesoft Shell");
+            Console.WriteLine("  --uninstall (-x): Uninstall Nilesoft Shell");
+            Console.WriteLine("  --install-status (-is): Check current installation status");
+        });
+        cmd.Validators.Add(result =>
         {
-            // 确保只指定了一个操作
-            int optionCount = 0;
-            if (result.FindResultFor(statusOption) is not null) optionCount++;
-            if (result.FindResultFor(installStatusOption) is not null) optionCount++;
-            if (result.FindResultFor(installOption) is not null) optionCount++;
-            if (result.FindResultFor(uninstallOption) is not null) optionCount++;
-            if (result.FindResultFor(registerOption) is not null) optionCount++;
-            if (result.FindResultFor(unregisterOption) is not null) optionCount++;
-            if (result.FindResultFor(restartOption) is not null) optionCount++;
-            if (result.FindResultFor(treatOption) is not null) optionCount++;
+            var optionCount = 0;
+            if (HasOption(result, statusOption)) optionCount++;
+            if (HasOption(result, installStatusOption)) optionCount++;
+            if (HasOption(result, installOption)) optionCount++;
+            if (HasOption(result, uninstallOption)) optionCount++;
+            if (HasOption(result, registerOption)) optionCount++;
+            if (HasOption(result, unregisterOption)) optionCount++;
+            if (HasOption(result, restartOption)) optionCount++;
+            if (HasOption(result, treatOption)) optionCount++;
 
             if (optionCount > 1)
             {
-                result.ErrorMessage = "Please specify only one action at a time";
+                result.AddError("Please specify only one action at a time");
                 return;
             }
 
             if (optionCount == 0)
-            {
-                result.ErrorMessage = "At least one action option should be specified";
-                return;
-            }
+                result.AddError("At least one action option should be specified");
         });
 
-
-
         return cmd;
-
     }
 
-
-
-    private static void OnException(Exception ex, InvocationContext context)
-
-    {
-
-        var message = ex switch
-
+    private static Option<bool> CreateFlagOption(string name, string alias, string description) =>
+        new(name, alias)
         {
+            Description = description,
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
+    private static bool HasArgument<T>(SymbolResult result, Argument<T> argument) =>
+        result.GetResult(argument) is not null;
+
+    private static bool HasCommand(SymbolResult result, Command command) =>
+        result.GetResult(command) is not null;
+
+    private static bool HasOption(SymbolResult result, Option option) =>
+        result.GetResult(option) is { Implicit: false };
+
+    private static int OnException(Exception ex)
+    {
+        var message = ex switch
+        {
             IpcConnectException => "Failed to connect. " +
-
                                    "Make sure that Lenovo Legion Toolkit is running " +
-
                                    "in background and CLI is enabled in Settings.",
-
             IpcException => ex.Message,
-
             _ => ex.ToString()
-
         };
 
         var exitCode = ex switch
-
         {
-
             IpcConnectException => -1,
-
             IpcException => -2,
-
             _ => -99
-
         };
 
-
-
         if (!Console.IsOutputRedirected)
-
         {
-
             Console.ResetColor();
-
             Console.ForegroundColor = ConsoleColor.Red;
-
         }
 
-
-
-        context.Console.Error.WriteLine(message);
-
-        context.ExitCode = exitCode;
-
-
+        Console.Error.WriteLine(message);
 
         if (!Console.IsOutputRedirected)
-
             Console.ResetColor();
 
+        return exitCode;
     }
 }

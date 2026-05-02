@@ -1,0 +1,56 @@
+name: Bug Report
+description: Report a reproducible Lenovo Legion Toolkit problem.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the README and existing issues before filing a new report.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: List the exact steps needed to reproduce the issue.
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: LLT Version
+      placeholder: "3.6.15"
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device Model
+      placeholder: "Legion Pro 5 16IRX10"
+    validations:
+      required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: Windows Version
+      options:
+        - Windows 11
+        - Windows 10
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: Attach relevant logs or screenshots. Do not paste secrets.

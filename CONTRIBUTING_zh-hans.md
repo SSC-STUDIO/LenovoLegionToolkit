@@ -10,11 +10,11 @@ _由于 Issues 总量的增加，不符合标准的 Issue 会在无预先警告�
 
 **1. 在报告 Issue 前请仔细阅读 README**
 
-绝大多数常见问题的解决方法和重要信息都已在 [README](https://github.com/Crs10259/LenovoLegionToolkit/blob/master/README_zh-hans.md) 内阐明。请务必在报告 Issue 或发起讨论前通读其中的内容。
+绝大多数常见问题的解决方法和重要信息都已在 [README](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/README_zh-hans.md) 内阐明。请务必在报告 Issue 或发起讨论前通读其中的内容。
 
 **2. 检查已被报告的 Issues**
 
-请检查项目仓库下的 [Issues](https://github.com/Crs10259/LenovoLegionToolkit/issues?q=is%3Aissue) 和 [Discussions](https://github.com/Crs10259/LenovoLegionToolkit/discussions?discussions_q=) 栏目。请不要报告重复的 Issue 或发起重复的讨论。即使你找到的 Issue 已经被关闭，你一样可以在那里留言。
+请检查项目仓库下的 [Issues](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues?q=is%3Aissue) 和 [Discussions](https://github.com/SSC-STUDIO/LenovoLegionToolkit/discussions?discussions_q=) 栏目。请不要报告重复的 Issue 或发起重复的讨论。即使你找到的 Issue 已经被关闭，你一样可以在那里留言。
 
 **3. 使用英语**
 

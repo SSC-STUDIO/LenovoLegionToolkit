@@ -27,12 +27,17 @@ public static partial class Compatibility
 
     private static readonly string[] AllowedModelsPrefix = [
         // Worldwide variants
+        "18IAX",
+
         "17ACH",
         "17ARH",
+        "17IRX",
         "17ITH",
         "17IMH",
 
         "16ACH",
+        "16ADR",
+        "16AFR",
         "16AHP",
         "16APH",
         "16ARH",
@@ -45,6 +50,7 @@ public static partial class Compatibility
         "16ITH",
 
         "15ACH",
+        "15AKP",
         "15AHP",
         "15APH",
         "15ARH",
@@ -54,6 +60,7 @@ public static partial class Compatibility
         "15IHU",
         "15IMH",
         "15IRH",
+        "15IRX",
         "15ITH",
 
         "14APH",

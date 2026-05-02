@@ -1,0 +1,40 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "ManagedNativeWifi"
+      - dependency-name: "Microsoft.Windows.CsWin32"
+      - dependency-name: "System.CommandLine"
+    groups:
+      dotnet-servicing:
+        patterns:
+          - "System.*"
+          - "Microsoft.Extensions.*"
+          - "Microsoft.NET.Test.Sdk"
+      ui-dependencies:
+        patterns:
+          - "WPF-UI"
+          - "PixiEditor.ColorPicker*"
+          - "Markdig*"
+      test-dependencies:
+        patterns:
+          - "xunit*"
+          - "MSTest.*"
+          - "coverlet.collector"
+          - "Moq"
+          - "FluentAssertions"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+      timezone: "Asia/Shanghai"

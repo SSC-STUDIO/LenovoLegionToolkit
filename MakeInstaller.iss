@@ -3,7 +3,7 @@
 #define MyAppName "Lenovo Legion Toolkit"
 #define MyAppNameCompact "LenovoLegionToolkit"
 #define MyAppPublisher "ChenRunsen"
-#define MyAppURL "https://github.com/Crs10259/LenovoLegionToolkit"
+#define MyAppURL "https://github.com/SSC-STUDIO/LenovoLegionToolkit"
 #define MyAppExeName "Lenovo Legion Toolkit.exe"
 
 #ifndef MyAppVersion
@@ -34,7 +34,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 [Code]
 function InitializeSetup: Boolean;
 begin
-  InstallDotNet6DesktopRuntime;
+  InstallDotNetDesktopRuntime;
   Result := True;
 end;
 
