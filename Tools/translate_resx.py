@@ -11,6 +11,7 @@ Usage:
 import argparse
 import json
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 
@@ -21,8 +22,6 @@ MODULES = {
     "Automation": "LenovoLegionToolkit.Lib.Automation/Resources",
     "Macro": "LenovoLegionToolkit.Lib.Macro/Resources",
 }
-
-NS = "http://schemas.microsoft.com/winfx/2006/xaml"
 
 
 def parse_resx(path):
@@ -62,33 +61,61 @@ def extract(lang, module):
     return untranslated
 
 
+def escape_xml(text):
+    """Escape XML special characters in translation values."""
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
+
+
 def apply(lang, module, translations_file):
-    """Apply translations from JSON file to the target .resx."""
+    """Apply translations from JSON file to the target .resx.
+
+    Uses regex replacement to preserve the original XML structure,
+    comments, and namespace declarations intact.
+    """
     res_dir = os.path.join(REPO, MODULES[module])
     lang_path = os.path.join(res_dir, f"Resource.{lang}.resx")
+
+    if not os.path.exists(lang_path):
+        print(f"ERROR: {lang_path} not found", file=sys.stderr)
+        sys.exit(1)
+    if not os.path.exists(translations_file):
+        print(f"ERROR: {translations_file} not found", file=sys.stderr)
+        sys.exit(1)
 
     with open(translations_file, "r", encoding="utf-8") as f:
         translations = json.load(f)
 
     trans_map = {t["name"]: t["translated"] for t in translations if "translated" in t}
 
-    entries, tree = parse_resx(lang_path)
-    root = tree.getroot()
+    with open(lang_path, "r", encoding="utf-8-sig") as f:
+        content = f.read()
+
     changed = 0
 
-    for data in root.findall("data"):
-        name = data.get("name")
+    def replace_value(match):
+        nonlocal changed
+        name = match.group(1)
+        old_value = match.group(2)
         if name in trans_map:
-            val_elem = data.find("value")
-            if val_elem is not None:
-                old = val_elem.text or ""
-                new = trans_map[name]
-                if old != new:
-                    val_elem.text = new
-                    changed += 1
+            new_value = trans_map[name]
+            if old_value != new_value:
+                changed += 1
+                return (
+                    f'<data name="{name}" xml:space="preserve">\n'
+                    f"    <value>{escape_xml(new_value)}</value>"
+                )
+        return match.group(0)
 
-    # Preserve XML declaration and formatting
-    tree.write(lang_path, xml_declaration=True, encoding="utf-8-sig")
+    pattern = r'<data name="([^"]+)" xml:space="preserve">\s*\n\s*<value>(.*?)</value>'
+    content = re.sub(pattern, replace_value, content, flags=re.DOTALL)
+
+    with open(lang_path, "w", encoding="utf-8-sig") as f:
+        f.write(content)
+
     print(f"Applied {changed} translations to {lang_path}", file=sys.stderr)
 
 
