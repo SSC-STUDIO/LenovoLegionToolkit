@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -273,13 +273,13 @@
     <value>Topp til bunn</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Alltid</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
     <value>Lydsprett</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
-    <value>Audio Ripple</value>
+    <value>Lydbølge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
     <value>Aurora Sync</value>
@@ -303,7 +303,7 @@
     <value>Regnbuebølge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
-    <value>Ripple</value>
+    <value>Bølge</value>
   </data>
   <data name="SpectrumKeyboardBacklightEffectType_Smooth" xml:space="preserve">
     <value>Glatt</value>
