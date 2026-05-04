@@ -60,8 +60,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to create sandbox for plugin {pluginId}: {ex.Message}", ex);
+                Log.Instance.Warning($"Failed to create sandbox for plugin {pluginId}: {ex.Message}", ex);
                 return false;
             }
         }
@@ -121,15 +120,13 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 // Start resource monitoring
                 StartResourceMonitoring(context);
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Successfully loaded plugin {pluginId} ({plugin.Name} v{context.Info.Version})");
+                Log.Instance.Info($"Successfully loaded plugin {pluginId} ({plugin.Name} v{context.Info.Version})");
 
                 return plugin;
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to load plugin {pluginId}: {ex.Message}", ex);
+                Log.Instance.Error($"Failed to load plugin {pluginId}: {ex.Message}", ex);
                 return null;
             }
         }
@@ -424,8 +421,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Error destroying sandbox for {pluginId}: {ex.Message}", ex);
+                Log.Instance.Warning($"Error destroying sandbox for {pluginId}: {ex.Message}", ex);
                 return false;
             }
         }

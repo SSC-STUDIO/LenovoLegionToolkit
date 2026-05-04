@@ -124,8 +124,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
 
         if (!PathSecurity.IsValidDirectoryPath(pluginsDirectory))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Invalid plugins directory path: {pluginsDirectory}");
+            Log.Instance.Warning($"SECURITY: Invalid plugins directory path: {pluginsDirectory}");
             return new List<string>();
         }
 
@@ -176,16 +175,14 @@ public class PluginFileSystemManager : IPluginFileSystemManager
         var pluginsDirectory = GetPluginsDirectory();
         if (!PathSecurity.IsPathWithinAllowedDirectory(filePath, pluginsDirectory))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Plugin DLL path outside allowed directory: {filePath}");
+            Log.Instance.Warning($"SECURITY: Plugin DLL path outside allowed directory: {filePath}");
             return false;
         }
 
         var fileName = Path.GetFileName(filePath);
         if (!PathSecurity.IsValidFileName(fileName))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"SECURITY: Invalid plugin DLL file name: {fileName}");
+            Log.Instance.Warning($"SECURITY: Invalid plugin DLL file name: {fileName}");
             return false;
         }
 

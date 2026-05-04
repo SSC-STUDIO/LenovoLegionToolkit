@@ -33,16 +33,14 @@ public class PluginInstallationService
         // SECURITY: Validate zip file path
         if (string.IsNullOrWhiteSpace(zipFilePath) || !File.Exists(zipFilePath))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("SECURITY: Invalid or non-existent ZIP file path");
+            Log.Instance.Warning("SECURITY: Invalid or non-existent ZIP file path");
             return false;
         }
 
         // SECURITY: Validate plugins directory
         if (string.IsNullOrWhiteSpace(pluginsDir))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("SECURITY: Invalid plugins directory");
+            Log.Instance.Warning("SECURITY: Invalid plugins directory");
             return false;
         }
 
@@ -139,8 +137,7 @@ public class PluginInstallationService
                 }
             }
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to install plugin from {zipFilePath}: {ex.Message}", ex);
+            Log.Instance.Error($"Failed to install plugin from {zipFilePath}: {ex.Message}", ex);
             throw;
         }
         finally
@@ -204,8 +201,7 @@ public class PluginInstallationService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Plugin validation error: {ex.Message}", ex);
+            Log.Instance.Warning($"Plugin validation error: {ex.Message}", ex);
             return false;
         }
     }
@@ -333,8 +329,7 @@ public class PluginInstallationService
         {
             if (!PathSecurity.IsValidDirectoryPath(pluginDir))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Invalid plugin directory path: {pluginDir}");
+                Log.Instance.Warning($"SECURITY: Invalid plugin directory path: {pluginDir}");
                 return null;
             }
 
@@ -343,8 +338,7 @@ public class PluginInstallationService
 
             if (!PathSecurity.IsPathWithinAllowedDirectory(manifestPath, fullPluginDir))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Manifest path traversal detected: {manifestPath}");
+                Log.Instance.Warning($"SECURITY: Manifest path traversal detected: {manifestPath}");
                 return null;
             }
             
@@ -448,8 +442,7 @@ public class PluginInstallationService
                 entry.FullName.StartsWith("/") || 
                 entry.FullName.StartsWith("\\"))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Skipping ZIP entry with suspicious path: {entry.FullName}");
+                Log.Instance.Warning($"SECURITY: Skipping ZIP entry with suspicious path: {entry.FullName}");
                 continue;
             }
 
@@ -462,8 +455,7 @@ public class PluginInstallationService
             
             if (!fullDestinationPath.StartsWith(fullExtractDir, StringComparison.OrdinalIgnoreCase))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: ZIP entry escapes extract directory: {entry.FullName}");
+                Log.Instance.Warning($"SECURITY: ZIP entry escapes extract directory: {entry.FullName}");
                 continue;
             }
 

@@ -72,8 +72,7 @@ public class GPUOverclockController
             try { NVAPI.Unload(); } catch { /* Ignored */ }
         }
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"NVAPI status: {isSupported}.");
+        Log.Instance.Info($"NVAPI status: {isSupported}.");
 
         if (!isSupported)
             return isSupported;
@@ -97,8 +96,7 @@ public class GPUOverclockController
             isSupported = false;
         }
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Supports GPU OC status: {isSupported}");
+        Log.Instance.Info($"Supports GPU OC status: {isSupported}");
 
         return isSupported;
     }
@@ -116,8 +114,7 @@ public class GPUOverclockController
     {
         if (await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Can't correctly apply state when Vantage is running.");
+            Log.Instance.Warning($"Can't correctly apply state when Vantage is running.");
 
             Changed?.Invoke(this, EventArgs.Empty);
             return;
@@ -125,8 +122,7 @@ public class GPUOverclockController
 
         if (await _legionZoneDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Can't correctly apply state when Legion Zone is running.");
+            Log.Instance.Warning($"Can't correctly apply state when Legion Zone is running.");
 
             Changed?.Invoke(this, EventArgs.Empty);
             return;
@@ -179,8 +175,7 @@ public class GPUOverclockController
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to apply overclock: {info}, clearing settings...", ex);
+            Log.Instance.Error($"Failed to apply overclock: {info}, clearing settings...", ex);
 
             _settings.Store.Enabled = false;
             _settings.Store.Info = GPUOverclockInfo.Zero;

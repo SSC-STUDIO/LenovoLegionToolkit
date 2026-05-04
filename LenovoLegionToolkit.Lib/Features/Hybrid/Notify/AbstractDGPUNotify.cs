@@ -34,8 +34,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to notify.", ex);
+            Log.Instance.Warning($"Failed to check dGPU availability.", ex);
             return false;
         }
     }
@@ -62,8 +61,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to notify.", ex);
+            Log.Instance.Warning($"Failed to notify dGPU status.", ex);
         }
     }
 

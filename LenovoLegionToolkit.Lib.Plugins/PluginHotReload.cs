@@ -222,8 +222,7 @@ public class PluginHotReload : IPluginHotReload, IDisposable
         {
             stopwatch.Stop();
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to reload plugin {pluginId}: {ex.Message}", ex);
+            Log.Instance.Error($"Failed to reload plugin {pluginId}: {ex.Message}", ex);
 
             // Raise reload failed event
             var failedArgs = new HotReloadEventArgs
@@ -651,13 +650,11 @@ public class PluginHotReload : IPluginHotReload, IDisposable
                 }
             }
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Loaded {_savedStates.Count} saved plugin states");
+            Log.Instance.Info($"Loaded {_savedStates.Count} saved plugin states");
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to load saved states: {ex.Message}");
+            Log.Instance.Warning($"Failed to load saved states: {ex.Message}");
         }
     }
 

@@ -72,8 +72,7 @@ public class PluginLoader : IPluginLoader
             var signatureResult = await signatureValidator.ValidateAsync(dllPath);
             if (!signatureResult.IsValid)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Plugin signature validation failed for {dllPath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
+                Log.Instance.Warning($"Plugin signature validation failed for {dllPath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
 
                 return null;
             }
@@ -248,8 +247,7 @@ public class PluginLoader : IPluginLoader
             var signatureResult = signatureValidator.ValidateAsync(candidatePath).GetAwaiter().GetResult();
             if (!IsValidPluginDependencySignature(signatureResult, requestedAssemblyName, candidatePath))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Rejected plugin dependency due to invalid signature. [path={candidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
+                Log.Instance.Warning($"Rejected plugin dependency due to invalid signature. [path={candidatePath}, status={signatureResult.Status}, error={signatureResult.ErrorMessage}]");
                 return null;
             }
 

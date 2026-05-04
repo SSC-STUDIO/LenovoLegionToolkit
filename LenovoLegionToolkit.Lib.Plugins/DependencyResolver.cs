@@ -92,10 +92,7 @@ public class DependencyResolver : IDependencyResolver
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-            {
-                Log.Instance.Trace($"Dependency resolution failed: {ex.Message}", ex);
-            }
+            Log.Instance.Warning($"Dependency resolution failed: {ex.Message}", ex);
 
             result.Success = false;
             result.ErrorMessage = $"Dependency resolution error: {ex.Message}";

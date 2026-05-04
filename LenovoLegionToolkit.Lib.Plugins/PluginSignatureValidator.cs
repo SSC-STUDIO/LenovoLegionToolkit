@@ -121,8 +121,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                     { IsAllowedByPolicy = true };
                 }
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Plugin {dllPath} is not signed: {ex.Message}", ex);
+                Log.Instance.Warning($"Plugin {dllPath} is not signed: {ex.Message}", ex);
 
                 return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
                     "Plugin is not signed. Signature required per policy.");
@@ -131,20 +130,16 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             // Validate the certificate
             var validationResult = await ValidateCertificateAsync(certificate, dllPath);
 
-            if (Log.Instance.IsTraceEnabled)
-            {
-                if (validationResult.IsValid)
-                    Log.Instance.Trace($"Plugin signature validation passed for {dllPath}. Issuer: {validationResult.Issuer}");
-                else
-                    Log.Instance.Trace($"Plugin signature validation failed for {dllPath}. Status: {validationResult.Status}, Error: {validationResult.ErrorMessage}");
-            }
+            if (validationResult.IsValid)
+                Log.Instance.Trace($"Plugin signature validation passed for {dllPath}. Issuer: {validationResult.Issuer}");
+            else
+                Log.Instance.Warning($"Plugin signature validation failed for {dllPath}. Status: {validationResult.Status}, Error: {validationResult.ErrorMessage}");
 
             return validationResult;
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error validating plugin signature for {dllPath}: {ex.Message}", ex);
+            Log.Instance.Warning($"Error validating plugin signature for {dllPath}: {ex.Message}", ex);
 
             return new PluginSignatureResult(PluginSignatureStatus.ValidationError,
                 $"Validation error: {ex.Message}");
@@ -238,8 +233,7 @@ public class PluginSignatureValidator : IPluginSignatureValidator
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error validating certificate for {dllPath}: {ex.Message}", ex);
+            Log.Instance.Warning($"Error validating certificate for {dllPath}: {ex.Message}", ex);
 
             return new PluginSignatureResult(PluginSignatureStatus.ValidationError,
                 $"Certificate validation error: {ex.Message}");

@@ -105,8 +105,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
     {
         try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Event received: {e.Mode}");
+            Log.Instance.Info($"Event received: {e.Mode}");
 
             var powerMode = e.Mode switch
             {

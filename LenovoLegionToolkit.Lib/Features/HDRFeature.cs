@@ -33,8 +33,7 @@ public class HDRFeature : IFeature<HDRState>
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to check HDR support", ex);
+            Log.Instance.Warning($"Failed to check HDR support", ex);
 
             return Task.FromResult(false);
         }

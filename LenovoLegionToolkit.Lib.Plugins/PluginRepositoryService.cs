@@ -115,15 +115,13 @@ public class PluginRepositoryService : IDisposable
                 return manifest;
             }).ToList();
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Found {plugins.Count} plugins in store");
+            Log.Instance.Info($"Found {plugins.Count} plugins in store");
 
             return plugins;
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error fetching plugins from store: {ex.Message}", ex);
+            Log.Instance.Error($"Error fetching plugins from store: {ex.Message}", ex);
             throw;
         }
     }
@@ -190,8 +188,7 @@ public class PluginRepositoryService : IDisposable
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error installing plugin {manifest.Id}: {ex.Message}", ex);
+            Log.Instance.Error($"Error installing plugin {manifest.Id}: {ex.Message}", ex);
             DownloadFailed?.Invoke(this, ex.Message);
             return false;
         }
@@ -706,24 +703,21 @@ public class PluginRepositoryService : IDisposable
 
             if (!string.IsNullOrEmpty(manifest.FileHash) && !hashString.Equals(manifest.FileHash, StringComparison.OrdinalIgnoreCase))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Hash mismatch for {manifest.Id}. Expected: {manifest.FileHash}, Got: {hashString}");
+                Log.Instance.Warning($"Hash mismatch for {manifest.Id}. Expected: {manifest.FileHash}, Got: {hashString}");
                 return false;
             }
 
             // SECURITY: Validate plugin ID before using in path construction
             if (!PathSecurity.IsValidPluginId(manifest.Id))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Invalid plugin ID format: {manifest.Id}");
+                Log.Instance.Warning($"SECURITY: Invalid plugin ID format: {manifest.Id}");
                 return false;
             }
 
             // SECURITY: Verify the constructed path is within allowed directory
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, _pluginsDirectory))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"SECURITY: Plugin directory path traversal detected: {pluginDir}");
+                Log.Instance.Warning($"SECURITY: Plugin directory path traversal detected: {pluginDir}");
                 return false;
             }
             if (Directory.Exists(pluginDir))
@@ -809,8 +803,7 @@ public class PluginRepositoryService : IDisposable
         {
             await RestorePluginDirectoryAsync(pluginDir, backupDir, manifest.Id).ConfigureAwait(false);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error extracting plugin {manifest.Id}: {ex.Message}", ex);
+            Log.Instance.Error($"Error extracting plugin {manifest.Id}: {ex.Message}", ex);
             return false;
         }
     }

@@ -67,8 +67,7 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get HDR status. Assuming unavailable.", ex);
+            Log.Instance.Warning($"Failed to get HDR status. Assuming unavailable.", ex);
             return null;
         }
     }

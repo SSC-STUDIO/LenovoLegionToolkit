@@ -104,8 +104,7 @@ public class DriverKeyListener(
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unknown error.", ex);
+            Log.Instance.Error($"Unknown error.", ex);
         }
     }
 
@@ -158,8 +157,7 @@ public class DriverKeyListener(
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't handle key press. [value={value}]", ex);
+            Log.Instance.Error($"Couldn't handle key press. [value={value}]", ex);
         }
     }
 

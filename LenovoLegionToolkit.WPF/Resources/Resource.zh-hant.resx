@@ -1,0 +1,4052 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPage_AppName" xml:space="preserve">
+    <value>聯想拯救者工具箱</value>
+  </data>
+  <data name="AboutPage_Build" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="AboutPage_LatestReleaseOnGitHub" xml:space="preserve">
+    <value>在 GitHub 上查看最新版本</value>
+  </data>
+  <data name="AboutPage_Links" xml:space="preserve">
+    <value>項目鏈接</value>
+  </data>
+  <data name="AboutPage_ProjectWebsiteOnGitHub" xml:space="preserve">
+    <value>在 GitHub 上查看項目主頁</value>
+  </data>
+  <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
+    <value>第三方依賴庫</value>
+  </data>
+  <data name="AboutPage_Title" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="AboutPage_TranslationCredit" xml:space="preserve">
+    <value>Translated by Karl Lee. 由凌卡Karl漢化，開源社區校正。</value>
+    <comment>Please replace this text with something like "Translated into &lt;language&gt; by &lt;your name&gt;."</comment>
+  </data>
+  <data name="AboutPage_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Message" xml:space="preserve">
+    <value>在電腦關機、睡眠或休眠時保持 USB 接口供電。
+一般爲筆記本側面標有電池標誌的 USB 接口受此項控制。</value>
+  </data>
+  <data name="AlwaysOnUSBControl_Title" xml:space="preserve">
+    <value>保持 USB 供電</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Message" xml:space="preserve">
+    <value>在電腦關機、睡眠或休眠時保持 USB 接口供電。
+一般爲筆記本側面標有電池標誌的 USB 接口受此項控制。</value>
+  </data>
+  <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
+    <value>保持 USB 供電</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>聯想拯救者工具箱</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>應用</value>
+  </data>
+  <data name="ApplyAndClose" xml:space="preserve">
+    <value>應用並關閉</value>
+  </data>
+  <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
+    <value>只有在本程序運行時，自動化纔可生效。</value>
+  </data>
+  <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
+    <value>啓用自動化</value>
+  </data>
+  <data name="AutomationPage_Actions_Empty" xml:space="preserve">
+    <value>當前沒有自動化腳本，請點擊 "新建" 來新建一項。</value>
+  </data>
+  <data name="AutomationPage_Actions_Message" xml:space="preserve">
+    <value>啓用自動化後，當設備的狀態發生改變時，本應用將會按順序檢查各項自動化是否符合條件後，執行相關操作。</value>
+  </data>
+  <data name="AutomationPage_Actions_Title" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Placeholder" xml:space="preserve">
+    <value>點此輸入名稱</value>
+  </data>
+  <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
+    <value>沒有快捷操作，請點擊 "新建" 來新建快捷操作。</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Message" xml:space="preserve">
+    <value>你可以在系統托盤中本應用的右鍵菜單裏使用快捷操作。</value>
+  </data>
+  <data name="AutomationPage_QuickActions_Title" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Placeholder" xml:space="preserve">
+    <value>點此輸入名稱</value>
+  </data>
+  <data name="AutomationPage_RenamePipeline_Title" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="AutomationPage_Reverted_Message" xml:space="preserve">
+    <value>所有修改已被重置</value>
+  </data>
+  <data name="AutomationPage_Reverted_Title" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="AutomationPage_Saved_Message" xml:space="preserve">
+    <value>所有修改已成功保存</value>
+  </data>
+  <data name="AutomationPage_Saved_Title" xml:space="preserve">
+    <value>已保存</value>
+  </data>
+  <data name="AutomationPage_Title" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="AutomationPipelineControl_AddStep" xml:space="preserve">
+    <value>添加步驟</value>
+  </data>
+  <data name="AutomationPipelineControl_Configure" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive" xml:space="preserve">
+    <value>獨佔此條件</value>
+  </data>
+  <data name="AutomationPipelineControl_Exclusive_ToolTip" xml:space="preserve">
+    <value>當觸發此條件後，僅運行當前任務，不運行其它符合條件的任務</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow" xml:space="preserve">
+    <value>立刻運行</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Message" xml:space="preserve">
+    <value>運行出錯</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Error_Title" xml:space="preserve">
+    <value>立刻運行</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Message" xml:space="preserve">
+    <value>運行成功</value>
+  </data>
+  <data name="AutomationPipelineControl_RunNow_Success_Title" xml:space="preserve">
+    <value>立刻運行</value>
+  </data>
+  <data name="AutomationPipelineControl_Running" xml:space="preserve">
+    <value>運行中...</value>
+  </data>
+  <data name="AutomationPipelineControl_Step" xml:space="preserve">
+    <value>共 {0} 個步驟</value>
+  </data>
+  <data name="AutomationPipelineControl_Step_Many" xml:space="preserve">
+    <value>共 {0} 個步驟</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Apps" xml:space="preserve">
+    <value>應用列表</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunrise" xml:space="preserve">
+    <value>日出時</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtSunset" xml:space="preserve">
+    <value>日落時</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_AtTime" xml:space="preserve">
+    <value>將在 {0:D2}:{1:D2} 運行</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_PowerMode" xml:space="preserve">
+    <value>性能模式</value>
+  </data>
+  <data name="AutomationPipelineControl_Unnamed" xml:space="preserve">
+    <value>未命名</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Message" xml:space="preserve">
+    <value>啓用 Legion AI 引擎以自動檢測遊戲並調整 CPU/GPU 性能。可能會增加機身溫度和風扇噪音。</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_AIEngine_Title" xml:space="preserve">
+    <value>啓用 Legion AI 引擎</value>
+  </data>
+  <data name="BalanceModeSettingsWindow_Title" xml:space="preserve">
+    <value>均衡模式設置</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Message" xml:space="preserve">
+    <value>選擇電池充電模式</value>
+  </data>
+  <data name="BatteryAutomationStepControl_Title" xml:space="preserve">
+    <value>充電模式</value>
+  </data>
+  <data name="BatteryModeControl_Message" xml:space="preserve">
+    <value>選擇電池充電模式，養護模式將限制電池充電電量以提高壽命，快充模式將使用更高的功率充電。</value>
+  </data>
+  <data name="BatteryModeControl_Title" xml:space="preserve">
+    <value>充電模式</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedAndCharging" xml:space="preserve">
+    <value>已插入電源適配器，充電中...</value>
+  </data>
+  <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
+    <value>已插入電源適配器，未充電...</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
+    <value>當前電池溫度。</value>
+  </data>
+  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
+    <value>電池溫度</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
+    <value>當前電池容量。</value>
+  </data>
+  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
+    <value>當前容量</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
+    <value>電池充放電循環次數。</value>
+  </data>
+  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
+    <value>循環次數</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
+    <value>電池設計容量。</value>
+  </data>
+  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
+    <value>設計容量</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
+    <value>【+】爲電池充電，【-】爲電池放電。</value>
+  </data>
+  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
+    <value>電池充放電功率</value>
+  </data>
+  <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
+    <value>預估剩餘時間：{0}</value>
+  </data>
+  <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
+    <value>剩餘時間...</value>
+  </data>
+  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
+    <value>電池首次使用時間</value>
+  </data>
+  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
+    <value>代表電池被第一次使用的時間。</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
+    <value>當電池充滿電時的容量</value>
+  </data>
+  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
+    <value>滿電容量</value>
+  </data>
+  <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
+    <value>已插入較低功率電源適配器</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
+    <value>電池的生產日期。</value>
+  </data>
+  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
+    <value>生產日期</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
+    <value>筆記本斷開電源適配器的時間。
+如果在關機或休眠時充電，可能會導致此時間不準確。</value>
+  </data>
+  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
+    <value>電池使用時間</value>
+  </data>
+  <data name="BatteryPage_Title" xml:space="preserve">
+    <value>電池</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Celsius" xml:space="preserve">
+    <value>°C</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>藍色 (B)</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>綠色 (G)</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>紅色 (R)</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Message" xml:space="preserve">
+    <value>根據你的使用場景選擇顯卡工作模式。
+混合模式與獨顯模式互相切換後需要重啓生效。</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>切換至 {0} 需要重啓，現在重啓嗎？</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>需要重啓</value>
+  </data>
+  <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
+    <value>顯卡工作模式</value>
+  </data>
+  <data name="ContextMenu_QuickActions" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>繼續</value>
+  </data>
+  <data name="CopyAll" xml:space="preserve">
+    <value>複製全部</value>
+  </data>
+  <data name="DashboardPage_Graphics_Title" xml:space="preserve">
+    <value>圖形</value>
+  </data>
+  <data name="DashboardPage_Other_Title" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="DashboardPage_Power_Title" xml:space="preserve">
+    <value>電源</value>
+  </data>
+  <data name="DashboardPage_Title" xml:space="preserve">
+    <value>主頁</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>在不需要時休眠獨立顯卡。
+
+警告：在非混合模式或筆記本內置屏幕關閉的情況下此功能將不起作用。</value>
+  </data>
+  <data name="DeactivateGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>休眠獨立顯卡</value>
+  </data>
+  <data name="DelayAutomationStepControl_Message" xml:space="preserve">
+    <value>運行下一步前的延遲。</value>
+  </data>
+  <data name="DelayAutomationStepControl_Title" xml:space="preserve">
+    <value>延遲</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="DeviceInformationWindow_BiosVersion_Title" xml:space="preserve">
+    <value>BIOS 版本</value>
+  </data>
+  <data name="CopiedToClipboard_Message" xml:space="preserve">
+    <value>已複製文本到剪貼板。</value>
+  </data>
+  <data name="CopiedToClipboard_Message_WithParam" xml:space="preserve">
+    <value>"{0}" 已複製到剪切板。</value>
+  </data>
+  <data name="CopiedToClipboard_Title" xml:space="preserve">
+    <value>已複製！</value>
+  </data>
+  <data name="DeviceInformationWindow_Device_Title" xml:space="preserve">
+    <value>設備信息</value>
+  </data>
+  <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
+    <value>點擊訪問聯想服務網站查看詳細保修信息</value>
+  </data>
+  <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
+    <value>設備代號</value>
+  </data>
+  <data name="DeviceInformationWindow_Manufacturer_Title" xml:space="preserve">
+    <value>製造商</value>
+  </data>
+  <data name="DeviceInformationWindow_Model_Title" xml:space="preserve">
+    <value>設備型號</value>
+  </data>
+  <data name="DeviceInformationWindow_SerialNumber_Title" xml:space="preserve">
+    <value>序列號</value>
+  </data>
+  <data name="DeviceInformationWindow_Title" xml:space="preserve">
+    <value>關於設備</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
+    <value>結束時間</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyStartDate_Title" xml:space="preserve">
+    <value>開始時間</value>
+  </data>
+  <data name="DeviceInformationWindow_Warranty_Title" xml:space="preserve">
+    <value>保修信息</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>活動中</value>
+  </data>
+  <data name="DiscreteGPUControl_Deactivate" xml:space="preserve">
+    <value>強制休眠顯卡</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>休眠中</value>
+  </data>
+  <data name="DiscreteGPUControl_KillApps" xml:space="preserve">
+    <value>關閉佔用應用</value>
+  </data>
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>在不需要時強制休眠顯卡，可能會導致應用崩潰。
+請儘可能通過手動關閉佔用進程來解除獨立顯卡佔用。</value>
+  </data>
+  <data name="DiscreteGPUControl_MonitorConnected" xml:space="preserve">
+    <value>有顯示器正在使用此顯卡。</value>
+  </data>
+  <data name="DiscreteGPUControl_NoProcesses" xml:space="preserve">
+    <value>無進程</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState" xml:space="preserve">
+    <value>性能狀態</value>
+  </data>
+  <data name="DiscreteGPUControl_PerformanceState_Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="DiscreteGPUControl_Processes" xml:space="preserve">
+    <value>正在使用顯卡的進程</value>
+  </data>
+  <data name="DiscreteGPUControl_RestartGPU" xml:space="preserve">
+    <value>重啓顯卡</value>
+  </data>
+  <data name="DiscreteGPUControl_Title" xml:space="preserve">
+    <value>獨立顯卡</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>更改內置屏幕亮度。
+在部分設備上，切換性能模式後屏幕亮度也會變化，因此請確保把這一步放到最後，否則可能無法正常執行。
+
+警告：當內置顯示器關閉時此操作將不起作用。</value>
+  </data>
+  <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>顯示器亮度</value>
+  </data>
+
+  <data name="Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Description" xml:space="preserve">
+    <value>取消選擇某個刷新率你在使用 Fn + R 快捷鍵時不想使用的刷新率。</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
+    <value>請確保筆記本屏幕已打開，否則本軟件無法獲取刷新率信息。</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
+    <value>未發現可調節刷新率</value>
+  </data>
+  <data name="ExcludeRefreshRatesWindow_Title" xml:space="preserve">
+    <value>排除刷新率</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>導出</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Message" xml:space="preserve">
+    <value>使用電池時只使用核顯，連接電源適配器時同時使用核顯與獨顯。當連接非標準（較低功率）電源適配器時，系統會切換到混合核顯模式。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Auto_Title" xml:space="preserve">
+    <value>混合自動模式</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Disclaimer" xml:space="preserve">
+    <value>切換到此模式需要重啓。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Message" xml:space="preserve">
+    <value>僅使用獨立顯卡，此模式將會釋放全部顯卡性能，但會顯著增加功耗。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_DGPU_Title" xml:space="preserve">
+    <value>獨顯直連模式</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Message" xml:space="preserve">
+    <value>核顯與獨顯都將啓用，系統將自動決定使用哪一個。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Hybrid_Title" xml:space="preserve">
+    <value>混合模式</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Disclaimer" xml:space="preserve">
+    <value>這種模式只有在獨顯停用時纔會生效。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Message" xml:space="preserve">
+    <value>僅使用核顯，將獲得最長的續航與最小的風扇噪音。</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_IGPU_Title" xml:space="preserve">
+    <value>混合核顯模式</value>
+  </data>
+  <data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
+    <value>關於顯卡工作模式</value>
+  </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>°F</value>
+  </data>
+  <data name="FanCurveControl_CPU" xml:space="preserve">
+    <value>處理器</value>
+  </data>
+  <data name="FanCurveControl_CPUSensor" xml:space="preserve">
+    <value>CPU 傳感器</value>
+  </data>
+  <data name="FanCurveControl_FanSpeed" xml:space="preserve">
+    <value>風扇轉速</value>
+  </data>
+  <data name="FanCurveControl_GPU" xml:space="preserve">
+    <value>顯卡</value>
+  </data>
+  <data name="FanCurveControl_GPU2" xml:space="preserve">
+    <value>顯卡 #2</value>
+  </data>
+  <data name="RPM" xml:space="preserve">
+    <value>轉</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Message" xml:space="preserve">
+    <value>打開蓋子時將自動開啓筆記本。</value>
+  </data>
+  <data name="FlipToStartAutomationStepControl_Title" xml:space="preserve">
+    <value>開蓋啓動</value>
+  </data>
+  <data name="FlipToStartControl_Message" xml:space="preserve">
+    <value>打開蓋子時將會自動開啓筆記本。</value>
+  </data>
+  <data name="FlipToStartControl_Title" xml:space="preserve">
+    <value>開蓋啓動</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Message" xml:space="preserve">
+    <value>開啓後將無需按下 Fn 鍵即可觸發功能，
+觸發原 F1 至 F12 鍵需按下 Fn 鍵。</value>
+  </data>
+  <data name="FnLockAutomationStepControl_Title" xml:space="preserve">
+    <value>鎖定 Fn 鍵</value>
+  </data>
+  <data name="FnLockControl_Message" xml:space="preserve">
+    <value>開啓後將無需按下 Fn 鍵即可觸發功能，
+觸發原 F1 至 F12 鍵需按下Fn鍵。</value>
+  </data>
+  <data name="FnLockControl_Title" xml:space="preserve">
+    <value>鎖定 Fn 鍵</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
+    <value>警告！
+一些筆記本可以使用更低的功耗限制，但【一定小心】，這個選項可能會導致未知後果！除非你瞭解【此選項的準確意義】，否則請保持這個選項爲 0。</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
+    <value>最小功耗限制偏移量</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
+    <value>警告！
+一些筆記本可以使用更高的功耗限制，但【一定小心】，這個選項可能會導致未知後果！除非你瞭解【此選項的準確意義】，否則請保持這個選項爲 0。</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
+    <value>最大功耗限制偏移量</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Message" xml:space="preserve">
+    <value>請謹慎修改下方選項！在你不知道下方選項的準確意義前，請勿修改！</value>
+  </data>
+  <data name="GodModeSettingsWindow_Advanced_Title" xml:space="preserve">
+    <value>高級選項</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading" xml:space="preserve">
+    <value>長時負載功耗限制 (Cross Loading)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL" xml:space="preserve">
+    <value>長時負載功耗限制 (PL1)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL" xml:space="preserve">
+    <value>短時睿頻功耗限制 (PL2)</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit" xml:space="preserve">
+    <value>CPU 溫度限制</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_Title" xml:space="preserve">
+    <value>處理器</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Apply_Title" xml:space="preserve">
+    <value>無法應用設置</value>
+  </data>
+  <data name="GodModeSettingsWindow_Error_Load_Title" xml:space="preserve">
+    <value>無法加載設置</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Message" xml:space="preserve">
+    <value>風扇速度不是僅僅由一個溫度傳感器決定的。它將根據 CPU、GPU 和散熱器溫度之間的最高值決定轉速。把鼠標懸停在滑塊上時，可以看到準確的數值。</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Curve_Title" xml:space="preserve">
+    <value>風扇曲線</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
+    <value>警告！
+風扇處於長時間滿轉速的情況下將會減少其壽命。
+【請謹慎使用此選項！】</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
+    <value>使風扇滿轉速</value>
+  </data>
+  <data name="GodModeSettingsWindow_Fans_Title" xml:space="preserve">
+    <value>風扇</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP" xml:space="preserve">
+    <value>可配置 TGP</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost" xml:space="preserve">
+    <value>動態加速功率 (DynamicBoost)</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit" xml:space="preserve">
+    <value>顯卡溫度限制</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_Title" xml:space="preserve">
+    <value>顯卡</value>
+  </data>
+  <data name="GodModeSettingsWindow_Title" xml:space="preserve">
+    <value>自定義模式設置</value>
+  </data>
+  <data name="HDRAutomationStepControl_Message" xml:space="preserve">
+    <value>爲內置屏幕啓用高動態範圍顯示（HDR）。
+
+警告：如內置屏幕關閉則本項無法正常運行。</value>
+  </data>
+  <data name="HDRAutomationStepControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Message" xml:space="preserve">
+    <value>爲內置屏幕啓用高動態範圍顯示（HDR）。</value>
+  </data>
+  <data name="HDRControl_Title" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="HDRControl_Warning" xml:space="preserve">
+    <value>Windows 設置已阻止啓用 HDR。</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>導入</value>
+  </data>
+  <data name="IncompatibleDevice_Message" xml:space="preserve">
+    <value>此設備可能與 LLT 不兼容。</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
+    <value>您的設備可能缺少必要的系統組件（LenovoGameZoneData）。</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
+    <value>如果點擊"確定"繼續：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
+    <value>- 軟件將以受限模式運行</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
+    <value>- 部分功能將被禁用（儀表板、自動化、宏）</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
+    <value>- 其他基本功能仍可使用</value>
+  </data>
+  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
+    <value>設備信息：</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
+    <value>製造商:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
+    <value>型號:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
+    <value>設備類型:</value>
+  </data>
+  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
+    <value>點擊"確定"繼續，或"取消"退出。</value>
+  </data>
+  <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
+    <value>未發現兼容的鍵盤</value>
+  </data>
+  <data name="KeyboardBacklightPage_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Message" xml:space="preserve">
+    <value>由於 Lenovo Vantage 或其服務正在運行導致衝突，無法在此控制鍵盤背光。</value>
+  </data>
+  <data name="Keyboard_VantageEnabledWarning_Title" xml:space="preserve">
+    <value>Lenovo Vantage 與之相關服務仍在運行</value>
+  </data>
+  <data name="MainWindow_NavigationItem_About" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
+    <value>電池</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
+    <value>控制檯</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
+    <value>鍵盤</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
+    <value>驅動更新</value>
+  </data>
+  <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
+    <value>系統優化</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+<data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>插件擴展</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>導航項設置</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>配置側邊欄中顯示哪些導航項。儀表盤和設置將始終顯示。</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏鍵盤導航項</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏電池導航項</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏自動化導航項</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏宏導航項</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏系統優化導航項</value>
+  </data>
+<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏插件擴展導航項</value>
+  </data>
+
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>顯示或隱藏關於導航項</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>導航項</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>配置側邊欄中顯示哪些導航項</value>
+  </data>
+  <data name="MainWindow_UpdateAvailable" xml:space="preserve">
+    <value>新版本可用！</value>
+  </data>
+  <data name="MainWindow_UpdateAvailableWithVersion" xml:space="preserve">
+    <value>發現新版本 {0}！</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Notification_ACAdapterConnected" xml:space="preserve">
+    <value>電源適配器 已插入</value>
+  </data>
+  <data name="Notification_ACAdapterConnectedLowWattage" xml:space="preserve">
+    <value>電源適配器（較低功率） 已插入</value>
+  </data>
+  <data name="Notification_ACAdapterDisconnected" xml:space="preserve">
+    <value>電源適配器 已拔出</value>
+  </data>
+  <data name="Notification_CameraOff" xml:space="preserve">
+    <value>攝像頭 關</value>
+  </data>
+  <data name="Notification_CameraOn" xml:space="preserve">
+    <value>攝像頭 開</value>
+  </data>
+  <data name="Notification_CapsLockOff" xml:space="preserve">
+    <value>Caps Lock 關</value>
+  </data>
+  <data name="Notification_CapsLockOn" xml:space="preserve">
+    <value>Caps Lock 開</value>
+  </data>
+  <data name="Notification_FnLockOff" xml:space="preserve">
+    <value>鎖定 Fn 鍵 關</value>
+  </data>
+  <data name="Notification_FnLockOn" xml:space="preserve">
+    <value>鎖定 Fn 鍵 開</value>
+  </data>
+  <data name="Notification_MicrophoneOff" xml:space="preserve">
+    <value>麥克風 關</value>
+  </data>
+  <data name="Notification_MicrophoneOn" xml:space="preserve">
+    <value>麥克風 開</value>
+  </data>
+  <data name="Notification_NumLockOff" xml:space="preserve">
+    <value>Num Lock 關</value>
+  </data>
+  <data name="Notification_NumLockOn" xml:space="preserve">
+    <value>Num Lock 開</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Backlight" xml:space="preserve">
+    <value>背光 {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Brightness" xml:space="preserve">
+    <value>鍵盤背光亮度 {0}</value>
+  </data>
+  <data name="Notification_SpectrumKeyboardBacklight_Profile" xml:space="preserve">
+    <value>燈效主題 {0}</value>
+  </data>
+  <data name="Notification_TouchpadOff" xml:space="preserve">
+    <value>觸摸板 關</value>
+  </data>
+  <data name="Notification_TouchpadOn" xml:space="preserve">
+    <value>觸摸板 開</value>
+  </data>
+  <data name="Notification_WhiteKeyboardBacklight" xml:space="preserve">
+    <value>背光 {0}</value>
+  </data>
+  <data name="NotificationsSettingsWindow_ACAdapter" xml:space="preserve">
+    <value>電源適配器</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Camera" xml:space="preserve">
+    <value>攝像頭</value>
+  </data>
+  <data name="NotificationsSettingsWindow_CapsAndNumLock" xml:space="preserve">
+    <value>Caps Lock 和 Num Lock</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Message" xml:space="preserve">
+    <value>禁用麥克風靜音等 Fn 鍵操作的彈窗。
+如果彈窗與全屏應用有衝突，請啓用此選項。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_DontShowNotifications_Title" xml:space="preserve">
+    <value>不要顯示彈窗</value>
+  </data>
+  <data name="NotificationsSettingsWindow_FnLock" xml:space="preserve">
+    <value>鎖定Fn鍵</value>
+  </data>
+  <data name="NotificationsSettingsWindow_KeyboardBacklight" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Microphone" xml:space="preserve">
+    <value>麥克風</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationPosition_Title" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="NotificationsSettingsWindow_PowerMode" xml:space="preserve">
+    <value>性能模式</value>
+  </data>
+  <data name="NotificationsSettingsWindow_RefreshRate" xml:space="preserve">
+    <value>刷新率</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SmartKey" xml:space="preserve">
+    <value>智能鍵</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Title" xml:space="preserve">
+    <value>提示彈窗</value>
+  </data>
+  <data name="NotificationsSettingsWindow_TouchpadLock" xml:space="preserve">
+    <value>觸摸板鎖定</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>打開</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Message" xml:space="preserve">
+    <value>開啓後通過加壓超頻提升內置屏幕響應速度，可能會導致屏幕過沖產生鬼影。</value>
+  </data>
+  <data name="OverDriveAutomationStepControl_Title" xml:space="preserve">
+    <value>OverDrive</value>
+  </data>
+  <data name="OverDriveControl_Message" xml:space="preserve">
+    <value>開啓後通過加壓超頻提升內置屏幕響應速度，
+可能會導致屏幕過沖產生鬼影。</value>
+  </data>
+  <data name="OverDriveControl_Title" xml:space="preserve">
+    <value>OverDrive</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Message" xml:space="preserve">
+    <value>已下載 {0}</value>
+  </data>
+  <data name="PackageControl_DownloadComplete_Title" xml:space="preserve">
+    <value>下載完成</value>
+  </data>
+  <data name="PackageControl_GeneralError_Title" xml:space="preserve">
+    <value>什麼地方出錯了(っ °Д °;)っ</value>
+  </data>
+  <data name="PackageControl_Http404Error_Message" xml:space="preserve">
+    <value>服務器返回 404</value>
+  </data>
+  <data name="PackageControl_Http404Error_Title" xml:space="preserve">
+    <value>似乎未找到文件</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Message" xml:space="preserve">
+    <value>請確保你的網絡正常</value>
+  </data>
+  <data name="PackageControl_HttpGeneralError_Title" xml:space="preserve">
+    <value>什麼地方出錯了(っ °Д °;)っ</value>
+  </data>
+  <data name="PackageControl_IsUpdateInfo" xml:space="preserve">
+    <value>有新版本可更新！</value>
+  </data>
+  <data name="PackageControl_OldPackageWarning" xml:space="preserve">
+    <value>此驅動包的發佈日期距今已超過一年</value>
+  </data>
+  <data name="PackageControl_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+<data name="PackageControl_Install" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>卸載</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>安裝失敗</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>文件未找到，請先下載</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>安裝程序以退出代碼 {0} 結束</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>安裝已啓動</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>正在啓動安裝程序: {0}</value>
+  </data>
+  <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
+    <value>下面是根據你的電腦型號獲取的軟件列表，
+請確保你安裝的軟件對應型號與版本正確。
+注：下列軟件與驅動來自聯想國際站點，不一定適用於在中國大陸銷售的機型。</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
+    <value>請確保機器類型與系統類型設置正確！</value>
+  </data>
+  <data name="PackagesPage_DownloadFailed_Title" xml:space="preserve">
+    <value>什麼地方出錯了(っ °Д °;)っ</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
+    <value>改變排序、搜索關鍵詞、隱藏軟件包或刷新列表將停止下載。確定嗎？</value>
+  </data>
+  <data name="PackagesPage_DownloadInProgress_Title" xml:space="preserve">
+    <value>下載進行中</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>搜索...</value>
+  </data>
+  <data name="PackagesPage_MachineType" xml:space="preserve">
+    <value>設備代號</value>
+  </data>
+  <data name="PackagesPage_OperatingSystem" xml:space="preserve">
+    <value>系統</value>
+  </data>
+  <data name="PackagesPage_PrimarySource" xml:space="preserve">
+    <value>首選來源（推薦）</value>
+  </data>
+  <data name="PackagesPage_PrimarySource_Message" xml:space="preserve">
+    <value>與 Lenovo Vantage 中的驅動一致</value>
+  </data>
+  <data name="PackagesPage_SecondarySource" xml:space="preserve">
+    <value>備用來源（第三方）</value>
+  </data>
+  <data name="PackagesPage_SecondarySource_Message" xml:space="preserve">
+    <value>與聯想海外支持網頁的驅動一致</value>
+  </data>
+  <data name="PackagesPage_Sort_Category" xml:space="preserve">
+    <value>類別</value>
+  </data>
+  <data name="PackagesPage_Sort_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="PackagesPage_Sort_Name" xml:space="preserve">
+    <value>名字</value>
+  </data>
+  <data name="PackagesPage_Source" xml:space="preserve">
+    <value>來源</value>
+  </data>
+  <data name="PackagesPage_Title" xml:space="preserve">
+    <value>驅動更新</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>粘貼</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Message" xml:space="preserve">
+    <value>選擇性能模式</value>
+  </data>
+  <data name="PowerModeAutomationStepControl_Title" xml:space="preserve">
+    <value>性能模式</value>
+  </data>
+  <data name="PowerModeControl_Message" xml:space="preserve">
+    <value>選擇性能模式
+你可以通過快捷鍵 Fn+Q 快速更改。</value>
+  </data>
+  <data name="PowerModeControl_Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="PowerModeControl_Title" xml:space="preserve">
+    <value>性能模式</value>
+  </data>
+  <data name="PowerModeControl_Warning" xml:space="preserve">
+    <value>在未插入電源適配器的情況下，性能模式可能無法正常生效。</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_DefaultPowerPlan" xml:space="preserve">
+    <value>默認</value>
+  </data>
+  <data name="WindowsPowerPlansWindow_Title" xml:space="preserve">
+    <value>Windows 電源計劃</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>正在掃描可用驅動包，請稍候...</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>掃描驅動包</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>選擇來源並開始掃描，以列出兼容的驅動下載項。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>未找到驅動下載項</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>請嘗試切換來源、操作系統或機器型號。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>沒有匹配的下載項</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>請調整篩選、僅顯示更新或隱藏下載項設置。</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>驅動掃描未完成</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>請檢查當前來源和網絡連接，然後重新掃描。</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>網絡出問題了，正在自動重試...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>正在重新獲取驅動包...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>清理信息</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>查看清理操作的進度和估算大小。</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>調節鍵盤背光預設</value>
+  </data>
+  <data name="RGBKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="RGBKeyboardBacklightBrightnessCardControl_Brightness" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset1" xml:space="preserve">
+    <value>預設 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset2" xml:space="preserve">
+    <value>預設 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset3" xml:space="preserve">
+    <value>預設 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Preset4" xml:space="preserve">
+    <value>預設 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_PresetOff" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone1" xml:space="preserve">
+    <value>區域 1</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone2" xml:space="preserve">
+    <value>區域 2</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone3" xml:space="preserve">
+    <value>區域 3</value>
+  </data>
+  <data name="RGBKeyboardBacklightControl_Zone4" xml:space="preserve">
+    <value>區域 4</value>
+  </data>
+  <data name="RGBKeyboardBacklightEffectCardControl_Title" xml:space="preserve">
+    <value>效果</value>
+  </data>
+  <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="ReadmeWindow_Title" xml:space="preserve">
+    <value>自述文件</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Message" xml:space="preserve">
+    <value>切換內置屏幕刷新率。
+
+警告！當內置屏幕關閉時此選項無法生效。</value>
+  </data>
+  <data name="RefreshRateAutomationStepControl_Title" xml:space="preserve">
+    <value>刷新率</value>
+  </data>
+  <data name="RefreshRateControl_Message" xml:space="preserve">
+    <value>切換內置屏幕刷新率。</value>
+  </data>
+  <data name="RefreshRateControl_Title" xml:space="preserve">
+    <value>刷新率</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="RestartLater" xml:space="preserve">
+    <value>稍後自行重啓</value>
+  </data>
+<data name="RestartNow" xml:space="preserve">
+    <value>立刻重啓</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="RunAutomationStepControl_ExeArguments" xml:space="preserve">
+    <value>參數</value>
+  </data>
+  <data name="RunAutomationStepControl_ExePath" xml:space="preserve">
+    <value>執行路徑</value>
+  </data>
+  <data name="RunAutomationStepControl_Message" xml:space="preserve">
+    <value>運行腳本或應用
+請確保你的腳本能正常運行。</value>
+  </data>
+  <data name="RunAutomationStepControl_Title" xml:space="preserve">
+    <value>運行</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>保存中...</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Description" xml:space="preserve">
+    <value>選擇單個或多個快捷操作來循環執行。</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_List_Empty" xml:space="preserve">
+    <value>暫無快捷操作。</value>
+  </data>
+  <data name="SelectSmartKeyPipelinesWindow_ShowThisApp" xml:space="preserve">
+    <value>顯示本應用</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Description" xml:space="preserve">
+    <value>改變應用的主題色。</value>
+  </data>
+  <data name="SettingsPage_AccentColor_Title" xml:space="preserve">
+    <value>主題色</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>自定義語言、溫度單位、主題和主題色。</value>
+  </data>
+  <data name="SettingsPage_Autorun_Title" xml:space="preserve">
+    <value>開機啓動</value>
+  </data>
+  <data name="SettingsPage_Autorun_Message" xml:space="preserve">
+    <value>登錄 Windows 後最小化到系統托盤。</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone 可能沒有被正確禁用。</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Error_Title" xml:space="preserve">
+    <value>無法禁用 Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Message" xml:space="preserve">
+    <value>禁用 Legion Zone 服務且無需卸載。
+修改此項後推薦重啓電腦。</value>
+  </data>
+  <data name="SettingsPage_DisableLegionZone_Title" xml:space="preserve">
+    <value>禁用 Legion Zone</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys 可能沒有被正確禁用。</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>無法禁用 Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Message" xml:space="preserve">
+    <value>禁用 Lenovo Hotkeys 且無需卸載。
+禁用後本應用將接管 Fn 快捷功能。
+修改此項後建議重啓電腦。</value>
+  </data>
+  <data name="SettingsPage_DisableLenovoHotkeys_Title" xml:space="preserve">
+    <value>禁用 Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage 與 ImController 可能沒有被正確禁用。</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Error_Title" xml:space="preserve">
+    <value>無法禁用 Lenovo Vantage 與 ImController</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Message" xml:space="preserve">
+    <value>禁用 Lenovo Vantage 與 ImController 且無需卸載。
+修改此項後推薦重啓電腦。</value>
+  </data>
+  <data name="SettingsPage_DisableVantage_Title" xml:space="preserve">
+    <value>禁用 Lenovo Vantage 與 ImController</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Message" xml:space="preserve">
+    <value>Legion Zone 可能沒有被正確啓用。</value>
+  </data>
+  <data name="SettingsPage_EnableLegionZone_Error_Title" xml:space="preserve">
+    <value>無法啓用 Legion Zone</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Message" xml:space="preserve">
+    <value>Lenovo Hotkeys 可能沒有被正確啓用。</value>
+  </data>
+  <data name="SettingsPage_EnableLenovoHotkeys_Error_Title" xml:space="preserve">
+    <value>無法啓用 Lenovo Hotkeys</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Message" xml:space="preserve">
+    <value>Lenovo Vantage 與/或 ImController 可能未被正確啓用。</value>
+  </data>
+  <data name="SettingsPage_EnableVantage_Error_Title" xml:space="preserve">
+    <value>無法啓用 Lenovo Vantage 與 ImController</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Message" xml:space="preserve">
+    <value>你可以排除某個刷新率，使 Fn+R 快捷鍵切換更快速。</value>
+  </data>
+  <data name="SettingsPage_ExcludeRefreshRates_Title" xml:space="preserve">
+    <value>排除刷新率</value>
+  </data>
+  <data name="SettingsPage_Language_Message" xml:space="preserve">
+    <value>選擇語言</value>
+  </data>
+  <data name="SettingsPage_Language_Title" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
+    <value>總是最小化到托盤。開啓後需右鍵點擊托盤圖標點擊關閉以關閉軟件。</value>
+  </data>
+  <data name="SettingsPage_MinimizeOnClose_Title" xml:space="preserve">
+    <value>關閉時最小化</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Message" xml:space="preserve">
+    <value>隱藏啓動時彈出的不兼容設備提示。</value>
+  </data>
+  <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
+    <value>不再提示不兼容設備</value>
+  </data>
+
+  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
+    <value>啓用擴展</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
+    <value>啓用擴展系統以訪問插件市場。</value>
+  </data>
+  <data name="SettingsPage_Notifications_Message" xml:space="preserve">
+    <value>選擇顯示哪些通知彈窗。</value>
+  </data>
+  <data name="SettingsPage_Notifications_Title" xml:space="preserve">
+    <value>提示彈窗</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Title" xml:space="preserve">
+    <value>Windows 電源計劃</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Message" xml:space="preserve">
+    <value>選擇雙擊 Fn + F9 觸發的快捷操作。</value>
+  </data>
+  <data name="SettingsPage_SmartKeyDoublePressAction_Title" xml:space="preserve">
+    <value>Smart Key 第二快捷動作</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Message" xml:space="preserve">
+    <value>選擇單擊 Fn + F9 觸發的快捷操作。</value>
+  </data>
+  <data name="SettingsPage_SmartKeySinglePressAction_Title" xml:space="preserve">
+    <value>Smart Key 快捷動作</value>
+  </data>
+  <data name="SettingsPage_Theme_Description" xml:space="preserve">
+    <value>選擇淺色或深色模式，亦或者跟隨系統。</value>
+  </data>
+  <data name="SettingsPage_Theme_Title" xml:space="preserve">
+    <value>主題</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>應用程序</value>
+  </data>
+  <data name="SettingsPage_Title" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>配置應用程序的外觀、行爲和功能選項。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Message" xml:space="preserve">
+    <value>調節鍵盤背光亮度</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Off" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightBrightnessAutomationStepControl_Title" xml:space="preserve">
+    <value>鍵盤背光亮度調節</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_AddEffect" xml:space="preserve">
+    <value>添加燈效</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Title" xml:space="preserve">
+    <value>無法應用配置文件</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ApplyProfileError_Message" xml:space="preserve">
+    <value>無法應用照明配置文件。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Brightness_Title" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_DeselectAll_ToolTip" xml:space="preserve">
+    <value>取消全選所有區域</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Effects" xml:space="preserve">
+    <value>效果</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Message" xml:space="preserve">
+    <value>無法導出配置文件</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ExportProfileError_Title" xml:space="preserve">
+    <value>無法導出配置文件</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Message" xml:space="preserve">
+    <value>無法導入配置文件</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ImportProfileError_Title" xml:space="preserve">
+    <value>無法導入配置文件</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_NoEffects_Text" xml:space="preserve">
+    <value>沒有燈效主題。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip" xml:space="preserve">
+    <value>重置爲默認配置</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SelectAll_ToolTip" xml:space="preserve">
+    <value>全選所有燈區</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip" xml:space="preserve">
+    <value>切換鍵盤佈局</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_ClockwiseDirection_Title" xml:space="preserve">
+    <value>方向</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Color_Title" xml:space="preserve">
+    <value>顏色</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Colors_Title" xml:space="preserve">
+    <value>顏色</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Direction_Title" xml:space="preserve">
+    <value>方向</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Title" xml:space="preserve">
+    <value>方向動效</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning" xml:space="preserve">
+    <value>此動效將被應用至整個鍵盤並替換其他動效。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Speed_Title" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Add" xml:space="preserve">
+    <value>新增燈效主題</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEditEffectWindow_Title_Edit" xml:space="preserve">
+    <value>編輯燈效主題</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>切換鍵盤背光主題。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>鍵盤背光主題</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_AllZones" xml:space="preserve">
+    <value>全部鍵區</value>
+  </data>
+  <data name="SpectrumKeyboardEffectControl_Description_Zones" xml:space="preserve">
+    <value>{0} 鍵區</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunrise" xml:space="preserve">
+    <value>日出</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Sunset" xml:space="preserve">
+    <value>日落</value>
+  </data>
+  <data name="TimeAutomationPipelineTriggerTabItemContent_Time" xml:space="preserve">
+    <value>時間</value>
+  </data>
+  <data name="ToggleHybridModeControl_Message" xml:space="preserve">
+    <value>混合模式允許在覈顯與獨顯之間切換。
+關閉後即爲獨顯直連模式，兩者之間切換需要重啓生效。</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Message" xml:space="preserve">
+    <value>更改混合模式需要重新啓動。你想現在重啓嗎？</value>
+  </data>
+  <data name="ToggleHybridModeControl_RestartRequired_Title" xml:space="preserve">
+    <value>需要重啓</value>
+  </data>
+  <data name="ToggleHybridModeControl_Title" xml:space="preserve">
+    <value>混合模式</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Message" xml:space="preserve">
+    <value>停止使用觸摸板</value>
+  </data>
+  <data name="TouchpadLockAutomationStepControl_Title" xml:space="preserve">
+    <value>鎖定觸摸板</value>
+  </data>
+  <data name="TouchpadLockControl_Message" xml:space="preserve">
+    <value>停用觸摸板。推薦在使用鼠標時開啓以避免誤觸。</value>
+  </data>
+  <data name="TouchpadLockControl_Title" xml:space="preserve">
+    <value>鎖定觸摸板</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>重試</value>
+  </data>
+  <data name="UnexpectedException" xml:space="preserve">
+    <value>發生意外異常：
+{0}</value>
+  </data>
+  <data name="Unnamed" xml:space="preserve">
+    <value>未命名</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer" xml:space="preserve">
+    <value>你可以選擇繼續，風險自負，但請謹記，一些功能可能無法正常使用。
+
+如果你選擇繼續，將自動啓動日誌記錄。</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
+    <value>請查看 GitHub 上的項目頁面以瞭解更多信息。</value>
+  </data>
+  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
+    <value>日誌文件夾</value>
+  </data>
+  <data name="UnsupportedWindow_MachineType" xml:space="preserve">
+    <value>設備類型</value>
+  </data>
+  <data name="UnsupportedWindow_Message" xml:space="preserve">
+    <value>Lenovo Legion Toolkit 尚未在您的設備上經過測試。</value>
+  </data>
+  <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
+    <value>您可以隨時在"設置"頁面關閉此提示。</value>
+  </data>
+  <data name="UnsupportedWindow_Model" xml:space="preserve">
+    <value>設備型號</value>
+  </data>
+  <data name="UnsupportedWindow_Title" xml:space="preserve">
+    <value>不支持的設備</value>
+  </data>
+  <data name="UnsupportedWindow_Vendor" xml:space="preserve">
+    <value>製造商</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>有新的更新！</value>
+  </data>
+  <data name="UpdateWindow_WhatsNew" xml:space="preserve">
+    <value>更新日誌</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>調節鍵盤背光</value>
+  </data>
+  <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>你可以通過快捷鍵 Fn + 空格 調節鍵盤背光開關與亮度。</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>禁用內置鍵盤上的 Win 鍵。</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>禁用 Win 鍵</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>僅在內置鍵盤上生效。啓用後，Win 鍵將不再響應。</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>禁用 Win 鍵</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>麥克風</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>關閉此項將靜音所有可用的麥克風。</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>麥克風</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>關閉此項將靜音所有可用的麥克風。</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>分辨率</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>切換內置屏幕分辨率。</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>分辨率</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>切換內置屏幕分辨率。
+
+警告：如果內置屏幕已關閉，此操作將無法正確執行。</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>DPI 縮放</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>切換內置屏幕縮放。</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>DPI 縮放</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>切換內置屏幕縮放。
+
+警告：如果內置屏幕已關閉，此操作將無法正確執行。</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>顯示</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>你可以使用快捷鍵 Fn + 空格 來開關背光。</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>鍵盤背光</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>使用 Fn + 空格鍵開關背光。</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>沒有匹配的結果</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>僅顯示有更新的驅動/軟件</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>自定義控制檯</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>新建組</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>在此處輸入名稱</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>不同設備的功能支持情況各不相同，所以一些功能可能不會顯示在控制檯中。</value>
+  </data>
+  <data name="DashboardPage_Customize" xml:space="preserve">
+    <value>自定義</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
+    <value>關閉顯示器</value>
+  </data>
+  <data name="TurnOffMonitorsControl_Message" xml:space="preserve">
+    <value>關閉所有可用的顯示器。
+移動鼠標或按下鍵盤按鍵即可喚醒屏幕。</value>
+  </data>
+  <data name="TurnOffMonitorsControl_TurnOff" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Title" xml:space="preserve">
+    <value>關閉顯示器</value>
+  </data>
+  <data name="TurnOffMonitorsAutomationStepControl_Message" xml:space="preserve">
+    <value>關閉所有可用的顯示器。</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Title" xml:space="preserve">
+    <value>修改分組名稱</value>
+  </data>
+  <data name="EditDashboardGroupControl_EditGroup_Message" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOn" xml:space="preserve">
+    <value>拯救者 LOGO 燈 開</value>
+  </data>
+  <data name="Notification_PanelLogoLightingOff" xml:space="preserve">
+    <value>拯救者 LOGO 燈 關</value>
+  </data>
+  <data name="Notification_PortLightingOn" xml:space="preserve">
+    <value>接口指示燈 開</value>
+  </data>
+  <data name="Notification_PortLightingOff" xml:space="preserve">
+    <value>接口指示燈 關</value>
+  </data>
+  <data name="PackageControl_RebootRequired" xml:space="preserve">
+    <value>需要重啓</value>
+  </data>
+  <data name="PackageControl_ShutdownRequired" xml:space="preserve">
+    <value>需要關機</value>
+  </data>
+  <data name="PackageControl_RebootRecommended" xml:space="preserve">
+    <value>建議重啓</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>推薦</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>已加入隊列</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>下載中</value>
+  </data>
+<data name="PackageControl_Installing" xml:space="preserve">
+    <value>安裝中</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>正在加載插件...</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>未找到操作定義</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>此操作的技術實現細節不可用</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>加載失敗</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>命令執行</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>註冊表修改</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>服務管理</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>註冊表修改 + PowerShell腳本</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>註冊表清理</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>DISM命令</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve">
+    <value>shell.exe 未找到</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve">
+    <value>配置文件路徑: 未找到</value>
+  </data>
+  <data name="SaveAndClose" xml:space="preserve">
+    <value>保存並關閉</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Title" xml:space="preserve">
+    <value>自定義模式預設</value>
+  </data>
+  <data name="GodModePresetAutomationStepControl_Message" xml:space="preserve">
+    <value>切換至自定義模式的某個預設。
+該設置只有在啓用自定義模式時纔會生效。</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Title" xml:space="preserve">
+    <value>預設名稱</value>
+  </data>
+  <data name="GodModeSettingsWindow_EditPreset_Message" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="GodModeSettingsWindow_ActivePreset_Title" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="AboutPage_ApplicationFolders" xml:space="preserve">
+    <value>應用文件夾</value>
+  </data>
+  <data name="AboutPage_Data" xml:space="preserve">
+    <value>數據</value>
+  </data>
+  <data name="AboutPage_Temp" xml:space="preserve">
+    <value>溫度</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title" xml:space="preserve">
+    <value>固定顯示亮度</value>
+  </data>
+  <data name="SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message" xml:space="preserve">
+    <value>啓用後在不同電源計劃間切換將保持亮度不變。</value>
+  </data>
+  <data name="Notification_UpdateAvailable" xml:space="preserve">
+    <value>發現新版本 {0}！</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL" xml:space="preserve">
+    <value>峯值功耗限制</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL" xml:space="preserve">
+    <value>APU 慢速功耗追蹤限制（sPPT）</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_LongTermPL_Description" xml:space="preserve">
+    <value>CPU 持續負載功耗限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_ShortTermPL_Description" xml:space="preserve">
+    <value>CPU 短時峯值功耗限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PeakPL_Description" xml:space="preserve">
+    <value>CPU瞬時功耗限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_CrossLoading_Description" xml:space="preserve">
+    <value>當 CPU 與 GPU 同時最大負載時，CPU 的最大功耗限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
+    <value>CPU 在一定的延遲後可以達到的最大功耗限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_TempLimit_Description" xml:space="preserve">
+    <value>在降頻之前 CPU 的溫度限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_DynamicBoost_Description" xml:space="preserve">
+    <value>基於 CPU 的功耗，最大可以借用給 GPU 的額外功率。</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_CTGP_Description" xml:space="preserve">
+    <value>在基本功耗的基礎上，可以分配給 GPU的額外功率量。 </value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TempLimit_Description" xml:space="preserve">
+    <value>在降頻前，GPU 的溫度限制。</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>默認</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau" xml:space="preserve">
+    <value>短時睿頻功耗限制</value>
+  </data>
+  <data name="GodModeSettingsWindow_CPU_PL1Tau_Description" xml:space="preserve">
+    <value>CPU 被允許使用短期功率限制進行加速的時間量。當 Tau 過期時，將使用長期功率限制。</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl" xml:space="preserve">
+    <value>插電情況下總處理器功耗目標。</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description" xml:space="preserve">
+    <value>CPU 觸發 GPU 動態功耗調整的點。</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>創建</value>
+  </data>
+  <data name="AddAutomationStepWindow_Title" xml:space="preserve">
+    <value>添加步驟</value>
+  </data>
+  <data name="CreateAutomationPipelineWindow_Title" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="StatusTrayPopup_PowerMode" xml:space="preserve">
+    <value>性能模式</value>
+  </data>
+  <data name="StatusTrayPopup_Preset" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="StatusTrayPopup_DiscreteGPU" xml:space="preserve">
+    <value>獨立顯卡</value>
+  </data>
+  <data name="StatusTrayPopup_PowerState" xml:space="preserve">
+    <value>性能狀態</value>
+  </data>
+  <data name="StatusTrayPopup_Battery" xml:space="preserve">
+    <value>電池</value>
+  </data>
+  <data name="StatusTrayPopup_Mode" xml:space="preserve">
+    <value>充電模式</value>
+  </data>
+  <data name="StatusTrayPopup_DischargeRate" xml:space="preserve">
+    <value>電池充放電功率</value>
+  </data>
+  <data name="StatusTrayPopup_UpdateAvailable" xml:space="preserve">
+    <value>新版本可用！</value>
+  </data>
+  <data name="SymbolRegularPicker_Title" xml:space="preserve">
+    <value>選擇圖標</value>
+  </data>
+  <data name="AutomationPage_ChangeIcon" xml:space="preserve">
+    <value>更改圖標</value>
+  </data>
+  <data name="BatteryPage_LowLevel" xml:space="preserve">
+    <value>電池電量低</value>
+  </data>
+  <data name="AutomationPipelineTriggerConfigurationWindow_Title" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Title" xml:space="preserve">
+    <value>檢測到 S0 低功耗空閒模型</value>
+  </data>
+  <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
+    <value>檢測到本設備支持新式待機（Modern Standby）。使用 "平衡" 以外的電源計劃可能會導致意外問題。</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlans_Message" xml:space="preserve">
+    <value>選擇在電源模式改變時應用的 Windows 電源計劃。</value>
+  </data>
+  <data name="SettingsPage_Power_Title" xml:space="preserve">
+    <value>電源</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerPlansControlPanel_Title" xml:space="preserve">
+    <value>打開 Windows 控制面板中的電源計劃選項</value>
+  </data>
+  <data name="PoweredOff" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Title" xml:space="preserve">
+    <value>導入鍵盤背光主題。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Message" xml:space="preserve">
+    <value>導入並應用鍵盤背光配置到當前的主題。</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightImportProfileAutomationStepControl_Path" xml:space="preserve">
+    <value>路徑</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_After" xml:space="preserve">
+    <value>在 {0} 之後</value>
+  </data>
+  <data name="MultipleTriggersAutomationPipelineTrigger_DisplayName" xml:space="preserve">
+    <value>多個觸發器...</value>
+    <comment>Allows the user to merge multiple triggers for the execution of selected actions.</comment>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_Title" xml:space="preserve">
+    <value>獨立顯卡超頻設置</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title" xml:space="preserve">
+    <value>核心頻率偏移量</value>
+  </data>
+  <data name="OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title" xml:space="preserve">
+    <value>顯存頻率偏移量</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Title" xml:space="preserve">
+    <value>超頻獨立顯卡</value>
+  </data>
+  <data name="OverclockDiscreteGPUControl_Message" xml:space="preserve">
+    <value>超頻獨立顯卡以提升性能。</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Title" xml:space="preserve">
+    <value>超頻獨立顯卡</value>
+  </data>
+  <data name="OverclockDiscreteGPUAutomationStepControl_Message" xml:space="preserve">
+    <value>超頻獨立顯卡以提升性能。
+
+警告：當獨立顯卡彈出後此操作將不起作用。</value>
+  </data>
+  <data name="PortsBacklightControl_Title" xml:space="preserve">
+    <value>接口指示燈</value>
+  </data>
+  <data name="PortsBacklightControl_Message" xml:space="preserve">
+    <value>打開或關閉位於設備後方的接口指示燈。</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>接口指示燈</value>
+  </data>
+  <data name="PortsBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>打開或關閉位於設備後方的接口指示燈。</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Title" xml:space="preserve">
+    <value>拯救者 LOGO 燈</value>
+  </data>
+  <data name="PanelLogoBacklightControl_Message" xml:space="preserve">
+    <value>打開或關閉位於設備後方的拯救者 LOGO 燈。</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>拯救者 LOGO 燈</value>
+  </data>
+  <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>打開或關閉位於設備後方的拯救者 LOGO 燈。</value>
+  </data>
+  <data name="GHz" xml:space="preserve">
+    <value>GHz</value>
+  </data>
+  <data name="MHz" xml:space="preserve">
+    <value>兆赫</value>
+  </data>
+  <data name="SensorsControl_Maximum" xml:space="preserve">
+    <value>最大：{0}</value>
+  </data>
+  <data name="SensorsControl_CPU_Title" xml:space="preserve">
+    <value>處理器</value>
+  </data>
+  <data name="SensorsControl_Utilization_Title" xml:space="preserve">
+    <value>利用率</value>
+  </data>
+  <data name="SensorsControl_CoreClock_Title" xml:space="preserve">
+    <value>核心頻率</value>
+  </data>
+  <data name="SensorsControl_Temperature_Title" xml:space="preserve">
+    <value>溫度</value>
+  </data>
+  <data name="SensorsControl_Fan_Title" xml:space="preserve">
+    <value>風扇</value>
+  </data>
+  <data name="SensorsControl_GPU_Title" xml:space="preserve">
+    <value>顯卡</value>
+  </data>
+  <data name="SensorsControl_MemoryClock_Title" xml:space="preserve">
+    <value>顯存頻率</value>
+  </data>
+  <data name="SensorsControl_RefreshInterval" xml:space="preserve">
+    <value>刷新間隔</value>
+  </data>
+  <data name="InstantBootControl_Title" xml:space="preserve">
+    <value>通電自啓</value>
+  </data>
+  <data name="InstantBootControl_Message" xml:space="preserve">
+    <value>電源口接入電源後立即開機。</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Title" xml:space="preserve">
+    <value>通電自啓</value>
+  </data>
+  <data name="InstantBootAutomationStepControl_Message" xml:space="preserve">
+    <value>電源口接入電源後立即開機。</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
+    <value>無法更改性能模式</value>
+  </data>
+  <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
+    <value>在未接入全功率電源適配器時無法啓用{0}</value>
+    <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="EditDashboardWindow_Sensors" xml:space="preserve">
+    <value>硬件監控信息</value>
+  </data>
+  <data name="IGPUModeChangeException_Title" xml:space="preserve">
+    <value>當前無法切換顯卡工作模式</value>
+  </data>
+  <data name="IGPUModeChangeException_Message" xml:space="preserve">
+    <value>如果獨顯未啓用，請在幾秒鐘後再次嘗試更改模式。
+如果仍未有反應，請重新啓動設備。</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_IGPUOnly" xml:space="preserve">
+    <value>獨立顯卡當前被佔用</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_IGPUOnly" xml:space="preserve">
+    <value>獨立顯卡在解除佔用後將自動停用。</value>
+  </data>
+  <data name="IGPUModeChangeException_Title_Auto" xml:space="preserve">
+    <value>獨立顯卡當前被佔用或設備當前並非電池供電</value>
+  </data>
+  <data name="IGPUModeChangeException_Message_Auto" xml:space="preserve">
+    <value>獨立顯卡在解除佔用或設備處於電池供電的狀態下將自動停用。</value>
+  </data>
+  <data name="GodModeSettingsWindow_VantageWarning_Title" xml:space="preserve">
+    <value>自定義設置在 Lenovo Vantage 及其服務運行時將不會生效。</value>
+  </data>
+  <data name="GodModeSettingsWindow_LegionZoneWarning_Title" xml:space="preserve">
+    <value>自定義設置在 Legion Zone 及其服務運行時將不會生效。</value>
+  </data>
+  <data name="DGPU_Connected_Title" xml:space="preserve">
+    <value>獨立顯卡已連接</value>
+  </data>
+  <data name="DGPU_Disconnected_Title" xml:space="preserve">
+    <value>獨立顯卡已斷開連接</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>顯卡工作模式</value>
+  </data>
+  <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>根據你的使用場景選擇顯卡工作模式。
+各混合模式與獨顯直連模式互相切換後需要重啓生效。</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Title" xml:space="preserve">
+    <value>混合模式</value>
+  </data>
+  <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
+    <value>混合模式允許在覈顯與獨顯之間切換。
+關閉後即爲獨顯直連模式，兩者之間切換需要重啓生效。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationDuration_Title" xml:space="preserve">
+    <value>持續時間</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Updates_Title" xml:space="preserve">
+    <value>新版本更新提醒</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl" xml:space="preserve">
+    <value>GPU 至 CPU Dynamic Boost</value>
+  </data>
+  <data name="GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description" xml:space="preserve">
+    <value>此爲根據 CPU 的使用情況，能從 GPU 借用給 CPU 的額外功率。值越大，則使用 CPU 計算較多的應用性能越好。</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Title" xml:space="preserve">
+    <value>自定義開機畫面</value>
+  </data>
+  <data name="SettingsPage_BootLogo_Message" xml:space="preserve">
+    <value>自定義在啓動階段所展示的圖案。</value>
+  </data>
+  <data name="BootLogoWindow_Title" xml:space="preserve">
+    <value>自定義開機畫面</value>
+  </data>
+  <data name="BootLogoWindow_DefaultLogoSet" xml:space="preserve">
+    <value>已設置爲默認開機畫面</value>
+  </data>
+  <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
+    <value>已設置爲自定義開機畫面</value>
+  </data>
+  <data name="BootLogoWindow_Status" xml:space="preserve">
+    <value>當前狀態</value>
+  </data>
+  <data name="RevertToDefault" xml:space="preserve">
+    <value>重置爲默認設置</value>
+  </data>
+  <data name="BootLogoWindow_Customize" xml:space="preserve">
+    <value>自定義</value>
+  </data>
+  <data name="NotificationsSettingsWindow_Automation" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="NotificationAutomationStepControl_NotificationText" xml:space="preserve">
+    <value>提示彈窗文本</value>
+  </data>
+  <data name="NotificationAutomationStepControl_Title" xml:space="preserve">
+    <value>顯示提示彈窗</value>
+  </data>
+  <data name="AutomationPipelineControl_SubtitlePart_Preset" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Title" xml:space="preserve">
+    <value>智能鎖定 Fn 鍵</value>
+  </data>
+  <data name="SettingsPage_SmartFnLock_Message" xml:space="preserve">
+    <value>按下 Alt、Ctrl 或 Shift 鍵時，Fn 將會暫時解除鎖定。</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="BootLogoWindow_Description" xml:space="preserve">
+    <value>替換的自定義開機畫面圖標的圖片文件分辨率必須準確地爲 {0} 。
+支持的圖片文件格式爲：{1}。</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
+    <value>隔夜電池充電</value>
+  </data>
+  <data name="BatteryNightChargeModeControl_Message" xml:space="preserve">
+    <value>啓用該功能後，當您插上電源過夜時，該設備將充電至 80%，並在您早上使用該設備時充電至 100%。</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
+    <value>隔夜電池充電</value>
+  </data>
+  <data name="BatteryNightChargeAutomationStepControl_Message" xml:space="preserve">
+    <value>啓用該功能後，當您插上電源過夜時，該設備將充電至 80%，並在您早上使用該設備時充電至 100%。</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Size" xml:space="preserve">
+    <value>無效的圖像分辨率。</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Invalid_Image_Format" xml:space="preserve">
+    <value>無效的圖像格式。</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Mount_EFI_Partition" xml:space="preserve">
+    <value>無法掛載 EFI 分區。</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Cannot_Set_UEFI_Privilege" xml:space="preserve">
+    <value>無法設置 UEFI 權限。</value>
+  </data>
+  <data name="BootLogoWindow_SetError_Not_Enough_Free_Space_On_EFI_Partition" xml:space="preserve">
+    <value>EFI 分區空間不足。</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomFailed" xml:space="preserve">
+    <value>自定義開機畫面設置失敗：{0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultFailed" xml:space="preserve">
+    <value>預設開機畫面設置失敗：{0}</value>
+  </data>
+  <data name="BootLogoWindow_SetDefaultSuccess" xml:space="preserve">
+    <value>已設置爲默認開機畫面。</value>
+  </data>
+  <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
+    <value>已設置爲自定義開機畫面。</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
+    <value>網絡名稱（SSID）</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
+    <value>複製當前的網絡名稱</value>
+  </data>
+  <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
+    <value>將任何 Wi-Fi 網絡留空。</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
+    <value>HWiNFO64</value>
+  </data>
+  <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
+    <value>將風扇速度，電池溫度等數據和 HWiNFO64 共享。切換此選項後也許需要重啓 HWiNFO64。</value>
+  </data>
+  <data name="SettingsPage_Integrations_Title" xml:space="preserve">
+    <value>應用集成</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="PackagesPage_DownloadTo" xml:space="preserve">
+    <value>下載文件夾</value>
+  </data>
+  <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
+    <value>打開下載文件夾</value>
+  </data>
+  <data name="PackageControl_Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="PackageControl_OpenReadme" xml:space="preserve">
+    <value>打開 README</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightControl_Preset" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="DeviceInformationWindow_Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="AbstractAutomationStepControl_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
+    <value>設置執行間隔（分鐘）</value>
+    <comment>A prompt that is used both to ask the user to input an integer, representing the number of minutes between two periodic actions are triggered, and to inform the user what have they set once they are done configuring the action.</comment>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Message" xml:space="preserve">
+    <value>在系統開機或重新啓動時重置【電池】下的電池使用時間計數器。</value>
+  </data>
+  <data name="SettingsPage_OnBatterySinceReset_Title" xml:space="preserve">
+    <value>啓動時重置電池使用時間</value>
+  </data>
+  <data name="TurnOffWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>關閉 Wi-Fi</value>
+  </data>
+  <data name="TurnOnWiFiAutomationStepControl_Title" xml:space="preserve">
+    <value>打開 Wi-Fi</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently" xml:space="preserve">
+    <value>靜默運行</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished" xml:space="preserve">
+    <value>等待運行結束</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessRunSilently_Description" xml:space="preserve">
+    <value>不新建命令行窗口運行命令行應用。</value>
+  </data>
+  <data name="RunAutomationStepControl_ProcessWaitUntilFinished_Description" xml:space="preserve">
+    <value>等待至程序或腳本運行結束</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Message" xml:space="preserve">
+    <value>靜音此項將靜音所有活動的音頻輸出設備。</value>
+  </data>
+  <data name="SpeakerAutomationStepControl_Title" xml:space="preserve">
+    <value>揚聲器</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Title" xml:space="preserve">
+    <value>最小化至托盤</value>
+  </data>
+  <data name="SettingsPage_MinimizeToTray_Message" xml:space="preserve">
+    <value>總是最小化到托盤，而非任務欄。</value>
+  </data>
+  <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
+    <value>Windows 電源模式</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Title" xml:space="preserve">
+    <value>使用 Fn+Q 切換至自定義模式</value>
+  </data>
+  <data name="Settings_GodModeFnQSwitchable_Message" xml:space="preserve">
+    <value>使用 Fn+Q 來快速切換至自定義模式。</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Title" xml:space="preserve">
+    <value>電源模式同步</value>
+  </data>
+  <data name="SettingsPage_PowerModeMapping_Message" xml:space="preserve">
+    <value>切換性能模式時，同步自動切換 Windows 電源計劃或 Windows 電源模式。</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Title" xml:space="preserve">
+    <value>Windows 電源模式</value>
+  </data>
+  <data name="SettingsPage_WindowsPowerModes_Message" xml:space="preserve">
+    <value>選擇在電源模式改變時應用的 Windows 電源計劃。</value>
+  </data>
+  <data name="CompatibilityCheckError_Message" xml:space="preserve">
+    <value>讀取設備信息時發生錯誤。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>兼容性檢查錯誤</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>應用程序在啓動時無法讀取設備信息。請查看下面的錯誤詳情，如需要可嘗試故障排除步驟。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>故障排除步驟</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>確保 Windows Management Instrumentation (WMI) 服務正在運行：打開服務 (services.msc) 並檢查"Windows Management Instrumentation"是否正在運行。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>以管理員身份運行應用程序，以確保有足夠的權限訪問系統註冊表和 WMI。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>檢查系統資源：關閉其他佔用資源的應用程序，然後重試。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>通過點擊下面的"打開日誌文件"按鈕查看日誌文件以獲取詳細的錯誤信息。</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>打開日誌文件</value>
+  </data>
+  <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
+    <value>自定義宏</value>
+  </data>
+  <data name="MacroPage_Title" xml:space="preserve">
+    <value>鍵盤宏</value>
+  </data>
+  <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
+    <value>重複次數</value>
+  </data>
+  <data name="MacroSequenceControl_IgnoreDelays_Title" xml:space="preserve">
+    <value>忽略延時</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="MacroSequenceControl_Record" xml:space="preserve">
+    <value>記錄</value>
+  </data>
+  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
+    <value>停止記錄</value>
+  </data>
+  <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
+    <value>不重複</value>
+  </data>
+  <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
+    <value>只有在本程序運行時，宏才能生效。</value>
+  </data>
+  <data name="MacroPage_Enable_Title" xml:space="preserve">
+    <value>啓用宏</value>
+  </data>
+  <data name="MacroPage_Subtitle" xml:space="preserve">
+    <value>你可以錄製一系列按鍵，並使用鍵盤上的數字小鍵盤調用它們。</value>
+  </data>
+  <data name="MacroAutomationStepControl_Title" xml:space="preserve">
+    <value>宏</value>
+  </data>
+  <data name="MacroAutomationStepControl_Message" xml:space="preserve">
+    <value>啓用或禁用宏。</value>
+  </data>
+  <data name="MacroSequenceControl_InterruptOnOtherKey_Title" xml:space="preserve">
+    <value>若按下其他按鍵則中斷</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>隱藏</value>
+  </data>
+  <data name="HideAll" xml:space="preserve">
+    <value>隱藏全部</value>
+  </data>
+  <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
+    <value>設備</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>全不選</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>全選</value>
+  </data>
+  <data name="MacroSequenceControl_Keyboard" xml:space="preserve">
+    <value>僅鍵盤</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouse" xml:space="preserve">
+    <value>鍵盤和鼠標按鍵</value>
+  </data>
+  <data name="MacroSequenceControl_KeyboardMouseMovement" xml:space="preserve">
+    <value>所有輸入</value>
+  </data>
+  <data name="MacroSequenceControl_RecordingOptions" xml:space="preserve">
+    <value>錄製選項</value>
+  </data>
+  <data name="MacroRecordingWindow_Preparing_Title" xml:space="preserve">
+    <value>錄製將在三秒後開始…</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Title" xml:space="preserve">
+    <value>正在錄製...</value>
+  </data>
+  <data name="MacroRecordingWindow_Recording_Message" xml:space="preserve">
+    <value>按 ESC 鍵停止錄製。</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlySelected" xml:space="preserve">
+    <value>僅顯示被選中的設備</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyRemovable" xml:space="preserve">
+    <value>僅顯示可移動設備</value>
+  </data>
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_OnlyConnected" xml:space="preserve">
+    <value>僅顯示被連接的設備</value>
+  </data>
+  <data name="SettingsPage_CLI_Title" xml:space="preserve">
+    <value>命令行界面</value>
+  </data>
+  <data name="SettingsPage_CLI_Message" xml:space="preserve">
+    <value>啓用命令行界面，允許使用命令行進行控制。</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Title" xml:space="preserve">
+    <value>將命令行界面添加至 PATH 變量</value>
+  </data>
+  <data name="SettingsPage_CLIAddToPath_Message" xml:space="preserve">
+    <value>將命令行界面添加至用戶 PATH 環境變量中。</value>
+  </data>
+  <data name="SettingsPage_Temperature_Title" xml:space="preserve">
+    <value>溫度</value>
+  </data>
+  <data name="SettingsPage_Temperature_Message" xml:space="preserve">
+    <value>選擇溫度傳感器使用的單位。</value>
+  </data>
+  <data name="MainWindows_FnKeysRunning" xml:space="preserve">
+    <value>Lenovo Hotkeys 正在後臺運行。</value>
+  </data>
+  <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
+    <value>Legion Zone 正在後臺運行。</value>
+  </data>
+  <data name="MainWindows_VantageRunning" xml:space="preserve">
+    <value>Lenovo Vantage 和 / 或 ImController 正在後臺運行。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
+    <value>在所有連接到設備的顯示器上顯示提示彈窗。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
+    <value>在所有顯示器上顯示提示彈窗</value>
+  </data>
+  <data name="SettingsPage_CheckUpdatesButton_Content" xml:space="preserve">
+    <value>檢查</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Started_Title" xml:space="preserve">
+    <value>正在檢查更新...</value>
+  </data>
+  <data name="SettingsPage_CheckUpdates_Title" xml:space="preserve">
+    <value>檢查更新</value>
+  </data>
+  <data name="SettingsPage_Update_Title" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>本次會話已禁用更新檢查</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Lenovo Legion Toolkit 啓動時帶有 {0} 參數。本次會話中自動和手動更新檢查以及下方更新設置都會禁用；去掉該啓動參數後重新啓動即可恢復。</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
+    <value>已達到 API 訪問頻率上限，請稍後再試。</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Title" xml:space="preserve">
+    <value>檢查更新失敗</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Error_Unknown_Message" xml:space="preserve">
+    <value>出現了一些錯誤，請稍後再試。</value>
+  </data>
+  <data name="MainWindow_CheckForUpdates_Success_Title" xml:space="preserve">
+    <value>未發現更新</value>
+  </data>
+  <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
+    <value>自動檢查更新</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>更新倉庫</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>配置用於檢查更新的 GitHub 倉庫。留空則使用默認值。</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>倉庫所有者</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>例如：SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>倉庫名稱</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>例如：LenovoLegionToolkit</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
+    <value>未找到更新日誌</value>
+  </data>
+  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
+    <value>嘗試從其它源獲取更新。</value>
+  </data>
+  <data name="PackagesPage_Error_Title" xml:space="preserve">
+    <value>出現了一些錯誤</value>
+  </data>
+  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
+    <value>請確保你的網絡連接正常。</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
+    <value>播放音頻</value>
+  </data>
+  <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
+    <value>支持如 wav 和 mp3 等常規音頻格式。</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Title" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="QuickActionAutomationStepControl_Message" xml:space="preserve">
+    <value>運行一個保存的快捷操作。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Title" xml:space="preserve">
+    <value>通知始終置頂</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationAlwaysOnTop_Message" xml:space="preserve">
+    <value>始終將通知顯示在頂部。
+這不會影響其他全屏窗口，但您將無法點擊這些通知。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
+    <value>系統優化</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
+    <value>應用推薦的性能調優並清理臨時文件。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
+    <value>應用性能與服務優化</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
+    <value>已完成性能優化。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
+    <value>無法完成性能優化。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
+    <value>執行清理</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
+    <value>清理完成。</value>
+  </data>
+  <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
+    <value>清理失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Info" xml:space="preserve">
+    <value>這些操作將修改系統服務和文件，可能需要管理員權限。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
+    <value>應用所選操作</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
+    <value>選擇推薦項</value>
+  </data>
+  <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
+    <value>清除選擇</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>全部開始</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>請至少選擇一項清理操作。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>掃描</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
+    <value>執行清理操作</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Count" xml:space="preserve">
+    <value>{0} 個項目已選擇</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Empty" xml:space="preserve">
+    <value>尚未選擇任何項目。</value>
+  </data>
+  <data name="WindowsOptimizationPage_SelectedActions_Header" xml:space="preserve">
+    <value>已選中的項目</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Cleanup" xml:space="preserve">
+    <value>垃圾清理</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
+    <value>系統優美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
+    <value>系統美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>驅動下載</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>安全確認</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>系統清理將永久刪除臨時文件和緩存。雖然通常是安全的，但建議確保您已備份重要數據。是否繼續？</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>擴展</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>管理系統優化擴展和工具</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>暫無可用擴展</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>從插件擴展頁面安裝擴展以增強系統優化功能。</value>
+  </data>
+<data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
+    <value>全選</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Header" xml:space="preserve">
+    <value>自定義清理規則</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Description" xml:space="preserve">
+    <value>選擇在清理時需要處理的文件夾以及文件後綴。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Add" xml:space="preserve">
+    <value>添加規則</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Clear" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Empty" xml:space="preserve">
+    <value>尚未配置自定義清理規則。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CustomCleanup_Recursive_Label" xml:space="preserve">
+    <value>包含子文件夾</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
+    <value>AppX 管理</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
+    <value>選擇需要爲所有用戶卸載的預裝微軟商店應用。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
+    <value>未選擇任何要卸載的應用。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
+    <value>卸載所選應用</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
+    <value>所選應用已安排卸載。</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
+    <value>卸載所選應用失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
+    <value>操作列表</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
+    <value>自定義清理規則</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Folder_Label" xml:space="preserve">
+    <value>文件夾</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Label" xml:space="preserve">
+    <value>文件後綴</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Extensions_Hint" xml:space="preserve">
+    <value>多個後綴請用逗號分隔（示例：tmp, log, bak）</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Recursive_Label" xml:space="preserve">
+    <value>包含子文件夾</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
+    <value>瀏覽…</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
+    <value>請選擇一個文件夾。</value>
+  </data>
+  <data name="CustomCleanupRuleWindow_Error_Extensions" xml:space="preserve">
+    <value>請至少輸入一個文件後綴。</value>
+  </data>
+  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
+    <value>請至少選擇一個操作。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
+    <value>所選操作已完成。</value>
+  </data>
+  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
+    <value>無法完成所選操作。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>系統美化</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>替換部分和更改系統UI樣式。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Title" xml:space="preserve">
+    <value>資源管理器與界面</value>
+  </data>
+  <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
+    <value>調整任務欄、資源管理器及界面體驗。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Title" xml:space="preserve">
+    <value>性能優化</value>
+  </data>
+  <data name="WindowsOptimization_Category_Performance_Description" xml:space="preserve">
+    <value>修改系統性能與響應相關設置。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
+    <value>系統服務</value>
+  </data>
+  <data name="WindowsOptimization_Category_Services_Description" xml:space="preserve">
+    <value>禁用佔用資源的後臺服務。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>網絡加速</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>優化網絡設置以提升網絡速度和響應性能。</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
+    <value>垃圾清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
+    <value>刪除緩存、臨時文件與其他殘留。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Title" xml:space="preserve">
+    <value>緩存清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCache_Description" xml:space="preserve">
+    <value>清理各種應用程序和系統的緩存文件，釋放存儲空間。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Title" xml:space="preserve">
+    <value>系統文件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemFiles_Description" xml:space="preserve">
+    <value>清理臨時文件、日誌、崩潰轉儲等系統文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Title" xml:space="preserve">
+    <value>系統組件清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupSystemComponents_Description" xml:space="preserve">
+    <value>清理 Windows 更新緩存、組件存儲等系統組件文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Title" xml:space="preserve">
+    <value>性能清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupPerformance_Description" xml:space="preserve">
+    <value>清理可能影響系統性能的文件，如預取文件等。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Title" xml:space="preserve">
+    <value>自定義清理</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupCustom_Description" xml:space="preserve">
+    <value>使用自定義規則清理指定的文件和目錄。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Title" xml:space="preserve">
+    <value>任務欄與開始菜單佈局</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerTaskbar_Description" xml:space="preserve">
+    <value>隱藏搜索框和任務視圖按鈕、禁用任務欄分組並始終顯示托盤圖標。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Title" xml:space="preserve">
+    <value>禁用開始菜單並讓Win鍵打開搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerStartMenu_Description" xml:space="preserve">
+    <value>完全禁用開始菜單。當您按下Win鍵時，將打開搜索而不是開始菜單。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Title" xml:space="preserve">
+    <value>提升資源管理器響應速度</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerResponsiveness_Description" xml:space="preserve">
+    <value>減少菜單延遲、更快關閉無響應程序並默認打開"此電腦"。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Title" xml:space="preserve">
+    <value>文件可見性設置</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerVisibility_Description" xml:space="preserve">
+    <value>在資源管理器中顯示文件擴展名和隱藏文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Title" xml:space="preserve">
+    <value>禁用資源管理器推薦內容</value>
+  </data>
+  <data name="WindowsOptimization_Action_ExplorerSuggestions_Description" xml:space="preserve">
+    <value>關閉雲端內容推薦與提示橫幅。</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
+    <value>將 Windows 鍵改爲打開搜索</value>
+  </data>
+  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
+    <value>修改 Windows 鍵行爲，使其打開搜索而不是開始菜單。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Title" xml:space="preserve">
+    <value>優化多媒體調度</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMultimedia_Description" xml:space="preserve">
+    <value>移除網絡限速並降低系統響應延遲。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Title" xml:space="preserve">
+    <value>改進內存管理</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceMemory_Description" xml:space="preserve">
+    <value>保持系統緩存駐留內存並避免分頁內核驅動。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Title" xml:space="preserve">
+    <value>禁用 Acrylic 與通知中心</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceNotifications_Description" xml:space="preserve">
+    <value>移除登錄界面的 Acrylic 效果並隱藏通知中心。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Title" xml:space="preserve">
+    <value>減少遙測與提示</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformanceTelemetry_Description" xml:space="preserve">
+    <value>禁用廣告 ID、聚焦內容和自動建議。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
+    <value>TCP/IP 和 DNS 優化</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
+    <value>優化 TCP/IP 參數和 DNS 緩存設置，提升網絡連接速度和響應性能。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
+    <value>重置網絡配置</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
+    <value>刷新 DNS 緩存並重置 Winsock 和 TCP/IP 協議棧配置，修復網絡連接問題。</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Title" xml:space="preserve">
+    <value>強制使用高性能電源計劃</value>
+  </data>
+  <data name="WindowsOptimization_Action_PerformancePowerPlan_Description" xml:space="preserve">
+    <value>啓用高性能電源模式並關閉休眠。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Title" xml:space="preserve">
+    <value>禁用診斷相關服務</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesDiagnostics_Description" xml:space="preserve">
+    <value>停止並禁用體驗改善、診斷中心與傳遞優化服務。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
+    <value>禁用 SysMain</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSysMain_Description" xml:space="preserve">
+    <value>關閉 Superfetch/SysMain，減少後臺磁盤佔用。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Title" xml:space="preserve">
+    <value>禁用 Windows 搜索索引</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesSearch_Description" xml:space="preserve">
+    <value>停止 Windows Search 服務以防止更新索引。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Title" xml:space="preserve">
+    <value>禁用遠程註冊表</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesRemoteRegistry_Description" xml:space="preserve">
+    <value>通過禁用遠程註冊表訪問來提升安全性。</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Title" xml:space="preserve">
+    <value>禁用錯誤報告</value>
+  </data>
+  <data name="WindowsOptimization_Action_ServicesErrorReporting_Description" xml:space="preserve">
+    <value>停止 Windows 錯誤報告，防止收集並上傳崩潰數據。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Title" xml:space="preserve">
+    <value>清理遠程桌面緩存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRemoteDesktop_Description" xml:space="preserve">
+    <value>刪除遠程桌面客戶端生成的緩存文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Title" xml:space="preserve">
+    <value>清理 Windows 更新緩存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupWindowsUpdate_Description" xml:space="preserve">
+    <value>刪除已下載的更新文件和傳遞優化緩存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Title" xml:space="preserve">
+    <value>清理瀏覽器緩存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>清理各種應用程序留下的臨時文件和日誌。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>應用殘留文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
+    <value>移除 IE / Edge 的緩存和 Cookie 文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Title" xml:space="preserve">
+    <value>清理縮略圖緩存</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupThumbnailCache_Description" xml:space="preserve">
+    <value>刪除資源管理器縮略圖數據庫與 D3D 着色器緩存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Title" xml:space="preserve">
+    <value>清理 .NET 本地鏡像</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDotNet_Description" xml:space="preserve">
+    <value>刪除緩存的 .NET Native 鏡像以釋放磁盤空間。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Title" xml:space="preserve">
+    <value>刪除日誌與診斷數據</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>掃描系統盤上的大文件，找出佔用大量空間的項。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>大文件掃描</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>識別並管理系統上的大文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>大文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLogs_Description" xml:space="preserve">
+    <value>清理 Windows 日誌、錯誤報告與診斷跟蹤。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Title" xml:space="preserve">
+    <value>刪除崩潰轉儲</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCrashDumps_Description" xml:space="preserve">
+    <value>移除系統崩潰後生成的內存轉儲文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Title" xml:space="preserve">
+    <value>清理 Defender 掃描記錄</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupDefender_Description" xml:space="preserve">
+    <value>刪除 Windows Defender 的掃描歷史和緩存。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Title" xml:space="preserve">
+    <value>清理臨時文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupTempFiles_Description" xml:space="preserve">
+    <value>清空 Windows 及用戶臨時目錄。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
+    <value>卸載捆綁的 Windows 應用</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
+
+    <value>爲所有用戶卸載部分預裝 UWP 應用程序。</value>
+
+  </data>
+<data name="WindowsOptimization_Action_CleanupRecycleBin_Title" xml:space="preserve">
+    <value>清空回收站</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupRecycleBin_Description" xml:space="preserve">
+    <value>刪除回收站中的文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Title" xml:space="preserve">
+    <value>清理預讀取數據</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupPrefetch_Description" xml:space="preserve">
+    <value>刪除 Windows 預讀取數據以生成新的跟蹤。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Title" xml:space="preserve">
+    <value>清理自定義文件</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupCustom_Description" xml:space="preserve">
+    <value>刪除在選定文件夾中符合配置後綴的文件。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Title" xml:space="preserve">
+    <value>維護組件存儲</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupComponentStore_Description" xml:space="preserve">
+    <value>運行 DISM 清理並刪除 WinSxS 臨時文件。</value>
+  </data>
+  <data name="WindowsOptimization_Category_SelectionSummary" xml:space="preserve">
+    <value>已選擇 {0}/{1} 個操作</value>
+  </data>
+  <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
+    <value>推薦</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>全部暫停</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
+    <value>實現方式和效果原理</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve">
+    <value>實現類型：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+    <value>COM組件註冊 + 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Principle" xml:space="preserve">
+    <value>通過註冊Nilesoft Shell作爲Windows上下文菜單的COM處理程序，攔截系統右鍵菜單的創建和顯示。當用戶右鍵點擊文件或文件夾時，Shell會讀取shell.nss配置文件並應用自定義的主題、透明度、圓角和陰影等樣式設置，實現美化的右鍵菜單效果。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Message" xml:space="preserve">
+    <value>未找到配置文件。請確認已安裝 Nilesoft Shell。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileNotFound_Title" xml:space="preserve">
+    <value>未找到配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Message" xml:space="preserve">
+    <value>設置已成功應用。重啓文件資源管理器後生效。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SettingsApplied_Title" xml:space="preserve">
+    <value>設置已應用</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToApplySettings_Message" xml:space="preserve">
+    <value>應用設置失敗：{0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Error_Title" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_COMRegistration" xml:space="preserve">
+    <value>1. COM 組件註冊：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ShellExeCommand" xml:space="preserve">
+    <value>   shell.exe -register -treat -restart</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Path" xml:space="preserve">
+    <value>    路徑：{0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFile" xml:space="preserve">
+    <value>2. 配置文件（shell.nss）：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFilePath" xml:space="preserve">
+    <value>    配置文件路徑：{0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileSyntax" xml:space="preserve">
+    <value>    使用類似 CSS 的語法來定義菜單樣式</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ConfigFileExample" xml:space="preserve">
+    <value>3. 配置文件格式示例：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_ThemeExample" xml:space="preserve">
+    <value>theme 
+   {
+       background-color: # 2d2d2d;
+       text-color: # ffffff;
+       corner-radius: 5px;
+       shadow: true;
+       透明度: true;
+}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_WorkingPrinciple" xml:space="preserve">
+    <value>4. 工作原理：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle1" xml:space="preserve">
+    <value>    - Shell.dll 以 COM 組件方式註冊到系統</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle2" xml:space="preserve">
+    <value>    - 實現 IContextMenu 接口以攔截右鍵菜單創建</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle3" xml:space="preserve">
+    <value>    - 讀取 shell.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle4" xml:space="preserve">
+    <value>    - 應用自定義樣式（主題、圓角、陰影等）</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_Principle5" xml:space="preserve">
+    <value>    - 渲染美化後的右鍵菜單</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectDescription" xml:space="preserve">
+    <value>5. 效果說明：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectAutoTheme" xml:space="preserve">
+    <value>    - 自動主題：跟隨系統主題（明/暗）</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectTransparency" xml:space="preserve">
+    <value>    - 透明度：啓用菜單背景透明效果</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectRoundedCorners" xml:space="preserve">
+    <value>    - 圓角：爲菜單項添加圓角邊框</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Details_EffectShadows" xml:space="preserve">
+    <value>    - 陰影：爲菜單添加陰影以增強層次感</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
+    <value>配置文件編輯器</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
+    <value>shell.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
+    <value>主題。nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve">
+    <value>圖像。nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve">
+    <value>修改。nss</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>操作詳情</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>技術實現細節</value>
+  </data>
+  <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
+    <value>實現類型：</value>
+  </data>
+  <data name="ActionDetailsWindow_Close_Button" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
+    <value>預計可清理大小: {0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_EstimatedCleanupSize_Pending" xml:space="preserve">
+    <value>點擊掃描以計算可清理大小</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
+    <value>正在執行：{0}</value>
+  </data>
+  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
+    <value>正在卸載所選應用…</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>展開全部</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>摺疊全部</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Title" xml:space="preserve">
+    <value>菜單樣式設置</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Title" xml:space="preserve">
+    <value>主題</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Auto" xml:space="preserve">
+    <value>自動（跟隨系統主題）</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Light" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Classic" xml:space="preserve">
+    <value>經典</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Theme_Modern" xml:space="preserve">
+    <value>現代</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Title" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Transparency_Enable" xml:space="preserve">
+    <value>啓用透明效果</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Title" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_RoundedCorners" xml:space="preserve">
+    <value>圓角</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Appearance_Shadows" xml:space="preserve">
+    <value>陰影</value>
+  </data>
+  <data name="SystemBeautification_MenuStyleSettings_Apply" xml:space="preserve">
+    <value>應用</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Theme_Description" xml:space="preserve">
+    <value>選擇右鍵菜單的主題。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Transparency_Description" xml:space="preserve">
+    <value>爲右鍵菜單啓用透明效果。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_Appearance_Description" xml:space="preserve">
+    <value>自定義右鍵菜單的外觀。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ShellNotFound" xml:space="preserve">
+    <value>未找到 Shell.exe。請確保已安裝 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ConfigNotFound" xml:space="preserve">
+    <value>未找到配置文件。請確保已安裝 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_EnableError" xml:space="preserve">
+    <value>啓用經典菜單失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_RestoreError" xml:space="preserve">
+    <value>恢復默認菜單失敗。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Beautification_ApplyError" xml:space="preserve">
+    <value>應用樣式設置失敗。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>切換到現代菜單</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>應用經典樣式並重啓資源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>切換到默認右鍵菜單</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>恢復默認樣式並重啓資源管理器。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>鼠標外觀</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>應用自定義光標樣式，並可跟隨系統明暗主題。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>啓用主題跟隨光標樣式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>根據當前 Windows 明暗模式自動應用對應的自定義光標方案。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>禁用主題跟隨光標樣式</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>恢復備份的光標方案，並停止按系統主題自動切換。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>應用新式右鍵菜單</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>替換系統自帶默認右鍵菜單，效果更好。</value>
+  </data>
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>Shell 集成</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>增強的 Windows Shell 集成，包含右鍵菜單美化和鼠標樣式自定義</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>啓用現代右鍵菜單</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>啓用 Nilesoft Shell 以美化 Windows 右鍵菜單，使用現代風格</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>禁用現代右鍵菜單</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>註銷 Nilesoft Shell 並恢復默認的 Windows 右鍵菜單</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>應用 Windows 11 光標樣式</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>應用 Windows 11 風格的光標主題，支持高 DPI</value>
+  </data>
+<data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
+    <value>電池最大充電容量。</value>
+  </data>
+
+  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
+    <value>電池健康</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
+    <value>電池充電（+）或放電（-）的最大速率。</value>
+  </data>
+
+  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
+    <value>最大充放電功率</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
+    <value>電池充電（+）或放電（-）的最小速率。</value>
+  </data>
+
+  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
+    <value>最小充放電功率</value>
+  </data>
+
+  <data name="Compact" xml:space="preserve">
+    <value>緊湊視圖</value>
+  </data>
+
+  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
+    <value>系統美化</value>
+  </data>
+
+  <data name="StatusTrayPopup_MaxDischargeRate" xml:space="preserve">
+    <value>最大充放電功率</value>
+  </data>
+
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>使用時間</value>
+  </data>
+
+  <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
+    <value>最小充放電功率</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
+    <value>調整 Windows 透明度效果。</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
+    <value>視覺效果</value>
+  </data>
+
+  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
+    <value>啓用透明度效果</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_DisableClassic" xml:space="preserve">
+    <value>禁用經典菜單</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_EnableClassic" xml:space="preserve">
+    <value>啓用經典菜單</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Install" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_OpenStyleSettings" xml:space="preserve">
+    <value>打開樣式設置</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_RestoreDefault" xml:space="preserve">
+    <value>恢復默認</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_Installed" xml:space="preserve">
+    <value>已安裝</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_InstalledButNotRegistered" xml:space="preserve">
+    <value>已安裝但未啓用</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Status_NotInstalled" xml:space="preserve">
+    <value>未安裝</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Subtitle" xml:space="preserve">
+    <value>自定義右鍵菜單的外觀和行爲。</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Title" xml:space="preserve">
+    <value>右鍵菜單樣式</value>
+  </data>
+
+  <data name="SystemBeautification_RightClick_Uninstall" xml:space="preserve">
+    <value>卸載</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
+    <value>自定義 Windows 外觀和行爲。</value>
+  </data>
+
+  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
+    <value>Windows 美化</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
+    <value>加載失敗：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+    <value>正在加載應用，請稍候...</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
+    <value>發佈者：{0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_InstallError" xml:space="preserve">
+    <value>安裝 shell 失敗。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_Beautification_UninstallError" xml:space="preserve">
+    <value>卸載 shell 失敗。</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
+    <value>已釋放 {0}，用時 {1} 秒</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Description" xml:space="preserve">
+    <value>清理常見的用戶註冊表歷史記錄（運行 MRU、最近文檔、打開/保存對話框、已輸入路徑）。這不會刪除系統關鍵條目。</value>
+  </data>
+
+  <data name="WindowsOptimization_Action_CleanupRegistry_Title" xml:space="preserve">
+    <value>註冊表 MRU/歷史記錄清理</value>
+  </data>
+
+  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
+    <value>系統美化</value>
+  </data>
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+    <value>正在執行 {0}%</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
+    <value>操作已取消</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
+    <value>錯誤詳情: {0}</value>
+  </data>
+
+  <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>顯示隱藏的下載</value>
+  </data>
+
+  <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
+    <value>顯示隱藏的下載</value>
+  </data>
+
+  <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
+    <value>選擇語言</value>
+  </data>
+
+  <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
+    <value>未連接</value>
+  </data>
+
+  <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
+    <value>同步區域</value>
+  </data>
+<data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>使用 Windows 內置的註冊表清理功能</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (刷新DNS緩存)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (重置Winsock協議棧)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (重置TCP/IP協議棧)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>插件擴展</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>安裝和管理插件以擴展功能</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>插件總數</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>已安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>可更新</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>商店狀態</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>正在檢查插件可用性...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>有 {0} 個插件更新可安裝。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>當前源中還有 {0} 個額外插件可用。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>正在等待加載插件元數據。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>當前檢測到的插件均已是最新版本。</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>可安裝更新</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>可安裝插件</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>加載元數據</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>已是最新</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>作者：{0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>快速打開</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>優化</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>更新</value>
+  </data>
+
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>已安裝</value>
+  </data>
+
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>無法卸載</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>插件設置</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>插件名稱</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>插件描述</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>此插件沒有可配置的設置。</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>未找到插件: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>作者: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>插件配置界面格式不正確。</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>加載插件設置時出錯: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>搜索插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>已安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>未安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>沒有可用的插件</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>插件商城目前爲空，敬請期待未來的插件更新</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>卸載</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>打開</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>語言：</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>使用應用默認語言</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>找到 {0} 個插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>插件安裝成功</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>安裝失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>無法安裝插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>插件卸載成功</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>插件已成功卸載</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>卸載失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>無法卸載插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>打開失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>無法打開插件：{0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>請先安裝插件</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>插件需要先安裝才能使用</value>
+  </data>
+<data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>需要最低主機版本 {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>永久刪除</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
+    <value>插件將被永久刪除。此操作無法撤銷。</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>更新失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>插件更新失敗，請檢查網絡連接後重試</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>更新成功</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>插件已成功更新</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>正在更新插件</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>正在下載並更新插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>全部更新</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>運行插件</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>插件已啓動</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>插件已卸載</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>插件將在程序關閉時刪除</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>刪除失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>刪除插件時發生錯誤</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>配置失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>插件已安裝但未加載，請嘗試重啓應用程序</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>無配置選項</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>此插件沒有配置選項</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>不支持配置</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>此插件不支持配置</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>插件狀態已重置</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>所有插件的安裝狀態已清除</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>批量更新完成</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>所有插件已處理完畢。</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>正在準備下載...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>本地</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>有新版本可用</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>版本：</value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>發佈日期：</value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>更新內容：</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>刷新插件列表</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>未找到符合搜索條件的插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>更新所有可用插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>一鍵安裝</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>安裝所有可用插件</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>正在安裝全部...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>正在安裝 {0} 個插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>一鍵安裝完成</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>已安裝 {0} 個插件。</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>一鍵安裝失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>安裝插件失敗：{0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>正在更新全部...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>正在更新...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>打開文件夾</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>複製插件 ID</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>未找到文件夾</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>該插件目錄尚不存在。</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>已複製</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>插件 ID“{0}”已複製到剪貼板。</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>下載完成</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>正在下載...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>正在下載... {0:F1} / {1:F1} MB ({2:F0}%)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
+    <value>批量導入</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
+    <value>從本地ZIP文件導入插件</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
+    <value>從文件導入</value>
+  </data>
+  <data name="PluginExtensionsPage_SelectPluginFiles" xml:space="preserve">
+    <value>選擇插件文件 (.zip)</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccess" xml:space="preserve">
+    <value>成功導入 {0} 個插件</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportSuccessMessage" xml:space="preserve">
+    <value>{0} 個插件已成功導入並可用</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailed" xml:space="preserve">
+    <value>批量導入失敗</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
+    <value>無法導入插件: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
+    <value>正在導入插件...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
+    <value>正在導入 {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
+    <value>正在處理 {0}...</value>
+  </data>
+  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
+    <value>網絡加速</value>
+  </data>
+  <data name="Plugin_Name_ViveTool" xml:space="preserve">
+    <value>ViVeTool</value>
+  </data>
+  <data name="Plugin_Name_Tools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
+    <value>實時網絡加速和優化功能</value>
+  </data>
+  <data name="Plugin_Description_ViveTool" xml:space="preserve">
+    <value>使用 ViVeTool 管理 Windows 功能標誌</value>
+  </data>
+  <data name="Plugin_Description_Tools" xml:space="preserve">
+    <value>系統優化和實用工具</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
+    <value>使用說明</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve">
+    <value>此編輯器用於直接編輯 shell.nss 配置文件。修改後，請單擊</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve">
+    <value>應用</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve">
+    <value>按鈕以保存所有更改並重啓資源管理器使配置生效。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve">
+    <value>• 配置文件路徑：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve">
+    <value>• 修改配置後，需要重啓資源管理器（Explorer）才能生效。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
+    <value>應用</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve">
+    <value>shell.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve">
+    <value>shell.nss 文件用於定義右鍵菜單的整體結構和行爲。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve">
+    <value>打開 shell.nss 文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve">
+    <value>打開所在文件夾</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Path" xml:space="preserve">
+    <value>路徑：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve">
+    <value>UI 設置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve">
+    <value>基礎主題設置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve">
+    <value>背景顏色：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve">
+    <value>文本顏色：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve">
+    <value>懸停效果設置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve">
+    <value>懸停背景：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve">
+    <value>懸停文本：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve">
+    <value>選中效果設置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve">
+    <value>選中背景：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve">
+    <value>選中文本：</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve">
+    <value>從UI更新文本</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve">
+    <value>從文本加載</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve">
+    <value>文本編輯器</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve">
+    <value>在外部編輯器打開</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve">
+    <value>images.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve">
+    <value>images.nss 文件用於定義右鍵菜單的圖標和圖像。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve">
+    <value>打開 images.nss 文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve">
+    <value>modify.nss 配置文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve">
+    <value>modify.nss 文件用於修改和自定義右鍵菜單項</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve">
+    <value>打開 modify.nss 文件</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>當前沒有可用的工具。請在應用程序目錄下的 tools 文件夾中添加工具。</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>工具將在 tools 目錄中可用後顯示在這裏。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve">
+    <value>基礎目錄: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve">
+    <value>未找到配置文件目錄</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve">
+    <value>未找到文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve">
+    <value>無法讀取配置文件: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve">
+    <value>此文件用於定義主題相關的樣式設置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve">
+    <value>主題顏色定義</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve">
+    <value>基礎顏色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve">
+    <value>懸停顏色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve">
+    <value>選中顏色</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve">
+    <value>更多主題配置選項請參考 Nilesoft Shell 官方文檔</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve">
+    <value>確定要應用配置嗎？
+
+這將：
+1. 保存所有配置文件
+2. 重啓資源管理器（Explorer）使配置生效
+
+注意：重啓將關閉所有打開的文件夾窗口和任務欄，然後自動重新啓動。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve">
+    <value>確認應用配置</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve">
+    <value>無法保存配置文件：
+{0}
+
+請檢查文件權限後重試。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve">
+    <value>保存失敗</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve">
+    <value>已成功保存以下文件：
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve">
+    <value>保存失敗的文件：
+{0}
+
+</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve">
+    <value>資源管理器已重啓，配置已生效！</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve">
+    <value>部分應用成功</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve">
+    <value>應用成功</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve">
+    <value>應用配置時出錯：
+{0}
+
+您可以手動保存文件並在任務管理器中重啓 Explorer 進程。</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve">
+    <value>應用失敗</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve">
+    <value>文件不存在或路徑無效</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve">
+    <value>打開文件失敗</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve">
+    <value>使用系統默認程序打開文件</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve">
+    <value>無法打開文件: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve">
+    <value>打開文件失敗</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve">
+    <value>文件夾不存在或路徑無效</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve">
+    <value>打開文件夾失敗</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve">
+    <value>無法打開文件夾: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve">
+    <value>打開文件夾失敗</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>型號</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>功耗</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>電量</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>健康度</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>速率</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>最低速率</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>最高速率</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>循環</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>容量</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>滿充容量</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>設計容量</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>核心 / 顯存頻率</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>核心電壓</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>電壓範圍</value>
+  </data>
+  <data name="SensorsControl_AvgTemp" xml:space="preserve">
+    <value>平均溫度</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>應用側邊欄</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>系統</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>功率範圍</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>例如: 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>例如: C:\Drivers</value>
+  </data>
+<data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+    <value>啓用透明效果</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
+    <value>爲右鍵菜單啓用透明效果</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
+    <value>顯示文件擴展名</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
+    <value>在文件資源管理器中顯示文件擴展名</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
+    <value>顯示隱藏文件</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
+    <value>在文件資源管理器中顯示隱藏的文件和文件夾</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>打開到快速訪問</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>打開文件資源管理器時默認顯示快速訪問而非此電腦</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>顯示預覽窗格</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>在文件資源管理器中顯示預覽窗格</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>請至少選擇一個要清理的項目。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>應用 {0} 失敗：{1}</value>
+  </data>
+<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即將推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>擴展商店將在未來更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>無法打開插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>強制軟件渲染</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>檢測到遠程桌面或無顯示器輸出時使用軟件渲染。建議重啓。</value></data></root>

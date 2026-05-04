@@ -7,7 +7,6 @@ using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Settings;
@@ -88,43 +87,11 @@ public class WindowsOptimizationService
     public IReadOnlyList<WindowsOptimizationCategoryDefinition> GetCategories()
     {
         var list = new List<WindowsOptimizationCategoryDefinition>(_categoryProvider.BuildCategories());
-        
+
         try
         {
-            var pluginManager = IoCContainer.Resolve<IPluginManager>();
-            var installedPlugins = pluginManager.GetRegisteredPlugins()
-                .Where(p => pluginManager.IsInstalled(p.Id));
-            
-            foreach (var plugin in installedPlugins)
-            {
-                try
-                {
-                    WindowsOptimizationCategoryDefinition? category = null;
-                    
-                    if (plugin is IOptimizationCategoryProvider provider)
-                    {
-                        category = provider.GetOptimizationCategory();
-                    }
-                    else if (plugin is PluginBase pluginBase)
-                    {
-                        category = pluginBase.GetOptimizationCategory();
-                    }
-                    
-                    if (category != null)
-                    {
-                        if (string.IsNullOrEmpty(category.PluginId))
-                        {
-                            category = category with { PluginId = plugin.Id };
-                        }
-                        list.Add(category);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Failed to get optimization category from plugin {plugin.Id}: {ex.Message}", ex);
-                }
-            }
+            var extender = IoCContainer.Resolve<IOptimizationCategoryExtender>();
+            list.AddRange(extender.GetPluginCategories());
         }
         catch (Exception ex)
         {

@@ -94,8 +94,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unhook keyboard hook in NativeWindowsMessageListener: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to unhook keyboard hook in NativeWindowsMessageListener: {ex.Message}", ex);
         }
 
         try
@@ -104,8 +103,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unregister device notification: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to unregister device notification: {ex.Message}", ex);
         }
 
         try
@@ -114,8 +112,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unregister console display state notification: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to unregister console display state notification: {ex.Message}", ex);
         }
 
         try
@@ -124,8 +121,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unregister lid switch state notification: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to unregister lid switch state notification: {ex.Message}", ex);
         }
 
         try
@@ -134,8 +130,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unregister power saving state notification: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to unregister power saving state notification: {ex.Message}", ex);
         }
 
         _kbHook = default;
@@ -150,8 +145,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to release handle in NativeWindowsMessageListener: {ex.Message}", ex);
+            Log.Instance.Warning($"Failed to release handle in NativeWindowsMessageListener: {ex.Message}", ex);
         }
 
         return Task.CompletedTask;
@@ -173,16 +167,14 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
                 {
                     case PInvoke.DBT_DEVICEARRIVAL:
                         {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Event received: Device Arrival [name={name}]");
+                            Log.Instance.Info($"Event received: Device Arrival [name={name}]");
 
                             OnDeviceConnected(name);
                             break;
                         }
                     case PInvoke.DBT_DEVICEREMOVECOMPLETE:
                         {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Event received: Device Removal Complete [name={name}]");
+                            Log.Instance.Info($"Event received: Device Removal Complete [name={name}]");
 
                             OnDeviceDisconnected(name);
                             break;
@@ -191,8 +183,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
                 if (devBroadcastDeviceInterface.dbcc_classguid == PInvoke.GUID_DISPLAY_DEVICE_ARRIVAL)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Event received: Display Device Arrival");
+                    Log.Instance.Info($"Event received: Display Device Arrival");
 
                     OnDisplayDeviceArrival();
                 }
@@ -206,16 +197,14 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
                     {
                         case PInvoke.DBT_DEVICEARRIVAL:
                             {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Event received: Monitor Connected");
+                                Log.Instance.Info($"Event received: Monitor Connected");
 
                                 OnMonitorConnected(isExternal);
                                 break;
                             }
                         case PInvoke.DBT_DEVICEREMOVECOMPLETE:
                             {
-                                if (Log.Instance.IsTraceEnabled)
-                                    Log.Instance.Trace($"Event received: Monitor Disconnected");
+                                Log.Instance.Info($"Event received: Monitor Disconnected");
 
                                 OnMonitorDisconnected(isExternal);
                                 break;
@@ -236,16 +225,14 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
                 {
                     case PInvokeExtensions.CONSOLE_DISPLAY_STATE.On:
                         {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Event received: Monitor On");
+                            Log.Instance.Info($"Event received: Monitor On");
 
                             OnMonitorOn();
                             break;
                         }
                     case PInvokeExtensions.CONSOLE_DISPLAY_STATE.Off:
                         {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Event received: Monitor Off");
+                            Log.Instance.Info($"Event received: Monitor Off");
 
                             OnMonitorOff();
                             break;
@@ -258,15 +245,13 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
                 var isOpened = str.Data[0] != 0;
                 if (isOpened)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Event received: Lid Opened");
+                    Log.Instance.Info($"Event received: Lid Opened");
 
                     OnLidOpened();
                 }
                 else
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Event received: Lid Closed");
+                    Log.Instance.Info($"Event received: Lid Closed");
 
                     OnLidClosed();
                 }
@@ -274,8 +259,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
             if (str.PowerSetting == PInvoke.GUID_POWER_SAVING_STATUS && str.Data[0] == 0)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Event received: Battery Saver enabled");
+                Log.Instance.Info($"Event received: Battery Saver enabled");
 
                 OnBatterySaverEnabled();
             }
@@ -296,8 +280,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
 
         if (completed == delayTask)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Delay expired, state might be inconsistent! [IsMonitorOn={IsMonitorOn}, IsLidOpen={IsLidOpen}]");
+            Log.Instance.Warning($"Delay expired, state might be inconsistent! [IsMonitorOn={IsMonitorOn}, IsLidOpen={IsLidOpen}]");
         }
     }
 

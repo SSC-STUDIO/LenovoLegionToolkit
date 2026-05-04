@@ -10974,5 +10974,77 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("SensorsControl_RateRange", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Report.
+        /// </summary>
+        public static string CrashReportNotification_DeleteReport {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_DeleteReport", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A crash report has been saved to disk. You can review the report details below. Reports are not sent automatically..
+        /// </summary>
+        public static string CrashReportNotification_Description {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The application crashed during the previous session.
+        /// </summary>
+        public static string CrashReportNotification_Message {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to open crash report: {0}.
+        /// </summary>
+        public static string CrashReportNotification_OpenFailed {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_OpenFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open Report.
+        /// </summary>
+        public static string CrashReportNotification_OpenReport {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_OpenReport", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Crash report saved to: {0}.
+        /// </summary>
+        public static string CrashReportNotification_ReportPath {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_ReportPath", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Crash Report Detected.
+        /// </summary>
+        public static string CrashReportNotification_Title {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load crash report details..
+        /// </summary>
+        public static string CrashReportNotification_UnableToLoad {
+            get {
+                return ResourceManager.GetString("CrashReportNotification_UnableToLoad", resourceCulture);
+            }
+        }
     }
 }

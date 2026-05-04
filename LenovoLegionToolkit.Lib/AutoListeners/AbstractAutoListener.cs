@@ -109,8 +109,7 @@ protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
                 }
                 catch (Exception ex)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Error during AbstractAutoListener disposal", ex);
+                    Log.Instance.Error($"Error during AbstractAutoListener disposal", ex);
                 }
             }
             _disposed = true;

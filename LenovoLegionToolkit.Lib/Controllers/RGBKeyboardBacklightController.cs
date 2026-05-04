@@ -79,8 +79,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
                         return;
                     }
 
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Can't take ownership.", ex);
+                    Log.Instance.Warning($"Can't take RGB keyboard ownership.", ex);
 
                     throw;
                 }

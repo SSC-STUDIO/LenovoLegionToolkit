@@ -1,6 +1,5 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -1919,7 +1918,7 @@
   <data name="WhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
     <value>إضاءة لوحة المفاتيح الخلفية</value>
   </data>
-<data name="DashboardPage_Customize" xml:space="preserve">
+  <data name="DashboardPage_Customize" xml:space="preserve">
     <value>تخصيص</value>
   </data>
   <data name="TurnOffMonitorsControl_Title" xml:space="preserve">
@@ -2699,7 +2698,7 @@
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>أفرج عن {0} في {1}s</value>
   </data>
-<data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
+  <data name="MenuStyleSettingsWindow_Implementation_Type_Value" xml:space="preserve">
     <value>تسجيل مكون COM   ملف التكوين</value>
   </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
@@ -2796,35 +2795,27 @@
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>تنفيذ {0}%</value>
   </data>
-
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
     <value>تم إلغاء العملية</value>
   </data>
-
   <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
     <value>تفاصيل الخطأ: {0}</value>
   </data>
-
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>عرض التنزيلات المخفية</value>
   </data>
-
   <data name="PackagesPage_ShowHiddenDownloads" xml:space="preserve">
     <value>عرض التنزيلات المخفية</value>
   </data>
-
   <data name="LanguageSelectorWindow_SelectLanguage" xml:space="preserve">
     <value>اختر اللغة</value>
   </data>
-
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>غير متصل</value>
   </data>
-
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>مزامنة المناطق</value>
   </data>
-
   <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
     <value>سيتم حذف المكون الإضافي نهائيًا. لا يمكن التراجع عن هذا الإجراء.</value>
   </data>
@@ -2861,26 +2852,1023 @@
   <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
     <value>معالجة {0}...</value>
   </data>
-
-<data name="DiscreteGPUControl_Message" xml:space="preserve"><value>قم بتعطيل بطاقة الرسوميات المنفصلة إذا كانت نشطة بلا داع.</value></data><data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve"><value>ملحقات الإضافات</value></data><data name="NavigationItemsSettingsWindow_Title" xml:space="preserve"><value>إعدادات عناصر التنقل</value></data><data name="NavigationItemsSettingsWindow_Description" xml:space="preserve"><value>قم بتكوين العناصر التي تظهر في شريط التنقل الجانبي. ستظل لوحة التحكم والإعدادات مرئية دائمًا.</value></data><data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل للوحة المفاتيح</value></data><data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل للبطارية</value></data><data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل للأتمتة</value></data><data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل للماكرو</value></data><data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل لتحسين النظام</value></data><data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل لملحقات الإضافات</value></data><data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve"><value>إظهار أو إخفاء عنصر التنقل حول</value></data><data name="SettingsPage_NavigationItems_Title" xml:space="preserve"><value>عناصر التنقل</value></data><data name="SettingsPage_NavigationItems_Message" xml:space="preserve"><value>تكوين العناصر التي تظهر في الشريط الجانبي</value></data><data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve"><value>جارٍ البحث عن حزم التعريف المتاحة، يرجى الانتظار...</value></data><data name="WindowsOptimizationPage_NetworkError" xml:space="preserve"><value>حدث خطأ في الشبكة. إعادة المحاولة تلقائيًا...</value></data><data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve"><value>إعادة المحاولة لجلب حزم التعريف...</value></data><data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve"><value>معلومات التنظيف</value></data><data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve"><value>عرض تقدم عملية التنظيف والحجم المقدر.</value></data><data name="SettingsPage_Appearance_Title" xml:space="preserve"><value>ابدأ مصغّرًا في علبة النظام عند تسجيل الدخول إلى Windows.</value></data><data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve"><value>مسح</value></data><data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve"><value>تحميل التعريفات</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve"><value>تأكيد الأمان</value></data><data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve"><value>سيؤدي تنظيف النظام إلى حذف الملفات المؤقتة وملفات التخزين المؤقت بشكل دائم. وعلى الرغم من أنه عادةً آمن، فإننا نوصي بالتأكد من وجود نسخ احتياطية للبيانات المهمة. هل ترغب في المتابعة؟</value></data><data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve"><value>الإضافات</value></data><data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve"><value>إدارة إضافات وأدوات تحسين النظام</value></data><data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve"><value>لا توجد إضافات متاحة</value></data><data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve"><value>قم بتثبيت الإضافات من صفحة إضافات المكوّنات لتعزيز وظائف تحسين النظام.</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>قريبًا</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>سوق الإضافات سيكون متاحًا في تحديث مستقبلي.</value></data><data name="PluginExtensionsPage_Loading" xml:space="preserve"><value>جارٍ تحميل الإضافات...</value></data><data name="ShellIntegration_Category_Title" xml:space="preserve"><value>تكامل الشِل</value></data><data name="ShellIntegration_Category_Description" xml:space="preserve"><value>تكامل محسن للشِل في ويندوز مع تجميل قائمة السياق وتخصيص نمط الفأرة</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>تمكين قائمة السياق الحديثة</value></data><data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>تمكين شِل Nilesoft لتجميل قائمة سياق ويندوز بنمط حديث</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve"><value>تعطيل قائمة السياق الحديثة</value></data><data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve"><value>إلغاء تسجيل شِل Nilesoft واستعادة قائمة سياق ويندوز الافتراضية</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve"><value>تطبيق نمط مؤشر ويندوز 11</value></data><data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve"><value>تطبيق سمة مؤشر نمط ويندوز 11 مع دعم دقة عالية</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve"><value>تسريع الشبكة</value></data><data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve"><value>تحسين إعدادات الشبكة لتحسين سرعة الشبكة واستجابتها.</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve"><value>تحسين TCP/IP و DNS</value></data><data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve"><value>تحسين معلمات TCP/IP وإعدادات ذاكرة التخزين المؤقت لـ DNS لتحسين سرعة الاتصال واستجابته.</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve"><value>إعادة تعيين تكوين الشبكة</value></data><data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve"><value>مسح ذاكرة التخزين المؤقت لـ DNS وإعادة ضبط تكوين Winsock و TCP/IP لإصلاح مشكلات الاتصال بالشبكة.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve"><value>تنظيف الملفات المؤقتة والسجلات التي تركتها التطبيقات المختلفة.</value></data><data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve"><value>بقايا التطبيقات</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve"><value>يفحص الملفات الكبيرة على قرص النظام والتي قد تشغل مساحة كبيرة.</value></data><data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve"><value>فحص الملفات الكبيرة</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve"><value>تحديد وإدارة الملفات الكبيرة على نظامك.</value></data><data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve"><value>الملفات الكبيرة</value></data><data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve"><value>تمكين الإضافات</value></data><data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve"><value>تمكين نظام الإضافات للوصول إلى سوق الملحقات في صفحة الأدوات.</value></data><data name="SettingsPage_Description" xml:space="preserve"><value>قم بتكوين خيارات المظهر والسلوك والوظائف للتطبيق.</value></data><data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve"><value>يمكنك تغيير السطوع باستخدام Fn Space</value></data><data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve"><value>إضاءة لوحة المفاتيح الخلفية</value></data><data name="WinKeyAutomationStepControl_Message" xml:space="preserve"><value>تعطيل مفتاح Windows على لوحة المفاتيح المدمجة.</value></data><data name="WinKeyAutomationStepControl_Title" xml:space="preserve"><value>قفل مفتاح Windows</value></data><data name="WinKeyControl_Message" xml:space="preserve"><value>يعمل فقط على لوحة المفاتيح المدمجة.</value></data><data name="WinKeyControl_Title" xml:space="preserve"><value>قفل مفتاح Windows</value></data><data name="Yes" xml:space="preserve"><value>نعم</value></data><data name="MicrophoneControl_Title" xml:space="preserve"><value>الميكروفون</value></data><data name="MicrophoneControl_Message" xml:space="preserve"><value>عند إيقاف التشغيل، سيتم كتم الميكروفونات.</value></data><data name="MicrophoneAutomationStepControl_Title" xml:space="preserve"><value>الميكروفون</value></data><data name="MicrophoneAutomationStepControl_Message" xml:space="preserve"><value>عند إيقاف التشغيل، سيتم كتم الميكروفونات.</value></data><data name="ResolutionControl_Title" xml:space="preserve"><value>الدقة</value></data><data name="ResolutionControl_Message" xml:space="preserve"><value>تغيير دقة الشاشة المدمجة.</value></data><data name="ResolutionAutomationStepControl_Title" xml:space="preserve"><value>الدقة</value></data><data name="ResolutionAutomationStepControl_Message" xml:space="preserve"><value>تغيير دقة الشاشة المدمجة. 
+  <data name="DiscreteGPUControl_Message" xml:space="preserve">
+    <value>قم بتعطيل بطاقة الرسوميات المنفصلة إذا كانت نشطة بلا داع.</value>
+  </data>
+  <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
+    <value>ملحقات الإضافات</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Title" xml:space="preserve">
+    <value>إعدادات عناصر التنقل</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_Description" xml:space="preserve">
+    <value>قم بتكوين العناصر التي تظهر في شريط التنقل الجانبي. ستظل لوحة التحكم والإعدادات مرئية دائمًا.</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل للوحة المفاتيح</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل للبطارية</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل للأتمتة</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل للماكرو</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل لتحسين النظام</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل لملحقات الإضافات</value>
+  </data>
+  <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
+    <value>إظهار أو إخفاء عنصر التنقل حول</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Title" xml:space="preserve">
+    <value>عناصر التنقل</value>
+  </data>
+  <data name="SettingsPage_NavigationItems_Message" xml:space="preserve">
+    <value>تكوين العناصر التي تظهر في الشريط الجانبي</value>
+  </data>
+  <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
+    <value>جارٍ البحث عن حزم التعريف المتاحة، يرجى الانتظار...</value>
+  </data>
+  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
+    <value>حدث خطأ في الشبكة. إعادة المحاولة تلقائيًا...</value>
+  </data>
+  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
+    <value>إعادة المحاولة لجلب حزم التعريف...</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
+    <value>معلومات التنظيف</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
+    <value>عرض تقدم عملية التنظيف والحجم المقدر.</value>
+  </data>
+  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
+    <value>ابدأ مصغّرًا في علبة النظام عند تسجيل الدخول إلى Windows.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
+    <value>تحميل التعريفات</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
+    <value>تأكيد الأمان</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
+    <value>سيؤدي تنظيف النظام إلى حذف الملفات المؤقتة وملفات التخزين المؤقت بشكل دائم. وعلى الرغم من أنه عادةً آمن، فإننا نوصي بالتأكد من وجود نسخ احتياطية للبيانات المهمة. هل ترغب في المتابعة؟</value>
+  </data>
+  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
+    <value>الإضافات</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
+    <value>إدارة إضافات وأدوات تحسين النظام</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
+    <value>لا توجد إضافات متاحة</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
+    <value>قم بتثبيت الإضافات من صفحة إضافات المكوّنات لتعزيز وظائف تحسين النظام.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
+    <value>قريبًا</value>
+  </data>
+  <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
+    <value>سوق الإضافات سيكون متاحًا في تحديث مستقبلي.</value>
+  </data>
+  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
+    <value>جارٍ تحميل الإضافات...</value>
+  </data>
+  <data name="ShellIntegration_Category_Title" xml:space="preserve">
+    <value>تكامل الشِل</value>
+  </data>
+  <data name="ShellIntegration_Category_Description" xml:space="preserve">
+    <value>تكامل محسن للشِل في ويندوز مع تجميل قائمة السياق وتخصيص نمط الفأرة</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>تمكين قائمة السياق الحديثة</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>تمكين شِل Nilesoft لتجميل قائمة سياق ويندوز بنمط حديث</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
+    <value>تعطيل قائمة السياق الحديثة</value>
+  </data>
+  <data name="ShellIntegration_Action_NilesoftShell_Uninstall_Description" xml:space="preserve">
+    <value>إلغاء تسجيل شِل Nilesoft واستعادة قائمة سياق ويندوز الافتراضية</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Title" xml:space="preserve">
+    <value>تطبيق نمط مؤشر ويندوز 11</value>
+  </data>
+  <data name="ShellIntegration_Action_MouseStyle_W11CC_Description" xml:space="preserve">
+    <value>تطبيق سمة مؤشر نمط ويندوز 11 مع دعم دقة عالية</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Title" xml:space="preserve">
+    <value>تسريع الشبكة</value>
+  </data>
+  <data name="WindowsOptimization_Category_NetworkAcceleration_Description" xml:space="preserve">
+    <value>تحسين إعدادات الشبكة لتحسين سرعة الشبكة واستجابتها.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Title" xml:space="preserve">
+    <value>تحسين TCP/IP و DNS</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkAcceleration_Description" xml:space="preserve">
+    <value>تحسين معلمات TCP/IP وإعدادات ذاكرة التخزين المؤقت لـ DNS لتحسين سرعة الاتصال واستجابته.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Title" xml:space="preserve">
+    <value>إعادة تعيين تكوين الشبكة</value>
+  </data>
+  <data name="WindowsOptimization_Action_NetworkOptimization_Description" xml:space="preserve">
+    <value>مسح ذاكرة التخزين المؤقت لـ DNS وإعادة ضبط تكوين Winsock و TCP/IP لإصلاح مشكلات الاتصال بالشبكة.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
+    <value>تنظيف الملفات المؤقتة والسجلات التي تركتها التطبيقات المختلفة.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupAppLeftovers_Title" xml:space="preserve">
+    <value>بقايا التطبيقات</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>يفحص الملفات الكبيرة على قرص النظام والتي قد تشغل مساحة كبيرة.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>فحص الملفات الكبيرة</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Description" xml:space="preserve">
+    <value>تحديد وإدارة الملفات الكبيرة على نظامك.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CleanupLargeFiles_Title" xml:space="preserve">
+    <value>الملفات الكبيرة</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
+    <value>تمكين الإضافات</value>
+  </data>
+  <data name="SettingsPage_ExtensionsEnabled_Message" xml:space="preserve">
+    <value>تمكين نظام الإضافات للوصول إلى سوق الملحقات في صفحة الأدوات.</value>
+  </data>
+  <data name="SettingsPage_Description" xml:space="preserve">
+    <value>قم بتكوين خيارات المظهر والسلوك والوظائف للتطبيق.</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>يمكنك تغيير السطوع باستخدام Fn Space</value>
+  </data>
+  <data name="WhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>إضاءة لوحة المفاتيح الخلفية</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
+    <value>تعطيل مفتاح Windows على لوحة المفاتيح المدمجة.</value>
+  </data>
+  <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
+    <value>قفل مفتاح Windows</value>
+  </data>
+  <data name="WinKeyControl_Message" xml:space="preserve">
+    <value>يعمل فقط على لوحة المفاتيح المدمجة.</value>
+  </data>
+  <data name="WinKeyControl_Title" xml:space="preserve">
+    <value>قفل مفتاح Windows</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="MicrophoneControl_Title" xml:space="preserve">
+    <value>الميكروفون</value>
+  </data>
+  <data name="MicrophoneControl_Message" xml:space="preserve">
+    <value>عند إيقاف التشغيل، سيتم كتم الميكروفونات.</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Title" xml:space="preserve">
+    <value>الميكروفون</value>
+  </data>
+  <data name="MicrophoneAutomationStepControl_Message" xml:space="preserve">
+    <value>عند إيقاف التشغيل، سيتم كتم الميكروفونات.</value>
+  </data>
+  <data name="ResolutionControl_Title" xml:space="preserve">
+    <value>الدقة</value>
+  </data>
+  <data name="ResolutionControl_Message" xml:space="preserve">
+    <value>تغيير دقة الشاشة المدمجة.</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Title" xml:space="preserve">
+    <value>الدقة</value>
+  </data>
+  <data name="ResolutionAutomationStepControl_Message" xml:space="preserve">
+    <value>تغيير دقة الشاشة المدمجة. 
   
- تحذير: لن يتم تشغيل هذا الإجراء بشكل صحيح إذا كانت الشاشة الداخلية متوقفة.</value></data><data name="DpiScaleControl_Title" xml:space="preserve"><value>نقطة في البوصة</value></data><data name="DpiScaleControl_Message" xml:space="preserve"><value>تغيير حجم العرض على الشاشة المدمجة.</value></data><data name="DpiScaleAutomationStepControl_Title" xml:space="preserve"><value>نقطة في البوصة</value></data><data name="DpiScaleAutomationStepControl_Message" xml:space="preserve"><value>تغيير تكبير الشاشة المدمجة. 
+ تحذير: لن يتم تشغيل هذا الإجراء بشكل صحيح إذا كانت الشاشة الداخلية متوقفة.</value>
+  </data>
+  <data name="DpiScaleControl_Title" xml:space="preserve">
+    <value>نقطة في البوصة</value>
+  </data>
+  <data name="DpiScaleControl_Message" xml:space="preserve">
+    <value>تغيير حجم العرض على الشاشة المدمجة.</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Title" xml:space="preserve">
+    <value>نقطة في البوصة</value>
+  </data>
+  <data name="DpiScaleAutomationStepControl_Message" xml:space="preserve">
+    <value>تغيير تكبير الشاشة المدمجة. 
   
- تحذير: لن يتم تشغيل هذا الإجراء بشكل صحيح إذا كانت الشاشة الداخلية متوقفة.</value></data><data name="DashboardPage_Display_Title" xml:space="preserve"><value>الشاشة</value></data><data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve"><value>إضاءة لوحة المفاتيح الخلفية</value></data><data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve"><value>يمكنك تشغيل الإضاءة الخلفية أو إيقافها باستخدام Fn Space.</value></data><data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve"><value>إضاءة لوحة المفاتيح الخلفية</value></data><data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve"><value>تشغيل الإضاءة الخلفية أو إيقافها.</value></data><data name="PackagesPage_NoMatchingDownloads" xml:space="preserve"><value>لم يتم العثور على تنزيلات مطابقة</value></data><data name="PackagesPage_OnlyShowUpdates" xml:space="preserve"><value>عرض التحديثات فقط</value></data><data name="EditDashboardWindow_Title" xml:space="preserve"><value>تخصيص لوحة التحكم</value></data><data name="Load" xml:space="preserve"><value>تحميل</value></data><data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve"><value>إنشاء مجموعة</value></data><data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve"><value>الاسم</value></data><data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve"><value>قد لا تظهر بعض الميزات على لوحة التحكم اعتمادًا على حالة جهاز الكمبيوتر المحمول وإعداداته.</value></data><data name="PackageControl_Recommended" xml:space="preserve"><value>موصى به</value></data><data name="PackageControl_Downloading" xml:space="preserve"><value>جارٍ التنزيل</value></data><data name="PackageControl_Installing" xml:space="preserve"><value>جارٍ التثبيت</value></data><data name="PackageControl_Completed" xml:space="preserve"><value>تم الاكتمال</value></data><data name="ActionDetailsWindow_NotFound" xml:space="preserve"><value>تعريف الإجراء غير موجود</value></data><data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve"><value>التفاصيل التقنية للتنفيذ غير متوفرة لهذا الإجراء</value></data><data name="ActionDetailsWindow_LoadFailed" xml:space="preserve"><value>فشل التحميل</value></data><data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve"><value>غير معروف</value></data><data name="ActionDetailsWindow_CommandExecution" xml:space="preserve"><value>تنفيذ الأمر</value></data><data name="ActionDetailsWindow_RegistryModification" xml:space="preserve"><value>تعديل السجل</value></data><data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve"><value>إدارة الخدمة</value></data><data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve"><value>تعديل السجل - برنامج PowerShell</value></data><data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve"><value>تنظيف السجل</value></data><data name="ActionDetailsWindow_DISMCommand" xml:space="preserve"><value>??? DISM</value></data><data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve"><value>لم يتم العثور على shell.exe</value></data><data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve"><value>مسار ملف التكوين: غير موجود</value></data><data name="StatusTrayPopup_UsageTime" xml:space="preserve"><value>وقت الاستخدام</value></data><data name="PackageControl_Install" xml:space="preserve"><value>تثبيت</value></data><data name="PackageControl_Uninstall" xml:space="preserve"><value>إلغاء التثبيت</value></data><data name="PackageControl_InstallError_Title" xml:space="preserve"><value>فشل التثبيت</value></data><data name="PackageControl_InstallError_FileNotFound" xml:space="preserve"><value>الملف غير موجود، يرجى التنزيل أولاً</value></data><data name="PackageControl_InstallStarted_Title" xml:space="preserve"><value>بدأ التثبيت</value></data><data name="PackageControl_InstallStarted_Message" xml:space="preserve"><value>بدء المثبت: {0}</value></data><data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve"><value>خطأ في فحص التوافق</value></data><data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve"><value>فشل التطبيق في قراءة معلومات الجهاز أثناء بدء التشغيل. يرجى التحقق من تفاصيل الخطأ أدناه وتجربة خطوات استكشاف الأخطاء وإصلاحها إذا لزم الأمر.</value></data><data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve"><value>خطوات استكشاف الأخطاء وإصلاحها</value></data><data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve"><value>تأكد من أن خدمة إدارة أجهزة ويندوز (WMI) تعمل: افتح الخدمات (services.msc) وتحقق من أن خدمة "إدارة أجهزة ويندوز" تعمل.</value></data><data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve"><value>شغّل التطبيق كمسؤول لضمان وجود الأذونات الكافية للوصول إلى سجل النظام و WMI.</value></data><data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve"><value>تحقق من موارد النظام: أغلق التطبيقات الأخرى المكثفة الاستخدام للموارد وحاول مرة أخرى.</value></data><data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve"><value>راجع ملف السجل لمزيد من المعلومات التفصيلية عن الخطأ بالنقر على "فتح السجل" أدناه.</value></data><data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve"><value>فتح ملف السجل</value></data><data name="SettingsPage_UpdateRepository_Title" xml:space="preserve"><value>تحديث المستودع</value></data><data name="SettingsPage_UpdateRepository_Message" xml:space="preserve"><value>قم بتكوين مستودع GitHub للتحقق من التحديثات. اتركه فارغًا لاستخدام الافتراضي.</value></data><data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve"><value>مالك المستودع</value></data><data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve"><value>على سبيل المثال، SSC-STUDIO</value></data><data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve"><value>اسم المستودع</value></data><data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve"><value>مثل، Lenovo Legion Toolkit</value></data><data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve"><value>إيقاف التشغيل الكل مؤقتًا</value></data><data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve"><value>مبادئ التنفيذ والتأثير</value></data><data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve"><value>نوع التنفيذ:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve"><value>محرر التكوين</value></data><data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve"><value>شل.ن س س</value></data><data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve"><value>الموضوع. nss.</value></data><data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve"><value>صور.nss</value></data><data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve"><value>تعديل.nss</value></data><data name="ActionDetailsWindow_Title" xml:space="preserve"><value>تفاصيل الإجراء</value></data><data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve"><value>تفاصيل التنفيذ الفني</value></data><data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve"><value>استخدام وظيفة تنظيف السجل المدمجة في ويندوز</value></data><data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve"><value>ipconfig /flushdns (??? ????? ??????? ?????? ?? DNS)</value></data><data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve"><value>netsh winsock reset (????? ????? ???? ???????? Winsock)</value></data><data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve"><value>netsh int ip reset (????? ????? ???? ???????? TCP/IP)</value></data><data name="PluginExtensionsPage_Title" xml:space="preserve"><value>ملحقات الإضافات</value></data><data name="PluginExtensionsPage_Description" xml:space="preserve"><value>تثبيت وإدارة الإضافات لتوسيع الوظائف</value></data><data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve"><value>تثبيت</value></data><data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve"><value>????</value></data><data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve"><value>لا يمكن إلغاء التثبيت</value></data><data name="PluginSettingsWindow_Title" xml:space="preserve"><value>إعدادات الإضافة</value></data><data name="PluginSettingsWindow_PluginName" xml:space="preserve"><value>اسم الإضافة</value></data><data name="PluginSettingsWindow_PluginDescription" xml:space="preserve"><value>وصف الإضافة</value></data><data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve"><value>هذه الإضافة لا تحتوي على إعدادات قابلة للتكوين.</value></data><data name="PluginSettingsWindow_Close" xml:space="preserve"><value>إغلاق</value></data><data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve"><value>الإضافة غير موجودة: {0}</value></data><data name="PluginSettingsWindow_Error" xml:space="preserve"><value>خطأ</value></data><data name="PluginSettingsWindow_Settings" xml:space="preserve"><value>الإعدادات</value></data><data name="PluginSettingsWindow_Author" xml:space="preserve"><value>المؤلف: {0}</value></data><data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve"><value>تنسيق واجهة تكوين الإضافة غير صحيح.</value></data><data name="PluginSettingsWindow_LoadError" xml:space="preserve"><value>خطأ في تحميل إعدادات الإضافة: {0}</value></data><data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve"><value>بحث في الإضافات...</value></data><data name="PluginExtensionsPage_FilterAll" xml:space="preserve"><value>الكل</value></data><data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve"><value>????</value></data><data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve"><value>??? ????</value></data><data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve"><value>لا توجد إضافات متاحة</value></data><data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve"><value>متجر الإضافات فارغ حاليا. تابع التحديثات المستقبلية للإضافات.</value></data><data name="PluginExtensionsPage_Configure" xml:space="preserve"><value>تكوين</value></data><data name="PluginExtensionsPage_Uninstall" xml:space="preserve"><value>إلغاء التثبيت</value></data><data name="PluginExtensionsPage_Open" xml:space="preserve"><value>فتح</value></data><data name="PluginExtensionsPage_Language" xml:space="preserve"><value>اللغة:</value></data><data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve"><value>استخدام إعداد التطبيق الافتراضي</value></data><data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve"><value>تم العثور على إضافات {0}</value></data><data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve"><value>تم تثبيت الإضافة بنجاح</value></data><data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve"><value>تم تثبيت الإضافة بنجاح</value></data><data name="PluginExtensionsPage_InstallFailed" xml:space="preserve"><value>فشل التثبيت</value></data><data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve"><value>تعذر تثبيت الملحق: {0}</value></data><data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve"><value>تم إلغاء تثبيت الملحق بنجاح</value></data><data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve"><value>تم إلغاء تثبيت الملحق بنجاح</value></data><data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve"><value>فشل الإلغاء</value></data><data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve"><value>تعذر إلغاء تثبيت الملحق: {0}</value></data><data name="PluginExtensionsPage_OpenFailed" xml:space="preserve"><value>فشل في فتح الملحق</value></data><data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve"><value>تعذر فتح الملحق: {0}</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>تعذر فتح الملحق: {0}</value></data><data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve"><value>الملحق غير مثبت</value></data><data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve"><value>الملحق غير مثبت ولا يمكن فتحه</value></data><data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve"><value>الحد الأدنى لإصدار البرنامج المضيف المطلوب: {0}</value></data><data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve"><value>سيتم حذف الملحق نهائيًا</value></data><data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve"><value>فشل التحديث</value></data><data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve"><value>فشل تحديث الملحق، يرجى التحقق من الاتصال بالشبكة والمحاولة لاحقًا.</value></data><data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve"><value>تم التحديث بنجاح</value></data><data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve"><value>تم تحديث الملحق بنجاح</value></data><data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve"><value>جارٍ تحديث الملحق</value></data><data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve"><value>جارٍ تنزيل وتحديث الملحق...</value></data><data name="PluginExtensionsPage_UpdateAll" xml:space="preserve"><value>تحديث الكل</value></data><data name="PluginExtensionsPage_RunPlugin" xml:space="preserve"><value>تشغيل الملحق</value></data><data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve"><value>تم تشغيل الملحق</value></data><data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve"><value>تم إلغاء تثبيت الملحق</value></data><data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve"><value>سيتم حذف الملحق عند إغلاق البرنامج.</value></data><data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve"><value>فشل الحذف</value></data><data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve"><value>حدث خطأ أثناء حذف الملحق</value></data><data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve"><value>فشل التكوين</value></data><data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve"><value>الملحق مثبت لكنه غير محمل. يرجى محاولة إعادة تشغيل التطبيق.</value></data><data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve"><value>لا يوجد تكوين</value></data><data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve"><value>الملحق لا يحتوي على أي خيارات تكوين.</value></data><data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve"><value>التكوين غير مدعوم</value></data><data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve"><value>الملحق لا يدعم التكوين.</value></data><data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve"><value>تم إعادة ضبط حالة الملحق</value></data><data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve"><value>تم مسح جميع حالات تثبيت الملحقات</value></data><data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve"><value>اكتمال التحديث الجماعي</value></data><data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve"><value>تمت معالجة جميع الملحقات.</value></data><data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve"><value>جاري تحضير التنزيل...</value></data><data name="PluginExtensionsPage_LocalBadge" xml:space="preserve"><value>محلي</value></data><data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve"><value>يتوفر إصدار جديد</value></data><data name="PluginExtensionsPage_VersionLabel" xml:space="preserve"><value>الإصدار:</value></data><data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve"><value>تاريخ الإصدار:</value></data><data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve"><value>ما الجديد:</value></data><data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve"><value>تحديث قائمة الملحقات</value></data><data name="PluginExtensionsPage_NoResults" xml:space="preserve"><value>لم يتم العثور على ملحقات تطابق بحثك.</value></data><data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve"><value>تحديث جميع الملحقات المتاحة</value></data><data name="PluginExtensionsPage_InstallAll" xml:space="preserve"><value>تثبيت الكل</value></data><data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve"><value>تثبيت جميع الإضافات المتاحة</value></data><data name="PluginExtensionsPage_InstallingAll" xml:space="preserve"><value>جارٍ تثبيت الكل...</value></data><data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve"><value>جارٍ تثبيت إضافة(إضافات) {0}...</value></data><data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve"><value>اكتمل التثبيت بالجملة</value></data><data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve"><value>تم تثبيت إضافة(إضافات) {0}.</value></data><data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve"><value>فشل التثبيت بالجملة</value></data><data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve"><value>فشل تثبيت الإضافات: {0}</value></data><data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve"><value>جارٍ التحديث للجميع...</value></data><data name="PluginExtensionsPage_Updating" xml:space="preserve"><value>جارٍ التحديث...</value></data><data name="PluginExtensionsPage_OpenFolder" xml:space="preserve"><value>فتح المجلد</value></data><data name="PluginExtensionsPage_CopyId" xml:space="preserve"><value>نسخ معرف الإضافة</value></data><data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve"><value>المجلد غير موجود</value></data><data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve"><value>دليل الإضافات غير موجود بعد.</value></data><data name="PluginExtensionsPage_Copied" xml:space="preserve"><value>تم النسخ</value></data><data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve"><value>تم نسخ معرف الإضافة '{0}' إلى الحافظة.</value></data><data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve"><value>اكتمل التنزيل</value></data><data name="PluginExtensionsPage_Downloading" xml:space="preserve"><value>جارٍ التنزيل...</value></data><data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve"><value>جارٍ التنزيل... {0:F1} / {1:F1} ميغابايت ({2:F0}%)</value></data><data name="Plugin_Name_NetworkAcceleration" xml:space="preserve"><value>تسريع الشبكة</value></data><data name="Plugin_Name_ViveTool" xml:space="preserve"><value>أداة فيف</value></data><data name="Plugin_Name_Tools" xml:space="preserve"><value>الأدوات</value></data><data name="Plugin_Description_NetworkAcceleration" xml:space="preserve"><value>ميزات تسريع وتحسين الشبكة في الوقت الفعلي</value></data><data name="Plugin_Description_ViveTool" xml:space="preserve"><value>إدارة علامات ميزات ويندوز باستخدام ViVeTool</value></data><data name="Plugin_Description_Tools" xml:space="preserve"><value>أدوات تحسين النظام والصيانة</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve"><value>الاستخدام</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve"><value>يتم استخدام هذا المحرر لتحرير ملف تكوين shell.nss مباشرة. بعد التعديل، اضغط على</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve"><value>تطبيق</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve"><value>زر لحفظ جميع التغييرات وإعادة تشغيل مستكشف الملفات لتطبيق التكوين.</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve"><value>• مسار ملف التكوين:</value></data><data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve"><value>• بعد تعديل التكوين، يحتاج مستكشف الملفات (Explorer) إلى إعادة التشغيل لتطبيق التغييرات.</value></data><data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve"><value>تطبيق</value></data><data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve"><value>ملف تكوين shell.nss</value></data><data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve"><value>يتم استخدام ملف shell.nss لتحديد الهيكل العام وسلوك قائمة النقر بزر الماوس الأيمن</value></data><data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve"><value>فتح ملف shell.nss</value></data><data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve"><value>فتح المجلد المحتوي</value></data><data name="MenuStyleSettingsWindow_Path" xml:space="preserve"><value>المسار:</value></data><data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve"><value>إعدادات واجهة المستخدم</value></data><data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve"><value>إعدادات السمة الأساسية</value></data><data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve"><value>لون الخلفية:</value></data><data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve"><value>لون النص:</value></data><data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve"><value>إعدادات تأثير التحويم</value></data><data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve"><value>خلفية التحويم:</value></data><data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve"><value>نص التحويم:</value></data><data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve"><value>إعدادات تأثير التحديد</value></data><data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve"><value>خلفية التحديد:</value></data><data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve"><value>النص المحدد:</value></data><data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve"><value>تحديث النص من واجهة المستخدم</value></data><data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve"><value>تحميل من النص</value></data><data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve"><value>محرر النصوص</value></data><data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve"><value>فتح في محرر خارجي</value></data><data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve"><value>ملف إعدادات images.nss</value></data><data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve"><value>يُستخدم ملف images.nss لتعريف الأيقونات والصور لقائمة النقر بزر الماوس الأيمن</value></data><data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve"><value>فتح ملف images.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve"><value>ملف إعدادات modify.nss</value></data><data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve"><value>يُستخدم ملف modify.nss لتعديل وتخصيص عناصر قائمة النقر بزر الماوس الأيمن</value></data><data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve"><value>فتح ملف modify.nss</value></data><data name="WindowsOptimizationPage_NoTools" xml:space="preserve"><value>لا توجد أدوات متاحة. يرجى إضافة أدوات في مجلد الأدوات داخل مجلد التطبيق.</value></data><data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve"><value>ستظهر الأدوات هنا بمجرد توفرها في مجلد الأدوات.</value></data><data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve"><value>الدليل الأساسي: {0}</value></data><data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve"><value>لم يتم العثور على دليل ملف الإعدادات</value></data><data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve"><value>الملف غير موجود</value></data><data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve"><value>لا يمكن قراءة ملف الإعدادات: {0}</value></data><data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve"><value>يُستخدم هذا الملف لتحديد إعدادات النمط المتعلقة بالثيم</value></data><data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve"><value>تعريف لون السمة</value></data><data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve"><value>اللون الأساسي</value></data><data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve"><value>لون التحويم</value></data><data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve"><value>اللون المحدد</value></data><data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve"><value>لمزيد من خيارات تكوين السمة، يرجى الرجوع إلى الوثائق الرسمية لـ Nilesoft Shell</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve"><value>هل أنت متأكد من أنك تريد تطبيق التكوين؟ 
+ تحذير: لن يتم تشغيل هذا الإجراء بشكل صحيح إذا كانت الشاشة الداخلية متوقفة.</value>
+  </data>
+  <data name="DashboardPage_Display_Title" xml:space="preserve">
+    <value>الشاشة</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Title" xml:space="preserve">
+    <value>إضاءة لوحة المفاتيح الخلفية</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightControl_Message" xml:space="preserve">
+    <value>يمكنك تشغيل الإضاءة الخلفية أو إيقافها باستخدام Fn Space.</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Title" xml:space="preserve">
+    <value>إضاءة لوحة المفاتيح الخلفية</value>
+  </data>
+  <data name="OneLevelWhiteKeyboardBacklightAutomationStepControl_Message" xml:space="preserve">
+    <value>تشغيل الإضاءة الخلفية أو إيقافها.</value>
+  </data>
+  <data name="PackagesPage_NoMatchingDownloads" xml:space="preserve">
+    <value>لم يتم العثور على تنزيلات مطابقة</value>
+  </data>
+  <data name="PackagesPage_OnlyShowUpdates" xml:space="preserve">
+    <value>عرض التحديثات فقط</value>
+  </data>
+  <data name="EditDashboardWindow_Title" xml:space="preserve">
+    <value>تخصيص لوحة التحكم</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>تحميل</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Title" xml:space="preserve">
+    <value>إنشاء مجموعة</value>
+  </data>
+  <data name="EditDashboardWindow_CreateGroup_Message" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="EditDashboardWindow_Disclaimer_Message" xml:space="preserve">
+    <value>قد لا تظهر بعض الميزات على لوحة التحكم اعتمادًا على حالة جهاز الكمبيوتر المحمول وإعداداته.</value>
+  </data>
+  <data name="PackageControl_Recommended" xml:space="preserve">
+    <value>موصى به</value>
+  </data>
+  <data name="PackageControl_Downloading" xml:space="preserve">
+    <value>جارٍ التنزيل</value>
+  </data>
+  <data name="PackageControl_Installing" xml:space="preserve">
+    <value>جارٍ التثبيت</value>
+  </data>
+  <data name="PackageControl_Completed" xml:space="preserve">
+    <value>تم الاكتمال</value>
+  </data>
+  <data name="ActionDetailsWindow_NotFound" xml:space="preserve">
+    <value>تعريف الإجراء غير موجود</value>
+  </data>
+  <data name="ActionDetailsWindow_NoDetailsAvailable" xml:space="preserve">
+    <value>التفاصيل التقنية للتنفيذ غير متوفرة لهذا الإجراء</value>
+  </data>
+  <data name="ActionDetailsWindow_LoadFailed" xml:space="preserve">
+    <value>فشل التحميل</value>
+  </data>
+  <data name="ActionDetailsWindow_UnknownImplementation" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="ActionDetailsWindow_CommandExecution" xml:space="preserve">
+    <value>تنفيذ الأمر</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryModification" xml:space="preserve">
+    <value>تعديل السجل</value>
+  </data>
+  <data name="ActionDetailsWindow_ServiceManagement" xml:space="preserve">
+    <value>إدارة الخدمة</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryAndScript" xml:space="preserve">
+    <value>تعديل السجل - برنامج PowerShell</value>
+  </data>
+  <data name="ActionDetailsWindow_RegistryCleanup" xml:space="preserve">
+    <value>تنظيف السجل</value>
+  </data>
+  <data name="ActionDetailsWindow_DISMCommand" xml:space="preserve">
+    <value>??? DISM</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellExeNotFound" xml:space="preserve">
+    <value>لم يتم العثور على shell.exe</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigPathNotFound" xml:space="preserve">
+    <value>مسار ملف التكوين: غير موجود</value>
+  </data>
+  <data name="StatusTrayPopup_UsageTime" xml:space="preserve">
+    <value>وقت الاستخدام</value>
+  </data>
+  <data name="PackageControl_Install" xml:space="preserve">
+    <value>تثبيت</value>
+  </data>
+  <data name="PackageControl_Uninstall" xml:space="preserve">
+    <value>إلغاء التثبيت</value>
+  </data>
+  <data name="PackageControl_InstallError_Title" xml:space="preserve">
+    <value>فشل التثبيت</value>
+  </data>
+  <data name="PackageControl_InstallError_FileNotFound" xml:space="preserve">
+    <value>الملف غير موجود، يرجى التنزيل أولاً</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Title" xml:space="preserve">
+    <value>بدأ التثبيت</value>
+  </data>
+  <data name="PackageControl_InstallStarted_Message" xml:space="preserve">
+    <value>بدء المثبت: {0}</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Title" xml:space="preserve">
+    <value>خطأ في فحص التوافق</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Description" xml:space="preserve">
+    <value>فشل التطبيق في قراءة معلومات الجهاز أثناء بدء التشغيل. يرجى التحقق من تفاصيل الخطأ أدناه وتجربة خطوات استكشاف الأخطاء وإصلاحها إذا لزم الأمر.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_TroubleshootingTitle" xml:space="preserve">
+    <value>خطوات استكشاف الأخطاء وإصلاحها</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip1" xml:space="preserve">
+    <value>تأكد من أن خدمة إدارة أجهزة ويندوز (WMI) تعمل: افتح الخدمات (services.msc) وتحقق من أن خدمة "إدارة أجهزة ويندوز" تعمل.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip2" xml:space="preserve">
+    <value>شغّل التطبيق كمسؤول لضمان وجود الأذونات الكافية للوصول إلى سجل النظام و WMI.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip3" xml:space="preserve">
+    <value>تحقق من موارد النظام: أغلق التطبيقات الأخرى المكثفة الاستخدام للموارد وحاول مرة أخرى.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_Tip4" xml:space="preserve">
+    <value>راجع ملف السجل لمزيد من المعلومات التفصيلية عن الخطأ بالنقر على "فتح السجل" أدناه.</value>
+  </data>
+  <data name="CompatibilityCheckErrorWindow_OpenLog" xml:space="preserve">
+    <value>فتح ملف السجل</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
+    <value>تحديث المستودع</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Message" xml:space="preserve">
+    <value>قم بتكوين مستودع GitHub للتحقق من التحديثات. اتركه فارغًا لاستخدام الافتراضي.</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Label" xml:space="preserve">
+    <value>مالك المستودع</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Owner_Placeholder" xml:space="preserve">
+    <value>على سبيل المثال، SSC-STUDIO</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Label" xml:space="preserve">
+    <value>اسم المستودع</value>
+  </data>
+  <data name="SettingsPage_UpdateRepository_Name_Placeholder" xml:space="preserve">
+    <value>مثل، Lenovo Legion Toolkit</value>
+  </data>
+  <data name="WindowsOptimizationPage_PauseAll_Button" xml:space="preserve">
+    <value>إيقاف التشغيل الكل مؤقتًا</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Title" xml:space="preserve">
+    <value>مبادئ التنفيذ والتأثير</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Implementation_Type" xml:space="preserve">
+    <value>نوع التنفيذ:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Title" xml:space="preserve">
+    <value>محرر التكوين</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ShellNss" xml:space="preserve">
+    <value>شل.ن س س</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ThemeNss" xml:space="preserve">
+    <value>الموضوع. nss.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ImagesNss" xml:space="preserve">
+    <value>صور.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Tab_ModifyNss" xml:space="preserve">
+    <value>تعديل.nss</value>
+  </data>
+  <data name="ActionDetailsWindow_Title" xml:space="preserve">
+    <value>تفاصيل الإجراء</value>
+  </data>
+  <data name="ActionDetailsWindow_TechnicalDetails" xml:space="preserve">
+    <value>تفاصيل التنفيذ الفني</value>
+  </data>
+  <data name="ActionDetailsWindow_CleanupRegistry" xml:space="preserve">
+    <value>استخدام وظيفة تنظيف السجل المدمجة في ويندوز</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkFlushDNS" xml:space="preserve">
+    <value>ipconfig /flushdns (??? ????? ??????? ?????? ?? DNS)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetWinsock" xml:space="preserve">
+    <value>netsh winsock reset (????? ????? ???? ???????? Winsock)</value>
+  </data>
+  <data name="ActionDetailsWindow_NetworkResetTCPIP" xml:space="preserve">
+    <value>netsh int ip reset (????? ????? ???? ???????? TCP/IP)</value>
+  </data>
+  <data name="PluginExtensionsPage_Title" xml:space="preserve">
+    <value>ملحقات الإضافات</value>
+  </data>
+  <data name="PluginExtensionsPage_Description" xml:space="preserve">
+    <value>تثبيت وإدارة الإضافات لتوسيع الوظائف</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
+    <value>تثبيت</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
+    <value>????</value>
+  </data>
+  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
+    <value>لا يمكن إلغاء التثبيت</value>
+  </data>
+  <data name="PluginSettingsWindow_Title" xml:space="preserve">
+    <value>إعدادات الإضافة</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginName" xml:space="preserve">
+    <value>اسم الإضافة</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginDescription" xml:space="preserve">
+    <value>وصف الإضافة</value>
+  </data>
+  <data name="PluginSettingsWindow_NoConfigMessage" xml:space="preserve">
+    <value>هذه الإضافة لا تحتوي على إعدادات قابلة للتكوين.</value>
+  </data>
+  <data name="PluginSettingsWindow_Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="PluginSettingsWindow_PluginNotFound" xml:space="preserve">
+    <value>الإضافة غير موجودة: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_Error" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="PluginSettingsWindow_Settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="PluginSettingsWindow_Author" xml:space="preserve">
+    <value>المؤلف: {0}</value>
+  </data>
+  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
+    <value>تنسيق واجهة تكوين الإضافة غير صحيح.</value>
+  </data>
+  <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
+    <value>خطأ في تحميل إعدادات الإضافة: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_SearchPlaceholder" xml:space="preserve">
+    <value>بحث في الإضافات...</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterAll" xml:space="preserve">
+    <value>الكل</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterInstalled" xml:space="preserve">
+    <value>????</value>
+  </data>
+  <data name="PluginExtensionsPage_FilterNotInstalled" xml:space="preserve">
+    <value>??? ????</value>
+  </data>
+  <data name="PluginExtensionsPage_NoPluginsAvailable" xml:space="preserve">
+    <value>لا توجد إضافات متاحة</value>
+  </data>
+  <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
+    <value>متجر الإضافات فارغ حاليا. تابع التحديثات المستقبلية للإضافات.</value>
+  </data>
+  <data name="PluginExtensionsPage_Configure" xml:space="preserve">
+    <value>تكوين</value>
+  </data>
+  <data name="PluginExtensionsPage_Uninstall" xml:space="preserve">
+    <value>إلغاء التثبيت</value>
+  </data>
+  <data name="PluginExtensionsPage_Open" xml:space="preserve">
+    <value>فتح</value>
+  </data>
+  <data name="PluginExtensionsPage_Language" xml:space="preserve">
+    <value>اللغة:</value>
+  </data>
+  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
+    <value>استخدام إعداد التطبيق الافتراضي</value>
+  </data>
+  <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
+    <value>تم العثور على إضافات {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
+    <value>تم تثبيت الإضافة بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallSuccessMessage" xml:space="preserve">
+    <value>تم تثبيت الإضافة بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailed" xml:space="preserve">
+    <value>فشل التثبيت</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
+    <value>تعذر تثبيت الملحق: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
+    <value>تم إلغاء تثبيت الملحق بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallSuccessMessage" xml:space="preserve">
+    <value>تم إلغاء تثبيت الملحق بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailed" xml:space="preserve">
+    <value>فشل الإلغاء</value>
+  </data>
+  <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
+    <value>تعذر إلغاء تثبيت الملحق: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
+    <value>فشل في فتح الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+    <value>تعذر فتح الملحق: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
+    <value>تعذر فتح الملحق: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalled" xml:space="preserve">
+    <value>الملحق غير مثبت</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginNotInstalledMessage" xml:space="preserve">
+    <value>الملحق غير مثبت ولا يمكن فتحه</value>
+  </data>
+  <data name="PluginExtensionsPage_MinimumVersion" xml:space="preserve">
+    <value>الحد الأدنى لإصدار البرنامج المضيف المطلوب: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
+    <value>سيتم حذف الملحق نهائيًا</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
+    <value>فشل التحديث</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
+    <value>فشل تحديث الملحق، يرجى التحقق من الاتصال بالشبكة والمحاولة لاحقًا.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
+    <value>تم التحديث بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
+    <value>تم تحديث الملحق بنجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
+    <value>جارٍ تحديث الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingPluginMessage" xml:space="preserve">
+    <value>جارٍ تنزيل وتحديث الملحق...</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAll" xml:space="preserve">
+    <value>تحديث الكل</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
+    <value>تشغيل الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
+    <value>تم تشغيل الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
+    <value>تم إلغاء تثبيت الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
+    <value>سيتم حذف الملحق عند إغلاق البرنامج.</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
+    <value>فشل الحذف</value>
+  </data>
+  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
+    <value>حدث خطأ أثناء حذف الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
+    <value>فشل التكوين</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
+    <value>الملحق مثبت لكنه غير محمل. يرجى محاولة إعادة تشغيل التطبيق.</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
+    <value>لا يوجد تكوين</value>
+  </data>
+  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
+    <value>الملحق لا يحتوي على أي خيارات تكوين.</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
+    <value>التكوين غير مدعوم</value>
+  </data>
+  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
+    <value>الملحق لا يدعم التكوين.</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
+    <value>تم إعادة ضبط حالة الملحق</value>
+  </data>
+  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
+    <value>تم مسح جميع حالات تثبيت الملحقات</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
+    <value>اكتمال التحديث الجماعي</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkUpdateCompleteMessage" xml:space="preserve">
+    <value>تمت معالجة جميع الملحقات.</value>
+  </data>
+  <data name="PluginExtensionsPage_PreparingDownload" xml:space="preserve">
+    <value>جاري تحضير التنزيل...</value>
+  </data>
+  <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
+    <value>محلي</value>
+  </data>
+  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
+    <value>يتوفر إصدار جديد</value>
+  </data>
+  <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
+    <value>الإصدار:</value>
+  </data>
+  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
+    <value>تاريخ الإصدار:</value>
+  </data>
+  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
+    <value>ما الجديد:</value>
+  </data>
+  <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
+    <value>تحديث قائمة الملحقات</value>
+  </data>
+  <data name="PluginExtensionsPage_NoResults" xml:space="preserve">
+    <value>لم يتم العثور على ملحقات تطابق بحثك.</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdateAllTooltip" xml:space="preserve">
+    <value>تحديث جميع الملحقات المتاحة</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAll" xml:space="preserve">
+    <value>تثبيت الكل</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallAllTooltip" xml:space="preserve">
+    <value>تثبيت جميع الإضافات المتاحة</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAll" xml:space="preserve">
+    <value>جارٍ تثبيت الكل...</value>
+  </data>
+  <data name="PluginExtensionsPage_InstallingAllMessage" xml:space="preserve">
+    <value>جارٍ تثبيت إضافة(إضافات) {0}...</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallComplete" xml:space="preserve">
+    <value>اكتمل التثبيت بالجملة</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallCompleteMessage" xml:space="preserve">
+    <value>تم تثبيت إضافة(إضافات) {0}.</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailed" xml:space="preserve">
+    <value>فشل التثبيت بالجملة</value>
+  </data>
+  <data name="PluginExtensionsPage_BulkInstallFailedMessage" xml:space="preserve">
+    <value>فشل تثبيت الإضافات: {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_UpdatingAll" xml:space="preserve">
+    <value>جارٍ التحديث للجميع...</value>
+  </data>
+  <data name="PluginExtensionsPage_Updating" xml:space="preserve">
+    <value>جارٍ التحديث...</value>
+  </data>
+  <data name="PluginExtensionsPage_OpenFolder" xml:space="preserve">
+    <value>فتح المجلد</value>
+  </data>
+  <data name="PluginExtensionsPage_CopyId" xml:space="preserve">
+    <value>نسخ معرف الإضافة</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFound" xml:space="preserve">
+    <value>المجلد غير موجود</value>
+  </data>
+  <data name="PluginExtensionsPage_FolderNotFoundMessage" xml:space="preserve">
+    <value>دليل الإضافات غير موجود بعد.</value>
+  </data>
+  <data name="PluginExtensionsPage_Copied" xml:space="preserve">
+    <value>تم النسخ</value>
+  </data>
+  <data name="PluginExtensionsPage_CopiedMessage" xml:space="preserve">
+    <value>تم نسخ معرف الإضافة '{0}' إلى الحافظة.</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadCompleted" xml:space="preserve">
+    <value>اكتمل التنزيل</value>
+  </data>
+  <data name="PluginExtensionsPage_Downloading" xml:space="preserve">
+    <value>جارٍ التنزيل...</value>
+  </data>
+  <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
+    <value>جارٍ التنزيل... {0:F1} / {1:F1} ميغابايت ({2:F0}%)</value>
+  </data>
+  <data name="Plugin_Name_NetworkAcceleration" xml:space="preserve">
+    <value>تسريع الشبكة</value>
+  </data>
+  <data name="Plugin_Name_ViveTool" xml:space="preserve">
+    <value>أداة فيف</value>
+  </data>
+  <data name="Plugin_Name_Tools" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="Plugin_Description_NetworkAcceleration" xml:space="preserve">
+    <value>ميزات تسريع وتحسين الشبكة في الوقت الفعلي</value>
+  </data>
+  <data name="Plugin_Description_ViveTool" xml:space="preserve">
+    <value>إدارة علامات ميزات ويندوز باستخدام ViVeTool</value>
+  </data>
+  <data name="Plugin_Description_Tools" xml:space="preserve">
+    <value>أدوات تحسين النظام والصيانة</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Usage" xml:space="preserve">
+    <value>الاستخدام</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_Description" xml:space="preserve">
+    <value>يتم استخدام هذا المحرر لتحرير ملف تكوين shell.nss مباشرة. بعد التعديل، اضغط على</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyButton" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ApplyDescription" xml:space="preserve">
+    <value>زر لحفظ جميع التغييرات وإعادة تشغيل مستكشف الملفات لتطبيق التكوين.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_ConfigPath" xml:space="preserve">
+    <value>• مسار ملف التكوين:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigEditor_RestartNote" xml:space="preserve">
+    <value>• بعد تعديل التكوين، يحتاج مستكشف الملفات (Explorer) إلى إعادة التشغيل لتطبيق التغييرات.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyButton" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssConfigFile" xml:space="preserve">
+    <value>ملف تكوين shell.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ShellNssDescription" xml:space="preserve">
+    <value>يتم استخدام ملف shell.nss لتحديد الهيكل العام وسلوك قائمة النقر بزر الماوس الأيمن</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenShellNssFile" xml:space="preserve">
+    <value>فتح ملف shell.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenContainingFolder" xml:space="preserve">
+    <value>فتح المجلد المحتوي</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_Path" xml:space="preserve">
+    <value>المسار:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UISettings" xml:space="preserve">
+    <value>إعدادات واجهة المستخدم</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BasicThemeSettings" xml:space="preserve">
+    <value>إعدادات السمة الأساسية</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BackgroundColor" xml:space="preserve">
+    <value>لون الخلفية:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextColor" xml:space="preserve">
+    <value>لون النص:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverEffectSettings" xml:space="preserve">
+    <value>إعدادات تأثير التحويم</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverBackground" xml:space="preserve">
+    <value>خلفية التحويم:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverText" xml:space="preserve">
+    <value>نص التحويم:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedEffectSettings" xml:space="preserve">
+    <value>إعدادات تأثير التحديد</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedBackground" xml:space="preserve">
+    <value>خلفية التحديد:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedText" xml:space="preserve">
+    <value>النص المحدد:</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UpdateFromUI" xml:space="preserve">
+    <value>تحديث النص من واجهة المستخدم</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_LoadFromText" xml:space="preserve">
+    <value>تحميل من النص</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_TextEditor" xml:space="preserve">
+    <value>محرر النصوص</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenInExternalEditor" xml:space="preserve">
+    <value>فتح في محرر خارجي</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssConfigFile" xml:space="preserve">
+    <value>ملف إعدادات images.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ImagesNssDescription" xml:space="preserve">
+    <value>يُستخدم ملف images.nss لتعريف الأيقونات والصور لقائمة النقر بزر الماوس الأيمن</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenImagesNssFile" xml:space="preserve">
+    <value>فتح ملف images.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssConfigFile" xml:space="preserve">
+    <value>ملف إعدادات modify.nss</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ModifyNssDescription" xml:space="preserve">
+    <value>يُستخدم ملف modify.nss لتعديل وتخصيص عناصر قائمة النقر بزر الماوس الأيمن</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenModifyNssFile" xml:space="preserve">
+    <value>فتح ملف modify.nss</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
+    <value>لا توجد أدوات متاحة. يرجى إضافة أدوات في مجلد الأدوات داخل مجلد التطبيق.</value>
+  </data>
+  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
+    <value>ستظهر الأدوات هنا بمجرد توفرها في مجلد الأدوات.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseDirectory" xml:space="preserve">
+    <value>الدليل الأساسي: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfigFileDirectoryNotFound" xml:space="preserve">
+    <value>لم يتم العثور على دليل ملف الإعدادات</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFound" xml:space="preserve">
+    <value>الملف غير موجود</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotReadConfigFile" xml:space="preserve">
+    <value>لا يمكن قراءة ملف الإعدادات: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeFileDescription" xml:space="preserve">
+    <value>يُستخدم هذا الملف لتحديد إعدادات النمط المتعلقة بالثيم</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ThemeColorDefinition" xml:space="preserve">
+    <value>تعريف لون السمة</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_BaseColor" xml:space="preserve">
+    <value>اللون الأساسي</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_HoverColor" xml:space="preserve">
+    <value>لون التحويم</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SelectedColor" xml:space="preserve">
+    <value>اللون المحدد</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_MoreThemeOptions" xml:space="preserve">
+    <value>لمزيد من خيارات تكوين السمة، يرجى الرجوع إلى الوثائق الرسمية لـ Nilesoft Shell</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfig" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد تطبيق التكوين؟ 
   
  هذا سيؤدي إلى: 
  1. حفظ جميع ملفات التكوين 
  2. إعادة تشغيل مستكشف الملفات لتطبيق التكوين 
   
- ملاحظة: إعادة التشغيل ستغلق جميع نوافذ المجلدات المفتوحة وشريط المهام، ثم تعيد التشغيل تلقائيًا.</value></data><data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve"><value>تأكيد تطبيق التكوين</value></data><data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve"><value>تعذر حفظ ملف التكوين: 
+ ملاحظة: إعادة التشغيل ستغلق جميع نوافذ المجلدات المفتوحة وشريط المهام، ثم تعيد التشغيل تلقائيًا.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ConfirmApplyConfigTitle" xml:space="preserve">
+    <value>تأكيد تطبيق التكوين</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotSaveConfigFile" xml:space="preserve">
+    <value>تعذر حفظ ملف التكوين: 
  {0} 
   
- يرجى التحقق من أذونات الملف والمحاولة مرة أخرى.</value></data><data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve"><value>فشل الحفظ</value></data><data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve"><value>تم حفظ الملفات التالية بنجاح: 
- {0}</value></data><data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve"><value>فشل حفظ الملفات: 
- {0}</value></data><data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve"><value>تم إعادة تشغيل مستكشف الملفات، والإعدادات أصبحت سارية الآن!</value></data><data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve"><value>تم التطبيق جزئيًا</value></data><data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve"><value>تم التطبيق بنجاح</value></data><data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve"><value>خطأ في تطبيق الإعدادات: 
+ يرجى التحقق من أذونات الملف والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SaveFailed" xml:space="preserve">
+    <value>فشل الحفظ</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_SuccessfullySavedFiles" xml:space="preserve">
+    <value>تم حفظ الملفات التالية بنجاح: 
+ {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FailedToSaveFiles" xml:space="preserve">
+    <value>فشل حفظ الملفات: 
+ {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ExplorerRestarted" xml:space="preserve">
+    <value>تم إعادة تشغيل مستكشف الملفات، والإعدادات أصبحت سارية الآن!</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_PartiallyApplied" xml:space="preserve">
+    <value>تم التطبيق جزئيًا</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_AppliedSuccessfully" xml:space="preserve">
+    <value>تم التطبيق بنجاح</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyConfigError" xml:space="preserve">
+    <value>خطأ في تطبيق الإعدادات: 
  {0} 
  
- يمكنك حفظ الملفات يدويًا وإعادة تشغيل عملية المستكشف في إدارة المهام.</value></data><data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve"><value>فشل التطبيق</value></data><data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve"><value>الملف غير موجود أو المسار غير صالح</value></data><data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve"><value>فشل فتح الملف</value></data><data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve"><value>استخدم برنامج النظام الافتراضي لفتح الملف</value></data><data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve"><value>لا يمكن فتح الملف: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve"><value>فشل فتح الملف</value></data><data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve"><value>المجلد غير موجود أو المسار غير صالح</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve"><value>فشل فتح المجلد</value></data><data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve"><value>لا يمكن فتح المجلد: {0}</value></data><data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve"><value>فشل فتح المجلد</value></data><data name="SensorsControl_Model" xml:space="preserve"><value>النموذج</value></data><data name="SensorsControl_PowerUsage" xml:space="preserve"><value>استهلاك الطاقة</value></data><data name="SensorsControl_Charge" xml:space="preserve"><value>الشحن</value></data><data name="SensorsControl_Health" xml:space="preserve"><value>الحالة الصحية</value></data><data name="SensorsControl_Rate" xml:space="preserve"><value>النسبة</value></data><data name="SensorsControl_MinRate" xml:space="preserve"><value>الحد الأدنى للنسبة</value></data><data name="SensorsControl_MaxRate" xml:space="preserve"><value>الحد الأعلى للنسبة</value></data><data name="SensorsControl_Cycles" xml:space="preserve"><value>الدورات</value></data><data name="SensorsControl_Capacity" xml:space="preserve"><value>السعة</value></data><data name="SensorsControl_FullCapacity" xml:space="preserve"><value>السعة الكاملة</value></data><data name="SensorsControl_DesignCapacity" xml:space="preserve"><value>تصميم</value></data><data name="SensorsControl_Date" xml:space="preserve"><value>التاريخ</value></data><data name="SensorsControl_GpuClocks_Title" xml:space="preserve"><value>سرعة نواة / ذاكرة</value></data><data name="SensorsControl_Voltage" xml:space="preserve"><value>جهد النواة</value></data><data name="SensorsControl_VoltageRange" xml:space="preserve"><value>نطاق الجهد</value></data><data name="SensorsControl_AvgTemp" xml:space="preserve"><value>متوسط درجة الحرارة</value></data><data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve"><value>الشريط الجانبي</value></data><data name="PluginExtensionsPage_LocationSystem" xml:space="preserve"><value>النظام</value></data><data name="SensorsControl_RateRange" xml:space="preserve"><value>نطاق المعدل</value></data><data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve"><value>يرجى اختيار خيار تنظيف واحد على الأقل.</value></data><data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve"><value>ابدأ الكل</value></data><data name="PackagesPage_MachineType_Placeholder" xml:space="preserve"><value>مثال: 82JQ</value></data><data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve"><value>مثال: C:\Drivers</value></data><data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve"><value>تمكين الشفافية</value></data><data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve"><value>تمكين تأثيرات الشفافية للقائمة السياقية</value></data><data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve"><value>إظهار امتدادات الملفات</value></data><data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve"><value>عرض امتدادات الملفات في مستكشف الملفات</value></data><data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve"><value>إظهار الملفات المخفية</value></data><data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve"><value>عرض الملفات والمجلدات المخفية في مستكشف الملفات</value></data><data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve"><value>افتح للوصول السريع</value></data><data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve"><value>افتح مستكشف الملفات للوصول السريع بدلاً من جهاز الكمبيوتر هذا</value></data><data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve"><value>إظهار جزء المعاينة</value></data><data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve"><value>عرض جزء المعاينة في مستكشف الملفات</value></data><data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve"><value>يرجى اختيار عنصر واحد على الأقل للتنظيف.</value></data>
+ يمكنك حفظ الملفات يدويًا وإعادة تشغيل عملية المستكشف في إدارة المهام.</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_ApplyFailed" xml:space="preserve">
+    <value>فشل التطبيق</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FileNotFoundOrInvalidPath" xml:space="preserve">
+    <value>الملف غير موجود أو المسار غير صالح</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailed" xml:space="preserve">
+    <value>فشل فتح الملف</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_UseSystemDefaultProgram" xml:space="preserve">
+    <value>استخدم برنامج النظام الافتراضي لفتح الملف</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFile" xml:space="preserve">
+    <value>لا يمكن فتح الملف: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFileFailedTitle" xml:space="preserve">
+    <value>فشل فتح الملف</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_FolderNotFoundOrInvalidPath" xml:space="preserve">
+    <value>المجلد غير موجود أو المسار غير صالح</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailed" xml:space="preserve">
+    <value>فشل فتح المجلد</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_CannotOpenFolder" xml:space="preserve">
+    <value>لا يمكن فتح المجلد: {0}</value>
+  </data>
+  <data name="MenuStyleSettingsWindow_OpenFolderFailedTitle" xml:space="preserve">
+    <value>فشل فتح المجلد</value>
+  </data>
+  <data name="SensorsControl_Model" xml:space="preserve">
+    <value>النموذج</value>
+  </data>
+  <data name="SensorsControl_PowerUsage" xml:space="preserve">
+    <value>استهلاك الطاقة</value>
+  </data>
+  <data name="SensorsControl_Charge" xml:space="preserve">
+    <value>الشحن</value>
+  </data>
+  <data name="SensorsControl_Health" xml:space="preserve">
+    <value>الحالة الصحية</value>
+  </data>
+  <data name="SensorsControl_Rate" xml:space="preserve">
+    <value>النسبة</value>
+  </data>
+  <data name="SensorsControl_MinRate" xml:space="preserve">
+    <value>الحد الأدنى للنسبة</value>
+  </data>
+  <data name="SensorsControl_MaxRate" xml:space="preserve">
+    <value>الحد الأعلى للنسبة</value>
+  </data>
+  <data name="SensorsControl_Cycles" xml:space="preserve">
+    <value>الدورات</value>
+  </data>
+  <data name="SensorsControl_Capacity" xml:space="preserve">
+    <value>السعة</value>
+  </data>
+  <data name="SensorsControl_FullCapacity" xml:space="preserve">
+    <value>السعة الكاملة</value>
+  </data>
+  <data name="SensorsControl_DesignCapacity" xml:space="preserve">
+    <value>تصميم</value>
+  </data>
+  <data name="SensorsControl_Date" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
+    <value>سرعة نواة / ذاكرة</value>
+  </data>
+  <data name="SensorsControl_Voltage" xml:space="preserve">
+    <value>جهد النواة</value>
+  </data>
+  <data name="SensorsControl_VoltageRange" xml:space="preserve">
+    <value>نطاق الجهد</value>
+  </data>
+  <data name="SensorsControl_AvgTemp" xml:space="preserve">
+    <value>متوسط درجة الحرارة</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSidebar" xml:space="preserve">
+    <value>الشريط الجانبي</value>
+  </data>
+  <data name="PluginExtensionsPage_LocationSystem" xml:space="preserve">
+    <value>النظام</value>
+  </data>
+  <data name="SensorsControl_RateRange" xml:space="preserve">
+    <value>نطاق المعدل</value>
+  </data>
+  <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
+    <value>يرجى اختيار خيار تنظيف واحد على الأقل.</value>
+  </data>
+  <data name="WindowsOptimizationPage_StartAll_Button" xml:space="preserve">
+    <value>ابدأ الكل</value>
+  </data>
+  <data name="PackagesPage_MachineType_Placeholder" xml:space="preserve">
+    <value>مثال: 82JQ</value>
+  </data>
+  <data name="PackagesPage_DownloadTo_Placeholder" xml:space="preserve">
+    <value>مثال: C:\Drivers</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Title" xml:space="preserve">
+    <value>تمكين الشفافية</value>
+  </data>
+  <data name="ShellIntegration_Action_Transparency_Description" xml:space="preserve">
+    <value>تمكين تأثيرات الشفافية للقائمة السياقية</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Title" xml:space="preserve">
+    <value>إظهار امتدادات الملفات</value>
+  </data>
+  <data name="ShellIntegration_Action_FileExtensions_Description" xml:space="preserve">
+    <value>عرض امتدادات الملفات في مستكشف الملفات</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Title" xml:space="preserve">
+    <value>إظهار الملفات المخفية</value>
+  </data>
+  <data name="ShellIntegration_Action_HiddenFiles_Description" xml:space="preserve">
+    <value>عرض الملفات والمجلدات المخفية في مستكشف الملفات</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Title" xml:space="preserve">
+    <value>افتح للوصول السريع</value>
+  </data>
+  <data name="ShellIntegration_Action_QuickAccess_Description" xml:space="preserve">
+    <value>افتح مستكشف الملفات للوصول السريع بدلاً من جهاز الكمبيوتر هذا</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Title" xml:space="preserve">
+    <value>إظهار جزء المعاينة</value>
+  </data>
+  <data name="ShellIntegration_Action_PreviewPane_Description" xml:space="preserve">
+    <value>عرض جزء المعاينة في مستكشف الملفات</value>
+  </data>
+  <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
+    <value>يرجى اختيار عنصر واحد على الأقل للتنظيف.</value>
+  </data>
   <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
     <value>مظهر الفأرة</value>
   </data>
@@ -2899,4 +3887,112 @@
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
     <value>استعادة مخطط المؤشر الاحتياطي ووقف تبديل المؤشر المخصص المستند إلى الموضوع.</value>
   </data>
-<data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>Force software rendering</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value></data></root>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Force software rendering</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Installer exited with code {0}</value>
+  </data>
+  <data name="PackageControl_Queued" xml:space="preserve">
+    <value>Queued</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>by {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimize</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Quick Open</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Checking plugin availability...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Available to install</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>{0} additional plugin(s) are available in the current feed.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Store Pulse</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Total Plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>All detected plugins are currently up to date.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Up to date</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Updates available</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Updates Ready</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} plugin update(s) are ready to install.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Waiting for plugin metadata to load.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Loading metadata</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Customize language, temperature unit, theme and accent color.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
+    <value>Lenovo Legion Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+  </data>
+  <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
+    <value>Update checks are disabled for this session</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
+    <value>Check the selected source and network connection, then scan again.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
+    <value>Driver scan did not complete</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
+    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
+    <value>No matching downloads found</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
+    <value>Try a different source, operating system, or machine type.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
+    <value>No driver downloads found</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
+    <value>Choose a source and scan to list compatible driver downloads.</value>
+  </data>
+  <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
+    <value>Scan for driver packages</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Failed to apply {0}: {1}</value>
+  </data>
+</root>

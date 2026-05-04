@@ -57,8 +57,7 @@ public class DisplayBrightnessListener(WindowsPowerPlanController windowsPowerPl
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to set brightness to {brightness.Value}.", ex);
+            Log.Instance.Error($"Failed to set brightness to {brightness.Value}.", ex);
         }
     }
 }

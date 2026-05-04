@@ -91,8 +91,7 @@ public class ProcessAutoListener(
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Can't get process {e.ProcessName} details. [processId={e.ProcessId}]", ex);
+                Log.Instance.Warning($"Can't get process {e.ProcessName} details. [processId={e.ProcessId}]", ex);
             }
 
             if (!string.IsNullOrEmpty(processPath) && IgnoredPaths.Any(p => processPath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))

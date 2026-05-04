@@ -24,8 +24,7 @@ public class ThermalModeListener(
 
         if (!Enum.IsDefined(state))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unknown value received: {value}");
+            Log.Instance.Warning($"Unknown value received: {value}");
 
             state = ThermalModeState.Unknown;
         }

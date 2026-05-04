@@ -49,13 +49,11 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         {
             _isUnsupported = true;
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"WMI class or namespace not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]");
+            Log.Instance.Warning($"WMI class or namespace not available; listener disabled. [listener={GetType().Name}, error={ex.ErrorCode}]");
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't start listener. [listener={GetType().Name}]", ex);
+            Log.Instance.Error($"Couldn't start listener. [listener={GetType().Name}]", ex);
         }
 
         return Task.CompletedTask;
@@ -73,8 +71,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't stop listener. [listener={GetType().Name}]", ex);
+            Log.Instance.Error($"Couldn't stop listener. [listener={GetType().Name}]", ex);
         }
 
         return Task.CompletedTask;
@@ -104,8 +101,7 @@ private async Task HandlerAsync(TRawValue properties)
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to handle event.  [listener={GetType().Name}]", ex);
+            Log.Instance.Error($"Failed to handle event.  [listener={GetType().Name}]", ex);
         }
         finally
         {

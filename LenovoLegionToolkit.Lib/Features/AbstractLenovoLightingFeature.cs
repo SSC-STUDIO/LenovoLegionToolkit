@@ -42,8 +42,7 @@ public abstract class AbstractLenovoLightingFeature<T>(int lightingID, int contr
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to check support [feature={GetType().Name}]", ex);
+            Log.Instance.Warning($"Failed to check support [feature={GetType().Name}]", ex);
 
             return false;
         }

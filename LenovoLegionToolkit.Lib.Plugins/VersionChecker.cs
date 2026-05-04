@@ -115,7 +115,7 @@ public class VersionChecker
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace($"Error checking version compatibility: {ex.Message}");
+            Log.Instance.Warning($"Error checking version compatibility: {ex.Message}");
             return true;
         }
     }
@@ -141,7 +141,7 @@ public class VersionChecker
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace($"Error checking update availability: {ex.Message}");
+            Log.Instance.Warning($"Error checking update availability: {ex.Message}");
             return false;
         }
     }
@@ -162,7 +162,7 @@ public class VersionChecker
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace($"Error comparing versions: {ex.Message}");
+            Log.Instance.Warning($"Error comparing versions: {ex.Message}");
             return 0;
         }
     }

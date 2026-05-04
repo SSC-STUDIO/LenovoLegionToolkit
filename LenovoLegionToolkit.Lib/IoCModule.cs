@@ -16,7 +16,6 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
-using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
@@ -154,25 +153,5 @@ public class IoCModule : Module
         builder.Register<BatteryDischargeRateMonitorService>();
         builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
-
-        // 注册插件签名验证器
-        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.CreateForCurrentProcess()))
-            .As<IPluginSignatureValidator>()
-            .SingleInstance();
-
-        // 注册插件系统组件
-        builder.Register<PluginLoader>().As<IPluginLoader>().SingleInstance();
-        builder.Register<PluginRegistry>().As<IPluginRegistry>().SingleInstance();
-        builder.Register<PluginFileSystemManager>().As<IPluginFileSystemManager>().SingleInstance();
-
-        // 注册插件管理器
-        builder.Register<PluginManager>().As<IPluginManager>().SingleInstance();
-        
-        // 注册插件仓库服务
-        builder.Register<PluginRepositoryService>().AsSelf().SingleInstance();
-        
-        // System Optimization and Tools are now default interfaces, not plugins
-        // They are registered directly in MainWindow.xaml as NavigationItems
-        // No need to register them as plugins in IoC container
     }
 }

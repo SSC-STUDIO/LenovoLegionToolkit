@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -487,7 +486,6 @@ WARNING: This action will not run correctly, if internal display is off.</value>
   <data name="DisplayBrightnessAutomationStepControl_Title" xml:space="preserve">
     <value>Display brightness</value>
   </data>
-
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -737,7 +735,6 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
-
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Keyboard</value>
   </data>
@@ -747,7 +744,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>System optimization</value>
   </data>
-<data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
+  <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
@@ -774,10 +771,9 @@ WARNING: This action will not run correctly if the internal display is off.</val
   <data name="NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the System Optimization navigation item</value>
   </data>
-<data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
+  <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the Plugin Extensions navigation item</value>
   </data>
-
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
     <value>Show or hide the About navigation item</value>
   </data>
@@ -1342,7 +1338,7 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
     <value>Failed to remove selected apps.</value>
   </data>
-<data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
+  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
     <value>Loading apps, please wait...</value>
   </data>
   <data name="PluginExtensionsPage_Loading" xml:space="preserve">
@@ -1435,7 +1431,6 @@ Restart is recommended after changing this option.</value>
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
     <value>Restore backed-up cursor scheme and stop theme-based custom cursor switching.</value>
   </data>
-
   <data name="WindowsOptimization_Action_NilesoftShell_Uninstall_Title" xml:space="preserve">
     <value>Apply Modern Context Menu</value>
   </data>
@@ -1824,7 +1819,6 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
     <value>Disable incompatible device warning</value>
   </data>
-
   <data name="SettingsPage_ExtensionsEnabled_Title" xml:space="preserve">
     <value>Enable Extensions</value>
   </data>
@@ -1994,6 +1988,30 @@ Requires restart.</value>
   <data name="UnexpectedException" xml:space="preserve">
     <value>Unexpected exception occurred:
 {0}</value>
+  </data>
+  <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
+    <value>Delete Report</value>
+  </data>
+  <data name="CrashReportNotification_Description" xml:space="preserve">
+    <value>A crash report has been saved to disk. You can review the report details below. Reports are not sent automatically.</value>
+  </data>
+  <data name="CrashReportNotification_Message" xml:space="preserve">
+    <value>The application crashed during the previous session</value>
+  </data>
+  <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
+    <value>Failed to open crash report: {0}</value>
+  </data>
+  <data name="CrashReportNotification_OpenReport" xml:space="preserve">
+    <value>Open Report</value>
+  </data>
+  <data name="CrashReportNotification_ReportPath" xml:space="preserve">
+    <value>Crash report saved to: {0}</value>
+  </data>
+  <data name="CrashReportNotification_Title" xml:space="preserve">
+    <value>Crash Report Detected</value>
+  </data>
+  <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
+    <value>Unable to load crash report details.</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
     <value>Unnamed</value>
@@ -2689,7 +2707,7 @@ Supported formats are: {1}.</value>
   <data name="PackageControl_Download" xml:space="preserve">
     <value>Download</value>
   </data>
-<data name="PackageControl_Install" xml:space="preserve">
+  <data name="PackageControl_Install" xml:space="preserve">
     <value>Install</value>
   </data>
   <data name="PackageControl_Uninstall" xml:space="preserve">
@@ -3251,11 +3269,9 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Collapse all</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
-
     <value>Freed {0} in {1}s</value>
-
   </data>
-<data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
+  <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Executing {0}%</value>
   </data>
   <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
@@ -3297,14 +3313,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_Description" xml:space="preserve">
     <value>Install and manage plugins to extend functionality</value>
   </data>
-
   <data name="PluginExtensionsPage_InstallPlugin" xml:space="preserve">
     <value>Install</value>
   </data>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Installed</value>
   </data>
-
   <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
     <value>Cannot Uninstall</value>
   </data>
@@ -3437,7 +3451,7 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
     <value>Failed to open plugin</value>
   </data>
-    <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
+  <data name="PluginExtensionsPage_OpenFailedMessage" xml:space="preserve">
     <value>Unable to open plugin: {0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve">
@@ -3941,4 +3955,79 @@ You can manually save the files and restart the Explorer process in Task Manager
   <data name="WindowsOptimization_NoCleanupSelection_Warning" xml:space="preserve">
     <value>Please select at least one item to clean up.</value>
   </data>
-<data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>Force software rendering</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value></data></root>
+  <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
+    <value>Force software rendering</value>
+  </data>
+  <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
+    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+  </data>
+  <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
+    <value>Installer exited with code {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
+    <value>by {0}</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
+    <value>Optimize</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
+    <value>Quick Open</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
+    <value>Checking plugin availability...</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
+    <value>Available to install</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
+    <value>{0} additional plugin(s) are available in the current feed.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
+    <value>Store Pulse</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
+    <value>Total Plugins</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
+    <value>All detected plugins are currently up to date.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
+    <value>Up to date</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
+    <value>Updates available</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
+    <value>Updates Ready</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
+    <value>{0} plugin update(s) are ready to install.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
+    <value>Waiting for plugin metadata to load.</value>
+  </data>
+  <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
+    <value>Loading metadata</value>
+  </data>
+  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
+    <value>Customize language, temperature unit, theme and accent color.</value>
+  </data>
+  <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsPage_Navigation_Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
+    <value>Failed to apply {0}: {1}</value>
+  </data>
+</root>
