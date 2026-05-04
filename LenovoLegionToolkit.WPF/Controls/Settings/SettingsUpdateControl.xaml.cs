@@ -64,7 +64,7 @@ public partial class SettingsUpdateControl
         if (App.Current.MainWindow is not MainWindow mainWindow)
             return;
 
-        mainWindow.CheckForUpdates(true);
+        await mainWindow.CheckForUpdates(true);
         await SnackbarHelper.ShowAsync(Resource.SettingsPage_CheckUpdates_Started_Title, type: SnackbarType.Info);
     }
 

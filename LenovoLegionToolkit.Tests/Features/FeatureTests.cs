@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Features;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Moq;
 
 namespace LenovoLegionToolkit.Tests.Features;
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+[Trait("Category", TestCategories.Controller)]
 public class IFeatureTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void IFeature_ShouldHaveCorrectMethods()
     {
         var methodNames = new[]
@@ -29,7 +28,7 @@ public class IFeatureTests : UnitTestBase
         }
     }
 
-    [TestMethod]
+    [Fact]
     public async Task IFeature_MockImplementation_ShouldWorkCorrectly()
     {
         var mockFeature = new Mock<IFeature<BatteryState>>();
@@ -56,11 +55,11 @@ public class IFeatureTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class BatteryStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void BatteryState_ShouldHaveThreeStates()
     {
         var states = Enum.GetValues<BatteryState>();
@@ -71,7 +70,7 @@ public class BatteryStateTests : UnitTestBase
         states.Should().Contain(BatteryState.RapidCharge);
     }
 
-    [TestMethod]
+    [Fact]
     public void BatteryState_Values_ShouldBeCorrect()
     {
         ((int)BatteryState.Conservation).Should().Be(0);
@@ -80,11 +79,11 @@ public class BatteryStateTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class PowerModeStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void PowerModeState_ShouldHaveFourStates()
     {
         var states = Enum.GetValues<PowerModeState>();
@@ -96,13 +95,13 @@ public class PowerModeStateTests : UnitTestBase
         states.Should().Contain(PowerModeState.GodMode);
     }
 
-    [TestMethod]
+    [Fact]
     public void PowerModeState_GodMode_ShouldHaveSpecialValue()
     {
         ((int)PowerModeState.GodMode).Should().Be(254);
     }
 
-    [TestMethod]
+    [Fact]
     public void PowerModeState_StandardModes_ShouldHaveSequentialValues()
     {
         ((int)PowerModeState.Quiet).Should().Be(0);
@@ -111,11 +110,11 @@ public class PowerModeStateTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class HybridModeStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void HybridModeState_ShouldHaveFourStates()
     {
         var states = Enum.GetValues<HybridModeState>();
@@ -128,11 +127,11 @@ public class HybridModeStateTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class GPUStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void GPUState_ShouldHaveSixStates()
     {
         var states = Enum.GetValues<GPUState>();
@@ -146,18 +145,18 @@ public class GPUStateTests : UnitTestBase
         states.Should().Contain(GPUState.PoweredOff);
     }
 
-    [TestMethod]
+    [Fact]
     public void GPUState_Unknown_ShouldBeFirst()
     {
         ((int)GPUState.Unknown).Should().Be(0);
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class FanTableTypeTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void FanTableType_ShouldHaveFiveTypes()
     {
         var types = Enum.GetValues<FanTableType>();

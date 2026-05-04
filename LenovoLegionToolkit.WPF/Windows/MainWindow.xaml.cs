@@ -164,7 +164,7 @@ public partial class MainWindow
 
         LoadDeviceInfo();
         UpdateIndicators();
-        CheckForUpdates();
+        _ = CheckForUpdates();
 
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToPrevious), Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
@@ -290,7 +290,7 @@ public partial class MainWindow
         if (!IsVisible)
             return;
 
-        CheckForUpdates();
+        _ = CheckForUpdates();
     }
 
     private void OpenLogIndicator_Click(object sender, MouseButtonEventArgs e) => OpenLog();
@@ -366,7 +366,7 @@ public partial class MainWindow
         });
     }
 
-    public async void CheckForUpdates(bool manualCheck = false)
+    public async Task CheckForUpdates(bool manualCheck = false)
     {
         try
         {

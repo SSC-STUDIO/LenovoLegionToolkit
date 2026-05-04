@@ -2,12 +2,11 @@ using System;
 using System.Reflection;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace LenovoLegionToolkit.Tests.Utils;
 
-[TestClass]
-[TestCategory(TestCategories.Utils)]
+[Trait("Category", TestCategories.Utils)]
 public class ReflectionCacheTests : UnitTestBase
 {
     private class TestClass
@@ -17,7 +16,7 @@ public class ReflectionCacheTests : UnitTestBase
         private int PrivateProperty { get; set; }
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedProperties_ShouldReturnPublicProperties()
     {
         var properties = ReflectionCache.GetCachedProperties(typeof(TestClass));
@@ -27,7 +26,7 @@ public class ReflectionCacheTests : UnitTestBase
         properties.Should().Contain(p => p.Name == nameof(TestClass.StringProperty));
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedProperties_WhenCalledMultipleTimes_ShouldReturnSameInstance()
     {
         var properties1 = ReflectionCache.GetCachedProperties(typeof(TestClass));
@@ -36,7 +35,7 @@ public class ReflectionCacheTests : UnitTestBase
         properties1.Should().BeSameAs(properties2);
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedProperty_ShouldReturnCorrectProperty()
     {
         var property = ReflectionCache.GetCachedProperty(typeof(TestClass), nameof(TestClass.PublicProperty));
@@ -45,7 +44,7 @@ public class ReflectionCacheTests : UnitTestBase
         property!.Name.Should().Be(nameof(TestClass.PublicProperty));
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedProperty_WhenPropertyDoesNotExist_ShouldReturnNull()
     {
         var property = ReflectionCache.GetCachedProperty(typeof(TestClass), "NonExistentProperty");
@@ -53,7 +52,7 @@ public class ReflectionCacheTests : UnitTestBase
         property.Should().BeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedProperty_WhenCalledMultipleTimes_ShouldReturnSameInstance()
     {
         var property1 = ReflectionCache.GetCachedProperty(typeof(TestClass), nameof(TestClass.PublicProperty));
@@ -62,7 +61,7 @@ public class ReflectionCacheTests : UnitTestBase
         property1.Should().BeSameAs(property2);
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedPropertyValue_ShouldReturnCorrectValue()
     {
         var obj = new TestClass { PublicProperty = 100 };
@@ -72,7 +71,7 @@ public class ReflectionCacheTests : UnitTestBase
         value.Should().Be(100);
     }
 
-    [TestMethod]
+    [Fact]
     public void GetCachedPropertyValue_WhenObjectIsNull_ShouldReturnNull()
     {
         var value = ReflectionCache.GetCachedPropertyValue(null!, "AnyProperty");
@@ -80,7 +79,7 @@ public class ReflectionCacheTests : UnitTestBase
         value.Should().BeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void ClearCache_ShouldClearAllCaches()
     {
         _ = ReflectionCache.GetCachedProperties(typeof(TestClass));
@@ -109,18 +108,18 @@ public class ReflectionCacheTests : UnitTestBase
         return (int)countProperty!.GetValue(value)!;
     }
 
-    [TestCleanup]
-    public new void Cleanup()
+    protected override void Cleanup()
     {
         ReflectionCache.ClearCache();
+        base.Cleanup();
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Utils)]
+
+[Trait("Category", TestCategories.Utils)]
 public class GPUPowerInfoCacheTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void Constructor_DefaultValues_ShouldInitializeCorrectly()
     {
         var cache = new GPUPowerInfoCache();
@@ -131,7 +130,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         voltage.Should().Be(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void Update_ShouldSetCachedValues()
     {
         var cache = new GPUPowerInfoCache();
@@ -143,7 +142,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         voltage.Should().Be(1.2);
     }
 
-    [TestMethod]
+    [Fact]
     public void IsCacheValid_WhenNoUpdate_ShouldReturnFalse()
     {
         var cache = new GPUPowerInfoCache();
@@ -151,7 +150,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.IsCacheValid().Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void IsCacheValid_AfterUpdate_ShouldReturnTrue()
     {
         var cache = new GPUPowerInfoCache();
@@ -160,7 +159,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.IsCacheValid().Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void IsCacheValid_AfterExpiration_ShouldReturnFalse()
     {
         var cache = new GPUPowerInfoCache(TimeSpan.FromMilliseconds(10));
@@ -171,7 +170,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.IsCacheValid().Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldTryNvidiaSmi_Initially_ShouldReturnTrue()
     {
         var cache = new GPUPowerInfoCache();
@@ -179,7 +178,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.ShouldTryNvidiaSmi().Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldTryNvidiaSmi_AfterFailure_ShouldReturnFalse()
     {
         var cache = new GPUPowerInfoCache();
@@ -189,7 +188,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.ShouldTryNvidiaSmi().Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldTryNvidiaSmi_AfterRetryInterval_ShouldReturnTrue()
     {
         var cache = new GPUPowerInfoCache(nvidiaSmiRetryInterval: TimeSpan.FromMilliseconds(10));
@@ -200,7 +199,7 @@ public class GPUPowerInfoCacheTests : UnitTestBase
         cache.ShouldTryNvidiaSmi().Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void ResetNvidiaSmiFailed_ShouldAllowRetry()
     {
         var cache = new GPUPowerInfoCache();

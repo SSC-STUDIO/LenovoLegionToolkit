@@ -33,11 +33,11 @@ public partial class SettingsDisplayControl
 
         await Task.WhenAll(fnKeysTask, bootLogoTask);
 
-        var fnKeysStatus = fnKeysTask.Result;
+        var fnKeysStatus = await fnKeysTask;
         _notificationsCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
 
-        _bootLogoCard.Visibility = bootLogoTask.Result ? Visibility.Visible : Visibility.Collapsed;
+        _bootLogoCard.Visibility = await bootLogoTask ? Visibility.Visible : Visibility.Collapsed;
 
         _isRefreshing = false;
     }

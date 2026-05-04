@@ -9,12 +9,11 @@ using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace LenovoLegionToolkit.Tests.Controllers;
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+[Trait("Category", TestCategories.Controller)]
 public class GodModeControllerTests : UnitTestBase
 {
     private TestGodModeControllerV1 _controllerV1 = null!;
@@ -42,13 +41,13 @@ public class GodModeControllerTests : UnitTestBase
         RestoreCompatibilityState();
     }
 
-    [TestMethod]
+    [Fact]
     public void Constructor_ShouldInitializeCorrectly()
     {
         _controller.Should().NotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void PresetChanged_Event_ShouldBeSubscribedToBothControllers()
     {
         var eventCount = 0;
@@ -64,7 +63,7 @@ public class GodModeControllerTests : UnitTestBase
         _controller.PresetChanged -= handler;
     }
 
-    [TestMethod]
+    [Fact]
     public async Task NeedsVantageDisabledAsync_ShouldCallCorrectController()
     {
         var result = await _controller.NeedsVantageDisabledAsync();
@@ -72,7 +71,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task NeedsLegionZoneDisabledAsync_ShouldCallCorrectController()
     {
         var result = await _controller.NeedsLegionZoneDisabledAsync();
@@ -80,7 +79,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetActivePresetIdAsync_ShouldReturnCorrectId()
     {
         var expectedId = Guid.NewGuid();
@@ -94,7 +93,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().Be(expectedId);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetActivePresetNameAsync_ShouldReturnCorrectName()
     {
         const string expectedName = "Test Preset";
@@ -109,7 +108,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().Be(expectedName);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetActivePresetNameAsync_WhenNoPreset_ShouldReturnNull()
     {
         var activeId = Guid.NewGuid();
@@ -123,7 +122,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().BeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task SetStateAsync_ShouldCallCorrectController()
     {
         var presetId = Guid.NewGuid();
@@ -142,7 +141,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().Be(presetId);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task ApplyStateAsync_ShouldCallCorrectController()
     {
         await _controller.ApplyStateAsync();
@@ -150,7 +149,7 @@ public class GodModeControllerTests : UnitTestBase
         _controllerV1.ApplyCalls.Should().Be(1);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetDefaultFanTableAsync_ShouldReturnFanTable()
     {
         var result = await _controller.GetDefaultFanTableAsync();
@@ -158,7 +157,7 @@ public class GodModeControllerTests : UnitTestBase
         result.GetTable().Should().Equal((ushort)1, (ushort)2, (ushort)3, (ushort)4, (ushort)5, (ushort)6, (ushort)7, (ushort)8, (ushort)9, (ushort)10);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetMinimumFanTableAsync_ShouldReturnFanTable()
     {
         var result = await _controller.GetMinimumFanTableAsync();
@@ -166,7 +165,7 @@ public class GodModeControllerTests : UnitTestBase
         result.GetTable().Should().Equal((ushort)1, (ushort)1, (ushort)1, (ushort)1, (ushort)1, (ushort)1, (ushort)1, (ushort)1, (ushort)3, (ushort)5);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task GetDefaultsInOtherPowerModesAsync_ShouldReturnDictionary()
     {
         var result = await _controller.GetDefaultsInOtherPowerModesAsync();
@@ -174,7 +173,7 @@ public class GodModeControllerTests : UnitTestBase
         result.Should().ContainKey(PowerModeState.Quiet);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task RestoreDefaultsInOtherPowerModeAsync_ShouldCallCorrectController()
     {
         var powerMode = PowerModeState.Quiet;
@@ -298,11 +297,11 @@ public class GodModeControllerTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class FanTableTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void FanTable_DefaultConstructor_ShouldInitializeWithDefaults()
     {
         var fanTable = new FanTable();
@@ -310,7 +309,7 @@ public class FanTableTests : UnitTestBase
         fanTable.Should().NotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void FanTable_WithParameters_ShouldSetPropertiesCorrectly()
     {
         var fanTable = new FanTable
@@ -324,11 +323,11 @@ public class FanTableTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class GodModeStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void GodModeState_DefaultConstructor_ShouldInitialize()
     {
         var state = new GodModeState();
@@ -336,7 +335,7 @@ public class GodModeStateTests : UnitTestBase
         state.Should().NotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void GodModeState_WithPresetId_ShouldSetCorrectly()
     {
         var presetId = Guid.NewGuid();

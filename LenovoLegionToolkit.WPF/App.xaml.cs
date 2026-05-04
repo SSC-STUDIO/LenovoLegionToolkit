@@ -835,10 +835,10 @@ public partial class App
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        // Prevent infinite recursion
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
         if (_exceptionHandlerExecuting)
         {
-            Environment.Exit(100);
+            Environment.FailFast("Fatal error: re-entered AppDomain_UnhandledException", new Exception("Re-entry detected"));
             return;
         }
 
@@ -847,8 +847,12 @@ public partial class App
         try
         {
             var exception = e.ExceptionObject as Exception;
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
 
-            Log.Instance.ErrorReport("AppDomain_UnhandledException", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
+            Log.Instance.ErrorReport($"AppDomain_UnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
             Log.Instance.Trace($"Unhandled exception occurred.", exception);
 
             // Save crash report BEFORE showing message box
@@ -877,6 +881,8 @@ public partial class App
             // CRITICAL: Stop MacroController to release keyboard hook before exit
             StopMacroControllerSafely();
 
+            Log.Instance.Flush();
+
             // Force exit to prevent hanging
             try
             {
@@ -884,18 +890,25 @@ public partial class App
             }
             catch
             {
-                Environment.Exit(100);
+                try
+                {
+                    Environment.Exit(100);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in AppDomain", e.ExceptionObject as Exception);
+                }
             }
         }
     }
 
     private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        // Prevent infinite recursion
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
         if (_exceptionHandlerExecuting)
         {
             e.Handled = true;
-            Environment.Exit(101);
+            Environment.FailFast("Fatal error: re-entered Application_DispatcherUnhandledException", new Exception("Re-entry detected"));
             return;
         }
 
@@ -904,7 +917,12 @@ public partial class App
 
         try
         {
-            Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            Log.Instance.ErrorReport($"Application_DispatcherUnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
             Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
 
             // Save crash report BEFORE showing message box
@@ -933,6 +951,8 @@ public partial class App
             // CRITICAL: Stop MacroController to release keyboard hook before exit
             StopMacroControllerSafely();
 
+            Log.Instance.Flush();
+
             // Force exit to prevent hanging
             try
             {
@@ -940,7 +960,14 @@ public partial class App
             }
             catch
             {
-                Environment.Exit(101);
+                try
+                {
+                    Environment.Exit(101);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in Dispatcher", e.Exception);
+                }
             }
         }
     }
@@ -949,8 +976,13 @@ public partial class App
     {
         try
         {
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
             // Log the unobserved task exception
-            Log.Instance.ErrorReport("TaskScheduler_UnobservedTaskException", e.Exception);
+            Log.Instance.ErrorReport($"TaskScheduler_UnobservedTaskException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
             Log.Instance.Trace($"Unobserved task exception occurred.", e.Exception);
 
             // Save crash report

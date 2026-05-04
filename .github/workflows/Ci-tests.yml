@@ -23,6 +23,12 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
+
       - name: Restore solution
         run: dotnet restore LenovoLegionToolkit.sln
 
@@ -30,7 +36,22 @@ jobs:
         run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
 
       - name: Test stable paths
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx"
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage"
+
+      - name: Check for vulnerable packages
+        shell: pwsh
+        run: |
+          dotnet list package --vulnerable --include-transitive
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::warning::Vulnerable packages found. Please review and update packages."
+          }
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test results
+          path: '**/*.trx'
+          reporter: dotnet-trx
 
       - name: Smoke CLI help and version
         shell: pwsh

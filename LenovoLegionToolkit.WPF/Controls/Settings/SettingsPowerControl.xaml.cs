@@ -35,8 +35,8 @@ public partial class SettingsPowerControl
 
         await Task.WhenAll(miTask, powerModeSupportedTask);
 
-        var mi = miTask.Result;
-        var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
+        var mi = await miTask;
+        var isPowerModeFeatureSupported = await powerModeSupportedTask;
 
         // Check GodModeFnQSwitchable capability and get value if supported
         // Note: If WMI call fails, the card will be hidden to avoid showing broken UI

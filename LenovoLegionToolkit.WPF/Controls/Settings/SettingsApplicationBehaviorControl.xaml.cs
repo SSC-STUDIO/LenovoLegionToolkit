@@ -46,7 +46,7 @@ public partial class SettingsApplicationBehaviorControl
 
         await Task.WhenAll(compatibilityTask, miTask, vantageTask, legionZoneTask, fnKeysTask);
 
-        var (isCompatible, _) = compatibilityTask.Result;
+        var (isCompatible, _) = await compatibilityTask;
         if (!isCompatible)
         {
             _disableCompatibilityWarningCard.Visibility = Visibility.Visible;
@@ -57,18 +57,18 @@ public partial class SettingsApplicationBehaviorControl
             _disableCompatibilityWarningCard.Visibility = Visibility.Collapsed;
         }
 
-        var mi = miTask.Result;
+        var mi = await miTask;
         var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
 
-        var vantageStatus = vantageTask.Result;
+        var vantageStatus = await vantageTask;
         _vantageCard.Visibility = isSupportedLegionMachine && vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _vantageToggle.IsChecked = vantageStatus == SoftwareStatus.Disabled;
 
-        var legionZoneStatus = legionZoneTask.Result;
+        var legionZoneStatus = await legionZoneTask;
         _legionZoneCard.Visibility = isSupportedLegionMachine && legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _legionZoneToggle.IsChecked = legionZoneStatus == SoftwareStatus.Disabled;
 
-        var fnKeysStatus = fnKeysTask.Result;
+        var fnKeysStatus = await fnKeysTask;
         _fnKeysCard.Visibility = isSupportedLegionMachine && fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
 

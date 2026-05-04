@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Features;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Moq;
 
 namespace LenovoLegionToolkit.Tests.Features;
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+[Trait("Category", TestCategories.Controller)]
 public class PowerModeFeatureTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void PowerModeState_ShouldHaveFourStates()
     {
         var states = Enum.GetValues<PowerModeState>();
@@ -24,7 +23,7 @@ public class PowerModeFeatureTests : UnitTestBase
         states.Should().Contain(PowerModeState.GodMode);
     }
 
-    [TestMethod]
+    [Fact]
     public void PowerModeState_Values_ShouldBeCorrect()
     {
         ((int)PowerModeState.Quiet).Should().Be(0);
@@ -33,7 +32,7 @@ public class PowerModeFeatureTests : UnitTestBase
         ((int)PowerModeState.GodMode).Should().Be(254);
     }
 
-    [TestMethod]
+    [Fact]
     public void PowerModeUnavailableWithoutACException_ShouldContainPowerMode()
     {
         var exception = new PowerModeUnavailableWithoutACException(PowerModeState.Performance);
@@ -43,11 +42,11 @@ public class PowerModeFeatureTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class BatteryFeatureTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void BatteryState_ShouldHaveThreeStates()
     {
         var states = Enum.GetValues<BatteryState>();
@@ -58,7 +57,7 @@ public class BatteryFeatureTests : UnitTestBase
         states.Should().Contain(BatteryState.RapidCharge);
     }
 
-    [TestMethod]
+    [Fact]
     public void BatteryState_Values_ShouldBeCorrect()
     {
         ((int)BatteryState.Conservation).Should().Be(0);
@@ -67,11 +66,11 @@ public class BatteryFeatureTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class IFeatureInterfaceTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void IFeature_ShouldHaveCorrectMethods()
     {
         var methodNames = new[]
@@ -88,7 +87,7 @@ public class IFeatureInterfaceTests : UnitTestBase
         }
     }
 
-    [TestMethod]
+    [Fact]
     public async Task IFeature_MockImplementation_ShouldWorkCorrectly()
     {
         var mockFeature = new Mock<IFeature<PowerModeState>>();
@@ -115,11 +114,11 @@ public class IFeatureInterfaceTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class PowerModeStateExtensionsTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void Next_ShouldReturnCorrectNextState()
     {
         PowerModeState.Quiet.Next().Should().Be(PowerModeState.Balance);
@@ -128,7 +127,7 @@ public class PowerModeStateExtensionsTests : UnitTestBase
         PowerModeState.GodMode.Next().Should().Be(PowerModeState.Quiet);
     }
 
-    [TestMethod]
+    [Fact]
     public void Previous_ShouldReturnCorrectPreviousState()
     {
         PowerModeState.Quiet.Previous().Should().Be(PowerModeState.GodMode);

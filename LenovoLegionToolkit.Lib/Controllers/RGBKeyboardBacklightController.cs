@@ -66,6 +66,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Light control ownership: {enable}");
+
+                    Log.Instance.Info($"Light control ownership set to {enable} [controller={nameof(RGBKeyboardBacklightController)}]");
                 }
                 catch (Exception ex)
                 {
@@ -131,6 +133,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB state set to {selectedPreset}");
 
+                Log.Instance.Info($"RGB state set to {selectedPreset} [controller={nameof(RGBKeyboardBacklightController)}]");
+
                 await SendToDevice(str).ConfigureAwait(false);
             }
         }
@@ -164,6 +168,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB preset set to {preset}");
+
+                Log.Instance.Info($"RGB preset set to {preset} [controller={nameof(RGBKeyboardBacklightController)}]");
             }
         }
 
@@ -198,6 +204,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB preset changed to {newPreset}");
+
+                Log.Instance.Info($"RGB preset changed to {newPreset} [controller={nameof(RGBKeyboardBacklightController)}]");
 
                 return newPreset;
             }

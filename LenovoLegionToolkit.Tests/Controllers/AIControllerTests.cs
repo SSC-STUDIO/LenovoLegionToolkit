@@ -6,15 +6,15 @@ using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Settings;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace LenovoLegionToolkit.Tests.Controllers;
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class AIControllerTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void Constructor_ShouldInitializeCorrectly()
     {
         var controller = CreateController();
@@ -22,7 +22,7 @@ public class AIControllerTests : UnitTestBase
         controller.Should().NotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void IsAIModeEnabled_GetSet_ShouldWorkCorrectly()
     {
         var settings = new BalanceModeSettings();
@@ -35,7 +35,7 @@ public class AIControllerTests : UnitTestBase
         controller.IsAIModeEnabled.Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void Dispose_ShouldNotThrow()
     {
         var controller = CreateController();
@@ -45,7 +45,7 @@ public class AIControllerTests : UnitTestBase
         act.Should().NotThrow();
     }
 
-    [TestMethod]
+    [Fact]
     public void Dispose_MultipleTimes_ShouldNotThrow()
     {
         var controller = CreateController();
@@ -79,11 +79,11 @@ public class AIControllerTests : UnitTestBase
         (T)RuntimeHelpers.GetUninitializedObject(typeof(T));
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class BalanceModeSettingsTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void Store_DefaultValues_ShouldBeCorrect()
     {
         var settings = new BalanceModeSettings();
@@ -91,7 +91,7 @@ public class BalanceModeSettingsTests : UnitTestBase
         settings.Store.AIModeEnabled.Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void Store_CanBeModified()
     {
         var settings = new BalanceModeSettings();

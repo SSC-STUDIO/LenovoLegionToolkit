@@ -210,7 +210,11 @@ public static partial class Compatibility
             var capabilities = await WMI.LenovoCapabilityData00.ReadAsync().ConfigureAwait(false);
             return new(MachineInformation.FeatureData.SourceType.CapabilityData, capabilities);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"LenovoCapabilityData00 read failed, falling back to feature flags", ex);
+        }
 
         try
         {
@@ -228,7 +232,11 @@ public static partial class Compatibility
                 [CapabilityID.OverDrive] = true
             };
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetLegionDeviceSupportFeature read failed, returning Unknown features", ex);
+        }
 
         return MachineInformation.FeatureData.Unknown;
     }
@@ -252,7 +260,11 @@ public static partial class Compatibility
 
             return powerModes;
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetFeatureValue(SupportedPowerModes) read failed, falling back to GetSupportThermalMode", ex);
+        }
 
         try
         {
@@ -271,7 +283,11 @@ public static partial class Compatibility
 
             return powerModes;
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetSupportThermalMode read failed, returning empty power modes", ex);
+        }
 
         return [];
     }
@@ -282,7 +298,11 @@ public static partial class Compatibility
         {
             return await WMI.LenovoGameZoneData.IsSupportSmartFanAsync().ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IsSupportSmartFan read failed, returning -1", ex);
+        }
 
         return -1;
     }
@@ -293,13 +313,21 @@ public static partial class Compatibility
         {
             return await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.LegionZoneSupportVersion).ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetFeatureValue(LegionZoneSupportVersion) read failed, falling back to GetSupportLegionZoneVersion", ex);
+        }
 
         try
         {
             return await WMI.LenovoOtherMethod.GetSupportLegionZoneVersionAsync().ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetSupportLegionZoneVersion read failed, returning -1", ex);
+        }
 
         return -1;
     }
