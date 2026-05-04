@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
@@ -77,5 +78,25 @@ public class WindowsPowerModeControllerTests : UnitTestBase
         _dispatcherMock.Verify(
             d => d.Dispatch(It.IsAny<Action>()),
             Times.Never);
+    }
+
+    [Fact]
+    public void Constructor_WithValidSettings_ShouldNotThrow()
+    {
+        var act = () => new WindowsPowerModeController(new ApplicationSettings(), new Mock<IMainThreadDispatcher>().Object);
+
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void PowerModes_DefaultStore_ShouldContainZeroModes()
+    {
+        _settings.Store.PowerModes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void PowerModeMappingMode_Default_ShouldBeWindowsPowerMode()
+    {
+        _settings.Store.PowerModeMappingMode.Should().Be(PowerModeMappingMode.WindowsPowerMode);
     }
 }

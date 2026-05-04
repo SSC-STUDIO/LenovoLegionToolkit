@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
@@ -74,28 +75,6 @@ public class RGBKeyboardBacklightControllerTests : UnitTestBase
     }
 
     [Fact]
-    public async Task SetPresetAsync_WhenForceDisable_ShouldThrowInvalidOperationException()
-    {
-        _controller.ForceDisable = true;
-
-        var act = async () => await _controller.SetPresetAsync(default);
-
-        await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*RGB Keyboard unsupported*");
-    }
-
-    [Fact]
-    public async Task SetNextPresetAsync_WhenForceDisable_ShouldThrowInvalidOperationException()
-    {
-        _controller.ForceDisable = true;
-
-        var act = async () => await _controller.SetNextPresetAsync();
-
-        await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*RGB Keyboard unsupported*");
-    }
-
-    [Fact]
     public async Task SetLightControlOwnerAsync_WhenForceDisable_ShouldNotThrow()
     {
         _controller.ForceDisable = true;
@@ -114,4 +93,60 @@ public class RGBKeyboardBacklightControllerTests : UnitTestBase
         _controller.ForceDisable = false;
         _controller.ForceDisable.Should().BeFalse();
     }
+
+    #region Extended Tests
+
+    [Fact]
+    public async Task SetPresetAsync_WhenForceDisable_ShouldThrowInvalidOperationException()
+    {
+        _controller.ForceDisable = true;
+
+        var act = async () => await _controller.SetPresetAsync(RGBKeyboardBacklightPreset.Off);
+
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage("*RGB Keyboard unsupported*");
+    }
+
+    [Fact]
+    public async Task SetNextPresetAsync_WhenForceDisable_ShouldThrowInvalidOperationException()
+    {
+        _controller.ForceDisable = true;
+
+        var act = async () => await _controller.SetNextPresetAsync();
+
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage("*RGB Keyboard unsupported*");
+    }
+
+    [Fact]
+    public async Task SetLightControlOwnerAsync_WithRestorePreset_WhenForceDisable_ShouldNotThrow()
+    {
+        _controller.ForceDisable = true;
+
+        var act = async () => await _controller.SetLightControlOwnerAsync(true, restorePreset: true);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task SetLightControlOwnerAsync_WithEnableFalse_WhenForceDisable_ShouldNotThrow()
+    {
+        _controller.ForceDisable = true;
+
+        var act = async () => await _controller.SetLightControlOwnerAsync(false);
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task ForceDisable_AfterSettingToFalse_IsSupportedShouldCheckDevice()
+    {
+        _controller.ForceDisable = false;
+
+        var result = await _controller.IsSupportedAsync();
+
+        result.Should().BeFalse();
+    }
+
+    #endregion
 }

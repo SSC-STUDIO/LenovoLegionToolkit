@@ -93,57 +93,73 @@
                 <wpfui:NavigationStore.Items>
                     <custom:NavigationItem
                         x:Name="_dashboardItem"
+                        AutomationProperties.AccessKey="D"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}"
                         Icon="Home24"
                         PageTag="dashboard"
-                        PageType="{x:Type pages:DashboardPage}" />
+                        PageType="{x:Type pages:DashboardPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}" />
                     <custom:NavigationItem
                         x:Name="_keyboardItem"
+                        AutomationProperties.AccessKey="K"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}"
                         Icon="Keyboard24"
                         PageTag="keyboardBacklight"
-                        PageType="{x:Type pages:KeyboardBacklightPage}" />
+                        PageType="{x:Type pages:KeyboardBacklightPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}" />
                     <custom:NavigationItem
                         x:Name="_automationItem"
+                        AutomationProperties.AccessKey="A"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
                         Icon="Rocket24"
                         PageTag="automation"
-                        PageType="{x:Type pages:AutomationPage}" />
+                        PageType="{x:Type pages:AutomationPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}" />
                     <custom:NavigationItem
                         x:Name="_macroItem"
+                        AutomationProperties.AccessKey="M"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
                         Icon="ReceiptPlay24"
                         PageTag="macro"
-                        PageType="{x:Type pages:MacroPage}" />
+                        PageType="{x:Type pages:MacroPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}" />
                     <custom:NavigationItem
                         x:Name="_windowsOptimizationItem"
+                        AutomationProperties.AccessKey="W"
                         AutomationProperties.AutomationId="WindowsOptimizationNavItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
                         Icon="Gauge24"
                         PageTag="windowsOptimization"
-                        PageType="{x:Type pages:WindowsOptimizationPage}" />
+                        PageType="{x:Type pages:WindowsOptimizationPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" />
                 </wpfui:NavigationStore.Items>
 
                 <wpfui:NavigationStore.Footer>
                     <custom:NavigationItem
                         x:Name="_pluginExtensionsItem"
+                        AutomationProperties.AccessKey="P"
                         AutomationProperties.AutomationId="PluginExtensionsNavItem"
                         Content="Plugin Extensions"
                         Icon="Apps24"
                         PageTag="pluginExtensions"
-                        PageType="{x:Type pages:PluginExtensionsPage}" />
+                        PageType="{x:Type pages:PluginExtensionsPage}"
+                        ToolTip="Plugin Extensions" />
 
                     <custom:NavigationItem
+                        AutomationProperties.AccessKey="S"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
                         Icon="Settings24"
                         PageTag="settings"
-                        PageType="{x:Type pages:SettingsPage}" />
+                        PageType="{x:Type pages:SettingsPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}" />
                     <custom:NavigationItem
                         x:Name="_aboutItem"
+                        AutomationProperties.AccessKey="B"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
                         Icon="Info24"
                         PageTag="about"
-                        PageType="{x:Type pages:AboutPage}" />
+                        PageType="{x:Type pages:AboutPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_About}" />
                 </wpfui:NavigationStore.Footer>
 
             </wpfui:NavigationStore>
@@ -252,6 +268,7 @@
             Padding="8,4,8,6"
             Background="{DynamicResource SystemFillColorSuccessBrush}"
             Cursor="Hand"
+            ToolTip="{x:Static resources:Resource.MainWindow_UpdateAvailable}"
             MouseLeftButtonDown="UpdateIndicator_Click"
             MouseRightButtonDown="UpdateIndicator_Click"
             Visibility="Collapsed">

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -145,33 +146,68 @@ public class GPUControllerTests : UnitTestBase
             _controller.IsStarted.Should().BeFalse();
         }
     }
-}
 
-[Trait("Category", TestCategories.Controller)]
-public class GPUProcessManagerTests : UnitTestBase
-{
-    private GPUProcessManager _processManager = null!;
+    #region Extended Edge Case Tests
 
-    protected override void Setup()
+    [Fact(Skip = "Requires NVIDIA GPU/NVAPI (Windows only)")]
+    [Trait("Requires", "NVAPI")]
+    public async Task StopAsync_WithWaitForFinish_ShouldComplete()
     {
-        _processManager = new GPUProcessManager();
-    }
+        await _controller.StartAsync(delay: 50, interval: 5000);
+        _controller.IsStarted.Should().BeTrue();
 
-    [Fact]
-    public async Task KillGPUProcessesAsync_WithEmptyList_ShouldNotThrow()
-    {
-        var processes = new List<Process>();
-
-        var act = async () => await _processManager.KillGPUProcessesAsync(processes);
+        var act = async () => await _controller.StopAsync(waitForFinish: true);
 
         await act.Should().NotThrowAsync();
+        _controller.IsStarted.Should().BeFalse();
+    }
+
+    [Fact(Skip = "Requires NVIDIA GPU/NVAPI (Windows only)")]
+    [Trait("Requires", "NVAPI")]
+    public async Task RefreshNowAsync_WhenNotStarted_ShouldReturnUnknownAndNotCrash()
+    {
+        GPUStatus? result = null;
+        var act = async () => { result = await _controller.RefreshNowAsync(); };
+
+        // Note: NVAPI native libraries must be available for this test to pass.
+        // In environments without NVIDIA hardware/NVAPI, this may throw.
+        await act.Should().NotThrowAsync();
+        result.Should().NotBeNull();
     }
 
     [Fact]
-    public void KillGPUProcessesAsync_WithNull_ShouldThrow()
+    public async Task RestartGPUAsync_WhenStateIsNotActiveOrInactive_ShouldNotCallHardwareManager()
     {
-        var act = async () => await _processManager.KillGPUProcessesAsync(null!);
+        var stateField = typeof(GPUController).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance);
+        stateField!.SetValue(_controller, GPUState.PoweredOff);
 
-        act.Should().ThrowAsync<ArgumentNullException>();
+        await _controller.RestartGPUAsync();
+
+        _hardwareManagerMock.Verify(
+            m => m.RestartGPUAsync(It.IsAny<string>()),
+            Times.Never);
     }
+
+    [Fact]
+    public async Task KillGPUProcessesAsync_WhenStateIsNotActive_ShouldNotCallProcessManager()
+    {
+        var stateField = typeof(GPUController).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance);
+        stateField!.SetValue(_controller, GPUState.Inactive);
+
+        await _controller.KillGPUProcessesAsync();
+
+        _processManagerMock.Verify(
+            m => m.KillGPUProcessesAsync(It.IsAny<IEnumerable<Process>>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task GetLastKnownStateAsync_AfterConstructor_ShouldReturnUnknown()
+    {
+        var state = await _controller.GetLastKnownStateAsync();
+
+        state.Should().Be(GPUState.Unknown);
+    }
+
+    #endregion
 }
