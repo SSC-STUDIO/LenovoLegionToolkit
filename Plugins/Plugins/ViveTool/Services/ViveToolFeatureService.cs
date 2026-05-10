@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 
@@ -35,8 +36,7 @@ public class ViveToolFeatureService
     /// </summary>
     public void ClearFeatureCache()
     {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Clearing feature cache");
+        PluginLog.Trace($"ViveTool: Clearing feature cache");
 
         lock (_cacheSync)
         {
@@ -50,8 +50,7 @@ public class ViveToolFeatureService
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: vivetool.exe not found");
+            PluginLog.Trace($"ViveTool: vivetool.exe not found");
             return false;
         }
 
@@ -64,8 +63,7 @@ public class ViveToolFeatureService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error enabling feature {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error enabling feature {featureId}: {ex.Message}", ex);
             return false;
         }
     }
@@ -75,8 +73,7 @@ public class ViveToolFeatureService
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: vivetool.exe not found");
+            PluginLog.Trace($"ViveTool: vivetool.exe not found");
             return false;
         }
 
@@ -89,8 +86,7 @@ public class ViveToolFeatureService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error disabling feature {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error disabling feature {featureId}: {ex.Message}", ex);
             return false;
         }
     }
@@ -100,8 +96,7 @@ public class ViveToolFeatureService
         // Validate feature ID
         if (featureId <= 0)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Invalid feature ID {featureId}, must be positive");
+            PluginLog.Trace($"ViveTool: Invalid feature ID {featureId}, must be positive");
             return null;
         }
 
@@ -128,8 +123,7 @@ public class ViveToolFeatureService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error querying feature {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error querying feature {featureId}: {ex.Message}", ex);
             return null;
         }
     }
@@ -165,15 +159,13 @@ public class ViveToolFeatureService
 
             UpdateCachedFeatures(features, DateTime.UtcNow);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Caching {features.Count} features for {_cacheDuration.TotalMinutes} minutes");
+            PluginLog.Trace($"ViveTool: Caching {features.Count} features for {_cacheDuration.TotalMinutes} minutes");
 
             return new List<FeatureFlagInfo>(features);
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error listing features: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error listing features: {ex.Message}", ex);
             return [];
         }
         finally
@@ -201,8 +193,7 @@ public class ViveToolFeatureService
         var viveToolPath = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
         if (string.IsNullOrEmpty(viveToolPath))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: vivetool.exe not found, cannot get version");
+            PluginLog.Trace($"ViveTool: vivetool.exe not found, cannot get version");
             return null;
         }
 
@@ -216,16 +207,14 @@ public class ViveToolFeatureService
                 // Parse version from output
                 var version = ParseVersionFromOutput(result.Output);
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Detected version: {version}");
+                PluginLog.Trace($"ViveTool: Detected version: {version}");
 
                 return version;
             }
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error getting version: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error getting version: {ex.Message}", ex);
         }
 
         return null;
@@ -244,8 +233,7 @@ public class ViveToolFeatureService
 
         if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("ViveTool: Query did not return configured feature data");
+            PluginLog.Trace("ViveTool: Query did not return configured feature data");
 
             return null;
         }
@@ -370,8 +358,7 @@ public class ViveToolFeatureService
         if (string.IsNullOrWhiteSpace(output))
             return features;
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Parsing feature list output (length: {output.Length} chars)");
+        PluginLog.Trace($"ViveTool: Parsing feature list output (length: {output.Length} chars)");
 
         // Parse vivetool output formats
         // Check for v0.3.4+ format (starts with [ID])
@@ -387,14 +374,12 @@ public class ViveToolFeatureService
             // Handle older formats
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Found {lines.Length} lines to parse");
+            PluginLog.Trace($"ViveTool: Found {lines.Length} lines to parse");
 
             features.AddRange(ParseLegacyFormats(lines));
         }
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Parsed {features.Count} features from output");
+        PluginLog.Trace($"ViveTool: Parsed {features.Count} features from output");
 
         return features;
     }
@@ -570,8 +555,7 @@ public class ViveToolFeatureService
         {
             if (_cachedFeatures != null && (now - _cachedFeaturesTimestamp) < _cacheDuration)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Returning {_cachedFeatures.Count} features from cache");
+                PluginLog.Trace($"ViveTool: Returning {_cachedFeatures.Count} features from cache");
 
                 features = new List<FeatureFlagInfo>(_cachedFeatures);
                 return true;

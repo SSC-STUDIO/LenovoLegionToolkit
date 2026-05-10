@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 
@@ -96,8 +97,7 @@ public class ViveToolPathService
 
             if (!File.Exists(filePath))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Specified file does not exist: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified file does not exist: {filePath}");
                 return false;
             }
 
@@ -105,15 +105,13 @@ public class ViveToolPathService
             var fileName = Path.GetFileName(filePath);
             if (!fileName.Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Specified file is not vivetool.exe: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified file is not vivetool.exe: {filePath}");
                 return false;
             }
 
             if (!IsInstallComplete(Path.GetDirectoryName(filePath)))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Specified path does not include the full ViVeTool runtime: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified path does not include the full ViVeTool runtime: {filePath}");
                 return false;
             }
 
@@ -121,15 +119,13 @@ public class ViveToolPathService
             _cachedViveToolPath = filePath;
             await _settings.SaveAsync().ConfigureAwait(false);
 
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Path set to: {filePath}");
+            PluginLog.Trace($"ViveTool: Path set to: {filePath}");
 
             return true;
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error setting path: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error setting path: {ex.Message}", ex);
             return false;
         }
     }
@@ -157,8 +153,7 @@ public class ViveToolPathService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
             return false;
         }
     }

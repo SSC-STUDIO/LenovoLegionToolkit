@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 
@@ -97,8 +98,7 @@ public class ViveToolDownloadService
                     var actualZipHash = Convert.ToHexString(hashAlgorithm.Hash!).ToLowerInvariant();
                     if (!actualZipHash.Equals(ExpectedViveToolZipSha256, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"ViveTool: ZIP hash mismatch. Expected {ExpectedViveToolZipSha256}, actual {actualZipHash}.");
+                        PluginLog.Trace($"ViveTool: ZIP hash mismatch. Expected {ExpectedViveToolZipSha256}, actual {actualZipHash}.");
                         return false;
                     }
                 }
@@ -118,8 +118,7 @@ public class ViveToolDownloadService
 
                 if (exeEntry == null)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"ViveTool: {ViveToolPathService.ViveToolExeName} not found in ZIP archive");
+                    PluginLog.Trace($"ViveTool: {ViveToolPathService.ViveToolExeName} not found in ZIP archive");
                     return false;
                 }
 
@@ -133,8 +132,7 @@ public class ViveToolDownloadService
                     // SECURITY: Validate entry name to prevent path traversal in ZIP
                     if (entry.Name.Contains("..") || entry.Name.Contains('/') || entry.Name.Contains('\\'))
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"SECURITY: Skipping suspicious entry name in ZIP: {entry.Name}");
+                        PluginLog.Trace($"SECURITY: Skipping suspicious entry name in ZIP: {entry.Name}");
                         continue;
                     }
 
@@ -144,15 +142,13 @@ public class ViveToolDownloadService
 
                 if (!ViveToolPathService.IsInstallComplete(stagingDirectory))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("ViveTool: Extracted archive is missing required runtime files");
+                    PluginLog.Trace("ViveTool: Extracted archive is missing required runtime files");
                     return false;
                 }
 
                 if (!VerifyKnownInstallHashes(stagingDirectory))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("ViveTool: Extracted archive failed file hash verification");
+                    PluginLog.Trace("ViveTool: Extracted archive failed file hash verification");
                     return false;
                 }
 
@@ -164,20 +160,17 @@ public class ViveToolDownloadService
 
                 if (!ViveToolPathService.IsInstallComplete(builtInDir))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("ViveTool: Built-in install directory is incomplete after extraction");
+                    PluginLog.Trace("ViveTool: Built-in install directory is incomplete after extraction");
                     return false;
                 }
 
                 if (!VerifyKnownInstallHashes(builtInDir))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("ViveTool: Built-in install directory failed file hash verification");
+                    PluginLog.Trace("ViveTool: Built-in install directory failed file hash verification");
                     return false;
                 }
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
+                PluginLog.Trace($"ViveTool: Downloaded and extracted built-in ViVeTool and dependencies to {builtInDir}");
 
                 _pathService.CachedPath = builtInPath;
                 return true;
@@ -200,8 +193,7 @@ public class ViveToolDownloadService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Failed to download built-in ViVeTool: {ex.Message}", ex);
             return false;
         }
         finally
@@ -219,16 +211,14 @@ public class ViveToolDownloadService
 
             if (!File.Exists(filePath))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Import file not found: {filePath}");
+                PluginLog.Trace($"ViveTool: Import file not found: {filePath}");
                 return new List<FeatureFlagInfo>();
             }
 
             var fileInfo = new FileInfo(filePath);
             if (fileInfo.Length > MaxImportContentBytes)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Import file exceeds size limit: {filePath}");
+                PluginLog.Trace($"ViveTool: Import file exceeds size limit: {filePath}");
                 return new List<FeatureFlagInfo>();
             }
 
@@ -237,8 +227,7 @@ public class ViveToolDownloadService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error importing features from file: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error importing features from file: {ex.Message}", ex);
             return new List<FeatureFlagInfo>();
         }
     }
@@ -257,8 +246,7 @@ public class ViveToolDownloadService
 
             if (response.Content.Headers.ContentLength is long contentLength && contentLength > MaxImportContentBytes)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"ViveTool: Import URL content exceeds size limit: {uri}");
+                PluginLog.Trace($"ViveTool: Import URL content exceeds size limit: {uri}");
                 return new List<FeatureFlagInfo>();
             }
 
@@ -268,8 +256,7 @@ public class ViveToolDownloadService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error importing features from URL: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error importing features from URL: {ex.Message}", ex);
             return new List<FeatureFlagInfo>();
         }
     }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.Plugins.Shared;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
@@ -80,6 +81,10 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
 
     public CustomMousePlugin()
     {
+        PluginLog.Configure(
+            isTraceEnabled: () => Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => Log.Instance.Trace(message, exception));
+
         _settings = LoadSettings();
         NormalizeCursorThemeSettings();
     }
@@ -415,8 +420,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"CustomMouse: INF installation failed: {ex.Message}", ex);
+            PluginLog.Trace($"CustomMouse: INF installation failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -515,8 +519,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
+            PluginLog.Trace($"CustomMouse lifecycle operation '{operationName}' failed: {ex.Message}", ex);
         }
     }
 
@@ -534,8 +537,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"CustomMouse background operation '{operationName}' failed: {ex.Message}", ex);
+                PluginLog.Trace($"CustomMouse background operation '{operationName}' failed: {ex.Message}", ex);
             }
         });
     }

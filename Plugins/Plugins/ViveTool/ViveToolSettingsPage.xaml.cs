@@ -167,8 +167,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error loading ViveTool settings: {ex.Message}", ex);
+            PluginLog.Trace($"Error loading ViveTool settings: {ex.Message}", ex);
         }
     }
 
@@ -187,8 +186,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
+            PluginLog.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
 
             SetStatus(Resource.ViveTool_ViveToolError, true);
         }
@@ -259,8 +257,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
+            PluginLog.Trace($"Error browsing for vivetool.exe: {ex.Message}", ex);
             System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_BrowseError, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -273,8 +270,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -292,8 +288,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error opening GitHub URL: {ex.Message}", ex);
+            PluginLog.Trace($"Error opening GitHub URL: {ex.Message}", ex);
         }
     }
 
@@ -358,8 +353,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error downloading ViveTool: {ex.Message}", ex);
+            PluginLog.Trace($"Error downloading ViveTool: {ex.Message}", ex);
             
             System.Windows.MessageBox.Show(string.Format(Resource.ViveTool_DownloadFailed, ex.Message), Resource.ViveTool_Error, MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -409,8 +403,7 @@ public partial class ViveToolSettingsPage
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error importing configuration: {ex.Message}", ex);
+            PluginLog.Trace($"Error importing configuration: {ex.Message}", ex);
             
             System.Windows.MessageBox.Show(
                 string.Format(Resource.ViveTool_ConfigImportFailedMessage, ex.Message),

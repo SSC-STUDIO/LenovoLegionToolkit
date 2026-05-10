@@ -203,6 +203,7 @@ public class ProcessRunner
 
             return ProcessResult.Ok(output, process.ExitCode);
         }
+        catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "ProcessRunner failed to execute process: {FilePath}", filePath);

@@ -58,6 +58,13 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
     private readonly ShellIntegrationConfigService _configService = new();
 
+    static ShellIntegrationPlugin()
+    {
+        PluginLog.Configure(
+            isTraceEnabled: () => LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
+    }
+
     public override string Id => PluginId;
     public override string Name => ShellIntegrationText.PluginName;
     public override string Description => ShellIntegrationText.PluginDescription;
@@ -220,8 +227,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Enable failed: {ex.Message}", ex);
+                PluginLog.Trace($"ShellIntegration: Enable failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -235,8 +241,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
+                PluginLog.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
             return false;
         }
     }
@@ -545,8 +550,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 
         if (!_configService.TryLoadProfile(out var profile, out var errorMessage))
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
+                PluginLog.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
             return false;
         }
 
@@ -556,8 +560,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
+                PluginLog.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
             return false;
         }
     }

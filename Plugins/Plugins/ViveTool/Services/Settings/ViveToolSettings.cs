@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
 
@@ -73,8 +74,7 @@ public class ViveToolSettings
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error in delayed save: {ex.Message}", ex);
+            PluginLog.Trace($"Error in delayed save: {ex.Message}", ex);
         }
     }
 
@@ -109,8 +109,7 @@ public class ViveToolSettings
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error loading settings: {ex.Message}", ex);
+            PluginLog.Trace($"Error loading settings: {ex.Message}", ex);
             
             using (await _dataLock.LockAsync().ConfigureAwait(false))
             {
@@ -147,8 +146,7 @@ public class ViveToolSettings
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error saving settings: {ex.Message}", ex);
+            PluginLog.Trace($"Error saving settings: {ex.Message}", ex);
         }
     }
 

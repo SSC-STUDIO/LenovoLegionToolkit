@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
 
@@ -115,8 +115,7 @@ public sealed class NetworkAccelerationRuntime
                 catch (TimeoutException)
                 {
                     // Loop task didn't complete within timeout - log but don't block shutdown
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
+                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
                 }
             }
         }
@@ -240,8 +239,7 @@ public sealed class NetworkAccelerationRuntime
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"NetworkAcceleration: Failed to read network totals: {ex.Message}", ex);
+            PluginLog.Trace($"NetworkAcceleration: Failed to read network totals: {ex.Message}", ex);
 
             totals = default;
             return false;
@@ -270,8 +268,7 @@ public sealed class NetworkAccelerationRuntime
 
             if (interfaceSnapshot.Error is not null)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"NetworkAcceleration: Failed to read stats for interface '{interfaceSnapshot.Name}': {interfaceSnapshot.Error.Message}", interfaceSnapshot.Error);
+                PluginLog.Trace($"NetworkAcceleration: Failed to read stats for interface '{interfaceSnapshot.Name}': {interfaceSnapshot.Error.Message}", interfaceSnapshot.Error);
                 continue;
             }
 

@@ -712,8 +712,7 @@ public partial class NetworkAccelerationControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ServiceToggleButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"ServiceToggleButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -742,8 +741,7 @@ public partial class NetworkAccelerationControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"QuickOptimizeButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"QuickOptimizeButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -760,8 +758,7 @@ public partial class NetworkAccelerationControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ResetStackButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"ResetStackButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -793,8 +790,7 @@ public partial class NetworkAccelerationControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveModeButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"SaveModeButton_Click error: {ex.Message}", ex);
         }
     }
 

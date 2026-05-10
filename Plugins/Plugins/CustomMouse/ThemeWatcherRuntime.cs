@@ -3,7 +3,7 @@ using System.Threading;
 #nullable enable
 
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 using Microsoft.Win32;
 
 namespace LenovoLegionToolkit.Plugins.CustomMouse;
@@ -120,9 +120,9 @@ public sealed class ThemeWatcherRuntime
                     await ThemeChanged.Invoke(currentTheme, token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
-            catch (Exception ex) when (Log.Instance.IsTraceEnabled)
+            catch (Exception ex)
             {
-                Log.Instance.Trace($"ThemeWatcher: error watching theme changes: {ex.Message}", ex);
+                PluginLog.Trace($"ThemeWatcher: error watching theme changes: {ex.Message}", ex);
             }
         }, token);
     }

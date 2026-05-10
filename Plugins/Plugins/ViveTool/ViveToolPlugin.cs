@@ -1,4 +1,6 @@
-﻿using LenovoLegionToolkit.Plugins.SDK;
+﻿using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.SDK;
+using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;
@@ -14,6 +16,13 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
 )]
 public class ViveToolPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
 {
+    static ViveToolPlugin()
+    {
+        PluginLog.Configure(
+            isTraceEnabled: () => Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => Log.Instance.Trace(message, exception));
+    }
+
     public override string Id => "vive-tool";
     public override string Name => Resource.ViveTool_PageTitle;
     public override string Description => Resource.ViveTool_PageDescription;

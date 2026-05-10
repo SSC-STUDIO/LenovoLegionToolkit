@@ -232,8 +232,7 @@ public partial class CustomMouseSettingsControl : UserControl
         {
             SetStatus($"{CustomMouseText.StatusCursorApplyFailed}: {ex.Message}", true);
             LoadCursorThemeMode();
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"CursorThemeModeComboBox_SelectionChanged error: {ex.Message}", ex);
+            PluginLog.Trace($"CursorThemeModeComboBox_SelectionChanged error: {ex.Message}", ex);
         }
     }
 
@@ -272,8 +271,7 @@ public partial class CustomMouseSettingsControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"Apply failed: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ApplyButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"ApplyButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -293,8 +291,7 @@ public partial class CustomMouseSettingsControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"Apply cursor theme failed: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ApplyCursorThemeNowButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"ApplyCursorThemeNowButton_Click error: {ex.Message}", ex);
         }
     }
 

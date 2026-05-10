@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-#nullable enable
-
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ShellIntegration;
 
@@ -81,6 +80,7 @@ public sealed class ShellIntegrationConfigService
         }
         catch (Exception ex)
         {
+            PluginLog.Trace($"ShellIntegration: Failed to load profile from '{LocalProfilePath}': {ex.Message}", ex);
             profile = ShellIntegrationProfile.CreateDefault();
             errorMessage = ex.Message;
             return false;

@@ -187,8 +187,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         catch (Exception ex)
         {
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"EnableButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"EnableButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -202,8 +201,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         catch (Exception ex)
         {
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"DisableButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"DisableButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -217,8 +215,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         catch (Exception ex)
         {
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"OpenStyleButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"OpenStyleButton_Click error: {ex.Message}", ex);
         }
     }
 

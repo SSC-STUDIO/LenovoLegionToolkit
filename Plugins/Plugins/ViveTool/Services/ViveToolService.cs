@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Plugins.Shared;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
 
@@ -25,8 +26,7 @@ public class ViveToolService : IViveToolService
         _featureService = new ViveToolFeatureService(_pathService, processService);
         _downloadService = new ViveToolDownloadService(_pathService);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace("ViveTool: ViveToolService initialized with specialized services");
+        PluginLog.Trace("ViveTool: ViveToolService initialized with specialized services");
     }
 
     /// <summary>
@@ -37,8 +37,7 @@ public class ViveToolService : IViveToolService
         var path = await GetViveToolPathAsync().ConfigureAwait(false);
         var available = !string.IsNullOrEmpty(path);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: ViVeTool availability check: {available}");
+        PluginLog.Trace($"ViveTool: ViVeTool availability check: {available}");
 
         return available;
     }
@@ -50,8 +49,7 @@ public class ViveToolService : IViveToolService
     {
         var path = await _pathService.GetViveToolPathAsync().ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: ViVeTool path resolved: {path ?? "(not found)"}");
+        PluginLog.Trace($"ViveTool: ViVeTool path resolved: {path ?? "(not found)"}");
 
         return path;
     }
@@ -63,8 +61,7 @@ public class ViveToolService : IViveToolService
     {
         var success = await _featureService.EnableFeatureAsync(featureId).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Enable feature {featureId}: {success}");
+        PluginLog.Trace($"ViveTool: Enable feature {featureId}: {success}");
 
         return success;
     }
@@ -76,8 +73,7 @@ public class ViveToolService : IViveToolService
     {
         var success = await _featureService.DisableFeatureAsync(featureId).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Disable feature {featureId}: {success}");
+        PluginLog.Trace($"ViveTool: Disable feature {featureId}: {success}");
 
         return success;
     }
@@ -89,8 +85,7 @@ public class ViveToolService : IViveToolService
     {
         var status = await _featureService.GetFeatureStatusAsync(featureId).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Feature {featureId} status: {status}");
+        PluginLog.Trace($"ViveTool: Feature {featureId} status: {status}");
 
         return status;
     }
@@ -102,8 +97,7 @@ public class ViveToolService : IViveToolService
     {
         var features = await _featureService.ListFeaturesAsync().ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Listed {features.Count} features");
+        PluginLog.Trace($"ViveTool: Listed {features.Count} features");
 
         return features;
     }
@@ -115,8 +109,7 @@ public class ViveToolService : IViveToolService
     {
         var features = await _featureService.SearchFeaturesAsync(keyword).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Found {features.Count} features matching '{keyword}'");
+        PluginLog.Trace($"ViveTool: Found {features.Count} features matching '{keyword}'");
 
         return features;
     }
@@ -128,8 +121,7 @@ public class ViveToolService : IViveToolService
     {
         var features = await _downloadService.ImportFeaturesFromFileAsync(filePath).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Imported {features.Count} features from file: {filePath}");
+        PluginLog.Trace($"ViveTool: Imported {features.Count} features from file: {filePath}");
 
         return features;
     }
@@ -141,8 +133,7 @@ public class ViveToolService : IViveToolService
     {
         var features = await _downloadService.ImportFeaturesFromUrlAsync(url).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Imported {features.Count} features from URL: {url}");
+        PluginLog.Trace($"ViveTool: Imported {features.Count} features from URL: {url}");
 
         return features;
     }
@@ -154,8 +145,7 @@ public class ViveToolService : IViveToolService
     {
         var success = await _pathService.SetViveToolPathAsync(filePath).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Set ViVeTool path: {filePath}, success: {success}");
+        PluginLog.Trace($"ViveTool: Set ViVeTool path: {filePath}, success: {success}");
 
         return success;
     }
@@ -167,8 +157,7 @@ public class ViveToolService : IViveToolService
     {
         var success = await _downloadService.DownloadViveToolAsync(progress).ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: Download ViVeTool: {success}");
+        PluginLog.Trace($"ViveTool: Download ViVeTool: {success}");
 
         return success;
     }
@@ -180,8 +169,7 @@ public class ViveToolService : IViveToolService
     {
         _featureService.ClearFeatureCache();
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace("ViveTool: Feature cache cleared");
+        PluginLog.Trace("ViveTool: Feature cache cleared");
     }
 
     /// <summary>
@@ -191,8 +179,7 @@ public class ViveToolService : IViveToolService
     {
         var version = await _featureService.GetViveToolVersionAsync().ConfigureAwait(false);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"ViveTool: ViVeTool version: {version ?? "(unknown)"}");
+        PluginLog.Trace($"ViveTool: ViVeTool version: {version ?? "(unknown)"}");
 
         return version;
     }

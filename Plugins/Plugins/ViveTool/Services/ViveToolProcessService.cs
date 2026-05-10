@@ -40,8 +40,7 @@ public class ViveToolProcessService
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"ViveTool: Error executing command: {ex.Message}", ex);
+            PluginLog.Trace($"ViveTool: Error executing command: {ex.Message}", ex);
             return (false, null, ex.Message);
         }
     }

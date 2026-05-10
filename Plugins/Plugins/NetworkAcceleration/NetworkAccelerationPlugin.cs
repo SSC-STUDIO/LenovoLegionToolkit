@@ -34,6 +34,10 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
 
     public NetworkAccelerationPlugin()
     {
+        PluginLog.Configure(
+            isTraceEnabled: () => LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
+
         _settings = LoadSettings();
     }
 
@@ -188,8 +192,7 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
         var executablePath = ResolveTrustedSystemExecutablePath(executableName);
         if (string.IsNullOrWhiteSpace(executablePath))
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"NetworkAcceleration: Unable to resolve trusted system command path for {executableName}.");
+            PluginLog.Trace($"NetworkAcceleration: Unable to resolve trusted system command path for {executableName}.");
             return false;
         }
 
@@ -199,9 +202,9 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             cancellationToken,
             Constants.ProcessTimeoutSeconds).ConfigureAwait(false);
 
-        if (!result.Success && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+        if (!result.Success)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+            PluginLog.Trace(
                 $"NetworkAcceleration: Command failed: {Path.GetFileName(executablePath)} {arguments}. Error: {result.Error}");
         }
 
@@ -235,13 +238,11 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
             }
             catch (OperationCanceledException)
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"NetworkAcceleration: Background operation '{operationName}' was cancelled.");
+                PluginLog.Trace($"NetworkAcceleration: Background operation '{operationName}' was cancelled.");
             }
             catch (Exception ex)
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"NetworkAcceleration: Background operation '{operationName}' failed: {ex.Message}", ex);
+                PluginLog.Trace($"NetworkAcceleration: Background operation '{operationName}' failed: {ex.Message}", ex);
             }
         });
     }

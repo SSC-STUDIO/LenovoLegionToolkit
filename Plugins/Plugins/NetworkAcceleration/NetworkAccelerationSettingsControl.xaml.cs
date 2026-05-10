@@ -295,8 +295,7 @@ public partial class NetworkAccelerationSettingsControl : UserControl
         catch (Exception ex)
         {
             SetStatus($"{NetworkAccelerationText.ErrorPrefix}: {ex.Message}", true);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"SaveButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"SaveButton_Click error: {ex.Message}", ex);
         }
     }
 
