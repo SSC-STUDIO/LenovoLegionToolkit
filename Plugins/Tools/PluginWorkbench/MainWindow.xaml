@@ -1,6 +1,7 @@
 <Window x:Class="PluginWorkbench.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Plugin Workbench"
         Width="1560"
         Height="980"
@@ -9,7 +10,27 @@
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource ApplicationBackgroundBrush}"
         AutomationProperties.AutomationId="PluginWorkbenchMainWindow">
-    <Grid Margin="18">
+    <Window.Resources>
+        <Style x:Key="ToolbarIconButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="MetaLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,2" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+        </Style>
+        <Style x:Key="MetaValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -17,104 +38,95 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- Top AppBar -->
         <Border Grid.Row="0"
-                Padding="18"
-                CornerRadius="24"
+                Padding="14,10"
+                CornerRadius="10"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="0"
-                            Grid.Column="0">
-                    <TextBlock FontSize="28"
-                               FontWeight="SemiBold"
-                               Text="Plugin Workbench"
-                               AutomationProperties.AutomationId="WorkbenchHeaderTextBlock" />
-                    <TextBlock Margin="0,6,0,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="Host-level preview for plugin authors. Preview mirrors the main app shell; Real Runtime is opt-in."
-                               TextWrapping="Wrap"
-                               AutomationProperties.AutomationId="WorkbenchDescriptionTextBlock" />
+                <!-- Brand -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="32" Height="32"
+                            CornerRadius="8"
+                            Margin="0,0,12,0"
+                            Background="{DynamicResource SystemAccentColorPrimaryBrush}">
+                        <wpfui:SymbolIcon Symbol="Beaker24"
+                                          FontSize="16"
+                                          Foreground="White"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Text="Plugin Workbench"
+                                   AutomationProperties.AutomationId="WorkbenchHeaderTextBlock" />
+                        <TextBlock FontSize="11"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="Host-level preview for plugin authors"
+                                   AutomationProperties.AutomationId="WorkbenchDescriptionTextBlock" />
+                    </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Row="0"
-                            Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right">
-                    <Border Margin="0,0,10,0"
-                            Padding="12,6"
+                <!-- Repo path -->
+                <Grid Grid.Column="1" Margin="24,0,16,0" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <wpfui:SymbolIcon Grid.Column="0"
+                                      Symbol="Folder24"
+                                      FontSize="14"
+                                      Margin="0,0,8,0"
+                                      VerticalAlignment="Center"
+                                      Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    <TextBox x:Name="RepositoryPathTextBox"
+                             Grid.Column="1"
+                             IsReadOnly="True"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             FontSize="12"
+                             VerticalContentAlignment="Center"
+                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                             AutomationProperties.AutomationId="RepositoryPathTextBox" />
+                </Grid>
+
+                <!-- Toolbar -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Padding="10,4"
                             CornerRadius="999"
+                            Margin="0,0,8,0"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
                         <TextBlock x:Name="ThemeStateTextBlock"
+                                   FontSize="11"
                                    FontWeight="SemiBold"
                                    Text="Theme: System"
                                    AutomationProperties.AutomationId="ThemeStateTextBlock" />
                     </Border>
-                    <Border Padding="12,6"
+                    <Border Padding="10,4"
                             CornerRadius="999"
+                            Margin="0,0,12,0"
                             Background="{DynamicResource SystemAccentColorLight3Brush}">
                         <TextBlock x:Name="ModeStateTextBlock"
+                                   FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource SystemAccentColorDark1Brush}"
                                    Text="Preview"
                                    AutomationProperties.AutomationId="ModeStateTextBlock" />
                     </Border>
-                </StackPanel>
 
-                <Grid Grid.Row="1"
-                      Grid.ColumnSpan="2"
-                      Margin="0,16,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox x:Name="RepositoryPathTextBox"
-                             Grid.Column="0"
-                             Margin="0,0,12,0"
-                             IsReadOnly="True"
-                             VerticalContentAlignment="Center"
-                             AutomationProperties.AutomationId="RepositoryPathTextBox" />
-                    <Button x:Name="RefreshButton"
-                            Grid.Column="1"
-                            Margin="0,0,10,0"
-                            Padding="16,6"
-                            Click="RefreshButton_Click"
-                            Content="Refresh"
-                            AutomationProperties.AutomationId="RefreshButton" />
-                    <Button x:Name="BootstrapHostButton"
-                            Grid.Column="2"
-                            Margin="0,0,10,0"
-                            Padding="16,6"
-                            Click="BootstrapHostButton_Click"
-                            Content="Bootstrap Host"
-                            AutomationProperties.AutomationId="BootstrapHostButton" />
-                    <Button x:Name="OpenZipButton"
-                            Grid.Column="3"
-                            Margin="0,0,10,0"
-                            Padding="16,6"
-                            Click="OpenZipButton_Click"
-                            Content="Open ZIP"
-                            AutomationProperties.AutomationId="OpenZipButton" />
                     <ComboBox x:Name="ThemeComboBox"
-                              Grid.Column="4"
-                              Width="130"
-                              Margin="0,0,10,0"
+                              Width="100"
+                              Margin="0,0,6,0"
+                              FontSize="12"
                               SelectionChanged="ThemeComboBox_SelectionChanged"
                               AutomationProperties.AutomationId="ThemeComboBox">
                         <ComboBoxItem Content="System" Tag="System" />
@@ -122,57 +134,102 @@
                         <ComboBoxItem Content="Dark" Tag="Dark" />
                     </ComboBox>
                     <ComboBox x:Name="ModeComboBox"
-                              Grid.Column="5"
-                              Width="150"
-                              Margin="0,0,10,0"
+                              Width="120"
+                              Margin="0,0,8,0"
+                              FontSize="12"
                               SelectionChanged="ModeComboBox_SelectionChanged"
                               AutomationProperties.AutomationId="ModeComboBox">
                         <ComboBoxItem Content="Preview" Tag="Preview" />
                         <ComboBoxItem Content="Real Runtime" Tag="RealRuntime" />
                     </ComboBox>
-                    <Button x:Name="ModeToggleButton"
-                            Grid.Column="6"
-                            Margin="0,0,10,0"
-                            Padding="16,6"
-                            Click="ModeToggleButton_Click"
-                            Content="Enable Real Runtime"
-                            AutomationProperties.AutomationId="ModeToggleButton" />
-                    <Button x:Name="ReloadCurrentButton"
-                            Grid.Column="7"
-                            Padding="16,6"
-                            Click="ReloadCurrentButton_Click"
-                            Content="Reload Current"
-                            AutomationProperties.AutomationId="ReloadCurrentButton" />
-                </Grid>
+
+                    <wpfui:Button x:Name="ModeToggleButton"
+                                  Margin="0,0,6,0"
+                                  Padding="10,5"
+                                  FontSize="12"
+                                  Icon="Play24"
+                                  Content="Enable Real Runtime"
+                                  Click="ModeToggleButton_Click"
+                                  AutomationProperties.AutomationId="ModeToggleButton" />
+                    <wpfui:Button x:Name="RefreshButton"
+                                  Margin="0,0,6,0"
+                                  Padding="10,5"
+                                  FontSize="12"
+                                  Icon="ArrowClockwise24"
+                                  Content="Refresh"
+                                  Click="RefreshButton_Click"
+                                  AutomationProperties.AutomationId="RefreshButton" />
+                    <wpfui:Button x:Name="ReloadCurrentButton"
+                                  Margin="0,0,6,0"
+                                  Padding="10,5"
+                                  FontSize="12"
+                                  Icon="ArrowSync24"
+                                  Content="Reload"
+                                  Click="ReloadCurrentButton_Click"
+                                  AutomationProperties.AutomationId="ReloadCurrentButton" />
+                    <wpfui:Button x:Name="OpenZipButton"
+                                  Margin="0,0,6,0"
+                                  Padding="10,5"
+                                  FontSize="12"
+                                  Icon="FolderZip24"
+                                  Content="Open ZIP"
+                                  Click="OpenZipButton_Click"
+                                  AutomationProperties.AutomationId="OpenZipButton" />
+                    <wpfui:Button x:Name="BootstrapHostButton"
+                                  Padding="10,5"
+                                  FontSize="12"
+                                  Icon="Wrench24"
+                                  Content="Bootstrap"
+                                  Click="BootstrapHostButton_Click"
+                                  AutomationProperties.AutomationId="BootstrapHostButton" />
+                </StackPanel>
             </Grid>
         </Border>
 
+        <!-- Host resource warning -->
         <Border x:Name="HostResourceWarningBorder"
                 Grid.Row="1"
-                Margin="0,14,0,14"
-                Padding="14"
-                CornerRadius="20"
-                Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                BorderBrush="{DynamicResource SystemAccentColorPrimaryBrush}"
+                Margin="0,10,0,10"
+                Padding="12,10"
+                CornerRadius="10"
+                Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+                BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                 BorderThickness="1"
                 Visibility="Collapsed">
-            <TextBlock x:Name="HostResourceWarningTextBlock"
-                       TextWrapping="Wrap"
-                       AutomationProperties.AutomationId="HostResourceWarningTextBlock" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <wpfui:SymbolIcon Grid.Column="0"
+                                  Symbol="Warning24"
+                                  FontSize="16"
+                                  Margin="0,1,10,0"
+                                  VerticalAlignment="Top"
+                                  Foreground="{DynamicResource SystemFillColorCautionBrush}" />
+                <TextBlock Grid.Column="1"
+                           x:Name="HostResourceWarningTextBlock"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           AutomationProperties.AutomationId="HostResourceWarningTextBlock" />
+            </Grid>
         </Border>
 
+        <!-- Main working area -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="320" />
-                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="14" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="18" />
-                <ColumnDefinition Width="320" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="280" />
             </Grid.ColumnDefinitions>
 
+            <!-- Sidebar: Plugin list -->
             <Border Grid.Column="0"
-                    Padding="16"
-                    CornerRadius="24"
+                    Padding="14"
+                    CornerRadius="10"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -180,35 +237,92 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <DockPanel Margin="0,0,0,12">
-                        <TextBlock DockPanel.Dock="Left"
-                                   FontSize="20"
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <wpfui:SymbolIcon Symbol="Apps24"
+                                          FontSize="16"
+                                          Margin="0,0,8,0"
+                                          Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                        <TextBlock FontSize="13"
                                    FontWeight="SemiBold"
+                                   VerticalAlignment="Center"
                                    Text="Plugins"
                                    AutomationProperties.AutomationId="PluginListHeaderTextBlock" />
-                        <Button x:Name="LoadSelectedButton"
-                                DockPanel.Dock="Right"
-                                Padding="16,6"
-                                Click="LoadSelectedButton_Click"
-                                Content="Load Selected"
-                                AutomationProperties.AutomationId="LoadSelectedButton" />
-                    </DockPanel>
+                    </StackPanel>
 
                     <ListBox x:Name="PluginListBox"
                              Grid.Row="1"
-                             DisplayMemberPath="DisplayText"
                              Background="Transparent"
                              BorderThickness="0"
+                             Padding="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              MouseDoubleClick="PluginListBox_MouseDoubleClick"
-                             AutomationProperties.AutomationId="PluginListBox" />
+                             AutomationProperties.AutomationId="PluginListBox">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0,0,0,6" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10,8"
+                                        CornerRadius="8"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Text="{Binding Name}"
+                                                       TextTrimming="CharacterEllipsis" />
+                                            <TextBlock FontSize="11"
+                                                       Margin="0,2,0,0"
+                                                       Text="{Binding PluginId}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Right">
+                                            <Border Padding="6,2"
+                                                    CornerRadius="999"
+                                                    Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                                <TextBlock FontSize="10"
+                                                           FontWeight="SemiBold"
+                                                           Text="{Binding Version, StringFormat=v{0}}"
+                                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <wpfui:Button x:Name="LoadSelectedButton"
+                                  Grid.Row="2"
+                                  Margin="0,10,0,0"
+                                  Padding="12,6"
+                                  HorizontalAlignment="Stretch"
+                                  Appearance="Primary"
+                                  Icon="ArrowRight24"
+                                  Content="Load Selected"
+                                  Click="LoadSelectedButton_Click"
+                                  AutomationProperties.AutomationId="LoadSelectedButton" />
                 </Grid>
             </Border>
 
+            <!-- Center: Plugin preview -->
             <Border Grid.Column="2"
-                    Padding="18"
-                    CornerRadius="28"
+                    Padding="16"
+                    CornerRadius="10"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
@@ -219,38 +333,65 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel>
-                        <TextBlock x:Name="PluginTitleTextBlock"
-                                   FontSize="30"
-                                   FontWeight="SemiBold"
-                                   Text="No plugin loaded"
-                                   AutomationProperties.AutomationId="PluginTitleTextBlock" />
-                        <TextBlock x:Name="PluginSubtitleTextBlock"
-                                   Margin="0,8,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Select a built plugin from the left or open a ZIP package."
-                                   TextWrapping="Wrap"
-                                   AutomationProperties.AutomationId="PluginSubtitleTextBlock" />
-                    </StackPanel>
+                    <!-- Plugin header -->
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock x:Name="PluginTitleTextBlock"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Text="No plugin loaded"
+                                       AutomationProperties.AutomationId="PluginTitleTextBlock" />
+                            <TextBlock x:Name="PluginSubtitleTextBlock"
+                                       Margin="0,4,0,0"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="Select a built plugin from the left or open a ZIP package."
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.AutomationId="PluginSubtitleTextBlock" />
+                        </StackPanel>
+                    </Grid>
 
+                    <!-- Status pill -->
                     <Border Grid.Row="1"
-                            Margin="0,16,0,16"
-                            Padding="14"
-                            CornerRadius="18"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
-                            BorderThickness="1">
-                        <TextBlock x:Name="StatusTextBlock"
-                                   Text="Idle"
-                                   TextWrapping="Wrap"
-                                   AutomationProperties.AutomationId="StatusTextBlock" />
+                            Margin="0,0,0,12"
+                            Padding="10,6"
+                            CornerRadius="8"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <wpfui:SymbolIcon Grid.Column="0"
+                                              Symbol="Info24"
+                                              FontSize="14"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Center"
+                                              Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       x:Name="StatusTextBlock"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       Text="Idle"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       AutomationProperties.AutomationId="StatusTextBlock" />
+                        </Grid>
                     </Border>
 
+                    <!-- Tabs -->
                     <TabControl x:Name="MainTabControl"
                                 Grid.Row="2"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="0"
                                 AutomationProperties.AutomationId="MainTabControl">
                         <TabItem x:Name="FeatureTabItem"
-                                 Header="Feature Preview"
+                                 Header="Feature"
                                  AutomationProperties.AutomationId="FeatureTabItem">
                             <Grid Margin="0,10,0,0">
                                 <Grid.RowDefinitions>
@@ -259,105 +400,81 @@
                                 </Grid.RowDefinitions>
 
                                 <Border x:Name="FeaturePreviewHintBorder"
-                                        Padding="14"
-                                        CornerRadius="18"
+                                        Padding="10,8"
+                                        CornerRadius="8"
+                                        Margin="0,0,0,10"
                                         Background="{DynamicResource SystemAccentColorLight3Brush}"
                                         BorderBrush="{DynamicResource SystemAccentColorPrimaryBrush}"
                                         BorderThickness="1"
                                         Visibility="Collapsed">
-                                    <TextBlock Text="Preview mode keeps feature UI safe and non-destructive. Switch to Real Runtime to interact with live actions."
+                                    <TextBlock FontSize="11"
+                                               Foreground="{DynamicResource SystemAccentColorDark1Brush}"
+                                               Text="Preview mode keeps feature UI safe and non-destructive. Switch to Real Runtime to interact with live actions."
                                                TextWrapping="Wrap"
                                                AutomationProperties.AutomationId="FeaturePreviewHintTextBlock" />
                                 </Border>
 
                                 <ScrollViewer Grid.Row="1"
-                                              Margin="0,14,0,0"
                                               VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled">
-                                    <StackPanel>
-                                        <TextBlock Text="Feature Host"
-                                                   Style="{DynamicResource AppSectionTitleTextBlockStyle}" />
-                                        <Border Margin="0,12,0,0"
-                                                Padding="20"
-                                                CornerRadius="24"
-                                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                            <ContentControl x:Name="FeatureContentHost"
-                                                            AutomationProperties.AutomationId="FeatureContentHost" />
-                                        </Border>
-                                    </StackPanel>
+                                    <ContentControl x:Name="FeatureContentHost"
+                                                    AutomationProperties.AutomationId="FeatureContentHost" />
                                 </ScrollViewer>
                             </Grid>
                         </TabItem>
 
                         <TabItem x:Name="SettingsTabItem"
-                                 Header="Settings Preview"
+                                 Header="Settings"
                                  AutomationProperties.AutomationId="SettingsTabItem">
                             <Grid Margin="0,10,0,0">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
                                 <Border x:Name="SettingsPreviewHintBorder"
-                                        Padding="14"
-                                        CornerRadius="18"
+                                        Padding="10,8"
+                                        CornerRadius="8"
+                                        Margin="0,0,0,10"
                                         Background="{DynamicResource SystemAccentColorLight3Brush}"
                                         BorderBrush="{DynamicResource SystemAccentColorPrimaryBrush}"
                                         BorderThickness="1"
                                         Visibility="Collapsed">
-                                    <TextBlock Text="Settings preview uses the same host shell structure as the main app. Real Runtime unlocks live interactions."
+                                    <TextBlock FontSize="11"
+                                               Foreground="{DynamicResource SystemAccentColorDark1Brush}"
+                                               Text="Settings preview uses the same host shell structure as the main app. Real Runtime unlocks live interactions."
                                                TextWrapping="Wrap"
                                                AutomationProperties.AutomationId="SettingsPreviewHintTextBlock" />
                                 </Border>
 
-                                <ScrollViewer Grid.Row="1"
-                                              Margin="0,14,0,0"
+                                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                    <TextBlock x:Name="SettingsShellTitleTextBlock"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Text="Plugin Settings"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                               AutomationProperties.AutomationId="SettingsShellTitleTextBlock" />
+                                    <TextBlock x:Name="SettingsShellDescriptionTextBlock"
+                                               Margin="0,4,0,0"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                               Text="Host shell preview for plugin settings."
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.AutomationId="SettingsShellDescriptionTextBlock" />
+                                </StackPanel>
+
+                                <ScrollViewer Grid.Row="2"
                                               VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled">
-                                    <StackPanel>
-                                        <Border Padding="24"
-                                                CornerRadius="24"
-                                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                BorderThickness="1">
-                                            <StackPanel>
-                                                <TextBlock x:Name="SettingsShellTitleTextBlock"
-                                                           Style="{DynamicResource AppPageTitleTextBlockStyle}"
-                                                           Text="Plugin Settings"
-                                                           AutomationProperties.AutomationId="SettingsShellTitleTextBlock" />
-                                                <TextBlock x:Name="SettingsShellDescriptionTextBlock"
-                                                           Margin="0,10,0,0"
-                                                           Style="{DynamicResource AppPageDescriptionTextBlockStyle}"
-                                                           Text="Host shell preview for plugin settings."
-                                                           AutomationProperties.AutomationId="SettingsShellDescriptionTextBlock" />
-                                            </StackPanel>
-                                        </Border>
-
-                                        <Border Margin="0,18,0,0"
-                                                Padding="20"
-                                                CornerRadius="24"
-                                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                BorderThickness="1">
-                                            <StackPanel>
-                                                <TextBlock Text="Settings"
-                                                           Style="{DynamicResource AppSectionTitleTextBlockStyle}" />
-                                                <Border Margin="0,16,0,0"
-                                                        Padding="18"
-                                                        CornerRadius="20"
-                                                        Background="{DynamicResource ControlFillColorDefaultBrush}">
-                                                    <ContentControl x:Name="SettingsContentHost"
-                                                                    AutomationProperties.AutomationId="SettingsContentHost" />
-                                                </Border>
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
+                                    <ContentControl x:Name="SettingsContentHost"
+                                                    AutomationProperties.AutomationId="SettingsContentHost" />
                                 </ScrollViewer>
                             </Grid>
                         </TabItem>
 
                         <TabItem x:Name="OptimizationTabItem"
-                                 Header="Optimization Preview"
+                                 Header="Optimization"
                                  AutomationProperties.AutomationId="OptimizationTabItem">
                             <Grid Margin="0,10,0,0">
                                 <Grid.RowDefinitions>
@@ -366,28 +483,38 @@
                                 </Grid.RowDefinitions>
 
                                 <Border x:Name="OptimizationPreviewHintBorder"
-                                        Padding="14"
-                                        CornerRadius="18"
+                                        Padding="10,8"
+                                        CornerRadius="8"
+                                        Margin="0,0,0,10"
                                         Background="{DynamicResource SystemAccentColorLight3Brush}"
                                         BorderBrush="{DynamicResource SystemAccentColorPrimaryBrush}"
                                         BorderThickness="1"
                                         Visibility="Collapsed">
-                                    <TextBlock Text="Optimization actions stay disabled in Preview mode. Real Runtime enables execution and keeps a confirmation step."
+                                    <TextBlock FontSize="11"
+                                               Foreground="{DynamicResource SystemAccentColorDark1Brush}"
+                                               Text="Optimization actions stay disabled in Preview mode. Real Runtime enables execution and keeps a confirmation step."
                                                TextWrapping="Wrap"
                                                AutomationProperties.AutomationId="OptimizationPreviewHintTextBlock" />
                                 </Border>
 
                                 <ListBox x:Name="OptimizationListBox"
                                          Grid.Row="1"
-                                         Margin="0,14,0,0"
                                          Background="Transparent"
                                          BorderThickness="0"
+                                         Padding="0"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          AutomationProperties.AutomationId="OptimizationListBox">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Margin" Value="0,0,0,8" />
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Margin="0,0,0,10"
-                                                    Padding="18"
-                                                    CornerRadius="22"
+                                            <Border Padding="14,12"
+                                                    CornerRadius="10"
                                                     Background="{DynamicResource ControlFillColorSecondaryBrush}"
                                                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                                     BorderThickness="1">
@@ -396,26 +523,37 @@
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
-                                                    <StackPanel>
-                                                        <TextBlock FontWeight="SemiBold"
+                                                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                                        <TextBlock FontSize="13"
+                                                                   FontWeight="SemiBold"
                                                                    Text="{Binding Title}" />
-                                                        <TextBlock Margin="0,8,0,0"
+                                                        <TextBlock Margin="0,4,0,0"
+                                                                   FontSize="11"
                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                                    TextWrapping="Wrap"
                                                                    Text="{Binding Description}" />
-                                                        <TextBlock Margin="0,12,0,0"
-                                                                   FontWeight="SemiBold"
-                                                                   Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
-                                                                   Text="{Binding AppliedState}" />
+                                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                            <wpfui:SymbolIcon Symbol="CheckmarkCircle24"
+                                                                              FontSize="12"
+                                                                              Margin="0,0,6,0"
+                                                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                                            <TextBlock FontSize="11"
+                                                                       FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center"
+                                                                       Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+                                                                       Text="{Binding AppliedState}" />
+                                                        </StackPanel>
                                                     </StackPanel>
-                                                    <Button Grid.Column="1"
-                                                            Margin="16,0,0,0"
-                                                            Padding="16,6"
-                                                            IsEnabled="{Binding CanExecute}"
-                                                            Click="RunOptimizationActionButton_Click"
-                                                            Content="Run"
-                                                            AutomationProperties.AutomationId="OptimizationRunButton"
-                                                            Tag="{Binding}" />
+                                                    <wpfui:Button Grid.Column="1"
+                                                                  Padding="12,6"
+                                                                  VerticalAlignment="Center"
+                                                                  Appearance="Primary"
+                                                                  Icon="Play24"
+                                                                  Content="Run"
+                                                                  IsEnabled="{Binding CanExecute}"
+                                                                  Click="RunOptimizationActionButton_Click"
+                                                                  Tag="{Binding}"
+                                                                  AutomationProperties.AutomationId="OptimizationRunButton" />
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -427,80 +565,83 @@
                 </Grid>
             </Border>
 
+            <!-- Right sidebar: Host context + plugin metadata -->
             <Border Grid.Column="4"
-                    Padding="16"
-                    CornerRadius="24"
+                    Padding="14"
+                    CornerRadius="10"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
-                        <TextBlock FontSize="20"
-                                   FontWeight="SemiBold"
-                                   Text="Host Context"
-                                   AutomationProperties.AutomationId="HostContextHeaderTextBlock" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <wpfui:SymbolIcon Symbol="Desktop24"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                            <TextBlock FontSize="13"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"
+                                       Text="Host Context"
+                                       AutomationProperties.AutomationId="HostContextHeaderTextBlock" />
+                        </StackPanel>
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Current source" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Current source" />
                         <TextBlock x:Name="CurrentSourceTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="None"
                                    AutomationProperties.AutomationId="CurrentSourceTextBlock" />
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Theme" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Theme" />
                         <TextBlock x:Name="ThemeDetailTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="System"
                                    AutomationProperties.AutomationId="ThemeDetailTextBlock" />
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Host resources" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Host resources" />
                         <TextBlock x:Name="ResourceStateTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="Pending"
                                    AutomationProperties.AutomationId="ResourceStateTextBlock" />
 
-                        <Separator Margin="0,18,0,18" />
+                        <Border Margin="0,4,0,14"
+                                Height="1"
+                                Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
-                        <TextBlock FontSize="20"
-                                   FontWeight="SemiBold"
-                                   Text="Plugin Metadata"
-                                   AutomationProperties.AutomationId="PluginMetadataHeaderTextBlock" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <wpfui:SymbolIcon Symbol="DocumentBulletList24"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                            <TextBlock FontSize="13"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"
+                                       Text="Plugin Metadata"
+                                       AutomationProperties.AutomationId="PluginMetadataHeaderTextBlock" />
+                        </StackPanel>
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Plugin id" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Plugin id" />
                         <TextBlock x:Name="PluginIdTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="-"
                                    AutomationProperties.AutomationId="PluginIdTextBlock" />
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Version" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Version" />
                         <TextBlock x:Name="PluginVersionTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="-"
                                    AutomationProperties.AutomationId="PluginVersionTextBlock" />
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Minimum LLT" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Minimum LLT" />
                         <TextBlock x:Name="PluginMinVersionTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="-"
                                    AutomationProperties.AutomationId="PluginMinVersionTextBlock" />
 
-                        <TextBlock Margin="0,14,0,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Optimization mode" />
+                        <TextBlock Style="{StaticResource MetaLabelStyle}" Text="Optimization mode" />
                         <TextBlock x:Name="OptimizationStateTextBlock"
-                                   FontWeight="SemiBold"
+                                   Style="{StaticResource MetaValueStyle}"
                                    Text="Not available"
                                    AutomationProperties.AutomationId="OptimizationStateTextBlock" />
                     </StackPanel>
@@ -508,23 +649,39 @@
             </Border>
         </Grid>
 
+        <!-- Log panel -->
         <Expander x:Name="LogExpander"
                   Grid.Row="3"
-                  Margin="0,16,0,0"
-                  Padding="14"
-                  Header="Logs"
+                  Margin="0,12,0,0"
                   IsExpanded="True"
                   AutomationProperties.AutomationId="LogExpander">
-            <Border Padding="12"
-                    CornerRadius="20"
-                    Background="#111827">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <wpfui:SymbolIcon Symbol="DocumentText24"
+                                      FontSize="14"
+                                      Margin="0,0,8,0"
+                                      Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                    <TextBlock FontSize="12"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Text="Logs" />
+                </StackPanel>
+            </Expander.Header>
+            <Border Margin="0,8,0,0"
+                    Padding="12,10"
+                    CornerRadius="10"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1">
                 <TextBox x:Name="LogTextBox"
+                         MinHeight="120"
+                         MaxHeight="200"
                          IsReadOnly="True"
-                         FontFamily="Consolas"
-                         FontSize="12"
-                         Foreground="#F9FAFB"
+                         FontFamily="Cascadia Mono, Consolas, Courier New"
+                         FontSize="11"
                          Background="Transparent"
                          BorderThickness="0"
+                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                          TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalScrollBarVisibility="Auto"
