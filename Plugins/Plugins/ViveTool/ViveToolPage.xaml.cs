@@ -17,6 +17,7 @@ using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Plugins.Shared;
 using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using LenovoLegionToolkit.Plugins.ViveTool.Utils;
 using LenovoLegionToolkit.WPF;
 using LenovoLegionToolkit.WPF.Utils;
 using MessageBoxHelper = LenovoLegionToolkit.WPF.Utils.MessageBoxHelper;
@@ -402,8 +403,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error in Page_Loaded: {ex.Message}", ex);
+            PluginLog.Trace($"Error in Page_Loaded: {ex.Message}", ex);
         }
     }
 
@@ -423,8 +423,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error applying plugin resource culture: {ex.Message}", ex);
+            PluginLog.Trace($"Error applying plugin resource culture: {ex.Message}", ex);
         }
     }
 
@@ -467,8 +466,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
+            PluginLog.Trace($"Error refreshing ViveTool status: {ex.Message}", ex);
             
             await Dispatcher.InvokeAsync(() =>
             {
@@ -514,8 +512,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error loading features: {ex.Message}", ex);
+            PluginLog.Trace($"Error loading features: {ex.Message}", ex);
             
             await Dispatcher.InvokeAsync(() =>
             {
@@ -533,8 +530,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"RefreshStatusButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -557,8 +553,8 @@ public partial class ViveToolPage : INotifyPropertyChanged
                 double percent = Math.Min(100, (bytesDownloaded * 100.0) / estimatedTotalBytes);
                 
                 DownloadProgress = percent;
-                DownloadProgressText = string.Format(Resource.ViveTool_DownloadProgress, 
-                    FormatBytes(bytesDownloaded), FormatBytes(estimatedTotalBytes), (int)percent);
+                DownloadProgressText = string.Format(Resource.ViveTool_DownloadProgress,
+                    ByteFormatter.FormatBytes(bytesDownloaded), ByteFormatter.FormatBytes(estimatedTotalBytes), (int)percent);
             });
 
             // Download ViVeTool
@@ -591,8 +587,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error downloading vivetool.exe: {ex.Message}", ex);
+            PluginLog.Trace($"Error downloading vivetool.exe: {ex.Message}", ex);
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -609,24 +604,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
-    private static string FormatBytes(long bytes)
-    {
-        string[] suffix = { "B", "KB", "MB", "GB" };
-        var value = (double)Math.Abs(bytes);
-        var i = 0;
-
-        while (i < suffix.Length - 1 && value >= 1024)
-        {
-            value /= 1024;
-            i++;
-        }
-
-        if (bytes < 0)
-            value = -value;
-
-        return string.Format("{0:0.##} {1}", value, suffix[i]);
-    }
-
     private async void RefreshListButton_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -635,8 +612,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"RefreshListButton_Click error: {ex.Message}", ex);
+            PluginLog.Trace($"RefreshListButton_Click error: {ex.Message}", ex);
         }
     }
 
@@ -652,8 +628,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
+            PluginLog.Trace($"Error opening plugin settings: {ex.Message}", ex);
         }
     }
 
@@ -704,8 +679,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error showing import dialog: {ex.Message}", ex);
+            PluginLog.Trace($"Error showing import dialog: {ex.Message}", ex);
         }
     }
 
@@ -730,7 +704,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    MergeImportedFeatures(Features, _allFeatures, importedFeatures);
+                    FeatureMerger.MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
                     UpdateFeaturesVisibility();
                     IsLoading = false;
@@ -743,8 +717,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error importing from file: {ex.Message}", ex);
+            PluginLog.Trace($"Error importing from file: {ex.Message}", ex);
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -781,7 +754,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
             await Dispatcher.InvokeAsync(() =>
             {
-                MergeImportedFeatures(Features, _allFeatures, importedFeatures);
+                FeatureMerger.MergeImportedFeatures(Features, _allFeatures, importedFeatures);
 
                 UpdateFeaturesVisibility();
                 IsLoading = false;
@@ -793,8 +766,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error importing from URL: {ex.Message}", ex);
+            PluginLog.Trace($"Error importing from URL: {ex.Message}", ex);
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -824,9 +796,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
             await SearchFeaturesAsync().ConfigureAwait(false);
         }
         catch (OperationCanceledException)
@@ -836,8 +805,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         catch (Exception ex)
         {
             // Log unexpected exceptions but don't crash the app
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error in SearchTextBox_TextChanged debounce: {ex.Message}", ex);
+            PluginLog.Trace($"Error in SearchTextBox_TextChanged debounce: {ex.Message}", ex);
         }
     }
 
@@ -850,7 +818,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             // Use local cache for fast searching instead of service calls
             await Dispatcher.InvokeAsync(() =>
             {
-                var filteredFeatures = FilterFeatures(_allFeatures, _searchTextBox.Text);
+                var filteredFeatures = FeatureFilter.FilterFeatures(_allFeatures, _searchTextBox.Text);
 
                 Features.Clear();
 
@@ -865,8 +833,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error searching features: {ex.Message}", ex);
+            PluginLog.Trace($"Error searching features: {ex.Message}", ex);
             
             await Dispatcher.InvokeAsync(() =>
             {
@@ -906,8 +873,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error enabling feature {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"Error enabling feature {featureId}: {ex.Message}", ex);
         }
     }
 
@@ -942,8 +908,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error disabling feature {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"Error disabling feature {featureId}: {ex.Message}", ex);
         }
     }
 
@@ -964,8 +929,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error refreshing feature status {featureId}: {ex.Message}", ex);
+            PluginLog.Trace($"Error refreshing feature status {featureId}: {ex.Message}", ex);
         }
     }
 
@@ -997,37 +961,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
             _emptyStatePanel.Visibility = Visibility.Collapsed;
             _featuresDataGrid.Visibility = Visibility.Visible;
         }
-    }
-
-    private static void MergeImportedFeatures(
-        ICollection<FeatureFlagInfo> visibleFeatures,
-        ICollection<FeatureFlagInfo> allFeatures,
-        IEnumerable<FeatureFlagInfo> importedFeatures)
-    {
-        foreach (var feature in importedFeatures)
-        {
-            if (!visibleFeatures.Any(f => f.Id == feature.Id))
-            {
-                visibleFeatures.Add(feature);
-            }
-
-            if (!allFeatures.Any(f => f.Id == feature.Id))
-            {
-                allFeatures.Add(feature);
-            }
-        }
-    }
-
-    private static IReadOnlyList<FeatureFlagInfo> FilterFeatures(IEnumerable<FeatureFlagInfo> allFeatures, string? searchText)
-    {
-        var lowerKeyword = (searchText ?? string.Empty).ToLowerInvariant();
-
-        return allFeatures.Where(feature =>
-                string.IsNullOrWhiteSpace(lowerKeyword) ||
-                feature.Id.ToString().Contains(lowerKeyword) ||
-                (feature.Name ?? string.Empty).ToLowerInvariant().Contains(lowerKeyword) ||
-                (feature.Description ?? string.Empty).ToLowerInvariant().Contains(lowerKeyword))
-            .ToList();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
