@@ -47,7 +47,7 @@
 
 
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'LenovoLegionToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <Copyright>© 2025 SSC-STUDIO</Copyright>
+    <Copyright>© 2025-2026 SSC-STUDIO</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>SSC-STUDIO</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

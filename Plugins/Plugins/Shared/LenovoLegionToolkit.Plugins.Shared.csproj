@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Version>1.0.35</Version>
-    <FileVersion>1.0.35</FileVersion>
-    <AssemblyVersion>1.0.35</AssemblyVersion>
+    <Version>1.0.36</Version>
+    <FileVersion>1.0.36</FileVersion>
+    <AssemblyVersion>1.0.36</AssemblyVersion>
     <AssemblyName>LenovoLegionToolkit.Plugins.Shared</AssemblyName>
     <IsSharedProject>true</IsSharedProject>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

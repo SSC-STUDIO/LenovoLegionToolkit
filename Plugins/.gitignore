@@ -4,3 +4,7 @@ Build/
 !.gitkeep
 artifacts/
 artifacts-plugin-completion-check.log
+.vs/
+*.user
+*.DotSettings.user
+TestResults/

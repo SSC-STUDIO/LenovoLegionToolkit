@@ -1,160 +1,469 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="DisableButton" xml:space="preserve">
-    <value>Disable</value>
-  </data>
-  <data name="EnableButton" xml:space="preserve">
-    <value>Iespējot</value>
-  </data>
-  <data name="NotFound" xml:space="preserve">
-    <value>Not found</value>
-  </data>
-  <data name="OpenConfigButton" xml:space="preserve">
-    <value>Open Config File</value>
-  </data>
-  <data name="OpenShellFolderButton" xml:space="preserve">
-    <value>Open Shell Folder</value>
-  </data>
-  <data name="OpenStyleSettingsButton" xml:space="preserve">
-    <value>Open style settings</value>
-  </data>
-  <data name="OpenStyleShortButton" xml:space="preserve">
-    <value>Open Style</value>
-  </data>
-  <data name="OptimizationHint" xml:space="preserve">
-    <value>You can also access shell actions from Windows Optimization.</value>
-  </data>
-  <data name="PathLabel" xml:space="preserve">
-    <value>Ceļš</value>
-  </data>
-  <data name="PluginDescription" xml:space="preserve">
-    <value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value>
-  </data>
-  <data name="PluginName" xml:space="preserve">
-    <value>Shell integrācija</value>
-  </data>
-  <data name="SettingsPageTitle" xml:space="preserve">
-    <value>Shell integrācija</value>
-  </data>
-  <data name="StatusConfigNotFound" xml:space="preserve">
-    <value>Config file not found.</value>
-  </data>
-  <data name="StatusDetected" xml:space="preserve">
-    <value>Nilesoft Shell detected.</value>
-  </data>
-  <data name="StatusDisableCompleted" xml:space="preserve">
-    <value>Disable command completed.</value>
-  </data>
-  <data name="StatusDisableFailed" xml:space="preserve">
-    <value>Disable command failed.</value>
-  </data>
-  <data name="StatusEnableCompleted" xml:space="preserve">
-    <value>Enable command completed.</value>
-  </data>
-  <data name="StatusEnableFailed" xml:space="preserve">
-    <value>Enable command failed.</value>
-  </data>
-  <data name="StatusNotDetected" xml:space="preserve">
-    <value>Nilesoft Shell was not detected.</value>
-  </data>
-  <data name="StatusOpenedConfig" xml:space="preserve">
-    <value>Opened config file.</value>
-  </data>
-  <data name="StatusOpenedShellFolder" xml:space="preserve">
-    <value>Opened shell folder.</value>
-  </data>
-  <data name="StatusOpenedStyleSettings" xml:space="preserve">
-    <value>Opened style settings.</value>
-  </data>
-  <data name="StatusShellFolderNotFound" xml:space="preserve">
-    <value>Shell folder not found.</value>
-  </data>
-  <data name="Subtitle" xml:space="preserve">
-    <value>Manage Nilesoft Shell registration and open style editor.</value>
-  </data>
-  <data name="VersionLabel" xml:space="preserve">
-    <value>Versija</value>
-  </data>
-  <data name="OverviewTitle" xml:space="preserve">
-    <value>Shell Integration Overview</value>
-  </data>
-  <data name="OverviewDescription" xml:space="preserve">
-    <value>Check registration state, installation path, and jump straight into the packaged Shell tools.</value>
-  </data>
-  <data name="RegistrationLabel" xml:space="preserve">
-    <value>Registration</value>
-  </data>
-  <data name="ConfigLabel" xml:space="preserve">
-    <value>Config</value>
-  </data>
-  <data name="ActionsTitle" xml:space="preserve">
-    <value>Quick Actions</value>
-  </data>
-  <data name="ActionsDescription" xml:space="preserve">
-    <value>Apply registration changes or open the packaged Shell assets used by this plugin.</value>
-  </data>
-  <data name="RegisteredState" xml:space="preserve">
-    <value>Detected</value>
-  </data>
-  <data name="MissingState" xml:space="preserve">
-    <value>Missing</value>
-  </data>
+<?xml version="1.0" encoding="utf-8"?>
+
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:schema id="root">
+
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xs:element name="root" ns1:IsDataSet="true">
+
+      <xs:complexType>
+
+        <xs:choice maxOccurs="unbounded">
+
+          <xs:element name="metadata">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+              <xs:attribute name="type" type="xsd:string" />
+
+              <xs:attribute name="mimetype" type="xsd:string" />
+
+              <xs:attribute ref="xml:space" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="assembly">
+
+            <xs:complexType>
+
+              <xs:attribute name="alias" type="xsd:string" />
+
+              <xs:attribute name="name" type="xsd:string" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="data">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+              <xs:attribute name="type" type="xsd:string" />
+
+              <xs:attribute name="mimetype" type="xsd:string" />
+
+              <xs:attribute ref="xml:space" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="resheader">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+        </xs:choice>
+
+      </xs:complexType>
+
+    </xs:element>
+
+  </xs:schema>
+
+  <resheader name="resmimetype">
+
+    <value>text/microsoft-resx</value>
+
+  </resheader>
+
+  <resheader name="version">
+
+    <value>2.0</value>
+
+  </resheader>
+
+  <resheader name="reader">
+
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+
+  </resheader>
+
+  <resheader name="writer">
+
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+
+  </resheader>
+
+  <data name="DisableButton" xml:space="preserve">
+
+    <value>Disable</value>
+
+  </data>
+
+  <data name="EnableButton" xml:space="preserve">
+
+    <value>Iespējot</value>
+
+  </data>
+
+  <data name="NotFound" xml:space="preserve">
+
+    <value>Not found</value>
+
+  </data>
+
+  <data name="OpenConfigButton" xml:space="preserve">
+
+    <value>Open Config File</value>
+
+  </data>
+
+  <data name="OpenShellFolderButton" xml:space="preserve">
+
+    <value>Open Shell Folder</value>
+
+  </data>
+
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+
+    <value>Open style settings</value>
+
+  </data>
+
+  <data name="OpenStyleShortButton" xml:space="preserve">
+
+    <value>Open Style</value>
+
+  </data>
+
+  <data name="OptimizationHint" xml:space="preserve">
+
+    <value>You can also access shell actions from Windows Optimization.</value>
+
+  </data>
+
+  <data name="PathLabel" xml:space="preserve">
+
+    <value>Ceļš</value>
+
+  </data>
+
+  <data name="PluginDescription" xml:space="preserve">
+
+    <value>Integrate Lenovo Legion Toolkit with Windows shell context menu.</value>
+
+  </data>
+
+  <data name="PluginName" xml:space="preserve">
+
+    <value>Shell integrācija</value>
+
+  </data>
+
+  <data name="SettingsPageTitle" xml:space="preserve">
+
+    <value>Shell integrācija</value>
+
+  </data>
+
+  <data name="StatusConfigNotFound" xml:space="preserve">
+
+    <value>Config file not found.</value>
+
+  </data>
+
+  <data name="StatusDetected" xml:space="preserve">
+
+    <value>Nilesoft Shell detected.</value>
+
+  </data>
+
+  <data name="StatusDisableCompleted" xml:space="preserve">
+
+    <value>Disable command completed.</value>
+
+  </data>
+
+  <data name="StatusDisableFailed" xml:space="preserve">
+
+    <value>Disable command failed.</value>
+
+  </data>
+
+  <data name="StatusEnableCompleted" xml:space="preserve">
+
+    <value>Enable command completed.</value>
+
+  </data>
+
+  <data name="StatusEnableFailed" xml:space="preserve">
+
+    <value>Enable command failed.</value>
+
+  </data>
+
+  <data name="StatusNotDetected" xml:space="preserve">
+
+    <value>Nilesoft Shell was not detected.</value>
+
+  </data>
+
+  <data name="StatusOpenedConfig" xml:space="preserve">
+
+    <value>Opened config file.</value>
+
+  </data>
+
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+
+    <value>Opened shell folder.</value>
+
+  </data>
+
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+
+    <value>Opened style settings.</value>
+
+  </data>
+
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+
+    <value>Shell folder not found.</value>
+
+  </data>
+
+  <data name="Subtitle" xml:space="preserve">
+
+    <value>Manage Nilesoft Shell registration and open style editor.</value>
+
+  </data>
+
+  <data name="VersionLabel" xml:space="preserve">
+
+    <value>Versija</value>
+
+  </data>
+
+  <data name="OverviewTitle" xml:space="preserve">
+
+    <value>Shell Integration Overview</value>
+
+  </data>
+
+  <data name="OverviewDescription" xml:space="preserve">
+
+    <value>Check registration state, installation path, and jump straight into the packaged Shell tools.</value>
+
+  </data>
+
+  <data name="RegistrationLabel" xml:space="preserve">
+
+    <value>Registration</value>
+
+  </data>
+
+  <data name="ConfigLabel" xml:space="preserve">
+
+    <value>Config</value>
+
+  </data>
+
+  <data name="ActionsTitle" xml:space="preserve">
+
+    <value>Quick Actions</value>
+
+  </data>
+
+  <data name="ActionsDescription" xml:space="preserve">
+
+    <value>Apply registration changes or open the packaged Shell assets used by this plugin.</value>
+
+  </data>
+
+  <data name="RegisteredState" xml:space="preserve">
+
+    <value>Detected</value>
+
+  </data>
+
+  <data name="MissingState" xml:space="preserve">
+
+    <value>Missing</value>
+
+  </data>
+
+  <data name="RefreshButton" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Reset to Defaults</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>Apply Changes</value>
+  </data>
+  <data name="StatusRegistered" xml:space="preserve">
+    <value>Shell integration is currently enabled.</value>
+  </data>
+  <data name="StatusUnregistered" xml:space="preserve">
+    <value>Shell integration is currently disabled.</value>
+  </data>
+  <data name="StatusDetailDefault" xml:space="preserve">
+    <value>The plugin now manages the Shell config and generated config files.</value>
+  </data>
+  <data name="StatusEnabledBadge" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="StatusDisabledBadge" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="StatusMissingBadge" xml:space="preserve">
+    <value>Not Installed</value>
+  </data>
+  <data name="StatusUnknownBadge" xml:space="preserve">
+    <value>Checking</value>
+  </data>
+  <data name="ManagedConfigLabel" xml:space="preserve">
+    <value>Managed Config</value>
+  </data>
+  <data name="ManagedConfigNotReady" xml:space="preserve">
+    <value>Managed config will be created after Shell is detected.</value>
+  </data>
+  <data name="ProfileSavedShellMissing" xml:space="preserve">
+    <value>Profile saved, but Shell was not found on this system.</value>
+  </data>
+  <data name="ApplyCompletedEnabled" xml:space="preserve">
+    <value>Configuration applied, shell integration enabled.</value>
+  </data>
+  <data name="ApplyCompletedDisabled" xml:space="preserve">
+    <value>Configuration applied, shell integration disabled.</value>
+  </data>
+  <data name="FallbackLoadError" xml:space="preserve">
+    <value>Enhanced settings page failed to load.</value>
+  </data>
+  <data name="AppearanceSection" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="AppearanceSectionHint" xml:space="preserve">
+    <value>Adjust delays, animations, and overall rendering style before writing the managed config.</value>
+  </data>
+  <data name="PaletteSection" xml:space="preserve">
+    <value>Color Palette</value>
+  </data>
+  <data name="PaletteSectionHint" xml:space="preserve">
+    <value>Tune menu colors directly in the plugin and keep generated themes consistent.</value>
+  </data>
+  <data name="PreviewSection" xml:space="preserve">
+    <value>Live Preview</value>
+  </data>
+  <data name="PreviewHint" xml:space="preserve">
+    <value>This preview simulates the generated Shell theme so you can adjust before applying.</value>
+  </data>
+  <data name="PathsSection" xml:space="preserve">
+    <value>Config Status</value>
+  </data>
+  <data name="MotionToggleLabel" xml:space="preserve">
+    <value>Enable Motion Accents</value>
+  </data>
+  <data name="ShadowToggleLabel" xml:space="preserve">
+    <value>Enable Shadow Depth</value>
+  </data>
+  <data name="ColorSchemeLabel" xml:space="preserve">
+    <value>Color Scheme</value>
+  </data>
+  <data name="ColorSchemeAuto" xml:space="preserve">
+    <value>Follow System</value>
+  </data>
+  <data name="ColorSchemeLight" xml:space="preserve">
+    <value>Always Light</value>
+  </data>
+  <data name="ColorSchemeDark" xml:space="preserve">
+    <value>Always Dark</value>
+  </data>
+  <data name="VisualEffectLabel" xml:space="preserve">
+    <value>Background Effect</value>
+  </data>
+  <data name="EffectNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="EffectTransparent" xml:space="preserve">
+    <value>Transparent</value>
+  </data>
+  <data name="EffectBlur" xml:space="preserve">
+    <value>Blur</value>
+  </data>
+  <data name="EffectAcrylic" xml:space="preserve">
+    <value>Acrylic</value>
+  </data>
+  <data name="ShowDelayLabel" xml:space="preserve">
+    <value>Submenu Show Delay</value>
+  </data>
+  <data name="ShowDelayValueFormat" xml:space="preserve">
+    <value>{0} ms</value>
+  </data>
+  <data name="ShadowStrengthLabel" xml:space="preserve">
+    <value>Shadow Opacity</value>
+  </data>
+  <data name="ShadowStrengthValueFormat" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="AccentColorLabel" xml:space="preserve">
+    <value>Accent Color</value>
+  </data>
+  <data name="BackgroundColorLabel" xml:space="preserve">
+    <value>Background Color</value>
+  </data>
+  <data name="HoverColorLabel" xml:space="preserve">
+    <value>Hover Color</value>
+  </data>
+  <data name="TextColorLabel" xml:space="preserve">
+    <value>Text Color</value>
+  </data>
+  <data name="MutedColorLabel" xml:space="preserve">
+    <value>Muted Text Color</value>
+  </data>
+  <data name="TintColorLabel" xml:space="preserve">
+    <value>Tint Color</value>
+  </data>
+  <data name="PreviewPrimary" xml:space="preserve">
+    <value>Performance Mode</value>
+  </data>
+  <data name="PreviewPrimaryHint" xml:space="preserve">
+    <value>Pinned quick action with the current accent color.</value>
+  </data>
+  <data name="PreviewSecondary" xml:space="preserve">
+    <value>Hybrid GPU</value>
+  </data>
+  <data name="PreviewSecondaryHint" xml:space="preserve">
+    <value>Hover state of a secondary menu action.</value>
+  </data>
+  <data name="PreviewTertiary" xml:space="preserve">
+    <value>Open Toolbox Panel</value>
+  </data>
+  <data name="PreviewTertiaryHint" xml:space="preserve">
+    <value>Regular menu item using the generated background palette.</value>
+  </data>
 </root>

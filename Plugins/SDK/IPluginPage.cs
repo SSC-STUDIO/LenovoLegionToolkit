@@ -11,7 +11,3 @@ public interface IPluginPage : LenovoLegionToolkit.Lib.Plugins.IPluginPage
     // All interface members are inherited from the base interface in Lib
 }
 
-
-
-
-
