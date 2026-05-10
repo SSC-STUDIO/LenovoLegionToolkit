@@ -26,7 +26,7 @@ Example:
 
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  new `
+  init `
   --template feature-settings `
   --folder MyPlugin `
   --id my-plugin `
@@ -37,6 +37,7 @@ This generates:
 
 - `Plugins/MyPlugin/`
 - `Plugins/MyPlugin.Tests/`
+- `plugin.manifest.json`
 - `plugin.json`
 - plugin `CHANGELOG.md`
 - resource files
@@ -55,6 +56,16 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
   preview `
+  --plugin my-plugin `
+  --theme system `
+  --view feature
+```
+
+Use `dev` for the normal inner loop:
+
+```powershell
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+  dev `
   --plugin my-plugin `
   --theme system `
   --view feature
@@ -81,7 +92,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  pack `
+  package `
   --plugin my-plugin `
   --build-first
 ```
@@ -96,7 +107,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
   --plugin my-plugin
 ```
 
-That creates `store-entry.json` beside the plugin. After that, validate with:
+That ensures the `store` object in `plugin.manifest.json` is ready and writes the legacy `store-entry.json` compatibility file. After that, validate with:
 
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
@@ -109,10 +120,10 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 
 For new plugin authoring:
 
-- edit `plugin.json`
+- edit `plugin.manifest.json`
 - implement the plugin
 - preview it
 - validate it
-- pack it
+- package it
 
-Root `store.json` is release output, not the normal starting point for contributors.
+`plugin.json` is kept as a host-compatibility output. Root `store.json` is release output, not the normal starting point for contributors.

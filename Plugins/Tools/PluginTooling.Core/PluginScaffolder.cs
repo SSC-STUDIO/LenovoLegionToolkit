@@ -38,19 +38,29 @@ public sealed class PluginScaffolder
 
         var pluginProjectPath = Path.Combine(pluginDirectory, $"LenovoLegionToolkit.Plugins.{request.FolderName}.csproj");
         var testProjectPath = Path.Combine(testsDirectory, $"{request.FolderName}.Tests.csproj");
+        var legacyManifest = BuildPluginManifest(request);
+        var unifiedManifest = PluginRepository.CreateUnifiedManifest(legacyManifest, null, request.FolderName, archetype);
+        unifiedManifest.Store.Description = description;
+        unifiedManifest.Store.Icon = DefaultIcon;
+        unifiedManifest.Store.IconBackground = "#FFF1E2";
+        unifiedManifest.Store.Tags = request.Official ? ["new-plugin", "official-candidate"] : [];
+        unifiedManifest.Store.Dependencies = [];
+        unifiedManifest.Store.SupportedLanguages = ["en", "zh-Hans"];
+        unifiedManifest.Store.RepositoryUrl = request.Official ? "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins" : null;
 
         File.WriteAllText(pluginProjectPath, PluginRepository.NormalizeLineEndings(BuildProjectFile(request)));
         File.WriteAllText(testProjectPath, PluginRepository.NormalizeLineEndings(BuildTestProjectFile(request, namespaceSegment)));
-        File.WriteAllText(Path.Combine(pluginDirectory, "plugin.json"), PluginRepository.NormalizeLineEndings(BuildPluginJson(request)));
+        PluginRepository.WriteJsonFile(Path.Combine(pluginDirectory, "plugin.manifest.json"), unifiedManifest);
+        PluginRepository.WriteJsonFile(Path.Combine(pluginDirectory, "plugin.json"), legacyManifest);
         File.WriteAllText(Path.Combine(pluginDirectory, "CHANGELOG.md"), PluginRepository.NormalizeLineEndings(BuildPluginChangelog(request.DisplayName)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Text.cs"), PluginRepository.NormalizeLineEndings(BuildTextClass(namespaceSegment, classPrefix, request)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Plugin.cs"), PluginRepository.NormalizeLineEndings(BuildPluginClass(namespaceSegment, classPrefix, request, description, archetype)));
-        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(classPrefix, request.DisplayName, "Feature preview")));
+        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}Control", request.DisplayName, "Feature preview")));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "Control")));
 
         if (archetype.HasSettingsPage)
         {
-            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml($"{classPrefix}Settings", $"{request.DisplayName} Settings", "Settings preview")));
+            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}SettingsControl", $"{request.DisplayName} Settings", "Settings preview")));
             File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "SettingsControl")));
         }
 
@@ -65,14 +75,7 @@ public sealed class PluginScaffolder
         if (request.Official)
         {
             storeEntryPath = Path.Combine(pluginDirectory, "store-entry.json");
-            PluginRepository.WriteJsonFile(storeEntryPath, new OfficialStoreEntry(
-                Description: description,
-                Icon: DefaultIcon,
-                IconBackground: "#FFF1E2",
-                Tags: ["new-plugin", "official-candidate"],
-                Dependencies: Array.Empty<string>(),
-                SupportedLanguages: ["en", "zh-Hans"],
-                RepositoryUrl: "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"));
+            PluginRepository.WriteJsonFile(storeEntryPath, PluginRepository.ToStoreEntry(unifiedManifest));
         }
 
         if (File.Exists(repository.SolutionPath))
@@ -94,16 +97,25 @@ public sealed class PluginScaffolder
         if (File.Exists(storeEntryPath) && !request.Overwrite)
             return new PromoteResult(storeEntryPath, Created: false);
 
-        var storeEntry = new OfficialStoreEntry(
-            Description: plugin.Manifest.Name,
-            Icon: DefaultIcon,
-            IconBackground: "#FFF1E2",
-            Tags: ["official-candidate"],
-            Dependencies: Array.Empty<string>(),
-            SupportedLanguages: _repository.InferSupportedLanguages(plugin),
-            RepositoryUrl: string.IsNullOrWhiteSpace(plugin.Manifest.Repository) ? null : plugin.Manifest.Repository);
+        plugin.UnifiedManifest.Store.Description = string.IsNullOrWhiteSpace(plugin.UnifiedManifest.Store.Description)
+            ? plugin.Manifest.Name
+            : plugin.UnifiedManifest.Store.Description;
+        plugin.UnifiedManifest.Store.Icon = string.IsNullOrWhiteSpace(plugin.UnifiedManifest.Store.Icon)
+            ? DefaultIcon
+            : plugin.UnifiedManifest.Store.Icon;
+        plugin.UnifiedManifest.Store.IconBackground = string.IsNullOrWhiteSpace(plugin.UnifiedManifest.Store.IconBackground)
+            ? "#FFF1E2"
+            : plugin.UnifiedManifest.Store.IconBackground;
+        if (plugin.UnifiedManifest.Store.Tags.Count == 0)
+            plugin.UnifiedManifest.Store.Tags.Add("official-candidate");
+        if (plugin.UnifiedManifest.Store.SupportedLanguages.Count == 0)
+            plugin.UnifiedManifest.Store.SupportedLanguages.AddRange(_repository.InferSupportedLanguages(plugin));
+        plugin.UnifiedManifest.Store.RepositoryUrl ??= string.IsNullOrWhiteSpace(plugin.Manifest.Repository) ? null : plugin.Manifest.Repository;
 
-        PluginRepository.WriteJsonFile(storeEntryPath, storeEntry);
+        var unifiedManifestPath = plugin.UnifiedManifestPath ?? Path.Combine(plugin.DirectoryPath, "plugin.manifest.json");
+        PluginRepository.WriteJsonFile(unifiedManifestPath, plugin.UnifiedManifest);
+        PluginRepository.WriteJsonFile(Path.Combine(plugin.DirectoryPath, "plugin.json"), PluginRepository.ToLegacyManifest(plugin.UnifiedManifest));
+        PluginRepository.WriteJsonFile(storeEntryPath, PluginRepository.ToStoreEntry(plugin.UnifiedManifest));
         return new PromoteResult(storeEntryPath, Created: true);
     }
 
@@ -145,6 +157,9 @@ public sealed class PluginScaffolder
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="plugin.manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -220,20 +235,17 @@ public sealed class PluginScaffolder
 """;
     }
 
-    private static string BuildPluginJson(ScaffoldRequest request)
+    private static PluginManifest BuildPluginManifest(ScaffoldRequest request)
     {
-        return $$"""
-{
-  "id": "{{request.PluginId}}",
-  "name": "{{request.DisplayName}}",
-  "version": "1.0.0",
-  "minLLTVersion": "{{request.MinimumHostVersion}}",
-  "author": "{{request.Author}}",
-  "isSystemPlugin": false,
-  "repository": "",
-  "issues": ""
-}
-""";
+        return new PluginManifest(
+            request.PluginId,
+            request.DisplayName,
+            "1.0.0",
+            request.MinimumHostVersion,
+            request.Author,
+            false,
+            string.Empty,
+            string.Empty);
     }
 
     private static string BuildPluginChangelog(string displayName)
@@ -343,10 +355,10 @@ public sealed class {{classPrefix}}SettingsPage : IPluginPage
 """;
     }
 
-    private static string BuildContentControlXaml(string controlPrefix, string title, string description)
+    private static string BuildContentControlXaml(string namespaceSegment, string className, string title, string description)
     {
         return $$"""
-<UserControl x:Class="LenovoLegionToolkit.Plugins.{{controlPrefix.Replace("Settings", string.Empty, StringComparison.Ordinal)}}.{{controlPrefix}}"
+<UserControl x:Class="LenovoLegionToolkit.Plugins.{{namespaceSegment}}.{{className}}"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Border Padding="24"

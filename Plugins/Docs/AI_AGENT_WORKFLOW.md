@@ -49,7 +49,7 @@ dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
 
 ## Store Generation
 
-Root `store.json` should be reproducible from plugin manifests, `store-entry.json`, release assets, and a fixed release date.
+Root `store.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.
 
 Check without writing:
 

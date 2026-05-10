@@ -276,7 +276,7 @@ internal static class Program
             if (folderName is "Shared" or "Template" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            var manifestPath = Path.Combine(pluginDirectory, "plugin.json");
+            var manifestPath = ResolveManifestPath(pluginDirectory);
             if (!File.Exists(manifestPath))
                 continue;
 
@@ -308,7 +308,7 @@ internal static class Program
         {
             foreach (var directory in Directory.EnumerateDirectories(buildRoot))
             {
-                var manifestPath = Path.Combine(directory, "plugin.json");
+                var manifestPath = ResolveManifestPath(directory);
                 if (!File.Exists(manifestPath))
                     continue;
 
@@ -321,6 +321,15 @@ internal static class Program
         }
 
         throw new DirectoryNotFoundException($"Plugin build output for '{pluginId}' was not found. Build the plugin first.");
+    }
+
+    private static string ResolveManifestPath(string directory)
+    {
+        var unified = Path.Combine(directory, "plugin.manifest.json");
+        if (File.Exists(unified))
+            return unified;
+
+        return Path.Combine(directory, "plugin.json");
     }
 
     private static (ProcessStartInfo startInfo, string appDirectory) ResolveWorkbenchStartInfo(string repositoryRoot)

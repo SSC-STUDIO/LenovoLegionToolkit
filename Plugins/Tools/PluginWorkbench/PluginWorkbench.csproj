@@ -24,7 +24,7 @@
       <HintPath>$(HostWpfPath)</HintPath>
       <Private>true</Private>
     </Reference>
-    <PackageReference Include="WPF-UI" Version="2.1.0" />
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

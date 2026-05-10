@@ -6,8 +6,8 @@ LenovoLegionToolkit-Plugins 是联想拯救者工具包的官方插件系统，�
 
 当前工具链围绕两条路径设计：
 
-1. 贡献者路径：`doctor -> new -> build -> preview -> validate -> pack`
-2. 官方收录路径：在贡献者路径基础上补 `promote`、`store-entry.json` 和官方发布流程
+1. 贡献者路径：`doctor -> init -> dev -> test -> validate -> package`
+2. 官方收录路径：在贡献者路径基础上补 `promote`、`plugin.manifest.json` 的 `store` 元数据和官方发布流程
 
 ## 项目结构
 
@@ -70,8 +70,9 @@ LenovoLegionToolkit-Plugins/
 
 插件元数据现在拆成三层：
 
-- `plugin.json`: 运行时身份与兼容性
-- `store-entry.json`: 官方商店展示元数据
+- `plugin.manifest.json`: 作者编辑的统一清单，包含运行时身份、贡献点、打包规则和官方商店元数据
+- `plugin.json`: 为当前宿主加载保留的运行时兼容输出
+- `store-entry.json`: 为旧发布脚本保留的官方元数据兼容输出
 - 根 `store.json`: 发布输出，不再作为新插件作者的日常编辑入口
 
 ### 2.1 独立宿主模式
@@ -95,11 +96,14 @@ LenovoLegionToolkit-Plugins/
 标准作者入口是 `PluginTooling.Cli`：
 
 - `doctor`
-- `new`
+- `init`
+- `dev`
 - `build`
+- `test`
 - `preview`
 - `validate`
-- `pack`
+- `package`
+- `migrate`
 - `promote`
 
 `PluginCompletionUiTool` 继续保留，但定位为维护者/仓库侧校验 UI，而不是第一次贡献者的标准入口。
@@ -196,7 +200,8 @@ Load → Start → [Runtime Loop] → Stop → Unload
 ### 版本号同步
 - `Directory.Build.props`: 主版本
 - `*.csproj`: 文件版本
-- `plugin.json`: 插件版本
+- `plugin.manifest.json`: 插件版本、贡献点、包名与商店元数据
+- `plugin.json`: 兼容运行时清单
 - `store.json`: 发布元数据
 
 ### 发布流程

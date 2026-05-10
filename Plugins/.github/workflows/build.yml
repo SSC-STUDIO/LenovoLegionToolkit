@@ -12,7 +12,7 @@ on:
         required: false
         default: ''
       version:
-        description: 'Legacy single-plugin release version assertion; must match plugin.json and cannot be combined with plugin_ids'
+        description: 'Legacy single-plugin release version assertion; must match plugin.manifest.json and cannot be combined with plugin_ids'
         required: false
         default: ''
 
@@ -131,7 +131,10 @@ jobs:
             $pluginsById = @{}
 
             foreach ($pluginDirectory in $pluginDirectories) {
-              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+              if (-not (Test-Path $manifestPath)) {
+                $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+              }
               if (-not (Test-Path $manifestPath)) {
                 continue
               }
@@ -220,7 +223,10 @@ jobs:
           $allPlugins = @()
 
           foreach ($pluginDirectory in $pluginDirectories) {
-            $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+            $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+            if (-not (Test-Path $manifestPath)) {
+              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+            }
             if (-not (Test-Path $manifestPath)) {
               continue
             }
@@ -374,9 +380,12 @@ jobs:
           foreach ($selectedPlugin in @($selectedPlugins)) {
             $plugin = [string]$selectedPlugin.folderName
             $pluginDir = "Plugins/$plugin"
-            $pluginJson = Join-Path $pluginDir "plugin.json"
+            $pluginJson = Join-Path $pluginDir "plugin.manifest.json"
             if (-not (Test-Path $pluginJson)) {
-              throw "Missing plugin.json for $plugin"
+              $pluginJson = Join-Path $pluginDir "plugin.json"
+            }
+            if (-not (Test-Path $pluginJson)) {
+              throw "Missing plugin manifest for $plugin"
             }
 
             $pluginManifest = Get-Content $pluginJson -Raw | ConvertFrom-Json
@@ -592,9 +601,12 @@ jobs:
 
           foreach ($selectedPlugin in @($selectedPlugins)) {
             $pluginFolder = [string]$selectedPlugin.folderName
-            $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.json"
+            $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.manifest.json"
             if (-not (Test-Path $pluginJsonPath)) {
-              throw "Missing plugin.json for $pluginFolder"
+              $pluginJsonPath = Join-Path (Join-Path $PWD "Plugins\$pluginFolder") "plugin.json"
+            }
+            if (-not (Test-Path $pluginJsonPath)) {
+              throw "Missing plugin manifest for $pluginFolder"
             }
 
             $pluginManifest = Get-Content $pluginJsonPath -Raw | ConvertFrom-Json -AsHashtable
@@ -637,7 +649,7 @@ jobs:
               iconBackground = if ($existingPlugin) { $existingPlugin.iconBackground } else { "" }
               isSystemPlugin = [bool]$pluginManifest.isSystemPlugin
               dependencies = if ($existingPlugin) { @($existingPlugin.dependencies) } else { @() }
-              minLLTVersion = [string]$pluginManifest.minLLTVersion
+              minLLTVersion = if ($pluginManifest.ContainsKey("minHostVersion")) { [string]$pluginManifest.minHostVersion } else { [string]$pluginManifest.minLLTVersion }
               releaseDate = $releaseDate
               fileSize = [int64]$publishedRelease.assetSize
               tags = if ($existingPlugin) { @($existingPlugin.tags) } else { @() }

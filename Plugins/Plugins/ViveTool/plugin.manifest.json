@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "vive-tool",
+  "name": "ViVeTool",
+  "version": "1.2.1",
+  "minHostVersion": "3.6.1",
+  "author": "SSC-STUDIO",
+  "isSystemPlugin": false,
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "contributes": {
+    "featurePage": {
+      "class": "LenovoLegionToolkit.Plugins.ViveTool.ViveToolPage",
+      "title": "ViVeTool"
+    },
+    "settingsPage": {
+      "class": "LenovoLegionToolkit.Plugins.ViveTool.ViveToolSettingsPage",
+      "title": "ViVeTool Settings"
+    },
+    "runtime": null,
+    "optimizationActions": []
+  },
+  "package": {
+    "assetName": "vive-tool-v1.2.1.zip",
+    "requiredFiles": [
+      "LenovoLegionToolkit.Plugins.ViveTool.dll",
+      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Manage Windows feature flags using ViVeTool",
+    "icon": "Code24",
+    "iconBackground": "#7C3AED",
+    "tags": [
+      "windows",
+      "feature-flags",
+      "vivetool"
+    ],
+    "dependencies": [],
+    "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  }
+}

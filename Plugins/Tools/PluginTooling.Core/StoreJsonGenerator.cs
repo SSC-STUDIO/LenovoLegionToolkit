@@ -10,7 +10,7 @@ public sealed class StoreJsonGenerator
 
         var repository = _repository.Load(request.RepositoryRoot);
         var selectedPluginIds = request.PluginIds.Count == 0
-            ? repository.Plugins.Values.Where(plugin => plugin.StoreEntry is not null).Select(plugin => plugin.Manifest.Id).ToArray()
+            ? repository.Plugins.Values.Where(HasStoreMetadata).Select(plugin => plugin.Manifest.Id).ToArray()
             : _repository.ResolveTargetPluginIds(repository, request.PluginIds);
 
         var assetRoot = request.AssetRoot is null
@@ -28,9 +28,10 @@ public sealed class StoreJsonGenerator
         foreach (var pluginId in selectedPluginIds.OrderBy(id => id, StringComparer.OrdinalIgnoreCase))
         {
             var plugin = repository.Plugins[pluginId];
-            if (plugin.StoreEntry is null)
+            if (!HasStoreMetadata(plugin))
                 continue;
 
+            var storeMetadata = plugin.UnifiedManifest.Store;
             var tagName = $"{plugin.Manifest.Id}-v{plugin.Manifest.Version}";
             var assetName = $"{tagName}.zip";
             var assetPath = Path.Combine(assetRoot, assetName);
@@ -39,7 +40,7 @@ public sealed class StoreJsonGenerator
             {
                 Id = plugin.Manifest.Id,
                 Name = plugin.Manifest.Name,
-                Description = plugin.StoreEntry.Description,
+                Description = storeMetadata.Description,
                 Author = plugin.Manifest.Author,
                 Version = plugin.Manifest.Version,
                 MinLltVersion = plugin.Manifest.MinLltVersion,
@@ -48,12 +49,12 @@ public sealed class StoreJsonGenerator
                 Changelog = $"{request.ReleaseRepositoryUrl}/tag/{tagName}",
                 FileSize = File.Exists(assetPath) ? new FileInfo(assetPath).Length : 0,
                 ReleaseDate = releaseDate.ToString("O"),
-                RepositoryUrl = plugin.StoreEntry.RepositoryUrl ?? plugin.Manifest.Repository,
-                SupportedLanguages = plugin.StoreEntry.SupportedLanguages.ToList(),
-                Icon = plugin.StoreEntry.Icon,
-                IconBackground = plugin.StoreEntry.IconBackground,
-                Dependencies = plugin.StoreEntry.Dependencies.ToList(),
-                Tags = plugin.StoreEntry.Tags.ToList(),
+                RepositoryUrl = storeMetadata.RepositoryUrl ?? plugin.Manifest.Repository,
+                SupportedLanguages = storeMetadata.SupportedLanguages.ToList(),
+                Icon = storeMetadata.Icon,
+                IconBackground = storeMetadata.IconBackground,
+                Dependencies = storeMetadata.Dependencies.ToList(),
+                Tags = storeMetadata.Tags.ToList(),
             });
         }
 
@@ -102,5 +103,15 @@ public sealed class StoreJsonGenerator
             value = value[1..];
 
         return PluginRepository.NormalizeLineEndings(value).TrimEnd();
+    }
+
+    private static bool HasStoreMetadata(PluginContext plugin)
+    {
+        var store = plugin.UnifiedManifest.Store;
+        return !string.IsNullOrWhiteSpace(store.Description) &&
+               !string.IsNullOrWhiteSpace(store.Icon) &&
+               !string.IsNullOrWhiteSpace(store.IconBackground) &&
+               store.Tags.Count > 0 &&
+               store.SupportedLanguages.Count > 0;
     }
 }

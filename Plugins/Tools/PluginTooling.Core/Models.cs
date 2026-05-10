@@ -40,6 +40,117 @@ public sealed record PluginManifest(
     string Repository,
     string Issues);
 
+public sealed class UnifiedPluginManifest
+{
+    [JsonPropertyName("schemaVersion")]
+    public int SchemaVersion { get; set; } = 1;
+
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("version")]
+    public string Version { get; set; } = "1.0.0";
+
+    [JsonPropertyName("minHostVersion")]
+    public string MinHostVersion { get; set; } = string.Empty;
+
+    [JsonPropertyName("author")]
+    public string Author { get; set; } = string.Empty;
+
+    [JsonPropertyName("isSystemPlugin")]
+    public bool IsSystemPlugin { get; set; }
+
+    [JsonPropertyName("repository")]
+    public string Repository { get; set; } = string.Empty;
+
+    [JsonPropertyName("issues")]
+    public string Issues { get; set; } = string.Empty;
+
+    [JsonPropertyName("contributes")]
+    public PluginContributions Contributes { get; set; } = new();
+
+    [JsonPropertyName("package")]
+    public PluginPackageMetadata Package { get; set; } = new();
+
+    [JsonPropertyName("store")]
+    public PluginStoreMetadata Store { get; set; } = new();
+}
+
+public sealed class PluginContributions
+{
+    [JsonPropertyName("featurePage")]
+    public PluginPageContribution? FeaturePage { get; set; }
+
+    [JsonPropertyName("settingsPage")]
+    public PluginPageContribution? SettingsPage { get; set; }
+
+    [JsonPropertyName("runtime")]
+    public PluginRuntimeContribution? Runtime { get; set; }
+
+    [JsonPropertyName("optimizationActions")]
+    public List<PluginOptimizationContribution> OptimizationActions { get; set; } = [];
+}
+
+public sealed class PluginPageContribution
+{
+    [JsonPropertyName("class")]
+    public string Class { get; set; } = string.Empty;
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+}
+
+public sealed class PluginRuntimeContribution
+{
+    [JsonPropertyName("class")]
+    public string Class { get; set; } = string.Empty;
+}
+
+public sealed class PluginOptimizationContribution
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+}
+
+public sealed class PluginPackageMetadata
+{
+    [JsonPropertyName("assetName")]
+    public string AssetName { get; set; } = string.Empty;
+
+    [JsonPropertyName("requiredFiles")]
+    public List<string> RequiredFiles { get; set; } = [];
+}
+
+public sealed class PluginStoreMetadata
+{
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("icon")]
+    public string Icon { get; set; } = string.Empty;
+
+    [JsonPropertyName("iconBackground")]
+    public string IconBackground { get; set; } = string.Empty;
+
+    [JsonPropertyName("tags")]
+    public List<string> Tags { get; set; } = [];
+
+    [JsonPropertyName("dependencies")]
+    public List<string> Dependencies { get; set; } = [];
+
+    [JsonPropertyName("supportedLanguages")]
+    public List<string> SupportedLanguages { get; set; } = [];
+
+    [JsonPropertyName("repositoryUrl")]
+    public string? RepositoryUrl { get; set; }
+}
+
 public sealed record OfficialStoreEntry(
     string Description,
     string Icon,
@@ -55,6 +166,8 @@ public sealed record PluginContext(
     string DirectoryPath,
     string ManifestPath,
     PluginManifest Manifest,
+    string? UnifiedManifestPath,
+    UnifiedPluginManifest UnifiedManifest,
     string? ProjectPath,
     string? TestProjectPath,
     string? ChangelogPath,
@@ -263,6 +376,9 @@ public sealed class PluginInspectionItem
     [JsonPropertyName("manifestPath")]
     public string ManifestPath { get; init; } = string.Empty;
 
+    [JsonPropertyName("unifiedManifestPath")]
+    public string? UnifiedManifestPath { get; init; }
+
     [JsonPropertyName("projectPath")]
     public string? ProjectPath { get; init; }
 
@@ -287,8 +403,14 @@ public sealed class PluginInspectionItem
     [JsonPropertyName("hasPluginAssembly")]
     public bool HasPluginAssembly { get; init; }
 
+    [JsonPropertyName("hasUnifiedManifest")]
+    public bool HasUnifiedManifest { get; init; }
+
     [JsonPropertyName("hasOutputManifest")]
     public bool HasOutputManifest { get; init; }
+
+    [JsonPropertyName("hasOutputUnifiedManifest")]
+    public bool HasOutputUnifiedManifest { get; init; }
 
     [JsonPropertyName("hasTestProject")]
     public bool HasTestProject { get; init; }
@@ -301,6 +423,9 @@ public sealed class PluginInspectionItem
 
     [JsonPropertyName("hasStoreEntry")]
     public bool HasStoreEntry { get; init; }
+
+    [JsonPropertyName("hasStoreMetadata")]
+    public bool HasStoreMetadata { get; init; }
 
     [JsonPropertyName("storeJsonEntry")]
     public StoreInspectionItem? StoreJsonEntry { get; init; }

@@ -20,11 +20,16 @@ static async Task<int> ProgramMainAsync(string[] args)
         {
             "doctor" => await RunDoctorAsync(root, args),
             "inspect" => await RunInspectAsync(root, args),
+            "init" => await RunNewAsync(root, args),
             "new" => await RunNewAsync(root, args),
+            "dev" => await RunDevAsync(root, args),
             "build" => await RunBuildAsync(root, args),
+            "test" => await RunTestAsync(root, args),
             "preview" => await RunPreviewAsync(root, args),
             "validate" => await RunValidateAsync(root, args),
+            "package" => await RunPackAsync(root, args),
             "pack" => await RunPackAsync(root, args),
+            "migrate" => RunMigrate(root, args),
             "promote" => RunPromote(root, args),
             "generate-store" => RunGenerateStore(root, args),
             _ => Fail($"Unknown command '{args[0]}'."),
@@ -76,15 +81,16 @@ static async Task<int> ProgramMainAsync(string[] args)
         foreach (var plugin in report.Plugins)
         {
             var storeState = plugin.StoreJsonEntry is null
-                ? "store: missing"
+                ? plugin.HasStoreMetadata ? "store: metadata ready" : "store: metadata missing"
                 : plugin.StoreJsonEntry.MatchesManifestVersion ? "store: aligned" : "store: version mismatch";
-            var outputState = plugin.HasPluginAssembly ? "build: ready" : "build: missing";
+            var manifestState = plugin.HasUnifiedManifest ? "manifest: unified" : "manifest: legacy";
+            var outputState = plugin.HasPluginAssembly && plugin.HasOutputUnifiedManifest ? "build: ready" : "build: missing";
             var testsState = plugin.HasTestProject ? "tests: present" : "tests: missing";
             var changelogState = plugin.HasChangelog
                 ? plugin.HasUnreleasedChangelog ? "changelog: unreleased" : "changelog: present"
                 : "changelog: missing";
 
-            Console.WriteLine($"[{plugin.PluginId}] {plugin.Name} {plugin.Version} ({storeState}, {outputState}, {testsState}, {changelogState})");
+            Console.WriteLine($"[{plugin.PluginId}] {plugin.Name} {plugin.Version} ({manifestState}, {storeState}, {outputState}, {testsState}, {changelogState})");
             Console.WriteLine($"  path: {plugin.DirectoryPath}");
             Console.WriteLine($"  output: {plugin.OutputDirectory}");
         }
@@ -146,6 +152,41 @@ static async Task<int> ProgramMainAsync(string[] args)
             Console.WriteLine);
     }
 
+    async Task<int> RunDevAsync(string repositoryRoot, string[] argv)
+    {
+        var pluginId = RequireValue(argv, "--plugin");
+        var configuration = OptionalValue(argv, "--configuration") ?? "Release";
+        var buildExitCode = await RunBuildAsync(repositoryRoot, ["build", "--plugin", pluginId, "--configuration", configuration]);
+        if (buildExitCode != 0)
+            return buildExitCode;
+
+        var previewArgs = new List<string>
+        {
+            "preview",
+            "--plugin",
+            pluginId,
+            "--theme",
+            OptionalValue(argv, "--theme") ?? "system",
+            "--view",
+            OptionalValue(argv, "--view") ?? "feature",
+        };
+
+        return await RunPreviewAsync(repositoryRoot, previewArgs.ToArray());
+    }
+
+    async Task<int> RunTestAsync(string repositoryRoot, string[] argv)
+    {
+        var repo = repository.Load(repositoryRoot);
+        var pluginId = repository.ResolveTargetPluginIds(repo, [RequireValue(argv, "--plugin")]).Single();
+        var plugin = repo.Plugins[pluginId];
+        var configuration = OptionalValue(argv, "--configuration") ?? "Release";
+        if (string.IsNullOrWhiteSpace(plugin.TestProjectPath))
+            return Fail($"Plugin '{pluginId}' does not have a test project.");
+
+        var runner = new ProcessRunner();
+        return await runner.RunDotnetAsync(["test", plugin.TestProjectPath!, "-c", configuration, "--nologo"], repo.RootPath, Console.WriteLine);
+    }
+
     async Task<int> RunValidateAsync(string repositoryRoot, string[] argv)
     {
         var service = new PluginValidationService(Console.WriteLine);
@@ -202,6 +243,20 @@ static async Task<int> ProgramMainAsync(string[] args)
         Console.WriteLine(result.Created
             ? $"Created {result.StoreEntryPath}"
             : $"Already exists: {result.StoreEntryPath}");
+        return 0;
+    }
+
+    int RunMigrate(string repositoryRoot, string[] argv)
+    {
+        var rawPluginIds = OptionalValue(argv, "--plugin-ids");
+        var pluginId = OptionalValue(argv, "--plugin");
+        var selection = rawPluginIds is not null
+            ? rawPluginIds.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            : pluginId is not null ? [pluginId] : Array.Empty<string>();
+
+        var migrator = new PluginManifestMigrator();
+        var written = migrator.Migrate(repositoryRoot, selection, Console.WriteLine);
+        Console.WriteLine($"Migrated {written.Count} plugin manifest(s).");
         return 0;
     }
 
@@ -321,11 +376,14 @@ static void PrintHelp()
     Console.WriteLine("""
 plugin-tooling doctor [--repository-root <path>] [--json-report-path <path>]
 plugin-tooling inspect [--repository-root <path>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--json-report-path <path>]
-plugin-tooling new --template <settings-only|feature-settings|runtime-optimization> --folder <FolderName> --id <plugin-id> --name <DisplayName> [--author <Author>] [--description <Text>] [--min-llt-version <X.Y.Z>] [--official]
+plugin-tooling init --template <settings-only|feature-settings|runtime-optimization> --folder <FolderName> --id <plugin-id> --name <DisplayName> [--author <Author>] [--description <Text>] [--min-llt-version <X.Y.Z>] [--official]
+plugin-tooling dev --plugin <plugin-id> [--configuration Release] [--theme system|light|dark] [--view feature|settings|optimization]
 plugin-tooling build --plugin <plugin-id> [--configuration Release]
+plugin-tooling test --plugin <plugin-id> [--configuration Release]
 plugin-tooling preview --plugin <plugin-id> [--theme system|light|dark] [--view feature|settings|optimization]
 plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile contributor|official-candidate|official-release] [--skip-build] [--skip-tests] [--json-report-path <path>]
-plugin-tooling pack --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
+plugin-tooling package --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
+plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>]
 plugin-tooling promote --plugin <plugin-id> [--overwrite]
 plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--check]
 """);

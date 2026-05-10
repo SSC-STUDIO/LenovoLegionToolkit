@@ -1,14 +1,14 @@
 {
-  "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
-  "icon": "Folder24",
-  "iconBackground": "#0F766E",
-  "tags": [
+  "Description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+  "Icon": "Folder24",
+  "IconBackground": "#0F766E",
+  "Tags": [
     "system",
     "shell",
     "integration"
   ],
-  "dependencies": [],
-  "supportedLanguages": [
+  "Dependencies": [],
+  "SupportedLanguages": [
     "ar",
     "bg",
     "bs",
@@ -42,5 +42,5 @@
     "zh-Hans",
     "zh-Hant"
   ],
-  "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  "RepositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
 }

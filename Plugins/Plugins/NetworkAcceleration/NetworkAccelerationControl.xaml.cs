@@ -80,7 +80,7 @@ public partial class NetworkAccelerationControl : UserControl
         _statusTextBlock = new TextBlock { TextWrapping = TextWrapping.Wrap };
         _statusIcon = new Wpf.Ui.Controls.SymbolIcon
         {
-            Symbol = Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24,
+            Symbol = Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24,
             FontSize = 16,
             Margin = new Thickness(0, 1, 8, 0),
             VerticalAlignment = VerticalAlignment.Top
@@ -914,8 +914,8 @@ public partial class NetworkAccelerationControl : UserControl
             : ResolveBrush("SystemFillColorSuccessBrush", SystemColors.ControlTextBrush);
 
         _statusIcon.Symbol = isError
-            ? Wpf.Ui.Common.SymbolRegular.ErrorCircle24
-            : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
+            ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+            : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
         _statusIcon.Foreground = _statusTextBlock.Foreground;
     }
 

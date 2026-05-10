@@ -12,7 +12,6 @@ using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
 using Microsoft.Win32;
-using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;
 
@@ -208,8 +207,8 @@ public partial class ViveToolSettingsPage
         if (_statusIcon is not null)
         {
             _statusIcon.Symbol = isError
-                ? Wpf.Ui.Common.SymbolRegular.ErrorCircle24
-                : Wpf.Ui.Common.SymbolRegular.CheckmarkCircle24;
+                ? Wpf.Ui.Controls.SymbolRegular.ErrorCircle24
+                : Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24;
             _statusIcon.Foreground = _statusTextBlock.Foreground;
         }
     }

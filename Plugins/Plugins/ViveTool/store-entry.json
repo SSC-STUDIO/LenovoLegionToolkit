@@ -1,14 +1,14 @@
 {
-  "description": "Manage Windows feature flags using ViVeTool",
-  "icon": "Code24",
-  "iconBackground": "#7C3AED",
-  "tags": [
+  "Description": "Manage Windows feature flags using ViVeTool",
+  "Icon": "Code24",
+  "IconBackground": "#7C3AED",
+  "Tags": [
     "windows",
     "feature-flags",
     "vivetool"
   ],
-  "dependencies": [],
-  "supportedLanguages": [
+  "Dependencies": [],
+  "SupportedLanguages": [
     "ar",
     "bg",
     "bs",
@@ -42,5 +42,5 @@
     "zh-Hans",
     "zh-Hant"
   ],
-  "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  "RepositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
 }

@@ -58,12 +58,13 @@ public sealed class PluginValidationService
     {
         state.Info("Starting validation.");
         ValidateManifest(plugin, state);
+        ValidateUnifiedManifest(plugin, state);
         ValidateChangelog(plugin, state);
         ValidateProject(plugin, state);
         ValidateTestProject(plugin, state);
 
         if (request.Profile is PluginValidationProfile.OfficialCandidate or PluginValidationProfile.OfficialRelease)
-            ValidateStoreEntry(plugin, state);
+            ValidateStoreMetadata(plugin, state);
 
         if (!request.SkipBuild && !string.IsNullOrWhiteSpace(plugin.ProjectPath))
         {
@@ -84,6 +85,7 @@ public sealed class PluginValidationService
         }
 
         ValidateBuildOutput(plugin, state);
+        ValidatePackageContents(plugin, state);
 
         if (!request.SkipTests && !string.IsNullOrWhiteSpace(plugin.TestProjectPath))
         {
@@ -115,24 +117,122 @@ public sealed class PluginValidationService
     private static void ValidateManifest(PluginContext plugin, ValidationState state)
     {
         if (string.IsNullOrWhiteSpace(plugin.Manifest.Id))
-            state.Fail("plugin.json is missing id.");
+            state.Fail("Runtime manifest is missing id.");
         else
-            state.Pass("plugin.json id found.");
+            state.Pass("Runtime manifest id found.");
 
         if (string.IsNullOrWhiteSpace(plugin.Manifest.Name))
-            state.Fail("plugin.json is missing name.");
+            state.Fail("Runtime manifest is missing name.");
         else
-            state.Pass("plugin.json name found.");
+            state.Pass("Runtime manifest name found.");
 
         if (string.IsNullOrWhiteSpace(plugin.Manifest.Version))
-            state.Fail("plugin.json is missing version.");
+            state.Fail("Runtime manifest is missing version.");
         else
-            state.Pass("plugin.json version found.");
+            state.Pass("Runtime manifest version found.");
 
         if (string.IsNullOrWhiteSpace(plugin.Manifest.MinLltVersion))
-            state.Fail("plugin.json is missing minLLTVersion.");
+            state.Fail("Runtime manifest is missing minLLTVersion.");
         else
-            state.Pass("plugin.json minLLTVersion found.");
+            state.Pass("Runtime manifest minLLTVersion found.");
+    }
+
+    private static void ValidateUnifiedManifest(PluginContext plugin, ValidationState state)
+    {
+        if (string.IsNullOrWhiteSpace(plugin.UnifiedManifestPath) || !File.Exists(plugin.UnifiedManifestPath))
+        {
+            state.Fail("plugin.manifest.json is missing.");
+            return;
+        }
+
+        state.Pass("plugin.manifest.json found.");
+
+        var manifest = plugin.UnifiedManifest;
+        ValidateEqual(manifest.Id, plugin.Manifest.Id, "Unified manifest id does not match runtime manifest id.", state);
+        ValidateEqual(manifest.Version, plugin.Manifest.Version, "Unified manifest version does not match runtime manifest version.", state);
+        ValidateEqual(manifest.MinHostVersion, plugin.Manifest.MinLltVersion, "Unified manifest minHostVersion does not match runtime minLLTVersion.", state);
+        ValidateLegacyManifestCompatibility(plugin, manifest, state);
+
+        if (string.IsNullOrWhiteSpace(manifest.Package.AssetName))
+            state.Fail("plugin.manifest.json package.assetName is missing.");
+        else if (!string.Equals(manifest.Package.AssetName, $"{manifest.Id}-v{manifest.Version}.zip", StringComparison.OrdinalIgnoreCase))
+            state.Fail("plugin.manifest.json package.assetName must be '<plugin-id>-v<version>.zip'.");
+        else
+            state.Pass("plugin.manifest.json package asset name matches convention.");
+
+        ValidateContributionType(plugin, manifest.Contributes.FeaturePage, "featurePage", state);
+        ValidateContributionType(plugin, manifest.Contributes.SettingsPage, "settingsPage", state);
+        ValidateContributionType(plugin, manifest.Contributes.Runtime, "runtime", state);
+
+        foreach (var action in manifest.Contributes.OptimizationActions)
+        {
+            if (string.IsNullOrWhiteSpace(action.Id) || string.IsNullOrWhiteSpace(action.Title))
+                state.Fail("optimizationActions entries must include id and title.");
+            else
+                state.Pass($"optimization action '{action.Id}' found.");
+        }
+    }
+
+    private static void ValidateContributionType(PluginContext plugin, PluginPageContribution? contribution, string contributionName, ValidationState state)
+    {
+        if (contribution is null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(contribution.Class))
+        {
+            state.Fail($"{contributionName} contribution is missing class.");
+            return;
+        }
+
+        ValidateContributionClassExists(plugin, contribution.Class, contributionName, state);
+    }
+
+    private static void ValidateContributionType(PluginContext plugin, PluginRuntimeContribution? contribution, string contributionName, ValidationState state)
+    {
+        if (contribution is null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(contribution.Class))
+        {
+            state.Fail($"{contributionName} contribution is missing class.");
+            return;
+        }
+
+        ValidateContributionClassExists(plugin, contribution.Class, contributionName, state);
+    }
+
+    private static void ValidateLegacyManifestCompatibility(PluginContext plugin, UnifiedPluginManifest manifest, ValidationState state)
+    {
+        var legacyManifestPath = Path.Combine(plugin.DirectoryPath, "plugin.json");
+        if (!File.Exists(legacyManifestPath))
+        {
+            state.Fail("plugin.json compatibility manifest is missing.");
+            return;
+        }
+
+        var legacyManifest = PluginRepository.ReadJsonFile<PluginManifest>(legacyManifestPath);
+        ValidateEqual(legacyManifest.Id, manifest.Id, "plugin.json id does not match plugin.manifest.json id.", state);
+        ValidateEqual(legacyManifest.Name, manifest.Name, "plugin.json name does not match plugin.manifest.json name.", state);
+        ValidateEqual(legacyManifest.Version, manifest.Version, "plugin.json version does not match plugin.manifest.json version.", state);
+        ValidateEqual(legacyManifest.MinLltVersion, manifest.MinHostVersion, "plugin.json minLLTVersion does not match plugin.manifest.json minHostVersion.", state);
+        ValidateEqual(legacyManifest.Author, manifest.Author, "plugin.json author does not match plugin.manifest.json author.", state);
+
+        if (legacyManifest.IsSystemPlugin != manifest.IsSystemPlugin)
+            state.Fail("plugin.json isSystemPlugin does not match plugin.manifest.json isSystemPlugin.");
+        else
+            state.Pass("plugin.json isSystemPlugin matches plugin.manifest.json.");
+    }
+
+    private static void ValidateContributionClassExists(PluginContext plugin, string fullTypeName, string contributionName, ValidationState state)
+    {
+        var typeName = fullTypeName.Split('.').Last();
+        var found = Directory.EnumerateFiles(plugin.DirectoryPath, "*.cs", SearchOption.AllDirectories)
+            .Any(path => File.ReadAllText(path).Contains($"class {typeName}", StringComparison.Ordinal));
+
+        if (!found)
+            state.Fail($"{contributionName} contribution class '{fullTypeName}' was not found in plugin source.");
+        else
+            state.Pass($"{contributionName} contribution class found.");
     }
 
     private static void ValidateChangelog(PluginContext plugin, ValidationState state)
@@ -158,7 +258,7 @@ public sealed class PluginValidationService
             state.Pass("Project file naming matches convention.");
 
         var document = XDocument.Load(plugin.ProjectPath, LoadOptions.None);
-        ValidateEqual(ReadProperty(document, "Version"), plugin.Manifest.Version, "Project Version does not match plugin.json version.", state);
+        ValidateEqual(ReadProperty(document, "Version"), plugin.Manifest.Version, "Project Version does not match plugin.manifest.json version.", state);
         ValidateEqual(ReadProperty(document, "AssemblyName"), plugin.ExpectedAssemblyName, $"AssemblyName must be '{plugin.ExpectedAssemblyName}'.", state);
 
         var outputPath = ReadProperty(document, "OutputPath");
@@ -180,38 +280,51 @@ public sealed class PluginValidationService
         state.Pass("Plugin test project found.");
     }
 
-    private static void ValidateStoreEntry(PluginContext plugin, ValidationState state)
+    private static void ValidateStoreMetadata(PluginContext plugin, ValidationState state)
     {
+        var store = plugin.UnifiedManifest.Store;
+        if (string.IsNullOrWhiteSpace(store.Description))
+            state.Fail("plugin.manifest.json store.description is missing.");
+        else
+            state.Pass("plugin.manifest.json store description found.");
+
+        if (string.IsNullOrWhiteSpace(store.Icon))
+            state.Fail("plugin.manifest.json store.icon is missing.");
+        else
+            state.Pass("plugin.manifest.json store icon found.");
+
+        if (string.IsNullOrWhiteSpace(store.IconBackground))
+            state.Fail("plugin.manifest.json store.iconBackground is missing.");
+        else
+            state.Pass("plugin.manifest.json store iconBackground found.");
+
+        if (store.Tags.Count == 0)
+            state.Fail("plugin.manifest.json store.tags is missing.");
+        else
+            state.Pass("plugin.manifest.json store tags found.");
+
+        if (store.SupportedLanguages.Count == 0)
+            state.Fail("plugin.manifest.json store.supportedLanguages is missing.");
+        else
+            state.Pass("plugin.manifest.json store supportedLanguages found.");
+
         if (plugin.StoreEntry is null || string.IsNullOrWhiteSpace(plugin.StoreEntryPath) || !File.Exists(plugin.StoreEntryPath))
         {
-            state.Fail("Official plugin is missing store-entry.json.");
+            state.Warn("store-entry.json compatibility file is missing; run migrate or promote if legacy release scripts still need it.");
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(plugin.StoreEntry.Description))
-            state.Fail("store-entry.json is missing description.");
+        var storeEntry = PluginRepository.ToStoreEntry(plugin.UnifiedManifest);
+        if (!string.Equals(plugin.StoreEntry.Description, storeEntry.Description, StringComparison.Ordinal) ||
+            !string.Equals(plugin.StoreEntry.Icon, storeEntry.Icon, StringComparison.Ordinal) ||
+            !string.Equals(plugin.StoreEntry.IconBackground, storeEntry.IconBackground, StringComparison.Ordinal) ||
+            !plugin.StoreEntry.Tags.SequenceEqual(storeEntry.Tags, StringComparer.Ordinal) ||
+            !plugin.StoreEntry.SupportedLanguages.SequenceEqual(storeEntry.SupportedLanguages, StringComparer.Ordinal) ||
+            !plugin.StoreEntry.Dependencies.SequenceEqual(storeEntry.Dependencies, StringComparer.Ordinal) ||
+            !string.Equals(plugin.StoreEntry.RepositoryUrl, storeEntry.RepositoryUrl, StringComparison.Ordinal))
+            state.Warn("store-entry.json differs from plugin.manifest.json store metadata; run migrate or promote to resync compatibility metadata.");
         else
-            state.Pass("store-entry.json description found.");
-
-        if (string.IsNullOrWhiteSpace(plugin.StoreEntry.Icon))
-            state.Fail("store-entry.json is missing icon.");
-        else
-            state.Pass("store-entry.json icon found.");
-
-        if (string.IsNullOrWhiteSpace(plugin.StoreEntry.IconBackground))
-            state.Fail("store-entry.json is missing iconBackground.");
-        else
-            state.Pass("store-entry.json iconBackground found.");
-
-        if (plugin.StoreEntry.Tags.Count == 0)
-            state.Fail("store-entry.json is missing tags.");
-        else
-            state.Pass("store-entry.json tags found.");
-
-        if (plugin.StoreEntry.SupportedLanguages.Count == 0)
-            state.Fail("store-entry.json is missing supportedLanguages.");
-        else
-            state.Pass("store-entry.json supportedLanguages found.");
+            state.Pass("store-entry.json compatibility metadata is synchronized.");
     }
 
     private static void ValidateBuildOutput(PluginContext plugin, ValidationState state)
@@ -231,6 +344,34 @@ public sealed class PluginValidationService
             state.Fail("plugin.json is missing from build output.");
         else
             state.Pass("plugin.json exists in build output.");
+
+        if (!File.Exists(Path.Combine(plugin.OutputDirectory, "plugin.manifest.json")))
+            state.Fail("plugin.manifest.json is missing from build output.");
+        else
+            state.Pass("plugin.manifest.json exists in build output.");
+    }
+
+    private static void ValidatePackageContents(PluginContext plugin, ValidationState state)
+    {
+        if (!Directory.Exists(plugin.OutputDirectory))
+            return;
+
+        foreach (var requiredFile in plugin.UnifiedManifest.Package.RequiredFiles)
+        {
+            var requiredPath = Path.Combine(plugin.OutputDirectory, requiredFile);
+            if (!File.Exists(requiredPath))
+                state.Fail($"Package required file is missing from build output: {requiredFile}");
+            else
+                state.Pass($"Package required file found: {requiredFile}");
+        }
+
+        foreach (var sidecar in Directory.EnumerateFiles(plugin.OutputDirectory, "Wpf.Ui*.dll", SearchOption.TopDirectoryOnly)
+                     .Select(Path.GetFileName)
+                     .Where(fileName => !string.IsNullOrWhiteSpace(fileName))
+                     .Select(fileName => fileName!))
+        {
+            state.Pass($"WPF UI sidecar available: {sidecar}");
+        }
     }
 
     private static void ValidateStoreJsonAlignment(RepositoryContext repository, PluginContext plugin, ValidationState state)
@@ -251,14 +392,14 @@ public sealed class PluginValidationService
         }
 
         if (!string.Equals(existingEntry.Version, plugin.Manifest.Version, StringComparison.OrdinalIgnoreCase))
-            state.Fail("store.json version does not match plugin.json version.");
+            state.Fail("store.json version does not match plugin.manifest.json version.");
         else
-            state.Pass("store.json version matches plugin.json.");
+            state.Pass("store.json version matches plugin.manifest.json.");
 
         if (!string.Equals(existingEntry.Name, plugin.Manifest.Name, StringComparison.OrdinalIgnoreCase))
-            state.Fail("store.json name does not match plugin.json name.");
+            state.Fail("store.json name does not match plugin.manifest.json name.");
         else
-            state.Pass("store.json name matches plugin.json.");
+            state.Pass("store.json name matches plugin.manifest.json.");
     }
 
     private static string ReadProperty(XDocument document, string propertyName)

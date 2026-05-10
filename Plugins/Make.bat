@@ -18,6 +18,7 @@ IF "%1"=="/h" GOTO HELP
 IF "%1"=="--help" GOTO HELP
 IF "%1"=="help" GOTO HELP
 IF "%1"=="doctor" GOTO DOCTOR
+IF "%1"=="init" GOTO INIT
 IF "%1"=="new" GOTO NEW
 IF "%1"=="clean" GOTO CLEAN
 IF "%1"=="check" GOTO CHECK
@@ -27,6 +28,10 @@ IF "%1"=="workbench" GOTO WORKBENCH
 IF "%1"=="workbench-bootstrap" GOTO WORKBENCH_BOOTSTRAP
 IF "%1"=="workbench-smoke" GOTO WORKBENCH_SMOKE
 IF "%1"=="preview" GOTO PREVIEW
+IF "%1"=="dev" GOTO DEV
+IF "%1"=="test" GOTO TEST_PLUGIN
+IF "%1"=="package" GOTO PACKAGE
+IF "%1"=="migrate" GOTO MIGRATE
 IF "%1"=="pack" GOTO PACK
 IF "%1"=="promote" GOTO PROMOTE
 IF "%1"=="smoke" GOTO SMOKE
@@ -65,7 +70,12 @@ EXIT /B %ERRORLEVEL%
 
 :NEW
 SHIFT
-dotnet run --project "%TOOLING%" -- new --repository-root "%REPO_ROOT%" %*
+dotnet run --project "%TOOLING%" -- init --repository-root "%REPO_ROOT%" %*
+EXIT /B %ERRORLEVEL%
+
+:INIT
+SHIFT
+dotnet run --project "%TOOLING%" -- init --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :UI
@@ -86,6 +96,16 @@ EXIT /B %ERRORLEVEL%
 :PREVIEW
 SHIFT
 dotnet run --project "%TOOLING%" -- preview --repository-root "%REPO_ROOT%" %*
+EXIT /B %ERRORLEVEL%
+
+:DEV
+SHIFT
+dotnet run --project "%TOOLING%" -- dev --repository-root "%REPO_ROOT%" %*
+EXIT /B %ERRORLEVEL%
+
+:TEST_PLUGIN
+SHIFT
+dotnet run --project "%TOOLING%" -- test --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :WORKBENCH_SMOKE
@@ -114,7 +134,17 @@ EXIT /B 1
 
 :PACK
 SHIFT
-dotnet run --project "%TOOLING%" -- pack --repository-root "%REPO_ROOT%" %*
+dotnet run --project "%TOOLING%" -- package --repository-root "%REPO_ROOT%" %*
+EXIT /B %ERRORLEVEL%
+
+:PACKAGE
+SHIFT
+dotnet run --project "%TOOLING%" -- package --repository-root "%REPO_ROOT%" %*
+EXIT /B %ERRORLEVEL%
+
+:MIGRATE
+SHIFT
+dotnet run --project "%TOOLING%" -- migrate --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :PROMOTE
@@ -133,10 +163,11 @@ ECHO ============================================================
 ECHO.
 ECHO Preferred commands:
 ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- dev --plugin my-plugin --theme system
 ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- validate --profile contributor --plugin my-plugin
 ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- preview --plugin my-plugin --theme system
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- pack --plugin my-plugin --build-first
+ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- package --plugin my-plugin --build-first
 ECHO   dotnet build LenovoLegionToolkit-Plugins.sln -c Release
 ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
 ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
@@ -151,22 +182,27 @@ ECHO Compatibility commands:
 ECHO   make.bat              - dotnet build solution (Release)
 ECHO   make.bat debug        - dotnet build solution (Debug)
 ECHO   make.bat doctor       - validate local environment and host dependencies
-ECHO   make.bat new          - scaffold a new plugin via the CLI
+ECHO   make.bat init         - scaffold a new plugin via the CLI
+ECHO   make.bat new          - compatibility alias for init
 ECHO   make.bat check        - run official-candidate validation
 ECHO   make.bat validate     - run plugin-tooling validation with custom args
 ECHO   make.bat ui           - launch PluginCompletionUiTool
 ECHO   make.bat workbench-bootstrap - ensure standalone host dependencies
 ECHO   make.bat workbench    - launch PluginWorkbench
 ECHO   make.bat preview      - open PluginWorkbench for a specific plugin
-ECHO   make.bat pack         - create a release ZIP from Build\plugins output
-ECHO   make.bat promote      - scaffold store-entry.json for an official candidate
+ECHO   make.bat dev          - build then open PluginWorkbench for a plugin
+ECHO   make.bat package      - create a release ZIP from Build\plugins output
+ECHO   make.bat pack         - compatibility alias for package
+ECHO   make.bat migrate      - generate plugin.manifest.json and compatibility manifests
+ECHO   make.bat promote      - sync official store metadata compatibility files
 ECHO   make.bat workbench-smoke --plugin-id custom-mouse --theme Dark - run PluginWorkbench UI smoke
 ECHO   make.bat smoke        - run UI smoke flow
 ECHO   make.bat clean        - dotnet clean solution
 ECHO.
 ECHO Notes:
 ECHO   - The plugin-tooling CLI is the standard author entry point.
-ECHO   - store.json should be treated as generated release output; official plugin metadata lives beside each plugin in store-entry.json.
+ECHO   - plugin.manifest.json is the authoring source of truth; plugin.json is emitted for host compatibility.
+ECHO   - store.json should be treated as generated release output; official metadata lives in plugin.manifest.json store metadata.
 ECHO   - PluginWorkbench loads plugin build outputs or local ZIPs without needing the main repo checkout.
 ECHO   - PluginWorkbench.Smoke validates theme and Preview -> Real Runtime behavior against built plugin outputs.
 ECHO ============================================================

@@ -7,14 +7,14 @@ Official plugins and contributor tooling for Lenovo Legion Toolkit (LLT).
 This repository now has one standard author workflow:
 
 1. `doctor`
-2. `new`
-3. `build`
-4. `preview`
+2. `init`
+3. `dev`
+4. `test`
 5. `validate`
-6. `pack`
+6. `package`
 7. `promote` only when a plugin should enter the official store
 
-The standard entry point is `Tools/PluginTooling.Cli`.
+The standard entry point is `llt-plugin.cmd`, which delegates to `Tools/PluginTooling.Cli`.
 
 ## Prerequisites
 
@@ -35,17 +35,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-depend
 Check the environment:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
+.\llt-plugin.cmd doctor
 ```
 
 Create machine-readable agent reports:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   doctor `
   --json-report-path artifacts\agent\doctor.json
 
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   inspect `
   --json-report-path artifacts\agent\inspect.json
 ```
@@ -53,60 +53,49 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 Create a new plugin:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  new `
+.\llt-plugin.cmd `
+  init `
   --template feature-settings `
   --folder MyPlugin `
   --id my-plugin `
   --name "My Plugin"
 ```
 
-Build one plugin:
+Build and preview in one loop:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  build `
-  --plugin my-plugin
+.\llt-plugin.cmd dev --plugin my-plugin --theme system --view feature
 ```
 
-Preview it in the standalone host:
+Run only the build, test, or preview step when needed:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  preview `
-  --plugin my-plugin `
-  --theme system `
-  --view feature
+.\llt-plugin.cmd build --plugin my-plugin
+.\llt-plugin.cmd test --plugin my-plugin
+.\llt-plugin.cmd preview --plugin my-plugin --theme system --view feature
 ```
 
 Validate author requirements:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  validate `
-  --plugin my-plugin `
-  --profile contributor
+.\llt-plugin.cmd validate --plugin my-plugin --profile contributor
 ```
 
 Create a local ZIP:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  pack `
-  --plugin my-plugin `
-  --build-first
+.\llt-plugin.cmd package --plugin my-plugin --build-first
 ```
 
 ## Official Store Flow
 
-Only official plugins need `store-entry.json`.
+Official store metadata lives in `Plugins/<Plugin>/plugin.manifest.json` under the `store` object.
+`store-entry.json` is still emitted as a compatibility file for older release scripts.
 
 Create the official metadata scaffold:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
-  promote `
-  --plugin my-plugin
+.\llt-plugin.cmd promote --plugin my-plugin
 ```
 
 Then fill in the final store-facing metadata:
@@ -120,8 +109,8 @@ Then fill in the final store-facing metadata:
 
 Validation profiles:
 
-- `contributor`: local author checks, no `store-entry.json` required
-- `official-candidate`: official metadata required
+- `contributor`: local author checks
+- `official-candidate`: official `store` metadata required
 - `official-release`: release/store alignment checks
 
 ## PluginWorkbench
@@ -154,11 +143,26 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 
 ## Store Metadata Model
 
-Runtime identity lives in each plugin's `plugin.json`.
+`plugin.manifest.json` is the authoring source of truth. It combines:
 
-Official store-facing metadata now lives beside the plugin in `store-entry.json`.
+- runtime identity and compatibility
+- feature/settings/runtime contributions
+- package contents and asset name
+- official store metadata
 
-Root `store.json` should be treated as generated release output, not as the first thing authors edit for new plugins.
+`plugin.json` is generated or synchronized for current host compatibility. Root `store.json` is generated release output, not a normal authoring file.
+
+## VS Code Workflow Parity
+
+The workflow now mirrors VS Code extension development:
+
+- `plugin.manifest.json` plays the role of VS Code's `package.json`
+- `contributes` declares plugin entry points
+- `dev` is the build-and-open preview loop
+- `package` creates the installable ZIP, similar to `vsce package`
+- `generate-store` derives release metadata instead of hand-editing root `store.json`
+
+The remaining difference is host compatibility: LLT still ships `plugin.json` in plugin outputs until the main app loader moves to the unified manifest.
 
 ## Common Commands
 
@@ -166,11 +170,15 @@ Short wrapper commands are available through `make.bat`:
 
 - `make.bat doctor`
 - `make.bat workbench-smoke --plugin-id custom-mouse --theme Dark`
-- `make.bat new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"`
+- `make.bat init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"`
+- `make.bat dev --plugin my-plugin --theme system`
 - `make.bat validate --plugin my-plugin --profile contributor`
 - `make.bat preview --plugin my-plugin --theme system`
-- `make.bat pack --plugin my-plugin --build-first`
+- `make.bat package --plugin my-plugin --build-first`
+- `make.bat migrate`
 - `make.bat promote --plugin my-plugin`
+
+`new` and `pack` remain compatibility aliases for `init` and `package`.
 
 ## Release Model
 

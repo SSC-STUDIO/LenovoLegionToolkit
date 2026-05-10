@@ -85,7 +85,10 @@ jobs:
                 $folder = $folder.Substring(0, $folder.Length - 6)
               }
 
-              $manifestPath = Join-Path $PWD "Plugins/$folder/plugin.json"
+              $manifestPath = Join-Path $PWD "Plugins/$folder/plugin.manifest.json"
+              if (-not (Test-Path $manifestPath)) {
+                $manifestPath = Join-Path $PWD "Plugins/$folder/plugin.json"
+              }
               if (-not (Test-Path $manifestPath)) {
                 continue
               }
@@ -97,12 +100,20 @@ jobs:
 
           if ($shouldValidateAll) {
             $pluginIds.Clear()
-            foreach ($manifestPath in Get-ChildItem -Path Plugins -Filter plugin.json -Recurse -File) {
-              if ($manifestPath.Directory.Name -in @('Shared', 'TestCommon') -or $manifestPath.Directory.Name -like '*.Tests') {
+            foreach ($pluginDirectory in Get-ChildItem -Path Plugins -Directory) {
+              if ($pluginDirectory.Name -in @('Shared', 'TestCommon') -or $pluginDirectory.Name -like '*.Tests') {
                 continue
               }
 
-              $manifest = Get-Content $manifestPath.FullName -Raw | ConvertFrom-Json -AsHashtable
+              $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+              if (-not (Test-Path $manifestPath)) {
+                $manifestPath = Join-Path $pluginDirectory.FullName 'plugin.json'
+              }
+              if (-not (Test-Path $manifestPath)) {
+                continue
+              }
+
+              $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable
               $pluginIds.Add([string]$manifest.id) | Out-Null
             }
           }

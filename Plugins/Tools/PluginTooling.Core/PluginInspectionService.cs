@@ -18,6 +18,9 @@ public sealed class PluginInspectionService
         foreach (var pluginId in selectedPluginIds)
         {
             var plugin = repository.Plugins[pluginId];
+            var hasUnifiedManifest = !string.IsNullOrWhiteSpace(plugin.UnifiedManifestPath) &&
+                                     File.Exists(plugin.UnifiedManifestPath);
+            var hasStoreMetadata = HasStoreMetadata(plugin);
             var storeEntry = repository.StoreDocument?.Plugins.FirstOrDefault(entry =>
                 string.Equals(entry.Id, plugin.Manifest.Id, StringComparison.OrdinalIgnoreCase));
 
@@ -30,6 +33,7 @@ public sealed class PluginInspectionService
                 FolderName = plugin.FolderName,
                 DirectoryPath = plugin.DirectoryPath,
                 ManifestPath = plugin.ManifestPath,
+                UnifiedManifestPath = plugin.UnifiedManifestPath,
                 ProjectPath = plugin.ProjectPath,
                 TestProjectPath = plugin.TestProjectPath,
                 ChangelogPath = plugin.ChangelogPath,
@@ -38,11 +42,14 @@ public sealed class PluginInspectionService
                 ExpectedAssemblyPath = plugin.ExpectedAssemblyPath,
                 HasBuildOutput = Directory.Exists(plugin.OutputDirectory),
                 HasPluginAssembly = File.Exists(plugin.ExpectedAssemblyPath),
+                HasUnifiedManifest = hasUnifiedManifest,
                 HasOutputManifest = File.Exists(Path.Combine(plugin.OutputDirectory, "plugin.json")),
+                HasOutputUnifiedManifest = File.Exists(Path.Combine(plugin.OutputDirectory, "plugin.manifest.json")),
                 HasTestProject = !string.IsNullOrWhiteSpace(plugin.TestProjectPath) && File.Exists(plugin.TestProjectPath),
                 HasChangelog = !string.IsNullOrWhiteSpace(plugin.ChangelogPath) && File.Exists(plugin.ChangelogPath),
                 HasUnreleasedChangelog = HasUnreleasedChangelog(plugin.ChangelogPath),
                 HasStoreEntry = plugin.StoreEntry is not null && !string.IsNullOrWhiteSpace(plugin.StoreEntryPath) && File.Exists(plugin.StoreEntryPath),
+                HasStoreMetadata = hasStoreMetadata,
                 StoreJsonEntry = storeEntry is null
                     ? null
                     : new StoreInspectionItem
@@ -59,6 +66,16 @@ public sealed class PluginInspectionService
         }
 
         return report;
+    }
+
+    private static bool HasStoreMetadata(PluginContext plugin)
+    {
+        var store = plugin.UnifiedManifest.Store;
+        return !string.IsNullOrWhiteSpace(store.Description) &&
+               !string.IsNullOrWhiteSpace(store.Icon) &&
+               !string.IsNullOrWhiteSpace(store.IconBackground) &&
+               store.Tags.Count > 0 &&
+               store.SupportedLanguages.Count > 0;
     }
 
     private static bool HasUnreleasedChangelog(string? changelogPath)

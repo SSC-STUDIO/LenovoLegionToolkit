@@ -13,25 +13,27 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- new --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- dev --plugin my-plugin --theme system
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- build --plugin my-plugin
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- preview --plugin my-plugin --theme system
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- validate --plugin my-plugin --profile contributor
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- pack --plugin my-plugin --build-first
+dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- package --plugin my-plugin --build-first
 ```
 
 ### Validation Profile
 
 `contributor` checks:
 
-- `plugin.json`
+- `plugin.manifest.json`
+- synchronized runtime `plugin.json`
 - project naming
 - version alignment
 - test project presence
 - build output shape
 - optional build/test execution
 
-It does not require `store-entry.json`.
+It does not require official store metadata.
 
 ## Official Store Path
 
@@ -39,13 +41,13 @@ Use this only when the plugin is intended to ship from the official repository.
 
 ### Additional File Contract
 
-Each official plugin now owns its store-facing metadata in:
+Each official plugin owns its store-facing metadata in:
 
 ```text
-Plugins/<FolderName>/store-entry.json
+Plugins/<FolderName>/plugin.manifest.json
 ```
 
-This file contains:
+The `store` object contains:
 
 - `description`
 - `icon`
@@ -55,15 +57,17 @@ This file contains:
 - `supportedLanguages`
 - optional `repositoryUrl`
 
-Create the initial file with:
+Create or synchronize the initial store metadata with:
 
 ```powershell
 dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- promote --plugin my-plugin
 ```
 
+`promote` also writes `store-entry.json` for compatibility with older release tooling.
+
 ### Validation Profiles
 
-- `official-candidate`: plugin-local official metadata is required
+- `official-candidate`: plugin-local `store` metadata is required
 - `official-release`: release/store alignment checks
 
 Example:
@@ -106,6 +110,20 @@ Arguments:
 - `--theme system|light|dark`
 - `--view feature|settings|optimization`
 
+## VS Code Extension Workflow Mapping
+
+The tooling now follows the same shape as VS Code extension authoring:
+
+| VS Code extension flow | LLT plugin flow |
+|---|---|
+| `package.json` is the authoring manifest | `plugin.manifest.json` is the authoring manifest |
+| `contributes` declares commands/views | `contributes` declares feature/settings/runtime/optimization entry points |
+| `npm run watch` or F5 starts the extension host | `dev` builds and opens `PluginWorkbench` |
+| `vsce package` creates `.vsix` | `package` creates `<plugin-id>-v<version>.zip` |
+| Marketplace metadata is derived from manifest/package fields | root `store.json` is generated from manifest store metadata and release assets |
+
+The current difference is host compatibility: LLT still needs `plugin.json` in build output because the main app loader consumes that runtime manifest today. The author-facing source of truth is `plugin.manifest.json`; `plugin.json` is synchronized compatibility output.
+
 ## Generated Plugin Structure
 
 New scaffolds use `Templates/PluginArchetypes/` as the capability source instead of copying `Plugins/Template`.
@@ -114,6 +132,7 @@ The CLI emits:
 
 - plugin project
 - test project
+- `plugin.manifest.json`
 - `plugin.json`
 - plugin `CHANGELOG.md`
 - resource files
@@ -123,8 +142,9 @@ The CLI emits:
 
 Authoring metadata split:
 
-- `plugin.json`: runtime identity and compatibility
-- `store-entry.json`: official store-facing metadata
+- `plugin.manifest.json`: authoring source of truth for identity, contributions, package contents, and store metadata
+- `plugin.json`: generated/synchronized runtime compatibility manifest
+- `store-entry.json`: legacy compatibility output for official metadata
 - root `store.json`: generated release output
 
 That means new plugin contributors should not start by editing root `store.json`.
@@ -140,7 +160,7 @@ Manual official publishing should:
 
 1. validate the selected plugins
 2. build them
-3. pack stable ZIP assets
+3. package stable ZIP assets
 4. publish GitHub releases
 5. regenerate root `store.json`
 

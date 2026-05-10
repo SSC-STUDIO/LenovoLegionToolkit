@@ -68,11 +68,12 @@ internal sealed class PluginWorkbenchThemeService
             _ => IsSystemDarkMode(),
         };
 
-        Theme.Apply(isDark ? ThemeType.Dark : ThemeType.Light, BackgroundType.None, false);
+        var applicationTheme = isDark ? ApplicationTheme.Dark : ApplicationTheme.Light;
+        ApplicationThemeManager.Apply(applicationTheme, WindowBackdropType.None, updateAccent: false);
         Application.Current.Resources["SnackbarShadowColor"] = isDark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
 
         var accent = SystemParameters.WindowGlassColor;
-        Accent.Apply(accent, accent, accent, accent);
+        ApplicationAccentColorManager.Apply(accent, accent, accent, accent);
 
         var modeLabel = mode == PluginWorkbenchThemeMode.System
             ? $"System ({(isDark ? "Dark" : "Light")})"

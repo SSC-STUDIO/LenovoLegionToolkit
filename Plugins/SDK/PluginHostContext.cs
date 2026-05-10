@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace LenovoLegionToolkit.Plugins.SDK;
@@ -86,7 +87,18 @@ public static class PluginHostContext
             if (!string.Equals(assembly.GetName().Name, assemblyName, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            return assembly.GetType(fullTypeName, throwOnError: false, ignoreCase: false);
+            try
+            {
+                return assembly.GetType(fullTypeName, throwOnError: false, ignoreCase: false);
+            }
+            catch (TypeLoadException)
+            {
+                return null;
+            }
+            catch (FileLoadException)
+            {
+                return null;
+            }
         }
 
         try

@@ -1,13 +1,13 @@
 {
-  "description": "Real-time network acceleration and optimization features",
-  "icon": "Globe24",
-  "iconBackground": "#DC2626",
-  "tags": [
+  "Description": "Real-time network acceleration and optimization features",
+  "Icon": "Globe24",
+  "IconBackground": "#DC2626",
+  "Tags": [
     "network",
     "optimization"
   ],
-  "dependencies": [],
-  "supportedLanguages": [
+  "Dependencies": [],
+  "SupportedLanguages": [
     "ar",
     "bg",
     "bs",
@@ -41,5 +41,5 @@
     "zh-Hans",
     "zh-Hant"
   ],
-  "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  "RepositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
 }

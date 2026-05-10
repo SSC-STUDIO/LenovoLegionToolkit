@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "shell-integration",
+  "name": "Shell Integration",
+  "version": "1.0.11",
+  "minHostVersion": "3.6.1",
+  "author": "SSC-STUDIO",
+  "isSystemPlugin": true,
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "contributes": {
+    "featurePage": null,
+    "settingsPage": {
+      "class": "LenovoLegionToolkit.Plugins.ShellIntegration.ShellIntegrationSettingsControl",
+      "title": "Shell Integration"
+    },
+    "runtime": null,
+    "optimizationActions": []
+  },
+  "package": {
+    "assetName": "shell-integration-v1.0.11.zip",
+    "requiredFiles": [
+      "LenovoLegionToolkit.Plugins.ShellIntegration.dll",
+      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+    "icon": "Folder24",
+    "iconBackground": "#0F766E",
+    "tags": [
+      "system",
+      "shell",
+      "integration"
+    ],
+    "dependencies": [],
+    "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  }
+}

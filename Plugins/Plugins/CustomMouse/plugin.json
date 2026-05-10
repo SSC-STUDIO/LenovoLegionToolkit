@@ -1,10 +1,10 @@
-﻿{
-    "id":  "custom-mouse",
-    "name":  "Custom Mouse",
-    "version":  "1.0.15",
-    "minLLTVersion":  "3.6.1",
-    "author":  "SSC-STUDIO",
-    "isSystemPlugin":  false,
-    "repository":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
-    "issues":  "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
+{
+  "Id": "custom-mouse",
+  "Name": "Custom Mouse",
+  "Version": "1.0.15",
+  "MinLltVersion": "3.6.1",
+  "Author": "SSC-STUDIO",
+  "IsSystemPlugin": false,
+  "Repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "Issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues"
 }

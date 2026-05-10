@@ -336,8 +336,8 @@ public partial class MainWindow : Window
             if (folderName is "Shared" or "TestCommon" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            var manifestPath = Path.Combine(pluginDirectory, "plugin.json");
-            if (!File.Exists(manifestPath))
+            var manifestPath = ResolveManifestPath(pluginDirectory);
+            if (manifestPath is null)
                 continue;
 
             var manifest = ParsePluginManifest(manifestPath);
@@ -607,7 +607,19 @@ public partial class MainWindow : Window
             root.GetProperty("id").GetString() ?? Path.GetFileName(Path.GetDirectoryName(manifestPath) ?? manifestPath),
             root.GetProperty("name").GetString() ?? "Unknown Plugin",
             root.GetProperty("version").GetString() ?? "0.0.0",
-            root.TryGetProperty("minLLTVersion", out var minVersion) ? minVersion.GetString() ?? "0.0.0" : "0.0.0");
+            root.TryGetProperty("minHostVersion", out var minHostVersion)
+                ? minHostVersion.GetString() ?? "0.0.0"
+                : root.TryGetProperty("minLLTVersion", out var minVersion) ? minVersion.GetString() ?? "0.0.0" : "0.0.0");
+    }
+
+    private static string? ResolveManifestPath(string directory)
+    {
+        var unified = Path.Combine(directory, "plugin.manifest.json");
+        if (File.Exists(unified))
+            return unified;
+
+        var legacy = Path.Combine(directory, "plugin.json");
+        return File.Exists(legacy) ? legacy : null;
     }
 
     private static string? ResolveBuildDirectory(string repositoryRoot, string folderName, string pluginId)
@@ -622,8 +634,8 @@ public partial class MainWindow : Window
 
         foreach (var directory in Directory.EnumerateDirectories(buildRoot))
         {
-            var manifestPath = Path.Combine(directory, "plugin.json");
-            if (!File.Exists(manifestPath))
+            var manifestPath = ResolveManifestPath(directory);
+            if (manifestPath is null)
                 continue;
 
             var manifest = ParsePluginManifest(manifestPath);

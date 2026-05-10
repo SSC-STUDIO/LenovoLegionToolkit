@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "network-acceleration",
+  "name": "Network Acceleration",
+  "version": "1.1.8",
+  "minHostVersion": "3.6.1",
+  "author": "SSC-STUDIO",
+  "isSystemPlugin": false,
+  "repository": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/issues",
+  "contributes": {
+    "featurePage": {
+      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationControl",
+      "title": "Network Acceleration"
+    },
+    "settingsPage": {
+      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsControl",
+      "title": "Network Acceleration Settings"
+    },
+    "runtime": {
+      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationRuntime"
+    },
+    "optimizationActions": []
+  },
+  "package": {
+    "assetName": "network-acceleration-v1.1.8.zip",
+    "requiredFiles": [
+      "LenovoLegionToolkit.Plugins.NetworkAcceleration.dll",
+      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Real-time network acceleration and optimization features",
+    "icon": "Globe24",
+    "iconBackground": "#DC2626",
+    "tags": [
+      "network",
+      "optimization"
+    ],
+    "dependencies": [],
+    "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  }
+}

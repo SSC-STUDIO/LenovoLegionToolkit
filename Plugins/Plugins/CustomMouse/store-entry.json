@@ -1,14 +1,14 @@
 {
-  "description": "Customize mouse cursor style behavior and mouse settings",
-  "icon": "Pen24",
-  "iconBackground": "#2563EB",
-  "tags": [
+  "Description": "Customize mouse cursor style behavior and mouse settings",
+  "Icon": "Pen24",
+  "IconBackground": "#2563EB",
+  "Tags": [
     "mouse",
     "customization",
     "gaming"
   ],
-  "dependencies": [],
-  "supportedLanguages": [
+  "Dependencies": [],
+  "SupportedLanguages": [
     "ar",
     "bg",
     "bs",
@@ -42,5 +42,5 @@
     "zh-Hans",
     "zh-Hant"
   ],
-  "repositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
+  "RepositoryUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins"
 }

@@ -19,7 +19,6 @@ using LenovoLegionToolkit.Plugins.ViveTool.Resources;
 using LenovoLegionToolkit.Plugins.ViveTool.Services;
 using LenovoLegionToolkit.WPF;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Controls;
 using MessageBoxHelper = LenovoLegionToolkit.WPF.Utils.MessageBoxHelper;
 
 namespace LenovoLegionToolkit.Plugins.ViveTool;

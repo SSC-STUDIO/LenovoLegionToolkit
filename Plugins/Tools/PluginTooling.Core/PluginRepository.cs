@@ -187,6 +187,111 @@ public sealed class PluginRepository
         return value.Replace("\r\n", "\n", StringComparison.Ordinal).Replace("\n", Environment.NewLine, StringComparison.Ordinal);
     }
 
+    public static PluginManifest ToLegacyManifest(UnifiedPluginManifest manifest)
+    {
+        return new PluginManifest(
+            manifest.Id,
+            manifest.Name,
+            manifest.Version,
+            manifest.MinHostVersion,
+            manifest.Author,
+            manifest.IsSystemPlugin,
+            manifest.Repository,
+            manifest.Issues);
+    }
+
+    public static OfficialStoreEntry ToStoreEntry(UnifiedPluginManifest manifest)
+    {
+        return new OfficialStoreEntry(
+            manifest.Store.Description,
+            manifest.Store.Icon,
+            manifest.Store.IconBackground,
+            manifest.Store.Tags,
+            manifest.Store.Dependencies,
+            manifest.Store.SupportedLanguages,
+            manifest.Store.RepositoryUrl);
+    }
+
+    public static UnifiedPluginManifest CreateUnifiedManifest(
+        PluginManifest manifest,
+        OfficialStoreEntry? storeEntry,
+        string folderName,
+        ArchetypeDefinition? archetype = null)
+    {
+        var namespaceSegment = NormalizeIdentifier(folderName);
+        var packageAssetName = $"{manifest.Id}-v{manifest.Version}.zip";
+        var unified = new UnifiedPluginManifest
+        {
+            SchemaVersion = 1,
+            Id = manifest.Id,
+            Name = manifest.Name,
+            Version = manifest.Version,
+            MinHostVersion = manifest.MinLltVersion,
+            Author = manifest.Author,
+            IsSystemPlugin = manifest.IsSystemPlugin,
+            Repository = manifest.Repository,
+            Issues = manifest.Issues,
+            Package = new PluginPackageMetadata
+            {
+                AssetName = packageAssetName,
+                RequiredFiles =
+                [
+                    $"LenovoLegionToolkit.Plugins.{folderName}.dll",
+                    "LenovoLegionToolkit.Plugins.SDK.dll",
+                    "plugin.json",
+                    "plugin.manifest.json",
+                ],
+            },
+            Store = new PluginStoreMetadata
+            {
+                Description = storeEntry?.Description ?? manifest.Name,
+                Icon = storeEntry?.Icon ?? "PuzzlePiece24",
+                IconBackground = storeEntry?.IconBackground ?? "#FFF1E2",
+                Tags = storeEntry?.Tags.ToList() ?? [],
+                Dependencies = storeEntry?.Dependencies.ToList() ?? [],
+                SupportedLanguages = storeEntry?.SupportedLanguages.ToList() ?? ["en"],
+                RepositoryUrl = storeEntry?.RepositoryUrl ?? (string.IsNullOrWhiteSpace(manifest.Repository) ? null : manifest.Repository),
+            },
+        };
+
+        if (archetype?.HasFeaturePage == true)
+        {
+            unified.Contributes.FeaturePage = new PluginPageContribution
+            {
+                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}FeaturePage",
+                Title = manifest.Name,
+            };
+        }
+
+        if (archetype?.HasSettingsPage == true)
+        {
+            unified.Contributes.SettingsPage = new PluginPageContribution
+            {
+                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}SettingsPage",
+                Title = $"{manifest.Name} Settings",
+            };
+        }
+
+        if (archetype?.HasRuntime == true)
+        {
+            unified.Contributes.Runtime = new PluginRuntimeContribution
+            {
+                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}Runtime",
+            };
+        }
+
+        if (archetype?.HasOptimizationCategory == true)
+        {
+            unified.Contributes.OptimizationActions.Add(new PluginOptimizationContribution
+            {
+                Id = "default",
+                Title = manifest.Name,
+            });
+        }
+
+        return unified;
+    }
+
     private static IEnumerable<KeyValuePair<string, PluginContext>> DiscoverPlugins(string repositoryRoot, string pluginsRoot)
     {
         foreach (var pluginDirectory in Directory.EnumerateDirectories(pluginsRoot).OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
@@ -195,11 +300,17 @@ public sealed class PluginRepository
             if (folderName is "Shared" or "TestCommon" || folderName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            var manifestPath = Path.Combine(pluginDirectory, "plugin.json");
-            if (!File.Exists(manifestPath))
+            var unifiedManifestPath = Path.Combine(pluginDirectory, "plugin.manifest.json");
+            var legacyManifestPath = Path.Combine(pluginDirectory, "plugin.json");
+            if (!File.Exists(unifiedManifestPath) && !File.Exists(legacyManifestPath))
                 continue;
 
-            var manifest = ReadJsonFile<PluginManifest>(manifestPath);
+            var storeEntryPath = Path.Combine(pluginDirectory, "store-entry.json");
+            var storeEntry = File.Exists(storeEntryPath) ? ReadJsonFile<OfficialStoreEntry>(storeEntryPath) : null;
+            var unifiedManifest = File.Exists(unifiedManifestPath)
+                ? ReadJsonFile<UnifiedPluginManifest>(unifiedManifestPath)
+                : CreateUnifiedManifest(ReadJsonFile<PluginManifest>(legacyManifestPath), storeEntry, folderName);
+            var manifest = ToLegacyManifest(unifiedManifest);
             var projectPath = Directory.EnumerateFiles(pluginDirectory, "*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault();
             var changelogPath = File.Exists(Path.Combine(pluginDirectory, "CHANGELOG.md"))
                 ? Path.Combine(pluginDirectory, "CHANGELOG.md")
@@ -210,17 +321,16 @@ public sealed class PluginRepository
                 ? Directory.EnumerateFiles(testsDirectory, "*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault()
                 : null;
 
-            var storeEntryPath = Path.Combine(pluginDirectory, "store-entry.json");
-            var storeEntry = File.Exists(storeEntryPath) ? ReadJsonFile<OfficialStoreEntry>(storeEntryPath) : null;
-
             yield return new KeyValuePair<string, PluginContext>(
                 manifest.Id,
                 new PluginContext(
                     repositoryRoot,
                     folderName,
                     pluginDirectory,
-                    manifestPath,
+                    File.Exists(legacyManifestPath) ? legacyManifestPath : unifiedManifestPath,
                     manifest,
+                    File.Exists(unifiedManifestPath) ? unifiedManifestPath : null,
+                    unifiedManifest,
                     projectPath,
                     testProjectPath,
                     changelogPath,
