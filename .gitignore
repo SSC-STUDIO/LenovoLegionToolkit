@@ -611,3 +611,4 @@ screenshot.png
 # Local AI tool directories
 .codex/
 .tools-wpfui-inspect/
+all_strings.txt
