@@ -11,7 +11,6 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
@@ -19,7 +18,7 @@ namespace LenovoLegionToolkit.WPF.Pages
 /// <summary>
 /// 插件页面包装器，用于承载插件提供的UI页面
 /// </summary>
-public partial class PluginPageWrapper : UiPage
+public partial class PluginPageWrapper : Page
 {
     private static readonly ConcurrentDictionary<string, string> PageTagToPluginIdMap = new();
 
@@ -49,31 +48,23 @@ public partial class PluginPageWrapper : UiPage
 
     private void PluginPageWrapper_Loaded(object sender, RoutedEventArgs e)
     {
-        // 从导航上下文中获取插件ID
-        // NavigationStore 使用 PageTag 来标识页面，格式为 "plugin:{pluginId}"
+        // 从导航上下文中获取插件ID；NavigationView 通过选中项的 TargetPageTag 标识页面，格式为 "plugin:{pluginId}"
         if (_pluginId == null)
         {
-            // 尝试从父窗口的导航存储中获取当前页面的 PageTag
             var mainWindow = Application.Current.MainWindow as LenovoLegionToolkit.WPF.Windows.MainWindow;
             if (mainWindow != null)
             {
-                var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
-                if (navigationStore?.Current != null)
+                var navigationView = mainWindow.FindName("_navigationView") as NavigationView;
+                string? pageTag = null;
+                if (navigationView?.SelectedItem is NavigationViewItem nvi)
+                    pageTag = nvi.TargetPageTag;
+
+                if (pageTag != null)
                 {
-                    var pageTag = navigationStore.Current.PageTag;
-                    if (pageTag != null)
-                    {
-                        // 首先尝试从映射字典中获取
-                        if (PageTagToPluginIdMap.TryGetValue(pageTag, out var mappedPluginId))
-                        {
-                            _pluginId = mappedPluginId;
-                        }
-                        // 如果 PageTag 格式为 "plugin:{pluginId}"，直接解析
-                        else if (pageTag.StartsWith("plugin:"))
-                        {
-                            _pluginId = pageTag.Substring("plugin:".Length);
-                        }
-                    }
+                    if (PageTagToPluginIdMap.TryGetValue(pageTag, out var mappedPluginId))
+                        _pluginId = mappedPluginId;
+                    else if (pageTag.StartsWith("plugin:", StringComparison.Ordinal))
+                        _pluginId = pageTag.Substring("plugin:".Length);
                 }
             }
         }

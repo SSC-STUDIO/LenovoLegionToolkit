@@ -18,7 +18,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Packages
 {
@@ -275,21 +275,21 @@ public partial class PackageControl : IProgress<float>
             {
                 // 文件已存在，将下载按钮切换为安装按钮
                 // 检查当前图标，避免重复切换
-                if (_downloadButton.Icon is SymbolRegular icon && icon == SymbolRegular.Play24)
+                if (_downloadButton.Icon is SymbolIcon si && si.Symbol == SymbolRegular.Play24)
                     return; // 已经是安装按钮，无需切换
                     
                 // 移除下载事件，添加安装事件
                 _downloadButton.Click -= DownloadButton_Click;
                 _downloadButton.Click += InstallButton_Click;
                 
-                _downloadButton.Icon = SymbolRegular.Play24;
+                _downloadButton.Icon = new SymbolIcon { Symbol = SymbolRegular.Play24 };
                 _downloadButton.ToolTip = Resource.PackageControl_Install;
             }
             else
             {
                 // 文件不存在，确保按钮是下载按钮
                 // 检查当前图标，避免重复切换
-                if (_downloadButton.Icon is SymbolRegular icon && icon == SymbolRegular.ArrowDownload24)
+                if (_downloadButton.Icon is SymbolIcon si2 && si2.Symbol == SymbolRegular.ArrowDownload24)
                     return; // 已经是下载按钮，无需切换
                     
                 // 移除安装事件，重新添加下载事件
@@ -297,7 +297,7 @@ public partial class PackageControl : IProgress<float>
                 _downloadButton.Click -= DownloadButton_Click; // 先移除，避免重复绑定
                 _downloadButton.Click += DownloadButton_Click;
                 
-                _downloadButton.Icon = SymbolRegular.ArrowDownload24;
+                _downloadButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowDownload24 };
                 _downloadButton.ToolTip = Resource.PackageControl_Download;
             }
         }

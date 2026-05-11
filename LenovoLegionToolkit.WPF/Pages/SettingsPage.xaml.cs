@@ -11,7 +11,6 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
@@ -107,37 +106,43 @@ public partial class SettingsPage
         // Priority load: refresh the first visible control (Appearance) immediately
         await _appearanceControl.RefreshAsync();
 
-        // Load other controls in parallel in the background (fire and forget)
-        _ = Task.Run(async () =>
+        // Load other controls asynchronously without leaving the WPF dispatcher.
+        // Refresh methods update WPF controls after awaits, so they must start on the UI thread.
+        _ = RefreshSecondaryControlsAsync();
+    }
+
+    private async Task RefreshSecondaryControlsAsync()
+    {
+        if (_applicationBehaviorControl is null ||
+            _smartKeysControl is null ||
+            _displayControl is null ||
+            _powerControl is null ||
+            _integrationsControl is null ||
+            _updateControl is null)
         {
-            try
-            {
-                await Task.WhenAll(
-                    _applicationBehaviorControl.RefreshAsync(),
-                    _smartKeysControl.RefreshAsync(),
-                    _displayControl.RefreshAsync(),
-                    _powerControl.RefreshAsync(),
-                    _integrationsControl.RefreshAsync()
-                ).ConfigureAwait(false);
+            return;
+        }
 
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    _updateControl.Refresh();
-                });
+        try
+        {
+            await Task.WhenAll(
+                _applicationBehaviorControl.RefreshAsync(),
+                _smartKeysControl.RefreshAsync(),
+                _displayControl.RefreshAsync(),
+                _powerControl.RefreshAsync(),
+                _integrationsControl.RefreshAsync());
 
-                // Update visibility based on FnKeys status
-                var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync().ConfigureAwait(false);
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
-                    _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
-                });
-            }
-            catch
-            {
-                // Ignore errors in background loading
-            }
-        });
+            _updateControl.Refresh();
+
+            var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
+            _smartKeysControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+            _displayControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to refresh secondary settings controls.", ex);
+        }
     }
 
     private async void NavigationListBox_SelectionChanged(object sender, SelectionChangedEventArgs? e)

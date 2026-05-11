@@ -202,13 +202,13 @@ public static class LocalizationHelper
             var settings = new ApplicationSettings();
             var isDarkMode = ResolveStartupDarkMode(settings.Store.Theme);
 
-            var themeType = isDarkMode ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+            var themeType = isDarkMode ? Wpf.Ui.Appearance.ApplicationTheme.Dark : Wpf.Ui.Appearance.ApplicationTheme.Light;
             var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
 
             if (Application.Current.MainWindow is null)
                 Application.Current.MainWindow = window;
 
-            Wpf.Ui.Appearance.Theme.Apply(themeType, backgroundType, false);
+            Wpf.Ui.Appearance.ApplicationThemeManager.Apply(themeType, backgroundType, false);
             window.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
             Application.Current.Resources["SnackbarShadowColor"] = isDarkMode
                 ? System.Windows.Media.Colors.Black

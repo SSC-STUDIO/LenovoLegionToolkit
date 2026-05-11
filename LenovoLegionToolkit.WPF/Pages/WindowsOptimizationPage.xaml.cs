@@ -23,7 +23,7 @@ using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
-public partial class WindowsOptimizationPage : UiPage
+public partial class WindowsOptimizationPage : Page
 {
     private static readonly object FocusRequestLock = new();
     private static string? _pendingFocusPluginId;

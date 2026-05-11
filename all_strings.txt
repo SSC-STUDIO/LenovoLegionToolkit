@@ -1,0 +1,1268 @@
+text/microsoft-resx
+2.0
+System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+Lenovo Legion Toolkit
+Build
+Latest release on GitHub
+Links
+Project website on GitHub
+Third-party libraries
+About
+Translations provided by community.
+Version
+Add
+Add new
+Charge USB devices, when the laptop is off, sleeping or hibernated.
+Always on USB
+Charge USB devices, when the laptop is off, sleeping or hibernated.
+Always on USB
+Lenovo Legion Toolkit
+Apply
+Apply &amp; Close
+Lenovo Legion Toolkit must be running for automatic actions to work.
+Enable
+No Actions defined. Click "Add new" to create new Action.
+Actions
+Name...
+Add new
+No Quick Actions defined. Click "Add new" to create new Quick Action.
+Quick actions are available in the right click menu of the tray icon.
+Quick Actions
+Name...
+Rename
+All changes reverted!
+Reverted
+Changes were saved successfully!
+Saved
+Automation
+Add step
+Configure
+Exclusive
+Do not execute further actions when this action runs.
+Run now
+Completed with errors.
+Run now
+Completed successfully!
+Run now
+Running...
+{0} step
+{0} steps
+Apps
+At sunrise
+At sunset
+At {0:D2}:{1:D2}
+Power Mode
+Unnamed
+Automatically detects when certain games are running and tweaks CPU and GPU performance. Temperatures and fan noise might increase.
+Enable AI Engine
+Balance Mode Settings
+Choose how the battery is charged.
+Battery Mode
+Choose how the battery is charged.
+Battery Mode
+Connected, charging...
+Connected, not charging
+Current temperature of the battery.
+Battery temperature
+Current battery capacity.
+Current capacity
+Number of charge/discharge cycles.
+Cycle count
+Battery capacity as designed.
+Design capacity
+Rate at which battery is charged (+), or discharged (-).
+Discharge rate
+Minimum rate at which battery is charged (+), or discharged (-).
+Minimum discharge rate
+Maximum rate at which battery is charged (+), or discharged (-).
+Maximum discharge rate
+Estimated time remaining: {0}
+Estimating time...
+First use date
+When was the battery first used.
+Battery capacity when fully charged.
+Full charge capacity
+Battery maximum charge capacity.
+Battery health
+Low wattage charger connected
+When was the battery manufactured.
+Manufacture date
+On battery since
+Battery
+Cancel
+°C
+Close
+Blue
+Green
+Red
+Changing to {0} requires restart. Do you want to restart now?
+Restart required
+GPU Working Mode
+Quick Actions
+Continue
+Copy all
+Graphics
+Other
+Power
+Home
+Deactivate GPU
+Add delay before running next step.
+Delay
+Delete
+BIOS version
+Text copied to clipboard.
+"{0}" copied to clipboard.
+Copied!
+Device
+Lenovo Support
+Machine Type
+Manufacturer
+Model
+Serial number
+About your device
+End date
+Start date
+Warranty
+Active
+Deactivate
+Inactive
+Kill apps
+Disable discrete GPU, if it is active unnecessarily.
+A monitor is connected to nVidia GPU.
+No processes
+Performance state
+Unknown
+Processes
+Restart GPU
+Discrete GPU
+Display brightness
+Edit
+Uncheck refresh rates that you do not want to use when Fn+R shortcut is used.
+Make sure that laptop display is on. Lenovo Legion Toolkit can't load refresh rates for a display that is not on.
+No Refresh Rates found
+Exclude Refresh Rates
+Exit
+Export
+Use only integrated GPU when on battery and both integrated and discrete GPU when AC adapter is connected. When a non-standard adapter is connected, system switches to Hybrid-iGPU Only Mode.
+Hybrid-Auto Mode
+Switching to and from this mode requires restart.
+Use only discrete GPU. This mode provides best graphics performance, but increases power consumption.
+dGPU Mode
+Both integrated and discrete GPU are enabled. System will automatically switch between them based on its needs.
+Hybrid Mode
+This mode only takes effect when discrete GPU is not working.
+Only use integrated GPU. This mode minimizes power consumption and noise.
+Hybrid-iGPU Only Mode
+About GPU Working Modes
+°F
+CPU
+CPU Sensor
+Fan Speed
+GPU
+GPU #2
+RPM
+Turn on the laptop when you open the lid.
+Flip To Start
+Turn on the laptop when you open the lid.
+Flip To Start
+Use secondary functions of F1-F12 keys without holding Fn key.
+Fn Lock
+Use secondary functions of F1-F12 keys without holding Fn key.
+Fn Lock
+Minimum offset
+Maximum offset
+Do not change options below unless you really know what you are doing.
+Advanced
+Long Term Power Limit (Cross Loading)
+Long Term Power Limit
+Short Term Power Limit
+CPU Temperature Limit
+CPU
+Couldn't apply settings
+Couldn't load setting.
+Fan speed is not strictly determined by one temperature sensor. It will raise or lower speed per the highest sensor between CPU, GPU and Heatsink temperature. Exact values will appear when you hover mouse over each step.
+Fan curve
+Maximum fan speed
+Fans
+Configurable TGP
+Dynamic Boost
+GPU Temperature Limit
+GPU
+Custom Mode Settings
+HDR
+Enable high dynamic range (HDR) on the built-in display.
+HDR
+HDR usage is blocked by Windows settings.
+Import
+This device is not compatible with Lenovo Legion Toolkit.
+Your device may be missing required system components (LenovoGameZoneData).
+If you click "OK" to continue:
+- The software will run in restricted mode
+- Some features will be disabled (Dashboard, Automation, Macros)
+- Other basic features will still be available
+Device Information:
+Vendor:
+Model:
+Machine Type:
+Click "OK" to continue, or "Cancel" to exit.
+No compatible keyboards found
+Keyboard Backlight
+Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.
+Lenovo Vantage or its services are running
+About
+Actions
+Battery
+Dashboard
+Keyboard
+Downloads
+System optimization
+Settings
+Plugin Extensions
+Navigation Items Settings
+Configure which navigation items are displayed in the sidebar. Dashboard and Settings will always be visible.
+Show or hide the Keyboard navigation item
+Show or hide the Battery navigation item
+Show or hide the Automation navigation item
+Show or hide the Macro navigation item
+Show or hide the System Optimization navigation item
+Show or hide the Plugin Extensions navigation item
+Show or hide the About navigation item
+Navigation Items
+Configure which navigation items are displayed in the sidebar
+Update available!
+Update {0} available!
+Move down
+Move up
+No
+AC adapter connected
+AC adapter connected (Low wattage)
+AC adapter disconnected
+Camera off
+Camera on
+Caps Lock off
+Caps Lock on
+Fn Lock off
+Fn Lock on
+Microphone off
+Microphone on
+Num Lock off
+Num Lock on
+Backlight {0}
+Brightness {0}
+Profile {0}
+Touchpad off
+Touchpad on
+Backlight {0}
+AC Adapter
+Camera
+Caps Lock and Num Lock
+Don't show notifications
+Fn Lock
+Keyboard Backlight
+Microphone
+Position
+Power Mode
+Refresh Rate
+Smart Key
+Notifications
+Touchpad Lock
+OK
+Open
+Improve response time of the built-in display.
+Over Drive
+Improve response time of the built-in display.
+Over Drive
+{0} downloaded!
+Download complete
+Something went wrong
+Server returned code 404.
+The file seems to be gone
+Check if your internet connection is up and running.
+Something went wrong
+Update available!
+This package is more than a year old.
+Version
+Check if Machine Type and OS are set correctly.
+Something went wrong
+Changing sorting, filtering results, hiding packages or refreshing the list will stop the download. Do you want to continue?
+Download in progress
+Filter...
+Machine Type
+Operating System
+Primary (Recommended)
+Same as Lenovo Vantage
+Secondary
+Same as Lenovo PC Support
+Category
+Date
+Name
+Source
+Downloads
+Paste
+Change performance mode.
+Power Mode
+Settings
+Power Mode
+Selected power mode may not work correctly without AC adapter connected.
+Default
+Windows Power Plans
+Scanning for available driver packages, please wait...
+Scan for driver packages
+Choose a source and scan to list compatible driver downloads.
+No driver downloads found
+Try a different source, operating system, or machine type.
+No matching downloads found
+Adjust the filter, update-only option, or hidden-download list.
+Driver scan did not complete
+Check the selected source and network connection, then scan again.
+Network error occurred. Retrying automatically...
+Retrying to fetch driver packages...
+Cleanup Info
+View cleanup operation progress and estimated size.
+Adjust keyboard backlight preset.
+Keyboard backlight
+Brightness
+Preset 1
+Preset 2
+Preset 3
+Preset 4
+Off
+Zone 1
+Zone 2
+Zone 3
+Zone 4
+Effect
+Speed
+Readme
+Refresh
+Refresh rate
+Change refresh rate of the built-in display.
+Refresh rate
+Rename
+I will restart later
+Restart now
+Revert
+Arguments
+Executable Path
+Run
+Save
+Saving...
+Choose one or more quick actions to cycle through
+No Quick Actions defined.
+Show this app
+Change the accent color of the app.
+Accent color
+Appearance
+Customize language, temperature unit, theme and accent color.
+Autorun
+Start minimized to tray when you sign in to Windows.
+Legion Zone may have not been disabled correctly
+Couldn't disable Legion Zone
+Disable Legion Zone
+Lenovo Hotkeys may have not been disabled correctly
+Couldn't disable Lenovo Hotkeys
+System optimization
+Apply recommended performance tweaks and clean temporary files.
+Apply performance &amp; service tweaks
+Performance optimizations applied.
+Couldn't apply performance optimizations.
+Run cleanup
+Cleanup completed.
+Cleanup failed.
+These actions modify system services and files. Administrator privileges may be required.
+Apply selected actions
+Select recommended
+Clear selection
+Scan
+Run cleanup actions
+{0} actions selected
+No actions selected yet.
+Selected actions
+Cleanup
+Beautification
+Driver Download
+Safety Confirmation
+System cleanup will permanently delete temporary files and cache. While usually safe, it is recommended to ensure you have backups of important data. Do you want to continue?
+Extensions
+Manage system optimization extensions and tools
+No Extensions Available
+Install extensions from the Plugin Extensions page to enhance system optimization functionality.
+Coming Soon
+Extensions marketplace will be available in a future update.
+Windows optimization
+Select all
+Custom cleanup rules
+Choose folders and file extensions that should be deleted during cleanup.
+Add rule
+Edit
+Remove
+Clear all
+No custom cleanup rules configured.
+Include subfolders
+AppX management
+Select preinstalled Microsoft Store apps to remove for all users.
+No apps selected for removal.
+Uninstall selected apps
+Selected apps scheduled for removal.
+Failed to remove selected apps.
+Loading apps, please wait...
+Loading plugins...
+Failed to load: {0}
+Publisher: {0}
+Registry MRU/history cleanup
+Clear common user registry histories (Run MRU, RecentDocs, Open/Save dialogs, TypedPaths). This does not remove system-critical entries.
+Actions
+Custom cleanup rule
+Folder
+Extensions
+Separate multiple extensions with commas (example: tmp, log, bak)
+Include subfolders
+Browse…
+Please choose a folder.
+Please enter at least one file extension.
+Please select at least one action.
+Selected actions completed successfully.
+Failed to complete selected actions.
+Explorer &amp; interface
+Windows Beautification
+Change right-click menu style.
+Switch to modern menu
+Applies the classic style and restarts Explorer.
+Switch to default right-click menu
+Restores the default style and restarts Explorer.
+Mouse appearance
+Apply custom cursor styles and follow system light/dark theme.
+Enable theme-following cursor style
+Detect current Windows light/dark mode and apply matching custom cursor scheme.
+Disable theme-following cursor style
+Restore backed-up cursor scheme and stop theme-based custom cursor switching.
+Apply Modern Context Menu
+Completely uninstall shell.exe and related files
+Shell Integration
+Enhanced Windows Shell integration with context menu beautification and mouse style customization
+Enable Modern Context Menu
+Enable Nilesoft Shell to beautify Windows context menu with modern style
+Disable Modern Context Menu
+Unregister Nilesoft Shell and restore default Windows context menu
+Apply Windows 11 Cursor Style
+Apply Windows 11 style cursor theme with high DPI support
+Select the theme for the context menu.
+Enable transparency effects for the context menu.
+Customize the appearance of the context menu.
+Shell.exe not found. Please make sure Nilesoft Shell is installed.
+Configuration file not found. Please make sure Nilesoft Shell is installed.
+Failed to enable classic menu.
+Failed to restore default menu.
+Failed to install shell.
+Failed to uninstall shell.
+Failed to apply style settings.
+System beautification
+Tune taskbar, File Explorer and user interface behaviour.
+Performance
+Adjust system performance and responsiveness settings.
+Services
+Disable background services that consume resources.
+Network Acceleration
+Optimize network settings to improve network speed and responsiveness.
+TCP/IP and DNS Optimization
+Optimize TCP/IP parameters and DNS cache settings to improve connection speed and responsiveness.
+Reset Network Configuration
+Flush DNS cache and reset Winsock and TCP/IP stack configuration to repair network connectivity issues.
+Cleanup
+Remove caches, temporary files and other leftovers.
+Cache Cleanup
+Clean up cache files from various applications and the system to free up storage space.
+System Files Cleanup
+Clean up system files such as temporary files, logs, crash dumps, etc.
+System Components Cleanup
+Clean up system component files such as Windows Update cache, component store, etc.
+Performance Cleanup
+Clean up files that may affect system performance, such as prefetch files, etc.
+Custom Cleanup
+Clean up specified files and directories using custom rules.
+Taskbar and start menu layout
+Hide the search box and Task View button, disable taskbar grouping and always show tray icons.
+Disable start menu and open search with Win key
+Disable the start menu completely. When you press the Win key, it will open search instead of the start menu.
+Improve Explorer responsiveness
+Reduce menu delays, close hung apps faster and open This PC by default.
+File visibility options
+Show file extensions and hidden files in File Explorer.
+Disable Explorer suggestions
+Turn off cloud content suggestions and recommendation banners.
+Change Windows key to open search
+Modify Windows key behavior to open search instead of the start menu.
+Optimise multimedia scheduling
+Remove network throttling and lower system responsiveness latency.
+Improve memory management
+Keep system cache in memory and avoid paging kernel drivers.
+Disable acrylic and notification centre
+Remove acrylic effects on logon and hide the Windows notification centre.
+Reduce telemetry and tips
+Disable advertising ID, Spotlight features and automatic suggestions.
+Force high performance plan
+Activate the high performance power scheme and disable hibernation.
+Disable diagnostic services
+Stop and disable Connected User Experiences, Diagnostics Hub and Delivery Optimisation services.
+Disable SysMain
+Turn off Superfetch/SysMain to reduce background disk activity.
+Disable Windows Search indexing
+Stop the Windows Search service to prevent index updates.
+Disable Remote Registry
+Secure the system by disabling remote registry access.
+Disable error reporting
+Stop Windows Error Reporting from collecting and sending crash data.
+Clear Remote Desktop cache
+Remove cached files created by the Remote Desktop client.
+Clean Windows Update cache
+Delete downloaded update files and Delivery Optimisation cache.
+Clean browser cache
+Cleans up temporary files and logs left behind by various applications.
+App Leftovers
+Remove Internet Explorer and Edge cache and cookie files.
+Clean thumbnail caches
+Delete Explorer thumbnail databases and Direct3D shader cache.
+Clear .NET native images
+Remove cached .NET Native images to reclaim disk space.
+Remove logs and diagnostic data
+Scans for large files on your system drive that may be taking up significant space.
+Large Files Scan
+Identify and manage large files on your system.
+Large Files
+Delete Windows logs, error reports and diagnostic traces.
+Delete crash dumps
+Remove memory dump files left after system crashes.
+Clean Defender scans
+Delete Windows Defender scan history and caches.
+Clean temporary files
+Empty Windows and user temporary directories.
+Remove bundled Windows apps
+Uninstall selected preinstalled UWP applications for all users.
+Empty Recycle Bin
+Remove deleted files stored in the Recycle Bin.
+Clear prefetch data
+Delete Windows prefetch data to regenerate new traces.
+Clean custom files
+Delete files matching configured extensions from selected folders.
+Service component store
+Run DISM cleanup and clear WinSxS temporary files.
+Disable Lenovo Hotkeys
+Lenovo Vantage and/or ImController may have not been disabled correctly
+Couldn't disable Lenovo Vantage and/or ImController
+Disable Lenovo Vantage and ImController
+Legion Zone may have not been enabled correctly
+Couldn't enable Legion Zone
+Lenovo Hotkeys may have not been enabled correctly
+Couldn't enable Lenovo Hotkeys Keys
+Lenovo Vantage and/or ImController may have not been enabled correctly
+Couldn't enable Lenovo Vantage and/or ImController
+You can exclude refresh rates, to make Fn+R shortcut more useful.
+Exclude Refresh Rates
+Select language.
+Language
+Always minimize to tray. Close with right click on tray icon.
+Minimize on close
+Hide the incompatible device warning that appears on startup.
+Disable incompatible device warning
+Enable Extensions
+Enable the extension system to access the plugin market in the Tools page.
+Configure which notifications are shown.
+Notifications
+Windows Power Plans
+Assign Quick Action to Fn+F9 double press.
+Smart Key Secondary Action
+Assign Quick Action to Fn+F9 single press.
+Smart Key Action
+Set light theme, dark theme or follow system settings.
+Theme
+Appearance
+Application
+Settings
+Configure the appearance, behavior, and functionality options of the application.
+Adjust keyboard backlight brightness.
+Off
+Keyboard backlight brightness
+Add effect
+Couldn't apply profile
+Lighting profile couldn't be applied.
+Brightness
+Deselect all zones
+Effects
+Profile couldn't be exported
+Couldn't export profile
+Profile couldn't be imported
+Couldn't import profile
+No effects added.
+Reset to default
+Select all zones
+Switch keyboard layout
+Direction
+Color
+Colors
+Direction
+Effect
+This effect will be applied to the whole keyboard and will replace all other effects.
+Speed
+Add effect
+Edit effect
+Adjust keyboard backlight profile.
+Keyboard backlight profile
+All keys
+{0} zones
+Sunrise
+Sunset
+Time
+Changing Hybrid Mode requires restart. Do you want to restart now?
+Restart required
+Hybrid Mode
+Disable touchpad.
+Touchpad Lock
+Disable touchpad.
+Touchpad Lock
+Try again
+Delete Report
+A crash report has been saved to disk. You can review the report details below. Reports are not sent automatically.
+The application crashed during the previous session
+Failed to open crash report: {0}
+Open Report
+Crash report saved to: {0}
+Crash Report Detected
+Unable to load crash report details.
+Unnamed
+Check out project page on GitHub for more information.
+Logs folder
+Machine Type
+Lenovo Legion Toolkit has not been tested with your device.
+You can disable this warning at any time in Settings.
+Model
+Unsupported device
+Vendor
+Update
+Update available
+What's new?
+Adjust keyboard backlight brightness.
+Keyboard backlight
+You can change brightness with Fn+Space
+Keyboard backlight
+Disable Windows key on built-in keyboard.
+Windows Key Lock
+Only works on built-in keyboard.
+Windows Key Lock
+Yes
+Microphone
+When off, microphones will be muted.
+Microphone
+When off, microphones will be muted.
+Resolution
+Change resolution of the built-in display.
+Resolution
+DPI
+Change scale of the built-in display.
+DPI
+Display
+Keyboard backlight
+You can turn backlight on or off with Fn+Space.
+Keyboard backlight
+Turn backlight on or off.
+No matching downloads found
+Show updates only
+Customize Dashboard
+Load
+Create group
+Name
+Some features may not appear on the Dashboard depending on state and configuration of your laptop.
+Customize
+Turn off displays
+Turn off
+Turn off displays
+Turn off all available displays.
+Edit group name
+Name
+Legion logo on
+Legion logo off
+Ports backlight on
+Ports backlight off
+Restart required
+Shutdown required
+Restart recommended
+Recommended
+Queued
+Downloading
+Installing
+Completed
+Action definition not found
+Technical implementation details are not available for this action
+Load failed
+Unknown
+Command execution
+Registry modification
+Service management
+Registry modification + PowerShell script
+Registry cleanup
+DISM command
+shell.exe not found
+Configuration file path: Not found
+Save &amp; Close
+Custom Mode preset
+Preset name
+Name
+Active preset
+Application Folders
+Data
+Temp
+Single Display Brightness
+When on, same brightness level will be applied to all Windows power plans whenever you change it.
+Update {0} available!
+Peak Power Limit
+APU sPPT Power Limit
+The continuous power consumption that can be reached by the CPU.
+The peak power consumption that can be reached by the CPU within a short amount time.
+The maximum instantaneous power consumption that can be reached by the CPU.
+The maximum power consumption that can be reached by the CPU when both CPU and GPU are fully utilized.
+The peak power consumption that can be reached by the CPU with a minor delay.
+The maximum temperature that can be reached by the CPU before frequency and power is reduced.
+The additional maximum power that can be allocated to the GPU based on the power consumption of the CPU.
+The additional amount of power that can be allocated to the GPU on top of base power consumption.
+The maximum temperature that can be reached by the GPU before frequency and power is reduced.
+Default
+Short Term Power Limit Duration
+The amount of time the CPU is allowed to boost and use Short Term Power Limit for. When Tau expires, Long Term Power Limit is used.
+Total Processor Power Target In AC
+The point at which the CPU triggers dynamic power consumption adjustment for the GPU.
+Create
+Add step
+Create Action
+Power Mode
+Preset
+Discrete GPU
+Power State
+Battery
+Mode
+Discharge rate
+Min discharge rate
+Max discharge rate
+Usage time
+Update available!
+Select icon
+Change icon
+Battery level low
+Configure
+S0 Lower Power Model detected
+Windows reports that this laptop supports Modern Standby. Using power plans other than Balanced may cause unexpected behavior.
+Select Windows Power Plans to apply when Power Mode changes.
+Power
+Power Plan options in Windows Control Panel
+Powered Off
+Import keyboard backlight profile
+Import and apply backlight configuration to the current profile.
+Path
+After {0}
+Multiple triggers...
+Overclock GPU Settings
+Core Frequency Offset
+Memory Frequency Offset
+Overclock GPU
+Increase performance by overclocking discrete GPU.
+Overclock GPU
+Ports backlight
+Turn on or off backlight of the ports on the back of the laptop.
+Ports backlight
+Turn on or off the backlight of the ports on the back of the laptop.
+Panel logo backlight
+Turn on or off the backlight on the lid of the laptop.
+Panel logo backlight
+Turn on or off the backlight on the lid of the laptop.
+GHz
+MHz
+Maximum: {0}
+CPU
+Utilization
+Core Clock
+Temperature
+Fan
+GPU
+Memory Clock
+Refresh interval
+Instant Boot
+Turn on the laptop when a charger is connected.
+Instant Boot
+Turn on the laptop when a charger is connected.
+Cannot change Power Mode
+{0} power mode is not available without AC power.
+Sensors
+Could not change GPU Working Mode
+dGPU is currently in use
+dGPU will disconnect automatically when not in use.
+dGPU is currently in use or laptop is not on battery power
+dGPU will disconnect automatically when not in use and laptop is on battery power.
+Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.
+Custom Mode settings will not be applied correctly when Legion Zone or its services are running.
+dGPU connected
+dGPU disconnected
+GPU Working Mode
+Hybrid Mode
+Duration
+Updates
+GPU to CPU Dynamic Boost
+This is the maximum additional power that can be allocated to the CPU from the GPU based on CPU usage. The higher the value, the better the performance of applications that use the CPU.
+Boot Logo
+Customize Boot Logo image, visible during system startup.
+Boot Logo
+Default Boot Logo is set
+Custom Boot Logo is set
+Status
+Revert to default
+Customize
+Actions
+Notification Text
+Show notification
+Preset
+Smart Fn Lock
+Fn Lock will be temporarily disabled when Alt, Ctrl or Shift key is depressed.
+Off
+Overnight Battery Charging
+When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.
+Overnight Battery Charging
+When enabled, this device will charge to 80% when plugged in overnight and finish charging to 100% by the time you use this device in the morning.
+Invalid image size.
+Invalid image format.
+Cannot mount EFI partition.
+Cannot set UEFI privilege.
+Not enough free space on EFI partition.
+Custom logo could not be set: {0}
+Default logo could not be set: {0}
+Default boot logo set.
+Custom boot logo set.
+Network name (SSID)
+Copy current network name
+Leave empty for any Wi-Fi network.
+HWiNFO64
+Share fan speed, battery temperature etc. with HWiNFO64. You may need to restart HWiNFO64 after changing this option.
+Integrations
+Settings
+Information
+Download folder
+Open Download folder
+Download
+Install
+Uninstall
+Installation failed
+File not found, please download first
+Installer exited with code {0}
+Installation started
+Starting installer: {0}
+Open README
+Preset
+Refresh
+Delete
+Period (minutes)
+Resets the counter for "On battery since" in the battery section when the system reboots.
+Reset "On battery since" at startup
+Turn off Wi-Fi
+Turn on Wi-Fi
+Run silently
+Wait until finished
+Execute console applications, without creating a console window.
+Wait until program or script finishes executing
+When mute, all active audio output devices will be muted.
+Speaker
+Minimize to tray
+Always minimize to tray instead of taskbar.
+Windows Power Modes
+Switch to Custom Mode with Fn+Q
+Allow quick switching to Custom Mode with Fn+Q.
+Power Mode Synchronization
+Automatically change Windows Power Plan or Windows Power Mode when changing Power Modes.
+Windows Power Modes
+Select Windows Power Mode to apply when Power Mode changes.
+Error occurred when reading device information.
+Compatibility Check Error
+The application failed to read device information during startup. Please check the error details below and try the troubleshooting steps if needed.
+Troubleshooting Steps
+Ensure Windows Management Instrumentation (WMI) service is running: Open Services (services.msc) and check that "Windows Management Instrumentation" is running.
+Run the application as Administrator to ensure sufficient permissions to access system registry and WMI.
+Check system resources: Close other resource-intensive applications and try again.
+Review the log file for detailed error information by clicking "Open Log" below.
+Open Log File
+Macro
+Macro
+Repeat
+Ignore delays
+Clear
+Record
+Stop recording
+Don't repeat
+Lenovo Legion Toolkit must be running for macros to work.
+Enable
+You can record series of key presses and invoke them using the number pad on your keyboard.
+Macro
+Enable or disable macros.
+Interrupt if another key was pressed
+Hide
+Hide all
+Devices
+Deselect all
+Select all
+Keyboard only
+Keyboard keys and mouse buttons
+All inputs
+Recording options
+Recording will start in 3 seconds...
+Recording...
+Press ESC to stop.
+Show selected devices only
+Show removable devices only
+Show connected devices only
+CLI
+Enable Command Line Interface that allows control from command line.
+Add CLI to PATH
+Add CLI to user's PATH environment variable.
+Temperature
+Select units for temperature sensors.
+Lenovo Hotkeys is running in the background.
+Legion Zone is running in the background.
+Lenovo Vantage and/or ImController is running in the background.
+Show notification on all screens connected to your device.
+Notification on all screens
+Check
+Checking for updates...
+Check for updates
+Update
+Update checks are disabled for this session
+Lenovo Legion Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.
+API rate limit reached, please try again later.
+Failed to check for updates
+Something went wrong, please try again later.
+No updates found
+Automatically check for updates
+Update repository
+Configure the GitHub repository to check for updates. Leave empty to use default.
+Repository Owner
+e.g., SSC-STUDIO
+Repository Name
+e.g., LenovoLegionToolkit
+Update catalog not found
+Try getting updates from the other source.
+Something went wrong
+Check if your internet connection is up and running.
+Play sound
+Common music formats like wav or mp3 are supported.
+Quick Action
+Run a saved quick action.
+Notification always on top
+Recommended
+Pause all
+Implementation and Effect Principles
+Implementation Type:
+COM Component Registration + Configuration File
+By registering Nilesoft Shell as a COM handler for Windows context menus, it intercepts the creation and display of system right-click menus. When users right-click on files or folders, Shell reads the shell.nss configuration file and applies custom theme, transparency, rounded corners, and shadow settings to achieve a beautified right-click menu effect.
+Configuration file not found. Please make sure Nilesoft Shell is installed.
+Configuration File Not Found
+Settings applied successfully. Changes will take effect after restarting File Explorer.
+Settings Applied
+Failed to apply settings: {0}
+Error
+1. COM Component Registration:
+   regsvr32.exe /s shell.dll
+   Path: {0}
+2. Configuration File (shell.nss):
+   Configuration file path: {0}
+   Uses CSS-like syntax to define menu styles
+3. Configuration File Format Example:
+4. Working Principle:
+   - Shell.dll is registered as a COM component in the system
+   - Implements IContextMenu interface to intercept right-click menu creation
+   - Reads shell.nss configuration file
+   - Applies custom styles (theme, rounded corners, shadows, etc.)
+   - Renders the beautified context menu
+5. Effect Description:
+   - Auto Theme: Follows system theme (light/dark)
+   - Transparency: Enables menu background transparency effect
+   - Rounded Corners: Adds rounded corner borders to menu items
+   - Shadows: Adds shadow effects to menus, enhancing depth perception
+Configuration Editor
+shell.nss
+theme.nss
+images.nss
+modify.nss
+Action Details
+Technical Implementation Details
+Implementation Type:
+Close
+{0} of {1} actions selected
+Estimated cleanup size: {0}
+Click Scan to calculate total size
+Running: {0}
+Uninstalling selected apps...
+Compact view
+System Beautification
+Right Click Menu
+Customize the right click menu appearance and behavior.
+Enable Classic Menu
+Disable Classic Menu
+Restore Default
+Install
+Uninstall
+Installed
+Not Installed
+Installed but not registered
+Open Style Settings
+Windows Beautification
+Customize Windows appearance and behavior.
+Menu Style Settings
+Theme
+Auto
+Light
+Dark
+Classic
+Modern
+Transparency
+Enable transparency
+Appearance
+Rounded corners
+Shadows
+Apply
+Effects
+Customize visual effects.
+Transparency
+Expand all
+Collapse all
+Freed {0} in {1}s
+Executing {0}%
+Operation cancelled
+Error details: {0}
+Show hidden downloads
+Show hidden downloads
+Select language
+Not connected
+Synchronise zones
+Using Windows built-in registry cleanup functionality
+ipconfig /flushdns (Flush DNS cache)
+netsh winsock reset (Reset Winsock protocol stack)
+netsh int ip reset (Reset TCP/IP protocol stack)
+Plugin Extensions
+Install and manage plugins to extend functionality
+Total Plugins
+Installed
+Updates Ready
+Store Pulse
+Checking plugin availability...
+{0} plugin update(s) are ready to install.
+{0} additional plugin(s) are available in the current feed.
+Waiting for plugin metadata to load.
+All detected plugins are currently up to date.
+Updates available
+Available to install
+Loading metadata
+Up to date
+by {0}
+Settings
+Quick Open
+Optimize
+Update
+Install
+Installed
+Cannot Uninstall
+Plugin Settings
+Plugin Name
+Plugin Description
+This plugin has no configurable settings.
+Close
+Plugin not found: {0}
+Error
+Settings
+Author: {0}
+Plugin configuration interface format is incorrect.
+Error loading plugin settings: {0}
+Search plugins...
+All
+Installed
+Not Installed
+No plugins available
+The plugin store is currently empty. Stay tuned for future plugin updates.
+Configure
+Uninstall
+Open
+Language:
+Use Application Default
+Found {0} plugins
+Bulk Import
+Import plugins from local ZIP files
+Import from Files
+Select plugin files (.zip)
+Successfully imported {0} plugins
+{0} plugins have been successfully imported and are available
+Bulk import failed
+Failed to import plugins: {0}
+Importing plugins...
+Importing {0}...
+Processing {0}...
+Plugin installed successfully
+Plugin has been successfully installed
+Installation failed
+Unable to install plugin: {0}
+Plugin uninstalled successfully
+Plugin has been successfully uninstalled
+Uninstallation failed
+Unable to uninstall plugin: {0}
+Failed to open plugin
+Unable to open plugin: {0}
+Unable to open plugin: {0}
+Plugin not installed
+Plugin is not installed and cannot be opened
+Minimum host version {0} is required
+Plugin will be permanently deleted
+Plugin will be permanently deleted. This action cannot be undone.
+Update Failed
+Plugin update failed, please check network connection and try again later.
+Update Successful
+Plugin has been successfully updated
+Updating Plugin
+Downloading and updating plugin...
+Update All
+Run Plugin
+Plugin started
+Plugin Uninstalled
+Plugin will be deleted when the program closes.
+Deletion Failed
+Error occurred while deleting plugin
+Configuration Failed
+Plugin is installed but not loaded. Please try restarting the application.
+No Configuration
+Plugin does not have any configuration options.
+Configuration Not Supported
+Plugin does not support configuration.
+Plugin States Reset
+All plugin installation states have been cleared
+Bulk Update Complete
+All plugins have been processed.
+Preparing download...
+Local
+New Version Available
+Version: 
+Release Date: 
+What's New:
+Refresh plugin list
+No plugins found matching your search.
+Update all available plugins
+Install All
+Install all available plugins
+Installing All...
+Installing {0} plugin(s)...
+Bulk Install Complete
+Installed {0} plugin(s).
+Bulk Install Failed
+Failed to install plugins: {0}
+Updating All...
+Updating...
+Open Folder
+Copy Plugin ID
+Folder Not Found
+The plugin directory does not exist yet.
+Copied
+Plugin ID '{0}' copied to clipboard.
+Download completed
+Downloading...
+Downloading... {0:F1} / {1:F1} MB ({2:F0}%)
+Network Acceleration
+ViveTool
+Tools
+Real-time network acceleration and optimization features
+Manage Windows feature flags using ViVeTool
+System optimization and utility tools
+Usage
+This editor is used to directly edit shell.nss configuration file. After modification, click
+Apply
+button to save all changes and restart File Explorer to apply configuration.
+• Configuration file path:
+• After modifying configuration, File Explorer (Explorer) needs to be restarted for changes to take effect.
+Apply
+shell.nss Configuration File
+shell.nss file is used to define the overall structure and behavior of the right-click menu
+Open shell.nss file
+Open containing folder
+Path:
+UI Settings
+Basic Theme Settings
+Background Color:
+Text Color:
+Hover Effect Settings
+Hover Background:
+Hover Text:
+Selected Effect Settings
+Selected Background:
+Selected Text:
+Update Text from UI
+Load from Text
+Text Editor
+Open in External Editor
+images.nss Configuration File
+images.nss file is used to define icons and images for the right-click menu
+Open images.nss file
+modify.nss Configuration File
+modify.nss file is used to modify and customize right-click menu items
+Open modify.nss file
+No tools available. Please add tools in tools folder in application directory.
+Tools will appear here once they are available in the tools directory.
+Base Directory: {0}
+Configuration file directory not found
+File not found
+Cannot read configuration file: {0}
+This file is used to define theme-related style settings
+Theme color definition
+Base color
+Hover color
+Selected color
+For more theme configuration options, please refer to the official Nilesoft Shell documentation
+Confirm Apply Configuration
+Save Failed
+File Explorer has been restarted, configuration is now in effect!
+Partially Applied
+Applied Successfully
+Apply Failed
+File does not exist or path is invalid
+Open File Failed
+Use system default program to open file
+Cannot open file: {0}
+Open File Failed
+Folder does not exist or path is invalid
+Open Folder Failed
+Cannot open folder: {0}
+Open Folder Failed
+Model
+Power Usage
+Charge
+Health
+Rate
+Min Rate
+Max Rate
+Cycles
+Capacity
+Full Cap
+Design
+Date
+Core / Memory Clock
+Core Voltage
+Voltage Range
+Avg Temp
+Sidebar
+System
+Rate Range
+Please select at least one cleanup option.
+Start All
+e.g. 82JQ
+e.g. C:\Drivers
+Enable Transparency
+Enable transparency effects for the context menu
+Show File Extensions
+Show file extensions in File Explorer
+Show Hidden Files
+Show hidden files and folders in File Explorer
+Open to Quick Access
+Open File Explorer to Quick Access instead of This PC
+Show Preview Pane
+Show preview pane in File Explorer
+Please select at least one item to clean up.
+Failed to apply {0}: {1}
+Use software rendering when remote desktop or headless display is detected. Restart recommended.

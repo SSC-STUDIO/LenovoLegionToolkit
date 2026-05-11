@@ -7,8 +7,6 @@ using System.Windows.Shell;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
-using Wpf.Ui.Appearance;
-
 namespace LenovoLegionToolkit.WPF.Utils;
 
 internal static class RenderingCompatibilityHelper
@@ -32,14 +30,14 @@ internal static class RenderingCompatibilityHelper
         }
     }
 
-    public static BackgroundType GetPreferredBackgroundType(ApplicationSettings? settings = null)
+    public static WindowBackdropType GetPreferredBackgroundType(ApplicationSettings? settings = null)
     {
         if (ShouldDisableBackdrop(settings))
-            return BackgroundType.None;
+            return WindowBackdropType.None;
 
         return settings?.Store.WindowBackdropStyle == WindowBackdropStyle.macOS
-            ? BackgroundType.Acrylic
-            : BackgroundType.Mica;
+            ? WindowBackdropType.Acrylic
+            : WindowBackdropType.Mica;
     }
 
     public static bool ShouldDisableBackdrop(ApplicationSettings? settings = null)
@@ -67,7 +65,7 @@ internal static class RenderingCompatibilityHelper
                 hwndTarget.RenderMode = RenderMode.SoftwareOnly;
 
             ApplyCompatibleWindowChrome(window);
-            Wpf.Ui.Appearance.Background.RestoreContentBackground(window);
+            // WPF-UI 4 removed Appearance.Background.RestoreContentBackground; window chrome fallback is sufficient here.
         }
         catch (Exception ex)
         {

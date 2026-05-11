@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
@@ -5,22 +6,18 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
 
-namespace LenovoLegionToolkit.Tests;
+namespace LenovoLegionToolkit.Tests.Settings;
 
-public class ApplicationSettingsTests
+[Trait("Category", TestCategories.Unit)]
+public class ApplicationSettingsStoreDefaultsTests
 {
-
-
     [Fact]
     public void Notifications_ShouldHaveDefaultValues()
     {
-        // Arrange
         var settings = new ApplicationSettings();
 
-        // Act
         var notifications = settings.Store.Notifications;
 
-        // Assert
         notifications.Should().NotBeNull();
         notifications.UpdateAvailable.Should().BeTrue();
         notifications.TouchpadLock.Should().BeTrue();
@@ -34,13 +31,10 @@ public class ApplicationSettingsTests
     [Fact]
     public void Notifications_ShouldHaveDefaultFalseValues()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act
         var notifications = store.Notifications;
 
-        // Assert
         notifications.CapsNumLock.Should().BeFalse();
         notifications.FnLock.Should().BeFalse();
         notifications.PowerMode.Should().BeFalse();
@@ -51,13 +45,10 @@ public class ApplicationSettingsTests
     [Fact]
     public void CustomCleanupRules_ShouldDefaultToEmptyList()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act
         var rules = store.CustomCleanupRules;
 
-        // Assert
         rules.Should().NotBeNull();
         rules.Should().BeEmpty();
     }
@@ -65,10 +56,8 @@ public class ApplicationSettingsTests
     [Fact]
     public void CustomCleanupRule_ShouldHaveDefaultValues()
     {
-        // Arrange
         var rule = new CustomCleanupRule();
 
-        // Act & Assert
         rule.DirectoryPath.Should().BeEmpty();
         rule.Extensions.Should().NotBeNull();
         rule.Extensions.Should().BeEmpty();
@@ -78,60 +67,48 @@ public class ApplicationSettingsTests
     [Fact]
     public void PowerModeMappingMode_ShouldDefaultToWindowsPowerMode()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.PowerModeMappingMode.Should().Be(PowerModeMappingMode.WindowsPowerMode);
     }
 
     [Fact]
     public void NotificationPosition_ShouldDefaultToBottomCenter()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.NotificationPosition.Should().Be(NotificationPosition.BottomCenter);
     }
 
     [Fact]
     public void NotificationDuration_ShouldDefaultToNormal()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.NotificationDuration.Should().Be(NotificationDuration.Normal);
     }
 
     [Fact]
     public void MinimizeToTray_ShouldDefaultToTrue()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.MinimizeToTray.Should().BeTrue();
     }
 
     [Fact]
     public void MinimizeOnClose_ShouldDefaultToFalse()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.MinimizeOnClose.Should().BeFalse();
     }
 
     [Fact]
     public void ExcludedRefreshRates_ShouldDefaultToEmptyList()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.ExcludedRefreshRates.Should().NotBeNull();
         store.ExcludedRefreshRates.Should().BeEmpty();
     }
@@ -139,10 +116,8 @@ public class ApplicationSettingsTests
     [Fact]
     public void SmartKeyActionLists_ShouldDefaultToEmptyLists()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.SmartKeySinglePressActionList.Should().NotBeNull();
         store.SmartKeySinglePressActionList.Should().BeEmpty();
         store.SmartKeyDoublePressActionList.Should().NotBeNull();
@@ -152,10 +127,8 @@ public class ApplicationSettingsTests
     [Fact]
     public void PowerPlansAndModes_ShouldDefaultToEmptyDictionaries()
     {
-        // Arrange
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        // Act & Assert
         store.PowerPlans.Should().NotBeNull();
         store.PowerPlans.Should().BeEmpty();
         store.PowerModes.Should().NotBeNull();
@@ -163,46 +136,46 @@ public class ApplicationSettingsTests
     }
 
     [Fact]
-    public void ApplicationSettings_ShouldBeSingleton()
+    public void ApplicationSettings_EachInstanceIsIndependent()
     {
-        // Arrange
         var settings1 = new ApplicationSettings();
         var settings2 = new ApplicationSettings();
 
-        // Act & Assert
         settings1.Should().NotBeSameAs(settings2);
     }
 
     [Fact]
     public void LoadStore_ShouldReturnDefault_WhenFileNotFound()
     {
-        // Arrange
-        var settingsPath = Path.Combine(Folders.AppData, "settings.json");
-        var backupPath = settingsPath + ".bak";
-        if (File.Exists(settingsPath))
-        {
-            File.Copy(settingsPath, backupPath, overwrite: true);
-            File.Delete(settingsPath);
-        }
-
-        var settings = new ApplicationSettings();
-
+        var tempRoot = Path.Combine(Path.GetTempPath(), "llt-settings-test-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempRoot);
+        var prevOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         try
         {
-            // Act
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, tempRoot);
+
+            var settings = new ApplicationSettings();
             var store = settings.LoadStore();
 
-            // Assert
             store.Should().NotBeNull();
             store!.Notifications.UpdateAvailable.Should().BeTrue();
             store.NotificationDuration.Should().Be(NotificationDuration.Normal);
         }
         finally
         {
-            if (File.Exists(backupPath))
+            if (prevOverride is null)
+                Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, null);
+            else
+                Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, prevOverride);
+
+            try
             {
-                File.Copy(backupPath, settingsPath, overwrite: true);
-                File.Delete(backupPath);
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, recursive: true);
+            }
+            catch
+            {
+                // Best-effort cleanup of temp test directory
             }
         }
     }
@@ -210,13 +183,10 @@ public class ApplicationSettingsTests
     [Fact]
     public void SynchronizeStore_ShouldNotThrow()
     {
-        // Arrange
         var settings = new ApplicationSettings();
 
-        // Act
         Action act = () => settings.SynchronizeStore();
 
-        // Assert
         act.Should().NotThrow();
     }
 }

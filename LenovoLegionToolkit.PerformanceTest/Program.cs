@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Text.Json;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -180,7 +181,7 @@ namespace LenovoLegionToolkit.PerformanceTest
             {
                 var settings = new TestSettings(tempPath);
                 var testData = new { Value = "测试数据", Count = 100 };
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(testData);
+                var json = JsonSerializer.Serialize(testData);
                 await File.WriteAllTextAsync(tempPath, json).ConfigureAwait(false);
 
                 for (int i = 0; i < 50; i++)

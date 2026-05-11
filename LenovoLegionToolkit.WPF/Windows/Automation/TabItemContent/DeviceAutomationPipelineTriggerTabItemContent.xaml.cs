@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,7 +10,6 @@ using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
@@ -175,7 +174,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Orientation = Orientation.Vertical
         };
 
-        private readonly TextBlock _notConnected = new()
+        private readonly System.Windows.Controls.TextBlock _notConnected = new()
         {
             Margin = new(0, 0, 0, 2),
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -183,23 +182,23 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Text = Resource.DeviceAutomationPipelineTriggerTabItemContent_NotConnected
         };
 
-        private readonly TextBlock _name = new()
+        private readonly System.Windows.Controls.TextBlock _name = new()
         {
             Margin = new(0, 0, 0, 4),
             FontWeight = FontWeights.Medium
         };
 
-        private readonly TextBlock _description = new()
+        private readonly System.Windows.Controls.TextBlock _description = new()
         {
             Margin = new(0, 0, 0, 4)
         };
 
-        private readonly TextBlock _busReportedDeviceDescription = new()
+        private readonly System.Windows.Controls.TextBlock _busReportedDeviceDescription = new()
         {
             Margin = new(0, 0, 0, 4)
         };
 
-        private readonly TextBlock _deviceInstanceId = new()
+        private readonly System.Windows.Controls.TextBlock _deviceInstanceId = new()
         {
             Margin = new(0, 4, 0, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,

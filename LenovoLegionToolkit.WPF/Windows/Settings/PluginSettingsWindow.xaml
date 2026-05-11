@@ -24,7 +24,7 @@
         <wpfui:TitleBar
             Grid.Row="0"
             CanMaximize="true"
-            UseSnapLayout="true" />
+ />
 
         <Grid
             Grid.Row="0"

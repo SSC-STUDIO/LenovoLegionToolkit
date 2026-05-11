@@ -9,11 +9,10 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using Theme = Wpf.Ui.Appearance.Theme;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-public partial class UnsupportedWindow : UiWindow
+public partial class UnsupportedWindow : FluentWindow
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
 
@@ -33,14 +32,14 @@ public partial class UnsupportedWindow : UiWindow
         try
         {
             // Try to detect system theme
-            var isDarkMode = SystemTheme.IsDarkMode();
-            var themeType = isDarkMode ? ThemeType.Dark : ThemeType.Light;
+            var isDarkMode = LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
+            var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Applying theme to UnsupportedWindow: {themeType} (System is {(isDarkMode ? "Dark" : "Light")} mode)");
             
             var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
-            Theme.Apply(themeType, backgroundType, false);
+            ApplicationThemeManager.Apply(themeType, backgroundType, false);
         }
         catch (Exception ex)
         {
@@ -48,7 +47,7 @@ public partial class UnsupportedWindow : UiWindow
                 Log.Instance.Trace($"Failed to detect system theme, defaulting to Light mode", ex);
             
             // If theme detection fails, fall back to light theme
-            Theme.Apply(ThemeType.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
+            ApplicationThemeManager.Apply(ApplicationTheme.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
         }
     }
 

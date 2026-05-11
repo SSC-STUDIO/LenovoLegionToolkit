@@ -43,6 +43,12 @@ public class PluginRepositoryService : IDisposable
     private static readonly TimeSpan ApiAssetDownloadRequestTimeout = TimeSpan.FromSeconds(120);
     private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(300);
     private static readonly TimeSpan NativeCurlDownloadTimeoutPadding = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan AvailablePluginsMemoryCacheDuration = TimeSpan.FromMinutes(15);
+    private static readonly TimeSpan StoreDiskCacheDuration = TimeSpan.FromHours(6);
+
+    private readonly object _availablePluginsCacheLock = new();
+    private List<PluginManifest>? _availablePluginsMemoryCache;
+    private DateTimeOffset _availablePluginsMemoryCacheUpdatedAt;
 
     public event EventHandler<PluginDownloadProgress>? DownloadProgressChanged;
     public event EventHandler<string>? DownloadCompleted;
@@ -68,23 +74,37 @@ public class PluginRepositoryService : IDisposable
     /// <summary>
     /// Fetch available plugins from the online repository
     /// </summary>
-    public async Task<List<PluginManifest>> FetchAvailablePluginsAsync()
+    public async Task<List<PluginManifest>> FetchAvailablePluginsAsync(bool forceRefresh = false)
     {
         try
         {
+            if (!forceRefresh && TryGetCachedAvailablePlugins(out var cachedPlugins))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Using in-memory plugin store cache with {cachedPlugins.Count} plugins");
+
+                return cachedPlugins;
+            }
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Fetching plugins from online repository...");
 
-            string storeJson;
-            
             // Try local file first for development
             var localStorePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "store.json");
+            string storeJson;
             if (File.Exists(localStorePath))
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Using local store.json file at {localStorePath}");
                 
                 storeJson = await File.ReadAllTextAsync(localStorePath).ConfigureAwait(false);
+            }
+            else if (!forceRefresh && TryReadFreshStoreCache() is { } cachedStoreJson)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Using fresh plugin store disk cache from {_storeCachePath}");
+
+                storeJson = cachedStoreJson;
             }
             else
             {
@@ -117,12 +137,29 @@ public class PluginRepositoryService : IDisposable
 
             Log.Instance.Info($"Found {plugins.Count} plugins in store");
 
-            return plugins;
+            CacheAvailablePlugins(plugins);
+            return ClonePluginManifestList(plugins);
         }
         catch (Exception ex)
         {
             Log.Instance.Error($"Error fetching plugins from store: {ex.Message}", ex);
             throw;
+        }
+    }
+
+    public bool TryGetCachedAvailablePlugins(out List<PluginManifest> plugins)
+    {
+        lock (_availablePluginsCacheLock)
+        {
+            if (_availablePluginsMemoryCache is null ||
+                DateTimeOffset.UtcNow - _availablePluginsMemoryCacheUpdatedAt > AvailablePluginsMemoryCacheDuration)
+            {
+                plugins = new List<PluginManifest>();
+                return false;
+            }
+
+            plugins = ClonePluginManifestList(_availablePluginsMemoryCache);
+            return true;
         }
     }
 
@@ -1137,6 +1174,27 @@ public class PluginRepositoryService : IDisposable
         }
     }
 
+    private string? TryReadFreshStoreCache()
+    {
+        try
+        {
+            if (!File.Exists(_storeCachePath))
+                return null;
+
+            var cacheAge = DateTimeOffset.UtcNow - File.GetLastWriteTimeUtc(_storeCachePath);
+            if (cacheAge > StoreDiskCacheDuration)
+                return null;
+
+            return File.ReadAllText(_storeCachePath, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read fresh plugin store cache at {_storeCachePath}: {ex.Message}", ex);
+            return null;
+        }
+    }
+
     private static void DeletePartialDownload(string destinationPath)
     {
         try
@@ -1244,9 +1302,9 @@ public class PluginRepositoryService : IDisposable
     /// <summary>
     /// Check for plugin updates
     /// </summary>
-    public async Task<List<PluginManifest>> CheckForUpdatesAsync(List<PluginManifest> installedPlugins)
+    public async Task<List<PluginManifest>> CheckForUpdatesAsync(List<PluginManifest> installedPlugins, bool forceRefresh = false)
     {
-        var availablePlugins = await FetchAvailablePluginsAsync().ConfigureAwait(false);
+        var availablePlugins = await FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(false);
         var updates = new List<PluginManifest>();
 
         foreach (var installed in installedPlugins)
@@ -1267,6 +1325,39 @@ public class PluginRepositoryService : IDisposable
 
         return updates;
     }
+
+    private void CacheAvailablePlugins(List<PluginManifest> plugins)
+    {
+        lock (_availablePluginsCacheLock)
+        {
+            _availablePluginsMemoryCache = ClonePluginManifestList(plugins);
+            _availablePluginsMemoryCacheUpdatedAt = DateTimeOffset.UtcNow;
+        }
+    }
+
+    private static List<PluginManifest> ClonePluginManifestList(IEnumerable<PluginManifest> plugins) =>
+        plugins.Select(ClonePluginManifest).ToList();
+
+    private static PluginManifest ClonePluginManifest(PluginManifest manifest) =>
+        new()
+        {
+            Id = manifest.Id,
+            Name = manifest.Name,
+            Description = manifest.Description,
+            Icon = manifest.Icon,
+            IconBackground = manifest.IconBackground,
+            Author = manifest.Author,
+            Version = manifest.Version,
+            MinimumHostVersion = manifest.MinimumHostVersion,
+            Dependencies = manifest.Dependencies?.ToArray(),
+            DownloadUrl = manifest.DownloadUrl,
+            FileHash = manifest.FileHash,
+            FileSize = manifest.FileSize,
+            ReleaseDate = manifest.ReleaseDate,
+            Changelog = manifest.Changelog,
+            Tags = manifest.Tags?.ToArray(),
+            IsSystemPlugin = manifest.IsSystemPlugin
+        };
 
     /// <summary>
     /// Cleanup temporary download directory

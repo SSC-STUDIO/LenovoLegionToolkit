@@ -1,11 +1,18 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Custom;
 
 public class CardControl : Wpf.Ui.Controls.CardControl
 {
+    public new SymbolRegular Icon
+    {
+        get => base.Icon is SymbolIcon si ? si.Symbol : SymbolRegular.Empty;
+        set => base.Icon = value == SymbolRegular.Empty ? null : new SymbolIcon { Symbol = value };
+    }
+
     protected override AutomationPeer OnCreateAutomationPeer() => new CardControlAutomationPeer(this);
 
     private class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)

@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
@@ -354,6 +356,61 @@ public class Crc32AdlerTests
 
         // Assert
         crc1.Should().Be(crc2);
+    }
+
+    #endregion
+
+    #region File path tests
+
+    [Fact]
+    public void Calculate_File_ShouldReturnConsistentChecksum()
+    {
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(tempFile, "This is a test content for CRC32 calculation");
+
+            var actualCrc = Crc32Adler.Calculate(tempFile);
+
+            actualCrc.Should().BeGreaterThan(uint.MinValue);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void Calculate_NullFilePath_ShouldThrowArgumentNullException()
+    {
+        Action act = () => Crc32Adler.Calculate((string)null!);
+
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Calculate_InvalidFile_ShouldThrowIOException()
+    {
+        Action act = () => Crc32Adler.Calculate("/path/to/non/existent/file.txt");
+
+        act.Should().Throw<IOException>();
+    }
+
+    [Fact]
+    public async Task Calculate_ShouldBeThreadSafe()
+    {
+        var testData = System.Text.Encoding.UTF8.GetBytes("This is a test for thread safety");
+
+        var tasks = new Task<uint>[10];
+        for (var i = 0; i < tasks.Length; i++)
+            tasks[i] = Task.Run(() => Crc32Adler.Calculate(testData));
+
+        var results = await Task.WhenAll(tasks);
+
+        var firstResult = results[0];
+        for (var i = 1; i < results.Length; i++)
+            results[i].Should().Be(firstResult);
     }
 
     #endregion

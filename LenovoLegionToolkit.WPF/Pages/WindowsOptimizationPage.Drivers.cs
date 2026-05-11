@@ -15,7 +15,6 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.Utils;
 using System.IO;
 using System.Net.Http;
-using Wpf.Ui.Common;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 using System.Windows.Forms;
 using Process = System.Diagnostics.Process;
@@ -23,6 +22,7 @@ using ProcessStartInfo = System.Diagnostics.ProcessStartInfo;
 using LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.Lib.Extensions;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -568,9 +568,9 @@ public partial class WindowsOptimizationPage
         if (_driverPackagesStackPanel is null || _packageDownloaderSettings.Store.HiddenPackages.Count == 0)
             return;
 
-        var clearHidden = new Wpf.Ui.Controls.Hyperlink
+        var clearHidden = new HyperlinkButton
         {
-            Icon = SymbolRegular.Eye24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Eye24 },
             Content = Resource.WindowsOptimizationPage_ShowHiddenDownloads,
             HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
         };
@@ -611,7 +611,7 @@ public partial class WindowsOptimizationPage
 
         var hideMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.EyeOff24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.EyeOff24 },
             Header = Resource.Hide,
         };
         hideMenuItem.Click += (_, _) =>
@@ -624,7 +624,7 @@ public partial class WindowsOptimizationPage
 
         var hideAllMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.EyeOff24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.EyeOff24 },
             Header = Resource.HideAll,
         };
         hideAllMenuItem.Click += (_, _) =>

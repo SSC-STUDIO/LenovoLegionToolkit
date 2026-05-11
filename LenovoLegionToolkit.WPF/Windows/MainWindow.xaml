@@ -25,9 +25,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar Grid.Row="0" />
+        <wpfui:TitleBar Grid.Row="0" Height="48" />
 
-        <Grid Grid.Row="0" Margin="12,4,150,4">
+        <Grid
+            Grid.Row="0"
+            Height="30"
+            Margin="12,0,150,0"
+            VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -48,12 +52,14 @@
             <custom:Badge
                 x:Name="_openLogIndicator"
                 Grid.Column="1"
+                Height="26"
                 Margin="0,0,8,0"
                 Padding="8,2,8,2"
                 Appearance="Caution"
                 Content="Log"
                 Cursor="Hand"
                 Focusable="True"
+                VerticalAlignment="Center"
                 KeyDown="OpenLogIndicator_KeyDown"
                 MouseLeftButtonDown="OpenLogIndicator_Click"
                 MouseRightButtonDown="OpenLogIndicator_Click"
@@ -62,10 +68,12 @@
             <custom:Badge
                 x:Name="_deviceInfoIndicator"
                 Grid.Column="2"
+                Height="26"
                 Padding="8,2,8,2"
                 Appearance="Transparent"
                 Cursor="Hand"
                 Focusable="True"
+                VerticalAlignment="Center"
                 KeyDown="DeviceInfoIndicator_KeyDown"
                 MouseLeftButtonDown="DeviceInfoIndicator_Click"
                 MouseRightButtonDown="DeviceInfoIndicator_Click"
@@ -76,135 +84,103 @@
         <Grid
             x:Name="_contentGrid"
             Grid.Row="1"
-            Margin="12,6,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <wpfui:NavigationStore
-                x:Name="_navigationStore"
-                AutomationProperties.AutomationId="MainNavigationStore"
-                Grid.Column="0"
-                Margin="0,0,12,12"
-                Frame="{Binding ElementName=_rootFrame}"
-                SelectedPageIndex="0">
-
-                <wpfui:NavigationStore.Items>
+            Margin="0">
+            <Grid>
+                <wpfui:NavigationView
+                    x:Name="_navigationView"
+                    AutomationProperties.AutomationId="MainNavigationView"
+                    Margin="0,0,0,12"
+                    CompactPaneLength="96"
+                    FrameMargin="10,0,0,0"
+                    IsBackButtonVisible="Collapsed"
+                    IsPaneOpen="False"
+                    IsPaneToggleVisible="False"
+                    OpenPaneLength="96"
+                    PaneDisplayMode="LeftFluent">
+                    <wpfui:NavigationView.MenuItems>
                     <custom:NavigationItem
                         x:Name="_dashboardItem"
                         AutomationProperties.AccessKey="D"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}"
-                        Icon="Home24"
-                        PageTag="dashboard"
-                        PageType="{x:Type pages:DashboardPage}"
+                        Symbol="Home24"
+                        TargetPageTag="dashboard"
+                        TargetPageType="{x:Type pages:DashboardPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}" />
                     <custom:NavigationItem
                         x:Name="_keyboardItem"
                         AutomationProperties.AccessKey="K"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}"
-                        Icon="Keyboard24"
-                        PageTag="keyboardBacklight"
-                        PageType="{x:Type pages:KeyboardBacklightPage}"
+                        Symbol="Keyboard24"
+                        TargetPageTag="keyboardBacklight"
+                        TargetPageType="{x:Type pages:KeyboardBacklightPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}" />
                     <custom:NavigationItem
                         x:Name="_automationItem"
                         AutomationProperties.AccessKey="A"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
-                        Icon="Rocket24"
-                        PageTag="automation"
-                        PageType="{x:Type pages:AutomationPage}"
+                        Symbol="Rocket24"
+                        TargetPageTag="automation"
+                        TargetPageType="{x:Type pages:AutomationPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}" />
                     <custom:NavigationItem
                         x:Name="_macroItem"
                         AutomationProperties.AccessKey="M"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
-                        Icon="ReceiptPlay24"
-                        PageTag="macro"
-                        PageType="{x:Type pages:MacroPage}"
+                        Symbol="ReceiptPlay24"
+                        TargetPageTag="macro"
+                        TargetPageType="{x:Type pages:MacroPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}" />
                     <custom:NavigationItem
                         x:Name="_windowsOptimizationItem"
                         AutomationProperties.AccessKey="W"
                         AutomationProperties.AutomationId="WindowsOptimizationNavItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
-                        Icon="Gauge24"
-                        PageTag="windowsOptimization"
-                        PageType="{x:Type pages:WindowsOptimizationPage}"
+                        Symbol="Gauge24"
+                        TargetPageTag="windowsOptimization"
+                        TargetPageType="{x:Type pages:WindowsOptimizationPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" />
-                </wpfui:NavigationStore.Items>
+                    </wpfui:NavigationView.MenuItems>
 
-                <wpfui:NavigationStore.Footer>
+                    <wpfui:NavigationView.FooterMenuItems>
                     <custom:NavigationItem
                         x:Name="_pluginExtensionsItem"
                         AutomationProperties.AccessKey="P"
                         AutomationProperties.AutomationId="PluginExtensionsNavItem"
                         Content="Plugin Extensions"
-                        Icon="Apps24"
-                        PageTag="pluginExtensions"
-                        PageType="{x:Type pages:PluginExtensionsPage}"
+                        Symbol="Apps24"
+                        TargetPageTag="pluginExtensions"
+                        TargetPageType="{x:Type pages:PluginExtensionsPage}"
                         ToolTip="Plugin Extensions" />
 
                     <custom:NavigationItem
                         AutomationProperties.AccessKey="S"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
-                        Icon="Settings24"
-                        PageTag="settings"
-                        PageType="{x:Type pages:SettingsPage}"
+                        Symbol="Settings24"
+                        TargetPageTag="settings"
+                        TargetPageType="{x:Type pages:SettingsPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}" />
                     <custom:NavigationItem
                         x:Name="_aboutItem"
                         AutomationProperties.AccessKey="B"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
-                        Icon="Info24"
-                        PageTag="about"
-                        PageType="{x:Type pages:AboutPage}"
+                        Symbol="Info24"
+                        TargetPageTag="about"
+                        TargetPageType="{x:Type pages:AboutPage}"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_About}" />
-                </wpfui:NavigationStore.Footer>
+                    </wpfui:NavigationView.FooterMenuItems>
 
-            </wpfui:NavigationStore>
+                </wpfui:NavigationView>
 
-            <Border
-                Grid.Column="1"
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                CornerRadius="8,0,0,0">
-                <Frame Name="_rootFrame"
-                       AutomationProperties.AutomationId="MainRootFrame"
-                       Margin="24,0,0,0" />
-            </Border>
-
-            <wpfui:Snackbar
-                x:Name="_snackbar"
-                Grid.Column="1"
-                MinWidth="300"
+            <Grid
+                x:Name="_snackbarHost"
+                Margin="0,0,0,24"
                 HorizontalAlignment="Center"
-                Icon="Checkmark24">
-                <wpfui:Snackbar.Effect>
-                    <DropShadowEffect
-                        BlurRadius="15"
-                        Direction="270"
-                        Opacity="0.4"
-                        ShadowDepth="3"
-                        Color="{DynamicResource SnackbarShadowColor}" />
-                </wpfui:Snackbar.Effect>
-                <StackPanel Margin="4,4,4,4" VerticalAlignment="Center">
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarTitle"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarMessage"
-                        Margin="0,6,0,0"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                </StackPanel>
-            </wpfui:Snackbar>
+                VerticalAlignment="Bottom"
+                Panel.ZIndex="100">
+                <wpfui:SnackbarPresenter x:Name="_snackbarPresenter" />
+            </Grid>
+
+            </Grid>
 
         </Grid>
 

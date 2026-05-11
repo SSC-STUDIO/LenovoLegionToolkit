@@ -8,7 +8,4 @@
 	    <Copyright>© 2026 Lenovo Legion Toolkit Contributors</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" />
-	</ItemGroup>
 </Project>

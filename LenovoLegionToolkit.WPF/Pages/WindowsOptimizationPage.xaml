@@ -1,4 +1,4 @@
-<wpfui:UiPage
+<Page
     x:Class="LenovoLegionToolkit.WPF.Pages.WindowsOptimizationPage"
     x:Name="PageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -16,10 +16,9 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
     Title="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}"
-    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Scrollable="False">
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <wpfui:UiPage.Resources>
+    <Page.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <!-- Browser-style Tab RadioButton Style -->
         <Style TargetType="RadioButton" x:Key="NavRadioButtonStyle">
@@ -191,7 +190,7 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
-    </wpfui:UiPage.Resources>
+    </Page.Resources>
 
         <Grid>
         <Grid.RowDefinitions>
@@ -201,7 +200,7 @@
 
         <Grid
             Grid.Row="0"
-            Margin="0,0,16,0">
+            Margin="32,0,16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -224,7 +223,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,0,16,12">
+        <Grid Grid.Row="1" Margin="32,0,16,12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -363,7 +362,7 @@
                                 </wpfui:Button.Style>
                                 <wpfui:SymbolIcon>
                                     <wpfui:SymbolIcon.Style>
-                                        <Style TargetType="wpfui:SymbolIcon" BasedOn="{StaticResource {x:Type wpfui:SymbolIcon}}">
+                                        <Style TargetType="wpfui:SymbolIcon">
                                             <Setter Property="Symbol" Value="Delete24" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
@@ -587,17 +586,23 @@
                                                     Grid.Column="1"
                                                     Margin="6,0,0,0"
                                                     Click="DriverDownloadToButton_Click"
-                                                    Icon="MoreHorizontal24"
                                                     Style="{StaticResource DriverIconButtonStyle}"
-                                                    ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}" />
+                                                    ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}">
+                                                    <wpfui:Button.Icon>
+                                                        <wpfui:SymbolIcon Symbol="MoreHorizontal24" />
+                                                    </wpfui:Button.Icon>
+                                                </wpfui:Button>
 
                                                 <wpfui:Button
                                                     Grid.Column="2"
                                                     Margin="6,0,0,0"
                                                     Click="DriverOpenDownloadToButton_Click"
-                                                    Icon="Open24"
                                                     Style="{StaticResource DriverIconButtonStyle}"
-                                                    ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}" />
+                                                    ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}">
+                                                    <wpfui:Button.Icon>
+                                                        <wpfui:SymbolIcon Symbol="Open24" />
+                                                    </wpfui:Button.Icon>
+                                                </wpfui:Button>
                                             </Grid>
                                         </Grid>
 
@@ -660,8 +665,11 @@
                                                     HorizontalAlignment="Stretch"
                                                     Click="DriverSearchButton_Click"
                                                     Content="{x:Static resources:Resource.WindowsOptimizationPage_Scan_Button}"
-                                                    Icon="Search24"
-                                                    Style="{StaticResource AppButtonPrimary}" />
+                                                    Style="{StaticResource AppButtonPrimary}">
+                                                    <wpfui:Button.Icon>
+                                                        <wpfui:SymbolIcon Symbol="Search24" />
+                                                    </wpfui:Button.Icon>
+                                                </wpfui:Button>
                                             </StackPanel>
                                         </Border>
                                     </Grid>
@@ -698,13 +706,16 @@
 
                                                     <wpfui:TextBox
                                                         x:Name="_driverFilterTextBox"
-                                                        Grid.Column="0"
-                                                        MinWidth="240"
-                                                        AutomationProperties.Name="{x:Static resources:Resource.Filter}"
-                                                        Icon="Search24"
-                                                        PlaceholderEnabled="True"
-                                                        PlaceholderText="{x:Static resources:Resource.Filter}"
-                                                        TextChanged="DriverFilterTextBox_TextChanged" />
+                                                    Grid.Column="0"
+                                                    MinWidth="240"
+                                                    AutomationProperties.Name="{x:Static resources:Resource.Filter}"
+                                                    PlaceholderEnabled="True"
+                                                    PlaceholderText="{x:Static resources:Resource.Filter}"
+                                                    TextChanged="DriverFilterTextBox_TextChanged">
+                                                        <wpfui:TextBox.Icon>
+                                                            <wpfui:SymbolIcon Symbol="Search24" />
+                                                        </wpfui:TextBox.Icon>
+                                                    </wpfui:TextBox>
 
                                                     <CheckBox
                                                         x:Name="_driverOnlyShowUpdatesCheckBox"
@@ -1143,6 +1154,7 @@
                                 <TextBlock
                                     FontWeight="Medium"
                                     Margin="0,0,0,2"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
                                 <TextBlock
                                     Margin="0,0,0,12"
@@ -1354,6 +1366,7 @@
                                         <TextBlock
                                             FontWeight="Medium"
                                             Margin="0,0,0,2"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
                                         <TextBlock
                                             Margin="0,0,0,12"
@@ -1387,10 +1400,12 @@
                                                         <StackPanel>
                                                             <TextBlock
                                                                 FontWeight="Medium"
+                                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                                 Text="{Binding DirectoryPath}"
                                                                 TextWrapping="Wrap" />
                                                             <TextBlock
                                                                 Margin="0,4,0,0"
+                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                                 Text="{Binding ExtensionsDisplay}"
                                                                 TextWrapping="Wrap" />
                                                             <TextBlock
@@ -1465,4 +1480,4 @@
             </Grid>
         </Grid>
     </Grid>
-</wpfui:UiPage>
+</Page>

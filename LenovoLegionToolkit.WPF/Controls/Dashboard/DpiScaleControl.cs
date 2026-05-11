@@ -5,7 +5,6 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
 using DpiScale = LenovoLegionToolkit.Lib.DpiScale;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;

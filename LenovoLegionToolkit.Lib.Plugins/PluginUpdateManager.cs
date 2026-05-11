@@ -122,7 +122,7 @@ public class PluginUpdateManager : IDisposable
 
             try
             {
-                var availablePlugins = await _repositoryService.FetchAvailablePluginsAsync();
+                var availablePlugins = await _repositoryService.FetchAvailablePluginsAsync(forceRefresh: true);
 
                 var updates = _versionChecker.GetAvailableUpdates(installedPlugins, availablePlugins);
 

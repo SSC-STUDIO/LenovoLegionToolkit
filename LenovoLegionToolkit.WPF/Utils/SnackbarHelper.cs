@@ -4,13 +4,22 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.WPF.Windows;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
 public static class SnackbarHelper
 {
+    /// <summary>Shows a snackbar with title and optional body (WPF-UI 4: <see cref="Snackbar.ShowAsync()"/> has no text parameters).</summary>
+    public static async Task ShowSnackbarAsync(Snackbar snackbar, string title, string? message = null)
+    {
+        snackbar.Title = title;
+        snackbar.Content = string.IsNullOrEmpty(message)
+            ? null
+            : new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap };
+        await snackbar.ShowAsync();
+    }
+
     private class SnackbarMessage
     {
         public string Title { get; set; } = string.Empty;
@@ -82,8 +91,7 @@ public static class SnackbarHelper
         var timeout = await timeoutTask;
 
         // Wait for the snackbar to close before showing the next one
-        // Snackbar has a Timeout property, we should wait at least that long
-        await Task.Delay(timeout + 500); // Add a small buffer for animation
+        await Task.Delay(timeout + TimeSpan.FromMilliseconds(500));
     }
 
     private static void SetupSnackbarAppearance(Snackbar snackBar, string title, string? message, SnackbarType type)
@@ -96,17 +104,17 @@ public static class SnackbarHelper
         };
         snackBar.Icon = type switch
         {
-            SnackbarType.Warning => SymbolRegular.Warning24,
-            SnackbarType.Error => SymbolRegular.ErrorCircle24,
-            SnackbarType.Info => SymbolRegular.Info24,
-            _ => SymbolRegular.Checkmark24
+            SnackbarType.Warning => new SymbolIcon { Symbol = SymbolRegular.Warning24 },
+            SnackbarType.Error => new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 },
+            SnackbarType.Info => new SymbolIcon { Symbol = SymbolRegular.Info24 },
+            _ => new SymbolIcon { Symbol = SymbolRegular.Checkmark24 }
         };
         snackBar.Timeout = type switch
         {
-            SnackbarType.Success => 2000,
-            _ => Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000)
+            SnackbarType.Success => TimeSpan.FromMilliseconds(2000),
+            _ => TimeSpan.FromMilliseconds(Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000))
         };
-        snackBar.CloseButtonEnabled = type switch
+        snackBar.IsCloseButtonEnabled = type switch
         {
             SnackbarType.Success => false,
             _ => true
@@ -115,14 +123,13 @@ public static class SnackbarHelper
 
     private static void SetTitleAndMessage(FrameworkElement snackBar, string title, string? message)
     {
-        if (snackBar.FindName("_snackbarTitle") is TextBlock snackbarTitle)
-            snackbarTitle.Text = title;
+        if (snackBar is not Snackbar snackbar)
+            return;
 
-        if (snackBar.FindName("_snackbarMessage") is TextBlock snackbarMessage)
-        {
-            snackbarMessage.Visibility = string.IsNullOrEmpty(message) ? Visibility.Collapsed : Visibility.Visible;
-            snackbarMessage.Text = message;
-        }
+        snackbar.Title = title;
+        snackbar.Content = string.IsNullOrEmpty(message)
+            ? null
+            : new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap };
     }
 
     private static int GetTextLengthInMilliseconds(string title, string? message)

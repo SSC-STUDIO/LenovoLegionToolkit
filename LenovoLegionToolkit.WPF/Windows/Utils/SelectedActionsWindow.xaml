@@ -29,7 +29,7 @@
             CanMaximize="False"
             ShowMaximize="False"
             ShowMinimize="False"
-            UseSnapLayout="False" />
+ />
 
         <Grid Grid.Row="1" Margin="16">
             <Grid.RowDefinitions>

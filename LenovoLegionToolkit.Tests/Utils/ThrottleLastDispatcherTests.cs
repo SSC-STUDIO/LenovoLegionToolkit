@@ -181,21 +181,22 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var executionCount = 0;
 
-        // Act - Fire multiple dispatches rapidly (fire-and-forget)
-        for (int i = 0; i < 3; i++)
+        // Act — sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
+        Task? last = null;
+        for (var i = 0; i < 3; i++)
         {
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
                 await Task.CompletedTask;
                 Interlocked.Increment(ref executionCount);
             });
-            await Task.Delay(20);
+            if (i < 2)
+                await Task.Delay(20);
         }
 
-        // Wait enough time for the last dispatch to complete
-        await Task.Delay(300);
+        await last!;
 
-        // Assert - Only the last dispatch should have executed
+        // Assert — only the winning dispatch runs the callback
         executionCount.Should().Be(1);
     }
 

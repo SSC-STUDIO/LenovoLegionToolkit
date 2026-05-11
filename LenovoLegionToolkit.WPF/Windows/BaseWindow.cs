@@ -9,7 +9,7 @@ using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows;
 
-public class BaseWindow : UiWindow
+public class BaseWindow : FluentWindow
 {
     private bool _compatibilityMode;
     private bool _suppressUiWindowCallbacks;
@@ -44,7 +44,7 @@ public class BaseWindow : UiWindow
 
             _suppressUiWindowCallbacks = true;
             ExtendsContentIntoTitleBar = false;
-            WindowBackdropType = BackgroundType.None;
+            WindowBackdropType = WindowBackdropType.None;
             WindowStyle = WindowStyle.None;
             _suppressUiWindowCallbacks = false;
 
@@ -76,7 +76,7 @@ public class BaseWindow : UiWindow
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, PresentationSource.FromVisual(this) as HwndSource, settings);
     }
 
-    protected override void OnBackdropTypeChanged(BackgroundType oldValue, BackgroundType newValue)
+    protected override void OnBackdropTypeChanged(WindowBackdropType oldValue, WindowBackdropType newValue)
     {
         var settings = IoCContainer.Resolve<ApplicationSettings>();
         if (!_suppressUiWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation;
@@ -15,9 +16,9 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Assets;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Utils;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Controls.Custom;
+using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Utils;
@@ -41,11 +42,11 @@ public class TrayHelper : IDisposable
 
     private NotifyIcon? _notifyIcon;
 
-    public TrayHelper(INavigation navigation, Action bringToForeground, bool trayTooltipEnabled)
+    public TrayHelper(NavigationView navigationView, Action bringToForeground, bool trayTooltipEnabled)
     {
         _bringToForeground = bringToForeground;
 
-        InitializeStaticItems(navigation);
+        InitializeStaticItems(navigationView);
 
         var notifyIcon = new NotifyIcon
         {
@@ -73,14 +74,14 @@ public class TrayHelper : IDisposable
         _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p);
     }
 
-    private void InitializeStaticItems(INavigation navigation)
+    private void InitializeStaticItems(NavigationView navigationView)
     {
-        foreach (var navigationItem in navigation.Items.OfType<NavigationItem>())
+        foreach (var navigationItem in navigationView.MenuItems.OfType<NavigationItem>())
         {
             var navigationMenuItem = new MenuItem
             {
-                SymbolIcon = navigationItem.Icon,
-                Header = navigationItem.Content,
+                Icon = navigationItem.Icon.ToSymbolIcon(),
+                Header = GetNavigationHeader(navigationItem),
                 Tag = NAVIGATION_TAG
             };
             navigationMenuItem.Click += async (_, _) =>
@@ -89,7 +90,8 @@ public class TrayHelper : IDisposable
                 _bringToForeground();
 
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
-                navigation.Navigate(navigationItem.PageTag);
+                if (navigationItem.TargetPageTag is { } tag)
+                    navigationView.Navigate(tag, null);
             };
             _contextMenu.Items.Add(navigationMenuItem);
         }
@@ -111,6 +113,14 @@ public class TrayHelper : IDisposable
             await App.Current.ShutdownAsync(true);
         };
         _contextMenu.Items.Add(closeMenuItem);
+    }
+
+    private static object? GetNavigationHeader(NavigationItem navigationItem)
+    {
+        var automationName = AutomationProperties.GetName(navigationItem);
+        return string.IsNullOrWhiteSpace(automationName)
+            ? navigationItem.Content
+            : automationName;
     }
 
     private async Task UpdateStatusItemsAsync()
@@ -328,7 +338,7 @@ public class TrayHelper : IDisposable
 
             var item = new MenuItem
             {
-                SymbolIcon = icon,
+                Icon = new SymbolIcon { Symbol = icon },
                 Header = pipeline.Name ?? Resource.Unnamed,
                 Tag = AUTOMATION_TAG
             };

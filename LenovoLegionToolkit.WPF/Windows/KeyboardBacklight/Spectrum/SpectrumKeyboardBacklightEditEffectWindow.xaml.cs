@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,7 +41,6 @@ public partial class SpectrumKeyboardBacklightEditEffectWindow
 
         _title.Text = Resource.SpectrumKeyboardBacklightEditEffectWindow_Title_Add;
 
-        _titleBar.UseSnapLayout = false;
         _titleBar.CanMaximize = false;
 
         SetInitialValues();

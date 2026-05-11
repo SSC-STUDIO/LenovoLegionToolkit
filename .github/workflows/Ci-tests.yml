@@ -35,8 +35,12 @@ jobs:
       - name: Build solution
         run: dotnet build LenovoLegionToolkit.sln --configuration Release --no-restore
 
-      - name: Test stable paths
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage"
+      # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
+      - name: Test (Unit category — fail fast)
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=LenovoLegionToolkit.Tests.Unit.trx"
+
+      - name: Test stable paths (full suite + coverage)
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings LenovoLegionToolkit.Tests/coverlet.runsettings
 
       - name: Check for vulnerable packages
         shell: pwsh
@@ -50,7 +54,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Test results
-          path: '**/*.trx'
+          path: '**/LenovoLegionToolkit.Tests.trx'
           reporter: dotnet-trx
 
       - name: Smoke CLI help and version

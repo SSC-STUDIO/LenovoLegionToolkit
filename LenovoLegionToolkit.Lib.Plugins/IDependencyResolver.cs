@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Plugins;
 
@@ -106,8 +105,11 @@ public interface IDependencyResolver
     /// Resolves dependencies for a set of plugins and returns the correct load order
     /// </summary>
     /// <param name="plugins">Dictionary of plugin ID to its dependencies</param>
+    /// <param name="pluginVersionsById">Installed or candidate plugin versions by plugin ID; when null or empty, version-range validation is skipped (no fabricated versions).</param>
     /// <returns>Resolution result with load order or errors</returns>
-    DependencyResolutionResult ResolveDependencies(Dictionary<string, List<PluginDependency>> plugins);
+    DependencyResolutionResult ResolveDependencies(
+        Dictionary<string, List<PluginDependency>> plugins,
+        IReadOnlyDictionary<string, string>? pluginVersionsById = null);
 
     /// <summary>
     /// Validates if a specific plugin can be installed with current dependencies
@@ -140,8 +142,11 @@ public interface IDependencyResolver
     /// Gets the dependency graph for visualization
     /// </summary>
     /// <param name="plugins">Dictionary of plugin ID to its dependencies</param>
+    /// <param name="pluginVersionsById">Optional plugin versions by ID; unknown nodes use "?" for version.</param>
     /// <returns>Graph representation of dependencies</returns>
-    DependencyGraph GetDependencyGraph(Dictionary<string, List<PluginDependency>> plugins);
+    DependencyGraph GetDependencyGraph(
+        Dictionary<string, List<PluginDependency>> plugins,
+        IReadOnlyDictionary<string, string>? pluginVersionsById = null);
 }
 
 /// <summary>

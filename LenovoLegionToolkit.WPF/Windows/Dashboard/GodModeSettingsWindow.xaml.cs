@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,11 +14,14 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Dashboard
 {
 public partial class GodModeSettingsWindow
 {
+    private Snackbar _snackBar = null!;
+
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
     private readonly GodModeController _godModeController = IoCContainer.Resolve<GodModeController>();
 
@@ -32,6 +35,13 @@ public partial class GodModeSettingsWindow
     public GodModeSettingsWindow()
     {
         InitializeComponent();
+
+        _snackBar = new Snackbar(_snackBarPresenter)
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 },
+            Timeout = TimeSpan.FromSeconds(5)
+        };
 
         IsVisibleChanged += GodModeSettingsWindow_IsVisibleChanged;
     }
@@ -78,7 +88,10 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't load settings.", ex);
 
-            await _snackBar.ShowAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message);
+            await SnackbarHelper.ShowSnackbarAsync(
+                _snackBar,
+                Resource.GodModeSettingsWindow_Error_Load_Title,
+                ex.Message);
 
             Close();
         }
@@ -144,7 +157,10 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't apply settings", ex);
 
-            await _snackBar.ShowAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await SnackbarHelper.ShowSnackbarAsync(
+                _snackBar,
+                Resource.GodModeSettingsWindow_Error_Apply_Title,
+                ex.Message);
 
             return false;
         }
@@ -431,7 +447,7 @@ public partial class GodModeSettingsWindow
             .OrderBy(d => d.Key)
             .Select(d =>
             {
-                var menuItem = new MenuItem { Header = d.Key.GetDisplayName() };
+                var menuItem = new System.Windows.Controls.MenuItem { Header = d.Key.GetDisplayName() };
                 menuItem.Click += (_, _) => SetDefaults(d.Value);
                 return menuItem;
             });

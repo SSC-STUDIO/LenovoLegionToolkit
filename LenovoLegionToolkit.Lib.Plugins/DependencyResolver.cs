@@ -11,7 +11,9 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 public class DependencyResolver : IDependencyResolver
 {
     /// <inheritdoc />
-    public DependencyResolutionResult ResolveDependencies(Dictionary<string, List<PluginDependency>> plugins)
+    public DependencyResolutionResult ResolveDependencies(
+        Dictionary<string, List<PluginDependency>> plugins,
+        IReadOnlyDictionary<string, string>? pluginVersionsById = null)
     {
         var result = new DependencyResolutionResult();
 
@@ -70,8 +72,8 @@ public class DependencyResolver : IDependencyResolver
                 return result;
             }
 
-            // Validate version constraints
-            var versionConflicts = ValidateVersionConstraints(plugins);
+            // Validate version constraints when caller supplies versions (no fabricated defaults)
+            var versionConflicts = ValidateVersionConstraints(plugins, pluginVersionsById);
             if (versionConflicts.Any())
             {
                 result.Success = false;
@@ -180,7 +182,9 @@ public class DependencyResolver : IDependencyResolver
     }
 
     /// <inheritdoc />
-    public DependencyGraph GetDependencyGraph(Dictionary<string, List<PluginDependency>> plugins)
+    public DependencyGraph GetDependencyGraph(
+        Dictionary<string, List<PluginDependency>> plugins,
+        IReadOnlyDictionary<string, string>? pluginVersionsById = null)
     {
         var graph = new DependencyGraph();
         var nodes = new Dictionary<string, GraphNode>();
@@ -188,11 +192,19 @@ public class DependencyResolver : IDependencyResolver
         // Create nodes
         foreach (var pluginId in plugins.Keys)
         {
+            var version = "?";
+            if (pluginVersionsById is not null
+                && pluginVersionsById.TryGetValue(pluginId, out var v)
+                && !string.IsNullOrWhiteSpace(v))
+            {
+                version = v;
+            }
+
             var node = new GraphNode
             {
                 Id = pluginId,
                 Name = pluginId, // Could be enhanced to get actual plugin name
-                Version = "1.0.0" // Could be enhanced to get actual version
+                Version = version
             };
             nodes[pluginId] = node;
             graph.Nodes.Add(node);
@@ -321,33 +333,31 @@ public class DependencyResolver : IDependencyResolver
         recursionStack.Remove(current);
     }
 
-    private List<VersionConflict> ValidateVersionConstraints(Dictionary<string, List<PluginDependency>> plugins)
+    private List<VersionConflict> ValidateVersionConstraints(
+        Dictionary<string, List<PluginDependency>> plugins,
+        IReadOnlyDictionary<string, string>? pluginVersionsById)
     {
         var conflicts = new List<VersionConflict>();
-        var pluginVersions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        // Collect all plugin versions (in real implementation, this would come from plugin metadata)
-        foreach (var pluginId in plugins.Keys)
-        {
-            pluginVersions[pluginId] = "1.0.0"; // Placeholder - should get actual version
-        }
+        if (pluginVersionsById is null || pluginVersionsById.Count == 0)
+            return conflicts;
 
         foreach (var (pluginId, dependencies) in plugins)
         {
             foreach (var dependency in dependencies)
             {
-                if (pluginVersions.TryGetValue(dependency.PluginId, out var actualVersion))
+                if (!pluginVersionsById.TryGetValue(dependency.PluginId, out var actualVersion)
+                    || string.IsNullOrWhiteSpace(actualVersion))
+                    continue;
+
+                if (!IsVersionCompatible(actualVersion, dependency.MinVersion, dependency.MaxVersion))
                 {
-                    if (!IsVersionCompatible(actualVersion, dependency.MinVersion, dependency.MaxVersion))
+                    conflicts.Add(new VersionConflict
                     {
-                        conflicts.Add(new VersionConflict
-                        {
-                            PluginId = dependency.PluginId,
-                            ActualVersion = actualVersion,
-                            RequiredVersion = FormatVersionRequirement(dependency.MinVersion, dependency.MaxVersion),
-                            RequiredBy = pluginId
-                        });
-                    }
+                        PluginId = dependency.PluginId,
+                        ActualVersion = actualVersion,
+                        RequiredVersion = FormatVersionRequirement(dependency.MinVersion, dependency.MaxVersion),
+                        RequiredBy = pluginId
+                    });
                 }
             }
         }

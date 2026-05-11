@@ -12,7 +12,6 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
@@ -149,7 +148,7 @@ public partial class StatusWindow
 
         WindowStyle = System.Windows.WindowStyle.None;
         WindowStartupLocation = WindowStartupLocation.Manual;
-        WindowBackdropType = BackgroundType.None;
+        base.WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.None;
         ResizeMode = ResizeMode.NoResize;
         SizeToContent = SizeToContent.WidthAndHeight;
 

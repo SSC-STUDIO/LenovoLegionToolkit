@@ -1,11 +1,11 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Microsoft.Win32;
-using Wpf.Ui.Common;
 using Button = Wpf.Ui.Controls.Button;
 using Orientation = System.Windows.Controls.Orientation;
 
@@ -22,7 +22,7 @@ public class PlaySoundAutomationStepControl : AbstractAutomationStepControl<Play
 
     private readonly Button _openButton = new()
     {
-        Icon = SymbolRegular.Folder20,
+        Icon = SymbolRegular.Folder20.ToSymbolIcon(),
         MinWidth = 34,
         Height = 34,
         Margin = new(8, 0, 0, 0)

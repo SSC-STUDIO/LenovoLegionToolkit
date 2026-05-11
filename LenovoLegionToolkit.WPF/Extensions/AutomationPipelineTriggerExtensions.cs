@@ -1,6 +1,5 @@
 ﻿using System;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
-using Wpf.Ui.Common;
 
 namespace LenovoLegionToolkit.WPF.Extensions;
 

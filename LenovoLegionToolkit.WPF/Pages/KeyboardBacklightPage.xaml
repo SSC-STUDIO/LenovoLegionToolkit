@@ -1,4 +1,4 @@
-<wpfui:UiPage
+<Page
     x:Class="LenovoLegionToolkit.WPF.Pages.KeyboardBacklightPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,10 +8,10 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.KeyboardBacklightPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Initialized="KeyboardBacklightPage_Initialized"
-    Scrollable="True">
+    Initialized="KeyboardBacklightPage_Initialized">
 
-    <StackPanel Margin="0,0,0,0">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="32,0,16,12">
         <TextBlock
                 x:Name="_titleTextBlock"
                 Margin="0,16,0,24"
@@ -20,7 +20,7 @@
                 Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
             <controls:LoadableControl x:Name="_loader">
-                <StackPanel x:Name="_content" Margin="0,0,8,0">
+                <StackPanel x:Name="_content" Margin="0">
                 <TextBlock
                     x:Name="_noKeyboardsText"
                     FontSize="14"
@@ -31,5 +31,6 @@
         </controls:LoadableControl>
 
     </StackPanel>
+    </ScrollViewer>
 
-</wpfui:UiPage>
+</Page>

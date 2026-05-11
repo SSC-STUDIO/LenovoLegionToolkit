@@ -7,16 +7,26 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
 public partial class DeviceInformationWindow
 {
+    private Snackbar _snackBar = null!;
+
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
 
-    public DeviceInformationWindow() => InitializeComponent();
+    public DeviceInformationWindow()
+    {
+        InitializeComponent();
+        _snackBar = new Snackbar(_snackBarPresenter)
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
+            Timeout = TimeSpan.FromSeconds(1)
+        };
+    }
 
     private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync();
 
@@ -47,9 +57,10 @@ public partial class DeviceInformationWindow
             _biosLabel.Text = "-";
 
             // Show error notification
-            _snackBar.Icon = SymbolRegular.ErrorCircle24;
+            _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
             _snackBar.Appearance = ControlAppearance.Danger;
-            await _snackBar.ShowAsync(
+            await SnackbarHelper.ShowSnackbarAsync(
+                _snackBar,
                 Resource.CompatibilityCheckErrorWindow_Title,
                 Resource.CompatibilityCheckError_Message);
 
@@ -97,7 +108,10 @@ public partial class DeviceInformationWindow
         try
         {
             System.Windows.Clipboard.SetText(str);
-            await _snackBar.ShowAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
+            await SnackbarHelper.ShowSnackbarAsync(
+                _snackBar,
+                Resource.CopiedToClipboard_Title,
+                string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
         }
         catch (Exception ex)
         {

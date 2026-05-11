@@ -23,7 +23,6 @@
 		<PackageReference Include="System.Management" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" />
 		<PackageReference Include="NeoSmart.AsyncLock" />
-		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="NvAPIWrapper.Net" />
 		<PackageReference Include="Octokit" />
 		<PackageReference Include="Serilog" />

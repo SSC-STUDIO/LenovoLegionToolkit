@@ -8,14 +8,13 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using Theme = Wpf.Ui.Appearance.Theme;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
     /// <summary>
     /// Window to notify users about a previous crash and allow them to view or delete the crash report.
     /// </summary>
-    public partial class CrashReportNotificationWindow : UiWindow
+    public partial class CrashReportNotificationWindow : FluentWindow
     {
         private readonly string _crashReportPath;
         private readonly CrashReport? _crashReport;
@@ -81,13 +80,13 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             {
                 // Try to detect system theme
                 var isDarkMode = Lib.System.SystemTheme.IsDarkMode();
-                var themeType = isDarkMode ? ThemeType.Dark : ThemeType.Light;
+                var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Applying theme to CrashReportNotificationWindow: {themeType}");
 
                 var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
-                Theme.Apply(themeType, backgroundType, false);
+                ApplicationThemeManager.Apply(themeType, backgroundType, false);
             }
             catch (Exception ex)
             {
@@ -95,7 +94,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
                     Log.Instance.Trace($"Failed to detect system theme for crash notification", ex);
 
                 // Fallback to light theme
-                Theme.Apply(ThemeType.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
+                ApplicationThemeManager.Apply(ApplicationTheme.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
             }
         }
 

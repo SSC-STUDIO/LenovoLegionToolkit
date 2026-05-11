@@ -7,6 +7,7 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Windows;
+using Wpf.Ui.Appearance;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
@@ -44,7 +45,7 @@ public class ThemeManager
             case AccentColorSource.System:
                 try
                 {
-                    return SystemTheme.GetAccentColor();
+                    return LenovoLegionToolkit.Lib.System.SystemTheme.GetAccentColor();
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +72,7 @@ public class ThemeManager
             case Theme.System:
                 try
                 {
-                    return SystemTheme.IsDarkMode();
+                    return LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
                 }
                 catch (Exception ex)
                 {
@@ -88,9 +89,9 @@ public class ThemeManager
     private void SetTheme()
     {
         var isDark = IsDarkMode();
-        var theme = isDark ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
+        var theme = isDark ? ApplicationTheme.Dark : ApplicationTheme.Light;
         var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType(_settings);
-        Wpf.Ui.Appearance.Theme.Apply(theme, backgroundType, false);
+        ApplicationThemeManager.Apply(theme, backgroundType, false);
 
         Application.Current.Resources["SnackbarShadowColor"] = isDark ? System.Windows.Media.Colors.Black : System.Windows.Media.Color.FromArgb(64, 0, 0, 0);
         
@@ -117,11 +118,8 @@ public class ThemeManager
     {
         var accentColor = GetAccentColor().ToColor();
         
-        // Apply accent color with improved color contrast
-        Wpf.Ui.Appearance.Accent.Apply(systemAccent: accentColor,
-            primaryAccent: accentColor,
-            secondaryAccent: accentColor,
-            tertiaryAccent: accentColor);
+        // Apply accent color with improved color contrast (WPF-UI 4: ApplicationAccentColorManager)
+        ApplicationAccentColorManager.Apply(accentColor, accentColor, accentColor, accentColor);
         
         // Ensure proper color contrast for accessibility
         EnsureColorContrast();

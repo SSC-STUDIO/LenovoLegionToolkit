@@ -20,7 +20,6 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
 using PluginManifest = LenovoLegionToolkit.Lib.Plugins.PluginManifest;
@@ -43,6 +42,7 @@ private string _currentSearchText = string.Empty;
     private ObservableCollection<PluginViewModel> _pluginViewModels = new();
     private string _currentSelectedPluginId = string.Empty;
     private bool _isRefreshing = false;
+    private bool _hasLoadedOnlinePlugins = false;
     private string _currentDownloadingPluginId = string.Empty;
     private readonly SemaphoreSlim _onlinePluginInstallGate = new(1, 1);
 
@@ -125,12 +125,12 @@ private string _currentSearchText = string.Empty;
         if (refreshButton != null)
         {
             refreshButton.IsEnabled = false;
-            refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowSync24;
+            refreshButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowSync24 };
         }
 
         try
         {
-            await FetchOnlinePluginsAsync();
+            await FetchOnlinePluginsAsync(forceRefresh: true);
         }
         finally
         {
@@ -138,7 +138,7 @@ private string _currentSearchText = string.Empty;
             if (refreshButton != null)
             {
                 refreshButton.IsEnabled = true;
-                refreshButton.Icon = Wpf.Ui.Common.SymbolRegular.ArrowClockwise24;
+                refreshButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowClockwise24 };
             }
         }
     }
@@ -451,15 +451,25 @@ private string _currentSearchText = string.Empty;
     //     }
     // }
 
-    private async Task FetchOnlinePluginsAsync()
+    private async Task FetchOnlinePluginsAsync(bool forceRefresh = false)
     {
         try
         {
-            SetLoadingState(true);
-            
+            if (!forceRefresh && _pluginRepositoryService.TryGetCachedAvailablePlugins(out var cachedPlugins))
+            {
+                _onlinePlugins = cachedPlugins;
+                _hasLoadedOnlinePlugins = true;
+                UpdateAllPluginsUI();
+                UpdateBulkActionButtonsVisibility();
+                return;
+            }
+
+            SetLoadingState(!_hasLoadedOnlinePlugins || forceRefresh);
+             
             // Fetch online plugins
             _availableUpdates.Clear();
-            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync();
+            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh);
+            _hasLoadedOnlinePlugins = true;
             
             if (Lib.Utils.Log.Instance.IsTraceEnabled)
             {
@@ -746,6 +756,23 @@ private string _currentSearchText = string.Empty;
     private void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
         LocalizationHelper.SetPluginResourceCultures();
+
+        if (_hasLoadedOnlinePlugins)
+        {
+            SetLoadingState(false);
+            UpdateAllPluginsUI();
+            return;
+        }
+
+        if (_pluginRepositoryService.TryGetCachedAvailablePlugins(out var cachedPlugins))
+        {
+            _onlinePlugins = cachedPlugins;
+            _hasLoadedOnlinePlugins = true;
+            SetLoadingState(false);
+            UpdateAllPluginsUI();
+            return;
+        }
+
         SetLoadingState(true);
         
         // Auto-fetch online plugins in background
@@ -1168,13 +1195,11 @@ private string _currentSearchText = string.Empty;
     /// <summary>
     /// Convert string to SymbolRegular enum value
     /// </summary>
-    private Wpf.Ui.Common.SymbolRegular GetSymbolFromString(string symbolString)
+    private SymbolRegular GetSymbolFromString(string symbolString)
     {
-        if (Enum.TryParse<Wpf.Ui.Common.SymbolRegular>(symbolString, out var symbol))
-        {
+        if (Enum.TryParse<SymbolRegular>(symbolString, out var symbol))
             return symbol;
-        }
-        return Wpf.Ui.Common.SymbolRegular.Apps24;
+        return SymbolRegular.Apps24;
     }
 
     private readonly struct PluginUiCapabilities
@@ -1866,12 +1891,12 @@ private string _currentSearchText = string.Empty;
         if (mainWindow == null)
             return false;
 
-        var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
-        if (navigationStore == null)
+        var navigationView = mainWindow.FindName("_navigationView") as NavigationView;
+        if (navigationView == null)
             return false;
 
         WindowsOptimizationPage.RequestPluginCategoryFocus(pluginId);
-        navigationStore.Navigate("windowsOptimization");
+        navigationView.Navigate("windowsOptimization", null);
         return true;
     }
 
@@ -1883,11 +1908,11 @@ private string _currentSearchText = string.Empty;
         if (mainWindow == null)
             return;
 
-        var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
-        if (navigationStore?.Current?.PageTag == "pluginExtensions")
+        var navigationView = mainWindow.FindName("_navigationView") as NavigationView;
+        if (navigationView?.SelectedItem is NavigationViewItem { TargetPageTag: "pluginExtensions" })
             return;
 
-        navigationStore?.Navigate("pluginExtensions");
+        navigationView?.Navigate("pluginExtensions", null);
     }
 
     private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)
@@ -1957,14 +1982,29 @@ private string _currentSearchText = string.Empty;
 
     private async void BulkImportButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_bulkImportButton != null && !_bulkImportButton.IsEnabled)
+            return;
+
         try
         {
             var zipFilePaths = ResolveBulkImportZipFilePaths();
             if (zipFilePaths.Count > 0)
             {
-                SnackbarHelper.Show(Resource.PluginExtensionsPage_ImportProgress, Resource.PluginExtensionsPage_ImportProgress, SnackbarType.Info);
+                if (_bulkImportButton != null)
+                {
+                    _bulkImportButton.IsEnabled = false;
+                    _bulkImportButton.Content = Resource.PluginExtensionsPage_ImportProgress;
+                    _bulkImportButton.Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowSync24 };
+                }
+
+                var importProgressMessage = T("PluginExtensionsPage_ImportProgressMessage", "Processing {0}...");
+                SnackbarHelper.Show(
+                    Resource.PluginExtensionsPage_ImportProgress,
+                    string.Format(Resource.Culture ?? CultureInfo.CurrentUICulture, importProgressMessage, zipFilePaths.Count),
+                    SnackbarType.Info);
 
                 int importedCount = 0;
+                int failedCount = 0;
                 foreach (var zipFilePath in zipFilePaths)
                 {
                     try
@@ -1975,13 +2015,22 @@ private string _currentSearchText = string.Empty;
                         {
                             importedCount++;
                         }
+                        else
+                        {
+                            failedCount++;
+                        }
                     }
                     catch (Exception ex)
                     {
+                        failedCount++;
                         Lib.Utils.Log.Instance.Trace($"Error importing plugin from {zipFilePath}: {ex.Message}", ex);
 
                         SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
-                            string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, Path.GetFileName(zipFilePath), ex.Message), SnackbarType.Error);
+                            string.Format(
+                                Resource.Culture ?? CultureInfo.CurrentUICulture,
+                                T("PluginExtensionsPage_BulkImportFailedMessage", "Failed to import plugins: {0}"),
+                                $"{Path.GetFileName(zipFilePath)}: {ex.Message}"),
+                            SnackbarType.Error);
                     }
                 }
 
@@ -1996,8 +2045,27 @@ private string _currentSearchText = string.Empty;
                 // Show success message
                 if (importedCount > 0)
                 {
-                    SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportSuccess,
-                        string.Format(Resource.PluginExtensionsPage_BulkImportSuccessMessage, importedCount), SnackbarType.Success);
+                    SnackbarHelper.Show(
+                        string.Format(
+                            Resource.Culture ?? CultureInfo.CurrentUICulture,
+                            Resource.PluginExtensionsPage_BulkImportSuccess,
+                            importedCount),
+                        string.Format(
+                            Resource.Culture ?? CultureInfo.CurrentUICulture,
+                            Resource.PluginExtensionsPage_BulkImportSuccessMessage,
+                            importedCount),
+                        failedCount > 0 ? SnackbarType.Warning : SnackbarType.Success);
+                }
+
+                if (failedCount > 0 && importedCount == 0)
+                {
+                    SnackbarHelper.Show(
+                        Resource.PluginExtensionsPage_BulkImportFailed,
+                        string.Format(
+                            Resource.Culture ?? CultureInfo.CurrentUICulture,
+                            T("PluginExtensionsPage_BulkImportFailedMessage", "Failed to import plugins: {0}"),
+                            failedCount),
+                        SnackbarType.Error);
                 }
             }
         }
@@ -2007,10 +2075,19 @@ private string _currentSearchText = string.Empty;
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
                 string.Format(
+                    Resource.Culture ?? CultureInfo.CurrentUICulture,
                     Resource.PluginExtensionsPage_BulkImportFailedMessage,
-                    T("PluginExtensionsPage_UnknownSource", "Unknown"),
                     ex.Message),
                 SnackbarType.Error);
+        }
+        finally
+        {
+            if (_bulkImportButton != null)
+            {
+                _bulkImportButton.IsEnabled = true;
+                _bulkImportButton.Content = Resource.PluginExtensionsPage_ImportFromFiles;
+                _bulkImportButton.Icon = new SymbolIcon { Symbol = SymbolRegular.Open24 };
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-﻿<local:BaseWindow
+<local:BaseWindow
     x:Class="LenovoLegionToolkit.WPF.Windows.Dashboard.GodModeSettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -30,7 +30,7 @@
             CanMaximize="false"
             ShowMaximize="false"
             ShowMinimize="false"
-            UseSnapLayout="false" />
+ />
 
         <Grid
             Grid.Row="0"
@@ -338,13 +338,11 @@
                 Content="{x:Static resources:Resource.SaveAndClose}" />
         </Grid>
 
-        <wpfui:Snackbar
-            x:Name="_snackBar"
-            Grid.Row="1"
-            HorizontalAlignment="Center"
-            CloseButtonEnabled="True"
-            Icon="ErrorCircle24"
-            Timeout="5000" />
+        <Grid x:Name="_snackBarHost" Grid.Row="1">
+            <wpfui:SnackbarPresenter
+                x:Name="_snackBarPresenter"
+                HorizontalAlignment="Center" />
+        </Grid>
 
     </Grid>
 </local:BaseWindow>

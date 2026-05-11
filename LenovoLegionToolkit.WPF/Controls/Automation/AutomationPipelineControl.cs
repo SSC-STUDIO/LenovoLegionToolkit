@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Automation;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using CardExpander = LenovoLegionToolkit.WPF.Controls.Custom.CardExpander;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
@@ -409,7 +409,7 @@ public class AutomationPipelineControl : UserControl
 
         var moveUpMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.ArrowUp24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowUp24 },
             Header = Resource.MoveUp
         };
         if (index > 0)
@@ -420,7 +420,7 @@ public class AutomationPipelineControl : UserControl
 
         var moveDownMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.ArrowDown24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowDown24 },
             Header = Resource.MoveDown
         };
         if (index < maxIndex)

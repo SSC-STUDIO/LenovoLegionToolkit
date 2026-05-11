@@ -11,7 +11,6 @@ using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Extensions;
-using Wpf.Ui.Common;
 
 namespace LenovoLegionToolkit.WPF.Controls;
 
