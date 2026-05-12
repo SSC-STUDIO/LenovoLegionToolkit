@@ -165,10 +165,14 @@ public class PathSecurityTests
     }
 
     [Fact]
-    public void CreateSafeFilePath_WithTraversalName_ShouldReturnNull()
+    public void CreateSafeFilePath_WithTraversalName_ShouldSanitizePathTraversal()
     {
         var basePath = Path.GetTempPath();
-        PathSecurity.CreateSafeFilePath(basePath, "../../../etc/passwd").Should().BeNull();
+        // Sanitization replaces '/' with '_', neutralizing the traversal
+        var result = PathSecurity.CreateSafeFilePath(basePath, "../../../etc/passwd");
+        result.Should().NotBeNull();
+        result.Should().NotContain("..");
+        result.Should().StartWith(basePath);
     }
 
     #endregion

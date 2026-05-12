@@ -63,7 +63,8 @@ public class StreamExtensionsTests
         var source = new NonReadableStream();
         using var destination = new MemoryStream();
 
-        var act = async () => await source.CopyToAsync(destination, 4);
+        // Use static invocation to avoid shadowing by Stream.CopyToAsync(Stream, int)
+        var act = async () => await StreamExtensions.CopyToAsync(source, destination, 4);
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
@@ -73,7 +74,7 @@ public class StreamExtensionsTests
         using var source = new MemoryStream(new byte[] { 1, 2, 3 });
         var destination = new NonWritableStream();
 
-        var act = async () => await source.CopyToAsync(destination, 4);
+        var act = async () => await StreamExtensions.CopyToAsync(source, destination, 4);
         await act.Should().ThrowAsync<ArgumentException>();
     }
 

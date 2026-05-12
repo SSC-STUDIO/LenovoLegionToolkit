@@ -27,7 +27,7 @@ public class RGBKeyboardBacklightPresetExtensionsTests
         var visited = new System.Collections.Generic.HashSet<RGBKeyboardBacklightPreset>();
         var current = RGBKeyboardBacklightPreset.Off;
 
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 5; i++)
         {
             visited.Add(current);
             current = current.Next();

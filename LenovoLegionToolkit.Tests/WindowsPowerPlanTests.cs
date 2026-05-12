@@ -7,8 +7,8 @@ namespace LenovoLegionToolkit.Tests;
 [Trait("Category", TestCategories.Unit)]
 public class WindowsPowerPlanTests
 {
-    private static readonly Guid GuidA = new("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-    private static readonly Guid GuidB = new("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    private static readonly Guid GuidA = new("12345678-1234-1234-1234-123456789abc");
+    private static readonly Guid GuidB = new("fedcba98-7654-3210-fedc-ba9876543210");
 
     #region Equality
 

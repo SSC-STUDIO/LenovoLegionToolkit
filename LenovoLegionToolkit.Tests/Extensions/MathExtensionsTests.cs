@@ -19,8 +19,8 @@ public class MathExtensionsTests
     [InlineData(12, 5, 10)]
     [InlineData(13, 5, 15)]
     [InlineData(100, 25, 100)]
-    [InlineData(113, 25, 100)]
-    [InlineData(137, 25, 150)]
+    [InlineData(113, 25, 125)]
+    [InlineData(137, 25, 125)]
     public void RoundNearest_WithVariousInputs_ShouldRoundCorrectly(int value, int factor, int expected)
     {
         MathExtensions.RoundNearest(value, factor).Should().Be(expected);
