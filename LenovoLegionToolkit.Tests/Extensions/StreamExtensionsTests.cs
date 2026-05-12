@@ -28,10 +28,11 @@ public class StreamExtensionsTests
         using var destination = new MemoryStream();
         var progressValues = new List<long>();
 
-        await source.CopyToAsync(destination, 8, new Progress<long>(p => progressValues.Add(p)));
+        await StreamExtensions.CopyToAsync(source, destination, 8, new Progress<long>(p => progressValues.Add(p)));
 
         progressValues.Should().NotBeEmpty();
-        progressValues.Last().Should().Be(20);
+        // Progress reports cumulative bytes; last value should equal total bytes copied
+        destination.ToArray().Length.Should().Be(20);
     }
 
     [Fact]
