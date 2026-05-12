@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Enums;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Serialization;
 using Xunit;
 
