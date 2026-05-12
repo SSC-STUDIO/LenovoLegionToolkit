@@ -88,7 +88,7 @@ public class CompatibilityTests
     {
         var machineInformation = new MachineInformation
         {
-            Vendor = null,
+            Vendor = null!,
             MachineType = "83XX",
             Model = "Legion 5 15ACH6",
             SerialNumber = "TEST",
@@ -119,7 +119,7 @@ public class CompatibilityTests
         {
             Vendor = "LENOVO",
             MachineType = "83XX",
-            Model = null,
+            Model = null!,
             SerialNumber = "TEST",
             SupportedPowerModes = [],
             Features = MachineInformation.FeatureData.Unknown,
@@ -135,7 +135,7 @@ public class CompatibilityTests
     [InlineData("LENOVO")]
     [InlineData("lenovo")]
     [InlineData("Lenovo")]
-    [InlineData("LENOVO")]
+    [InlineData("leNOVO")]
     public void IsSupportedLegionMachine_WithDifferentVendorCase_ShouldReturnTrue(string vendor)
     {
         var machineInformation = CreateMachineInformation("Legion 5 15ACH6", vendor: vendor);

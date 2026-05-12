@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Reflection.Emit;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Extensions;
 using Xunit;
