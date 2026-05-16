@@ -40,6 +40,7 @@ jobs:
         with:
           languages: csharp
           build-mode: manual
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Restore solution
         run: dotnet restore LenovoLegionToolkit.sln
