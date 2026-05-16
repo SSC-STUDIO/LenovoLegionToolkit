@@ -51,7 +51,7 @@ public class WindowsOptimizationServiceTests
         var result = await service.EstimateCleanupSizeAsync(new[] { validActionKey }, CancellationToken.None);
         
         // Assert
-        result.Should().BeGreaterOrEqualTo(0);
+        result.Should().BeGreaterThanOrEqualTo(0);
     }
 
     [Fact]

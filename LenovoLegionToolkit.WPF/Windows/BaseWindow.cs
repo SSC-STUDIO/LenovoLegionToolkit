@@ -12,7 +12,7 @@ namespace LenovoLegionToolkit.WPF.Windows;
 public class BaseWindow : FluentWindow
 {
     private bool _compatibilityMode;
-    private bool _suppressUiWindowCallbacks;
+    private bool _suppressFluentWindowCallbacks;
 
     protected BaseWindow()
     {
@@ -42,18 +42,18 @@ public class BaseWindow : FluentWindow
             var originalExtendsContentIntoTitleBar = ExtendsContentIntoTitleBar;
             var originalWindowBackdropType = WindowBackdropType;
 
-            _suppressUiWindowCallbacks = true;
+            _suppressFluentWindowCallbacks = true;
             ExtendsContentIntoTitleBar = false;
             WindowBackdropType = WindowBackdropType.None;
             WindowStyle = WindowStyle.None;
-            _suppressUiWindowCallbacks = false;
+            _suppressFluentWindowCallbacks = false;
 
             base.OnSourceInitialized(e);
 
-            _suppressUiWindowCallbacks = true;
+            _suppressFluentWindowCallbacks = true;
             ExtendsContentIntoTitleBar = originalExtendsContentIntoTitleBar;
             WindowBackdropType = originalWindowBackdropType;
-            _suppressUiWindowCallbacks = false;
+            _suppressFluentWindowCallbacks = false;
 
             RenderingCompatibilityHelper.ApplyCompatibleWindowChrome(this);
         }
@@ -79,7 +79,7 @@ public class BaseWindow : FluentWindow
     protected override void OnBackdropTypeChanged(WindowBackdropType oldValue, WindowBackdropType newValue)
     {
         var settings = IoCContainer.Resolve<ApplicationSettings>();
-        if (!_suppressUiWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))
+        if (!_suppressFluentWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))
             base.OnBackdropTypeChanged(oldValue, newValue);
 
         RenderingCompatibilityHelper.ApplyOpaqueWindowFallback(this, settings);
@@ -89,7 +89,7 @@ public class BaseWindow : FluentWindow
     protected override void OnExtendsContentIntoTitleBarChanged(bool oldValue, bool newValue)
     {
         var settings = IoCContainer.Resolve<ApplicationSettings>();
-        if (!_suppressUiWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))
+        if (!_suppressFluentWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))
             base.OnExtendsContentIntoTitleBarChanged(oldValue, newValue);
         else
             RenderingCompatibilityHelper.ApplyCompatibleWindowChrome(this);

@@ -379,7 +379,7 @@ public class CMDTests
         var elapsed = DateTime.UtcNow - startTime;
 
         exitCode.Should().Be(0);
-        elapsed.TotalSeconds.Should().BeGreaterOrEqualTo(2);
+        elapsed.TotalSeconds.Should().BeGreaterThanOrEqualTo(2);
     }
 
     #endregion

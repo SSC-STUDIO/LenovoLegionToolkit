@@ -186,7 +186,7 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         WindowStartupLocation = WindowStartupLocation.Manual;
         ResizeMode = ResizeMode.NoResize;
         WindowStyle = WindowStyle.None;
-        base.WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.None;
+        WindowBackdropType = WindowBackdropType.None;
         Background = System.Windows.Media.Brushes.Transparent;
         AllowsTransparency = true;
 

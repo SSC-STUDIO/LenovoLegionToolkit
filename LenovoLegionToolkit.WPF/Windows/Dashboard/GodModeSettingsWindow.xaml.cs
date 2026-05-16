@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,13 +15,12 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Windows.Dashboard
 {
 public partial class GodModeSettingsWindow
 {
-    private Snackbar _snackBar = null!;
-
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
     private readonly GodModeController _godModeController = IoCContainer.Resolve<GodModeController>();
 
@@ -31,14 +30,15 @@ public partial class GodModeSettingsWindow
     private GodModeState? _state;
     private Dictionary<PowerModeState, GodModeDefaults>? _defaults;
     private bool _isRefreshing;
+    private readonly Snackbar _snackBar;
 
     public GodModeSettingsWindow()
     {
         InitializeComponent();
-
         _snackBar = new Snackbar(_snackBarPresenter)
         {
             HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = true,
             Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 },
             Timeout = TimeSpan.FromSeconds(5)
         };
@@ -88,10 +88,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't load settings.", ex);
 
-            await SnackbarHelper.ShowSnackbarAsync(
-                _snackBar,
-                Resource.GodModeSettingsWindow_Error_Load_Title,
-                ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message);
 
             Close();
         }
@@ -157,10 +154,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't apply settings", ex);
 
-            await SnackbarHelper.ShowSnackbarAsync(
-                _snackBar,
-                Resource.GodModeSettingsWindow_Error_Apply_Title,
-                ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
 
             return false;
         }
@@ -435,6 +429,13 @@ public partial class GodModeSettingsWindow
         _fanCurveControl.SetFanTableInfo(defaultFanTableInfo, minimum);
     }
 
+    private async Task ShowSnackBarAsync(string title, string? message)
+    {
+        _snackBar.Title = title;
+        _snackBar.Content = message;
+        await _snackBar.ShowAsync();
+    }
+
     private void LoadButton_Click(object sender, RoutedEventArgs e)
     {
         if (_defaults is null || _defaults.IsEmpty())
@@ -447,7 +448,7 @@ public partial class GodModeSettingsWindow
             .OrderBy(d => d.Key)
             .Select(d =>
             {
-                var menuItem = new System.Windows.Controls.MenuItem { Header = d.Key.GetDisplayName() };
+                var menuItem = new MenuItem { Header = d.Key.GetDisplayName() };
                 menuItem.Click += (_, _) => SetDefaults(d.Value);
                 return menuItem;
             });

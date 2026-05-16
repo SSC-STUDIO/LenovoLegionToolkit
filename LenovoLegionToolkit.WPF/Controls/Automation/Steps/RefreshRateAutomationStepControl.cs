@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -32,3 +33,4 @@ public class RefreshRateAutomationStepControl : AbstractComboBoxAutomationStepCa
             await RefreshAsync();
     });
 }
+

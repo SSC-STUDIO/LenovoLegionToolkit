@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Animation;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -32,7 +30,8 @@ using Microsoft.Xaml.Behaviors.Core;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
 using Wpf.Ui.Controls;
-using UiNavigatedEventArgs = Wpf.Ui.Controls.NavigatedEventArgs;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 #if !DEBUG
 using System.Reflection;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -44,6 +43,10 @@ namespace LenovoLegionToolkit.WPF.Windows
 {
 public partial class MainWindow
 {
+    private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+    private const int WmNchittest = 0x0084;
+    private const int HtClient = 1;
+
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginManager _pluginManager;
     private readonly SpecialKeyListener _specialKeyListener;
@@ -54,14 +57,13 @@ public partial class MainWindow
 
     private TrayHelper? _trayHelper;
     private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
+    private readonly Snackbar _snackbar;
 
     public bool TrayTooltipEnabled { get; set; } = true;
     public bool DisableConflictingSoftwareWarning { get; set; }
     public bool SuppressClosingEventHandler { get; set; }
 
     public Snackbar Snackbar => _snackbar;
-
-    private Snackbar _snackbar = null!;
 
     public MainWindow(
         ApplicationSettings applicationSettings,
@@ -81,20 +83,7 @@ public partial class MainWindow
         _updateChecker = updateChecker;
 
         InitializeComponent();
-
-        _snackbar = new Snackbar(_snackbarPresenter)
-        {
-            MinWidth = 300,
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
-            Effect = new DropShadowEffect
-            {
-                BlurRadius = 15,
-                Direction = 270,
-                Opacity = 0.4,
-                ShadowDepth = 3,
-                Color = Application.Current.Resources["SnackbarShadowColor"] is Color color ? color : Colors.Black
-            }
-        };
+        _snackbar = CreateMainSnackbar(_snackbarPresenter);
 
         Closing += MainWindow_Closing;
         Closed += MainWindow_Closed;
@@ -119,89 +108,115 @@ public partial class MainWindow
 
         Title = _title.Text;
 
-        _navigationView.Navigated += NavigationView_Navigated;
-        RegisterNavigationItemHandlers();
+        // Listen to Frame navigation events to update window title to current page title
+        _rootFrame.Navigated += RootFrame_Navigated;
 
         // Subscribe to plugin state changed events
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
     }
 
-    private void NavigationView_Navigated(NavigationView sender, UiNavigatedEventArgs e)
+    private static Snackbar CreateMainSnackbar(SnackbarPresenter presenter)
     {
+        return new Snackbar(presenter)
+        {
+            MinWidth = 300,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = false,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
+            Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 15,
+                Direction = 270,
+                Opacity = 0.4,
+                ShadowDepth = 3,
+                Color = (Color)Application.Current.FindResource("SnackbarShadowColor")
+            },
+            Content = CreateSnackbarContent()
+        };
+    }
+
+    private static StackPanel CreateSnackbarContent()
+    {
+        var snackbarTitle = new TextBlock
+        {
+            Name = "_snackbarTitle",
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 16,
+            FontWeight = FontWeights.Medium,
+            Foreground = (Brush)Application.Current.FindResource("TextFillColorPrimaryBrush"),
+            TextWrapping = TextWrapping.WrapWithOverflow
+        };
+
+        var snackbarMessage = new TextBlock
+        {
+            Name = "_snackbarMessage",
+            Margin = new Thickness(0, 6, 0, 0),
+            FontSize = 14,
+            Foreground = (Brush)Application.Current.FindResource("TextFillColorSecondaryBrush"),
+            TextWrapping = TextWrapping.WrapWithOverflow
+        };
+
+        var panel = new StackPanel
+        {
+            Margin = new Thickness(4),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        panel.Children.Add(snackbarTitle);
+        panel.Children.Add(snackbarMessage);
+        return panel;
+    }
+
+    private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+    {
+        // When page navigation is complete, update window title to: App Name - Page Title
         var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", "Lenovo Legion Toolkit", Resource.Culture);
 
-        if (e.Page is System.Windows.Controls.Page page && !string.IsNullOrWhiteSpace(page.Title))
+        if (e.Content is Page page && !string.IsNullOrWhiteSpace(page.Title))
         {
             Title = $"{appName} - {page.Title}";
             _title.Text = $"{appName} - {page.Title}";
         }
         else
         {
+            // If there is no page title, only show the app name
             Title = appName;
             _title.Text = appName;
         }
-
-        if (e.Page is FrameworkElement element)
-            PlayPageTransition(element);
     }
 
-    private static void PlayPageTransition(FrameworkElement element)
+    private void MainWindow_SourceInitialized(object? sender, EventArgs e)
     {
-        if (Compatibility.IsSmokeLegionSimulationEnabled)
-            return;
+        RestoreSize();
 
-        element.Opacity = 0;
-        element.RenderTransform = new TranslateTransform(0, 8);
-
-        var duration = Application.Current.Resources["AnimationDurationMedium"] is Duration resourceDuration
-            ? resourceDuration
-            : new Duration(TimeSpan.FromMilliseconds(200));
-        var easing = Application.Current.Resources["AnimationEasingCubicOut"] as IEasingFunction;
-
-        var storyboard = new Storyboard();
-
-        var opacityAnimation = new DoubleAnimation(0, 1, duration) { EasingFunction = easing };
-        Storyboard.SetTarget(opacityAnimation, element);
-        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
-
-        var translateAnimation = new DoubleAnimation(8, 0, duration) { EasingFunction = easing };
-        Storyboard.SetTarget(translateAnimation, element);
-        Storyboard.SetTargetProperty(translateAnimation, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
-
-        storyboard.Children.Add(opacityAnimation);
-        storyboard.Children.Add(translateAnimation);
-        storyboard.Begin();
+        if (PresentationSource.FromVisual(this) is HwndSource source)
+            source.AddHook(MainWindowHwndSourceHook);
     }
-
-    private void MainWindow_SourceInitialized(object? sender, EventArgs e) => RestoreSize();
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         _contentGrid.Visibility = Visibility.Hidden;
 
-        var mi = await Compatibility.GetMachineInformationAsync();
-        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
-        if (!isSupportedLegionMachine)
+        if (!isSupportedLegionMachine && !ShouldKeepUnsupportedNavigationItems())
         {
             // Keep dashboard visible in compatibility mode for basic functionality
-            // _navigationView.MenuItems.Remove(_dashboardItem);
-            _navigationView.MenuItems.Remove(_automationItem);
-            _navigationView.MenuItems.Remove(_keyboardItem);
-            _navigationView.MenuItems.Remove(_macroItem);
+            // _navigationStore.Items.Remove(_dashboardItem);
+            _navigationStore.Items.Remove(_automationItem);
+            _navigationStore.Items.Remove(_keyboardItem);
+            _navigationStore.Items.Remove(_macroItem);
 
             // Navigate to dashboard instead of windowsOptimization for better UX
-            _navigationView.Navigate("dashboard", null);
+            _navigationStore.Navigate("dashboard");
         }
-        else if (!await KeyboardBacklightPage.IsSupportedAsync())
+        else if (!await KeyboardBacklightPage.IsSupportedAsync() && !ShouldKeepUnsupportedNavigationItems())
         {
-            _navigationView.MenuItems.Remove(_keyboardItem);
+            _navigationStore.Items.Remove(_keyboardItem);
         }
 
+        // Control WindowsOptimization navigation item visibility based on extension settings
         UpdateNavigationVisibility();
-
-        if (isSupportedLegionMachine)
-            _navigationView.Navigate("dashboard", null);
 
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
 
@@ -217,25 +232,23 @@ public partial class MainWindow
         UpdateIndicators();
         _ = CheckForUpdates();
 
-        InputBindings.Add(new KeyBinding(new ActionCommand(_navigationView.NavigateToNext), Key.Tab, ModifierKeys.Control));
-        InputBindings.Add(new KeyBinding(new ActionCommand(_navigationView.NavigateToPrevious), Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
+        InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
+        InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToPrevious), Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
 
         var key = (int)Key.D1;
-        foreach (var item in _navigationView.MenuItems.OfType<NavigationItem>())
+        foreach (var item in _navigationStore.Items.OfType<NavigationItem>())
         {
-            if (item.TargetPageTag != null)
-                InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationView.Navigate(item.TargetPageTag, null)), (Key)key++, ModifierKeys.Control));
+            if (item.PageTag != null)
+                InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
         }
         
         // Set the plugin extensions navigation item text
         if (_pluginExtensionsItem != null)
         {
-            SetNavigationDisplayContent(_pluginExtensionsItem, LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", Resource.Culture));
+            _pluginExtensionsItem.Content = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", Resource.Culture);
         }
 
-        UpdateNavigationDisplayContent();
-
-        var trayHelper = new TrayHelper(_navigationView, BringToForeground, TrayTooltipEnabled);
+        var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
         await trayHelper.InitializeAsync();
         trayHelper.MakeVisible();
         _trayHelper = trayHelper;
@@ -308,8 +321,9 @@ public partial class MainWindow
         SourceInitialized -= MainWindow_SourceInitialized;
         StateChanged -= MainWindow_StateChanged;
 
-        _navigationView.Navigated -= NavigationView_Navigated;
-        UnregisterNavigationItemHandlers();
+        // Unsubscribe from frame navigation events
+        if (_rootFrame is not null)
+            _rootFrame.Navigated -= RootFrame_Navigated;
 
         // Unsubscribe from plugin manager events
         if (_pluginManager is not null)
@@ -345,23 +359,45 @@ public partial class MainWindow
         _ = CheckForUpdates();
     }
 
-    private void OpenLogIndicator_Click(object sender, MouseButtonEventArgs e) => OpenLog();
+    private void OpenLogIndicator_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        OpenLog();
+    }
+
+    private void OpenLogIndicator_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        OpenLog();
+    }
 
     private void OpenLogIndicator_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key is not Key.Enter and not Key.Space)
             return;
 
+        e.Handled = true;
         OpenLog();
     }
 
-    private void DeviceInfoIndicator_Click(object sender, MouseButtonEventArgs e) => ShowDeviceInfoWindow();
+    private void DeviceInfoIndicator_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        ShowDeviceInfoWindow();
+    }
+
+    private void DeviceInfoIndicator_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowDeviceInfoWindow();
+    }
 
     private void DeviceInfoIndicator_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key is not Key.Enter and not Key.Space)
             return;
 
+        e.Handled = true;
         ShowDeviceInfoWindow();
     }
 
@@ -379,8 +415,8 @@ public partial class MainWindow
     {
         try
         {
-            var mi = await Compatibility.GetMachineInformationAsync();
-            _deviceInfoIndicator.Content = mi.Model;
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            _deviceInfoIndicatorText.Text = mi.Model;
             _deviceInfoIndicator.Visibility = Visibility.Visible;
         }
         catch (Exception ex)
@@ -545,6 +581,42 @@ public partial class MainWindow
         window.ShowDialog();
     }
 
+    private IntPtr MainWindowHwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg != WmNchittest)
+            return IntPtr.Zero;
+
+        var screenPoint = GetScreenPointFromLParam(lParam);
+        if (IsScreenPointOverElement(_openLogIndicator, screenPoint)
+            || IsScreenPointOverElement(_deviceInfoIndicator, screenPoint))
+        {
+            handled = true;
+            return new IntPtr(HtClient);
+        }
+
+        return IntPtr.Zero;
+    }
+
+    private static Point GetScreenPointFromLParam(IntPtr lParam)
+    {
+        var value = lParam.ToInt64();
+        return new Point((short)(value & 0xffff), (short)((value >> 16) & 0xffff));
+    }
+
+    private bool IsScreenPointOverElement(FrameworkElement element, Point screenPoint)
+    {
+        if (!element.IsVisible || !element.IsHitTestVisible || element.ActualWidth <= 0 || element.ActualHeight <= 0)
+            return false;
+
+        var topLeft = element.PointToScreen(new Point(0, 0));
+        var bottomRight = element.PointToScreen(new Point(element.ActualWidth, element.ActualHeight));
+
+        return screenPoint.X >= topLeft.X
+               && screenPoint.X <= bottomRight.X
+               && screenPoint.Y >= topLeft.Y
+               && screenPoint.Y <= bottomRight.Y;
+    }
+
     public void ShowUpdateWindow()
     {
         var window = new UpdateWindow { Owner = this };
@@ -571,97 +643,11 @@ public partial class MainWindow
         UpdatePluginExtensionsNavigationVisibility();
     }
 
-    private void UpdateNavigationDisplayContent()
+    private static bool ShouldKeepUnsupportedNavigationItems()
     {
-        foreach (var item in _navigationView.MenuItems.OfType<NavigationItem>()
-                     .Concat(_navigationView.FooterMenuItems.OfType<NavigationItem>()))
-        {
-            var text = AutomationProperties.GetName(item);
-            if (string.IsNullOrWhiteSpace(text))
-                text = item.Content?.ToString();
-
-            SetNavigationDisplayContent(item, text);
-        }
-    }
-
-    private void RegisterNavigationItemHandlers()
-    {
-        foreach (var item in _navigationView.MenuItems.OfType<NavigationItem>()
-                     .Concat(_navigationView.FooterMenuItems.OfType<NavigationItem>()))
-        {
-            item.Invoked -= NavigationItem_Invoked;
-            item.Invoked += NavigationItem_Invoked;
-        }
-    }
-
-    private void UnregisterNavigationItemHandlers()
-    {
-        foreach (var item in _navigationView.MenuItems.OfType<NavigationItem>()
-                     .Concat(_navigationView.FooterMenuItems.OfType<NavigationItem>()))
-        {
-            item.Invoked -= NavigationItem_Invoked;
-        }
-    }
-
-    private void NavigationItem_Invoked(object? sender, EventArgs e)
-    {
-        if (sender is not NavigationItem { TargetPageTag: { } tag } item)
-            return;
-
-        foreach (var navigationItem in _navigationView.MenuItems.OfType<NavigationItem>()
-                     .Concat(_navigationView.FooterMenuItems.OfType<NavigationItem>()))
-        {
-            navigationItem.IsActive = ReferenceEquals(navigationItem, item);
-        }
-
-        _navigationView.Navigate(tag, null);
-    }
-
-    private static void SetNavigationDisplayContent(NavigationItem item, string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return;
-
-        AutomationProperties.SetName(item, text);
-        item.ToolTip ??= text;
-
-        var displayText = FormatNavigationDisplayText(text);
-        item.DisplayContent = displayText;
-        item.SetCurrentValue(ContentControl.ContentProperty, displayText);
-    }
-
-    private static string FormatNavigationDisplayText(string text)
-    {
-        var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length < 2)
-            return text;
-
-        if (parts.Length == 2)
-            return parts[0] + "\n" + parts[1];
-
-        var lineBreakIndex = GetBestNavigationTextLineBreak(parts);
-        return string.Join(' ', parts.Take(lineBreakIndex)) + "\n" + string.Join(' ', parts.Skip(lineBreakIndex));
-    }
-
-    private static int GetBestNavigationTextLineBreak(string[] parts)
-    {
-        var bestIndex = 1;
-        var bestDelta = int.MaxValue;
-
-        for (var i = 1; i < parts.Length; i++)
-        {
-            var firstLength = string.Join(' ', parts.Take(i)).Length;
-            var secondLength = string.Join(' ', parts.Skip(i)).Length;
-            var delta = Math.Abs(firstLength - secondLength);
-
-            if (delta < bestDelta)
-            {
-                bestIndex = i;
-                bestDelta = delta;
-            }
-        }
-
-        return bestIndex;
+        var value = Environment.GetEnvironmentVariable(KeepUnsupportedNavigationItemsEnvironmentVariable);
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()
@@ -724,20 +710,20 @@ public partial class MainWindow
             return;
 
         // Windows optimization interface is now the default interface, ensure it's in the navigation items list
-        var isInItems = _navigationView.MenuItems.Contains(_windowsOptimizationItem);
+        var isInItems = _navigationStore.Items.Contains(_windowsOptimizationItem);
         
         if (!isInItems)
         {
             // Find the position of the Macro navigation item and insert after it
-            var macroItem = _navigationView.MenuItems.OfType<NavigationItem>().FirstOrDefault(item => item.TargetPageTag == "macro");
+            var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
             if (macroItem != null)
             {
-                var macroIndex = _navigationView.MenuItems.IndexOf(macroItem);
-                _navigationView.MenuItems.Insert(macroIndex + 1, _windowsOptimizationItem);
+                var macroIndex = _navigationStore.Items.IndexOf(macroItem);
+                _navigationStore.Items.Insert(macroIndex + 1, _windowsOptimizationItem);
             }
             else
             {
-                _navigationView.MenuItems.Add(_windowsOptimizationItem);
+                _navigationStore.Items.Add(_windowsOptimizationItem);
             }
         }
         
@@ -798,7 +784,7 @@ public partial class MainWindow
             {
                 if (_pluginNavigationItems.TryGetValue(pluginId, out var navItem))
                 {
-                    _navigationView.MenuItems.Remove(navItem);
+                    _navigationStore.Items.Remove(navItem);
                     _pluginNavigationItems.Remove(pluginId);
                     if (Log.Instance.IsTraceEnabled)
                     {
@@ -824,11 +810,11 @@ public partial class MainWindow
                     // Create new navigation item for this plugin with icon
                     var navItem = new NavigationItem
                     {
-                        TargetPageTag = $"plugin:{plugin.Id}",
-                        TargetPageType = typeof(PluginPageWrapper),
+                        Content = pluginDisplayName,
+                        PageTag = $"plugin:{plugin.Id}",
+                        PageType = typeof(PluginPageWrapper),
                         Tag = pluginMetadata // Store metadata in Tag for later use
                     };
-                    SetNavigationDisplayContent(navItem, pluginDisplayName);
                     
                     // Set icon from plugin's Icon property
                     if (!string.IsNullOrWhiteSpace(plugin.Icon))
@@ -846,7 +832,6 @@ public partial class MainWindow
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
                     var pluginId = plugin.Id;
-                    navItem.Invoked += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.Click += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.PreviewMouseLeftButtonUp += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.KeyDown += (_, e) =>
@@ -860,27 +845,27 @@ public partial class MainWindow
 
                     // Find the position to insert (after windows optimization item, before plugin extensions item)
                     var insertIndex = -1;
-                    if (_windowsOptimizationItem != null && _navigationView.MenuItems.Contains(_windowsOptimizationItem))
+                    if (_windowsOptimizationItem != null && _navigationStore.Items.Contains(_windowsOptimizationItem))
                     {
-                        insertIndex = _navigationView.MenuItems.IndexOf(_windowsOptimizationItem);
+                        insertIndex = _navigationStore.Items.IndexOf(_windowsOptimizationItem);
                     }
                     else
                     {
-                        var macroItem = _navigationView.MenuItems.OfType<NavigationItem>().FirstOrDefault(item => item.TargetPageTag == "macro");
+                        var macroItem = _navigationStore.Items.OfType<NavigationItem>().FirstOrDefault(item => item.PageTag == "macro");
                         if (macroItem != null)
                         {
-                            insertIndex = _navigationView.MenuItems.IndexOf(macroItem);
+                            insertIndex = _navigationStore.Items.IndexOf(macroItem);
                         }
                     }
 
                     // Insert the navigation item
                     if (insertIndex >= 0)
                     {
-                        _navigationView.MenuItems.Insert(insertIndex + 1, navItem);
+                        _navigationStore.Items.Insert(insertIndex + 1, navItem);
                     }
                     else
                     {
-                        _navigationView.MenuItems.Add(navItem);
+                        _navigationStore.Items.Add(navItem);
                     }
 
                     _pluginNavigationItems[plugin.Id] = navItem;
@@ -922,13 +907,20 @@ public partial class MainWindow
             PluginPageWrapper.RegisterPluginPageTag(pageTag, pluginId);
             UpdateInstalledPluginsNavigationItems();
 
-            foreach (var item in _navigationView.MenuItems.OfType<NavigationItem>()
-                         .Concat(_navigationView.FooterMenuItems.OfType<NavigationItem>()))
+            foreach (var item in _navigationStore.Items.OfType<NavigationItem>()
+                         .Concat(_navigationStore.Footer.OfType<NavigationItem>()))
             {
-                item.IsActive = string.Equals(item.TargetPageTag, pageTag, StringComparison.OrdinalIgnoreCase);
+                item.IsActive = string.Equals(item.PageTag, pageTag, StringComparison.OrdinalIgnoreCase);
             }
 
-            _navigationView.Navigate(pageTag, null);
+            var plugin = _pluginManager.GetRegisteredPlugins()
+                .FirstOrDefault(p => string.Equals(p.Id, pluginId, StringComparison.OrdinalIgnoreCase));
+            var page = new PluginPageWrapper(pluginId)
+            {
+                Title = plugin?.Name ?? pluginId
+            };
+
+            _rootFrame.Navigate(page);
             return true;
         }
         catch (Exception ex)

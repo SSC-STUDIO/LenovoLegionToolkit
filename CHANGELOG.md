@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed / 修复
 - 挪威语 `Resource.no.resx` 中 `CopiedToClipboard_Message_WithParam` 补回 `{0}` 占位符，避免格式化参数丢失 / Restored the `{0}` placeholder in Norwegian `CopiedToClipboard_Message_WithParam` so clipboard notifications preserve the formatted argument
 - 中文界面中的传感器频率单位改为标准 `GHz` 缩写 / Changed the sensor frequency unit in Chinese UI to the standard `GHz` abbreviation
+- 修复 WPF-UI 4 迁移后的主窗口顶部 `Log`/设备信息按钮位置、交互和 hover 对比度，启动语言选择窗口透明背景、About 页小窗口滚动、插件扩展统计卡和深色主题文字对比回归 / Fixed WPF-UI 4 migration regressions in title-bar `Log`/device button placement, interaction, and hover contrast, startup language-selector transparency, About-page small-window scrolling, Plugin Extensions summary cards, and dark-theme text contrast
 
 ### Improved / 改进
+- 升级控制台页首次加载为贴近最终布局的骨架扫光动画，并为 CLI 等待主程序响应时增加不污染脚本输出的控制台加载动画 / Upgraded the Dashboard first-load state to a layout-matching shimmer skeleton and added a CLI loading animation while waiting for the main app response without polluting scripted output
 - 应用设置、自动化管道与 CLI IPC 的 JSON 序列化迁移至 `System.Text.Json`，并保持与既有配置文件格式的兼容策略（含自动化判别符）；Spectrum 配置文件导入导出同样使用该栈 / Migrated JSON serialization for application settings, automation pipelines, and CLI IPC to `System.Text.Json` while preserving compatibility strategies for existing files (including automation discriminators); Spectrum profile import/export uses the same stack
 - 已从基准 `Resource.resx` 回填 WPF 插件扩展等相关字符串键至全部卫星资源文件，`missing` 结构性缺口归零（占位文案为英文，可由 Crowdin 后续本地化）/ Backfilled plugin-extensions-related string keys from neutral `Resource.resx` into all WPF satellite resource files so structural `missing` gaps are cleared (English placeholders pending Crowdin localization)
 - 新增 `Tools/resx_translation_audit.py`，用于对四个资源模块的 `Resource.*.resx` 做缺失键、多余键、.NET 格式占位符一致性与英文残留（疑似未译）统计，便于发布前本地化自检 / Added `Tools/resx_translation_audit.py` to audit satellite `Resource.*.resx` files across the four resource modules for missing/extra keys, .NET placeholder parity, and English-identical strings for pre-release localization checks

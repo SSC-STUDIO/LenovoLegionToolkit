@@ -174,7 +174,7 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Orientation = Orientation.Vertical
         };
 
-        private readonly System.Windows.Controls.TextBlock _notConnected = new()
+        private readonly TextBlock _notConnected = new()
         {
             Margin = new(0, 0, 0, 2),
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -182,23 +182,23 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
             Text = Resource.DeviceAutomationPipelineTriggerTabItemContent_NotConnected
         };
 
-        private readonly System.Windows.Controls.TextBlock _name = new()
+        private readonly TextBlock _name = new()
         {
             Margin = new(0, 0, 0, 4),
             FontWeight = FontWeights.Medium
         };
 
-        private readonly System.Windows.Controls.TextBlock _description = new()
+        private readonly TextBlock _description = new()
         {
             Margin = new(0, 0, 0, 4)
         };
 
-        private readonly System.Windows.Controls.TextBlock _busReportedDeviceDescription = new()
+        private readonly TextBlock _busReportedDeviceDescription = new()
         {
             Margin = new(0, 0, 0, 4)
         };
 
-        private readonly System.Windows.Controls.TextBlock _deviceInstanceId = new()
+        private readonly TextBlock _deviceInstanceId = new()
         {
             Margin = new(0, 4, 0, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,

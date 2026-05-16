@@ -180,7 +180,7 @@ public class LambdaAsyncDisposableTests
 
         // Assert
         disposed.Should().BeTrue();
-        elapsedMs.Should().BeGreaterOrEqualTo(delayMs);
+        elapsedMs.Should().BeGreaterThanOrEqualTo(delayMs);
     }
 
     #endregion

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
@@ -48,23 +49,31 @@ public partial class PluginPageWrapper : Page
 
     private void PluginPageWrapper_Loaded(object sender, RoutedEventArgs e)
     {
-        // 从导航上下文中获取插件ID；NavigationView 通过选中项的 TargetPageTag 标识页面，格式为 "plugin:{pluginId}"
+        // 从导航上下文中获取插件ID
+        // NavigationStore 使用 PageTag 来标识页面，格式为 "plugin:{pluginId}"
         if (_pluginId == null)
         {
+            // 尝试从父窗口的导航存储中获取当前页面的 PageTag
             var mainWindow = Application.Current.MainWindow as LenovoLegionToolkit.WPF.Windows.MainWindow;
             if (mainWindow != null)
             {
-                var navigationView = mainWindow.FindName("_navigationView") as NavigationView;
-                string? pageTag = null;
-                if (navigationView?.SelectedItem is NavigationViewItem nvi)
-                    pageTag = nvi.TargetPageTag;
-
-                if (pageTag != null)
+                var navigationStore = mainWindow.FindName("_navigationStore") as NavigationStore;
+                if (navigationStore?.Current != null)
                 {
-                    if (PageTagToPluginIdMap.TryGetValue(pageTag, out var mappedPluginId))
-                        _pluginId = mappedPluginId;
-                    else if (pageTag.StartsWith("plugin:", StringComparison.Ordinal))
-                        _pluginId = pageTag.Substring("plugin:".Length);
+                    var pageTag = navigationStore.Current.PageTag;
+                    if (pageTag != null)
+                    {
+                        // 首先尝试从映射字典中获取
+                        if (PageTagToPluginIdMap.TryGetValue(pageTag, out var mappedPluginId))
+                        {
+                            _pluginId = mappedPluginId;
+                        }
+                        // 如果 PageTag 格式为 "plugin:{pluginId}"，直接解析
+                        else if (pageTag.StartsWith("plugin:"))
+                        {
+                            _pluginId = pageTag.Substring("plugin:".Length);
+                        }
+                    }
                 }
             }
         }
@@ -104,7 +113,7 @@ public partial class PluginPageWrapper : Page
             }
 
             var pluginPage = ResolvePluginPage(plugin);
-            
+
             // System Optimization and Tools are now default interfaces, not plugins
             // They are accessed directly via NavigationItems in MainWindow.xaml
             // If plugin does not provide IPluginPage, log and return
@@ -120,7 +129,7 @@ public partial class PluginPageWrapper : Page
 
             // 设置页面标题
             Title = pluginPage.PageTitle;
-            
+
             // 设置页面图标和标题显示
             var pluginHeader = this.FindName("_pluginHeader") as StackPanel;
             if (pluginHeader != null)
@@ -129,7 +138,7 @@ public partial class PluginPageWrapper : Page
                 if (!string.IsNullOrWhiteSpace(pluginPage.PageTitle))
                 {
                     pluginHeader.Visibility = Visibility.Visible;
-                    
+
                     // 设置图标
                     var pluginIcon = this.FindName("_pluginIcon") as Wpf.Ui.Controls.SymbolIcon;
                     if (pluginIcon != null && !string.IsNullOrWhiteSpace(pluginPage.PageIcon))
@@ -150,7 +159,7 @@ public partial class PluginPageWrapper : Page
                     {
                         pluginIcon.Visibility = Visibility.Collapsed;
                     }
-                    
+
                     // 设置标题
                     var pluginTitle = this.FindName("_pluginTitle") as TextBlock;
                     if (pluginTitle != null)
@@ -164,10 +173,10 @@ public partial class PluginPageWrapper : Page
                     pluginHeader.Visibility = Visibility.Collapsed;
                 }
             }
-            
+
             // 创建插件页面控件
             var pluginControl = pluginPage.CreatePage();
-            
+
             // Find the Frame control by name
             var contentHost = this.FindName("_pluginContentHost") as ContentControl;
             if (contentHost == null)
@@ -177,7 +186,7 @@ public partial class PluginPageWrapper : Page
                 ShowEmptyState(T("PluginPageWrapper_ContentUnavailable", "Plugin content container is unavailable."));
                 return;
             }
-            
+
             if (pluginControl is UIElement uiElement)
             {
                 contentHost.Content = uiElement;

@@ -1,6 +1,7 @@
-﻿using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -13,3 +14,4 @@ public class BatteryNightChargeAutomationStepControl : AbstractComboBoxAutomatio
         Subtitle = Resource.BatteryNightChargeAutomationStepControl_Message;
     }
 }
+

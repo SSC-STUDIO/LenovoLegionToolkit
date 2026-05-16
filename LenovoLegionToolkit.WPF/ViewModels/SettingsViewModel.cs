@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.ViewModels;
 
@@ -41,8 +42,8 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task InitializeNavigationAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
-        IsSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        IsSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
         var items = new List<NavigationItemViewModel>
         {
@@ -81,3 +82,4 @@ public partial class SettingsViewModel : ObservableObject
 }
 
 public record NavigationItemViewModel(string Key, string Title, SymbolRegular Icon);
+

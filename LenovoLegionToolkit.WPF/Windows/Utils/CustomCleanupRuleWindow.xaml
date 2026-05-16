@@ -25,8 +25,7 @@
             Title="{x:Static resources:Resource.CustomCleanupRuleWindow_Title}"
             CanMaximize="False"
             ShowMaximize="False"
-            ShowMinimize="False"
- />
+            ShowMinimize="False" />
 
         <Grid Grid.Row="1" Margin="16">
             <Grid.RowDefinitions>
@@ -114,4 +113,5 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
+
 

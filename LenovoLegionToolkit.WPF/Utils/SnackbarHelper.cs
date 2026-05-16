@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LenovoLegionToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
 
@@ -10,16 +11,6 @@ namespace LenovoLegionToolkit.WPF.Utils;
 
 public static class SnackbarHelper
 {
-    /// <summary>Shows a snackbar with title and optional body (WPF-UI 4: <see cref="Snackbar.ShowAsync()"/> has no text parameters).</summary>
-    public static async Task ShowSnackbarAsync(Snackbar snackbar, string title, string? message = null)
-    {
-        snackbar.Title = title;
-        snackbar.Content = string.IsNullOrEmpty(message)
-            ? null
-            : new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap };
-        await snackbar.ShowAsync();
-    }
-
     private class SnackbarMessage
     {
         public string Title { get; set; } = string.Empty;
@@ -91,7 +82,8 @@ public static class SnackbarHelper
         var timeout = await timeoutTask;
 
         // Wait for the snackbar to close before showing the next one
-        await Task.Delay(timeout + TimeSpan.FromMilliseconds(500));
+        // Snackbar has a Timeout property, we should wait at least that long
+        await Task.Delay(timeout + TimeSpan.FromMilliseconds(500)); // Add a small buffer for animation
     }
 
     private static void SetupSnackbarAppearance(Snackbar snackBar, string title, string? message, SnackbarType type)
@@ -109,11 +101,11 @@ public static class SnackbarHelper
             SnackbarType.Info => new SymbolIcon { Symbol = SymbolRegular.Info24 },
             _ => new SymbolIcon { Symbol = SymbolRegular.Checkmark24 }
         };
-        snackBar.Timeout = type switch
+        snackBar.Timeout = TimeSpan.FromMilliseconds(type switch
         {
-            SnackbarType.Success => TimeSpan.FromMilliseconds(2000),
-            _ => TimeSpan.FromMilliseconds(Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000))
-        };
+            SnackbarType.Success => 2000,
+            _ => Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000)
+        });
         snackBar.IsCloseButtonEnabled = type switch
         {
             SnackbarType.Success => false,
@@ -121,15 +113,57 @@ public static class SnackbarHelper
         };
     }
 
-    private static void SetTitleAndMessage(FrameworkElement snackBar, string title, string? message)
+    private static void SetTitleAndMessage(Snackbar snackBar, string title, string? message)
     {
-        if (snackBar is not Snackbar snackbar)
-            return;
+        if (FindNamedTextBlock(snackBar.Content, "_snackbarTitle") is { } snackbarTitle)
+            snackbarTitle.Text = title;
 
-        snackbar.Title = title;
-        snackbar.Content = string.IsNullOrEmpty(message)
-            ? null
-            : new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap };
+        if (FindNamedTextBlock(snackBar.Content, "_snackbarMessage") is { } snackbarMessage)
+        {
+            snackbarMessage.Visibility = string.IsNullOrEmpty(message) ? Visibility.Collapsed : Visibility.Visible;
+            snackbarMessage.Text = message;
+        }
+    }
+
+    private static TextBlock? FindNamedTextBlock(object? root, string name) =>
+        root is DependencyObject dependencyObject ? FindNamedTextBlock(dependencyObject, name) : null;
+
+    private static TextBlock? FindNamedTextBlock(DependencyObject root, string name)
+    {
+        if (root is TextBlock textBlock && string.Equals(textBlock.Name, name, StringComparison.Ordinal))
+            return textBlock;
+
+        foreach (var child in EnumerateChildren(root))
+        {
+            var match = FindNamedTextBlock(child, name);
+            if (match is not null)
+                return match;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<DependencyObject> EnumerateChildren(DependencyObject parent)
+    {
+        var visualChildrenCount = 0;
+
+        try
+        {
+            visualChildrenCount = VisualTreeHelper.GetChildrenCount(parent);
+        }
+        catch (InvalidOperationException)
+        {
+            visualChildrenCount = 0;
+        }
+
+        for (var i = 0; i < visualChildrenCount; i++)
+            yield return VisualTreeHelper.GetChild(parent, i);
+
+        foreach (var child in LogicalTreeHelper.GetChildren(parent))
+        {
+            if (child is DependencyObject dependencyObject)
+                yield return dependencyObject;
+        }
     }
 
     private static int GetTextLengthInMilliseconds(string title, string? message)

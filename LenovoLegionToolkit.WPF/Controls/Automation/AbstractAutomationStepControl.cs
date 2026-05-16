@@ -6,7 +6,6 @@ using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
-using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation;
 
@@ -41,10 +40,16 @@ public abstract class AbstractAutomationStepControl : UserControl
         Margin = new(8, 0, 0, 0),
     };
 
+    private SymbolRegular _icon = SymbolRegular.Empty;
+
     public SymbolRegular Icon
     {
-        get => _cardControl.Icon;
-        set => _cardControl.Icon = value;
+        get => _icon;
+        set
+        {
+            _icon = value;
+            _cardControl.Icon = new SymbolIcon { Symbol = value };
+        }
     }
 
     public string Title
@@ -114,3 +119,4 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     protected void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
 }
+

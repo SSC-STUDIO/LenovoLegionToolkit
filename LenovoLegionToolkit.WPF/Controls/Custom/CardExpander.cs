@@ -1,19 +1,11 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
-using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Custom;
 
 public class CardExpander : Wpf.Ui.Controls.CardExpander
 {
-    /// <summary>Glyph for the card header; maps to WPF-UI <see cref="Wpf.Ui.Controls.CardExpander.Icon"/> as <see cref="SymbolIcon"/>.</summary>
-    public new SymbolRegular Icon
-    {
-        get => base.Icon is SymbolIcon si ? si.Symbol : SymbolRegular.Empty;
-        set => base.Icon = value == SymbolRegular.Empty ? null : new SymbolIcon { Symbol = value };
-    }
-
     protected override AutomationPeer OnCreateAutomationPeer() => new CardExpanderAutomationPeer(this);
 
     private class CardExpanderAutomationPeer(CardExpander owner) : FrameworkElementAutomationPeer(owner)

@@ -30,7 +30,7 @@ public partial class SettingsPowerControl
         _isRefreshing = true;
 
         // Run all async operations in parallel
-        var miTask = Compatibility.GetMachineInformationAsync();
+        var miTask = MachineCompatibility.GetMachineInformationAsync();
         var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
 
         await Task.WhenAll(miTask, powerModeSupportedTask);

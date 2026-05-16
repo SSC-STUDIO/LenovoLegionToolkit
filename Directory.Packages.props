@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="Humanizer" Version="3.0.10" />
-    <PackageVersion Include="Markdig" Version="1.1.3" />
+    <PackageVersion Include="Markdig" Version="1.2.0" />
     <PackageVersion Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageVersion Include="PixiEditor.ColorPicker" Version="3.4.2.3" />
     <PackageVersion Include="WPF-UI" Version="4.3.0" />
@@ -37,8 +37,8 @@
   <ItemGroup>
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="CoordinateSharp" Version="3.4.1.1" />
-    <PackageVersion Include="ManagedNativeWifi" Version="2.7.1" />
-    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.183" />
+    <PackageVersion Include="ManagedNativeWifi" Version="3.0.2" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.275" />
     <PackageVersion Include="NAudio.Wasapi" Version="2.3.0" />
     <PackageVersion Include="PubSub" Version="4.0.2" />
     <PackageVersion Include="NvAPIWrapper.Net" Version="0.8.1.101" />
@@ -49,8 +49,8 @@
 
   <!-- ==================== System Libraries (.NET 10) ==================== -->
   <ItemGroup>
-    <PackageVersion Include="System.Management" Version="10.0.7" />
-    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="10.0.7" />
+    <PackageVersion Include="System.Management" Version="10.0.8" />
+    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="10.0.8" />
   </ItemGroup>
 
   <!-- ==================== Testing Dependencies ==================== -->
@@ -60,12 +60,26 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="coverlet.collector" Version="10.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="FluentAssertions" Version="7.2.2" />
+    <PackageVersion Include="FluentAssertions" Version="8.10.0" />
+  </ItemGroup>
+
+  <!-- ==================== Pinned Transitive Dependencies ==================== -->
+  <ItemGroup>
+    <PackageVersion Include="Castle.Core" Version="5.2.1" />
+    <PackageVersion Include="Microsoft.Win32.SystemEvents" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.8" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.8" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.8" />
+    <PackageVersion Include="System.Security.Permissions" Version="10.0.8" />
+    <PackageVersion Include="System.Windows.Extensions" Version="10.0.8" />
+    <PackageVersion Include="xunit.analyzers" Version="1.27.0" />
   </ItemGroup>
 
   <!-- ==================== Tools/Other ==================== -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
-    <PackageVersion Include="System.CommandLine" Version="2.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.8" />
   </ItemGroup>
 </Project>

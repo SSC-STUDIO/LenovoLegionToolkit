@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.WPF.Extensions;
+using Humanizer;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
@@ -108,7 +108,7 @@ public partial class DashboardPage
 
         var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
         var completedTask = await Task.WhenAny(Task.WhenAll(initializedTasks), timeoutTask);
-        
+
         if (completedTask == timeoutTask)
         {
             Log.Instance.Warning($"Dashboard initialization timed out after 10 seconds");

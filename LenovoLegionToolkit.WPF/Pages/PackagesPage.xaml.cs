@@ -21,6 +21,7 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
+using HyperlinkButton = Wpf.Ui.Controls.HyperlinkButton;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
@@ -48,7 +49,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void PackagesPage_Initialized(object? sender, EventArgs e)
     {
-        _machineTypeTextBox.Text = (await Compatibility.GetMachineInformationAsync()).MachineType;
+        _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
         _osComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
 
         var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);

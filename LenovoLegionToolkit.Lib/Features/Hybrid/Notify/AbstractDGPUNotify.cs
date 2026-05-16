@@ -129,7 +129,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
                 PInvokeExtensions.ThrowIfWin32Error("SetupDiEnumDeviceInterfaces");
 
             var requiredSize = 0u;
-            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, null, 0, &requiredSize, null);
+            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, null, 0, &requiredSize, null);
 
             string devicePath;
             var output = IntPtr.Zero;
@@ -139,7 +139,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
                 var deviceDetailData = (SP_DEVICE_INTERFACE_DETAIL_DATA_W*)output.ToPointer();
                 deviceDetailData->cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DETAIL_DATA_W>();
 
-                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, deviceDetailData, requiredSize, null, null);
+                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, deviceDetailData, requiredSize, null, null);
                 if (!result3)
                     PInvokeExtensions.ThrowIfWin32Error("SetupDiGetDeviceInterfaceDetail");
 

@@ -10,8 +10,8 @@
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Initialized="KeyboardBacklightPage_Initialized">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <StackPanel Margin="32,0,16,12">
+    <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,0,0">
         <TextBlock
                 x:Name="_titleTextBlock"
                 Margin="0,16,0,24"
@@ -20,7 +20,7 @@
                 Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
             <controls:LoadableControl x:Name="_loader">
-                <StackPanel x:Name="_content" Margin="0">
+                <StackPanel x:Name="_content" Margin="0,0,8,0">
                 <TextBlock
                     x:Name="_noKeyboardsText"
                     FontSize="14"
@@ -30,7 +30,9 @@
             </StackPanel>
         </controls:LoadableControl>
 
-    </StackPanel>
-    </ScrollViewer>
+        </StackPanel>
+    </wpfui:DynamicScrollViewer>
 
 </Page>
+
+

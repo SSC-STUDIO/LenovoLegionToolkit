@@ -78,17 +78,17 @@ public static class Devices
     private static unsafe string GetClassName(Guid guid)
     {
         var requiredSize = 0u;
-        PInvoke.SetupDiClassNameFromGuid(guid, Array.Empty<char>(), &requiredSize);
+        PInvoke.SetupDiClassNameFromGuid(guid, Array.Empty<char>(), out requiredSize);
 
         var chars = new char[requiredSize];
-        PInvoke.SetupDiClassNameFromGuid(guid, chars, null);
-        return chars.ToString() ?? string.Empty;
+        PInvoke.SetupDiClassNameFromGuid(guid, chars, out _);
+        return new string(chars).TrimEnd('\0');
     }
 
     private static unsafe string GetStringProperty(SetupDiDestroyDeviceInfoListSafeHandle deviceInfoSet, SP_DEVINFO_DATA deviceInfoData, DEVPROPKEY propertyKey)
     {
         var requiredSize = 0u;
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, &requiredSize, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, out requiredSize, 0);
 
         if (propertyType == DEVPROPTYPE.DEVPROP_TYPE_EMPTY)
             return string.Empty;
@@ -98,7 +98,7 @@ public static class Devices
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, null, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, out _, 0);
 
         return Encoding.Unicode.GetString(buffer).TrimEnd('\0');
     }
@@ -106,7 +106,7 @@ public static class Devices
     private static unsafe uint GetUInt32Property(SetupDiDestroyDeviceInfoListSafeHandle deviceInfoSet, SP_DEVINFO_DATA deviceInfoData, DEVPROPKEY propertyKey)
     {
         var requiredSize = 0u;
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, &requiredSize, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, out requiredSize, 0);
 
         if (propertyType == DEVPROPTYPE.DEVPROP_TYPE_EMPTY)
             return 0;
@@ -116,7 +116,7 @@ public static class Devices
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, null, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, out _, 0);
 
         return BitConverter.ToUInt32(buffer);
     }
@@ -124,7 +124,7 @@ public static class Devices
     private static unsafe Guid GetGuidProperty(SetupDiDestroyDeviceInfoListSafeHandle deviceInfoSet, SP_DEVINFO_DATA deviceInfoData, DEVPROPKEY propertyKey)
     {
         var requiredSize = 0u;
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, &requiredSize, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out var propertyType, null, out requiredSize, 0);
 
         if (propertyType == DEVPROPTYPE.DEVPROP_TYPE_EMPTY)
             return Guid.Empty;
@@ -134,7 +134,7 @@ public static class Devices
 
         var buffer = new byte[requiredSize];
         var propertyBuffer = new Span<byte>(buffer);
-        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, null, 0);
+        PInvoke.SetupDiGetDeviceProperty(deviceInfoSet, deviceInfoData, propertyKey, out _, propertyBuffer, out _, 0);
 
         return new Guid(buffer);
     }
@@ -176,7 +176,7 @@ public static class Devices
                 PInvokeExtensions.ThrowIfWin32Error("SetupDiEnumDeviceInterfaces");
 
             var requiredSize = 0u;
-            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, null, 0, &requiredSize, null);
+            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, null, 0, &requiredSize, null);
 
             string devicePath;
             var output = IntPtr.Zero;
@@ -186,7 +186,7 @@ public static class Devices
                 var deviceDetailData = (SP_DEVICE_INTERFACE_DETAIL_DATA_W*)output.ToPointer();
                 deviceDetailData->cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DETAIL_DATA_W>();
 
-                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, deviceDetailData, requiredSize, null, null);
+                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, deviceDetailData, requiredSize, null, null);
                 if (!result3)
                     PInvokeExtensions.ThrowIfWin32Error("SetupDiEnumDeviceInterfaces");
 
@@ -295,7 +295,7 @@ public static class Devices
                 PInvokeExtensions.ThrowIfWin32Error("SetupDiEnumDeviceInterfaces");
 
             var requiredSize = 0u;
-            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, null, 0, &requiredSize, null);
+            _ = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, null, 0, &requiredSize, null);
 
             string devicePath;
             var output = IntPtr.Zero;
@@ -305,7 +305,7 @@ public static class Devices
                 var deviceDetailData = (SP_DEVICE_INTERFACE_DETAIL_DATA_W*)output.ToPointer();
                 deviceDetailData->cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DETAIL_DATA_W>();
 
-                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle, deviceInterfaceData, deviceDetailData, requiredSize, null, null);
+                var result3 = PInvoke.SetupDiGetDeviceInterfaceDetail(deviceHandle.ToHdevInfo(), &deviceInterfaceData, deviceDetailData, requiredSize, null, null);
                 if (!result3)
                     PInvokeExtensions.ThrowIfWin32Error("SetupDiEnumDeviceInterfaces");
 

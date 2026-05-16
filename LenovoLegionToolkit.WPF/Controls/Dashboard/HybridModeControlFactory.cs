@@ -10,7 +10,6 @@ using LenovoLegionToolkit.Lib.Features.Hybrid;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
@@ -23,7 +22,7 @@ public static class HybridModeControlFactory
 {
     public static async Task<AbstractRefreshingControl> GetControlAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeControl()
             : new ToggleHybridModeControl();
@@ -35,7 +34,7 @@ public static class HybridModeControlFactory
 
         private readonly Button _infoButton = new()
         {
-            Icon = SymbolRegular.Info24.ToSymbolIcon(),
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Info24 },
             FontSize = 20,
             Margin = new(8, 0, 0, 0),
         };

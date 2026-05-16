@@ -129,7 +129,7 @@ public class AutomationPipelineControl : UserControl
     public void SetIcon(SymbolRegular? icon)
     {
         AutomationPipeline.IconName = icon.HasValue ? Enum.GetName(icon.Value) : null;
-        _cardExpander.Icon = GenerateIcon();
+        _cardExpander.Icon = new SymbolIcon { Symbol = GenerateIcon() };
 
         OnChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -183,7 +183,7 @@ public class AutomationPipelineControl : UserControl
             _stackPanel.Children.Add(_stepsStackPanel);
             _stackPanel.Children.Add(_buttonsStackPanel);
 
-            _cardExpander.Icon = GenerateIcon();
+            _cardExpander.Icon = new SymbolIcon { Symbol = GenerateIcon() };
             _cardHeaderControl.Title = GenerateHeader();
             _cardHeaderControl.Subtitle = GenerateSubtitle();
             _cardHeaderControl.Accessory = GenerateAccessory();
@@ -463,3 +463,4 @@ public class AutomationPipelineControl : UserControl
         OnChanged?.Invoke(this, EventArgs.Empty);
     }
 }
+

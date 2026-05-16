@@ -13,7 +13,7 @@ public static class WiFi
         try
         {
             NativeWifi.EnumerateInterfaces()
-            .ForEach(i => NativeWifi.TurnOnInterfaceRadio(i.Id));
+                .ForEach(i => NativeWifi.TurnOnRadio(i.Id));
         }
         catch (Exception ex)
         {
@@ -27,7 +27,7 @@ public static class WiFi
         try
         {
             NativeWifi.EnumerateInterfaces()
-                .ForEach(i => NativeWifi.TurnOffInterfaceRadio(i.Id));
+                .ForEach(i => NativeWifi.TurnOffRadio(i.Id));
         }
         catch (Exception ex)
         {

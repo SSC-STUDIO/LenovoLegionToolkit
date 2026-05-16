@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,7 +13,7 @@ using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
-using MenuItem = System.Windows.Controls.MenuItem;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB
 {

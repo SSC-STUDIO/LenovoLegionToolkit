@@ -1,6 +1,7 @@
-﻿using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
@@ -29,3 +30,4 @@ public class PortsBacklightControl : AbstractToggleFeatureCardControl<PortsBackl
         await RefreshAsync();
     });
 }
+

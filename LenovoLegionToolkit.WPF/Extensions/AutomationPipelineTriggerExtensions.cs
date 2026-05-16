@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Extensions;
 
@@ -27,3 +28,4 @@ public static class AutomationPipelineTriggerExtensions
         _ => throw new ArgumentException($"Unsupported trigger {trigger.GetType().Name}")
     };
 }
+

@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/Animations.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/ButtonStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Typography.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/Loading.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/Badge.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardAction.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/CardControl.xaml" />

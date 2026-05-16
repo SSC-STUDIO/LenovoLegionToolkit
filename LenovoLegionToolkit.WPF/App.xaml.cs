@@ -113,7 +113,7 @@ public partial class App
             try
             {
                 // Check compatibility - IsCompatibleAsync already includes basic compatibility check
-                var (isCompatible, mi) = await Compatibility.IsCompatibleAsync();
+                var (isCompatible, mi) = await MachineCompatibility.IsCompatibleAsync();
 
                 // If check fails, show the unsupported window only once
                 if (!isCompatible)

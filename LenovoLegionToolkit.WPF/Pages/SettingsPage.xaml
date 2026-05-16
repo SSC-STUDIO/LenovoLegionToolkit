@@ -29,7 +29,7 @@
         </Storyboard>
     </Page.Resources>
 
-    <Grid Margin="32,0,16,12">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -209,3 +209,5 @@
         </ContentControl>
     </Grid>
 </Page>
+
+

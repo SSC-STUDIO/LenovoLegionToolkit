@@ -1,6 +1,6 @@
-global using SymbolRegular = Wpf.Ui.Controls.SymbolRegular;
-global using SymbolFilled = Wpf.Ui.Controls.SymbolFilled;
-global using ControlAppearance = Wpf.Ui.Controls.ControlAppearance;
-global using WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType;
-global using TextBlock = System.Windows.Controls.TextBlock;
+global using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
+global using Compatibility = LenovoLegionToolkit.Lib.Utils.Compatibility;
 global using Image = System.Windows.Controls.Image;
+global using MachineCompatibility = LenovoLegionToolkit.Lib.Utils.Compatibility;
+global using SystemTheme = LenovoLegionToolkit.Lib.System.SystemTheme;
+global using TextBlock = System.Windows.Controls.TextBlock;

@@ -32,8 +32,7 @@
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
-            ShowMinimize="false"
- />
+            ShowMinimize="false" />
 
         <Grid Grid.Row="1" Margin="16">
             <Grid.RowDefinitions>
@@ -153,3 +152,7 @@
     </Grid>
 
 </wpfui:FluentWindow>
+
+
+
+

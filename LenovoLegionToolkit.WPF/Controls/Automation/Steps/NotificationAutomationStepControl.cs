@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 using TextBox = Wpf.Ui.Controls.TextBox;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
@@ -57,3 +58,4 @@ public class NotificationAutomationStepControl : AbstractAutomationStepControl<N
         return Task.CompletedTask;
     }
 }
+

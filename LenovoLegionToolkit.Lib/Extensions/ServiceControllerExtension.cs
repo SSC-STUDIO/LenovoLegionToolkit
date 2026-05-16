@@ -23,7 +23,7 @@ internal static class ServiceControllerExtension
             SERVICE_ERROR.SERVICE_ERROR_NORMAL,
             null,
             null,
-            null,
+            out _,
             null,
             null,
             null,

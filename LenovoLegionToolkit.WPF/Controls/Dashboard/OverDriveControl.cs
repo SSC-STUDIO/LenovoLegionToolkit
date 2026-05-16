@@ -1,5 +1,6 @@
-﻿using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
@@ -16,3 +17,4 @@ public class OverDriveControl : AbstractToggleFeatureCardControl<OverDriveState>
         Subtitle = Resource.OverDriveControl_Message;
     }
 }
+

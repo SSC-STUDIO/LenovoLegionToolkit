@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
+using Windows.Win32.Devices.DeviceAndDriverInstallation;
+using Windows.Win32.Foundation;
 
 namespace LenovoLegionToolkit.Lib.Extensions;
 
@@ -28,6 +30,10 @@ public static class PInvokeExtensions
 
     public static readonly Guid DISPLAY_BRIGTHNESS_SETTING_GUID = Guid.Parse("aded5e82-b909-4619-9949-f5d71dac0bcb");
 
+    public static HANDLE ToWin32Handle(this SafeHandle handle) => new(handle.DangerousGetHandle());
+
+    public static HDEVINFO ToHdevInfo(this SetupDiDestroyDeviceInfoListSafeHandle handle) => new(handle.DangerousGetHandle());
+
     public static unsafe bool DeviceIoControl<TIn, TOut>(SafeFileHandle hDevice, uint dwIoControlCode, TIn inVal, out TOut outVal) where TIn : struct where TOut : struct
     {
         var lpInBuffer = IntPtr.Zero;
@@ -43,7 +49,7 @@ public static class PInvokeExtensions
 
             Marshal.StructureToPtr(inVal, lpInBuffer, false);
 
-            var ret = PInvoke.DeviceIoControl(hDevice,
+            var ret = PInvoke.DeviceIoControl(hDevice.ToWin32Handle(),
                 dwIoControlCode,
                 lpInBuffer.ToPointer(),
                 (uint)nInBufferSize,

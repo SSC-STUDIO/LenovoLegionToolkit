@@ -13,9 +13,8 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
 public partial class DeviceInformationWindow
 {
-    private Snackbar _snackBar = null!;
-
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
+    private readonly Snackbar _snackBar;
 
     public DeviceInformationWindow()
     {
@@ -23,6 +22,7 @@ public partial class DeviceInformationWindow
         _snackBar = new Snackbar(_snackBarPresenter)
         {
             HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = false,
             Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
             Timeout = TimeSpan.FromSeconds(1)
         };
@@ -33,10 +33,10 @@ public partial class DeviceInformationWindow
     private async Task RefreshAsync(bool forceRefresh = false)
     {
         MachineInformation mi;
-        
+
         try
         {
-            mi = await Compatibility.GetMachineInformationAsync();
+            mi = await MachineCompatibility.GetMachineInformationAsync();
 
             _manufacturerLabel.Text = mi.Vendor ?? "-";
             _modelLabel.Text = mi.Model ?? "-";
@@ -59,8 +59,7 @@ public partial class DeviceInformationWindow
             // Show error notification
             _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
             _snackBar.Appearance = ControlAppearance.Danger;
-            await SnackbarHelper.ShowSnackbarAsync(
-                _snackBar,
+            await ShowSnackBarAsync(
                 Resource.CompatibilityCheckErrorWindow_Title,
                 Resource.CompatibilityCheckError_Message);
 
@@ -108,10 +107,7 @@ public partial class DeviceInformationWindow
         try
         {
             System.Windows.Clipboard.SetText(str);
-            await SnackbarHelper.ShowSnackbarAsync(
-                _snackBar,
-                Resource.CopiedToClipboard_Title,
-                string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
+            await ShowSnackBarAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
         }
         catch (Exception ex)
         {
@@ -124,6 +120,13 @@ public partial class DeviceInformationWindow
     {
         var link = _warrantyLinkCardAction.Tag as Uri;
         link?.Open();
+    }
+
+    private async Task ShowSnackBarAsync(string title, string? message)
+    {
+        _snackBar.Title = title;
+        _snackBar.Content = message;
+        await _snackBar.ShowAsync();
     }
 }
 }

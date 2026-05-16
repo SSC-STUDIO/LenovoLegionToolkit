@@ -38,8 +38,8 @@ public partial class SettingsApplicationBehaviorControl
         _minimizeOnCloseToggle.IsChecked = _settings.Store.MinimizeOnClose;
 
         // Run all async operations in parallel
-        var compatibilityTask = Compatibility.IsCompatibleAsync();
-        var miTask = Compatibility.GetMachineInformationAsync();
+        var compatibilityTask = MachineCompatibility.IsCompatibleAsync();
+        var miTask = MachineCompatibility.GetMachineInformationAsync();
         var vantageTask = _vantageDisabler.GetStatusAsync();
         var legionZoneTask = _legionZoneDisabler.GetStatusAsync();
         var fnKeysTask = _fnKeysDisabler.GetStatusAsync();
@@ -58,7 +58,7 @@ public partial class SettingsApplicationBehaviorControl
         }
 
         var mi = await miTask;
-        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
         var vantageStatus = await vantageTask;
         _vantageCard.Visibility = isSupportedLegionMachine && vantageStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;

@@ -11,6 +11,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Settings;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
@@ -42,8 +43,8 @@ public partial class SettingsPage
 
     private async void InitializeNavigationItems()
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
-        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
         var navigationItems = new List<NavigationItem>
         {
@@ -106,42 +107,33 @@ public partial class SettingsPage
         // Priority load: refresh the first visible control (Appearance) immediately
         await _appearanceControl.RefreshAsync();
 
-        // Load other controls asynchronously without leaving the WPF dispatcher.
-        // Refresh methods update WPF controls after awaits, so they must start on the UI thread.
-        _ = RefreshSecondaryControlsAsync();
+        // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
+        _ = RefreshRemainingControlsAsync();
     }
 
-    private async Task RefreshSecondaryControlsAsync()
+    private async Task RefreshRemainingControlsAsync()
     {
-        if (_applicationBehaviorControl is null ||
-            _smartKeysControl is null ||
-            _displayControl is null ||
-            _powerControl is null ||
-            _integrationsControl is null ||
-            _updateControl is null)
-        {
-            return;
-        }
-
         try
         {
             await Task.WhenAll(
-                _applicationBehaviorControl.RefreshAsync(),
-                _smartKeysControl.RefreshAsync(),
-                _displayControl.RefreshAsync(),
-                _powerControl.RefreshAsync(),
-                _integrationsControl.RefreshAsync());
+                _applicationBehaviorControl!.RefreshAsync(),
+                _smartKeysControl!.RefreshAsync(),
+                _displayControl!.RefreshAsync(),
+                _powerControl!.RefreshAsync(),
+                _integrationsControl!.RefreshAsync()
+            );
 
-            _updateControl.Refresh();
+            _updateControl?.Refresh();
 
+            // Update visibility based on FnKeys status
             var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
-            _smartKeysControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
-            _displayControl.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+            _smartKeysControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
+            _displayControl?.UpdateVisibilityBasedOnFnKeys(fnKeysStatus);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to refresh secondary settings controls.", ex);
+                Log.Instance.Trace($"Background settings refresh failed.", ex);
         }
     }
 
@@ -217,3 +209,4 @@ public partial class SettingsPage
     }
 }
 }
+

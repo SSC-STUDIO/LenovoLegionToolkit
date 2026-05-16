@@ -45,7 +45,7 @@ public class ThemeManager
             case AccentColorSource.System:
                 try
                 {
-                    return LenovoLegionToolkit.Lib.System.SystemTheme.GetAccentColor();
+                    return SystemTheme.GetAccentColor();
                 }
                 catch (Exception ex)
                 {
@@ -72,7 +72,7 @@ public class ThemeManager
             case Theme.System:
                 try
                 {
-                    return LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
+                    return SystemTheme.IsDarkMode();
                 }
                 catch (Exception ex)
                 {
@@ -118,8 +118,11 @@ public class ThemeManager
     {
         var accentColor = GetAccentColor().ToColor();
         
-        // Apply accent color with improved color contrast (WPF-UI 4: ApplicationAccentColorManager)
-        ApplicationAccentColorManager.Apply(accentColor, accentColor, accentColor, accentColor);
+        // Apply accent color with improved color contrast
+        ApplicationAccentColorManager.Apply(systemAccent: accentColor,
+            primaryAccent: accentColor,
+            secondaryAccent: accentColor,
+            tertiaryAccent: accentColor);
         
         // Ensure proper color contrast for accessibility
         EnsureColorContrast();

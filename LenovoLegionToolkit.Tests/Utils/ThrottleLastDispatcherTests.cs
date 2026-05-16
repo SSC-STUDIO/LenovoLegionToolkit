@@ -87,7 +87,7 @@ public class ThrottleLastDispatcherTests
 
         // Assert
         executed.Should().BeTrue();
-        elapsedMs.Should().BeGreaterOrEqualTo(40);
+        elapsedMs.Should().BeGreaterThanOrEqualTo(40);
     }
 
     [Fact]

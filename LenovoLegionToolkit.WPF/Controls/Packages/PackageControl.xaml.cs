@@ -275,7 +275,7 @@ public partial class PackageControl : IProgress<float>
             {
                 // 文件已存在，将下载按钮切换为安装按钮
                 // 检查当前图标，避免重复切换
-                if (_downloadButton.Icon is SymbolIcon si && si.Symbol == SymbolRegular.Play24)
+                if (_downloadButton.Icon is SymbolIcon { Symbol: SymbolRegular.Play24 })
                     return; // 已经是安装按钮，无需切换
                     
                 // 移除下载事件，添加安装事件
@@ -289,7 +289,7 @@ public partial class PackageControl : IProgress<float>
             {
                 // 文件不存在，确保按钮是下载按钮
                 // 检查当前图标，避免重复切换
-                if (_downloadButton.Icon is SymbolIcon si2 && si2.Symbol == SymbolRegular.ArrowDownload24)
+                if (_downloadButton.Icon is SymbolIcon { Symbol: SymbolRegular.ArrowDownload24 })
                     return; // 已经是下载按钮，无需切换
                     
                 // 移除安装事件，重新添加下载事件
@@ -859,3 +859,4 @@ public partial class PackageControl : IProgress<float>
     }
 }
 }
+

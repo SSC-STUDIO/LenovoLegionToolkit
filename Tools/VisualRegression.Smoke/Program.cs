@@ -1,0 +1,1263 @@
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.IO.Pipes;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Windows.Automation;
+using LenovoLegionToolkit.CLI.Lib;
+
+namespace VisualRegression.Smoke;
+
+internal static partial class Program
+{
+    private const string AppDataOverrideEnvironmentVariable = "LLT_APPDATA_OVERRIDE";
+    private const string PluginDirectoryOverrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
+    private const string SingleInstanceKeyEnvironmentVariable = "LLT_SINGLE_INSTANCE_KEY";
+    private const string RelaxedIpcAclEnvironmentVariable = "LLT_RELAXED_IPC_ACL";
+    private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+    private const int WindowX = 80;
+    private const int WindowY = 80;
+    private const int WindowWidth = 1300;
+    private const int WindowHeight = 850;
+    private const int MinWindowWidth = 1000;
+    private const int MinWindowHeight = 650;
+
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+    private static readonly List<CaptureRecord> Captures = new();
+    private static int _captureSequence;
+    private static string _pipeName = string.Empty;
+    private static int _processId;
+
+    public static int Main(string[] args)
+    {
+        Process? process = null;
+
+        try
+        {
+            var options = SmokeOptions.Parse(args);
+            var repoRoot = Path.GetFullPath(options.RepoRoot);
+            var outputRoot = Path.GetFullPath(options.OutputDirectory);
+            var currentDirectory = Path.Combine(outputRoot, "current");
+            var sandboxRoot = Path.Combine(outputRoot, "sandbox");
+            var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
+            var pluginsDirectory = Path.Combine(sandboxRoot, "plugins");
+
+            ResetDirectory(currentDirectory);
+            ResetDirectory(sandboxRoot);
+            Directory.CreateDirectory(currentDirectory);
+            Directory.CreateDirectory(appDataDirectory);
+            Directory.CreateDirectory(pluginsDirectory);
+
+            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme);
+            SeedPluginStoreCache(repoRoot, appDataDirectory);
+
+            _pipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(outputRoot)}-{Environment.ProcessId}";
+
+            var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
+            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(sandboxRoot));
+            _processId = process.Id;
+
+            Console.WriteLine($"[visual-smoke] Process: {_processId}");
+            Console.WriteLine($"[visual-smoke] Runtime: {runtimeDirectory}");
+            Console.WriteLine($"[visual-smoke] Output: {currentDirectory}");
+            Console.WriteLine($"[visual-smoke] Sandbox appdata: {appDataDirectory}");
+            Console.WriteLine($"[visual-smoke] IPC pipe: {_pipeName}");
+
+            TryWaitForInputIdle(process, 10_000);
+            var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(45));
+            NormalizeWindow(mainWindow);
+
+            CapturePage(currentDirectory, mainWindow, "main-window-ready");
+            CapturePage(currentDirectory, mainWindow, "dashboard");
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "keyboard",
+                ["_keyboardItem"],
+                ["Keyboard", "Keyboard Backlight"],
+                root => root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
+                        || FindVisibleTextContains(root, "No compatible keyboards")
+                        || FindVisibleTextContains(root, "Keyboard Backlight")));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "automation",
+                ["_automationItem"],
+                ["Actions", "Automation"],
+                root => root.Current.Name.Contains("Automation", StringComparison.OrdinalIgnoreCase)
+                        || FindVisibleTextContains(root, "Quick Actions")
+                        || FindVisibleTextContains(root, "automatic actions")));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "macro",
+                ["_macroItem"],
+                ["Macro"],
+                root => root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
+                        || FindVisibleTextContains(root, "M1")
+                        || FindVisibleTextContains(root, "Record")));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "windowsOptimization",
+                ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
+                ["System optimization", "Windows Optimization", "Windows optimization"],
+                IsWindowsOptimizationPageReady));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "pluginExtensions",
+                ["PluginExtensionsNavItem"],
+                ["Plugin Extensions"],
+                IsPluginExtensionsPageReady));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "settings",
+                [],
+                ["Settings"],
+                root => FindVisibleTextContains(root, "Settings")));
+
+            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                "about",
+                ["_aboutItem"],
+                ["About"],
+                root => FindVisibleTextContains(root, "Third-party libraries")
+                        || FindVisibleTextContains(root, "Application Folders")));
+            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", MinWindowWidth, MinWindowHeight);
+
+            NavigateAndWait(mainWindow, new PageTarget(
+                "windowsOptimization",
+                ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
+                ["System optimization", "Windows Optimization", "Windows optimization"],
+                IsWindowsOptimizationPageReady));
+            ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationOptimizationTabButton", "winopt-optimization-tab", IsWindowsOptimizationPageReady);
+            ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationCleanupTabButton", "winopt-cleanup-tab",
+                root => IsVisible(FindByAutomationId(root, "WindowsOptimizationCategoryList")) && FindVisibleTextContains(root, "Cleanup"));
+            ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationDriverTabButton", "winopt-driver-tab",
+                root => IsVisible(FindByAutomationId(root, "WindowsOptimizationDriverSearchButton")) || FindVisibleTextContains(root, "Driver Download"));
+
+            WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+            WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+            if (options.KeepApp)
+            {
+                Console.WriteLine("[visual-smoke] Leaving app running for inspection.");
+                process = null;
+                return 0;
+            }
+
+            TryCloseProcess(process);
+            process = null;
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("[visual-smoke] Failed:");
+            Console.Error.WriteLine(ex);
+            TryWriteFailureResult(args, process, ex);
+            return 1;
+        }
+        finally
+        {
+            if (process is not null && !process.HasExited)
+                TryCloseProcess(process);
+        }
+    }
+
+    private static void NavigateAndCapture(string currentDirectory, AutomationElement mainWindow, PageTarget target)
+    {
+        NavigateAndWait(mainWindow, target);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), target.Label);
+    }
+
+    private static void NavigateAndWait(AutomationElement mainWindow, PageTarget target)
+    {
+        Console.WriteLine($"[visual-smoke] Navigating to {target.Label}");
+        mainWindow = ResolveLiveWindow(mainWindow);
+        BringToForeground(mainWindow);
+
+        var arrived = false;
+        for (var attempt = 1; attempt <= 5 && !arrived; attempt++)
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var nav = FindNavigationElement(mainWindow, target);
+            if (nav is not null)
+                ActivateElement(nav);
+            else
+                PressCtrlTab();
+
+            arrived = WaitUntil(
+                () =>
+                {
+                    var live = ResolveLiveWindow(mainWindow);
+                    return target.Ready(live);
+                },
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromMilliseconds(250));
+
+            if (!arrived)
+                Thread.Sleep(500);
+        }
+
+        if (!arrived)
+        {
+            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 220);
+            throw new TimeoutException($"Timed out waiting for page '{target.Label}'.");
+        }
+
+        WaitForAnimationsToComplete();
+        NormalizeWindow(mainWindow);
+    }
+
+    private static void ClickTabAndCapture(
+        string currentDirectory,
+        AutomationElement mainWindow,
+        string automationId,
+        string label,
+        Func<AutomationElement, bool> ready)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var tab = WaitForAutomationId(mainWindow, automationId, TimeSpan.FromSeconds(10));
+        ActivateElement(tab);
+
+        var arrived = WaitUntil(
+            () => ready(ResolveLiveWindow(mainWindow)),
+            TimeSpan.FromSeconds(10),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!arrived)
+            throw new TimeoutException($"Timed out waiting for tab '{automationId}'.");
+
+        WaitForAnimationsToComplete();
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+    }
+
+    private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label)
+        => CapturePage(currentDirectory, mainWindow, label, WindowWidth, WindowHeight);
+
+    private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label, int width, int height)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        NormalizeWindow(mainWindow, width, height);
+        WaitForAnimationsToComplete();
+
+        if (!TryGetNativeWindowHandle(mainWindow, out var windowHandle))
+            throw new InvalidOperationException($"Window handle unavailable for '{label}'.");
+
+        var fileName = $"{++_captureSequence:000}-{SanitizeFileNameSegment(label)}.png";
+        var outputPath = Path.Combine(currentDirectory, fileName);
+
+        if (!TryCaptureWindowToFileViaIpc(windowHandle, outputPath, label))
+            CaptureWindowFromScreen(windowHandle, outputPath);
+
+        var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
+        var snapshot = BuildSnapshot(label, mainWindow);
+        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, JsonOptions));
+
+        Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
+    }
+
+    private static object BuildSnapshot(string label, AutomationElement root)
+    {
+        var elements = EnumerateDescendants(root, 260)
+            .Select(element => SafeDescribeElement(element))
+            .Where(element => element is not null)
+            .ToArray();
+
+        var visibleText = elements
+            .Where(element => element is { IsOffscreen: false } && !string.IsNullOrWhiteSpace(element.Name))
+            .Select(element => element!.Name!)
+            .Distinct()
+            .Take(120)
+            .ToArray();
+
+        return new
+        {
+            label,
+            capturedAt = DateTimeOffset.Now,
+            root = SafeDescribeElement(root),
+            visibleText,
+            elements,
+        };
+    }
+
+    private static ElementSnapshot? SafeDescribeElement(AutomationElement element)
+    {
+        try
+        {
+            var rect = element.Current.BoundingRectangle;
+            return new ElementSnapshot(
+                element.Current.ControlType.ProgrammaticName.Replace("ControlType.", string.Empty, StringComparison.Ordinal),
+                element.Current.Name,
+                element.Current.AutomationId,
+                element.Current.ClassName,
+                element.Current.IsEnabled,
+                element.Current.IsOffscreen,
+                NormalizeJsonNumber(rect.X),
+                NormalizeJsonNumber(rect.Y),
+                NormalizeJsonNumber(rect.Width),
+                NormalizeJsonNumber(rect.Height));
+        }
+        catch (ElementNotAvailableException)
+        {
+            return null;
+        }
+    }
+
+    private static IEnumerable<AutomationElement> EnumerateDescendants(AutomationElement root, int maxCount)
+    {
+        AutomationElementCollection collection;
+        try
+        {
+            collection = root.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+        }
+        catch (ElementNotAvailableException)
+        {
+            yield break;
+        }
+
+        var count = Math.Min(maxCount, collection.Count);
+        for (var i = 0; i < count; i++)
+            yield return collection[i];
+    }
+
+    private static AutomationElement? FindNavigationElement(AutomationElement root, PageTarget target)
+    {
+        foreach (var id in target.AutomationIds)
+        {
+            var byId = FindByAutomationId(root, id);
+            if (IsVisible(byId))
+                return byId;
+        }
+
+        foreach (var name in target.Names)
+        {
+            var byName = FindByName(root, name);
+            if (IsVisible(byName))
+            return byName is null ? null : FindClickableAncestor(byName) ?? byName;
+        }
+
+        return null;
+    }
+
+    private static AutomationElement? FindClickableAncestor(AutomationElement element)
+    {
+        var walker = TreeWalker.ControlViewWalker;
+        var current = element;
+        for (var i = 0; i < 5; i++)
+        {
+            var parent = walker.GetParent(current);
+            if (parent is null)
+                return null;
+
+            try
+            {
+                var controlType = parent.Current.ControlType;
+                if (controlType == ControlType.DataItem || controlType == ControlType.Button || controlType == ControlType.ListItem)
+                    return parent;
+
+                current = parent;
+            }
+            catch (ElementNotAvailableException)
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private static void ActivateElement(AutomationElement element)
+    {
+        BringToForeground(ResolveLiveWindowByProcessId(_processId));
+
+        if (TryInvokePattern(element))
+            return;
+
+        if (TrySelectionItemPattern(element))
+            return;
+
+        if (TryExpandCollapsePattern(element))
+            return;
+
+        MouseClick(element);
+    }
+
+    private static bool TryInvokePattern(AutomationElement element)
+    {
+        try
+        {
+            if (element.TryGetCurrentPattern(InvokePattern.Pattern, out var pattern))
+            {
+                ((InvokePattern)pattern).Invoke();
+                return true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        catch (ElementNotAvailableException)
+        {
+        }
+
+        return false;
+    }
+
+    private static bool TrySelectionItemPattern(AutomationElement element)
+    {
+        try
+        {
+            if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var pattern))
+            {
+                ((SelectionItemPattern)pattern).Select();
+                return true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        catch (ElementNotAvailableException)
+        {
+        }
+
+        return false;
+    }
+
+    private static bool TryExpandCollapsePattern(AutomationElement element)
+    {
+        try
+        {
+            if (element.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var pattern))
+            {
+                var expander = (ExpandCollapsePattern)pattern;
+                if (expander.Current.ExpandCollapseState != ExpandCollapseState.Expanded)
+                    expander.Expand();
+                return true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        catch (ElementNotAvailableException)
+        {
+        }
+
+        return false;
+    }
+
+    private static AutomationElement WaitForMainShellWindow(int processId, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            var window = TryFindMainShellWindow(processId);
+            if (window is not null)
+                return window;
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException("Timed out waiting for main shell window.");
+    }
+
+    private static AutomationElement? TryFindMainShellWindow(int processId)
+    {
+        var condition = new AndCondition(
+            new PropertyCondition(AutomationElement.ProcessIdProperty, processId),
+            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+
+        var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, condition).Cast<AutomationElement>();
+        foreach (var window in windows)
+        {
+            if (TryHandleCompatibilityWindow(window))
+                continue;
+
+            if (FindByAutomationId(window, "MainNavigationStore") is not null
+                || FindByAutomationId(window, "MainRootFrame") is not null)
+            {
+                return window;
+            }
+        }
+
+        return null;
+    }
+
+    private static bool TryHandleCompatibilityWindow(AutomationElement window)
+    {
+        var continueButton = FindByAutomationId(window, "_continueButton");
+        if (!IsVisible(continueButton) || continueButton is null || !continueButton.Current.IsEnabled)
+            return false;
+
+        ActivateElement(continueButton);
+        Thread.Sleep(400);
+        return true;
+    }
+
+    private static AutomationElement ResolveLiveWindow(AutomationElement window)
+    {
+        var processId = window.Current.ProcessId;
+        return ResolveLiveWindowByProcessId(processId);
+    }
+
+    private static AutomationElement ResolveLiveWindowByProcessId(int processId)
+    {
+        return TryFindMainShellWindow(processId)
+               ?? throw new InvalidOperationException($"Main shell window is not available for process {processId}.");
+    }
+
+    private static AutomationElement WaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => IsVisible(FindByAutomationId(ResolveLiveWindow(root), automationId)),
+            timeout,
+            TimeSpan.FromMilliseconds(200));
+
+        var element = FindByAutomationId(ResolveLiveWindow(root), automationId);
+        if (!found || element is null)
+            throw new TimeoutException($"Timed out waiting for automation id '{automationId}'.");
+
+        return element;
+    }
+
+    private static AutomationElement? FindByAutomationId(AutomationElement root, string automationId)
+    {
+        try
+        {
+            return root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        }
+        catch (ElementNotAvailableException)
+        {
+            return null;
+        }
+    }
+
+    private static AutomationElement? FindByName(AutomationElement root, string name)
+    {
+        try
+        {
+            var matches = root.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, name))
+                .Cast<AutomationElement>()
+                .Where(IsVisible)
+                .OrderBy(element =>
+                {
+                    try
+                    {
+                        return element.Current.BoundingRectangle.X;
+                    }
+                    catch
+                    {
+                        return double.MaxValue;
+                    }
+                })
+                .ToArray();
+
+            return matches.FirstOrDefault();
+        }
+        catch (ElementNotAvailableException)
+        {
+            return null;
+        }
+    }
+
+    private static bool IsWindowsOptimizationPageReady(AutomationElement root)
+    {
+        var isSystemOptimizationWindow = root.Current.Name.Contains("System optimization", StringComparison.OrdinalIgnoreCase)
+                                         || FindVisibleTextContains(root, "These actions modify system services and files");
+
+        return isSystemOptimizationWindow
+               && IsVisible(FindByAutomationId(root, "WindowsOptimizationCategoryList"))
+               && IsVisible(FindByAutomationId(root, "WindowsOptimizationOptimizationTabButton"));
+    }
+
+    private static bool IsPluginExtensionsPageReady(AutomationElement root)
+    {
+        if (!FindVisibleTextContains(root, "Plugin Extensions") && !IsVisible(FindByAutomationId(root, "PluginListBox")))
+            return false;
+
+        if (FindVisibleTextContains(root, "Loading metadata"))
+            return false;
+
+        return IsVisible(FindByAutomationId(root, "PluginCard_custom-mouse"))
+               || IsVisible(FindByAutomationId(root, "PluginCard_network-acceleration"))
+               || IsVisible(FindByAutomationId(root, "PluginNoPluginsMessage"))
+               || IsVisible(FindByAutomationId(root, "PluginNoResultsMessage"))
+               || FindVisibleTextContains(root, "Found 4 plugins")
+               || FindVisibleTextContains(root, "Available to install");
+    }
+
+    private static bool IsVisible(AutomationElement? element)
+    {
+        if (element is null)
+            return false;
+
+        try
+        {
+            var bounds = element.Current.BoundingRectangle;
+            return element.Current.IsEnabled
+                   && !element.Current.IsOffscreen
+                   && bounds.Width > 1
+                   && bounds.Height > 1
+                   && !double.IsInfinity(bounds.X)
+                   && !double.IsInfinity(bounds.Y);
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
+    }
+
+    private static bool FindVisibleTextContainsAny(AutomationElement root, params string[] keywords)
+    {
+        return keywords.Any(keyword => FindVisibleTextContains(root, keyword));
+    }
+
+    private static bool FindVisibleTextContains(AutomationElement root, string keyword)
+    {
+        try
+        {
+            return root.FindAll(TreeScope.Descendants, Condition.TrueCondition)
+                .Cast<AutomationElement>()
+                .Any(element =>
+                {
+                    try
+                    {
+                        return !element.Current.IsOffscreen
+                               && !string.IsNullOrWhiteSpace(element.Current.Name)
+                               && element.Current.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+                    }
+                    catch (ElementNotAvailableException)
+                    {
+                        return false;
+                    }
+                });
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
+    }
+
+    private static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, TimeSpan interval)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        Exception? lastException = null;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                if (predicate())
+                    return true;
+            }
+            catch (ElementNotAvailableException ex)
+            {
+                lastException = ex;
+            }
+            catch (InvalidOperationException ex)
+            {
+                lastException = ex;
+            }
+
+            Thread.Sleep(interval);
+        }
+
+        if (lastException is not null)
+            Console.WriteLine($"[visual-smoke] Wait ignored transient error: {lastException.Message}");
+
+        return false;
+    }
+
+    private static void NormalizeWindow(AutomationElement window)
+        => NormalizeWindow(window, WindowWidth, WindowHeight);
+
+    private static void NormalizeWindow(AutomationElement window, int width, int height)
+    {
+        if (!TryGetNativeWindowHandle(window, out var handle))
+            return;
+
+        var hwnd = (IntPtr)handle;
+        ShowWindow(hwnd, 9);
+        SetWindowPos(hwnd, IntPtr.Zero, WindowX, WindowY, width, height, 0x0040);
+        SetForegroundWindow(hwnd);
+        Thread.Sleep(250);
+    }
+
+    private static void BringToForeground(AutomationElement window)
+    {
+        if (!TryGetNativeWindowHandle(window, out var handle))
+            return;
+
+        var hwnd = (IntPtr)handle;
+        ShowWindow(hwnd, 9);
+        SetForegroundWindow(hwnd);
+        Thread.Sleep(100);
+    }
+
+    private static bool TryGetNativeWindowHandle(AutomationElement window, out int handle)
+    {
+        try
+        {
+            handle = window.Current.NativeWindowHandle;
+            return handle != 0;
+        }
+        catch (ElementNotAvailableException)
+        {
+            handle = 0;
+            return false;
+        }
+    }
+
+    private static bool TryCaptureWindowToFileViaIpc(int windowHandle, string outputPath, string label)
+    {
+        try
+        {
+            using var pipe = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut, PipeOptions.None);
+            pipe.Connect(3000);
+            pipe.ReadMode = PipeTransmissionMode.Message;
+
+            var request = new IpcRequest
+            {
+                Operation = IpcRequest.OperationType.CaptureWindowVisual,
+                Name = windowHandle.ToString(CultureInfo.InvariantCulture),
+                Value = outputPath
+            };
+
+            WritePipeObject(pipe, request);
+            var response = ReadPipeObject<IpcResponse>(pipe);
+            if (response?.Success == true && File.Exists(outputPath))
+                return true;
+
+            Console.WriteLine($"[visual-smoke] IPC capture skipped for {label}: {response?.Message ?? "unknown error"}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[visual-smoke] IPC capture unavailable for {label}: {ex.Message}");
+        }
+
+        return false;
+    }
+
+    private static void CaptureWindowFromScreen(int windowHandle, string outputPath)
+    {
+        if (!GetWindowRect((IntPtr)windowHandle, out var rect))
+            throw new InvalidOperationException($"Could not read window bounds for {windowHandle}.");
+
+        var width = Math.Max(1, rect.Right - rect.Left);
+        var height = Math.Max(1, rect.Bottom - rect.Top);
+        using var bitmap = new Bitmap(width, height);
+        using (var graphics = Graphics.FromImage(bitmap))
+        {
+            graphics.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height));
+        }
+
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+        bitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
+    }
+
+    private static void WritePipeObject<T>(PipeStream stream, T obj)
+    {
+        var json = JsonSerializer.Serialize(obj);
+        var bytes = Encoding.UTF8.GetBytes(json);
+        stream.Write(bytes, 0, bytes.Length);
+        stream.Flush();
+    }
+
+    private static T? ReadPipeObject<T>(PipeStream stream)
+    {
+        var buffer = new byte[4096];
+        var builder = new StringBuilder();
+
+        do
+        {
+            var read = stream.Read(buffer, 0, buffer.Length);
+            if (read <= 0)
+                break;
+
+            builder.Append(Encoding.UTF8.GetString(buffer, 0, read));
+        } while (!stream.IsMessageComplete);
+
+        return JsonSerializer.Deserialize<T>(builder.ToString());
+    }
+
+    private static double? NormalizeJsonNumber(double value)
+    {
+        return double.IsFinite(value) ? value : null;
+    }
+
+    private static void MouseClick(AutomationElement element)
+    {
+        var bounds = element.Current.BoundingRectangle;
+        if (bounds.Width <= 1 || bounds.Height <= 1)
+            throw new InvalidOperationException($"Cannot click element with empty bounds: {element.Current.AutomationId}");
+
+        var x = (int)Math.Round(bounds.X + bounds.Width / 2);
+        var y = (int)Math.Round(bounds.Y + bounds.Height / 2);
+        SetCursorPos(x, y);
+        mouse_event(0x0002, 0, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(50);
+        mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
+    }
+
+    private static void PressCtrlTab()
+    {
+        keybd_event(0x11, 0, 0, UIntPtr.Zero);
+        keybd_event(0x09, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(0x09, 0, 0x0002, UIntPtr.Zero);
+        keybd_event(0x11, 0, 0x0002, UIntPtr.Zero);
+        Thread.Sleep(150);
+    }
+
+    private static void WaitForAnimationsToComplete()
+    {
+        Thread.Sleep(900);
+    }
+
+    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string pluginsDirectory, string sandboxKey)
+    {
+        var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
+        var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
+        var exePath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.exe");
+
+        ProcessStartInfo startInfo;
+        if (File.Exists(dllPath) && File.Exists(runtimeConfigPath))
+        {
+            startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = $"\"{dllPath}\" --skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip",
+                WorkingDirectory = runtimeDirectory,
+                UseShellExecute = false
+            };
+        }
+        else if (File.Exists(exePath))
+        {
+            startInfo = new ProcessStartInfo
+            {
+                FileName = exePath,
+                Arguments = "--skip-compat-check --trace --disable-update-checker --disable-conflicting-software-warning --disable-tray-tooltip",
+                WorkingDirectory = runtimeDirectory,
+                UseShellExecute = false
+            };
+        }
+        else
+        {
+            throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
+        }
+
+        startInfo.EnvironmentVariables[AppDataOverrideEnvironmentVariable] = appDataDirectory;
+        startInfo.EnvironmentVariables[PluginDirectoryOverrideEnvironmentVariable] = pluginsDirectory;
+        startInfo.EnvironmentVariables[SingleInstanceKeyEnvironmentVariable] = sandboxKey;
+        startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = _pipeName;
+        startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
+        startInfo.EnvironmentVariables[KeepUnsupportedNavigationItemsEnvironmentVariable] = "1";
+
+        return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
+    }
+
+    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme)
+    {
+        var baselineAppData = Path.Combine(repoRoot, "Build", "wpf-navigation-smoke-2026-05-08", "sandbox", "appdata");
+        CopyIfExists(Path.Combine(baselineAppData, "settings.json"), Path.Combine(appDataDirectory, "settings.json"));
+        CopyIfExists(Path.Combine(baselineAppData, "package_downloader.json"), Path.Combine(appDataDirectory, "package_downloader.json"));
+
+        var settingsPath = Path.Combine(appDataDirectory, "settings.json");
+        var root = File.Exists(settingsPath)
+            ? JsonNode.Parse(File.ReadAllText(settingsPath))?.AsObject() ?? new JsonObject()
+            : new JsonObject();
+
+        root["Theme"] = theme;
+        root["WindowSize"] = new JsonObject
+        {
+            ["Width"] = WindowWidth,
+            ["Height"] = WindowHeight
+        };
+        root["MinimizeToTray"] = false;
+        root["MinimizeOnClose"] = false;
+        root["DisableUnsupportedHardwareWarning"] = true;
+        root["ForceSoftwareRendering"] = true;
+        root["ExtensionsEnabled"] = false;
+        root["AnimationsEnabled"] = false;
+        root["CheckPluginUpdatesOnStartup"] = false;
+
+        Directory.CreateDirectory(appDataDirectory);
+        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+
+        var integrationsPath = Path.Combine(appDataDirectory, "integrations.json");
+        File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(JsonOptions));
+
+        var langPath = Path.Combine(appDataDirectory, "lang");
+        if (!File.Exists(langPath))
+            File.WriteAllText(langPath, "en");
+    }
+
+    private static void ResetDirectory(string directory)
+    {
+        if (Directory.Exists(directory))
+            Directory.Delete(directory, recursive: true);
+
+        Directory.CreateDirectory(directory);
+    }
+
+    private static void CopyIfExists(string sourcePath, string destinationPath)
+    {
+        if (!File.Exists(sourcePath))
+            return;
+
+        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+        File.Copy(sourcePath, destinationPath, overwrite: true);
+    }
+
+    private static void SeedPluginStoreCache(string repoRoot, string appDataDirectory)
+    {
+        var destinationPath = Path.Combine(appDataDirectory, "plugin-store-cache.json");
+        var sourcePath = Path.Combine(repoRoot, "Build", "manual-simulated-legion-run", "appdata", "plugin-store-cache.json");
+
+        var storeJson = File.Exists(sourcePath)
+            ? File.ReadAllText(sourcePath, Encoding.UTF8)
+            : """
+              {
+                "lastUpdated": "2026-04-29T12:18:46Z",
+                "plugins": [
+                  {
+                    "id": "custom-mouse",
+                    "name": "Custom Mouse",
+                    "description": "Customize mouse cursor style behavior and mouse settings",
+                    "author": "SSC-STUDIO",
+                    "version": "1.0.15",
+                    "minLLTVersion": "3.6.1",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.15/custom-mouse-v1.0.15.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/custom-mouse-v1.0.15",
+                    "releaseDate": "2026-04-29T12:18:46Z",
+                    "icon": "Pen24",
+                    "iconBackground": "#2563EB",
+                    "dependencies": [],
+                    "tags": [ "mouse", "customization", "gaming" ]
+                  },
+                  {
+                    "id": "network-acceleration",
+                    "name": "Network Acceleration",
+                    "description": "Real-time network acceleration and optimization features",
+                    "author": "SSC-STUDIO",
+                    "version": "1.1.8",
+                    "minLLTVersion": "3.6.1",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/network-acceleration-v1.1.8/network-acceleration-v1.1.8.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/network-acceleration-v1.1.8",
+                    "releaseDate": "2026-04-29T12:18:46Z",
+                    "icon": "Globe24",
+                    "iconBackground": "#DC2626",
+                    "dependencies": [],
+                    "tags": [ "network", "optimization" ]
+                  },
+                  {
+                    "id": "shell-integration",
+                    "name": "Shell Integration",
+                    "description": "Integrate Lenovo Legion Toolkit with Windows shell context menu",
+                    "author": "SSC-STUDIO",
+                    "version": "1.0.11",
+                    "minLLTVersion": "3.6.1",
+                    "isSystemPlugin": true,
+                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/shell-integration-v1.0.11/shell-integration-v1.0.11.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/shell-integration-v1.0.11",
+                    "releaseDate": "2026-04-29T12:18:46Z",
+                    "icon": "Folder24",
+                    "iconBackground": "#0F766E",
+                    "dependencies": [],
+                    "tags": [ "system", "shell", "integration" ]
+                  },
+                  {
+                    "id": "vive-tool",
+                    "name": "ViVeTool",
+                    "description": "Manage Windows feature flags using ViVeTool",
+                    "author": "SSC-STUDIO",
+                    "version": "1.2.1",
+                    "minLLTVersion": "3.6.1",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/vive-tool-v1.2.1/vive-tool-v1.2.1.zip",
+                    "changelog": "https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/tag/vive-tool-v1.2.1",
+                    "releaseDate": "2026-04-29T12:18:46Z",
+                    "icon": "Code24",
+                    "iconBackground": "#7C3AED",
+                    "dependencies": [],
+                    "tags": [ "windows", "feature-flags", "vivetool" ]
+                  }
+                ]
+              }
+              """;
+
+        Directory.CreateDirectory(appDataDirectory);
+        File.WriteAllText(destinationPath, storeJson, Encoding.UTF8);
+        File.SetLastWriteTimeUtc(destinationPath, DateTime.UtcNow);
+    }
+
+    private static string ResolveRuntimeDirectory(string repoRoot, string configuration)
+    {
+        var candidate = Path.Combine(
+            repoRoot,
+            "LenovoLegionToolkit.WPF",
+            "bin",
+            configuration,
+            "net10.0-windows",
+            "win-x64");
+
+        if (!Directory.Exists(candidate))
+            throw new DirectoryNotFoundException($"Runtime directory not found: {candidate}");
+
+        return candidate;
+    }
+
+    private static void TryWaitForInputIdle(Process process, int milliseconds)
+    {
+        try
+        {
+            process.WaitForInputIdle(milliseconds);
+        }
+        catch (InvalidOperationException)
+        {
+        }
+    }
+
+    private static void TryCloseProcess(Process process)
+    {
+        if (process.HasExited)
+            return;
+
+        try
+        {
+            process.CloseMainWindow();
+            if (process.WaitForExit(5000))
+                return;
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            process.Kill(entireProcessTree: true);
+        }
+        catch
+        {
+        }
+    }
+
+    private static void WriteManifest(string currentDirectory, string outputRoot, string appDataDirectory)
+    {
+        var indexPath = Path.Combine(currentDirectory, "index.md");
+        var lines = new List<string>
+        {
+            "# Visual Regression Smoke",
+            string.Empty,
+            $"Generated: {DateTimeOffset.Now:O}",
+            $"AppData: `{appDataDirectory}`",
+            string.Empty,
+            "## Captures",
+        };
+
+        lines.AddRange(Captures.Select(capture => $"- `{capture.FileName}`: {capture.Label} ({capture.CapturedAt:HH:mm:ss})"));
+        File.WriteAllLines(indexPath, lines);
+
+        var htmlPath = Path.Combine(currentDirectory, "storyboard.html");
+        File.WriteAllText(htmlPath, BuildStoryboardHtml());
+        Console.WriteLine($"[visual-smoke] Index: {indexPath}");
+        Console.WriteLine($"[visual-smoke] Storyboard: {htmlPath}");
+    }
+
+    private static string BuildStoryboardHtml()
+    {
+        var json = JsonSerializer.Serialize(Captures.Select(capture => new
+        {
+            capture.Sequence,
+            capture.Label,
+            capture.FileName,
+            capture.SnapshotFileName,
+            capturedAt = capture.CapturedAt.ToString("HH:mm:ss")
+        }));
+
+        return $$"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Visual Regression Smoke</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", sans-serif; background: #111318; color: #eef2ff; }
+    .layout { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+    aside { padding: 18px; background: #171b24; border-right: 1px solid #303746; overflow: auto; }
+    main { padding: 18px; overflow: auto; }
+    button { display: block; width: 100%; margin: 0 0 8px; padding: 10px; border: 1px solid #303746; border-radius: 8px; background: #202634; color: #eef2ff; text-align: left; cursor: pointer; }
+    button.active { border-color: #75b8ff; }
+    img { max-width: 100%; height: auto; border: 1px solid #303746; border-radius: 10px; background: #05070a; }
+    .muted { color: #a6b0c3; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h1>Visual Regression Smoke</h1>
+      <p class="muted">Page-by-page WPF screenshots.</p>
+      <div id="list"></div>
+    </aside>
+    <main>
+      <h2 id="title"></h2>
+      <p id="meta" class="muted"></p>
+      <img id="image" alt="" />
+    </main>
+  </div>
+  <script>
+    const captures = {{json}};
+    const list = document.getElementById('list');
+    const title = document.getElementById('title');
+    const meta = document.getElementById('meta');
+    const image = document.getElementById('image');
+    function select(index) {
+      const item = captures[index];
+      title.textContent = `${item.Sequence}. ${item.Label}`;
+      meta.textContent = `${item.FileName} · ${item.capturedAt}`;
+      image.src = item.FileName;
+      [...list.querySelectorAll('button')].forEach((button, i) => button.classList.toggle('active', i === index));
+    }
+    captures.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.textContent = `${item.Sequence}. ${item.Label}`;
+      button.addEventListener('click', () => select(index));
+      list.appendChild(button);
+    });
+    if (captures.length) select(0);
+  </script>
+</body>
+</html>
+""";
+    }
+
+    private static void WriteResult(string outputRoot, string appDataDirectory, Process? process, int? exitCode, string? error)
+    {
+        var resultPath = Path.Combine(outputRoot, "result.json");
+        var result = new
+        {
+            finishedAt = DateTimeOffset.Now,
+            appDataDirectory,
+            processId = process?.Id,
+            exitCode,
+            error,
+            captures = Captures,
+            appLog = Directory.Exists(Path.Combine(appDataDirectory, "logs"))
+                ? Directory.GetFiles(Path.Combine(appDataDirectory, "logs"), "*.json").OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault()
+                : null,
+            errorLogs = Directory.Exists(Path.Combine(appDataDirectory, "logs"))
+                ? Directory.GetFiles(Path.Combine(appDataDirectory, "logs"), "error_*.txt").OrderByDescending(File.GetLastWriteTimeUtc).ToArray()
+                : []
+        };
+
+        File.WriteAllText(resultPath, JsonSerializer.Serialize(result, JsonOptions));
+    }
+
+    private static void TryWriteFailureResult(string[] args, Process? process, Exception ex)
+    {
+        try
+        {
+            var options = SmokeOptions.Parse(args);
+            var outputRoot = Path.GetFullPath(options.OutputDirectory);
+            var appDataDirectory = Path.Combine(outputRoot, "sandbox", "appdata");
+            Directory.CreateDirectory(outputRoot);
+            WriteResult(outputRoot, appDataDirectory, process, process?.HasExited == true ? process.ExitCode : null, ex.ToString());
+        }
+        catch
+        {
+        }
+    }
+
+    private static void DumpAutomationSnapshot(AutomationElement root, int maxCount)
+    {
+        Console.WriteLine("[visual-smoke] Automation snapshot:");
+        foreach (var element in EnumerateDescendants(root, maxCount))
+        {
+            var snapshot = SafeDescribeElement(element);
+            if (snapshot is null)
+                continue;
+
+            Console.WriteLine($"  {snapshot.Type} id='{snapshot.AutomationId}' name='{snapshot.Name}' class='{snapshot.ClassName}' offscreen={snapshot.IsOffscreen}");
+        }
+    }
+
+    private static string SanitizeFileNameSegment(string value)
+    {
+        var invalidChars = Path.GetInvalidFileNameChars().ToHashSet();
+        return string.Concat(value.Select(character => invalidChars.Contains(character) || char.IsWhiteSpace(character) || character == '/'
+            ? '-'
+            : char.ToLowerInvariant(character)));
+    }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetCursorPos(int x, int y);
+
+    [DllImport("user32.dll")]
+    private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
+
+    [DllImport("user32.dll")]
+    private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    private sealed record PageTarget(string Label, string[] AutomationIds, string[] Names, Func<AutomationElement, bool> Ready);
+
+    private sealed record CaptureRecord(int Sequence, string Label, string FileName, string SnapshotFileName, DateTimeOffset CapturedAt);
+
+    private sealed record ElementSnapshot(
+        string Type,
+        string? Name,
+        string? AutomationId,
+        string? ClassName,
+        bool IsEnabled,
+        bool IsOffscreen,
+        double? X,
+        double? Y,
+        double? Width,
+        double? Height);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
+    private sealed record SmokeOptions(string RepoRoot, string OutputDirectory, string Configuration, string Theme, bool KeepApp)
+    {
+        public static SmokeOptions Parse(IReadOnlyList<string> args)
+        {
+            var repoRoot = ReadOption(args, "--repo-root") ?? Directory.GetCurrentDirectory();
+            var configuration = ReadOption(args, "--configuration") ?? "Release";
+            var outputDirectory = ReadOption(args, "--output-dir")
+                                  ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
+            var theme = ReadOption(args, "--theme") ?? "Dark";
+            var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, keepApp);
+        }
+
+        private static string? ReadOption(IReadOnlyList<string> args, string name)
+        {
+            for (var i = 0; i < args.Count; i++)
+            {
+                if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase) && i + 1 < args.Count)
+                    return args[i + 1];
+
+                var prefix = $"{name}=";
+                if (args[i].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    return args[i][prefix.Length..];
+            }
+
+            return null;
+        }
+    }
+}

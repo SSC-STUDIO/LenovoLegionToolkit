@@ -104,7 +104,7 @@ public class RetryHelperTests
 
         // Assert - Should have waited between retries
         attemptCount.Should().Be(3);
-        elapsed.Should().BeGreaterOrEqualTo(timeout);
+        elapsed.Should().BeGreaterThanOrEqualTo(timeout);
     }
 
     #endregion

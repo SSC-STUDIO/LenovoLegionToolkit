@@ -15,14 +15,15 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.WPF.Utils;
 using System.IO;
 using System.Net.Http;
-using MenuItem = Wpf.Ui.Controls.MenuItem;
+using Wpf.Ui.Controls;
 using System.Windows.Forms;
 using Process = System.Diagnostics.Process;
 using ProcessStartInfo = System.Diagnostics.ProcessStartInfo;
 using LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.Lib.Extensions;
-using Wpf.Ui.Controls;
+using HyperlinkButton = Wpf.Ui.Controls.HyperlinkButton;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -46,7 +47,7 @@ public partial class WindowsOptimizationPage
             {
                 try
                 {
-                    var machineInfo = await Compatibility.GetMachineInformationAsync();
+                    var machineInfo = await MachineCompatibility.GetMachineInformationAsync();
                     _driverMachineTypeTextBox.Text = machineInfo.MachineType;
                 }
                 catch (Exception ex)
@@ -677,3 +678,4 @@ public partial class WindowsOptimizationPage
 
     
 }
+

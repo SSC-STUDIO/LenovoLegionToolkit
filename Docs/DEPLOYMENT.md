@@ -386,6 +386,17 @@ dotnet build --configuration Release
 - NuGet package verification
 - Dependency vulnerability scanning (Dependabot)
 
+### Dependency Audit
+
+Before a release candidate, verify the centrally managed package set from the repository root:
+
+```bash
+dotnet list LenovoLegionToolkit.sln package --outdated --include-transitive --no-restore
+dotnet list LenovoLegionToolkit.sln package --vulnerable --include-transitive --no-restore
+```
+
+On Windows builds from a WSL UNC path, prefer `--no-restore` after a successful restore/build to avoid repeating slow restore work over `\\wsl.localhost`. CsWin32 metadata packages may appear as transitive packages whose latest version is not found in the configured sources; treat those as generated-tool metadata, not as direct application dependencies.
+
 ### Deployment Security
 
 - HTTPS for all downloads

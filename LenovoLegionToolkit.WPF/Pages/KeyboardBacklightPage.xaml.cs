@@ -4,7 +4,6 @@ using System.Windows;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
 using LenovoLegionToolkit.WPF.ViewModels;
-using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
@@ -42,7 +41,6 @@ public partial class KeyboardBacklightPage
         _loader.IsLoading = false;
     }
 
-    public static async Task<bool> IsSupportedAsync() =>
-        Compatibility.IsSmokeLegionSimulationEnabled || await KeyboardBacklightViewModel.IsSupportedAsync();
+    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
 }
 }

@@ -11,6 +11,7 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Microsoft.Win32;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent
@@ -164,7 +165,7 @@ public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomatio
 
         private readonly Button _deleteButton = new()
         {
-            Icon = SymbolRegular.Delete24.ToSymbolIcon(),
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Delete24 },
             FontSize = 18,
             Margin = new(8, 0, 0, 0),
         };
@@ -216,3 +217,4 @@ public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomatio
     }
 }
 }
+

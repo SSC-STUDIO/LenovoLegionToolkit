@@ -42,7 +42,7 @@ public class DashboardGroupControl : UserControl
                 FontWeight = FontWeights.Medium,
                 Margin = new(0, 16, 0, 24)
             };
-            _headerTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
+            _headerTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
             AutomationProperties.SetName(_headerTextBlock, _headerTextBlock.Text);
             _stackPanel.Children.Add(_headerTextBlock);
 

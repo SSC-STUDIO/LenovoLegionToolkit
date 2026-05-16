@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -21,3 +22,4 @@ public class TurnOffWiFiAutomationStepControl : AbstractAutomationStepControl
 
     protected override Task RefreshAsync() => Task.CompletedTask;
 }
+

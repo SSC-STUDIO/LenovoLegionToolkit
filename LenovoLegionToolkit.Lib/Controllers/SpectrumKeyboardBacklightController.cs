@@ -693,7 +693,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     Marshal.StructureToPtr(str, ptr, false);
                 }
 
-                var result = PInvoke.HidD_SetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_SetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
             }
@@ -733,7 +733,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 ptr = Marshal.AllocHGlobal(size);
                 Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_GetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
 
@@ -773,7 +773,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 ptr = Marshal.AllocHGlobal(size);
                 Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_GetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error("bytes");
 

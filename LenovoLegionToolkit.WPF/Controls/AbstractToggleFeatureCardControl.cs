@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -9,7 +9,6 @@ using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
-using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
 namespace LenovoLegionToolkit.WPF.Controls;
 
@@ -23,10 +22,16 @@ public abstract class AbstractToggleFeatureCardControl<T> : AbstractRefreshingCo
 
     private readonly ToggleSwitch _toggle = new();
 
+    private SymbolRegular _icon = SymbolRegular.Empty;
+
     protected SymbolRegular Icon
     {
-        get => _cardControl.Icon;
-        set => _cardControl.Icon = value;
+        get => _icon;
+        set
+        {
+            _icon = value;
+            _cardControl.Icon = new SymbolIcon { Symbol = value };
+        }
     }
 
     protected string Title

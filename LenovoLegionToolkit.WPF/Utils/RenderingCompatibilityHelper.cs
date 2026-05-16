@@ -7,6 +7,9 @@ using System.Windows.Shell;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
+
 namespace LenovoLegionToolkit.WPF.Utils;
 
 internal static class RenderingCompatibilityHelper
@@ -65,7 +68,7 @@ internal static class RenderingCompatibilityHelper
                 hwndTarget.RenderMode = RenderMode.SoftwareOnly;
 
             ApplyCompatibleWindowChrome(window);
-            // WPF-UI 4 removed Appearance.Background.RestoreContentBackground; window chrome fallback is sufficient here.
+            window.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
         }
         catch (Exception ex)
         {

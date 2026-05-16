@@ -9,10 +9,11 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.MacroPage_Title}"
-    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    >
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <StackPanel Margin="32,0,16,12">
+    <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,12">
         <TextBlock
             Margin="0,16,0,8"
             Focusable="True"
@@ -181,6 +182,8 @@
                 Margin="32,0,0,0" />
 
         </Grid>
-    </StackPanel>
-    </ScrollViewer>
+        </StackPanel>
+    </wpfui:DynamicScrollViewer>
 </Page>
+
+

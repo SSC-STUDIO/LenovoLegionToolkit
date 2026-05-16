@@ -32,7 +32,7 @@ public partial class UnsupportedWindow : FluentWindow
         try
         {
             // Try to detect system theme
-            var isDarkMode = LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
+            var isDarkMode = SystemTheme.IsDarkMode();
             var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             
             if (Log.Instance.IsTraceEnabled)
@@ -55,16 +55,36 @@ public partial class UnsupportedWindow : FluentWindow
     {
         // Ensure theme is applied when window is loaded
         ApplyTheme();
+
+        var continueButton = GetContinueButton();
+        if (continueButton is null)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("UnsupportedWindow continue button was not initialized.");
+
+            return;
+        }
         
         var continueText = Resource.Continue;
         for (var i = 5; i > 0; i--)
         {
-            _continueButton.Content = $"{continueText} ({i})";
+            continueButton.Content = $"{continueText} ({i})";
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
-        _continueButton.Content = continueText;
-        _continueButton.IsEnabled = true;
+        continueButton.Content = continueText;
+        continueButton.IsEnabled = true;
+    }
+
+    private Wpf.Ui.Controls.Button? GetContinueButton()
+    {
+        if (_continueButton is not null)
+            return _continueButton;
+
+        if (FindName("_continueButton") is Wpf.Ui.Controls.Button namedButton)
+            return namedButton;
+
+        return LogicalTreeHelper.FindLogicalNode(this, "_continueButton") as Wpf.Ui.Controls.Button;
     }
 
     private void Window_Closed(object sender, EventArgs e)

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -10,7 +11,7 @@ public static class HybridModeAutomationStepControlFactory
 {
     public static async Task<AbstractAutomationStepControl<IAutomationStep<HybridModeState>>> GetControlAsync(IAutomationStep<HybridModeState> step)
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeAutomationStepControl(step)
             : new ToggleHybridModeAutomationStepControl(step);
@@ -36,3 +37,4 @@ public static class HybridModeAutomationStepControlFactory
         }
     }
 }
+

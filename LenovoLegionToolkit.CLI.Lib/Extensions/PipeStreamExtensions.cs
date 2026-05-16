@@ -37,8 +37,8 @@ public static class PipeStreamExtensions
 
         do
         {
-            _ = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
-            builder.Append(Encoding.GetString(buffer));
+            var bytesRead = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
+            builder.Append(Encoding.GetString(buffer, 0, bytesRead));
         } while (!stream.IsMessageComplete);
 
         return JsonSerializer.Deserialize<T>(builder.ToString(), PipeJsonOptions);

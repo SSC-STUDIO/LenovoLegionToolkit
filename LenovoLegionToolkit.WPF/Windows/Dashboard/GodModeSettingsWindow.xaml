@@ -29,8 +29,7 @@
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
-            ShowMinimize="false"
- />
+            ShowMinimize="false" />
 
         <Grid
             Grid.Row="0"
@@ -338,11 +337,13 @@
                 Content="{x:Static resources:Resource.SaveAndClose}" />
         </Grid>
 
-        <Grid x:Name="_snackBarHost" Grid.Row="1">
-            <wpfui:SnackbarPresenter
-                x:Name="_snackBarPresenter"
-                HorizontalAlignment="Center" />
-        </Grid>
+        <wpfui:SnackbarPresenter
+            x:Name="_snackBarPresenter"
+            Grid.Row="1"
+            HorizontalAlignment="Center" />
 
     </Grid>
 </local:BaseWindow>
+
+
+

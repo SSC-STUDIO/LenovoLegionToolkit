@@ -4,9 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using LenovoLegionToolkit.WPF.Resources;
-using MessageBox = Wpf.Ui.Controls.MessageBox;
-using TextBox = Wpf.Ui.Controls.TextBox;
 using Wpf.Ui.Controls;
+using MessageBox = Wpf.Ui.Controls.MessageBox;
+using MessageBoxResult = Wpf.Ui.Controls.MessageBoxResult;
+using TextBox = Wpf.Ui.Controls.TextBox;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
@@ -25,12 +26,14 @@ public static class MessageBoxHelper
         return ShowAsync(window, title, message, leftButton, rightButton);
     }
 
-    public static async Task<bool> ShowAsync(Window window,
+    public static Task<bool> ShowAsync(Window window,
         string title,
         string message,
         string? primaryButton = null,
         string? secondaryButton = null)
     {
+        var tcs = new TaskCompletionSource<bool>();
+
         var messageBox = new MessageBox
         {
             Owner = window,
@@ -46,9 +49,15 @@ public static class MessageBoxHelper
             Topmost = false,
             ResizeMode = ResizeMode.NoResize,
         };
+        _ = messageBox.ShowDialogAsync().ContinueWith(t =>
+        {
+            if (t.IsCompletedSuccessfully)
+                tcs.TrySetResult(t.Result == MessageBoxResult.Primary);
+            else
+                tcs.TrySetResult(false);
+        }, TaskScheduler.FromCurrentSynchronizationContext());
 
-        var result = await messageBox.ShowDialogAsync();
-        return result == Wpf.Ui.Controls.MessageBoxResult.Primary;
+        return tcs.Task;
     }
 
     public static Task<string?> ShowInputAsync(
@@ -67,7 +76,7 @@ public static class MessageBoxHelper
         return ShowInputAsync(window, title, placeholder, text, primaryButton, secondaryButton, allowEmpty);
     }
 
-    public static async Task<string?> ShowInputAsync(
+    public static Task<string?> ShowInputAsync(
         Window window,
         string title,
         string? placeholder = null,
@@ -77,6 +86,8 @@ public static class MessageBoxHelper
         bool allowEmpty = false
     )
     {
+        var tcs = new TaskCompletionSource<string?>();
+
         var textBox = new TextBox
         {
             MaxLines = 1,
@@ -84,7 +95,6 @@ public static class MessageBoxHelper
             PlaceholderText = placeholder ?? string.Empty,
             TextWrapping = TextWrapping.Wrap
         };
-
         var messageBox = new MessageBox
         {
             Owner = window,
@@ -100,28 +110,31 @@ public static class MessageBoxHelper
             ResizeMode = ResizeMode.NoResize,
         };
 
-        void SyncPrimaryEnabled()
+        textBox.TextChanged += (_, _) =>
         {
             var isEmpty = !allowEmpty && string.IsNullOrWhiteSpace(textBox.Text);
-            messageBox.IsPrimaryButtonEnabled = !isEmpty;
             messageBox.PrimaryButtonAppearance = isEmpty ? ControlAppearance.Transparent : ControlAppearance.Primary;
-        }
+        };
+        _ = messageBox.ShowDialogAsync().ContinueWith(t =>
+        {
+            if (!t.IsCompletedSuccessfully || t.Result != MessageBoxResult.Primary)
+            {
+                tcs.TrySetResult(null);
+                return;
+            }
 
-        textBox.TextChanged += (_, _) => SyncPrimaryEnabled();
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+            var content = textBox.Text?.Trim();
+            var newText = string.IsNullOrWhiteSpace(content) ? null : content;
+            tcs.TrySetResult(!allowEmpty && newText is null ? null : newText);
+        }, TaskScheduler.FromCurrentSynchronizationContext());
 
         textBox.Text = text ?? string.Empty;
         textBox.SelectionStart = text?.Length ?? 0;
         textBox.SelectionLength = 0;
-        SyncPrimaryEnabled();
 
         FocusManager.SetFocusedElement(window, textBox);
 
-        var result = await messageBox.ShowDialogAsync();
-
-        if (result != Wpf.Ui.Controls.MessageBoxResult.Primary)
-            return null;
-
-        var content = textBox.Text?.Trim();
-        return string.IsNullOrWhiteSpace(content) ? null : content;
+        return tcs.Task;
     }
 }

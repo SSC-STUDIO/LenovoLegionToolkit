@@ -39,7 +39,7 @@ public class DefaultDelayProviderTests
         var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 
         // Assert
-        elapsedMs.Should().BeGreaterOrEqualTo(delayMs - 10); // Allow small margin
+        elapsedMs.Should().BeGreaterThanOrEqualTo(delayMs - 10); // Allow small margin
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class DefaultDelayProviderTests
         var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 
         // Assert
-        elapsedMs.Should().BeGreaterOrEqualTo(delays.Sum() - 20);
+        elapsedMs.Should().BeGreaterThanOrEqualTo(delays.Sum() - 20);
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class DefaultDelayProviderTests
         var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 
         // Assert - Even 1ms delay should show some elapsed time
-        elapsedMs.Should().BeGreaterOrEqualTo(0);
+        elapsedMs.Should().BeGreaterThanOrEqualTo(0);
     }
 
     [Fact]
@@ -161,7 +161,7 @@ public class DefaultDelayProviderTests
         var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 
         // Assert
-        elapsedMs.Should().BeGreaterOrEqualTo(delayMs - 20);
+        elapsedMs.Should().BeGreaterThanOrEqualTo(delayMs - 20);
     }
 
     #endregion

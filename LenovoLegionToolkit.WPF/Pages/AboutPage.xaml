@@ -9,10 +9,11 @@
     Title="{x:Static resources:Resource.AboutPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <StackPanel
-        Margin="32,0,16,12"
-        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <wpfui:DynamicScrollViewer
+        AutomationProperties.AutomationId="AboutPageScrollViewer"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,12">
         <TextBlock
             Margin="0,16,0,24"
             Focusable="True"
@@ -28,17 +29,23 @@
             x:Name="_version"
             Padding="0,0,0,8"
             Focusable="True"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             Text="{x:Static resources:Resource.AboutPage_Version}" />
         <TextBlock
             x:Name="_build"
             Padding="0,0,0,16"
             Focusable="True"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             Text="{x:Static resources:Resource.AboutPage_Build}" />
 
-        <TextBlock x:Name="_copyright" Focusable="True" />
+        <TextBlock
+            x:Name="_copyright"
+            Focusable="True"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
         <TextBlock
             x:Name="_translationCredit"
             Padding="0,8,0,0"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             Text="{x:Static resources:Resource.AboutPage_TranslationCredit}" />
 
         <TextBlock
@@ -48,12 +55,18 @@
             Text="{x:Static resources:Resource.AboutPage_Links}" />
         <wpfui:HyperlinkButton
             Content="{x:Static resources:Resource.AboutPage_ProjectWebsiteOnGitHub}"
-            Icon="Link24"
-            NavigateUri="{x:Static root:Constants.ProjectWebsiteUrl}" />
+            NavigateUri="{x:Static root:Constants.ProjectWebsiteUrl}">
+            <wpfui:HyperlinkButton.Icon>
+                <wpfui:SymbolIcon Symbol="Link24" />
+            </wpfui:HyperlinkButton.Icon>
+        </wpfui:HyperlinkButton>
         <wpfui:HyperlinkButton
             Content="{x:Static resources:Resource.AboutPage_LatestReleaseOnGitHub}"
-            Icon="Link24"
-            NavigateUri="{x:Static root:Constants.LatestReleaseUrl}" />
+            NavigateUri="{x:Static root:Constants.LatestReleaseUrl}">
+            <wpfui:HyperlinkButton.Icon>
+                <wpfui:SymbolIcon Symbol="Link24" />
+            </wpfui:HyperlinkButton.Icon>
+        </wpfui:HyperlinkButton>
 
         <TextBlock
             Padding="0,24,0,8"
@@ -83,7 +96,7 @@
                 <wpfui:HyperlinkButton Content="Markdig.Wpf" NavigateUri="https://github.com/Kryptos-FR/markdig.wpf" />
                 <wpfui:HyperlinkButton Content="Microsoft.CSharp" NavigateUri="https://github.com/dotnet/runtime" />
                 <wpfui:HyperlinkButton Content="NAudio.Wasapi" NavigateUri="https://github.com/naudio/NAudio" />
-                <wpfui:HyperlinkButton Content="System.Text.Json" NavigateUri="https://learn.microsoft.com/dotnet/api/system.text.json" />
+                <wpfui:HyperlinkButton Content="Newtonsoft.Json" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json" />
                 <wpfui:HyperlinkButton Content="NvAPIWrapper.Net" NavigateUri="https://github.com/falahati/NvAPIWrapper" />
             </StackPanel>
             <StackPanel Grid.Column="2">
@@ -106,13 +119,22 @@
 
         <wpfui:HyperlinkButton
             Click="OpenApplicationDataFolder_Click"
-            Content="{x:Static resources:Resource.AboutPage_Data}"
-            Icon="Folder24" />
+            Content="{x:Static resources:Resource.AboutPage_Data}">
+            <wpfui:HyperlinkButton.Icon>
+                <wpfui:SymbolIcon Symbol="Folder24" />
+            </wpfui:HyperlinkButton.Icon>
+        </wpfui:HyperlinkButton>
         <wpfui:HyperlinkButton
             Click="OpenApplicationTempFolder_Click"
-            Content="{x:Static resources:Resource.AboutPage_Temp}"
-            Icon="Folder24" />
+            Content="{x:Static resources:Resource.AboutPage_Temp}">
+            <wpfui:HyperlinkButton.Icon>
+                <wpfui:SymbolIcon Symbol="Folder24" />
+            </wpfui:HyperlinkButton.Icon>
+        </wpfui:HyperlinkButton>
 
-    </StackPanel>
-    </ScrollViewer>
+        </StackPanel>
+    </wpfui:DynamicScrollViewer>
 </Page>
+
+
+

@@ -79,41 +79,8 @@
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         </Style>
 
-        <Style x:Key="SkeletonBlockStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Style x:Key="SkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Opacity" Value="0.85" />
-            <Setter Property="ClipToBounds" Value="True" />
-        </Style>
-
-        <Style x:Key="SkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource SkeletonBlockStyle}">
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <LinearGradientBrush.RelativeTransform>
-                            <TranslateTransform X="-1.2" />
-                        </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Color="#268891A0" Offset="0" />
-                        <GradientStop Color="#4A8891A0" Offset="0.48" />
-                        <GradientStop Color="#268891A0" Offset="1" />
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
-                                From="-1.2"
-                                To="1.2"
-                                Duration="0:0:1.4"
-                                RepeatBehavior="Forever" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="DetailActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonCompact}">
@@ -154,8 +121,8 @@
         </Style>
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <Grid Margin="32,0,16,12">
+    <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0,0,16,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -190,25 +157,25 @@
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
                         <wpfui:SymbolIcon Symbol="Apps24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryTotal}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <TextBlock x:Name="_summaryTotalTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Text="0" />
+                        <TextBlock x:Name="_summaryTotalTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
                         <wpfui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryInstalled}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <TextBlock x:Name="_summaryInstalledTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Text="0" />
+                        <TextBlock x:Name="_summaryInstalledTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
                         <wpfui:SymbolIcon Symbol="ArrowCircleUp24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryUpdatesReady}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <TextBlock x:Name="_summaryUpdatesTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Text="0" />
+                        <TextBlock x:Name="_summaryUpdatesTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
                         <wpfui:SymbolIcon Symbol="Pulse24" FontSize="15" Foreground="{DynamicResource SystemAccentColorBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryStorePulse}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <TextBlock x:Name="_summaryStorePulseValueTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Text="0" />
+                        <TextBlock x:Name="_summaryStorePulseValueTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
                 </WrapPanel>
 
@@ -259,9 +226,7 @@
                     Appearance="Secondary"
                     Margin="8,0,0,0"
                     Height="36"
-                    MinWidth="118"
                     Click="BulkImportButton_Click"
-                    Content="{x:Static resources:Resource.PluginExtensionsPage_ImportFromFiles}"
                     ToolTip="{x:Static resources:Resource.PluginExtensionsPage_BulkImportTooltip}">
                     <wpfui:Button.Icon>
                         <wpfui:SymbolIcon Symbol="Open24" />
@@ -531,17 +496,22 @@
                             <wpfui:Button Content="{Binding InstallButtonText}"
                                           AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
                                           Style="{StaticResource DetailPrimaryActionButtonStyle}"
-                                          Icon="ArrowDownload24"
                                           Click="PluginInstallButton_Click"
                                           Tag="{Binding PluginId}"
                                           ToolTip="{Binding InstallButtonText}"
-                                          Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                          Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <wpfui:Button.Icon>
+                                    <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                                </wpfui:Button.Icon>
+                            </wpfui:Button>
 
                             <wpfui:Button Content="{Binding ConfigureButtonText}"
                                           AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                          Icon="Settings24"
                                           ToolTip="{Binding ConfigureButtonText}">
+                                <wpfui:Button.Icon>
+                                    <wpfui:SymbolIcon Symbol="Settings24" />
+                                </wpfui:Button.Icon>
                                 <wpfui:Button.Visibility>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
                                         <Binding Path="IsInstalled" />
@@ -574,11 +544,14 @@
                             <wpfui:Button Content="{Binding UninstallButtonText}"
                                           AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
                                           Style="{StaticResource DetailDangerActionButtonStyle}"
-                                          Icon="Delete24"
                                           Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                           Click="PluginUninstallButton_Click"
                                           Tag="{Binding PluginId}"
-                                          ToolTip="{Binding UninstallButtonText}" />
+                                          ToolTip="{Binding UninstallButtonText}">
+                                <wpfui:Button.Icon>
+                                    <wpfui:SymbolIcon Symbol="Delete24" />
+                                </wpfui:Button.Icon>
+                            </wpfui:Button>
                         </WrapPanel>
 
                         <TextBlock Text="{Binding Description}"
@@ -609,7 +582,8 @@
                             <TextBlock Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{Binding CapabilitySummary}"
-                                       TextWrapping="Wrap" />
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
@@ -621,6 +595,7 @@
                                        Grid.Column="1"
                                        Margin="0,12,0,0"
                                        Text="{Binding NewVersion}"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                        Visibility="{Binding HasUpdateDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <TextBlock Grid.Row="2"
@@ -635,6 +610,7 @@
                                        Text="{Binding Changelog}"
                                        TextWrapping="Wrap"
                                        MaxHeight="96"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                        Visibility="{Binding HasChangelog, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
 
@@ -833,6 +809,8 @@
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>
-    </Grid>
-    </ScrollViewer>
+        </Grid>
+    </wpfui:DynamicScrollViewer>
 </Page>
+
+

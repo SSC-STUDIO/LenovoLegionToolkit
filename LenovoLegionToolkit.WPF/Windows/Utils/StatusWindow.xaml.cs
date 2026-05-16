@@ -12,6 +12,7 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
@@ -58,8 +59,8 @@ public partial class StatusWindow
 
         try
         {
-            var machineInfo = await Compatibility.GetMachineInformationAsync();
-            isCompatibilityMode = !Compatibility.IsSupportedLegionMachine(machineInfo);
+            var machineInfo = await MachineCompatibility.GetMachineInformationAsync();
+            isCompatibilityMode = !MachineCompatibility.IsSupportedLegionMachine(machineInfo);
         }
         catch (Exception ex)
         {
@@ -148,7 +149,7 @@ public partial class StatusWindow
 
         WindowStyle = System.Windows.WindowStyle.None;
         WindowStartupLocation = WindowStartupLocation.Manual;
-        base.WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.None;
+        WindowBackdropType = WindowBackdropType.None;
         ResizeMode = ResizeMode.NoResize;
         SizeToContent = SizeToContent.WidthAndHeight;
 
@@ -341,3 +342,4 @@ public partial class StatusWindow
     private void RefreshUpdate(bool hasUpdate) => _updateIndicator.Visibility = hasUpdate ? Visibility.Visible : Visibility.Collapsed;
 }
 }
+

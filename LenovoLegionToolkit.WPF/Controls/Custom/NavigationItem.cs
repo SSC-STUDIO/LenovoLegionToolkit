@@ -3,61 +3,106 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
-using System.Windows.Controls;
-using System.Windows.Input;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Custom;
 
-public class NavigationItem : Wpf.Ui.Controls.NavigationViewItem
+public class NavigationItem : ButtonBase
 {
-    static NavigationItem()
+    public static readonly DependencyProperty PageTagProperty = DependencyProperty.Register(
+        nameof(PageTag),
+        typeof(string),
+        typeof(NavigationItem),
+        new PropertyMetadata(string.Empty));
+
+    public string PageTag
     {
-        ContentProperty.OverrideMetadata(typeof(NavigationItem), new FrameworkPropertyMetadata(null, OnContentChanged));
+        get => (string)GetValue(PageTagProperty);
+        set => SetValue(PageTagProperty, value);
     }
 
-    public string? DisplayContent
+    public static readonly DependencyProperty PageTypeProperty = DependencyProperty.Register(
+        nameof(PageType),
+        typeof(Type),
+        typeof(NavigationItem),
+        new PropertyMetadata(null));
+
+    public Type? PageType
     {
-        get => (string?)GetValue(DisplayContentProperty);
-        set => SetValue(DisplayContentProperty, value);
+        get => (Type?)GetValue(PageTypeProperty);
+        set => SetValue(PageTypeProperty, value);
     }
 
-    public static readonly DependencyProperty DisplayContentProperty =
-        DependencyProperty.Register(
-            nameof(DisplayContent),
-            typeof(string),
-            typeof(NavigationItem),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+    public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
+        nameof(IsActive),
+        typeof(bool),
+        typeof(NavigationItem),
+        new PropertyMetadata(false));
 
-    public IconElement? DisplayIcon
+    public bool IsActive
     {
-        get => (IconElement?)GetValue(DisplayIconProperty);
-        set => SetValue(DisplayIconProperty, value);
+        get => (bool)GetValue(IsActiveProperty);
+        set => SetValue(IsActiveProperty, value);
     }
 
-    public static readonly DependencyProperty DisplayIconProperty =
-        DependencyProperty.Register(
-            nameof(DisplayIcon),
-            typeof(IconElement),
-            typeof(NavigationItem),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+    public static readonly DependencyProperty CacheProperty = DependencyProperty.Register(
+        nameof(Cache),
+        typeof(bool),
+        typeof(NavigationItem),
+        new PropertyMetadata(true));
 
-    public SymbolRegular Symbol
+    public bool Cache
     {
-        get => (SymbolRegular)GetValue(SymbolProperty);
-        set => SetValue(SymbolProperty, value);
+        get => (bool)GetValue(CacheProperty);
+        set => SetValue(CacheProperty, value);
     }
 
-    public static readonly DependencyProperty SymbolProperty =
-        DependencyProperty.Register(
-            nameof(Symbol),
-            typeof(SymbolRegular),
-            typeof(NavigationItem),
-            new FrameworkPropertyMetadata(
-                SymbolRegular.Empty,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-                OnSymbolChanged));
+    public static readonly DependencyProperty PageSourceProperty = DependencyProperty.Register(
+        nameof(PageSource),
+        typeof(Uri),
+        typeof(NavigationItem),
+        new PropertyMetadata(null));
+
+    public Uri? PageSource
+    {
+        get => (Uri?)GetValue(PageSourceProperty);
+        set => SetValue(PageSourceProperty, value);
+    }
+
+    public Uri? AbsolutePageSource => PageSource;
+
+    public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+        nameof(Icon),
+        typeof(SymbolRegular),
+        typeof(NavigationItem),
+        new PropertyMetadata(SymbolRegular.Empty));
+
+    public SymbolRegular Icon
+    {
+        get => (SymbolRegular)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public static readonly DependencyProperty IconFilledProperty = DependencyProperty.Register(
+        nameof(IconFilled),
+        typeof(bool),
+        typeof(NavigationItem),
+        new PropertyMetadata(false));
+
+    public bool IconFilled
+    {
+        get => (bool)GetValue(IconFilledProperty);
+        set => SetValue(IconFilledProperty, value);
+    }
+
+    public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(
+        nameof(IconSize),
+        typeof(double),
+        typeof(NavigationItem),
+        new PropertyMetadata(16d));
 
     public double IconSize
     {
@@ -65,12 +110,11 @@ public class NavigationItem : Wpf.Ui.Controls.NavigationViewItem
         set => SetValue(IconSizeProperty, value);
     }
 
-    public static readonly DependencyProperty IconSizeProperty =
-        DependencyProperty.Register(
-            nameof(IconSize),
-            typeof(double),
-            typeof(NavigationItem),
-            new FrameworkPropertyMetadata(24.0, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+    public static readonly DependencyProperty IconForegroundProperty = DependencyProperty.Register(
+        nameof(IconForeground),
+        typeof(Brush),
+        typeof(NavigationItem),
+        new PropertyMetadata(null));
 
     public Brush? IconForeground
     {
@@ -78,103 +122,40 @@ public class NavigationItem : Wpf.Ui.Controls.NavigationViewItem
         set => SetValue(IconForegroundProperty, value);
     }
 
-    public static readonly DependencyProperty IconForegroundProperty =
-        DependencyProperty.Register(nameof(IconForeground), typeof(Brush), typeof(NavigationItem), new PropertyMetadata(null));
+    public static readonly DependencyProperty ImageProperty = DependencyProperty.Register(
+        nameof(Image),
+        typeof(BitmapSource),
+        typeof(NavigationItem),
+        new PropertyMetadata(null));
 
-    public ImageSource? Image
+    public BitmapSource? Image
     {
-        get => (ImageSource?)GetValue(ImageProperty);
+        get => (BitmapSource?)GetValue(ImageProperty);
         set => SetValue(ImageProperty, value);
     }
 
-    public static readonly DependencyProperty ImageProperty =
-        DependencyProperty.Register(nameof(Image), typeof(ImageSource), typeof(NavigationItem), new PropertyMetadata(null));
-
-    public new SymbolRegular Icon
-    {
-        get => Symbol;
-        set => Symbol = value;
-    }
-
-    private EventHandler? _invoked;
-
-    public event EventHandler Invoked
-    {
-        add => _invoked += value;
-        remove => _invoked -= value;
-    }
-
-    internal bool HasInvokeHandler => _invoked is not null;
+    protected override AutomationPeer OnCreateAutomationPeer() => new NavigationItemAutomationPeer(this);
 
     internal void InvokeFromAutomation()
     {
         if (!IsEnabled)
             throw new ElementNotEnabledException();
 
-        Invoke();
-    }
-
-    protected override AutomationPeer OnCreateAutomationPeer() => new NavigationItemAutomationPeer(this);
-
-    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-    {
-        base.OnMouseLeftButtonUp(e);
-
-        if (Invoke())
-            e.Handled = true;
-    }
-
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-        base.OnKeyDown(e);
-
-        if (e.Key is not Key.Enter and not Key.Space)
-            return;
-
-        if (Invoke())
-            e.Handled = true;
-    }
-
-    private bool Invoke()
-    {
-        if (!IsEnabled || _invoked is null)
-            return false;
-
-        _invoked.Invoke(this, EventArgs.Empty);
-        return true;
-    }
-
-    private static void OnSymbolChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var item = (NavigationItem)d;
-        var symbol = (SymbolRegular)e.NewValue;
-        var icon = symbol == SymbolRegular.Empty ? null : new SymbolIcon { Symbol = symbol, FontSize = item.IconSize };
-        item.SetCurrentValue(DisplayIconProperty, icon);
-        item.SetCurrentValue(Wpf.Ui.Controls.NavigationViewItem.IconProperty, icon);
-    }
-
-    private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var item = (NavigationItem)d;
-        if (item.DisplayContent is not null)
-            return;
-
-        if (e.NewValue is string text)
-            item.SetCurrentValue(DisplayContentProperty, text);
+        OnClick();
     }
 
     private class NavigationItemAutomationPeer(NavigationItem owner) : FrameworkElementAutomationPeer(owner), IInvokeProvider
     {
         protected override string GetClassNameCore() => nameof(NavigationItem);
 
-        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Pane;
+        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Button;
 
         public override object? GetPattern(PatternInterface patternInterface)
         {
             if (patternInterface == PatternInterface.ItemContainer)
                 return this;
 
-            if (patternInterface == PatternInterface.Invoke && owner.HasInvokeHandler)
+            if (patternInterface == PatternInterface.Invoke)
                 return this;
 
             return base.GetPattern(patternInterface);

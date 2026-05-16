@@ -1,5 +1,6 @@
-﻿using LenovoLegionToolkit.Lib.Automation.Steps;
+using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -12,3 +13,4 @@ public class SpectrumKeyboardBacklightProfileAutomationStepControl : AbstractCom
         Subtitle = Resource.SpectrumKeyboardBacklightProfileAutomationStepControl_Message;
     }
 }
+

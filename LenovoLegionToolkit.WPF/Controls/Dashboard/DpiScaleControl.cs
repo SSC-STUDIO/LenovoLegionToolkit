@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
 using DpiScale = LenovoLegionToolkit.Lib.DpiScale;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
@@ -41,3 +42,4 @@ public class DpiScaleControl : AbstractComboBoxFeatureCardControl<DpiScale>
             await RefreshAsync();
     });
 }
+
