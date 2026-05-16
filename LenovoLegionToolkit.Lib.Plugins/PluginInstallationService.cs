@@ -452,8 +452,11 @@ public class PluginInstallationService
             // SECURITY: Verify the destination is within the extract directory
             var fullExtractDir = Path.GetFullPath(extractDir);
             var fullDestinationPath = Path.GetFullPath(destinationPath);
-            
-            if (!fullDestinationPath.StartsWith(fullExtractDir, StringComparison.OrdinalIgnoreCase))
+
+            if (!fullDestinationPath.StartsWith(fullExtractDir.EndsWith(Path.DirectorySeparatorChar.ToString())
+                    ? fullExtractDir
+                    : fullExtractDir + Path.DirectorySeparatorChar,
+                StringComparison.OrdinalIgnoreCase))
             {
                 Log.Instance.Warning($"SECURITY: ZIP entry escapes extract directory: {entry.FullName}");
                 continue;
