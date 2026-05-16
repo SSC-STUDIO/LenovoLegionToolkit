@@ -36,6 +36,8 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting Windows power mode: {powerModeState}");
 
+        Log.Instance.Info($"Setting Windows power mode: {powerModeState}");
+
         var powerMode = settings.Store.PowerModes.GetValueOrDefault(powerModeState, WindowsPowerMode.Balanced);
         var powerModeGuid = GuidForWindowsPowerMode(powerMode);
 
@@ -62,7 +64,7 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to update registry", ex);
+                    Log.Instance.Warning($"Failed to update registry", ex);
             }
 
             return Task.CompletedTask;
@@ -70,6 +72,8 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Windows power mode set to {powerMode}");
+
+        Log.Instance.Info($"Windows power mode set to {powerMode} [controller={nameof(WindowsPowerModeController)}]");
     }
 
     private static void UpdateRegistry(Guid guid)

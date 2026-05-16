@@ -1914,7 +1914,7 @@
     <value>打开或关闭位于设备后方的拯救者 LOGO 灯。</value>
   </data>
   <data name="GHz" xml:space="preserve">
-    <value>千兆赫</value>
+    <value>GHz</value>
   </data>
   <data name="MHz" xml:space="preserve">
     <value>兆赫</value>

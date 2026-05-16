@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 

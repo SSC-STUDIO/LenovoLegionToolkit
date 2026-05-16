@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls;
@@ -9,15 +8,8 @@ namespace LenovoLegionToolkit.WPF.Controls;
 public class LoadableControl : UserControl
 {
     private readonly ContentPresenter _contentPresenter = new();
-
-    private readonly ProgressRing _progressRing = new()
-    {
-        IsIndeterminate = true,
-        VerticalAlignment = VerticalAlignment.Center,
-        HorizontalAlignment = HorizontalAlignment.Center,
-        Width = 48,
-        Height = 48,
-    };
+    private readonly ContentPresenter _loadingPresenter = new();
+    private readonly ProgressRing _progressRing = new();
 
     private bool _isLoading = true;
 
@@ -75,25 +67,20 @@ public class LoadableControl : UserControl
 
     public Visibility ContentVisibilityWhileLoading { get; set; } = Visibility.Hidden;
 
+    public object? LoadingContent { get; set; }
+
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
 
         _contentPresenter.Content = Content;
+        _progressRing.SetResourceReference(StyleProperty, "AppLoadingRingStyle");
 
-        _progressRing.RenderTransformOrigin = new(0.5, 0.5);
-        _progressRing.RenderTransform = new TransformGroup
-        {
-            Children =
-            {
-                new RotateTransform(-90),
-                new ScaleTransform(-1, 1),
-            }
-        };
+        _loadingPresenter.Content = LoadingContent ?? _progressRing;
 
         var grid = new Grid();
         grid.Children.Add(_contentPresenter);
-        grid.Children.Add(_progressRing);
+        grid.Children.Add(_loadingPresenter);
 
         UpdateLoadingState();
 
@@ -103,6 +90,6 @@ public class LoadableControl : UserControl
     private void UpdateLoadingState()
     {
         _contentPresenter.Visibility = IsLoading ? ContentVisibilityWhileLoading : Visibility.Visible;
-        _progressRing.Visibility = IsLoading ? Visibility.Visible : Visibility.Hidden;
+        _loadingPresenter.Visibility = IsLoading ? Visibility.Visible : Visibility.Hidden;
     }
 }

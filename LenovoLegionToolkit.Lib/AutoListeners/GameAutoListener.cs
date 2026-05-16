@@ -121,8 +121,7 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
                     }
                     catch (Exception ex)
                     {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Can't get game \"{game}\" details: {ex.Message}", ex);
+                        Log.Instance.Warning($"Can't get game \"{game}\" details: {ex.Message}", ex);
                     }
                 }
             }
@@ -161,8 +160,7 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
 
                 if (string.IsNullOrEmpty(processPath))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Can't get path for {e.ProcessName}. [processId={e.ProcessId}]");
+                    Log.Instance.Warning($"Can't get path for {e.ProcessName}. [processId={e.ProcessId}]");
 
                     return;
                 }
@@ -181,8 +179,7 @@ public class GameAutoListener : AbstractAutoListener<GameAutoListener.ChangedEve
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to attach to {e.ProcessName}. [processId={e.ProcessId}]", ex);
+                Log.Instance.Error($"Failed to attach to {e.ProcessName}. [processId={e.ProcessId}]", ex);
             }
         }
     }

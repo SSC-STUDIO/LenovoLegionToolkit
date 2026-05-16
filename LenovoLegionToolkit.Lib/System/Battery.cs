@@ -202,7 +202,7 @@ public static class Battery
 
                     uint bytesReturned;
                     var result = PInvoke.DeviceIoControl(
-                        handle,
+                        handle.ToWin32Handle(),
                         PInvoke.IOCTL_BATTERY_QUERY_INFORMATION,
                         &queryInformation, // Take address directly since it's on stack
                         (uint)global::System.Runtime.InteropServices.Marshal.SizeOf<BATTERY_QUERY_INFORMATION>(),

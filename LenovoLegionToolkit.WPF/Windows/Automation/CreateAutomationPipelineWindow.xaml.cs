@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +10,7 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.Controls;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation
 {
@@ -117,7 +115,7 @@ public partial class CreateAutomationPipelineWindow
     {
         var control = new CardControl
         {
-            Icon = SymbolRegular.SquareMultiple24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.SquareMultiple24 },
             Header = new CardHeaderControl
             {
                 Title = Resource.MultipleTriggersAutomationPipelineTrigger_DisplayName,
@@ -160,7 +158,7 @@ public partial class CreateAutomationPipelineWindow
 
         var control = new CardControl
         {
-            Icon = trigger.Icon(),
+            Icon = new SymbolIcon { Symbol = trigger.Icon() },
             Header = new CardHeaderControl
             {
                 Title = trigger.DisplayName,

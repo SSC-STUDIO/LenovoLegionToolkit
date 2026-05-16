@@ -14,7 +14,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard
@@ -71,9 +71,11 @@ public partial class SensorsControl
         {
             var item = new MenuItem
             {
-                SymbolIcon = _dashboardSettings.Store.SensorsRefreshIntervalSeconds == interval ? SymbolRegular.Checkmark24 : SymbolRegular.Empty,
                 Header = TimeSpan.FromSeconds(interval).Humanize(culture: Resource.Culture)
             };
+            if (_dashboardSettings.Store.SensorsRefreshIntervalSeconds == interval)
+                item.Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 };
+
             item.Click += (_, _) =>
             {
                 _dashboardSettings.Store.SensorsRefreshIntervalSeconds = interval;
@@ -482,3 +484,4 @@ public partial class SensorsControl
     }
 }
 }
+

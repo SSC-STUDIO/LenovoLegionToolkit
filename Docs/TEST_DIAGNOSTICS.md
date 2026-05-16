@@ -117,6 +117,32 @@ dotnet test LenovoLegionToolkit.Tests
 
 ## MainAppPluginUi.Smoke 执行与诊断
 
+## VisualRegression.Smoke 页面视觉回归检查
+
+WPF-UI 迁移或主题/布局相关改动完成后，先构建主程序和视觉烟测工具：
+
+```bash
+dotnet build LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --no-restore
+dotnet build Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release --no-restore
+```
+
+再运行逐页截图烟测：
+
+```bash
+dotnet Tools/VisualRegression.Smoke/bin/Release/net10.0-windows/VisualRegression.Smoke.dll \
+  --repo-root . \
+  --configuration Release \
+  --output-dir Build/visual-regression-local \
+  --theme Dark
+```
+
+检查 `Build/visual-regression-local/result.json` 中 `error` 是否为 `null` 且 `errorLogs` 是否为空，并用 `current/storyboard.html` 或单张 PNG 逐页复核。WPF-UI 4 迁移后必须重点看这些位置：
+
+- 主窗口标题栏左侧的 `Log` 和设备信息按钮应有 hover/click 行为，且不应贴近右侧最小化/最大化/关闭按钮。
+- About 页在最小窗口尺寸下应显示 `AboutPageScrollViewer` 和 `PART_VerticalScrollBar`，内容不应被无滚动裁剪。
+- Plugin Extensions 顶部应保持卡片式 `Total Plugins`、`Installed`、`Updates Ready`、`Store Pulse` 汇总，不应退化成整条灰色横幅。
+- 深色主题下 About、Plugin Extensions、Settings、System Optimization 的正文、详情值和禁用/次级文字应保持可读对比度。
+
 ### 不打扰本机桌面的推荐方案
 
 如果不希望 smoke 抢占你当前的鼠标、键盘和前台窗口，不要在你正在使用的桌面会话里直接运行 `MainAppPluginUi.Smoke`。

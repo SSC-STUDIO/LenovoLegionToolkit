@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB;
 using LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
+using LenovoLegionToolkit.WPF.ViewModels;
 
 namespace LenovoLegionToolkit.WPF.Pages
 {
 public partial class KeyboardBacklightPage
 {
+    private readonly KeyboardBacklightViewModel _viewModel = new();
+
     public KeyboardBacklightPage() => InitializeComponent();
 
     private async void KeyboardBacklightPage_Initialized(object? sender, EventArgs e)
@@ -20,38 +21,26 @@ public partial class KeyboardBacklightPage
 
         _titleTextBlock.Visibility = Visibility.Visible;
 
-        var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-        if (await spectrumController.IsSupportedAsync())
+        await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
+
+        if (_viewModel.IsSpectrumSupported)
         {
             var control = new SpectrumKeyboardBacklightControl();
             _content.Children.Add(control);
-            _loader.IsLoading = false;
-            return;
         }
-
-        var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-        if (await rgbController.IsSupportedAsync())
+        else if (_viewModel.IsRGBSupported)
         {
             var control = new RGBKeyboardBacklightControl();
             _content.Children.Add(control);
-            _loader.IsLoading = false;
-            return;
+        }
+        else
+        {
+            _noKeyboardsText.Visibility = Visibility.Visible;
         }
 
-        _noKeyboardsText.Visibility = Visibility.Visible;
         _loader.IsLoading = false;
     }
-    public static async Task<bool> IsSupportedAsync()
-    {
-        var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-        if (await spectrumController.IsSupportedAsync())
-            return true;
 
-        var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-        if (await rgbController.IsSupportedAsync())
-            return true;
-
-        return false;
-    }
+    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
 }
 }

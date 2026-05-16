@@ -139,8 +139,11 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
-                        SymbolIcon="ArrowsBidirectional24" />
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}">
+                        <wpfui:MenuItem.Icon>
+                            <wpfui:SymbolIcon Symbol="ArrowsBidirectional24" />
+                        </wpfui:MenuItem.Icon>
+                    </wpfui:MenuItem>
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
             <controls:ColorPickerControl x:Name="_zone1ColorPicker" ColorChangedDelayed="CardControl_Changed" />
@@ -161,8 +164,11 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
-                        SymbolIcon="ArrowsBidirectional24" />
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}">
+                        <wpfui:MenuItem.Icon>
+                            <wpfui:SymbolIcon Symbol="ArrowsBidirectional24" />
+                        </wpfui:MenuItem.Icon>
+                    </wpfui:MenuItem>
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
             <controls:ColorPickerControl x:Name="_zone2ColorPicker" ColorChangedDelayed="CardControl_Changed" />
@@ -183,8 +189,11 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
-                        SymbolIcon="ArrowsBidirectional24" />
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}">
+                        <wpfui:MenuItem.Icon>
+                            <wpfui:SymbolIcon Symbol="ArrowsBidirectional24" />
+                        </wpfui:MenuItem.Icon>
+                    </wpfui:MenuItem>
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
             <controls:ColorPickerControl x:Name="_zone3ColorPicker" ColorChangedDelayed="CardControl_Changed" />
@@ -205,8 +214,11 @@
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
                     <wpfui:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
-                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}"
-                        SymbolIcon="ArrowsBidirectional24" />
+                        Header="{x:Static resources:Resource.RGBKeyboardBacklightControl_SynchroniseZones}">
+                        <wpfui:MenuItem.Icon>
+                            <wpfui:SymbolIcon Symbol="ArrowsBidirectional24" />
+                        </wpfui:MenuItem.Icon>
+                    </wpfui:MenuItem>
                 </ContextMenu>
             </custom:CardControl.ContextMenu>
             <controls:ColorPickerControl x:Name="_zone4ColorPicker" ColorChangedDelayed="CardControl_Changed" />

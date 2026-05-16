@@ -6,15 +6,15 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System;
+using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using NeoSmart.AsyncLock;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Windows.Win32;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
@@ -50,14 +50,7 @@ public class SpectrumKeyboardBacklightController : IDisposable
     private CancellationTokenSource? _auroraRefreshCancellationTokenSource;
     private Task? _auroraRefreshTask;
 
-    private readonly JsonSerializerSettings _jsonSerializerSettings = new()
-    {
-        Formatting = Formatting.Indented,
-        // SECURITY FIX: Changed from TypeNameHandling.Auto to None to prevent deserialization RCE attacks
-        TypeNameHandling = TypeNameHandling.None,
-        ObjectCreationHandling = ObjectCreationHandling.Replace,
-        Converters = [new StringEnumConverter()]
-    };
+    private static readonly JsonSerializerOptions SpectrumProfileJsonOptions = LltJson.CreateSettingsOptions();
 
     public bool ForceDisable { get; set; }
 
@@ -298,7 +291,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
     public async Task ImportProfileDescription(int profile, string jsonPath)
     {
         var json = await File.ReadAllTextAsync(jsonPath).ConfigureAwait(false);
-        var effects = JsonConvert.DeserializeObject<SpectrumKeyboardBacklightEffect[]>(json)
+        var effects = JsonSerializer.Deserialize<SpectrumKeyboardBacklightEffect[]>(json, SpectrumProfileJsonOptions)
                       ?? throw new InvalidOperationException("Couldn't deserialize effects");
 
         await SetProfileDescriptionAsync(profile, effects).ConfigureAwait(false);
@@ -307,7 +300,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
     public async Task ExportProfileDescriptionAsync(int profile, string jsonPath)
     {
         var (_, effects) = await GetProfileDescriptionAsync(profile).ConfigureAwait(false);
-        var json = JsonConvert.SerializeObject(effects, _jsonSerializerSettings);
+        var json = JsonSerializer.Serialize(effects, SpectrumProfileJsonOptions);
         await File.WriteAllTextAsync(jsonPath, json).ConfigureAwait(false);
     }
 
@@ -700,7 +693,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     Marshal.StructureToPtr(str, ptr, false);
                 }
 
-                var result = PInvoke.HidD_SetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_SetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
             }
@@ -740,7 +733,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 ptr = Marshal.AllocHGlobal(size);
                 Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_GetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error(typeof(T).Name);
 
@@ -780,7 +773,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 ptr = Marshal.AllocHGlobal(size);
                 Marshal.Copy(new byte[] { 7 }, 0, ptr, 1);
 
-                var result = PInvoke.HidD_GetFeature(handle, ptr.ToPointer(), (uint)size);
+                var result = PInvoke.HidD_GetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size);
                 if (!result)
                     PInvokeExtensions.ThrowIfWin32Error("bytes");
 

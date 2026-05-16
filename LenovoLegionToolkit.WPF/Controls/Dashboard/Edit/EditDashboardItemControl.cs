@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
-using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard.Edit;
 
@@ -27,7 +26,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _moveUpButton = new()
     {
-        Icon = SymbolRegular.ArrowUp24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowUp24 },
         ToolTip = Resource.MoveUp,
         MinWidth = 34,
         Height = 34,
@@ -36,7 +35,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _moveDownButton = new()
     {
-        Icon = SymbolRegular.ArrowDown24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowDown24 },
         ToolTip = Resource.MoveDown,
         MinWidth = 34,
         Height = 34,
@@ -45,7 +44,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.Dismiss24 },
         ToolTip = Resource.Delete,
         MinWidth = 34,
         Height = 34,
@@ -70,7 +69,7 @@ public class EditDashboardItemControl : UserControl
 
         _cardHeaderControl.Title = DashboardItem.GetTitle();
         _cardHeaderControl.Accessory = _stackPanel;
-        _cardControl.Icon = DashboardItem.GetIcon();
+        _cardControl.Icon = new SymbolIcon { Symbol = DashboardItem.GetIcon() };
         _cardControl.Header = _cardHeaderControl;
 
         AutomationProperties.SetName(_moveUpButton, _cardHeaderControl.Title);
@@ -80,3 +79,4 @@ public class EditDashboardItemControl : UserControl
         Content = _cardControl;
     }
 }
+

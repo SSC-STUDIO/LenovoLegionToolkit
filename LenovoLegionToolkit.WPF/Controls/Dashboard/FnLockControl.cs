@@ -1,7 +1,7 @@
-﻿using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
@@ -31,3 +31,4 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
             await RefreshAsync();
     });
 }
+

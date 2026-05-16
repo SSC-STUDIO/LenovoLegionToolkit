@@ -10,11 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- 挪威语 `Resource.no.resx` 中 `CopiedToClipboard_Message_WithParam` 补回 `{0}` 占位符，避免格式化参数丢失 / Restored the `{0}` placeholder in Norwegian `CopiedToClipboard_Message_WithParam` so clipboard notifications preserve the formatted argument
+- 中文界面中的传感器频率单位改为标准 `GHz` 缩写 / Changed the sensor frequency unit in Chinese UI to the standard `GHz` abbreviation
+- 修复 WPF-UI 4 迁移后的主窗口顶部 `Log`/设备信息按钮位置、交互和 hover 对比度，启动语言选择窗口透明背景、About 页小窗口滚动、插件扩展统计卡和深色主题文字对比回归 / Fixed WPF-UI 4 migration regressions in title-bar `Log`/device button placement, interaction, and hover contrast, startup language-selector transparency, About-page small-window scrolling, Plugin Extensions summary cards, and dark-theme text contrast
+
 ### Improved / 改进
+- 升级控制台页首次加载为贴近最终布局的骨架扫光动画，并为 CLI 等待主程序响应时增加不污染脚本输出的控制台加载动画 / Upgraded the Dashboard first-load state to a layout-matching shimmer skeleton and added a CLI loading animation while waiting for the main app response without polluting scripted output
+- 应用设置、自动化管道与 CLI IPC 的 JSON 序列化迁移至 `System.Text.Json`，并保持与既有配置文件格式的兼容策略（含自动化判别符）；Spectrum 配置文件导入导出同样使用该栈 / Migrated JSON serialization for application settings, automation pipelines, and CLI IPC to `System.Text.Json` while preserving compatibility strategies for existing files (including automation discriminators); Spectrum profile import/export uses the same stack
+- 已从基准 `Resource.resx` 回填 WPF 插件扩展等相关字符串键至全部卫星资源文件，`missing` 结构性缺口归零（占位文案为英文，可由 Crowdin 后续本地化）/ Backfilled plugin-extensions-related string keys from neutral `Resource.resx` into all WPF satellite resource files so structural `missing` gaps are cleared (English placeholders pending Crowdin localization)
+- 新增 `Tools/resx_translation_audit.py`，用于对四个资源模块的 `Resource.*.resx` 做缺失键、多余键、.NET 格式占位符一致性与英文残留（疑似未译）统计，便于发布前本地化自检 / Added `Tools/resx_translation_audit.py` to audit satellite `Resource.*.resx` files across the four resource modules for missing/extra keys, .NET placeholder parity, and English-identical strings for pre-release localization checks
 - 扩展 2025 年 Lenovo Legion 与 LOQ 机型识别，补齐 Gen 10 `15AKP`、`15IRX`、`16ADR`、`16AFR`、`17IRX`、`18IAX` 型号前缀 / Expanded 2025 Lenovo Legion and LOQ model detection by adding Gen 10 `15AKP`, `15IRX`, `16ADR`, `16AFR`, `17IRX`, and `18IAX` model prefixes
 - 加固发布和仓库治理：安装器改为检测 .NET 10 Desktop Runtime，发布流水线在打包前运行测试，并新增 CodeQL、Dependabot、Issue/PR 模板和分支保护配置 / Hardened release and repository governance by switching the installer to .NET 10 Desktop Runtime detection, running tests before release packaging, and adding CodeQL, Dependabot, Issue/PR templates, and branch protection configuration
 - 更新已验证兼容的 NuGet 依赖版本，并修正贡献指南、部署文档和安装器元数据中的旧仓库链接 / Updated verified-compatible NuGet dependency versions and corrected stale repository links in contribution guides, deployment docs, and installer metadata
 - 将 CLI 迁移到 `System.CommandLine` 2.0.7 稳定 API，保留现有命令、别名、验证错误和 IPC 失败提示行为 / Migrated the CLI to the stable `System.CommandLine` 2.0.7 APIs while preserving existing commands, aliases, validation errors, and IPC failure messages
+- 插件依赖解析：调用方传入各插件版本字典时才做依赖版本区间校验（不再使用虚构默认版本）；依赖关系图中未知版本显示为 `?`；移除未使用的 WPF 动画性能监控占位 API / Plugin dependency resolution now validates declared version ranges only when callers supply per-plugin version metadata (no fabricated defaults), shows `?` for unknown versions in the dependency graph, and removes the unused WPF animation performance-monitoring placeholder API
+- 完善 `AGENTS.md` 与 `CLAUDE.md` 中关于 `CHANGELOG` 的 `[Unreleased]` 维护说明（合并/发版前整理用户可见变更；未发布迭代中的自修不必逐条堆砌）/ Clarified `[Unreleased]` changelog guidance in `AGENTS.md` and `CLAUDE.md` (consolidate user-visible changes before merge/release; avoid stacking every pre-release self-correction as its own line)
 
 ## [3.6.15] - 2026-04-29
 

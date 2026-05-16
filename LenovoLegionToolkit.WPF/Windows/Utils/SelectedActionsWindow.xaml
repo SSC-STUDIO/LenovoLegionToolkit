@@ -28,8 +28,7 @@
             Title="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
             CanMaximize="False"
             ShowMaximize="False"
-            ShowMinimize="False"
-            UseSnapLayout="False" />
+            ShowMinimize="False" />
 
         <Grid Grid.Row="1" Margin="16">
             <Grid.RowDefinitions>
@@ -158,3 +157,4 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
+

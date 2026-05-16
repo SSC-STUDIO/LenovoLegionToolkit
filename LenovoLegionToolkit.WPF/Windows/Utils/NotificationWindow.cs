@@ -16,7 +16,6 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Color = System.Windows.Media.Color;
 using Colors = System.Windows.Media.Colors;
@@ -26,7 +25,7 @@ using Size = System.Windows.Size;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
-public class NotificationWindow : UiWindow, INotificationWindow
+public class NotificationWindow : FluentWindow, INotificationWindow
 {
     private readonly ScreenInfo _screenInfo;
 
@@ -173,8 +172,8 @@ public class NotificationWindow : UiWindow, INotificationWindow
         graphics.DrawImage(bitmap, 0, 0, newWidth, newHeight);
         graphics.ResetClip();
 
-        var appTheme = Wpf.Ui.Appearance.Theme.GetAppTheme();
-        var borderColor = appTheme == ThemeType.Dark ? System.Drawing.Color.FromArgb(64, 64, 64) : System.Drawing.Color.FromArgb(200, 200, 200);
+        var appTheme = ApplicationThemeManager.GetAppTheme();
+        var borderColor = appTheme == ApplicationTheme.Dark ? System.Drawing.Color.FromArgb(64, 64, 64) : System.Drawing.Color.FromArgb(200, 200, 200);
 
         using var pen = new System.Drawing.Pen(borderColor, 3);
         graphics.DrawPath(pen, penPath);
@@ -187,7 +186,7 @@ public class NotificationWindow : UiWindow, INotificationWindow
         WindowStartupLocation = WindowStartupLocation.Manual;
         ResizeMode = ResizeMode.NoResize;
         WindowStyle = WindowStyle.None;
-        WindowBackdropType = BackgroundType.None;
+        WindowBackdropType = WindowBackdropType.None;
         Background = System.Windows.Media.Brushes.Transparent;
         AllowsTransparency = true;
 
@@ -203,8 +202,8 @@ public class NotificationWindow : UiWindow, INotificationWindow
         _container.Background = (SolidColorBrush)FindResource("ApplicationBackgroundBrush");
         _container.BorderBrush = (SolidColorBrush)FindResource("CardStrokeColorDefaultBrush");
 
-        var appTheme = Wpf.Ui.Appearance.Theme.GetAppTheme();
-        _dropShadow.Color = appTheme == ThemeType.Dark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
+        var appTheme = ApplicationThemeManager.GetAppTheme();
+        _dropShadow.Color = appTheme == ApplicationTheme.Dark ? Colors.Black : Color.FromArgb(64, 0, 0, 0);
         _container.Effect = _dropShadow;
     }
 

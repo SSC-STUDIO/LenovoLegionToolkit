@@ -9,11 +9,10 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using Theme = Wpf.Ui.Appearance.Theme;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-public partial class UnsupportedWindow : UiWindow
+public partial class UnsupportedWindow : FluentWindow
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
 
@@ -34,13 +33,13 @@ public partial class UnsupportedWindow : UiWindow
         {
             // Try to detect system theme
             var isDarkMode = SystemTheme.IsDarkMode();
-            var themeType = isDarkMode ? ThemeType.Dark : ThemeType.Light;
+            var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Applying theme to UnsupportedWindow: {themeType} (System is {(isDarkMode ? "Dark" : "Light")} mode)");
             
             var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
-            Theme.Apply(themeType, backgroundType, false);
+            ApplicationThemeManager.Apply(themeType, backgroundType, false);
         }
         catch (Exception ex)
         {
@@ -48,7 +47,7 @@ public partial class UnsupportedWindow : UiWindow
                 Log.Instance.Trace($"Failed to detect system theme, defaulting to Light mode", ex);
             
             // If theme detection fails, fall back to light theme
-            Theme.Apply(ThemeType.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
+            ApplicationThemeManager.Apply(ApplicationTheme.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
         }
     }
 
@@ -56,16 +55,36 @@ public partial class UnsupportedWindow : UiWindow
     {
         // Ensure theme is applied when window is loaded
         ApplyTheme();
+
+        var continueButton = GetContinueButton();
+        if (continueButton is null)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("UnsupportedWindow continue button was not initialized.");
+
+            return;
+        }
         
         var continueText = Resource.Continue;
         for (var i = 5; i > 0; i--)
         {
-            _continueButton.Content = $"{continueText} ({i})";
+            continueButton.Content = $"{continueText} ({i})";
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
-        _continueButton.Content = continueText;
-        _continueButton.IsEnabled = true;
+        continueButton.Content = continueText;
+        continueButton.IsEnabled = true;
+    }
+
+    private Wpf.Ui.Controls.Button? GetContinueButton()
+    {
+        if (_continueButton is not null)
+            return _continueButton;
+
+        if (FindName("_continueButton") is Wpf.Ui.Controls.Button namedButton)
+            return namedButton;
+
+        return LogicalTreeHelper.FindLogicalNode(this, "_continueButton") as Wpf.Ui.Controls.Button;
     }
 
     private void Window_Closed(object sender, EventArgs e)

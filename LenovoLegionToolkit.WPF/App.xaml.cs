@@ -2,6 +2,7 @@ using LenovoLegionToolkit.Lib.System;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -92,6 +93,7 @@ public partial class App
         Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
 
         AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Flags: {flags}");
@@ -111,7 +113,7 @@ public partial class App
             try
             {
                 // Check compatibility - IsCompatibleAsync already includes basic compatibility check
-                var (isCompatible, mi) = await Compatibility.IsCompatibleAsync();
+                var (isCompatible, mi) = await MachineCompatibility.IsCompatibleAsync();
 
                 // If check fails, show the unsupported window only once
                 if (!isCompatible)
@@ -202,6 +204,7 @@ public partial class App
 
         IoCContainer.Initialize(
             new Lib.IoCModule(),
+            new Lib.Plugins.IoCModule(),
             new Lib.Automation.IoCModule(),
             new Lib.Macro.IoCModule(),
             new IoCModule()
@@ -250,6 +253,10 @@ public partial class App
 
         IoCContainer.Resolve<ThemeManager>().Apply();
 
+        // Check for unsent crash reports from previous session
+        // This shows a modal dialog before the main window appears
+        CheckPendingCrashReports();
+
         if (flags.Minimized)
         {
             if (Log.Instance.IsTraceEnabled)
@@ -293,6 +300,57 @@ public partial class App
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to initialize plugins.", ex);
         }
+    }
+
+    private static void CheckPendingCrashReports()
+    {
+        try
+        {
+            // Clean up old crash reports first (older than 30 days)
+            CrashReportHelper.CleanupOldCrashReports(30);
+
+            var reports = CrashReportHelper.GetUnsentCrashReports().ToList();
+            if (reports.Count <= 0)
+                return;
+
+            // Log that we found pending crash reports
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Found {reports.Count} pending crash report(s).");
+
+            // Show crash report notification for the most recent report
+            var mostRecentReport = reports.OrderByDescending(r =>
+            {
+                var info = new FileInfo(r);
+                return info.CreationTimeUtc;
+            }).FirstOrDefault();
+
+            if (mostRecentReport != null)
+            {
+                try
+                {
+                    var notificationWindow = new CrashReportNotificationWindow(mostRecentReport);
+                    notificationWindow.ShowDialog();
+
+                    // Delete other reports (keep only the most recent one shown)
+                    foreach (var otherReport in reports.Where(r => r != mostRecentReport))
+                    {
+                        CrashReportHelper.DeleteCrashReport(otherReport);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to show crash report notification: {ex.Message}", ex);
+
+                    // Delete all reports if we can't show the notification
+                    foreach (var report in reports)
+                    {
+                        CrashReportHelper.DeleteCrashReport(report);
+                    }
+                }
+            }
+        }
+        catch { /* Ignore crash report checking errors */ }
     }
 
     private void StartBackgroundInitialization()
@@ -777,10 +835,10 @@ public partial class App
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        // Prevent infinite recursion
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
         if (_exceptionHandlerExecuting)
         {
-            Environment.Exit(100);
+            Environment.FailFast("Fatal error: re-entered AppDomain_UnhandledException", new Exception("Re-entry detected"));
             return;
         }
 
@@ -789,9 +847,16 @@ public partial class App
         try
         {
             var exception = e.ExceptionObject as Exception;
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
 
-            Log.Instance.ErrorReport("AppDomain_UnhandledException", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
+            Log.Instance.ErrorReport($"AppDomain_UnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
             Log.Instance.Trace($"Unhandled exception occurred.", exception);
+
+            // Save crash report BEFORE showing message box
+            CrashReportHelper.SaveCrashReport(exception, "AppDomain");
 
             // Try to show message box, but don't let it cause infinite recursion
             try
@@ -816,6 +881,8 @@ public partial class App
             // CRITICAL: Stop MacroController to release keyboard hook before exit
             StopMacroControllerSafely();
 
+            Log.Instance.Flush();
+
             // Force exit to prevent hanging
             try
             {
@@ -823,18 +890,25 @@ public partial class App
             }
             catch
             {
-                Environment.Exit(100);
+                try
+                {
+                    Environment.Exit(100);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in AppDomain", e.ExceptionObject as Exception);
+                }
             }
         }
     }
 
     private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        // Prevent infinite recursion
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
         if (_exceptionHandlerExecuting)
         {
             e.Handled = true;
-            Environment.Exit(101);
+            Environment.FailFast("Fatal error: re-entered Application_DispatcherUnhandledException", new Exception("Re-entry detected"));
             return;
         }
 
@@ -843,8 +917,16 @@ public partial class App
 
         try
         {
-            Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            Log.Instance.ErrorReport($"Application_DispatcherUnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
             Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
+
+            // Save crash report BEFORE showing message box
+            CrashReportHelper.SaveCrashReport(e.Exception, "Dispatcher");
 
             // Try to show message box, but don't let it cause infinite recursion
             try
@@ -869,6 +951,8 @@ public partial class App
             // CRITICAL: Stop MacroController to release keyboard hook before exit
             StopMacroControllerSafely();
 
+            Log.Instance.Flush();
+
             // Force exit to prevent hanging
             try
             {
@@ -876,8 +960,43 @@ public partial class App
             }
             catch
             {
-                Environment.Exit(101);
+                try
+                {
+                    Environment.Exit(101);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in Dispatcher", e.Exception);
+                }
             }
+        }
+    }
+
+    private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        try
+        {
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            // Log the unobserved task exception
+            Log.Instance.ErrorReport($"TaskScheduler_UnobservedTaskException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
+            Log.Instance.Trace($"Unobserved task exception occurred.", e.Exception);
+
+            // Save crash report
+            CrashReportHelper.SaveCrashReport(e.Exception, "TaskScheduler");
+
+            // Mark as observed to prevent the process from terminating
+            // Note: In .NET 5+, unobserved task exceptions don't terminate the process by default,
+            // but we mark as observed for safety
+            e.SetObserved();
+        }
+        catch
+        {
+            // If even this fails, mark as observed to prevent termination
+            e.SetObserved();
         }
     }
 

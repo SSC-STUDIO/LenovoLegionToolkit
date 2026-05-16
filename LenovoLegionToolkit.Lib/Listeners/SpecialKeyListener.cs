@@ -112,8 +112,7 @@ public class SpecialKeyListener(
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to handle key. [key={value}, value={(int)value}]", ex);
+            Log.Instance.Error($"Failed to handle key. [key={value}, value={(int)value}]", ex);
         }
     }
 
@@ -169,8 +168,7 @@ public class SpecialKeyListener(
 
             if (filtered.Length < 2)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Can't switch refresh rate after Fn+R when there is less than 2 available.");
+                Log.Instance.Warning($"Can't switch refresh rate after Fn+R when there is less than 2 available.");
                 return;
             }
 
@@ -196,8 +194,7 @@ public class SpecialKeyListener(
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to switch refresh rate after Fn+R.", ex);
+            Log.Instance.Error($"Failed to switch refresh rate after Fn+R.", ex);
         }
     });
 

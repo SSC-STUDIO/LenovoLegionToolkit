@@ -23,8 +23,7 @@
 
         <wpfui:TitleBar
             Grid.Row="0"
-            CanMaximize="true"
-            UseSnapLayout="true" />
+            CanMaximize="true" />
 
         <Grid
             Grid.Row="0"
@@ -189,3 +188,4 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
+

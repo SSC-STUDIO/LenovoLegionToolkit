@@ -30,13 +30,13 @@ public partial class SettingsPowerControl
         _isRefreshing = true;
 
         // Run all async operations in parallel
-        var miTask = Compatibility.GetMachineInformationAsync();
+        var miTask = MachineCompatibility.GetMachineInformationAsync();
         var powerModeSupportedTask = _powerModeFeature.IsSupportedAsync();
 
         await Task.WhenAll(miTask, powerModeSupportedTask);
 
-        var mi = miTask.Result;
-        var isPowerModeFeatureSupported = powerModeSupportedTask.Result;
+        var mi = await miTask;
+        var isPowerModeFeatureSupported = await powerModeSupportedTask;
 
         // Check GodModeFnQSwitchable capability and get value if supported
         // Note: If WMI call fails, the card will be hidden to avoid showing broken UI

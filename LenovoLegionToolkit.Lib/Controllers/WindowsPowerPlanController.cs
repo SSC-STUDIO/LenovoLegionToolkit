@@ -123,45 +123,38 @@ public class WindowsPowerPlanController(ApplicationSettings settings, VantageDis
         return false;
     }
 
-    private static unsafe List<Guid> GetPowerPlanGuids()
+    private static List<Guid> GetPowerPlanGuids()
     {
         var list = new List<Guid>();
 
         var bufferSize = (uint)Marshal.SizeOf<Guid>();
         var buffer = new byte[bufferSize];
 
-        fixed (byte* bufferPtr = buffer)
+        uint index = 0;
+        while (PInvoke.PowerEnumerate(null, null, null, POWER_DATA_ACCESSOR.ACCESS_SCHEME, index, buffer, ref bufferSize) == WIN32_ERROR.ERROR_SUCCESS)
         {
-            uint index = 0;
-            while (PInvoke.PowerEnumerate(null, null, null, POWER_DATA_ACCESSOR.ACCESS_SCHEME, index, bufferPtr, ref bufferSize) == WIN32_ERROR.ERROR_SUCCESS)
-            {
-                list.Add(new Guid(buffer));
-                index++;
-            }
+            list.Add(new Guid(buffer));
+            index++;
         }
 
         return list;
     }
 
-    private static unsafe string GetPowerPlanName(Guid powerPlanGuid)
+    private static string GetPowerPlanName(Guid powerPlanGuid)
     {
         var nameSize = 2048u;
-        var namePtr = Marshal.AllocHGlobal((int)nameSize);
+        var buffer = new byte[nameSize];
 
         try
         {
-            if (PInvoke.PowerReadFriendlyName(null, powerPlanGuid, null, null, (byte*)namePtr.ToPointer(), ref nameSize) != WIN32_ERROR.ERROR_SUCCESS)
+            if (PInvoke.PowerReadFriendlyName(null, powerPlanGuid, null, null, buffer, ref nameSize) != WIN32_ERROR.ERROR_SUCCESS)
                 PInvokeExtensions.ThrowIfWin32Error("PowerReadFriendlyName");
 
-            return Marshal.PtrToStringUni(namePtr) ?? string.Empty;
+            return global::System.Text.Encoding.Unicode.GetString(buffer, 0, (int)nameSize).TrimEnd('\0');
         }
         catch
         {
             return powerPlanGuid.ToString();
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(namePtr);
         }
     }
 

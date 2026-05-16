@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +15,11 @@ namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
 internal readonly struct ExternalDetectionRule : IPackageRule
 {
     private const string TEMP_FOLDER_SUB_FOLDER = "external_package_detection";
+
+    private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".exe", ".dll", ".msi", ".bat", ".cmd", ".ps1"
+    };
 
     private int[] ReturnCodes { get; init; }
     private string Command { get; init; }
@@ -66,6 +72,13 @@ internal readonly struct ExternalDetectionRule : IPackageRule
 
         if (!File.Exists(filePath))
         {
+            var extension = Path.GetExtension(FileName);
+            if (!AllowedExtensions.Contains(extension ?? string.Empty))
+            {
+                Log.Instance.Warning($"Rejecting download of '{FileName}' from '{Url}': extension '{extension}' is not in the allowed list");
+                return false;
+            }
+
             await using var fileStream = File.OpenWrite(filePath);
             await httpClient.DownloadAsync(Url, fileStream, null, token).ConfigureAwait(false);
         }
@@ -83,6 +96,23 @@ internal readonly struct ExternalDetectionRule : IPackageRule
 
         if (!executable.Contains('\\'))
             executable = Path.Combine(packagePath, executable);
+
+        var resolvedExecutable = Path.GetFullPath(executable);
+        var resolvedPackagePath = Path.GetFullPath(packagePath);
+        if (!resolvedExecutable.StartsWith(resolvedPackagePath, StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Instance.Warning($"Rejecting executable '{resolvedExecutable}': path escapes package directory '{resolvedPackagePath}'");
+            return false;
+        }
+
+        var executableExtension = Path.GetExtension(resolvedExecutable);
+        if (!AllowedExtensions.Contains(executableExtension ?? string.Empty))
+        {
+            Log.Instance.Warning($"Rejecting executable '{resolvedExecutable}': extension '{executableExtension}' is not in the allowed list");
+            return false;
+        }
+
+        Log.Instance.Warning($"Executing external detection command: '{executable}' with args: '{arguments}' for package '{PackageName}'");
 
         var (exitCode, _) = await CMD.RunAsync(executable, arguments, token: token).ConfigureAwait(false);
         var result = ReturnCodes.Contains(exitCode);

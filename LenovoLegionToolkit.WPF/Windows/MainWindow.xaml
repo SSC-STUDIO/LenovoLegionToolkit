@@ -11,13 +11,38 @@
     Title="{x:Static resources:Resource.AppName}"
     Width="1300"
     Height="850"
-    MinWidth="500"
-    MinHeight="400"
+    MinWidth="1000"
+    MinHeight="650"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <local:BaseWindow.Resources>
+        <Style
+            x:Key="TitleBarDeviceInfoButtonStyle"
+            BasedOn="{StaticResource {x:Type wpfui:Button}}"
+            TargetType="{x:Type wpfui:Button}">
+            <Setter Property="Appearance" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </local:BaseWindow.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="38" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -25,64 +50,79 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar Grid.Row="0" />
+        <wpfui:TitleBar Grid.Row="0" Height="38">
+            <wpfui:TitleBar.Header>
+                <TextBlock
+                    x:Name="_title"
+                    MaxWidth="760"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FlowDirection="LeftToRight"
+                    Focusable="False"
+                    FontSize="12"
+                    IsHitTestVisible="False"
+                    Text="{x:Static resources:Resource.AppName}"
+                    TextTrimming="CharacterEllipsis" />
+            </wpfui:TitleBar.Header>
 
-        <Grid Grid.Row="0" Margin="12,4,150,4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <wpfui:TitleBar.TrailingContent>
+                <StackPanel
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <wpfui:Button
+                        x:Name="_openLogIndicator"
+                        Height="26"
+                        Margin="0,0,8,0"
+                        Padding="8,2,8,2"
+                        Appearance="Caution"
+                        AutomationProperties.AutomationId="OpenLogIndicator"
+                        Content="Log"
+                        Cursor="Hand"
+                        Focusable="True"
+                        VerticalAlignment="Center"
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        Click="OpenLogIndicator_Click"
+                        KeyDown="OpenLogIndicator_KeyDown"
+                        PreviewMouseLeftButtonUp="OpenLogIndicator_PreviewMouseLeftButtonUp"
+                        Visibility="Collapsed" />
 
-            <TextBlock
-                x:Name="_title"
-                Grid.Column="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FlowDirection="LeftToRight"
-                Focusable="False"
-                FontSize="12"
-                IsHitTestVisible="False"
-                Text="{x:Static resources:Resource.AppName}" />
-
-            <custom:Badge
-                x:Name="_openLogIndicator"
-                Grid.Column="1"
-                Margin="0,0,8,0"
-                Padding="8,2,8,2"
-                Appearance="Caution"
-                Content="Log"
-                Cursor="Hand"
-                Focusable="True"
-                KeyDown="OpenLogIndicator_KeyDown"
-                MouseLeftButtonDown="OpenLogIndicator_Click"
-                MouseRightButtonDown="OpenLogIndicator_Click"
-                Visibility="Collapsed" />
-
-            <custom:Badge
-                x:Name="_deviceInfoIndicator"
-                Grid.Column="2"
-                Padding="8,2,8,2"
-                Appearance="Transparent"
-                Cursor="Hand"
-                Focusable="True"
-                KeyDown="DeviceInfoIndicator_KeyDown"
-                MouseLeftButtonDown="DeviceInfoIndicator_Click"
-                MouseRightButtonDown="DeviceInfoIndicator_Click"
-                Visibility="Collapsed" />
-
-        </Grid>
+                    <wpfui:Button
+                        x:Name="_deviceInfoIndicator"
+                        Height="26"
+                        MaxWidth="260"
+                        Padding="8,2,8,2"
+                        AutomationProperties.AutomationId="DeviceInfoIndicator"
+                        Cursor="Hand"
+                        Focusable="True"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Style="{StaticResource TitleBarDeviceInfoButtonStyle}"
+                        VerticalAlignment="Center"
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        Click="DeviceInfoIndicator_Click"
+                        KeyDown="DeviceInfoIndicator_KeyDown"
+                        PreviewMouseLeftButtonUp="DeviceInfoIndicator_PreviewMouseLeftButtonUp"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            x:Name="_deviceInfoIndicatorText"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            TextTrimming="CharacterEllipsis" />
+                    </wpfui:Button>
+                </StackPanel>
+            </wpfui:TitleBar.TrailingContent>
+        </wpfui:TitleBar>
 
         <Grid
             x:Name="_contentGrid"
             Grid.Row="1"
-            Margin="12,6,0,0">
+            Margin="12,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <wpfui:NavigationStore
+            <custom:NavigationStore
                 x:Name="_navigationStore"
                 AutomationProperties.AutomationId="MainNavigationStore"
                 Grid.Column="0"
@@ -90,63 +130,79 @@
                 Frame="{Binding ElementName=_rootFrame}"
                 SelectedPageIndex="0">
 
-                <wpfui:NavigationStore.Items>
+                <custom:NavigationStore.Items>
                     <custom:NavigationItem
                         x:Name="_dashboardItem"
+                        AutomationProperties.AccessKey="D"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}"
                         Icon="Home24"
                         PageTag="dashboard"
-                        PageType="{x:Type pages:DashboardPage}" />
+                        PageType="{x:Type pages:DashboardPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Dashboard}" />
                     <custom:NavigationItem
                         x:Name="_keyboardItem"
+                        AutomationProperties.AccessKey="K"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}"
                         Icon="Keyboard24"
                         PageTag="keyboardBacklight"
-                        PageType="{x:Type pages:KeyboardBacklightPage}" />
+                        PageType="{x:Type pages:KeyboardBacklightPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}" />
                     <custom:NavigationItem
                         x:Name="_automationItem"
+                        AutomationProperties.AccessKey="A"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
                         Icon="Rocket24"
                         PageTag="automation"
-                        PageType="{x:Type pages:AutomationPage}" />
+                        PageType="{x:Type pages:AutomationPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}" />
                     <custom:NavigationItem
                         x:Name="_macroItem"
+                        AutomationProperties.AccessKey="M"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
                         Icon="ReceiptPlay24"
                         PageTag="macro"
-                        PageType="{x:Type pages:MacroPage}" />
+                        PageType="{x:Type pages:MacroPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}" />
                     <custom:NavigationItem
                         x:Name="_windowsOptimizationItem"
+                        AutomationProperties.AccessKey="W"
                         AutomationProperties.AutomationId="WindowsOptimizationNavItem"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
                         Icon="Gauge24"
                         PageTag="windowsOptimization"
-                        PageType="{x:Type pages:WindowsOptimizationPage}" />
-                </wpfui:NavigationStore.Items>
+                        PageType="{x:Type pages:WindowsOptimizationPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" />
+                </custom:NavigationStore.Items>
 
-                <wpfui:NavigationStore.Footer>
+                <custom:NavigationStore.Footer>
                     <custom:NavigationItem
                         x:Name="_pluginExtensionsItem"
+                        AutomationProperties.AccessKey="P"
                         AutomationProperties.AutomationId="PluginExtensionsNavItem"
                         Content="Plugin Extensions"
                         Icon="Apps24"
                         PageTag="pluginExtensions"
-                        PageType="{x:Type pages:PluginExtensionsPage}" />
+                        PageType="{x:Type pages:PluginExtensionsPage}"
+                        ToolTip="Plugin Extensions" />
 
                     <custom:NavigationItem
+                        AutomationProperties.AccessKey="S"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}"
                         Icon="Settings24"
                         PageTag="settings"
-                        PageType="{x:Type pages:SettingsPage}" />
+                        PageType="{x:Type pages:SettingsPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_Settings}" />
                     <custom:NavigationItem
                         x:Name="_aboutItem"
+                        AutomationProperties.AccessKey="B"
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
                         Icon="Info24"
                         PageTag="about"
-                        PageType="{x:Type pages:AboutPage}" />
-                </wpfui:NavigationStore.Footer>
+                        PageType="{x:Type pages:AboutPage}"
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_About}" />
+                </custom:NavigationStore.Footer>
 
-            </wpfui:NavigationStore>
+            </custom:NavigationStore>
 
             <Border
                 Grid.Column="1"
@@ -157,38 +213,10 @@
                        Margin="24,0,0,0" />
             </Border>
 
-            <wpfui:Snackbar
-                x:Name="_snackbar"
+            <wpfui:SnackbarPresenter
+                x:Name="_snackbarPresenter"
                 Grid.Column="1"
-                MinWidth="300"
-                HorizontalAlignment="Center"
-                Icon="Checkmark24">
-                <wpfui:Snackbar.Effect>
-                    <DropShadowEffect
-                        BlurRadius="15"
-                        Direction="270"
-                        Opacity="0.4"
-                        ShadowDepth="3"
-                        Color="{DynamicResource SnackbarShadowColor}" />
-                </wpfui:Snackbar.Effect>
-                <StackPanel Margin="4,4,4,4" VerticalAlignment="Center">
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarTitle"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarMessage"
-                        Margin="0,6,0,0"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                </StackPanel>
-            </wpfui:Snackbar>
+                HorizontalAlignment="Center" />
 
         </Grid>
 
@@ -201,11 +229,11 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <wpfui:SymbolIcon
                     Margin="0,0,4,0"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Symbol="Warning24" />
                 <TextBlock
                     Focusable="True"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.MainWindows_VantageRunning}" />
             </StackPanel>
         </Border>
@@ -219,11 +247,11 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <wpfui:SymbolIcon
                     Margin="0,0,4,0"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Symbol="Warning24" />
                 <TextBlock
                     Focusable="True"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.MainWindow_LegionZoneRunning}" />
             </StackPanel>
         </Border>
@@ -237,11 +265,11 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <wpfui:SymbolIcon
                     Margin="0,0,4,0"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Symbol="Warning24" />
                 <TextBlock
                     Focusable="True"
-                    Foreground="Black"
+                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.MainWindows_FnKeysRunning}" />
             </StackPanel>
         </Border>
@@ -252,6 +280,7 @@
             Padding="8,4,8,6"
             Background="{DynamicResource SystemFillColorSuccessBrush}"
             Cursor="Hand"
+            ToolTip="{x:Static resources:Resource.MainWindow_UpdateAvailable}"
             MouseLeftButtonDown="UpdateIndicator_Click"
             MouseRightButtonDown="UpdateIndicator_Click"
             Visibility="Collapsed">

@@ -152,8 +152,7 @@ public class HybridModeFeature(
             }
             catch (Exception ex)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to ensure dGPU is ejected", ex);
+                Log.Instance.Error($"Failed to ensure dGPU is ejected", ex);
             }
         });
     }

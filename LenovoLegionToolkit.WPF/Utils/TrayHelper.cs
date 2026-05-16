@@ -13,11 +13,10 @@ using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Assets;
+using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Utils;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Utils;
@@ -41,7 +40,7 @@ public class TrayHelper : IDisposable
 
     private NotifyIcon? _notifyIcon;
 
-    public TrayHelper(INavigation navigation, Action bringToForeground, bool trayTooltipEnabled)
+    public TrayHelper(NavigationStore navigation, Action bringToForeground, bool trayTooltipEnabled)
     {
         _bringToForeground = bringToForeground;
 
@@ -73,13 +72,13 @@ public class TrayHelper : IDisposable
         _automationProcessor.PipelinesChanged += async (_, p) => await SetAutomationItemsAsync(p);
     }
 
-    private void InitializeStaticItems(INavigation navigation)
+    private void InitializeStaticItems(NavigationStore navigation)
     {
         foreach (var navigationItem in navigation.Items.OfType<NavigationItem>())
         {
             var navigationMenuItem = new MenuItem
             {
-                SymbolIcon = navigationItem.Icon,
+                Icon = new SymbolIcon { Symbol = navigationItem.Icon },
                 Header = navigationItem.Content,
                 Tag = NAVIGATION_TAG
             };
@@ -328,7 +327,7 @@ public class TrayHelper : IDisposable
 
             var item = new MenuItem
             {
-                SymbolIcon = icon,
+                Icon = new SymbolIcon { Symbol = icon },
                 Header = pipeline.Name ?? Resource.Unnamed,
                 Tag = AUTOMATION_TAG
             };

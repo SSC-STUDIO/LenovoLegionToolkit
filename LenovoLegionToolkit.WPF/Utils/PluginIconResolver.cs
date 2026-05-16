@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Utils;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Utils;

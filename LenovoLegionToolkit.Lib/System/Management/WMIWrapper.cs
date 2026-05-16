@@ -115,8 +115,10 @@ public class WMIWrapper : IWMIWrapper
             using var results = mos.Get();
             return Task.FromResult(true);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("WMI availability check failed", ex);
             return Task.FromResult(false);
         }
     }
@@ -139,9 +141,10 @@ public class WMIWrapper : IWMIWrapper
                     prop.SetValue(result, value);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore conversion errors for individual properties
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to convert WMI property '{prop.Name}' for {typeof(T).Name}", ex);
             }
         }
 

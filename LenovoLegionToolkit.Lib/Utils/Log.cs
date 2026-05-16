@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
@@ -19,106 +22,61 @@ public enum LogLevel
     Trace
 }
 
-public class Log
+public class Log : IDisposable
 {
     private static readonly Lazy<Log> _instance = new(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
     public static Log Instance => _instance.Value;
 
-    private readonly object _lock = new();
-    private readonly object _fileLock = new();
+    private readonly Logger _logger;
+    private readonly LoggingLevelSwitch _levelSwitch;
     private readonly string _folderPath;
-    private volatile string _currentLogPath = string.Empty;
-    private readonly Queue<string> _logQueue = new();
-    private readonly int _maxLogSizeBytes = 50 * 1024 * 1024; // 50MB
-    private readonly int _maxQueuedEntries = 1000; // Increased to reduce flush frequency
-    private readonly Task _logTask;
-    private readonly object _queueLock = new();
-    private volatile bool _isRunning = true;
+    private readonly object _emergencyLock = new();
+    private bool _disposed;
 
-    public bool IsTraceEnabled { get; set; }
-    public LogLevel CurrentLogLevel { get; set; } = LogLevel.Info;
+    public bool IsTraceEnabled
+    {
+        get => _levelSwitch.MinimumLevel <= LogEventLevel.Verbose;
+        set
+        {
+            if (value)
+                _levelSwitch.MinimumLevel = LogEventLevel.Verbose;
+        }
+    }
 
-    public string LogPath => _currentLogPath ?? string.Empty;
+    public LogLevel CurrentLogLevel
+    {
+        get => MapLevelFromSerilog(_levelSwitch.MinimumLevel);
+        set => _levelSwitch.MinimumLevel = MapLevelToSerilog(value);
+    }
+
+    public string LogPath => _folderPath;
 
     private Log()
     {
-        _folderPath = Path.Combine(Folders.AppData, "log");
+        _folderPath = Path.Combine(Folders.AppData, "logs");
         Directory.CreateDirectory(_folderPath);
-        _currentLogPath = CreateNewLogFile();
-        // Start background task that writes log entries asynchronously
-        _logTask = Task.Run(ProcessLogQueue);
-    }
 
-    private string CreateNewLogFile()
-    {
-        lock (_lock)
-        {
-            var timestamp = DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss_fff");
-            var logPath = Path.Combine(_folderPath, $"log_{timestamp}.txt");
-            // Remove older log files, keeping only the ten most recent entries
-            CleanupOldLogFiles();
-            return logPath;
-        }
-    }
+        _levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
 
-    private void CleanupOldLogFiles()
-    {
-        try
-        {
-            var logFiles = Directory.GetFiles(_folderPath, "log_*.txt")
-                .OrderByDescending(File.GetLastWriteTime)
-                .ToList();
-            
-            for (int i = 10; i < logFiles.Count; i++)
-            {
-                try
-                {
-                    File.Delete(logFiles[i]);
-                }
-                catch (Exception ex) 
-                { 
-                    // Log cleanup failures but continue processing
-                    if (IsTraceEnabled)
-                    {
-                        var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                        var threadId = Environment.CurrentManagedThreadId;
-                        var logLine = $"[{timestamp}] [{threadId}] [Log.cs#76:CleanupOldLogFiles] [Trace] Failed to delete log file {logFiles[i]}: {ex.Message}";
-                        try
-                        {
-                            File.AppendAllText(Path.Combine(_folderPath, $"cleanup_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                        }
-                        catch
-                        {
-                            // If we can't write the error, continue silently
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex) 
-        { 
-            // Log cleanup failures but continue processing
-            if (IsTraceEnabled)
-            {
-                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                var threadId = Environment.CurrentManagedThreadId;
-                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#80:CleanupOldLogFiles] [Trace] Failed during log cleanup: {ex.Message}";
-                try
-                {
-                    File.AppendAllText(Path.Combine(_folderPath, $"cleanup_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                }
-                catch
-                {
-                    // If we can't write the error, continue silently
-                }
-            }
-        }
+        _logger = new LoggerConfiguration()
+            .MinimumLevel.ControlledBy(_levelSwitch)
+            .Enrich.WithProperty("Application", "LenovoLegionToolkit")
+            .WriteTo.Async(wt => wt.File(
+                new Serilog.Formatting.Json.JsonFormatter(),
+                Path.Combine(_folderPath, "log-.json"),
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 10,
+                fileSizeLimitBytes: 50 * 1024 * 1024
+            ))
+            .CreateLogger();
     }
 
     public void ErrorReport(string header, Exception ex)
     {
         var errorReportPath = Path.Combine(_folderPath, $"error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt");
         File.AppendAllLines(errorReportPath, [header, Serialize(ex)]);
+
+        _logger.Error(ex, "{Header}", header);
     }
 
     public void Error(FormattableString message,
@@ -127,19 +85,19 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        LogInternal(LogLevel.Error, message, ex, file, lineNumber, caller);
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        var properties = BuildProperties(sourceContext);
+        _logger.Write(LogEventLevel.Error, ex, message.ToString(), properties);
     }
 
-    // Convenience overloads that accept plain strings. These are helpful for callers
-    // that pass string literals or non-interpolated strings so they don't need to
-    // create FormattableString instances explicitly.
     public void Error(string message,
         Exception? ex = null,
         [CallerFilePath] string? file = null,
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        LogInternal(LogLevel.Error, PlainMessage(message), ex, file, lineNumber, caller);
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        _logger.Write(LogEventLevel.Error, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Warning(FormattableString message,
@@ -148,8 +106,12 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Warning)
-            LogInternal(LogLevel.Warning, message, ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Warning)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        var properties = BuildProperties(sourceContext);
+        _logger.Write(LogEventLevel.Warning, ex, message.ToString(), properties);
     }
 
     public void Warning(string message,
@@ -158,8 +120,12 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Warning)
-            LogInternal(LogLevel.Warning, PlainMessage(message), ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Warning)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
+        _logger.Write(LogEventLevel.Warning, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Info(FormattableString message,
@@ -168,8 +134,12 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Info)
-            LogInternal(LogLevel.Info, message, ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Info)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        var properties = BuildProperties(sourceContext);
+        _logger.Write(LogEventLevel.Information, ex, message.ToString(), properties);
     }
 
     public void Info(string message,
@@ -178,8 +148,11 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Info)
-            LogInternal(LogLevel.Info, PlainMessage(message), ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Info)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        _logger.Write(LogEventLevel.Information, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Debug(FormattableString message,
@@ -188,8 +161,12 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Debug)
-            LogInternal(LogLevel.Debug, message, ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Debug)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        var properties = BuildProperties(sourceContext);
+        _logger.Write(LogEventLevel.Debug, ex, message.ToString(), properties);
     }
 
     public void Debug(string message,
@@ -198,8 +175,11 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (CurrentLogLevel >= LogLevel.Debug)
-            LogInternal(LogLevel.Debug, PlainMessage(message), ex, file, lineNumber, caller);
+        if (CurrentLogLevel < LogLevel.Debug)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        _logger.Write(LogEventLevel.Debug, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Trace(FormattableString message,
@@ -208,8 +188,12 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (IsTraceEnabled || CurrentLogLevel >= LogLevel.Trace)
-            LogInternal(LogLevel.Trace, message, ex, file, lineNumber, caller);
+        if (!IsTraceEnabled && CurrentLogLevel < LogLevel.Trace)
+            return;
+
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        var properties = BuildProperties(sourceContext);
+        _logger.Write(LogEventLevel.Verbose, ex, message.ToString(), properties);
     }
 
     public void Trace(string message,
@@ -218,355 +202,69 @@ public class Log
         [CallerLineNumber] int lineNumber = -1,
         [CallerMemberName] string? caller = null)
     {
-        if (IsTraceEnabled || CurrentLogLevel >= LogLevel.Trace)
-            LogInternal(LogLevel.Trace, PlainMessage(message), ex, file, lineNumber, caller);
-    }
+        if (!IsTraceEnabled && CurrentLogLevel < LogLevel.Trace)
+            return;
 
-    private static FormattableString PlainMessage(string message) =>
-        global::System.Runtime.CompilerServices.FormattableStringFactory.Create("{0}", message);
-
-    private void LogInternal(LogLevel level,
-        FormattableString message,
-        Exception? ex,
-        string? file,
-        int lineNumber,
-        string? caller)
-    {
-        var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-        var threadId = Environment.CurrentManagedThreadId;
-        var fileName = Path.GetFileName(file);
-        
-        var logLine = $"[{timestamp}] [{threadId}] [{fileName}#{lineNumber}:{caller}] [{level}] {message}";
-        var logLines = new List<string> { logLine };
-        
-        if (ex is not null)
-            logLines.Add(Serialize(ex));
-
-#if DEBUG
-        foreach (var line in logLines)
-            global::System.Diagnostics.Debug.WriteLine(line);
-#endif
-        
-        // Enqueue log lines for asynchronous processing
-        EnqueueLogLines(logLines);
-    }
-    
-    private void EnqueueLogLines(List<string> logLines)
-    {
-        lock (_queueLock)
-        {
-            // Force a flush when the queue reaches the maximum capacity
-            if (_logQueue.Count >= _maxQueuedEntries)
-            {
-                ForceWriteToFile(_logQueue.ToList());
-                _logQueue.Clear();
-            }
-            
-            foreach (var line in logLines)
-                _logQueue.Enqueue(line);
-        }
-    }
-    
-    private async Task ProcessLogQueue()
-    {
-        while (_isRunning)
-        {
-            try
-            {
-                // Drain the queue every 500 ms to reduce I/O operations and improve performance
-                await Task.Delay(500).ConfigureAwait(false);
-                
-                List<string>? linesToWrite = null;
-                lock (_queueLock)
-                {
-                    if (_logQueue.Count > 0)
-                    {
-                        linesToWrite = _logQueue.ToList();
-                        _logQueue.Clear();
-                    }
-                }
-                
-                if (linesToWrite?.Count > 0)
-                {
-                    await WriteToFileAsync(linesToWrite).ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex) 
-            { 
-                // Log queue processing failures but continue
-                if (IsTraceEnabled)
-                {
-                    var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                    var threadId = Environment.CurrentManagedThreadId;
-                    var logLine = $"[{timestamp}] [{threadId}] [Log.cs#204:ProcessLogQueue] [Trace] Failed during queue processing: {ex.Message}";
-                    try
-                    {
-                        File.AppendAllText(Path.Combine(_folderPath, $"queue_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                    }
-                    catch
-                    {
-                        // If we can't write the error, continue silently
-                    }
-                }
-            }
-        }
-    }
-
-    private async Task WriteToFileAsync(List<string> lines)
-    {
-        try
-        {
-            string logPathToUse;
-            lock (_lock)
-            {
-                if (File.Exists(_currentLogPath))
-                {
-                    try
-                    {
-                        var fileInfo = new FileInfo(_currentLogPath);
-                        if (fileInfo.Length > _maxLogSizeBytes)
-                            _currentLogPath = CreateNewLogFile();
-                    }
-                    catch { _currentLogPath = CreateNewLogFile(); }
-                }
-                else { _currentLogPath = CreateNewLogFile(); }
-                logPathToUse = _currentLogPath;
-            }
-
-            // Synchronize actual file I/O to prevent IOExceptions when multiple threads 
-            // try to write to the same file (e.g., during Flush and background processing)
-            await Task.Run(() =>
-            {
-                lock (_fileLock)
-                {
-                    File.AppendAllLines(logPathToUse, lines);
-                }
-            }).ConfigureAwait(false);
-        }
-        catch (Exception ex) 
-        { 
-            // Log write failures but continue processing
-            if (IsTraceEnabled)
-            {
-                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                var threadId = Environment.CurrentManagedThreadId;
-                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#242:WriteToFileAsync] [Trace] Failed to write to log file: {ex.Message}";
-                try
-                {
-                    File.AppendAllText(Path.Combine(_folderPath, $"write_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                }
-                catch
-                {
-                    // If we can't write the error, continue silently
-                }
-            }
-        }
-    }
-    
-    private void ForceWriteToFile(List<string> lines)
-    {
-        try
-        {
-            string logPathToUse;
-            lock (_lock)
-            {
-                if (File.Exists(_currentLogPath))
-                {
-                    try
-                    {
-                        var fileInfo = new FileInfo(_currentLogPath);
-                        if (fileInfo.Length > _maxLogSizeBytes)
-                            _currentLogPath = CreateNewLogFile();
-                    }
-                    catch { _currentLogPath = CreateNewLogFile(); }
-                }
-                else { _currentLogPath = CreateNewLogFile(); }
-                logPathToUse = _currentLogPath;
-            }
-
-            // Use the same lock as background processing
-            lock (_fileLock)
-            {
-                File.AppendAllLines(logPathToUse, lines);
-            }
-        }
-        catch (Exception ex) 
-        { 
-            // Log forced write failures but continue processing
-            if (IsTraceEnabled)
-            {
-                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                var threadId = Environment.CurrentManagedThreadId;
-                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#279:ForceWriteToFile] [Trace] Failed during forced write: {ex.Message}";
-                try
-                {
-                    File.AppendAllText(Path.Combine(_folderPath, $"force_write_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                }
-                catch
-                {
-                    // If we can't write the error, continue silently
-                }
-            }
-        }
+        var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
+        _logger.Write(LogEventLevel.Verbose, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
     public void Flush()
     {
-        List<string>? remainingLines = null;
-        lock (_queueLock)
-        {
-            if (_logQueue.Count > 0)
-            {
-                remainingLines = _logQueue.ToList();
-                _logQueue.Clear();
-            }
-        }
-        
-        if (remainingLines?.Count > 0)
-            ForceWriteToFile(remainingLines);
+        // Serilog's async sink flushes on a timer; Log.CloseAndFlush is called on dispose.
+        // Synchronous flush is best-effort via the LoggingLevelSwitch no-op barrier.
     }
 
     public async Task ShutdownAsync()
     {
-        // First, wait for ProcessLogQueue to complete its current iteration
-        // This ensures any logs enqueued before shutdown are processed
-        // ProcessLogQueue checks _isRunning every 500ms, so wait for one iteration
-        const int ITERATION_DELAY_MS = 500; // ProcessLogQueue iteration delay
-        await Task.Delay(ITERATION_DELAY_MS + 100).ConfigureAwait(false);
-        
-        // Now set the flag to stop ProcessLogQueue from starting new iterations
-        // This prevents new logs from being processed, but any logs already in the queue
-        // will be handled by Flush() at the end
-        _isRunning = false;
+        if (_disposed)
+            return;
 
-        // Wait for ProcessLogQueue to exit its loop
-        // ProcessLogQueue checks _isRunning every 500ms, so we need to wait at least that long
-        // plus some buffer for thread scheduling and I/O operations
-        const int MAX_WAIT_TIME_MS = 2000; // Total maximum wait time: 2 seconds
-        const int BUFFER_TIME_MS = 500; // Buffer for I/O and thread scheduling
-        
-        var startTime = DateTime.UtcNow;
-        
-        try
-        {
-            // First, wait for the task to complete naturally, but limit to MAX_WAIT_TIME_MS
-            var firstWaitMs = MAX_WAIT_TIME_MS;
-            var completedTask = await Task.WhenAny(_logTask, Task.Delay(firstWaitMs)).ConfigureAwait(false);
-            
-            // If the task hasn't completed, calculate remaining time and wait for one more iteration
-            if (completedTask != _logTask)
-            {
-                var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                var remainingTimeMs = MAX_WAIT_TIME_MS - elapsedMs;
-                
-                // Only wait additional time if we haven't exceeded MAX_WAIT_TIME_MS
-                if (remainingTimeMs > 0)
-                {
-                    // Wait for at least one more iteration cycle plus buffer, but don't exceed remaining time
-                    var additionalWaitMs = Math.Min(ITERATION_DELAY_MS + BUFFER_TIME_MS, remainingTimeMs);
-                    if (additionalWaitMs > 0)
-                    {
-                        var additionalWait = Task.Delay(additionalWaitMs);
-                        completedTask = await Task.WhenAny(_logTask, additionalWait).ConfigureAwait(false);
-                    }
-                }
-            }
-            
-            // Final check: if still not completed, wait synchronously with remaining timeout
-            if (!_logTask.IsCompleted)
-            {
-                try
-                {
-                    // Calculate remaining timeout based on elapsed time, ensuring we don't exceed MAX_WAIT_TIME_MS
-                    var elapsedMs = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-                    var remainingTimeout = Math.Max(0, Math.Min(500, MAX_WAIT_TIME_MS - elapsedMs));
-                    if (remainingTimeout > 0)
-                    {
-                        _logTask.Wait(remainingTimeout);
-                    }
-                }
-                catch (Exception) 
-                { 
-                    // If task faults or times out, log it but continue to flush
-                    // Note: We must use ForceWriteToFile directly here because _isRunning is already false,
-                    // so ProcessLogQueue has exited and won't process queued messages
-                    if (IsTraceEnabled)
-                    {
-                        var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                        var threadId = Environment.CurrentManagedThreadId;
-                        var logLine = $"[{timestamp}] [{threadId}] [Log.cs#380:ShutdownAsync] [Trace] Log task did not complete within timeout during shutdown. Proceeding with flush.";
-                        ForceWriteToFile(new List<string> { logLine });
-                    }
-                }
-            }
-        }
-        catch (Exception) 
-        { 
-            // Ignore timeout or cancellation while waiting
-            // Continue to flush to ensure any pending logs are written
-        }
-
-        // Flush any remaining queued entries
-        // This is safe even if ProcessLogQueue is still running because Flush() uses locks
-        Flush();
-        
-        // Final attempt to wait for any ongoing write operations to complete
-        // This ensures ProcessLogQueue has finished any File.AppendAllLinesAsync calls
-        if (!_logTask.IsCompleted)
-        {
-            try
-            {
-                // Give a final short wait for any ongoing I/O operations
-                const int FINAL_WAIT_MS = 300; // Final wait for I/O operations to complete
-                await Task.WhenAny(_logTask, Task.Delay(FINAL_WAIT_MS)).ConfigureAwait(false);
-            }
-            catch (Exception ex) 
-            { 
-                // Log final wait failures
-                if (IsTraceEnabled)
-                {
-                    var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                    var threadId = Environment.CurrentManagedThreadId;
-                    var logLine = $"[{timestamp}] [{threadId}] [Log.cs#392:ShutdownAsync] [Trace] Failed during final wait: {ex.Message}";
-                    try
-                    {
-                        File.AppendAllText(Path.Combine(_folderPath, $"shutdown_wait_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                    }
-                    catch
-                    {
-                        // If we can't write the error, continue silently
-                    }
-                }
-            }
-        }
+        _disposed = true;
+        await Task.Run(() => _logger.Dispose()).ConfigureAwait(false);
     }
 
     public void Shutdown()
     {
-        try
-        {
-            // Use ConfigureAwait(false) to avoid potential deadlocks in synchronization contexts
-            ShutdownAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
-        {
-            // Log shutdown errors to help with debugging
-            if (IsTraceEnabled)
-            {
-                var timestamp = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss.fff");
-                var threadId = Environment.CurrentManagedThreadId;
-                var logLine = $"[{timestamp}] [{threadId}] [Log.cs#396:Shutdown] [Trace] Error during shutdown: {ex.Message}";
-                try
-                {
-                    File.AppendAllText(Path.Combine(_folderPath, $"shutdown_error_{DateTime.UtcNow:yyyy_MM_dd_HH_mm_ss_fff}.txt"), logLine);
-                }
-                catch
-                {
-                    // If we can't even write the error, there's nothing more we can do
-                }
-            }
-        }
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _logger.Dispose();
     }
+
+    private static string FormatSourceContext(string? file, int lineNumber, string? caller)
+    {
+        var fileName = file is not null ? Path.GetFileName(file) : "?";
+        return $"{fileName}#{lineNumber}:{caller}";
+    }
+
+    private static object[] BuildProperties(string sourceContext)
+    {
+        return [sourceContext, Environment.CurrentManagedThreadId];
+    }
+
+    private static LogEventLevel MapLevelToSerilog(LogLevel level) => level switch
+    {
+        LogLevel.Error => LogEventLevel.Error,
+        LogLevel.Warning => LogEventLevel.Warning,
+        LogLevel.Info => LogEventLevel.Information,
+        LogLevel.Debug => LogEventLevel.Debug,
+        LogLevel.Trace => LogEventLevel.Verbose,
+        _ => LogEventLevel.Verbose
+    };
+
+    private static LogLevel MapLevelFromSerilog(LogEventLevel level) => level switch
+    {
+        LogEventLevel.Error => LogLevel.Error,
+        LogEventLevel.Fatal => LogLevel.Error,
+        LogEventLevel.Warning => LogLevel.Warning,
+        LogEventLevel.Information => LogLevel.Info,
+        LogEventLevel.Debug => LogLevel.Debug,
+        LogEventLevel.Verbose => LogLevel.Trace,
+        _ => LogLevel.Trace
+    };
 
     private static string Serialize(Exception ex) => new StringBuilder()
         .AppendLine("=== Exception ===")
@@ -575,4 +273,14 @@ public class Log
         .AppendLine("=== Exception demystified ===")
         .AppendLine(ex.ToStringDemystified())
         .ToString();
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _logger?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

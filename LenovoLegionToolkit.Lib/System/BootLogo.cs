@@ -32,6 +32,20 @@ public static class BootLogo
                                     PInvokeExtensions.VARIABLE_ATTRIBUTE_BOOTSERVICE_ACCESS |
                                     PInvokeExtensions.VARIABLE_ATTRIBUTE_RUNTIME_ACCESS;
 
+    private static unsafe uint GetFirmwareEnvironmentVariableEx(string name, string guid, void* buffer, uint size)
+    {
+        fixed (char* namePtr = name)
+        fixed (char* guidPtr = guid)
+            return PInvoke.GetFirmwareEnvironmentVariableEx(namePtr, guidPtr, buffer, size, null);
+    }
+
+    private static unsafe bool SetFirmwareEnvironmentVariableEx(string name, string guid, void* buffer, uint size, uint attributes)
+    {
+        fixed (char* namePtr = name)
+        fixed (char* guidPtr = guid)
+            return PInvoke.SetFirmwareEnvironmentVariableEx(namePtr, guidPtr, buffer, size, attributes);
+    }
+
     public static async Task<bool> IsSupportedAsync()
     {
         try
@@ -108,7 +122,7 @@ public static class BootLogo
 
             var ptrSize = (uint)Marshal.SizeOf<BootLogoInfo>();
 
-            var size = PInvoke.GetFirmwareEnvironmentVariableEx(LBLDESP, LBLDESP_GUID, ptr.ToPointer(), ptrSize, null);
+            var size = GetFirmwareEnvironmentVariableEx(LBLDESP, LBLDESP_GUID, ptr.ToPointer(), ptrSize);
             if (size != ptrSize)
                 PInvokeExtensions.ThrowIfWin32Error("GetFirmwareEnvironmentVariableEx");
 
@@ -147,7 +161,7 @@ public static class BootLogo
             Marshal.StructureToPtr(info, ptr, false);
             var ptrSize = (uint)Marshal.SizeOf<BootLogoInfo>();
 
-            if (!PInvoke.SetFirmwareEnvironmentVariableEx(LBLDESP, LBLDESP_GUID, ptr.ToPointer(), ptrSize, SCOPE_ATTR))
+            if (!SetFirmwareEnvironmentVariableEx(LBLDESP, LBLDESP_GUID, ptr.ToPointer(), ptrSize, SCOPE_ATTR))
                 PInvokeExtensions.ThrowIfWin32Error("SetFirmwareEnvironmentVariableEx");
 
             if (Log.Instance.IsTraceEnabled)
@@ -180,7 +194,7 @@ public static class BootLogo
 
             var ptrSize = (uint)Marshal.SizeOf<BootLogoChecksum>();
 
-            var size = PInvoke.GetFirmwareEnvironmentVariableEx(LBLDVC, LBLDVC_GUID, ptr.ToPointer(), ptrSize, null);
+            var size = GetFirmwareEnvironmentVariableEx(LBLDVC, LBLDVC_GUID, ptr.ToPointer(), ptrSize);
             if (size != ptrSize)
                 PInvokeExtensions.ThrowIfWin32Error("GetFirmwareEnvironmentVariableEx");
 
@@ -220,7 +234,7 @@ public static class BootLogo
             Marshal.StructureToPtr(str, ptr, false);
             var ptrSize = (uint)Marshal.SizeOf<BootLogoChecksum>();
 
-            if (!PInvoke.SetFirmwareEnvironmentVariableEx(LBLDVC, LBLDVC_GUID, ptr.ToPointer(), ptrSize, SCOPE_ATTR))
+            if (!SetFirmwareEnvironmentVariableEx(LBLDVC, LBLDVC_GUID, ptr.ToPointer(), ptrSize, SCOPE_ATTR))
                 PInvokeExtensions.ThrowIfWin32Error("SetFirmwareEnvironmentVariableEx");
 
             if (Log.Instance.IsTraceEnabled)

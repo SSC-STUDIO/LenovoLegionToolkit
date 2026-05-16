@@ -1,9 +1,11 @@
-﻿using System;
+using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LenovoLegionToolkit.Lib.Automation.Steps;
 
+[method: JsonConstructor]
 public class QuickActionAutomationStep(Guid? pipelineId)
     : IAutomationStep
 {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using LenovoLegionToolkit.Lib.Extensions;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Octokit;
 
 namespace LenovoLegionToolkit.Lib;
@@ -858,10 +858,8 @@ public readonly struct RefreshRate(int frequency) : IDisplayName, IEquatable<Ref
 [method: JsonConstructor]
 public readonly struct Resolution(int width, int height) : IDisplayName, IEquatable<Resolution>, IComparable<Resolution>
 {
-    [JsonProperty]
     public int Width { get; } = width;
 
-    [JsonProperty]
     public int Height { get; } = height;
 
     [JsonIgnore]

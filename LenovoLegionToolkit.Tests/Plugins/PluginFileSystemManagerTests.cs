@@ -142,7 +142,7 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
 
         // Assert
         candidates.Should().NotBeEmpty();
-        candidates.Should().HaveCountGreaterOrEqualTo(3);
+        candidates.Should().HaveCountGreaterThanOrEqualTo(3);
     }
 
     [Fact]

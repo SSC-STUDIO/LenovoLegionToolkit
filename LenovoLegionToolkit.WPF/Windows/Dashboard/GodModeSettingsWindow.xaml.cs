@@ -14,6 +14,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Windows.Dashboard
 {
@@ -28,10 +30,18 @@ public partial class GodModeSettingsWindow
     private GodModeState? _state;
     private Dictionary<PowerModeState, GodModeDefaults>? _defaults;
     private bool _isRefreshing;
+    private readonly Snackbar _snackBar;
 
     public GodModeSettingsWindow()
     {
         InitializeComponent();
+        _snackBar = new Snackbar(_snackBarPresenter)
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = true,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 },
+            Timeout = TimeSpan.FromSeconds(5)
+        };
 
         IsVisibleChanged += GodModeSettingsWindow_IsVisibleChanged;
     }
@@ -78,7 +88,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't load settings.", ex);
 
-            await _snackBar.ShowAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Load_Title, ex.Message);
 
             Close();
         }
@@ -144,7 +154,7 @@ public partial class GodModeSettingsWindow
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't apply settings", ex);
 
-            await _snackBar.ShowAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
+            await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
 
             return false;
         }
@@ -417,6 +427,13 @@ public partial class GodModeSettingsWindow
         var defaultFanTableInfo = new FanTableInfo(data, defaultFanTable);
         var minimum = await _godModeController.GetMinimumFanTableAsync();
         _fanCurveControl.SetFanTableInfo(defaultFanTableInfo, minimum);
+    }
+
+    private async Task ShowSnackBarAsync(string title, string? message)
+    {
+        _snackBar.Title = title;
+        _snackBar.Content = message;
+        await _snackBar.ShowAsync();
     }
 
     private void LoadButton_Click(object sender, RoutedEventArgs e)

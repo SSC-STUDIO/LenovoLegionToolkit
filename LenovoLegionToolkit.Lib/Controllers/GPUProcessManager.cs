@@ -15,8 +15,15 @@ public class GPUProcessManager : IGPUProcessManager
 {
     public async Task KillGPUProcessesAsync(IEnumerable<Process> processes)
     {
+        if (processes is null)
+            return;
+
         foreach (var process in processes)
         {
+            var processId = 0;
+            var processName = "";
+            try { processId = process.Id; processName = process.ProcessName; } catch { }
+
             try
             {
                 if (!process.HasExited)
@@ -28,7 +35,7 @@ public class GPUProcessManager : IGPUProcessManager
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Couldn't kill process. [pid={process.Id}, name={process.ProcessName}]", ex);
+                    Log.Instance.Trace($"Couldn't kill process. [pid={processId}, name={processName}]", ex);
             }
             finally
             {
@@ -39,7 +46,7 @@ public class GPUProcessManager : IGPUProcessManager
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Couldn't dispose process. [pid={process.Id}, name={process.ProcessName}]", ex);
+                        Log.Instance.Trace($"Couldn't dispose process. [pid={processId}, name={processName}]", ex);
                 }
             }
         }

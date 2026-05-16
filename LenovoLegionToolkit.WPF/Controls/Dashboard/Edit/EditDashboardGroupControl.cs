@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using CardExpander = LenovoLegionToolkit.WPF.Controls.Custom.CardExpander;
 
@@ -35,7 +35,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _editButton = new()
     {
-        Icon = SymbolRegular.Edit24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
         ToolTip = Resource.Edit,
         MinWidth = 34,
         Height = 34,
@@ -44,7 +44,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _moveUpButton = new()
     {
-        Icon = SymbolRegular.ArrowUp24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowUp24 },
         ToolTip = Resource.MoveUp,
         MinWidth = 34,
         Height = 34,
@@ -53,7 +53,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _moveDownButton = new()
     {
-        Icon = SymbolRegular.ArrowDown24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowDown24 },
         ToolTip = Resource.MoveDown,
         MinWidth = 34,
         Height = 34,
@@ -62,7 +62,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.Dismiss24 },
         ToolTip = Resource.Delete,
         MinWidth = 34,
         Height = 34,
@@ -210,3 +210,4 @@ public class EditDashboardGroupControl : UserControl
 
     public void RefreshAdd() => _addItemButton.IsEnabled = Enum.GetValues<DashboardItem>().Except(_getExistingItems()).Any();
 }
+

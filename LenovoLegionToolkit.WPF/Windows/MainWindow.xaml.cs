@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Input;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -27,8 +29,9 @@ using LenovoLegionToolkit.WPF.Windows.Utils;
 using Microsoft.Xaml.Behaviors.Core;
 using Windows.Win32;
 using Windows.Win32.System.Threading;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 #if !DEBUG
 using System.Reflection;
 using LenovoLegionToolkit.Lib.Extensions;
@@ -40,6 +43,10 @@ namespace LenovoLegionToolkit.WPF.Windows
 {
 public partial class MainWindow
 {
+    private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+    private const int WmNchittest = 0x0084;
+    private const int HtClient = 1;
+
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginManager _pluginManager;
     private readonly SpecialKeyListener _specialKeyListener;
@@ -50,6 +57,7 @@ public partial class MainWindow
 
     private TrayHelper? _trayHelper;
     private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
+    private readonly Snackbar _snackbar;
 
     public bool TrayTooltipEnabled { get; set; } = true;
     public bool DisableConflictingSoftwareWarning { get; set; }
@@ -75,6 +83,7 @@ public partial class MainWindow
         _updateChecker = updateChecker;
 
         InitializeComponent();
+        _snackbar = CreateMainSnackbar(_snackbarPresenter);
 
         Closing += MainWindow_Closing;
         Closed += MainWindow_Closed;
@@ -106,12 +115,63 @@ public partial class MainWindow
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
     }
 
+    private static Snackbar CreateMainSnackbar(SnackbarPresenter presenter)
+    {
+        return new Snackbar(presenter)
+        {
+            MinWidth = 300,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = false,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
+            Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 15,
+                Direction = 270,
+                Opacity = 0.4,
+                ShadowDepth = 3,
+                Color = (Color)Application.Current.FindResource("SnackbarShadowColor")
+            },
+            Content = CreateSnackbarContent()
+        };
+    }
+
+    private static StackPanel CreateSnackbarContent()
+    {
+        var snackbarTitle = new TextBlock
+        {
+            Name = "_snackbarTitle",
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 16,
+            FontWeight = FontWeights.Medium,
+            Foreground = (Brush)Application.Current.FindResource("TextFillColorPrimaryBrush"),
+            TextWrapping = TextWrapping.WrapWithOverflow
+        };
+
+        var snackbarMessage = new TextBlock
+        {
+            Name = "_snackbarMessage",
+            Margin = new Thickness(0, 6, 0, 0),
+            FontSize = 14,
+            Foreground = (Brush)Application.Current.FindResource("TextFillColorSecondaryBrush"),
+            TextWrapping = TextWrapping.WrapWithOverflow
+        };
+
+        var panel = new StackPanel
+        {
+            Margin = new Thickness(4),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        panel.Children.Add(snackbarTitle);
+        panel.Children.Add(snackbarMessage);
+        return panel;
+    }
+
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {
         // When page navigation is complete, update window title to: App Name - Page Title
         var appName = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "AppName", "Lenovo Legion Toolkit", Resource.Culture);
 
-        if (e.Content is UiPage page && !string.IsNullOrWhiteSpace(page.Title))
+        if (e.Content is Page page && !string.IsNullOrWhiteSpace(page.Title))
         {
             Title = $"{appName} - {page.Title}";
             _title.Text = $"{appName} - {page.Title}";
@@ -124,16 +184,22 @@ public partial class MainWindow
         }
     }
 
-    private void MainWindow_SourceInitialized(object? sender, EventArgs e) => RestoreSize();
+    private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+    {
+        RestoreSize();
+
+        if (PresentationSource.FromVisual(this) is HwndSource source)
+            source.AddHook(MainWindowHwndSourceHook);
+    }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         _contentGrid.Visibility = Visibility.Hidden;
 
-        var mi = await Compatibility.GetMachineInformationAsync();
-        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
+        var isSupportedLegionMachine = MachineCompatibility.IsSupportedLegionMachine(mi);
 
-        if (!isSupportedLegionMachine)
+        if (!isSupportedLegionMachine && !ShouldKeepUnsupportedNavigationItems())
         {
             // Keep dashboard visible in compatibility mode for basic functionality
             // _navigationStore.Items.Remove(_dashboardItem);
@@ -144,7 +210,7 @@ public partial class MainWindow
             // Navigate to dashboard instead of windowsOptimization for better UX
             _navigationStore.Navigate("dashboard");
         }
-        else if (!await KeyboardBacklightPage.IsSupportedAsync())
+        else if (!await KeyboardBacklightPage.IsSupportedAsync() && !ShouldKeepUnsupportedNavigationItems())
         {
             _navigationStore.Items.Remove(_keyboardItem);
         }
@@ -164,7 +230,7 @@ public partial class MainWindow
 
         LoadDeviceInfo();
         UpdateIndicators();
-        CheckForUpdates();
+        _ = CheckForUpdates();
 
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToPrevious), Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
@@ -290,26 +356,48 @@ public partial class MainWindow
         if (!IsVisible)
             return;
 
-        CheckForUpdates();
+        _ = CheckForUpdates();
     }
 
-    private void OpenLogIndicator_Click(object sender, MouseButtonEventArgs e) => OpenLog();
+    private void OpenLogIndicator_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        OpenLog();
+    }
+
+    private void OpenLogIndicator_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        OpenLog();
+    }
 
     private void OpenLogIndicator_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key is not Key.Enter and not Key.Space)
             return;
 
+        e.Handled = true;
         OpenLog();
     }
 
-    private void DeviceInfoIndicator_Click(object sender, MouseButtonEventArgs e) => ShowDeviceInfoWindow();
+    private void DeviceInfoIndicator_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        ShowDeviceInfoWindow();
+    }
+
+    private void DeviceInfoIndicator_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        ShowDeviceInfoWindow();
+    }
 
     private void DeviceInfoIndicator_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key is not Key.Enter and not Key.Space)
             return;
 
+        e.Handled = true;
         ShowDeviceInfoWindow();
     }
 
@@ -327,8 +415,8 @@ public partial class MainWindow
     {
         try
         {
-            var mi = await Compatibility.GetMachineInformationAsync();
-            _deviceInfoIndicator.Content = mi.Model;
+            var mi = await MachineCompatibility.GetMachineInformationAsync();
+            _deviceInfoIndicatorText.Text = mi.Model;
             _deviceInfoIndicator.Visibility = Visibility.Visible;
         }
         catch (Exception ex)
@@ -366,7 +454,7 @@ public partial class MainWindow
         });
     }
 
-    public async void CheckForUpdates(bool manualCheck = false)
+    public async Task CheckForUpdates(bool manualCheck = false)
     {
         try
         {
@@ -493,6 +581,42 @@ public partial class MainWindow
         window.ShowDialog();
     }
 
+    private IntPtr MainWindowHwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg != WmNchittest)
+            return IntPtr.Zero;
+
+        var screenPoint = GetScreenPointFromLParam(lParam);
+        if (IsScreenPointOverElement(_openLogIndicator, screenPoint)
+            || IsScreenPointOverElement(_deviceInfoIndicator, screenPoint))
+        {
+            handled = true;
+            return new IntPtr(HtClient);
+        }
+
+        return IntPtr.Zero;
+    }
+
+    private static Point GetScreenPointFromLParam(IntPtr lParam)
+    {
+        var value = lParam.ToInt64();
+        return new Point((short)(value & 0xffff), (short)((value >> 16) & 0xffff));
+    }
+
+    private bool IsScreenPointOverElement(FrameworkElement element, Point screenPoint)
+    {
+        if (!element.IsVisible || !element.IsHitTestVisible || element.ActualWidth <= 0 || element.ActualHeight <= 0)
+            return false;
+
+        var topLeft = element.PointToScreen(new Point(0, 0));
+        var bottomRight = element.PointToScreen(new Point(element.ActualWidth, element.ActualHeight));
+
+        return screenPoint.X >= topLeft.X
+               && screenPoint.X <= bottomRight.X
+               && screenPoint.Y >= topLeft.Y
+               && screenPoint.Y <= bottomRight.Y;
+    }
+
     public void ShowUpdateWindow()
     {
         var window = new UpdateWindow { Owner = this };
@@ -517,6 +641,13 @@ public partial class MainWindow
         // UpdatePluginExtensionsNavigationVisibility must be called AFTER UpdateNavigationItemsVisibilityFromSettings
         // to ensure it has the latest visibility settings
         UpdatePluginExtensionsNavigationVisibility();
+    }
+
+    private static bool ShouldKeepUnsupportedNavigationItems()
+    {
+        var value = Environment.GetEnvironmentVariable(KeepUnsupportedNavigationItemsEnvironmentVariable);
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()
@@ -701,7 +832,6 @@ public partial class MainWindow
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
                     var pluginId = plugin.Id;
-                    navItem.Invoked += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.Click += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.PreviewMouseLeftButtonUp += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.KeyDown += (_, e) =>

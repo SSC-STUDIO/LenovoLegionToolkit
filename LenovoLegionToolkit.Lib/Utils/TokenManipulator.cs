@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using LenovoLegionToolkit.Lib.Extensions;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Security;
@@ -63,7 +64,7 @@ public static class TokenManipulator
             Attributes = enable ? TOKEN_PRIVILEGES_ATTRIBUTES.SE_PRIVILEGE_ENABLED : 0
         };
 
-        if (!PInvoke.AdjustTokenPrivileges(safeTokenHandle, false, &state, 0, null, null))
+        if (!PInvoke.AdjustTokenPrivileges(safeTokenHandle.ToWin32Handle(), false, &state, 0, null, null))
             return false;
 
         return Marshal.GetLastWin32Error() != ErrorNotAllAssigned;

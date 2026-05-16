@@ -14,6 +14,22 @@ public class RetryHelperTests
     #region RetryAsync - Success Tests
 
     [Fact]
+    public async Task RetryAsync_SucceedsAfterTransientFailures()
+    {
+        var calls = 0;
+
+        await RetryHelper.RetryAsync(async () =>
+        {
+            calls++;
+            if (calls < 3)
+                throw new InvalidOperationException();
+            await Task.CompletedTask;
+        }, maximumRetries: 5, timeout: TimeSpan.Zero);
+
+        calls.Should().Be(3);
+    }
+
+    [Fact]
     public async Task RetryAsync_WhenActionSucceeds_ShouldNotRetry()
     {
         // Arrange
@@ -88,7 +104,7 @@ public class RetryHelperTests
 
         // Assert - Should have waited between retries
         attemptCount.Should().Be(3);
-        elapsed.Should().BeGreaterOrEqualTo(timeout);
+        elapsed.Should().BeGreaterThanOrEqualTo(timeout);
     }
 
     #endregion

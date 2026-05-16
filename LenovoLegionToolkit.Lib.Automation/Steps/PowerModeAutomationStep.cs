@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace LenovoLegionToolkit.Lib.Automation.Steps;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -11,7 +11,7 @@ using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Extensions;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls;
 
@@ -25,10 +25,16 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private readonly ComboBox _comboBox = new();
 
+    private SymbolRegular _icon = SymbolRegular.Empty;
+
     protected SymbolRegular Icon
     {
-        get => _cardControl.Icon;
-        set => _cardControl.Icon = value;
+        get => _icon;
+        set
+        {
+            _icon = value;
+            _cardControl.Icon = new SymbolIcon { Symbol = value };
+        }
     }
 
     protected string Title
@@ -161,3 +167,4 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     protected virtual TimeSpan AdditionalStateChangeDelay(T? oldValue, T? newValue) => TimeSpan.Zero;
 }
+

@@ -47,8 +47,7 @@ public class RGBKeyboardBacklightListener(RGBKeyboardBacklightController control
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to set next keyboard backlight preset.", ex);
+            Log.Instance.Error($"Failed to set next keyboard backlight preset.", ex);
         }
     }
 }

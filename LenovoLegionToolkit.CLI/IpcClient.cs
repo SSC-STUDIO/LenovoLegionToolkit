@@ -230,6 +230,7 @@ public static class IpcClient
 
     private static async Task<string?> SendRequestAsync(IpcRequest req)
     {
+        using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req));
         await using var pipe = new NamedPipeClientStream(Constants.PIPE_NAME);
 
         await ConnectAsync(pipe).ConfigureAwait(false);
@@ -242,6 +243,32 @@ public static class IpcClient
 
         return res.Message;
     }
+
+    private static string GetLoadingMessage(IpcRequest req)
+        => req.Operation switch
+        {
+            IpcRequest.OperationType.ListFeatures => "Loading features",
+            IpcRequest.OperationType.ListFeatureValues => $"Loading values{FormatTarget(req.Name)}",
+            IpcRequest.OperationType.ListQuickActions => "Loading quick actions",
+            IpcRequest.OperationType.GetFeatureValue => $"Reading feature{FormatTarget(req.Name)}",
+            IpcRequest.OperationType.SetFeatureValue => $"Applying feature{FormatTarget(req.Name)}",
+            IpcRequest.OperationType.GetSpectrumProfile => "Reading Spectrum profile",
+            IpcRequest.OperationType.SetSpectrumProfile => "Applying Spectrum profile",
+            IpcRequest.OperationType.GetSpectrumBrightness => "Reading Spectrum brightness",
+            IpcRequest.OperationType.SetSpectrumBrightness => "Applying Spectrum brightness",
+            IpcRequest.OperationType.GetRGBPreset => "Reading RGB preset",
+            IpcRequest.OperationType.SetRGBPreset => "Applying RGB preset",
+            IpcRequest.OperationType.QuickAction => $"Running quick action{FormatTarget(req.Name)}",
+            IpcRequest.OperationType.IsShellRegistered => "Checking shell registration",
+            IpcRequest.OperationType.IsShellInstalled => "Checking shell installation",
+            IpcRequest.OperationType.InstallShell => "Starting shell installation",
+            IpcRequest.OperationType.UninstallShell => "Starting shell uninstallation",
+            IpcRequest.OperationType.GetAppStatus => "Checking app status",
+            _ => "Waiting for Lenovo Legion Toolkit"
+        };
+
+    private static string FormatTarget(string? value)
+        => string.IsNullOrWhiteSpace(value) ? string.Empty : $" '{value}'";
 
     private static async Task ConnectAsync(NamedPipeClientStream pipe)
     {

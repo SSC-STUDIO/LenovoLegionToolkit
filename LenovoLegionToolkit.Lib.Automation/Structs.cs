@@ -1,5 +1,5 @@
 ﻿using LenovoLegionToolkit.Lib.Automation.Resources;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace LenovoLegionToolkit.Lib.Automation;
 

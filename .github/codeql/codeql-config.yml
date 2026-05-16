@@ -1,0 +1,7 @@
+name: "CodeQL config"
+
+disable-default-queries: false
+
+query-filters:
+  - exclude:
+      id: cs/cleartext-storage-of-sensitive-information

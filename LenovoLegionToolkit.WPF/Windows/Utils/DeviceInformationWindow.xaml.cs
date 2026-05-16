@@ -7,7 +7,6 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
@@ -15,18 +14,29 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
 public partial class DeviceInformationWindow
 {
     private readonly WarrantyChecker _warrantyChecker = IoCContainer.Resolve<WarrantyChecker>();
+    private readonly Snackbar _snackBar;
 
-    public DeviceInformationWindow() => InitializeComponent();
+    public DeviceInformationWindow()
+    {
+        InitializeComponent();
+        _snackBar = new Snackbar(_snackBarPresenter)
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            IsCloseButtonEnabled = false,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 },
+            Timeout = TimeSpan.FromSeconds(1)
+        };
+    }
 
     private async void DeviceInformationWindow_Loaded(object sender, RoutedEventArgs e) => await RefreshAsync();
 
     private async Task RefreshAsync(bool forceRefresh = false)
     {
         MachineInformation mi;
-        
+
         try
         {
-            mi = await Compatibility.GetMachineInformationAsync();
+            mi = await MachineCompatibility.GetMachineInformationAsync();
 
             _manufacturerLabel.Text = mi.Vendor ?? "-";
             _modelLabel.Text = mi.Model ?? "-";
@@ -47,9 +57,9 @@ public partial class DeviceInformationWindow
             _biosLabel.Text = "-";
 
             // Show error notification
-            _snackBar.Icon = SymbolRegular.ErrorCircle24;
+            _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
             _snackBar.Appearance = ControlAppearance.Danger;
-            await _snackBar.ShowAsync(
+            await ShowSnackBarAsync(
                 Resource.CompatibilityCheckErrorWindow_Title,
                 Resource.CompatibilityCheckError_Message);
 
@@ -97,7 +107,7 @@ public partial class DeviceInformationWindow
         try
         {
             System.Windows.Clipboard.SetText(str);
-            await _snackBar.ShowAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
+            await ShowSnackBarAsync(Resource.CopiedToClipboard_Title, string.Format(Resource.CopiedToClipboard_Message_WithParam, str));
         }
         catch (Exception ex)
         {
@@ -110,6 +120,13 @@ public partial class DeviceInformationWindow
     {
         var link = _warrantyLinkCardAction.Tag as Uri;
         link?.Open();
+    }
+
+    private async Task ShowSnackBarAsync(string title, string? message)
+    {
+        _snackBar.Title = title;
+        _snackBar.Content = message;
+        await _snackBar.ShowAsync();
     }
 }
 }

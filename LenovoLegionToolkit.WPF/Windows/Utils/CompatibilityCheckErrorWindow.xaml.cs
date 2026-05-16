@@ -9,11 +9,10 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using Theme = Wpf.Ui.Appearance.Theme;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils
 {
-public partial class CompatibilityCheckErrorWindow : UiWindow
+public partial class CompatibilityCheckErrorWindow : FluentWindow
 {
     private readonly Exception _exception;
     private readonly string _logFilePath;
@@ -61,13 +60,13 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
         {
             // Try to detect system theme
             var isDarkMode = Lib.System.SystemTheme.IsDarkMode();
-            var themeType = isDarkMode ? ThemeType.Dark : ThemeType.Light;
+            var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Applying theme to CompatibilityCheckErrorWindow: {themeType} (System is {(isDarkMode ? "Dark" : "Light")} mode)");
             
             var backgroundType = RenderingCompatibilityHelper.GetPreferredBackgroundType();
-            Theme.Apply(themeType, backgroundType, false);
+            ApplicationThemeManager.Apply(themeType, backgroundType, false);
         }
         catch (Exception ex)
         {
@@ -75,7 +74,7 @@ public partial class CompatibilityCheckErrorWindow : UiWindow
                 Log.Instance.Trace($"Failed to detect system theme, defaulting to Light mode", ex);
             
             // If theme detection fails, fall back to light theme
-            Theme.Apply(ThemeType.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
+            ApplicationThemeManager.Apply(ApplicationTheme.Light, RenderingCompatibilityHelper.GetPreferredBackgroundType(), false);
         }
     }
 

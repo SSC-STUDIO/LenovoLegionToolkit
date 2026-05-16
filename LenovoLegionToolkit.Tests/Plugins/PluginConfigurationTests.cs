@@ -3,12 +3,11 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Plugins;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace LenovoLegionToolkit.Tests.Plugins;
 
-[TestClass]
-[TestCategory(TestCategories.Plugin)]
+[Trait("Category", TestCategories.Plugin)]
 public class PluginConfigurationTests : TemporaryFileTestBase
 {
     private const string TestPluginId = "test-plugin-config";
@@ -27,7 +26,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         base.Cleanup();
     }
 
-    [TestMethod]
+    [Fact]
     public void GetValue_WhenKeyDoesNotExist_ShouldReturnDefault()
     {
         var value = _config.GetValue("nonexistent", "default");
@@ -35,7 +34,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().Be("default");
     }
 
-    [TestMethod]
+    [Fact]
     public void GetValue_WhenKeyExists_ShouldReturnCorrectValue()
     {
         _config.SetValue("test-key", "test-value");
@@ -45,7 +44,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().Be("test-value");
     }
 
-    [TestMethod]
+    [Fact]
     public void GetValue_WithIntValue_ShouldReturnCorrectValue()
     {
         _config.SetValue("int-key", 42);
@@ -55,7 +54,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().Be(42);
     }
 
-    [TestMethod]
+    [Fact]
     public void GetValue_WithBoolValue_ShouldReturnCorrectValue()
     {
         _config.SetValue("bool-key", true);
@@ -65,7 +64,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void SetValue_ShouldUpdateValue()
     {
         _config.SetValue("key", "value1");
@@ -76,7 +75,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().Be("value2");
     }
 
-    [TestMethod]
+    [Fact]
     public void HasKey_WhenKeyExists_ShouldReturnTrue()
     {
         _config.SetValue("existing-key", "value");
@@ -84,13 +83,13 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         _config.HasKey("existing-key").Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void HasKey_WhenKeyDoesNotExist_ShouldReturnFalse()
     {
         _config.HasKey("nonexistent-key").Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void RemoveKey_ShouldRemoveKey()
     {
         _config.SetValue("key-to-remove", "value");
@@ -99,7 +98,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         _config.HasKey("key-to-remove").Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void Clear_ShouldRemoveAllKeys()
     {
         _config.SetValue("key1", "value1");
@@ -110,7 +109,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         _config.HasKey("key2").Should().BeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task SaveAsync_ShouldPersistConfiguration()
     {
         _config.SetValue("persistent-key", "persistent-value");
@@ -122,7 +121,7 @@ public class PluginConfigurationTests : TemporaryFileTestBase
         value.Should().Be("persistent-value");
     }
 
-    [TestMethod]
+    [Fact]
     public async Task ReloadAsync_ShouldLoadLatestConfiguration()
     {
         _config.SetValue("key1", "value1");
@@ -138,11 +137,11 @@ public class PluginConfigurationTests : TemporaryFileTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Plugin)]
+
+[Trait("Category", TestCategories.Plugin)]
 public class PluginStateTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void PluginState_ShouldHaveCorrectValues()
     {
         ((int)PluginState.NotInstalled).Should().Be(0);
@@ -152,7 +151,7 @@ public class PluginStateTests : UnitTestBase
         ((int)PluginState.Error).Should().Be(4);
     }
 
-    [TestMethod]
+    [Fact]
     public void PluginStateChangedEventArgs_ShouldSetPropertiesCorrectly()
     {
         var args = new PluginStateChangedEventArgs(
@@ -167,7 +166,7 @@ public class PluginStateTests : UnitTestBase
         args.ErrorMessage.Should().Be("Test error");
     }
 
-    [TestMethod]
+    [Fact]
     public void PluginStateChangedEventArgs_WithoutError_ShouldHaveNullErrorMessage()
     {
         var args = new PluginStateChangedEventArgs(

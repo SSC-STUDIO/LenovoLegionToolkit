@@ -16,8 +16,10 @@ public abstract class AbstractWmiFeature<T>(Func<Task<int>> getValue, Func<int, 
 
             return await isSupported().ConfigureAwait(false) > 0;
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to check WMI feature support [feature={GetType().Name}]", ex);
             return false;
         }
     }

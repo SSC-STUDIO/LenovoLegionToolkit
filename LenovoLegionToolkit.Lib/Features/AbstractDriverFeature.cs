@@ -82,8 +82,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
 
         var error = Marshal.GetLastWin32Error();
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"DeviceIoControl returned 0, last error: {error} [feature={GetType().Name}]");
+        Log.Instance.Warning($"DeviceIoControl returned 0, last error: {error} [feature={GetType().Name}]");
 
         throw new InvalidOperationException($"DeviceIoControl returned 0, last error: {error}");
     });
@@ -107,8 +106,7 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
             await Task.Delay(50).ConfigureAwait(false);
         }
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Verify state {state} set failed. [feature={GetType().Name}]");
+        Log.Instance.Warning($"Verify state {state} set failed. [feature={GetType().Name}]");
 
         throw new InvalidOperationException($"Failed to verify {GetType().Name} state was set to {state}.");
     }

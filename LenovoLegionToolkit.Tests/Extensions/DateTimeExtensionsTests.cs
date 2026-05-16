@@ -201,8 +201,8 @@ public class DateTimeExtensionsTests
         // Assert
         result.DayOfWeek.Should().Be(targetDay);
         var diff = (result.Date - now.Date).Days;
-        diff.Should().BeGreaterOrEqualTo(0);
-        diff.Should().BeLessOrEqualTo(6);
+        diff.Should().BeGreaterThanOrEqualTo(0);
+        diff.Should().BeLessThanOrEqualTo(6);
     }
 
     [Fact]
@@ -299,8 +299,8 @@ public class DateTimeExtensionsTests
         // Assert
         result.DayOfWeek.Should().Be(targetDay);
         var diff = (result.Date - now.Date).Days;
-        diff.Should().BeGreaterOrEqualTo(0);
-        diff.Should().BeLessOrEqualTo(6);
+        diff.Should().BeGreaterThanOrEqualTo(0);
+        diff.Should().BeLessThanOrEqualTo(6);
     }
 
     [Fact]

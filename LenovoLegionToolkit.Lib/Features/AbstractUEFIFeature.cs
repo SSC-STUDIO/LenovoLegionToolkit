@@ -39,28 +39,30 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
         {
             if (!TokenManipulator.AddPrivileges(TokenManipulator.SE_SYSTEM_ENVIRONMENT_PRIVILEGE))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Cannot set UEFI privileges [feature={GetType().Name}]");
+                Log.Instance.Warning($"Cannot set UEFI privileges [feature={GetType().Name}]");
 
                 throw new InvalidOperationException("Cannot set privileges UEFI");
             }
 
             var ptrSize = (uint)Marshal.SizeOf<TS>();
-            if (PInvoke.GetFirmwareEnvironmentVariableEx(scopeName, guid, ptr.ToPointer(), ptrSize, null) != 0)
+            fixed (char* scopeNamePtr = scopeName)
+            fixed (char* guidPtr = guid)
             {
-                var result = Marshal.PtrToStructure<TS>(ptr);
+                if (PInvoke.GetFirmwareEnvironmentVariableEx(scopeNamePtr, guidPtr, ptr.ToPointer(), ptrSize, null) != 0)
+                {
+                    var result = Marshal.PtrToStructure<TS>(ptr);
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Read from UEFI successful [feature={GetType().Name}]");
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Read from UEFI successful [feature={GetType().Name}]");
 
-                return result;
-            }
-            else
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Cannot read variable {scopeName} from UEFI [feature={GetType().Name}]");
+                    return result;
+                }
+                else
+                {
+                    Log.Instance.Warning($"Cannot read variable {scopeName} from UEFI [feature={GetType().Name}]");
 
-                throw new InvalidOperationException($"Cannot read variable {scopeName} from UEFI");
+                    throw new InvalidOperationException($"Cannot read variable {scopeName} from UEFI");
+                }
             }
         }
         finally
@@ -78,25 +80,27 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
         {
             if (!TokenManipulator.AddPrivileges(TokenManipulator.SE_SYSTEM_ENVIRONMENT_PRIVILEGE))
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Cannot set UEFI privileges [feature={GetType().Name}]");
+                Log.Instance.Warning($"Cannot set UEFI privileges [feature={GetType().Name}]");
 
                 throw new InvalidOperationException("Cannot set UEFI privileges");
             }
 
             Marshal.StructureToPtr(structure, ptr, false);
             var ptrSize = (uint)Marshal.SizeOf<TS>();
-            if (!PInvoke.SetFirmwareEnvironmentVariableEx(scopeName, guid, ptr.ToPointer(), ptrSize, scopeAttribute))
+            fixed (char* scopeNamePtr = scopeName)
+            fixed (char* guidPtr = guid)
             {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Cannot write variable {scopeName} to UEFI [feature={GetType().Name}]");
+                if (!PInvoke.SetFirmwareEnvironmentVariableEx(scopeNamePtr, guidPtr, ptr.ToPointer(), ptrSize, scopeAttribute))
+                {
+                    Log.Instance.Warning($"Cannot write variable {scopeName} to UEFI [feature={GetType().Name}]");
 
-                throw new InvalidOperationException($"Cannot write variable {scopeName} to UEFI");
-            }
-            else
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"WriteAsync to UEFI successful [feature={GetType().Name}]");
+                    throw new InvalidOperationException($"Cannot write variable {scopeName} to UEFI");
+                }
+                else
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"WriteAsync to UEFI successful [feature={GetType().Name}]");
+                }
             }
         }
         finally

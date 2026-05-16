@@ -66,6 +66,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Light control ownership: {enable}");
+
+                    Log.Instance.Info($"Light control ownership set to {enable} [controller={nameof(RGBKeyboardBacklightController)}]");
                 }
                 catch (Exception ex)
                 {
@@ -79,8 +81,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
                         return;
                     }
 
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Can't take ownership.", ex);
+                    Log.Instance.Warning($"Can't take RGB keyboard ownership.", ex);
 
                     throw;
                 }
@@ -132,6 +133,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB state set to {selectedPreset}");
 
+                Log.Instance.Info($"RGB state set to {selectedPreset} [controller={nameof(RGBKeyboardBacklightController)}]");
+
                 await SendToDevice(str).ConfigureAwait(false);
             }
         }
@@ -165,6 +168,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB preset set to {preset}");
+
+                Log.Instance.Info($"RGB preset set to {preset} [controller={nameof(RGBKeyboardBacklightController)}]");
             }
         }
 
@@ -199,6 +204,8 @@ namespace LenovoLegionToolkit.Lib.Controllers
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"RGB preset changed to {newPreset}");
+
+                Log.Instance.Info($"RGB preset changed to {newPreset} [controller={nameof(RGBKeyboardBacklightController)}]");
 
                 return newPreset;
             }
@@ -247,7 +254,7 @@ namespace LenovoLegionToolkit.Lib.Controllers
                 ptr = Marshal.AllocHGlobal(size);
                 Marshal.StructureToPtr(str, ptr, false);
 
-                if (!PInvoke.HidD_SetFeature(handle, ptr.ToPointer(), (uint)size))
+                if (!PInvoke.HidD_SetFeature(handle.ToWin32Handle(), ptr.ToPointer(), (uint)size))
                     PInvokeExtensions.ThrowIfWin32Error("HidD_SetFeature");
             }
             finally

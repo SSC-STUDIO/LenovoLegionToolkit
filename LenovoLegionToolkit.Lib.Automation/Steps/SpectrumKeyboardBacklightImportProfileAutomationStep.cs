@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace LenovoLegionToolkit.Lib.Automation.Steps;
 

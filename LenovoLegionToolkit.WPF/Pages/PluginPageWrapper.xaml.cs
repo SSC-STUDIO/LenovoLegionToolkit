@@ -8,10 +8,10 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
@@ -19,7 +19,7 @@ namespace LenovoLegionToolkit.WPF.Pages
 /// <summary>
 /// 插件页面包装器，用于承载插件提供的UI页面
 /// </summary>
-public partial class PluginPageWrapper : UiPage
+public partial class PluginPageWrapper : Page
 {
     private static readonly ConcurrentDictionary<string, string> PageTagToPluginIdMap = new();
 
@@ -113,7 +113,7 @@ public partial class PluginPageWrapper : UiPage
             }
 
             var pluginPage = ResolvePluginPage(plugin);
-            
+
             // System Optimization and Tools are now default interfaces, not plugins
             // They are accessed directly via NavigationItems in MainWindow.xaml
             // If plugin does not provide IPluginPage, log and return
@@ -129,7 +129,7 @@ public partial class PluginPageWrapper : UiPage
 
             // 设置页面标题
             Title = pluginPage.PageTitle;
-            
+
             // 设置页面图标和标题显示
             var pluginHeader = this.FindName("_pluginHeader") as StackPanel;
             if (pluginHeader != null)
@@ -138,7 +138,7 @@ public partial class PluginPageWrapper : UiPage
                 if (!string.IsNullOrWhiteSpace(pluginPage.PageTitle))
                 {
                     pluginHeader.Visibility = Visibility.Visible;
-                    
+
                     // 设置图标
                     var pluginIcon = this.FindName("_pluginIcon") as Wpf.Ui.Controls.SymbolIcon;
                     if (pluginIcon != null && !string.IsNullOrWhiteSpace(pluginPage.PageIcon))
@@ -159,7 +159,7 @@ public partial class PluginPageWrapper : UiPage
                     {
                         pluginIcon.Visibility = Visibility.Collapsed;
                     }
-                    
+
                     // 设置标题
                     var pluginTitle = this.FindName("_pluginTitle") as TextBlock;
                     if (pluginTitle != null)
@@ -173,10 +173,10 @@ public partial class PluginPageWrapper : UiPage
                     pluginHeader.Visibility = Visibility.Collapsed;
                 }
             }
-            
+
             // 创建插件页面控件
             var pluginControl = pluginPage.CreatePage();
-            
+
             // Find the Frame control by name
             var contentHost = this.FindName("_pluginContentHost") as ContentControl;
             if (contentHost == null)
@@ -186,7 +186,7 @@ public partial class PluginPageWrapper : UiPage
                 ShowEmptyState(T("PluginPageWrapper_ContentUnavailable", "Plugin content container is unavailable."));
                 return;
             }
-            
+
             if (pluginControl is UIElement uiElement)
             {
                 contentHost.Content = uiElement;

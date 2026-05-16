@@ -11,7 +11,6 @@
 	<ItemGroup>
 		<PackageReference Include="Autofac" />
 		<PackageReference Include="NeoSmart.AsyncLock" />
-        <PackageReference Include="Newtonsoft.Json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj" />

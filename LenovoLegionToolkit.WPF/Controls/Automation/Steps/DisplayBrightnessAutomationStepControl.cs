@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using NumberBox = Wpf.Ui.Controls.NumberBox;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
@@ -51,3 +51,4 @@ public class DisplayBrightnessAutomationStepControl : AbstractAutomationStepCont
         return Task.CompletedTask;
     }
 }
+

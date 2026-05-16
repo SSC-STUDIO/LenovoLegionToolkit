@@ -123,6 +123,8 @@ public class GPUController : IDisposable
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Starting GPU service [interval={interval}ms]");
 
+        Log.Instance.Info($"GPU monitoring started [controller={nameof(GPUController)}]");
+
         _currentInterval = interval;
         _refreshCancellationTokenSource = new CancellationTokenSource();
         var token = _refreshCancellationTokenSource.Token;
@@ -134,6 +136,8 @@ public class GPUController : IDisposable
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Stopping GPU service");
+
+        Log.Instance.Info($"GPU monitoring stopped [controller={nameof(GPUController)}]");
 
         if (_refreshCancellationTokenSource is not null)
             await _refreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
@@ -222,7 +226,7 @@ public class GPUController : IDisposable
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"GPU controller exception", ex);
+                Log.Instance.Warning($"GPU controller exception", ex);
 
             throw;
         }

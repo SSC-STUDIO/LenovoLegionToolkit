@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Coverlet: narrow collected coverage to LenovoLegionToolkit.Lib.Plugins (see Ci-tests.yml). Add Threshold when baseline is stable. -->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura,opencover</Format>
+          <Include>[LenovoLegionToolkit.Lib.Plugins]*</Include>
+          <Exclude>[LenovoLegionToolkit.Tests]*</Exclude>
+          <SkipAutoProps>true</SkipAutoProps>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

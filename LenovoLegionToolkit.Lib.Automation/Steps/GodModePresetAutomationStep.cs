@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Utils;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace LenovoLegionToolkit.Lib.Automation.Steps;
 

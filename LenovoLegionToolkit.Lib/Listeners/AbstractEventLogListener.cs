@@ -43,8 +43,7 @@ private async Task Watcher_EventRecordWrittenAsync(object? sender, EventRecordWr
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to handle event.  [listener={GetType().Name}]", ex);
+            Log.Instance.Error($"Failed to handle event.  [listener={GetType().Name}]", ex);
         }
     }
 

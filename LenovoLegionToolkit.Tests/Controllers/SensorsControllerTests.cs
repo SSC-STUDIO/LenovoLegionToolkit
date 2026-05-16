@@ -3,15 +3,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace LenovoLegionToolkit.Tests.Controllers;
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+[Trait("Category", TestCategories.Controller)]
 public class SensorsDataTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void SensorsData_Empty_ShouldHaveEmptyComponents()
     {
         var empty = SensorsData.Empty;
@@ -20,7 +19,7 @@ public class SensorsDataTests : UnitTestBase
         empty.GPU.Should().Be(SensorData.Empty);
     }
 
-    [TestMethod]
+    [Fact]
     public void SensorsData_WithValidData_ShouldSetPropertiesCorrectly()
     {
         var cpuData = new SensorData(
@@ -57,7 +56,7 @@ public class SensorsDataTests : UnitTestBase
         sensorsData.GPU.Should().Be(gpuData);
     }
 
-    [TestMethod]
+    [Fact]
     public void SensorsData_ToString_ShouldContainCPUAndGPU()
     {
         var data = new SensorsData(SensorData.Empty, SensorData.Empty);
@@ -68,11 +67,11 @@ public class SensorsDataTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class SensorDataTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void SensorData_Empty_ShouldHaveZeroValues()
     {
         var empty = SensorData.Empty;
@@ -84,7 +83,7 @@ public class SensorDataTests : UnitTestBase
         empty.Wattage.Should().Be(-1);
     }
 
-    [TestMethod]
+    [Fact]
     public void SensorData_WithAllParameters_ShouldSetPropertiesCorrectly()
     {
         var data = new SensorData(
@@ -113,7 +112,7 @@ public class SensorDataTests : UnitTestBase
         data.MaxFanSpeed.Should().Be(5500);
     }
 
-    [TestMethod]
+    [Fact]
     public void SensorData_ToString_ShouldContainKeyMetrics()
     {
         var data = new SensorData(
@@ -139,7 +138,7 @@ public class SensorDataTests : UnitTestBase
         str.Should().Contain("45W");
     }
 
-    [TestMethod]
+    [Fact]
     public void SensorData_WithExtendedParameters_ShouldSetExtendedProperties()
     {
         var data = new SensorData(
@@ -163,11 +162,11 @@ public class SensorDataTests : UnitTestBase
     }
 }
 
-[TestClass]
-[TestCategory(TestCategories.Controller)]
+
+[Trait("Category", TestCategories.Controller)]
 public class ISensorsControllerTests : UnitTestBase
 {
-    [TestMethod]
+    [Fact]
     public void ISensorsController_ShouldHaveCorrectMethods()
     {
         var methodNames = new[]
@@ -186,7 +185,7 @@ public class ISensorsControllerTests : UnitTestBase
         typeof(IDisposable).IsAssignableFrom(typeof(ISensorsController)).Should().BeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task ISensorsController_GetDataAsync_ShouldHaveDefaultParameter()
     {
         var method = typeof(ISensorsController).GetMethod("GetDataAsync");

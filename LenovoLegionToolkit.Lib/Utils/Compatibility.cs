@@ -83,7 +83,14 @@ public static partial class Compatibility
     private static MachineInformation? _machineInformation;
     private static bool? _isCompatible;
 
-    public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
+    public const string SmokeSimulateLegionEnvironmentVariable = "LLT_SMOKE_SIMULATE_LEGION";
+
+    public static bool IsSmokeLegionSimulationEnabled =>
+        string.Equals(Environment.GetEnvironmentVariable(SmokeSimulateLegionEnvironmentVariable), "1", StringComparison.OrdinalIgnoreCase);
+
+    public static Task<bool> CheckBasicCompatibilityAsync() => IsSmokeLegionSimulationEnabled
+        ? Task.FromResult(true)
+        : WMI.LenovoGameZoneData.ExistsAsync();
 
     public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
     {
@@ -103,6 +110,12 @@ public static partial class Compatibility
         if (_isCompatible.HasValue)
             return (_isCompatible.Value, mi);
 
+        if (IsSmokeLegionSimulationEnabled)
+        {
+            _isCompatible = true;
+            return (true, mi);
+        }
+
         if (!await CheckBasicCompatibilityAsync().ConfigureAwait(false))
         {
             _isCompatible = false;
@@ -119,6 +132,9 @@ public static partial class Compatibility
     {
         if (_machineInformation.HasValue)
             return _machineInformation.Value;
+
+        if (IsSmokeLegionSimulationEnabled)
+            return (_machineInformation = GetSmokeMachineInformation()).Value;
 
         var (vendor, machineType, model, serialNumber) = await GetModelDataAsync().ConfigureAwait(false);
         var (biosVersion, biosVersionRaw) = GetBIOSVersion();
@@ -185,6 +201,35 @@ public static partial class Compatibility
         return (_machineInformation = machineInformation).Value;
     }
 
+    private static MachineInformation GetSmokeMachineInformation() => new()
+    {
+        Vendor = "LENOVO",
+        MachineType = "83DE",
+        Model = "Legion Y9000P IRX9",
+        SerialNumber = "SMOKE-LEGION",
+        BiosVersion = new("NMCN", 32),
+        BiosVersionRaw = "NMCN32WW",
+        SupportedPowerModes =
+        [
+            PowerModeState.Quiet,
+            PowerModeState.Balance,
+            PowerModeState.Performance,
+            PowerModeState.GodMode
+        ],
+        SmartFanVersion = 6,
+        LegionZoneVersion = 3,
+        Features = MachineInformation.FeatureData.Unknown,
+        Properties = new()
+        {
+            SupportsAlwaysOnAc = (false, false),
+            SupportsGodModeV2 = true,
+            SupportsGSync = true,
+            SupportsIGPUMode = true,
+            SupportsAIMode = true,
+            SupportBootLogoChange = true
+        }
+    };
+
     private static Task<(string, string, string, string)> GetModelDataAsync() => WMI.Win32.ComputerSystemProduct.ReadAsync();
 
     private static (BiosVersion?, string?) GetBIOSVersion()
@@ -210,7 +255,11 @@ public static partial class Compatibility
             var capabilities = await WMI.LenovoCapabilityData00.ReadAsync().ConfigureAwait(false);
             return new(MachineInformation.FeatureData.SourceType.CapabilityData, capabilities);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"LenovoCapabilityData00 read failed, falling back to feature flags", ex);
+        }
 
         try
         {
@@ -228,7 +277,11 @@ public static partial class Compatibility
                 [CapabilityID.OverDrive] = true
             };
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetLegionDeviceSupportFeature read failed, returning Unknown features", ex);
+        }
 
         return MachineInformation.FeatureData.Unknown;
     }
@@ -252,7 +305,11 @@ public static partial class Compatibility
 
             return powerModes;
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetFeatureValue(SupportedPowerModes) read failed, falling back to GetSupportThermalMode", ex);
+        }
 
         try
         {
@@ -271,7 +328,11 @@ public static partial class Compatibility
 
             return powerModes;
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetSupportThermalMode read failed, returning empty power modes", ex);
+        }
 
         return [];
     }
@@ -282,7 +343,11 @@ public static partial class Compatibility
         {
             return await WMI.LenovoGameZoneData.IsSupportSmartFanAsync().ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"IsSupportSmartFan read failed, returning -1", ex);
+        }
 
         return -1;
     }
@@ -293,13 +358,21 @@ public static partial class Compatibility
         {
             return await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.LegionZoneSupportVersion).ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetFeatureValue(LegionZoneSupportVersion) read failed, falling back to GetSupportLegionZoneVersion", ex);
+        }
 
         try
         {
             return await WMI.LenovoOtherMethod.GetSupportLegionZoneVersionAsync().ConfigureAwait(false);
         }
-        catch { /* Ignored. */ }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"GetSupportLegionZoneVersion read failed, returning -1", ex);
+        }
 
         return -1;
     }

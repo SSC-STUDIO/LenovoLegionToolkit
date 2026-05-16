@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using WindowsDisplayAPI.Exceptions;
 
 namespace LenovoLegionToolkit.Lib.Automation.Steps;

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Text.Json;
 using LenovoLegionToolkit.Lib.Automation.Pipeline;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Automation.Resources;
+using LenovoLegionToolkit.Lib.Automation.Serialization;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Settings;
 
@@ -37,4 +39,10 @@ public class AutomationSettings() : AbstractSettings<AutomationSettings.Automati
             },
         },
     };
+
+    protected override void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
+    {
+        options.Converters.Add(new AutomationPipelineTriggerJsonConverter());
+        options.Converters.Add(new AutomationStepJsonConverter());
+    }
 }

@@ -1,15 +1,15 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 
 public abstract class AbstractSettings<T> where T : class, new()
 {
-    protected readonly JsonSerializerSettings JsonSerializerSettings;
+    protected readonly JsonSerializerOptions JsonSerializerOptions;
     private readonly string _settingsStorePath;
     private readonly string _fileName;
     private readonly object _lock = new();
@@ -32,36 +32,29 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     protected AbstractSettings(string filename)
     {
-        // SECURITY: Validate filename to prevent path traversal
         if (!PathSecurity.IsValidFileName(filename))
-        {
             throw new ArgumentException($"Invalid settings filename: {filename}", nameof(filename));
-        }
 
-        JsonSerializerSettings = new()
-        {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.None,
-            ObjectCreationHandling = ObjectCreationHandling.Replace,
-            Converters = { new StringEnumConverter() },
-            MaxDepth = 32
-        };
+        JsonSerializerOptions = LltJson.CreateSettingsOptions();
+        ConfigureJsonSerializerOptions(JsonSerializerOptions);
 
         _fileName = filename;
         _settingsStorePath = Path.Combine(Folders.AppData, _fileName);
-        
-        // SECURITY: Verify the constructed path is within AppData directory
+
         if (!PathSecurity.IsPathWithinAllowedDirectory(_settingsStorePath, Folders.AppData))
-        {
             throw new InvalidOperationException($"Settings path escapes allowed directory: {_settingsStorePath}");
-        }
     }
+
+    /// <summary>
+    /// Optional converters / options tweaks per settings file (e.g. automation polymorphism, legacy GUID migration).
+    /// </summary>
+    protected virtual void ConfigureJsonSerializerOptions(JsonSerializerOptions options) { }
 
     public void SynchronizeStore()
     {
         lock (_lock)
         {
-            var settingsSerialized = JsonConvert.SerializeObject(_cachedStore ?? Default, JsonSerializerSettings);
+            var settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
             File.WriteAllText(_settingsStorePath, settingsSerialized);
             _lastLoadTime = DateTime.UtcNow;
         }
@@ -72,7 +65,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         string settingsSerialized;
         lock (_lock)
         {
-            settingsSerialized = JsonConvert.SerializeObject(_cachedStore ?? Default, JsonSerializerSettings);
+            settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
             _lastLoadTime = DateTime.UtcNow;
         }
 
@@ -90,7 +83,7 @@ public abstract class AbstractSettings<T> where T : class, new()
             try
             {
                 var settingsSerialized = File.ReadAllText(_settingsStorePath);
-                store = JsonConvert.DeserializeObject<T>(settingsSerialized, JsonSerializerSettings);
+                store = JsonSerializer.Deserialize<T>(settingsSerialized, JsonSerializerOptions);
 
                 if (store is null)
                     TryBackup();
@@ -131,7 +124,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         try
         {
             var settingsSerialized = await File.ReadAllTextAsync(_settingsStorePath).ConfigureAwait(false);
-            store = JsonConvert.DeserializeObject<T>(settingsSerialized, JsonSerializerSettings);
+            store = JsonSerializer.Deserialize<T>(settingsSerialized, JsonSerializerOptions);
 
             if (store is null)
                 TryBackup();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,7 +6,7 @@ using System.Windows.Data;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.System;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using TextBox = Wpf.Ui.Controls.TextBox;
 
@@ -85,7 +85,7 @@ public partial class WiFiConnectedPipelineTriggerTabItemContent : IAutomationPip
         private readonly Button _removeButton = new()
         {
             Margin = new(8, 0, 0, 0),
-            Icon = SymbolRegular.Delete24
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Delete24 }
         };
 
         private readonly Grid _grid = new()
@@ -122,3 +122,4 @@ public partial class WiFiConnectedPipelineTriggerTabItemContent : IAutomationPip
     }
 }
 }
+

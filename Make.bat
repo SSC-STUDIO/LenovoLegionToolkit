@@ -94,5 +94,8 @@ ping -n 6 127.0.0.1 >nul 2>&1
 endlocal & exit /b %ERROR_COUNT%
 
 :RESOLVE_VERSION
-for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$props=[xml](Get-Content -Raw 'Directory.Build.props'); $group=$props.Project.PropertyGroup[0]; $version=[string]$group.ReleaseVersion; if ([string]::IsNullOrWhiteSpace($version) -or $version.Contains('$(')) { $version='{0}.{1}.{2}' -f [string]$group.MajorVersion,[string]$group.MinorVersion,[string]$group.PatchVersion }; if ([string]::IsNullOrWhiteSpace($version) -or $version.Contains('$(')) { exit 1 }; $version"`) do SET VERSION=%%v
+REM MajorVersion, MinorVersion, PatchVersion are plain numeric text nodes.
+REM Reading them directly avoids the '$(…)' MSBuild-expression interpolation
+REM trap that causes NuGet to see '..' as a version string on some runners.
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$props=[xml](Get-Content -Raw 'Directory.Build.props'); $group=$props.Project.PropertyGroup | Where-Object { $_.MajorVersion -ne $null } | Select-Object -First 1; $maj=[string]$group.MajorVersion; $min=[string]$group.MinorVersion; $pat=[string]$group.PatchVersion; if ([string]::IsNullOrWhiteSpace($maj) -or [string]::IsNullOrWhiteSpace($min) -or [string]::IsNullOrWhiteSpace($pat)) { exit 1 }; '{0}.{1}.{2}' -f $maj,$min,$pat"`) do SET VERSION=%%v
 exit /b %ERRORLEVEL%

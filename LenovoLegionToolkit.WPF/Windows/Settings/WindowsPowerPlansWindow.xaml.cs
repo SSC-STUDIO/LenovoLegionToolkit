@@ -43,7 +43,7 @@ public partial class WindowsPowerPlansWindow
 
         var loadingTask = Task.Delay(500);
 
-        var compatibility = await Compatibility.GetMachineInformationAsync();
+        var compatibility = await MachineCompatibility.GetMachineInformationAsync();
         _aoAcWarningCard.Visibility = compatibility.Properties.SupportsAlwaysOnAc.status
             ? Visibility.Visible
             : Visibility.Collapsed;

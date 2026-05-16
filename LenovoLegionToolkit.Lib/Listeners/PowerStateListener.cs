@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -105,8 +106,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
     {
         try
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Event received: {e.Mode}");
+            Log.Instance.Info($"Event received: {e.Mode}");
 
             var powerMode = e.Mode switch
             {
@@ -135,7 +135,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
 
     private unsafe uint Callback(void* context, uint type, void* setting)
     {
-        _ = Task.Run(() => CallbackAsync(type));
+        Task.Run(() => CallbackAsync(type)).Forget("handle power notification callback");
         return (uint)WIN32_ERROR.ERROR_SUCCESS;
     }
 
@@ -174,7 +174,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
 
         if (powerStateEvent is PowerStateEvent.Resume)
         {
-            _ = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 if (await _batteryFeature.IsSupportedAsync().ConfigureAwait(false))
                     await _batteryFeature.EnsureCorrectBatteryModeIsSetAsync().ConfigureAwait(false);
@@ -193,12 +193,12 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
                     await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
                     await _dgpuNotify.NotifyAsync().ConfigureAwait(false);
                 }
-            });
+            }).Forget("restore hardware state after resume");
         }
 
         if (powerStateEvent is PowerStateEvent.StatusChange && powerAdapterState is PowerAdapterStatus.Connected)
         {
-            _ = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 if (await _powerModeFeature.IsSupportedAsync().ConfigureAwait(false))
                     await _powerModeFeature.EnsureGodModeStateIsAppliedAsync().ConfigureAwait(false);
@@ -208,7 +208,7 @@ private async Task SystemEvents_PowerModeChangedAsync(object sender, PowerModeCh
                     await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
                     await _dgpuNotify.NotifyAsync().ConfigureAwait(false);
                 }
-            });
+            }).Forget("restore hardware state after power adapter connection");
         }
 
         var powerAdapterStateChanged = powerAdapterState != _lastPowerAdapterState;

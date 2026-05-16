@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -45,44 +45,32 @@ public class WiFiAutoListener : AbstractAutoListener<WiFiAutoListener.ChangedEve
 
     private unsafe LambdaDisposable? RegisterWlanNotification()
     {
-        var handlePtr = IntPtr.Zero;
+        if (PInvoke.WlanOpenHandle(2, out _, out var handle) != 0)
+            return null;
 
-        try
+        var nativeHandle = handle.ToWin32Handle();
+        var result = PInvoke.WlanRegisterNotification(nativeHandle,
+            WLAN_NOTIFICATION_SOURCES.WLAN_NOTIFICATION_SOURCE_ACM,
+            true,
+            _wlanCallback,
+            null,
+            null,
+            null);
+        if (result != 0)
+            return null;
+
+        return new LambdaDisposable(() =>
         {
-            handlePtr = Marshal.AllocHGlobal(Marshal.SizeOf<HANDLE>());
-
-            if (PInvoke.WlanOpenHandle(2, out _, (HANDLE*)handlePtr) != 0)
-                return null;
-
-            var handle = Marshal.PtrToStructure<HANDLE>(handlePtr);
-
-            var result = PInvoke.WlanRegisterNotification(handle,
-                WLAN_NOTIFICATION_SOURCES.WLAN_NOTIFICATION_SOURCE_ACM,
+            _ = PInvoke.WlanRegisterNotification(nativeHandle,
+                WLAN_NOTIFICATION_SOURCES.WLAN_NOTIFICATION_SOURCE_NONE,
                 true,
                 _wlanCallback,
                 null,
                 null,
                 null);
-            if (result != 0)
-                return null;
 
-            return new LambdaDisposable(() =>
-            {
-                _ = PInvoke.WlanRegisterNotification(handle,
-                    WLAN_NOTIFICATION_SOURCES.WLAN_NOTIFICATION_SOURCE_NONE,
-                    true,
-                    _wlanCallback,
-                    null,
-                    null,
-                    null);
-
-                _ = PInvoke.WlanCloseHandle(handle, null);
-            });
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(handlePtr);
-        }
+            handle.Dispose();
+        });
     }
 
     private unsafe void WlanCallback(L2_NOTIFICATION_DATA* param0, void* param1)
@@ -96,14 +84,12 @@ public class WiFiAutoListener : AbstractAutoListener<WiFiAutoListener.ChangedEve
                 var dot11Ssid = notificationData.dot11Ssid;
                 var ssid = Encoding.UTF8.GetString(dot11Ssid.ucSSID.Value, (int)dot11Ssid.uSSIDLength);
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"WiFi connected. [ssid={ssid}]");
+                Log.Instance.Info($"WiFi connected. [ssid={ssid}]");
 
                 RaiseChanged(new ChangedEventArgs(true, ssid));
                 break;
             case 0x15: /* Disconnected */
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"WiFi disconnected.");
+                Log.Instance.Info($"WiFi disconnected.");
 
                 RaiseChanged(new ChangedEventArgs(false, null));
                 break;

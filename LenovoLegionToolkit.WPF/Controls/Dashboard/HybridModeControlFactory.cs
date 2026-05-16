@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -13,7 +13,6 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 
@@ -23,7 +22,7 @@ public static class HybridModeControlFactory
 {
     public static async Task<AbstractRefreshingControl> GetControlAsync()
     {
-        var mi = await Compatibility.GetMachineInformationAsync();
+        var mi = await MachineCompatibility.GetMachineInformationAsync();
         return mi.Properties.SupportsIGPUMode
             ? new ComboBoxHybridModeControl()
             : new ToggleHybridModeControl();
@@ -35,7 +34,7 @@ public static class HybridModeControlFactory
 
         private readonly Button _infoButton = new()
         {
-            Icon = SymbolRegular.Info24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Info24 },
             FontSize = 20,
             Margin = new(8, 0, 0, 0),
         };

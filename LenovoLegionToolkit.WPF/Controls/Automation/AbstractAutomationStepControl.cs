@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
-using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation;
 
@@ -34,17 +33,23 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = new SymbolIcon { Symbol = SymbolRegular.Dismiss24 },
         ToolTip = Resource.AbstractAutomationStepControl_Delete,
         MinWidth = 34,
         Height = 34,
         Margin = new(8, 0, 0, 0),
     };
 
+    private SymbolRegular _icon = SymbolRegular.Empty;
+
     public SymbolRegular Icon
     {
-        get => _cardControl.Icon;
-        set => _cardControl.Icon = value;
+        get => _icon;
+        set
+        {
+            _icon = value;
+            _cardControl.Icon = new SymbolIcon { Symbol = value };
+        }
     }
 
     public string Title
@@ -114,3 +119,4 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     protected void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
 }
+

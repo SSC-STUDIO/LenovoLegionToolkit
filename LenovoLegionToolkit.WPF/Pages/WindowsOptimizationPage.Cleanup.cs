@@ -11,7 +11,7 @@ using LenovoLegionToolkit.WPF.ViewModels;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Pages.WindowsOptimization;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -159,3 +159,4 @@ public partial class WindowsOptimizationPage
         _applicationSettings.SynchronizeStore();
     }
 }
+

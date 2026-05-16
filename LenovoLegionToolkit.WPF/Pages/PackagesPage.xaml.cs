@@ -20,8 +20,8 @@ using LenovoLegionToolkit.WPF.Controls.Packages;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+using HyperlinkButton = Wpf.Ui.Controls.HyperlinkButton;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 
@@ -49,7 +49,7 @@ public partial class PackagesPage : IProgress<float>
 
     private async void PackagesPage_Initialized(object? sender, EventArgs e)
     {
-        _machineTypeTextBox.Text = (await Compatibility.GetMachineInformationAsync()).MachineType;
+        _machineTypeTextBox.Text = (await MachineCompatibility.GetMachineInformationAsync()).MachineType;
         _osComboBox.SetItems(Enum.GetValues<OS>(), OSExtensions.GetCurrent(), os => os.GetDisplayName());
 
         var downloadsFolder = KnownFolders.GetPath(KnownFolder.Downloads);
@@ -307,7 +307,7 @@ public partial class PackagesPage : IProgress<float>
 
         var hideMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.EyeOff24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.EyeOff24 },
             Header = Resource.Hide,
         };
         hideMenuItem.Click += (_, _) =>
@@ -320,7 +320,7 @@ public partial class PackagesPage : IProgress<float>
 
         var hideAllMenuItem = new MenuItem
         {
-            SymbolIcon = SymbolRegular.EyeOff24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.EyeOff24 },
             Header = Resource.HideAll,
         };
         hideAllMenuItem.Click += (_, _) =>
@@ -385,9 +385,9 @@ public partial class PackagesPage : IProgress<float>
 
         if (_packageDownloaderSettings.Store.HiddenPackages.Count != 0)
         {
-            var clearHidden = new Hyperlink
+            var clearHidden = new HyperlinkButton
             {
-                Icon = SymbolRegular.Eye24,
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Eye24 },
                 Content = Resource.PackagesPage_ShowHiddenDownloads,
                 HorizontalAlignment = HorizontalAlignment.Right,
             };

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Humanizer;
-using Humanizer.Localisation;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
@@ -16,7 +15,6 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
@@ -53,7 +51,7 @@ public partial class DashboardPage
 
         var initializedTasks = new List<Task> { Task.Delay(TimeSpan.FromSeconds(1)) };
 
-        ScrollHost?.ScrollToTop();
+        _scrollViewer.ScrollToTop();
 
         _sensors.Visibility = _dashboardSettings.Store.ShowSensors ? Visibility.Visible : Visibility.Collapsed;
 
@@ -86,9 +84,9 @@ public partial class DashboardPage
 
         _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
 
-        var editDashboardHyperlink = new Hyperlink
+        var editDashboardHyperlink = new HyperlinkButton
         {
-            Icon = SymbolRegular.Edit24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
             Content = Resource.DashboardPage_Customize,
             Margin = new(0, 16, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Center
@@ -110,7 +108,7 @@ public partial class DashboardPage
 
         var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
         var completedTask = await Task.WhenAny(Task.WhenAll(initializedTasks), timeoutTask);
-        
+
         if (completedTask == timeoutTask)
         {
             Log.Instance.Warning($"Dashboard initialization timed out after 10 seconds");
