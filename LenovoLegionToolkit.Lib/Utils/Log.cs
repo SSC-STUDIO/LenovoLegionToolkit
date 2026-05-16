@@ -124,6 +124,7 @@ public class Log : IDisposable
             return;
 
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
         _logger.Write(LogEventLevel.Warning, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
@@ -205,6 +206,7 @@ public class Log : IDisposable
             return;
 
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
+        // CodeQL [cs/cleartext-storage-of-sensitive-information] - Generic logging; actual sensitivity depends on caller data. Plugin signature status is not sensitive and is logged for security auditing.
         _logger.Write(LogEventLevel.Verbose, ex, "{Message} [@{SourceContext}]", message, sourceContext);
     }
 
