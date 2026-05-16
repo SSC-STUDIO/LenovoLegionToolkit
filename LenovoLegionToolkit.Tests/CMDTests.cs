@@ -88,8 +88,8 @@ public class CMDTests
         }
         finally
         {
-            if (File.Exists(scriptPath)) File.Delete(scriptPath);
-            if (File.Exists(markerPath)) File.Delete(markerPath);
+            await RetryDeleteAsync(scriptPath);
+            await RetryDeleteAsync(markerPath);
             if (Directory.Exists(tempDir)) Directory.Delete(tempDir);
         }
     }
@@ -394,5 +394,23 @@ public class CMDTests
             await Task.Delay(100);
         }
         return File.Exists(path);
+    }
+
+    private static async Task RetryDeleteAsync(string path, int maxAttempts = 5)
+    {
+        for (var i = 0; i < maxAttempts; i++)
+        {
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                File.Delete(path);
+                return;
+            }
+            catch (IOException) when (i < maxAttempts - 1)
+            {
+                await Task.Delay(200);
+            }
+        }
     }
 }
