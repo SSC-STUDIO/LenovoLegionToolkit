@@ -11,11 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed / 修复
+- 修复插件 ZIP 提取中的路径遍历漏洞（Zip Slip），防止恶意插件包在提取过程中写入目标目录之外的文件 / Fixed Zip Slip path traversal vulnerability during plugin ZIP extraction to prevent malicious packages from writing files outside the intended extraction directory
 - 挪威语 `Resource.no.resx` 中 `CopiedToClipboard_Message_WithParam` 补回 `{0}` 占位符，避免格式化参数丢失 / Restored the `{0}` placeholder in Norwegian `CopiedToClipboard_Message_WithParam` so clipboard notifications preserve the formatted argument
 - 中文界面中的传感器频率单位改为标准 `GHz` 缩写 / Changed the sensor frequency unit in Chinese UI to the standard `GHz` abbreviation
 - 修复 WPF-UI 4 迁移后的主窗口顶部 `Log`/设备信息按钮位置、交互和 hover 对比度，启动语言选择窗口透明背景、About 页小窗口滚动、插件扩展统计卡和深色主题文字对比回归 / Fixed WPF-UI 4 migration regressions in title-bar `Log`/device button placement, interaction, and hover contrast, startup language-selector transparency, About-page small-window scrolling, Plugin Extensions summary cards, and dark-theme text contrast
 
 ### Improved / 改进
+- 加固 CI 治理：添加 CodeQL 配置文件替换行内抑制注释以使 SARIF 处理器的规则排除生效，修复 WSL/UNC 路径测试用例和测试报告发布容错，并关闭已由 PR #14 覆盖的两个 Dependabot PR / Hardened CI governance by switching CodeQL suppression to config-file-based exclusion (SARIF-compatible), fixed WSL/UNC path test cases and test reporter resilience, and closed two Dependabot PRs superseded by the WPF-UI 4 migration
 - 升级控制台页首次加载为贴近最终布局的骨架扫光动画，并为 CLI 等待主程序响应时增加不污染脚本输出的控制台加载动画 / Upgraded the Dashboard first-load state to a layout-matching shimmer skeleton and added a CLI loading animation while waiting for the main app response without polluting scripted output
 - 应用设置、自动化管道与 CLI IPC 的 JSON 序列化迁移至 `System.Text.Json`，并保持与既有配置文件格式的兼容策略（含自动化判别符）；Spectrum 配置文件导入导出同样使用该栈 / Migrated JSON serialization for application settings, automation pipelines, and CLI IPC to `System.Text.Json` while preserving compatibility strategies for existing files (including automation discriminators); Spectrum profile import/export uses the same stack
 - 已从基准 `Resource.resx` 回填 WPF 插件扩展等相关字符串键至全部卫星资源文件，`missing` 结构性缺口归零（占位文案为英文，可由 Crowdin 后续本地化）/ Backfilled plugin-extensions-related string keys from neutral `Resource.resx` into all WPF satellite resource files so structural `missing` gaps are cleared (English placeholders pending Crowdin localization)
