@@ -51,20 +51,20 @@
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar Grid.Row="0" Height="38">
-            <wpfui:TitleBar.Header>
+            <wpfui:TitleBar.CenterContent>
                 <TextBlock
                     x:Name="_title"
                     MaxWidth="760"
-                    Margin="12,0,0,0"
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FlowDirection="LeftToRight"
                     Focusable="False"
                     FontSize="12"
                     IsHitTestVisible="False"
                     Text="{x:Static resources:Resource.AppName}"
+                    TextAlignment="Center"
                     TextTrimming="CharacterEllipsis" />
-            </wpfui:TitleBar.Header>
+            </wpfui:TitleBar.CenterContent>
 
             <wpfui:TitleBar.TrailingContent>
                 <StackPanel

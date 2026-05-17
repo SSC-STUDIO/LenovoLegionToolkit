@@ -42,6 +42,16 @@ public partial class SensorsControl
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
+        SizeChanged += SensorsControl_SizeChanged;
+        Loaded += SensorsControl_Loaded;
+    }
+
+    private void SensorsControl_Loaded(object sender, RoutedEventArgs e) => LayoutCards(ActualWidth);
+
+    private void SensorsControl_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.WidthChanged)
+            LayoutCards(e.NewSize.Width);
     }
 
     private async Task FetchHardwareNamesAsync()
@@ -460,6 +470,56 @@ public partial class SensorsControl
         SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
     }
 
+    private void LayoutCards(double width)
+    {
+        var collapse = width <= 1100;
+        if (collapse)
+        {
+            _cardsRow0.Height = new GridLength(1, GridUnitType.Auto);
+            _cardsRow1.Height = new GridLength(1, GridUnitType.Auto);
+            _cardsRow2.Height = new GridLength(1, GridUnitType.Auto);
+
+            _cardsSpacerColumn0.Width = new GridLength(0);
+            _cardsSpacerColumn1.Width = new GridLength(0);
+            _cardsColumn1.Width = new GridLength(0);
+            _cardsColumn2.Width = new GridLength(0);
+
+            Grid.SetRow(_cpuCard, 0);
+            Grid.SetColumn(_cpuCard, 0);
+            Grid.SetColumnSpan(_cpuCard, 5);
+
+            Grid.SetRow(_batteryCard, 1);
+            Grid.SetColumn(_batteryCard, 0);
+            Grid.SetColumnSpan(_batteryCard, 5);
+
+            Grid.SetRow(_gpuCard, 2);
+            Grid.SetColumn(_gpuCard, 0);
+            Grid.SetColumnSpan(_gpuCard, 5);
+            return;
+        }
+
+        _cardsRow0.Height = new GridLength(1, GridUnitType.Auto);
+        _cardsRow1.Height = new GridLength(0);
+        _cardsRow2.Height = new GridLength(0);
+
+        _cardsSpacerColumn0.Width = new GridLength(16);
+        _cardsSpacerColumn1.Width = new GridLength(16);
+        _cardsColumn1.Width = new GridLength(1, GridUnitType.Star);
+        _cardsColumn2.Width = new GridLength(1, GridUnitType.Star);
+
+        Grid.SetRow(_cpuCard, 0);
+        Grid.SetColumn(_cpuCard, 0);
+        Grid.SetColumnSpan(_cpuCard, 1);
+
+        Grid.SetRow(_batteryCard, 0);
+        Grid.SetColumn(_batteryCard, 2);
+        Grid.SetColumnSpan(_batteryCard, 1);
+
+        Grid.SetRow(_gpuCard, 0);
+        Grid.SetColumn(_gpuCard, 4);
+        Grid.SetColumnSpan(_gpuCard, 1);
+    }
+
     private string GetTemperatureText(double? temperature)
     {
         if (temperature is null)
@@ -501,11 +561,10 @@ public partial class SensorsControl
 
     private void SetSensorSectionsVisible(bool visible)
     {
-        var sectionVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
         SetVisibility("_cpuSection", visible);
         SetVisibility("_gpuSection", visible);
-        SetVisibility("_cpuGpuSeparatorLeft", visible);
-        SetVisibility("_cpuGpuSeparatorRight", visible);
+        SetVisibility("_cpuCard", visible);
+        SetVisibility("_gpuCard", visible);
 
         if (!visible)
         {
@@ -515,6 +574,9 @@ public partial class SensorsControl
 
         if (FindName("_batterySectionColumn") is FrameworkElement batterySection)
             batterySection.Visibility = Visibility.Visible;
+
+        if (FindName("_batteryCard") is FrameworkElement batteryCard)
+            batteryCard.Visibility = Visibility.Visible;
 
         Visibility = Visibility.Visible;
     }

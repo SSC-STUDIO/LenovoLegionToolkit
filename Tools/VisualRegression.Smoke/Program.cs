@@ -990,18 +990,36 @@ internal static partial class Program
 
     private static string ResolveRuntimeDirectory(string repoRoot, string configuration)
     {
-        var candidate = Path.Combine(
+        var runtimeRoot = Path.Combine(
             repoRoot,
             "LenovoLegionToolkit.WPF",
             "bin",
-            configuration,
-            "net10.0-windows",
-            "win-x64");
+            configuration);
 
-        if (!Directory.Exists(candidate))
-            throw new DirectoryNotFoundException($"Runtime directory not found: {candidate}");
+        var directCandidates = new[]
+        {
+            Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
+            Path.Combine(runtimeRoot, "net10.0-windows", "win-x64"),
+        };
 
-        return candidate;
+        foreach (var candidate in directCandidates)
+        {
+            if (Directory.Exists(candidate))
+                return candidate;
+        }
+
+        if (Directory.Exists(runtimeRoot))
+        {
+            var discovered = Directory
+                .EnumerateDirectories(runtimeRoot, "net10.0-windows*", SearchOption.TopDirectoryOnly)
+                .Select(path => Path.Combine(path, "win-x64"))
+                .FirstOrDefault(Directory.Exists);
+
+            if (discovered is not null)
+                return discovered;
+        }
+
+        throw new DirectoryNotFoundException($"Runtime directory not found under: {runtimeRoot}");
     }
 
     private static void TryWaitForInputIdle(Process process, int milliseconds)

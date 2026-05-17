@@ -23,7 +23,7 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Margin" Value="0,0,0,2" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
@@ -69,13 +69,13 @@
         <Style x:Key="InlineMetricStyle" TargetType="StackPanel">
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,22,0" />
+            <Setter Property="Margin" Value="0,0,18,0" />
         </Style>
 
         <Style x:Key="MetadataBadgeStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Padding" Value="9,4" />
-            <Setter Property="Margin" Value="0,0,8,8" />
+            <Setter Property="Margin" Value="0,0,6,6" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         </Style>
 
@@ -84,10 +84,10 @@
         </Style>
 
         <Style x:Key="DetailActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonCompact}">
-            <Setter Property="MinWidth" Value="108" />
+            <Setter Property="MinWidth" Value="96" />
             <Setter Property="Height" Value="34" />
-            <Setter Property="Padding" Value="11,0" />
-            <Setter Property="Margin" Value="0,0,8,8" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="Margin" Value="0,0,6,6" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="CornerRadius" Value="6" />
             <Setter Property="Appearance" Value="Transparent" />
@@ -122,7 +122,7 @@
     </Page.Resources>
 
     <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <Grid Margin="0,0,16,12" Style="{StaticResource AppPageEntranceAnimationStyle}">
+        <Grid Margin="0,0,12,10" Style="{StaticResource AppPageEntranceAnimationStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -131,7 +131,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,16,0,14">
+        <StackPanel Grid.Row="0" Margin="0,16,0,10">
             <TextBlock
                 x:Name="_titleTextBlock"
                 Focusable="True"
@@ -139,15 +139,15 @@
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Title}" />
             <TextBlock
                 x:Name="_descriptionTextBlock"
-                Margin="0,8,0,0"
+                Margin="0,6,0,0"
                 Focusable="True"
                 Style="{StaticResource AppPageDescriptionTextBlockStyle}"
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
         </StackPanel>
 
         <Border Grid.Row="1"
-                Margin="0,0,0,10"
-                Padding="12,8"
+                Margin="0,0,0,8"
+                Padding="12,6"
                 CornerRadius="8"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -188,7 +188,7 @@
             </DockPanel>
         </Border>
 
-        <Grid Grid.Row="2" Margin="0,0,0,12">
+        <Grid Grid.Row="2" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -278,10 +278,10 @@
             </WrapPanel>
         </Grid>
 
-        <wpfui:InfoBar
+            <wpfui:InfoBar
             x:Name="_deprecationNotice"
             Grid.Row="3"
-            Margin="0,0,0,12"
+            Margin="0,0,0,10"
             Severity="Warning"
             IsOpen="False"
             IsClosable="True"
@@ -291,9 +291,9 @@
 
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="360" MinWidth="300" />
-                <ColumnDefinition Width="18" />
-                <ColumnDefinition Width="*" MinWidth="420" />
+                <ColumnDefinition Width="328" MinWidth="288" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" MinWidth="380" />
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="_pluginListPanel"
@@ -307,7 +307,7 @@
                     x:Name="_resultsCountTextBlock"
                     AutomationProperties.AutomationId="PluginResultsCountText"
                     Grid.Row="0"
-                    Margin="2,0,0,8"
+                    Margin="2,0,0,6"
                     FontSize="12"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Visibility="Collapsed" />
@@ -324,8 +324,8 @@
                          ItemContainerStyle="{StaticResource PluginListItemContainerStyle}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border MinHeight="72"
-                                    Padding="10"
+                            <Border MinHeight="66"
+                                    Padding="8"
                                     Background="Transparent"
                                     AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginCard_{0}}">
                                 <Border.ContextMenu>
@@ -420,211 +420,238 @@
 
             <Border x:Name="_pluginDetailsPanel"
                     Grid.Column="2"
-                    Padding="18"
+                    Padding="14"
                     CornerRadius="8"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     DataContext="{Binding ElementName=_pluginsListBox, Path=SelectedItem}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Visibility="{Binding PluginId, Converter={StaticResource TextToVisibilityConverter}}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                    <Grid>
+                        <StackPanel Visibility="{Binding PluginId, Converter={StaticResource TextToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0"
-                                    Width="56"
-                                    Height="56"
-                                    Margin="0,0,14,0"
-                                    CornerRadius="8"
-                                    Background="{Binding IconBackground}">
-                                <TextBlock Text="{Binding IconLetter}"
-                                           FontSize="21"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                            </Border>
+                                <Border Grid.Column="0"
+                                        Width="56"
+                                        Height="56"
+                                        Margin="0,0,14,0"
+                                        CornerRadius="8"
+                                        Background="{Binding IconBackground}">
+                                    <TextBlock Text="{Binding IconLetter}"
+                                               FontSize="21"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
 
-                            <StackPanel Grid.Column="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding Name}"
-                                               Style="{StaticResource AppSectionTitleTextBlockStyle}"
-                                               TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding Name}"
+                                                   Style="{StaticResource AppSectionTitleTextBlockStyle}"
+                                                   TextTrimming="CharacterEllipsis" />
 
-                                    <Border Grid.Column="1"
-                                            Padding="9,4"
-                                            CornerRadius="8"
-                                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                        <TextBlock Text="{Binding StatusText}"
-                                                   FontSize="12"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{DynamicResource SystemAccentColorBrush}" />
-                                    </Border>
-                                </Grid>
+                                        <Border Grid.Column="1"
+                                                Padding="9,4"
+                                                CornerRadius="8"
+                                                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                            <TextBlock Text="{Binding StatusText}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource SystemAccentColorBrush}" />
+                                        </Border>
+                                    </Grid>
 
-                                <WrapPanel Margin="0,10,0,0">
-                                    <Border Style="{StaticResource MetadataBadgeStyle}">
-                                        <TextBlock Text="{Binding Version}" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                    </Border>
-                                    <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding Author, Converter={StaticResource TextToVisibilityConverter}}">
-                                        <TextBlock Text="{Binding Author, StringFormat={x:Static resources:Resource.PluginExtensionsPage_AuthorFormat}}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                    </Border>
-                                    <Border Style="{StaticResource MetadataBadgeStyle}">
-                                        <TextBlock Text="{Binding PluginId}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                    </Border>
-                                    <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding Location, Converter={StaticResource TextToVisibilityConverter}}">
-                                        <TextBlock Text="{Binding Location}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                    </Border>
-                                    <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_LocalBadge}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                    </Border>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Grid>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <Border Style="{StaticResource MetadataBadgeStyle}">
+                                            <TextBlock Text="{Binding Version}" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                        </Border>
+                                        <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding Author, Converter={StaticResource TextToVisibilityConverter}}">
+                                            <TextBlock Text="{Binding Author, StringFormat={x:Static resources:Resource.PluginExtensionsPage_AuthorFormat}}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        </Border>
+                                        <Border Style="{StaticResource MetadataBadgeStyle}">
+                                            <TextBlock Text="{Binding PluginId}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        </Border>
+                                        <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding Location, Converter={StaticResource TextToVisibilityConverter}}">
+                                            <TextBlock Text="{Binding Location}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        </Border>
+                                        <Border Style="{StaticResource MetadataBadgeStyle}" Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_LocalBadge}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        </Border>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Grid>
 
-                        <WrapPanel Margin="0,16,0,8">
-                            <wpfui:Button Content="{Binding InstallButtonText}"
-                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
-                                          Style="{StaticResource DetailPrimaryActionButtonStyle}"
-                                          Click="PluginInstallButton_Click"
-                                          Tag="{Binding PluginId}"
-                                          ToolTip="{Binding InstallButtonText}"
-                                          Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <wpfui:Button.Icon>
-                                    <wpfui:SymbolIcon Symbol="ArrowDownload24" />
-                                </wpfui:Button.Icon>
-                            </wpfui:Button>
+                            <WrapPanel Margin="0,12,0,6">
+                                <wpfui:Button Content="{Binding InstallButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
+                                              Style="{StaticResource DetailPrimaryActionButtonStyle}"
+                                              Click="PluginInstallButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              ToolTip="{Binding InstallButtonText}"
+                                              Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <wpfui:Button.Icon>
+                                        <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                                    </wpfui:Button.Icon>
+                                </wpfui:Button>
 
-                            <wpfui:Button Content="{Binding ConfigureButtonText}"
-                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
-                                          Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                          ToolTip="{Binding ConfigureButtonText}">
-                                <wpfui:Button.Icon>
-                                    <wpfui:SymbolIcon Symbol="Settings24" />
-                                </wpfui:Button.Icon>
-                                <wpfui:Button.Visibility>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="IsInstalled" />
-                                        <Binding Path="SupportsConfiguration" />
-                                    </MultiBinding>
-                                </wpfui:Button.Visibility>
-                                <wpfui:Button.Click>PluginConfigureButton_Click</wpfui:Button.Click>
-                                <wpfui:Button.Tag>
-                                    <Binding Path="PluginId" />
-                                </wpfui:Button.Tag>
-                            </wpfui:Button>
+                                <wpfui:Button Content="{Binding ConfigureButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
+                                              Style="{StaticResource DetailSecondaryActionButtonStyle}"
+                                              ToolTip="{Binding ConfigureButtonText}">
+                                    <wpfui:Button.Icon>
+                                        <wpfui:SymbolIcon Symbol="Settings24" />
+                                    </wpfui:Button.Icon>
+                                    <wpfui:Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                            <Binding Path="IsInstalled" />
+                                            <Binding Path="SupportsConfiguration" />
+                                        </MultiBinding>
+                                    </wpfui:Button.Visibility>
+                                    <wpfui:Button.Click>PluginConfigureButton_Click</wpfui:Button.Click>
+                                    <wpfui:Button.Tag>
+                                        <Binding Path="PluginId" />
+                                    </wpfui:Button.Tag>
+                                </wpfui:Button>
 
-                            <wpfui:Button Content="{Binding OpenButtonText}"
-                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
-                                          Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                          Click="PluginOpenButton_Click"
-                                          Tag="{Binding PluginId}"
-                                          ToolTip="{Binding OpenButtonText}">
-                                <wpfui:Button.Icon>
-                                    <wpfui:SymbolIcon Symbol="Open24" />
-                                </wpfui:Button.Icon>
-                                <wpfui:Button.Visibility>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="IsInstalled" />
-                                        <Binding Path="SupportsOpenAction" />
-                                    </MultiBinding>
-                                </wpfui:Button.Visibility>
-                            </wpfui:Button>
+                                <wpfui:Button Content="{Binding OpenButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
+                                              Style="{StaticResource DetailSecondaryActionButtonStyle}"
+                                              Click="PluginOpenButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              ToolTip="{Binding OpenButtonText}">
+                                    <wpfui:Button.Icon>
+                                        <wpfui:SymbolIcon Symbol="Open24" />
+                                    </wpfui:Button.Icon>
+                                    <wpfui:Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                            <Binding Path="IsInstalled" />
+                                            <Binding Path="SupportsOpenAction" />
+                                        </MultiBinding>
+                                    </wpfui:Button.Visibility>
+                                </wpfui:Button>
 
-                            <wpfui:Button Content="{Binding UninstallButtonText}"
-                                          AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
-                                          Style="{StaticResource DetailDangerActionButtonStyle}"
-                                          Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                          Click="PluginUninstallButton_Click"
-                                          Tag="{Binding PluginId}"
-                                          ToolTip="{Binding UninstallButtonText}">
-                                <wpfui:Button.Icon>
-                                    <wpfui:SymbolIcon Symbol="Delete24" />
-                                </wpfui:Button.Icon>
-                            </wpfui:Button>
-                        </WrapPanel>
+                                <wpfui:Button Content="{Binding UninstallButtonText}"
+                                              AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
+                                              Style="{StaticResource DetailDangerActionButtonStyle}"
+                                              Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                              Click="PluginUninstallButton_Click"
+                                              Tag="{Binding PluginId}"
+                                              ToolTip="{Binding UninstallButtonText}">
+                                    <wpfui:Button.Icon>
+                                        <wpfui:SymbolIcon Symbol="Delete24" />
+                                    </wpfui:Button.Icon>
+                                </wpfui:Button>
+                            </WrapPanel>
 
-                        <TextBlock Text="{Binding Description}"
-                                   Margin="0,18,0,0"
-                                   TextWrapping="Wrap"
-                                   Style="{StaticResource AppBodyTextBlockStyle}"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                        <Border Height="1"
-                                Margin="0,18,0,16"
-                                Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilitySettings}"
+                            <TextBlock Text="{Binding Description}"
+                                       Margin="0,14,0,0"
+                                       TextWrapping="Wrap"
+                                       Style="{StaticResource AppBodyTextBlockStyle}"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="1"
-                                       Text="{Binding CapabilitySummary}"
-                                       TextWrapping="Wrap"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Margin="0,12,0,0"
-                                       Text="{x:Static resources:Resource.PluginExtensionsPage_VersionLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Visibility="{Binding HasUpdateDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="1"
-                                       Margin="0,12,0,0"
-                                       Text="{Binding NewVersion}"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                       Visibility="{Binding HasUpdateDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <Border Height="1"
+                                    Margin="0,14,0,12"
+                                    Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="0"
-                                       Margin="0,12,0,0"
-                                       Text="{x:Static resources:Resource.PluginExtensionsPage_ChangelogLabel}"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Visibility="{Binding HasChangelog, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="1"
-                                       Margin="0,12,0,0"
-                                       Text="{Binding Changelog}"
-                                       TextWrapping="Wrap"
-                                       MaxHeight="96"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                       Visibility="{Binding HasChangelog, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                        <StackPanel Margin="0,16,0,0"
-                                    Visibility="{Binding IsInstalling, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text="{Binding InstallStatusText}"
-                                       FontSize="12"
-                                       Foreground="{DynamicResource SystemAccentColorBrush}"
-                                       Margin="0,0,0,6" />
-                            <ProgressBar Value="{Binding InstallProgress}"
-                                         Height="5"
-                                         Maximum="100"
-                                         Minimum="0" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="{x:Static resources:Resource.PluginExtensionsPage_CapabilitySettings}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="1"
+                                           Text="{Binding CapabilitySummary}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Margin="0,12,0,0"
+                                           Text="{x:Static resources:Resource.PluginExtensionsPage_VersionLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                           Visibility="{Binding HasUpdateDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           Margin="0,12,0,0"
+                                           Text="{Binding NewVersion}"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           Visibility="{Binding HasUpdateDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Margin="0,12,0,0"
+                                           Text="{x:Static resources:Resource.PluginExtensionsPage_ChangelogLabel}"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                           Visibility="{Binding HasChangelog, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="1"
+                                           Margin="0,12,0,0"
+                                           Text="{Binding Changelog}"
+                                           TextWrapping="Wrap"
+                                           MaxHeight="96"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           Visibility="{Binding HasChangelog, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </Grid>
+
+                            <StackPanel Margin="0,16,0,0"
+                                        Visibility="{Binding IsInstalling, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="{Binding InstallStatusText}"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource SystemAccentColorBrush}"
+                                           Margin="0,0,0,6" />
+                                <ProgressBar Value="{Binding InstallProgress}"
+                                             Height="5"
+                                             Maximum="100"
+                                             Minimum="0" />
+                            </StackPanel>
                         </StackPanel>
 
-                    </StackPanel>
+                        <StackPanel
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding PluginId, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <wpfui:SymbolIcon
+                                Symbol="Apps24"
+                                FontSize="40"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,12" />
+                            <TextBlock
+                                Text="Select a plugin"
+                                Style="{StaticResource AppSectionTitleTextBlockStyle}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                HorizontalAlignment="Center"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                Margin="0,6,0,0"
+                                Text="Choose a plugin from the list to view details and available actions."
+                                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                HorizontalAlignment="Center"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
                 </ScrollViewer>
             </Border>
 
@@ -636,15 +663,15 @@
                 ClipToBounds="True"
                 Background="Transparent">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="360" MinWidth="300" />
-                    <ColumnDefinition Width="18" />
-                    <ColumnDefinition Width="*" MinWidth="420" />
+                    <ColumnDefinition Width="328" MinWidth="288" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" MinWidth="380" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <Border Width="138"
+                    <Border Width="128"
                             Height="12"
-                            Margin="2,0,0,10"
+                            Margin="2,0,0,8"
                             HorizontalAlignment="Left"
                             Style="{StaticResource SkeletonShimmerBlockStyle}" />
 
@@ -706,7 +733,7 @@
                 </StackPanel>
 
                 <Border Grid.Column="2"
-                        Padding="18"
+                        Padding="14"
                         CornerRadius="8"
                         Background="{DynamicResource ControlFillColorDefaultBrush}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -727,7 +754,7 @@
                                     <Border Width="220" Height="20" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                     <Border Grid.Column="1" Width="92" Height="24" HorizontalAlignment="Right" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 </Grid>
-                                <WrapPanel Margin="0,14,0,0">
+                                <WrapPanel Margin="0,10,0,0">
                                     <Border Width="64" Height="22" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                     <Border Width="126" Height="22" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                     <Border Width="104" Height="22" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
@@ -735,17 +762,17 @@
                             </StackPanel>
                         </Grid>
 
-                        <WrapPanel Margin="0,16,0,10">
+                        <WrapPanel Margin="0,12,0,8">
                             <Border Width="108" Height="34" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <Border Width="108" Height="34" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <Border Width="108" Height="34" Margin="0,0,8,8" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                         </WrapPanel>
 
-                        <Border Width="96" Height="12" Margin="0,16,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                        <Border Width="96" Height="12" Margin="0,12,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                         <Border Height="12" Margin="0,10,24,0" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                         <Border Height="12" Margin="0,8,88,0" Style="{StaticResource SkeletonShimmerBlockStyle}" />
 
-                        <Border Height="1" Margin="0,18,0,16" Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                        <Border Height="1" Margin="0,14,0,12" Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
 
                         <Grid>
                             <Grid.ColumnDefinitions>
