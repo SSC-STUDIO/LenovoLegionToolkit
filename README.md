@@ -13,6 +13,8 @@
 
 <br />
 
+Lenovo Legion Toolkit (LLT) is a community-maintained continuation of the original [BartoszCichecki/LenovoLegionToolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit) project, which was archived on July 24, 2025. This fork keeps the GPL-3.0 project moving with compatibility fixes, security hardening, updated CI/release automation, newer device detection, plugin extensions, and ongoing Windows support.
+
 It runs no background services, uses less memory, uses virtually no CPU, and contains no telemetry. Just like Lenovo Vantage, this application is Windows only.
 
 _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
@@ -23,6 +25,7 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 # Table of Contents
   - [Disclaimer](#disclaimer)
+  - [Download](#download)
   - [Quick Start](#quick-start)
   - [Compatibility](#compatibility)
   - [Features](#features)
@@ -43,6 +46,15 @@ Please be patient and read through this readme carefully - it contains important
 
 > [!TIP]
 > If you are looking for a Vantage alternative for Linux, check [LenovoLegionLinux](https://github.com/johnfanv2/LenovoLegionLinux) project out.
+
+## Download
+
+Use the current `SSC-STUDIO/LenovoLegionToolkit` releases, not the archived upstream repository, for maintained builds.
+
+- **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest).
+- **winget**: Once the package is accepted by Windows Package Manager, install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`.
+- **Scoop**: `scoop install extras/lenovolegiontoolkit` when using the community-maintained Scoop bucket.
+- **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
 #### Next steps
 

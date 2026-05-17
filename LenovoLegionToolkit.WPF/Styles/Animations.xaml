@@ -49,6 +49,35 @@
             EasingFunction="{StaticResource AnimationEasingCubicOut}" />
     </Storyboard>
 
+    <Style x:Key="AppPageEntranceAnimationStyle" TargetType="FrameworkElement">
+        <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform Y="0" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="Opacity"
+                            From="{StaticResource AnimationOpacityStart}"
+                            To="{StaticResource AnimationOpacityEnd}"
+                            Duration="{StaticResource AnimationDurationMedium}"
+                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                            From="{StaticResource AnimationSubtleTranslationOffset}"
+                            To="0"
+                            Duration="{StaticResource AnimationDurationMedium}"
+                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Button Click Animation -->
     <Storyboard x:Key="ButtonClickAnimation">
         <DoubleAnimation

@@ -98,7 +98,8 @@ internal static class Program
         None,
         ShellLocal,
         ComboLocal,
-        DriverDownload
+        DriverDownload,
+        SystemOptimization
     }
 
     private enum SmokeTheme
@@ -262,11 +263,12 @@ internal static class Program
             Console.WriteLine($"[main-smoke] Theme: {_activeTheme}");
 
             var isDriverDownloadScenario = _activeScenario == SmokeScenario.DriverDownload;
+            var isSystemOptimizationScenario = _activeScenario == SmokeScenario.SystemOptimization;
             var scenarioPreset = ResolveScenarioPreset(_activeScenario);
-            var preferredPlugins = isDriverDownloadScenario
+            var preferredPlugins = isDriverDownloadScenario || isSystemOptimizationScenario
                 ? Array.Empty<string>()
                 : ResolvePreferredPlugins(args, scenarioPreset);
-            var requestedPluginSources = isDriverDownloadScenario
+            var requestedPluginSources = isDriverDownloadScenario || isSystemOptimizationScenario
                 ? new Dictionary<string, PluginInstallSource>(StringComparer.OrdinalIgnoreCase)
                 : ResolveRequestedPluginSources(args, scenarioPreset);
             var desiredPluginSources = preferredPlugins
@@ -304,6 +306,16 @@ internal static class Program
             {
                 TestDriverDownloadUi(mainWindow);
                 HoldForObservation("Driver Download smoke completed successfully", mainWindow, _successHold);
+                CloseWindow(mainWindow);
+                process.WaitForExit(7000);
+                Console.WriteLine("[main-smoke] PASS");
+                return 0;
+            }
+
+            if (isSystemOptimizationScenario)
+            {
+                TestSystemOptimizationUi(mainWindow);
+                HoldForObservation("System Optimization smoke completed successfully", mainWindow, _successHold);
                 CloseWindow(mainWindow);
                 process.WaitForExit(7000);
                 Console.WriteLine("[main-smoke] PASS");
@@ -513,7 +525,8 @@ internal static class Program
             "shell-local" => SmokeScenario.ShellLocal,
             "combo-local" => SmokeScenario.ComboLocal,
             "driver-download" => SmokeScenario.DriverDownload,
-            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local', 'combo-local', or 'driver-download'.")
+            "system-optimization" => SmokeScenario.SystemOptimization,
+            _ => throw new ArgumentException($"Unsupported smoke scenario '{rawValue}'. Expected 'shell-local', 'combo-local', 'driver-download', or 'system-optimization'.")
         };
     }
 
@@ -648,7 +661,7 @@ MainAppPluginUi.Smoke
 
 Usage:
 MainAppPluginUi.Smoke.dll [--repo-root <path>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
-                            [--scenario shell-local|combo-local|driver-download] [--theme system|light|dark]
+                            [--scenario shell-local|combo-local|driver-download|system-optimization] [--theme system|light|dark]
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
@@ -658,7 +671,7 @@ Options:
   --repo-root            Main repository root. Defaults to the current repo when auto-detected.
   --plugin               Comma-separated plugin id filter. Defaults to the smoke-supported plugin set.
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Local sources require matching plugin build directories or the smoke fails fast.
-  --scenario             Predefined smoke preset. 'shell-local' runs shell-integration only; 'combo-local' runs custom-mouse + shell-integration; 'driver-download' captures the Driver Download page without plugin install work.
+  --scenario             Predefined smoke preset. 'shell-local' runs shell-integration only; 'combo-local' runs custom-mouse + shell-integration; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
@@ -4515,6 +4528,220 @@ Environment variables:
         ObserveStep("Driver Download page ready", ResolveLiveWindow(mainWindow));
     }
 
+    private static void TestSystemOptimizationUi(AutomationElement mainWindow)
+    {
+        NavigateToWindowsOptimizationPage(mainWindow);
+        VerifyOptimizationTabUi(mainWindow);
+        VerifyCleanupTabUi(mainWindow);
+        NavigateToDriverDownloadTab(mainWindow);
+        TryPopulateDriverMachineType(mainWindow, "82JQ");
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "system-optimization-driver-download");
+        TryCaptureDriverDownloadLoadingSkeleton(mainWindow);
+        ObserveStep("System Optimization all tabs verified", ResolveLiveWindow(mainWindow));
+    }
+
+    private static void VerifyOptimizationTabUi(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        Click(WaitForAutomationId(mainWindow, "WindowsOptimizationOptimizationTabButton", TimeSpan.FromSeconds(12)));
+
+        var expectedCategories = new[] { "explorer", "performance", "services", "network" };
+        foreach (var categoryKey in expectedCategories)
+            ExpandOptimizationCategory(mainWindow, categoryKey);
+
+        var expectedActions = new[]
+        {
+            "explorer.taskbar",
+            "explorer.startMenu",
+            "explorer.responsiveness",
+            "explorer.visibility",
+            "explorer.suggestions",
+            "performance.multimedia",
+            "performance.memory",
+            "performance.notifications",
+            "performance.telemetry",
+            "performance.powerPlan",
+            "services.diagnostics",
+            "services.sysmain",
+            "services.search",
+            "services.remoteRegistry",
+            "services.errorReporting",
+            "network.acceleration",
+            "network.optimization"
+        };
+
+        foreach (var actionKey in expectedActions)
+            WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
+
+        CaptureMainWindow(mainWindow, "system-optimization-optimization-tab");
+        Click(WaitForAutomationId(mainWindow, "WindowsOptimizationSelectRecommendedButton", TimeSpan.FromSeconds(8)));
+        VerifySelectedActionsWindow(mainWindow);
+        Click(WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8)));
+        Console.WriteLine("[main-smoke] System Optimization tab verified without applying optimization actions.");
+    }
+
+    private static void VerifyCleanupTabUi(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        Click(WaitForAutomationId(mainWindow, "WindowsOptimizationCleanupTabButton", TimeSpan.FromSeconds(12)));
+
+        var expectedCategories = new[]
+        {
+            "cleanup.cache",
+            "cleanup.systemFiles",
+            "cleanup.systemComponents",
+            "cleanup.performance",
+            "cleanup.largeFiles",
+            "cleanup.custom"
+        };
+
+        foreach (var categoryKey in expectedCategories)
+            ExpandOptimizationCategory(mainWindow, categoryKey);
+
+        var expectedActions = new[]
+        {
+            "cleanup.browserCache",
+            "cleanup.appLeftovers",
+            "cleanup.thumbnailCache",
+            "cleanup.remoteDesktopCache",
+            "cleanup.tempFiles",
+            "cleanup.logs",
+            "cleanup.registry",
+            "cleanup.crashDumps",
+            "cleanup.recycleBin",
+            "cleanup.defender",
+            "cleanup.windowsUpdate",
+            "cleanup.componentStore",
+            "cleanup.dotnetNative",
+            "cleanup.prefetch",
+            "cleanup.largeFiles",
+            "cleanup.custom"
+        };
+
+        foreach (var actionKey in expectedActions)
+            WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
+
+        CaptureMainWindow(mainWindow, "system-optimization-cleanup-tab");
+
+        var browserCacheAction = WaitForAutomationId(mainWindow, "WindowsOptimizationAction_cleanup.browserCache", TimeSpan.FromSeconds(8));
+        ClickActionCheckbox(browserCacheAction, "cleanup.browserCache");
+
+        var scanButton = WaitForAutomationIdOrNames(
+            mainWindow,
+            "WindowsOptimizationScanCleanupButton",
+            new[] { "Scan", "扫描" },
+            TimeSpan.FromSeconds(8));
+        Click(scanButton);
+
+        WaitUntil(
+            () => !IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationScanCleanupButton")),
+            TimeSpan.FromSeconds(20),
+            TimeSpan.FromMilliseconds(250));
+
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "system-optimization-cleanup-scanned");
+
+        Click(WaitForAutomationId(ResolveLiveWindow(mainWindow), "WindowsOptimizationBulkActionButton", TimeSpan.FromSeconds(8)));
+        Console.WriteLine("[main-smoke] System Optimization cleanup tab scanned and selection cleared without running cleanup.");
+    }
+
+    private static void ExpandOptimizationCategory(AutomationElement mainWindow, string categoryKey)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        var category = WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationCategory_{categoryKey}", TimeSpan.FromSeconds(12));
+        ExpandIfNeeded(category);
+    }
+
+    private static void VerifyActionDetailsWindow(AutomationElement mainWindow, string actionKey)
+    {
+        var action = WaitForAutomationId(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
+        DoubleClick(action);
+
+        var processId = mainWindow.Current.ProcessId;
+        var detailsWindow = WaitForOwnedWindow(
+            processId,
+            mainWindow.Current.NativeWindowHandle,
+            window => IsVisible(FindByAutomationId(window, "ActionDetailsWindowTitleBar"))
+                      || string.Equals(window.Current.Name, "Action Details", StringComparison.OrdinalIgnoreCase),
+            TimeSpan.FromSeconds(10),
+            "Action Details");
+
+        CapturePluginSettingsWindow(detailsWindow, "system-optimization", "action-details");
+        var closeButton = FindByAutomationId(detailsWindow, "ActionDetailsWindowCloseButton")
+                          ?? FindByName(detailsWindow, "Close")
+                          ?? FindByName(detailsWindow, "关闭");
+        if (closeButton is not null)
+            Click(closeButton);
+        else
+            CloseWindow(detailsWindow);
+
+        Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
+        Console.WriteLine($"[main-smoke] Action details window verified for {actionKey}");
+    }
+
+    private static void VerifySelectedActionsWindow(AutomationElement mainWindow)
+    {
+        var selectedActionsButton = WaitForAutomationId(mainWindow, "WindowsOptimizationSelectedActionsButton", TimeSpan.FromSeconds(8));
+        Click(selectedActionsButton);
+
+        var processId = mainWindow.Current.ProcessId;
+        var selectedActionsWindow = WaitForOwnedWindow(
+            processId,
+            mainWindow.Current.NativeWindowHandle,
+            window => IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar"))
+                      || string.Equals(window.Current.Name, "Selected actions", StringComparison.OrdinalIgnoreCase),
+            TimeSpan.FromSeconds(10),
+            "Selected Actions");
+
+        CapturePluginSettingsWindow(selectedActionsWindow, "system-optimization", "selected-actions");
+        var closeButton = FindByAutomationId(selectedActionsWindow, "SelectedActionsWindowCloseButton")
+                          ?? FindByName(selectedActionsWindow, "Close")
+                          ?? FindByName(selectedActionsWindow, "关闭");
+        if (closeButton is not null)
+            Click(closeButton);
+        else
+            CloseWindow(selectedActionsWindow);
+
+        Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
+        Console.WriteLine("[main-smoke] Selected actions window verified.");
+    }
+
+    private static AutomationElement WaitForOwnedWindow(
+        int processId,
+        int mainWindowHandle,
+        Func<AutomationElement, bool> predicate,
+        TimeSpan timeout,
+        string description)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition)
+                    .Cast<AutomationElement>()
+                    .Where(window => window.Current.ProcessId == processId)
+                    .Where(window => window.Current.ControlType == ControlType.Window)
+                    .Where(window => window.Current.NativeWindowHandle != 0)
+                    .Where(window => window.Current.NativeWindowHandle != mainWindowHandle)
+                    .ToArray();
+
+                foreach (var window in windows)
+                {
+                    if (predicate(window))
+                        return window;
+                }
+            }
+            catch (Exception ex) when (IsRecoverableAutomationException(ex))
+            {
+                Console.WriteLine($"[main-smoke] Retrying {description} window detection after {ex.GetType().Name}");
+            }
+
+            Thread.Sleep(150);
+        }
+
+        throw new TimeoutException($"Timed out waiting for {description} window.");
+    }
+
     private static void NavigateToDriverDownloadTab(AutomationElement mainWindow)
     {
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -4890,6 +5117,20 @@ Environment variables:
             throw new InvalidOperationException($"Automation element '{automationId}' was not interactable after wait.");
 
         return element;
+    }
+
+    private static AutomationElement WaitForAutomationIdPresent(AutomationElement root, string automationId, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () => FindByAutomationId(root, automationId) is not null,
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            throw new TimeoutException($"Timed out waiting for automation element '{automationId}' to exist.");
+
+        return FindByAutomationId(root, automationId)
+               ?? throw new InvalidOperationException($"Automation element '{automationId}' disappeared after wait.");
     }
 
     private static AutomationElement? TryWaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)

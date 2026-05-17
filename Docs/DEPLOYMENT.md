@@ -293,7 +293,8 @@ After downloading translations:
    - Auto-updater support
 
 2. **winget Package Manager**
-   - `winget search LenovoLegionToolkit` then install one of published IDs
+   - Target package ID: `SSC-STUDIO.LenovoLegionToolkit`
+   - After acceptance: `winget install SSC-STUDIO.LenovoLegionToolkit`
    - Automatic updates via Windows Package Manager
 
 3. **Scoop**
@@ -305,6 +306,36 @@ After downloading translations:
 - **Chocolatey**: Community maintained
 - **Ninite**: Managed deployments
 - **MSI Wrapper**: Enterprise deployments
+
+### Winget Submission
+
+The maintainer-side manifest draft lives under `Packaging/winget`. The canonical submission target is the upstream `microsoft/winget-pkgs` repository.
+
+Before submitting a new version:
+
+1. Publish a stable GitHub Release with `LenovoLegionToolkit_vX.Y.Z_Setup.exe` and `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`.
+2. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
+3. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` unless winget review requires a rename before first acceptance.
+4. Validate locally on Windows:
+   ```powershell
+   winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
+   winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
+   winget uninstall SSC-STUDIO.LenovoLegionToolkit
+   ```
+5. Submit the version folder to `microsoft/winget-pkgs` and wait for automated validation.
+
+Use the GitHub Release URL as the winget installer source. Do not use mirror URLs in winget manifests.
+
+### High-Traffic Release Readiness
+
+When promoting a release on Chinese social platforms or after winget acceptance:
+
+- Pin the current GitHub Release URL, winget command, and SHA256 file in all announcement posts.
+- Link to the active `SSC-STUDIO/LenovoLegionToolkit` repository and explicitly state that `BartoszCichecki/LenovoLegionToolkit` is archived.
+- Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
+- Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
+- Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
+- Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
 
 ## Environment-Specific Configurations
 

@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
@@ -86,9 +90,7 @@ public class GPUOverclockController
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Clearing settings...");
 
-                _settings.Store.Enabled = false;
-                _settings.Store.Info = GPUOverclockInfo.Zero;
-                _settings.SynchronizeStore();
+                SaveState(false, GPUOverclockInfo.Zero);
             }
         }
         catch
@@ -101,12 +103,103 @@ public class GPUOverclockController
         return isSupported;
     }
 
-    public (bool, GPUOverclockInfo) GetState() => (_settings.Store.Enabled, _settings.Store.Info);
+    public (bool, GPUOverclockInfo) GetState()
+    {
+        var (_, profile) = GetActiveProfile();
+        return (_settings.Store.Enabled, profile.Info);
+    }
+
+    public Guid GetActiveProfileId() => GetActiveProfile().Item1;
+
+    public IReadOnlyDictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile> GetProfiles()
+    {
+        EnsureProfiles();
+        return _settings.Store.Profiles.AsReadOnlyDictionary();
+    }
 
     public void SaveState(bool enabled, GPUOverclockInfo info)
     {
+        var activeProfileId = GetActiveProfileId();
+        SaveState(enabled, activeProfileId, info);
+    }
+
+    public void SaveState(bool enabled, Guid activeProfileId, GPUOverclockInfo info)
+    {
         _settings.Store.Enabled = enabled;
+        SaveProfile(activeProfileId, info);
+    }
+
+    public void SaveProfile(Guid profileId, GPUOverclockInfo info)
+    {
+        EnsureProfiles();
+
+        var store = _settings.Store;
+        var profile = store.Profiles[profileId];
+        store.Profiles[profileId] = new()
+        {
+            Name = profile.Name,
+            Info = info
+        };
+        store.ActiveProfileId = profileId;
+        store.Info = info;
+        _settings.SynchronizeStore();
+    }
+
+    public Guid AddProfile(string name, GPUOverclockInfo info)
+    {
+        EnsureProfiles();
+
+        var profileId = Guid.NewGuid();
+        _settings.Store.Profiles[profileId] = new()
+        {
+            Name = name,
+            Info = info
+        };
+        _settings.Store.ActiveProfileId = profileId;
         _settings.Store.Info = info;
+        _settings.SynchronizeStore();
+
+        return profileId;
+    }
+
+    public void RenameProfile(Guid profileId, string name)
+    {
+        EnsureProfiles();
+
+        var profile = _settings.Store.Profiles[profileId];
+        _settings.Store.Profiles[profileId] = new()
+        {
+            Name = name,
+            Info = profile.Info
+        };
+        _settings.SynchronizeStore();
+    }
+
+    public void DeleteProfile(Guid profileId)
+    {
+        EnsureProfiles();
+
+        var store = _settings.Store;
+        if (store.Profiles.Count <= 1)
+            return;
+
+        store.Profiles.Remove(profileId);
+
+        if (store.ActiveProfileId == profileId || !store.Profiles.ContainsKey(store.ActiveProfileId))
+            store.ActiveProfileId = store.Profiles.OrderBy(kv => kv.Value.Name).First().Key;
+
+        store.Info = store.Profiles[store.ActiveProfileId].Info;
+        store.Profiles = new Dictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile>(store.Profiles);
+        _settings.SynchronizeStore();
+    }
+
+    public void SetActiveProfile(Guid profileId)
+    {
+        EnsureProfiles();
+
+        var profile = _settings.Store.Profiles[profileId];
+        _settings.Store.ActiveProfileId = profileId;
+        _settings.Store.Info = profile.Info;
         _settings.SynchronizeStore();
     }
 
@@ -128,8 +221,7 @@ public class GPUOverclockController
             return;
         }
 
-        var enabled = _settings.Store.Enabled;
-        var info = _settings.Store.Info;
+        var (enabled, info) = GetState();
 
         if (force)
         {
@@ -177,9 +269,7 @@ public class GPUOverclockController
         {
             Log.Instance.Error($"Failed to apply overclock: {info}, clearing settings...", ex);
 
-            _settings.Store.Enabled = false;
-            _settings.Store.Info = GPUOverclockInfo.Zero;
-            _settings.SynchronizeStore();
+            SaveState(false, GPUOverclockInfo.Zero);
         }
         finally
         {
@@ -250,5 +340,38 @@ private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, Na
         var core = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
         var memory = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
         return new(core, memory);
+    }
+
+    private (Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile) GetActiveProfile()
+    {
+        EnsureProfiles();
+
+        var store = _settings.Store;
+        return (store.ActiveProfileId, store.Profiles[store.ActiveProfileId]);
+    }
+
+    private void EnsureProfiles()
+    {
+        var store = _settings.Store;
+
+        if (store.Profiles.Count == 0)
+        {
+            var profileId = Guid.NewGuid();
+            store.ActiveProfileId = profileId;
+            store.Profiles = new Dictionary<Guid, GPUOverclockSettings.GPUOverclockSettingsStore.Profile>
+            {
+                [profileId] = new()
+                {
+                    Name = GPUOverclockSettings.DefaultProfileName,
+                    Info = store.Info
+                }
+            };
+            return;
+        }
+
+        if (!store.Profiles.ContainsKey(store.ActiveProfileId))
+            store.ActiveProfileId = store.Profiles.OrderBy(kv => kv.Value.Name).First().Key;
+
+        store.Info = store.Profiles[store.ActiveProfileId].Info;
     }
 }

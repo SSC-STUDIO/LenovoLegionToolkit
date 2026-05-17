@@ -122,7 +122,7 @@
     </Page.Resources>
 
     <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <Grid Margin="0,0,16,12">
+        <Grid Margin="0,0,16,12" Style="{StaticResource AppPageEntranceAnimationStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -812,5 +812,4 @@
         </Grid>
     </wpfui:DynamicScrollViewer>
 </Page>
-
 

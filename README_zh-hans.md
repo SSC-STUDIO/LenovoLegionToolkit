@@ -10,11 +10,11 @@
 
 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化应用程序。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
+本仓库是原 [BartoszCichecki/LenovoLegionToolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit) 项目的社区续维护版本。原项目已于 2025 年 7 月 24 日归档并停止积极维护；本项目在 GPL-3.0 许可下继续修复、适配和扩展，包括安全加固、CI/发布自动化、新机型识别、插件扩展、驱动下载和后续 Windows 兼容维护。
+
 本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
 
 加入 Legion Series Discord 频道: https://discord.com/invite/legionseries!
-
-**中文用户可加入[LLT QQ 频道](https://pd.qq.com/s/jj0737)，频道内推送正式版/测试版更新并附带国内镜像加速下载链接。**
 
 <img src="Assets/Screenshot_zh-hans.png" width="700" />
 
@@ -22,6 +22,7 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 # 目录
   - [免责声明](#免责声明)
+  - [下载](#下载)
   - [兼容性](#兼容性)
   - [功能介绍](#功能介绍)
   - [赞助](#赞助)
@@ -40,6 +41,15 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 > [!TIP]
 > 如果你正在寻找一个 Lenovo Vantage 在 Linux 系统下的替代品，请查看 [LenovoLegionLinux](https://github.com/johnfanv2/LenovoLegionLinux) 项目。
+
+## 下载
+
+请认准当前维护仓库 `SSC-STUDIO/LenovoLegionToolkit` 的发布页，不要从已归档的上游仓库下载旧版本。
+
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest) 下载最新版安装包。
+- **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
+- **Scoop**：使用社区维护 bucket 时可执行 `scoop install extras/lenovolegiontoolkit`。
+- **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
 
 #### 接下来的步骤
 
@@ -73,8 +83,6 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 #### 想要帮助我们测试？
 
 加入 [Legion Series Discord](https://discord.com/invite/legionseries) 并前往 `#legion-toolkit` 子频道，Beta 测试版与未来更新将会在那里频繁更新。
-
-中文用户可加入 [LLT QQ 频道](https://pd.qq.com/s/jj0737) 并前往 `#测试版更新💻` 子频道，Beta 测试版将会经常在那里同步发布。
 
 ## 兼容性
 

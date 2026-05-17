@@ -3,7 +3,7 @@ param(
     [string]$RepositoryRoot,
     [string]$PluginIds = 'shell-integration,custom-mouse',
     [string]$PluginSources = 'shell-integration=online,custom-mouse=local',
-    [ValidateSet('', 'custom', 'shell-local', 'combo-local')]
+    [ValidateSet('', 'custom', 'shell-local', 'combo-local', 'driver-download', 'system-optimization')]
     [string]$Scenario = 'custom',
     [ValidateSet('system', 'light', 'dark')]
     [string]$Theme = 'system',

@@ -293,7 +293,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         {
             return new List<string>
             {
-                "powercfg -setactive SCHEME_MIN",
+                "powercfg -setactive SCHEME_MAX",
                 "powercfg -h off"
             };
         }
@@ -355,4 +355,3 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
         }
     }
 }
-

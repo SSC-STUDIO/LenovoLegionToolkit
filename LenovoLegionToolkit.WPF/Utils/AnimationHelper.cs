@@ -19,6 +19,7 @@ public static class AnimationHelper
         UpdateDuration("AnimationDurationFast", 0.1, animationsEnabled, animationSpeed);
         UpdateDuration("AnimationDurationMedium", 0.2, animationsEnabled, animationSpeed);
         UpdateDuration("AnimationDurationSlow", 0.3, animationsEnabled, animationSpeed);
+        UpdateDuration("AnimationDurationShimmer", 1.4, animationsEnabled, animationSpeed);
     }
 
     private static void UpdateDuration(string key, double baseSeconds, bool enabled, double speed)

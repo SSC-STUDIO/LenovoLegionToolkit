@@ -54,7 +54,8 @@
                             Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
                             From="-1.2"
                             To="1.2"
-                            Duration="0:0:1.4"
+                            Duration="{StaticResource AnimationDurationShimmer}"
+                            EasingFunction="{StaticResource AnimationEasingCubicOut}"
                             RepeatBehavior="Forever" />
                     </Storyboard>
                 </BeginStoryboard>

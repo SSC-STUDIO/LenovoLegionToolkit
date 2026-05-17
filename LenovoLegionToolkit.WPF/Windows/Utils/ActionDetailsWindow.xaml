@@ -19,6 +19,7 @@
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
+            AutomationProperties.AutomationId="ActionDetailsWindowTitleBar"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -94,6 +95,7 @@
         <!-- Close button -->
         <Grid Grid.Row="2" Margin="20" HorizontalAlignment="Right">
             <wpfui:Button
+                AutomationProperties.AutomationId="ActionDetailsWindowCloseButton"
                 Content="{x:Static resources:Resource.ActionDetailsWindow_Close_Button}"
                 Appearance="Primary"
                 Click="CloseButton_Click"
@@ -101,5 +103,4 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
-
 

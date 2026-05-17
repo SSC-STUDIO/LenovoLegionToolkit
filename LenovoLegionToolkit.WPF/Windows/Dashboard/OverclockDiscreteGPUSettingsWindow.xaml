@@ -8,9 +8,9 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_Title}"
     MinWidth="500"
-    MinHeight="275"
+    MinHeight="340"
     MaxWidth="500"
-    MaxHeight="275"
+    MaxHeight="340"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
@@ -57,6 +57,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -68,10 +70,58 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
+                    Text="{x:Static resources:Resource.StatusTrayPopup_Preset}" />
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox
+                        x:Name="_profilesComboBox"
+                        Grid.Column="0"
+                        SelectionChanged="ProfilesComboBox_SelectionChanged" />
+
+                    <wpfui:Button
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Stretch"
+                        Click="RenameProfileButton_Click"
+                        Icon="Edit24"
+                        ToolTip="{x:Static resources:Resource.Rename}" />
+                    <wpfui:Button
+                        x:Name="_deleteProfileButton"
+                        Grid.Column="2"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Stretch"
+                        Click="DeleteProfileButton_Click"
+                        Icon="Dismiss24"
+                        ToolTip="{x:Static resources:Resource.Delete}" />
+                    <wpfui:Button
+                        Grid.Column="3"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Stretch"
+                        Appearance="Primary"
+                        Click="AddProfileButton_Click"
+                        Content="{x:Static resources:Resource.Add}"
+                        Icon="Add24" />
+                </Grid>
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Margin="0,16,0,0"
                     Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title}" />
                 <Slider
                     x:Name="_coreSlider"
-                    Grid.Row="1"
+                    Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Margin="0,16,8,0"
@@ -82,20 +132,20 @@
                     ValueChanged="CoreSlider_OnValueChanged" />
                 <Label
                     x:Name="_coreLabel"
-                    Grid.Row="1"
+                    Grid.Row="3"
                     Grid.Column="2"
                     Margin="0,16,0,0"
                     HorizontalContentAlignment="Right" />
 
                 <TextBlock
-                    Grid.Row="2"
+                    Grid.Row="4"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Margin="0,16,0,0"
                     Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title}" />
                 <Slider
                     x:Name="_memorySlider"
-                    Grid.Row="3"
+                    Grid.Row="5"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Margin="0,16,8,0"
@@ -106,7 +156,7 @@
                     ValueChanged="MemorySlider_OnValueChanged" />
                 <Label
                     x:Name="_memoryLabel"
-                    Grid.Row="3"
+                    Grid.Row="5"
                     Grid.Column="2"
                     Margin="0,16,0,0"
                     HorizontalContentAlignment="Right" />
@@ -158,4 +208,3 @@
 
     </Grid>
 </local:BaseWindow>
-
