@@ -55,6 +55,7 @@
                 <TextBlock
                     x:Name="_title"
                     MaxWidth="760"
+                    Margin="12,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FlowDirection="LeftToRight"
@@ -179,11 +180,11 @@
                         x:Name="_pluginExtensionsItem"
                         AutomationProperties.AccessKey="P"
                         AutomationProperties.AutomationId="PluginExtensionsNavItem"
-                        Content="Plugin Extensions"
+                        Content="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}"
                         Icon="Apps24"
                         PageTag="pluginExtensions"
                         PageType="{x:Type pages:PluginExtensionsPage}"
-                        ToolTip="Plugin Extensions" />
+                        ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}" />
 
                     <custom:NavigationItem
                         AutomationProperties.AccessKey="S"

@@ -51,6 +51,9 @@ public class GPUOverclockSettingsTests : IDisposable
         store.Enabled.Should().BeFalse();
         store.Info.Should().NotBeNull();
         store.Info.Should().Be(GPUOverclockInfo.Zero);
+        store.ActiveProfileId.Should().Be(Guid.Empty);
+        store.Profiles.Should().NotBeNull();
+        store.Profiles.Should().BeEmpty();
     }
 
     [Fact]
@@ -146,6 +149,43 @@ public class GPUOverclockSettingsTests : IDisposable
         reloadedStore.Info.Should().NotBe(GPUOverclockInfo.Zero);
         reloadedStore.Info.CoreDeltaMhz.Should().Be(100);
         reloadedStore.Info.MemoryDeltaMhz.Should().Be(200);
+    }
+
+    [Fact]
+    public void Profiles_WhenAdded_ShouldPersist()
+    {
+        // Arrange
+        var settings = new GPUOverclockSettings();
+        var profileId = Guid.NewGuid();
+        settings.Store.ActiveProfileId = profileId;
+        settings.Store.Profiles[profileId] = new GPUOverclockSettings.GPUOverclockSettingsStore.Profile
+        {
+            Name = "Gaming",
+            Info = new GPUOverclockInfo(120, 300)
+        };
+
+        // Act
+        settings.SynchronizeStore();
+        settings.InvalidateCache();
+        var reloadedStore = settings.Store;
+
+        // Assert
+        reloadedStore.ActiveProfileId.Should().Be(profileId);
+        reloadedStore.Profiles.Should().ContainKey(profileId);
+        reloadedStore.Profiles[profileId].Name.Should().Be("Gaming");
+        reloadedStore.Profiles[profileId].Info.CoreDeltaMhz.Should().Be(120);
+        reloadedStore.Profiles[profileId].Info.MemoryDeltaMhz.Should().Be(300);
+    }
+
+    [Fact]
+    public void Profile_DefaultConstructor_ShouldInitialize()
+    {
+        // Arrange & Act
+        var profile = new GPUOverclockSettings.GPUOverclockSettingsStore.Profile();
+
+        // Assert
+        profile.Name.Should().Be(GPUOverclockSettings.DefaultProfileName);
+        profile.Info.Should().Be(GPUOverclockInfo.Zero);
     }
 
     #endregion
@@ -251,6 +291,7 @@ public class GPUOverclockSettingsTests : IDisposable
         store.Should().NotBeNull();
         store.Enabled.Should().BeFalse();
         store.Info.Should().Be(GPUOverclockInfo.Zero);
+        store.Profiles.Should().BeEmpty();
     }
 
     [Fact]
@@ -260,13 +301,15 @@ public class GPUOverclockSettingsTests : IDisposable
         var store = new GPUOverclockSettings.GPUOverclockSettingsStore
         {
             Enabled = true,
-            Info = new GPUOverclockInfo(150, 250)
+            Info = new GPUOverclockInfo(150, 250),
+            ActiveProfileId = Guid.NewGuid()
         };
 
         // Act & Assert
         store.Enabled.Should().BeTrue();
         store.Info.CoreDeltaMhz.Should().Be(150);
         store.Info.MemoryDeltaMhz.Should().Be(250);
+        store.ActiveProfileId.Should().NotBe(Guid.Empty);
     }
 
     #endregion

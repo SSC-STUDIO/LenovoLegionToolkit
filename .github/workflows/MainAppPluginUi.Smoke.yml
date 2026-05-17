@@ -15,11 +15,11 @@ on:
       plugin_ids:
         description: Comma-separated plugin ids
         required: false
-        default: shell-integration,custom-mouse
+        default: custom-mouse,shell-integration,vive-tool,network-acceleration
       plugin_sources:
         description: Comma-separated plugin install sources (<pluginId>=online|local)
         required: false
-        default: shell-integration=online,custom-mouse=local
+        default: *=online
       screenshot_mode:
         description: Screenshot capture policy
         type: choice
@@ -104,14 +104,6 @@ jobs:
           PLUGIN_SOURCES: ${{ inputs.plugin_sources }}
           SCENARIO: ${{ inputs.scenario }}
         run: |
-          function Resolve-ScenarioPluginIds([string]$scenario) {
-            switch (($scenario ?? '').Trim().ToLowerInvariant()) {
-              'shell-local' { return @('shell-integration') }
-              'combo-local' { return @('custom-mouse', 'shell-integration') }
-              default { return @() }
-            }
-          }
-
           function ConvertTo-PluginDirectoryName([string]$pluginId) {
             $segments = $pluginId.Split('-', [System.StringSplitOptions]::RemoveEmptyEntries)
             if ($segments.Count -eq 0) {
@@ -129,52 +121,43 @@ jobs:
           }
 
           $requestedLocalPlugins = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-          $scenarioPluginIds = Resolve-ScenarioPluginIds $env:SCENARIO
+          $pluginIds = @($env:PLUGIN_IDS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+          $explicitSources = @{}
+          $wildcardSource = $null
 
-          if ($scenarioPluginIds.Count -gt 0) {
-            foreach ($pluginId in $scenarioPluginIds) {
-              [void]$requestedLocalPlugins.Add($pluginId)
+          foreach ($entry in @($env:PLUGIN_SOURCES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+            $parts = $entry.Split('=', 2)
+            if ($parts.Count -ne 2) {
+              throw "Invalid plugin source entry '$entry'. Expected '<pluginId>=online|local'."
+            }
+
+            $key = $parts[0].Trim()
+            $value = $parts[1].Trim().ToLowerInvariant()
+            if ($value -ne 'online' -and $value -ne 'local') {
+              throw "Invalid plugin source value '$value' for '$key'."
+            }
+
+            if ($key -eq '*') {
+              $wildcardSource = $value
+            }
+            else {
+              $explicitSources[$key] = $value
             }
           }
-          else {
-            $pluginIds = @($env:PLUGIN_IDS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
-            $explicitSources = @{}
-            $wildcardSource = $null
 
-            foreach ($entry in @($env:PLUGIN_SOURCES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
-              $parts = $entry.Split('=', 2)
-              if ($parts.Count -ne 2) {
-                throw "Invalid plugin source entry '$entry'. Expected '<pluginId>=online|local'."
-              }
-
-              $key = $parts[0].Trim()
-              $value = $parts[1].Trim().ToLowerInvariant()
-              if ($value -ne 'online' -and $value -ne 'local') {
-                throw "Invalid plugin source value '$value' for '$key'."
-              }
-
-              if ($key -eq '*') {
-                $wildcardSource = $value
-              }
-              else {
-                $explicitSources[$key] = $value
-              }
+          foreach ($pluginId in $pluginIds) {
+            $resolvedSource = if ($explicitSources.ContainsKey($pluginId)) {
+              $explicitSources[$pluginId]
+            }
+            elseif ($null -ne $wildcardSource) {
+              $wildcardSource
+            }
+            else {
+              'online'
             }
 
-            foreach ($pluginId in $pluginIds) {
-              $resolvedSource = if ($explicitSources.ContainsKey($pluginId)) {
-                $explicitSources[$pluginId]
-              }
-              elseif ($null -ne $wildcardSource) {
-                $wildcardSource
-              }
-              else {
-                'online'
-              }
-
-              if ($resolvedSource -eq 'local') {
-                [void]$requestedLocalPlugins.Add($pluginId)
-              }
+            if ($resolvedSource -eq 'local') {
+              [void]$requestedLocalPlugins.Add($pluginId)
             }
           }
 

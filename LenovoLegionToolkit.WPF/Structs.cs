@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using LenovoLegionToolkit.WPF.Resources;
 
@@ -10,6 +10,7 @@ public readonly struct DashboardGroup(DashboardGroupType type, string? customNam
     [
         new(DashboardGroupType.Power, null,
             DashboardItem.PowerMode,
+            DashboardItem.ItsMode,
             DashboardItem.BatteryMode,
             DashboardItem.BatteryNightChargeMode,
             DashboardItem.AlwaysOnUsb,

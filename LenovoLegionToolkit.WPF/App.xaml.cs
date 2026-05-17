@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation;
 using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Features.Hybrid;
@@ -24,6 +25,7 @@ using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Macro;
+using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Services;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
@@ -51,6 +53,7 @@ public partial class App
         private const string MUTEX_NAME = "LenovoLegionToolkit_Mutex_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string EVENT_NAME = "LenovoLegionToolkit_Event_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE = "LLT_SINGLE_INSTANCE_KEY";
+    private const string SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE = "LLT_SMOKE_AUTOMATION";
     private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
     private Mutex? _singleInstanceMutex;
@@ -361,12 +364,17 @@ public partial class App
         var initializationSteps = new Func<Task>[]
         {
             LogSoftwareStatusAsync,
+            InitLampArrayControllerAsync,
+            InitSensorsGroupControllerFeatureAsync,
             InitPowerModeFeatureAsync,
+            InitItsModeFeatureAsync,
             InitBatteryFeatureAsync,
             InitRgbKeyboardControllerAsync,
             InitSpectrumKeyboardControllerAsync,
             InitGpuOverclockControllerAsync,
             InitHybridModeAsync,
+            InitFanManagerAsync,
+            InitAmdOverclockingAsync,
             InitAutomationProcessorAsync
         };
 
@@ -787,10 +795,13 @@ public partial class App
                 StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
                 StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
                 StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
-                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor")
+                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor"),
+                StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller")
             );
 
             stopServicesTask.Wait(TimeSpan.FromSeconds(2));
+
+            await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
 
             StopMacroControllerSafely();
             StopSingleInstanceThreadSafely();
@@ -928,18 +939,22 @@ public partial class App
             // Save crash report BEFORE showing message box
             CrashReportHelper.SaveCrashReport(e.Exception, "Dispatcher");
 
-            // Try to show message box, but don't let it cause infinite recursion
-            try
+            // Skip modal dialogs during smoke automation runs so UIA does not get pinned on a crash dialog.
+            if (!IsSmokeAutomationRun())
             {
-                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
-                    T("App_UnhandledException_Dispatcher_Title", "Application Error"),
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-            catch
-            {
-                // If MessageBox fails, just log and exit
-                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+                // Try to show message box, but don't let it cause infinite recursion
+                try
+                {
+                    MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
+                        T("App_UnhandledException_Dispatcher_Title", "Application Error"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                catch
+                {
+                    // If MessageBox fails, just log and exit
+                    Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+                }
             }
         }
         catch
@@ -970,6 +985,14 @@ public partial class App
                 }
             }
         }
+    }
+
+    private static bool IsSmokeAutomationRun()
+    {
+        if (string.Equals(Environment.GetEnvironmentVariable(SMOKE_AUTOMATION_ENVIRONMENT_VARIABLE), "1", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return string.Equals(Environment.GetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable), "1", StringComparison.OrdinalIgnoreCase);
     }
 
     private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
@@ -1175,6 +1198,20 @@ public partial class App
         );
     }
 
+    private static async Task InitItsModeFeatureAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var feature = IoCContainer.Resolve<ITSModeFeature>();
+                if (await feature.IsSupportedAsync().ConfigureAwait(false))
+                    await feature.SetStateAsync(await feature.GetStateAsync().ConfigureAwait(false)).ConfigureAwait(false);
+            },
+            "ITS mode feature",
+            false
+        );
+    }
+
     private static async Task InitBatteryFeatureAsync()
     {
         await RunWithErrorHandlingAsync(
@@ -1253,6 +1290,36 @@ public partial class App
         );
     }
 
+    private static async Task InitSensorsGroupControllerFeatureAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var settings = IoCContainer.Resolve<ApplicationSettings>();
+                if (!settings.Store.EnableHardwareSensors)
+                    return;
+
+                _ = await IoCContainer.Resolve<SensorsGroupController>().IsSupportedAsync().ConfigureAwait(false);
+            },
+            "sensors group controller",
+            false
+        );
+    }
+
+    private static async Task InitLampArrayControllerAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var controller = IoCContainer.Resolve<LampArrayController>();
+                var settings = IoCContainer.Resolve<LampArraySettings>();
+                await controller.InitializeAsync(settings).ConfigureAwait(false);
+            },
+            "lamp array controller",
+            false
+        );
+    }
+
     private static async Task InitGpuOverclockControllerAsync()
     {
         await RunWithErrorHandlingAsync(
@@ -1285,6 +1352,87 @@ public partial class App
             "GPU overclock controller",
             false
         );
+    }
+
+    private static async Task InitFanManagerAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var fanManager = IoCContainer.Resolve<FanCurveManager>();
+                if (!await fanManager.IsSupportedAsync().ConfigureAwait(false))
+                    return;
+
+                await fanManager.InitializeAsync().ConfigureAwait(false);
+
+                var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                if (mi.LegionSeries <= LegionSeries.Legion_Legacy)
+                {
+                    var powerMode = IoCContainer.Resolve<PowerModeFeature>();
+                    if (await powerMode.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
+                        return;
+                }
+
+                var fanSettings = IoCContainer.Resolve<FanCurveSettings>();
+                if (fanSettings.Store.Entries.Count == 0)
+                    await fanSettings.SynchronizeStoreAsync().ConfigureAwait(false);
+
+                await fanManager.LoadAndApply(fanSettings.Store.Entries).ConfigureAwait(false);
+            },
+            "fan manager",
+            false
+        );
+    }
+
+    private static async Task InitAmdOverclockingAsync()
+    {
+        await RunWithErrorHandlingAsync(
+            async () =>
+            {
+                var controller = IoCContainer.Resolve<AmdOverclockingController>();
+                if (!controller.IsActive())
+                    return;
+
+                await controller.InitializeAsync().ConfigureAwait(false);
+
+                if (!controller.DoNotApply)
+                    await controller.ApplyInternalProfileAsync().ConfigureAwait(false);
+            },
+            "AMD overclocking",
+            false
+        );
+    }
+
+    private static async Task FinalizeRuntimeProfilesAsync()
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<AmdOverclockingController>() is { } amdController && amdController.IsActive())
+            {
+                amdController.SaveShutdownInfo(new ShutdownInfo
+                {
+                    Status = "Normal",
+                    AbnormalCount = 0
+                });
+            }
+
+            if (IoCContainer.TryResolve<FanCurveManager>() is { } fanManager &&
+                await fanManager.IsSupportedAsync().ConfigureAwait(false))
+            {
+                await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
+            }
+
+            if (IoCContainer.TryResolve<LampArrayController>() is { } lampArrayController &&
+                IoCContainer.TryResolve<LampArraySettings>() is { } lampArraySettings)
+            {
+                lampArrayController.SaveSettings(lampArraySettings);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Runtime profile finalization failed: {ex.Message}", ex);
+        }
     }
 
     private static void InitMacroController()

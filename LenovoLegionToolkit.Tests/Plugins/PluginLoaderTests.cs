@@ -154,6 +154,19 @@ public class PluginLoaderTests : IDisposable
     }
 
     [Fact]
+    public void CanLoad_WithSharedDll_ShouldReturnFalse()
+    {
+        // Arrange
+        var filePath = "LenovoLegionToolkit.Plugins.Shared.dll";
+
+        // Act
+        var result = _loader.CanLoad(filePath);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
     public void CanLoad_WithResourcesDll_ShouldReturnFalse()
     {
         // Arrange
@@ -647,6 +660,40 @@ public class PluginLoaderTests : IDisposable
 
         // Assert
         contexts.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Unload_WithRegisteredDependencyContext_ShouldRemoveContext()
+    {
+        // Arrange
+        const string pluginId = "test-plugin";
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "TestPlugin.dll");
+        var context = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+
+        var dependencyContextsField = typeof(PluginLoader)
+            .GetField("PluginDependencyContexts", BindingFlags.NonPublic | BindingFlags.Static);
+        dependencyContextsField.Should().NotBeNull();
+
+        var dependencyContexts = dependencyContextsField!.GetValue(null)
+            .Should().BeAssignableTo<System.Collections.IDictionary>().Which;
+        dependencyContexts[pluginId] = context;
+
+        try
+        {
+            // Act
+            var unloaded = _loader.Unload(pluginId);
+
+            // Assert
+            unloaded.Should().BeTrue();
+            var contexts = GetScopedDependencyResolutionContexts(null);
+            contexts.Should().BeEmpty();
+        }
+        finally
+        {
+            dependencyContexts.Remove(pluginId);
+            RemoveDependencyResolutionContext(context);
+        }
     }
 
     #endregion

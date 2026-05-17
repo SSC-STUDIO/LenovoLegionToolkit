@@ -23,43 +23,43 @@ public class PowerModeFeature(
     WindowsPowerPlanController windowsPowerPlanController,
     ThermalModeListener thermalModeListener,
     PowerModeListener powerModeListener)
-    : AbstractWmiFeature<PowerModeState>(WMI.LenovoGameZoneData.GetSmartFanModeAsync, WMI.LenovoGameZoneData.SetSmartFanModeAsync, WMI.LenovoGameZoneData.IsSupportSmartFanAsync, 1)
+    : AbstractWmiFeature<PowerModeState>(WMI.LenovoGameZoneData.GetSmartFanModeAsync, WMI.LenovoGameZoneData.SetSmartFanModeAsync, WMI.LenovoGameZoneData.IsSupportSmartFanAsync, 1), IFeature<PowerModeState>
 {
     public bool AllowAllPowerModesOnBattery { get; set; }
+
+    async Task<bool> IFeature<PowerModeState>.IsSupportedAsync() => await IsSupportedAsync().ConfigureAwait(false);
+
+    public new async Task<bool> IsSupportedAsync()
+    {
+        if (await base.IsSupportedAsync().ConfigureAwait(false))
+            return true;
+
+        return (await GetAllStatesAsync().ConfigureAwait(false)).Length > 0;
+    }
 
     public override async Task<PowerModeState[]> GetAllStatesAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-        var isSupportedLegionMachine = Compatibility.IsSupportedLegionMachine(mi);
-
-        var result = new List<PowerModeState>();
-
-        if (!isSupportedLegionMachine)
-            return [.. result];
-
-        // For backward compatibility, when SupportedPowerModes is null, include Quiet, Balance, and Performance
-        if (mi.SupportedPowerModes is null || mi.SupportedPowerModes.Length == 0)
+        var states = new List<PowerModeState>
         {
-            result.Add(PowerModeState.Quiet);
-            result.Add(PowerModeState.Balance);
-            result.Add(PowerModeState.Performance);
-        }
-        else
+            PowerModeState.Quiet,
+            PowerModeState.Balance,
+            PowerModeState.Performance
+        };
+
+        foreach (var supportedPowerMode in mi.SupportedPowerModes)
         {
-            // When SupportedPowerModes is specified, only include modes that are explicitly supported
-            if (mi.SupportedPowerModes.Contains(PowerModeState.Quiet))
-                result.Add(PowerModeState.Quiet);
-            if (mi.SupportedPowerModes.Contains(PowerModeState.Balance))
-                result.Add(PowerModeState.Balance);
-            if (mi.SupportedPowerModes.Contains(PowerModeState.Performance))
-                result.Add(PowerModeState.Performance);
+            if (!states.Contains(supportedPowerMode))
+                states.Add(supportedPowerMode);
         }
 
-        // GodMode requires explicit support check
-        if (mi.Properties.SupportsGodMode && mi.SupportedPowerModes is not null && mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
-            result.Add(PowerModeState.GodMode);
+        if (mi.Properties.SupportsExtremeMode || mi.SupportedPowerModes.Contains(PowerModeState.Extreme))
+            states.Add(PowerModeState.Extreme);
 
-        return [.. result];
+        if (mi.Properties.SupportsGodMode || mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+            states.Add(PowerModeState.GodMode);
+
+        return [.. states.Distinct()];
     }
 
     public override async Task SetStateAsync(PowerModeState state)
@@ -68,7 +68,7 @@ public class PowerModeFeature(
         if (!allStates.Contains(state))
             throw new InvalidOperationException($"Unsupported power mode {state}");
 
-        if (state is PowerModeState.Performance or PowerModeState.GodMode
+        if (state is PowerModeState.Performance or PowerModeState.GodMode or PowerModeState.Extreme
             && !AllowAllPowerModesOnBattery
             && await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false) is PowerAdapterStatus.Disconnected)
             throw new PowerModeUnavailableWithoutACException(state);
@@ -98,6 +98,9 @@ public class PowerModeFeature(
                     break;
                 case PowerModeState.Performance:
                     await base.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
+                    break;
+                case PowerModeState.Extreme:
+                    await base.SetStateAsync(PowerModeState.Extreme).ConfigureAwait(false);
                     break;
             }
 

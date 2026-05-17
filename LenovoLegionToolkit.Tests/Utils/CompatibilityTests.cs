@@ -146,6 +146,30 @@ public class CompatibilityTests
     }
 
     [Fact]
+    public void IsSupportedLegionMachine_WithMotorolaVendor_ShouldReturnTrue()
+    {
+        var machineInformation = CreateMachineInformation("Legion 5 15ACH6", vendor: "MOTOROLA");
+
+        var result = Compatibility.IsSupportedLegionMachine(machineInformation);
+
+        result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData("Legion Pro 7 NX10")]
+    [InlineData("ThinkBook 16P G7 IRX")]
+    [InlineData("Legion 5 14AKP10")]
+    [InlineData("Legion Slim 5 14AHP10")]
+    public void IsSupportedLegionMachine_WithAdditionalUpstreamModelPrefixes_ShouldReturnTrue(string model)
+    {
+        var machineInformation = CreateMachineInformation(model);
+
+        var result = Compatibility.IsSupportedLegionMachine(machineInformation);
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
     public void SmokeSimulateLegionEnvironmentVariable_WhenSet_ShouldBeDetected()
     {
         try

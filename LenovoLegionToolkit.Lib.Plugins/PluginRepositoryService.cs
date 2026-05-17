@@ -31,9 +31,9 @@ public class PluginRepositoryService : IDisposable
     // and include a CDN mirror because raw.githubusercontent.com can intermittently reset connections on Windows.
     private static readonly string[] PluginStoreUrls =
     {
+        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json",
         "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json",
-        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json",
-        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json"
+        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json"
     };
     private const string PluginReleasesApiUrl = "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50";
     private const int RemoteRequestRetryCount = 3;
@@ -41,7 +41,7 @@ public class PluginRepositoryService : IDisposable
     private static readonly TimeSpan StoreRequestTimeout = TimeSpan.FromSeconds(20);
     private static readonly TimeSpan ReleaseMetadataRequestTimeout = TimeSpan.FromSeconds(20);
     private static readonly TimeSpan ApiAssetDownloadRequestTimeout = TimeSpan.FromSeconds(120);
-    private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(300);
+    private static readonly TimeSpan BrowserDownloadRequestTimeout = TimeSpan.FromSeconds(90);
     private static readonly TimeSpan NativeCurlDownloadTimeoutPadding = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan AvailablePluginsMemoryCacheDuration = TimeSpan.FromMinutes(15);
     private static readonly TimeSpan StoreDiskCacheDuration = TimeSpan.FromHours(6);
@@ -246,6 +246,8 @@ public class PluginRepositoryService : IDisposable
             if (!string.IsNullOrWhiteSpace(publishedAsset.DownloadUrl))
                 preferredCandidateUrls.Add(publishedAsset.DownloadUrl);
 
+            preferredCandidateUrls.AddRange(candidateUrls);
+
             if (!string.IsNullOrWhiteSpace(publishedAsset.ApiDownloadUrl))
                 preferredCandidateUrls.Add(publishedAsset.ApiDownloadUrl);
 
@@ -324,6 +326,13 @@ public class PluginRepositoryService : IDisposable
                 return true;
             }
 
+            // GitHub release asset URLs are more reliable through native curl on some Windows
+            // machines than through the managed HTTP stack. Prefer that fast path first so the
+            // UI smoke flow does not spend multiple long socket timeouts before falling back.
+            var preferNativeCurl = ShouldUseNativeCurlDownloadFallback(candidateUrl);
+            if (preferNativeCurl)
+                return await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
+
             for (var attempt = 1; attempt <= RemoteDownloadRetryCount; attempt++)
             {
                 try
@@ -338,12 +347,6 @@ public class PluginRepositoryService : IDisposable
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        if (ShouldUseNativeCurlDownloadFallback(candidateUrl)
-                            && await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
-                        {
-                            return true;
-                        }
-
                         if (attempt < RemoteDownloadRetryCount && IsRetryableStatusCode(response.StatusCode))
                         {
                             if (Log.Instance.IsTraceEnabled)
@@ -393,18 +396,12 @@ public class PluginRepositoryService : IDisposable
                 {
                     DeletePartialDownload(destinationPath);
 
-                    if (await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
-                        return true;
-
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Transient error downloading plugin {manifest.Id} from {candidateUrl} on attempt {attempt}/{RemoteDownloadRetryCount}: {ex.Message}. Retrying...", ex);
 
                     await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
                 }
             }
-
-            if (await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
-                return true;
 
             return false;
         }
@@ -808,6 +805,9 @@ public class PluginRepositoryService : IDisposable
             // Copy all files from extraction
             foreach (var file in Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories))
             {
+                if (ShouldSkipPluginPayloadFile(file))
+                    continue;
+
                 var relativePath = file.Substring(extractPath.Length).TrimStart('\\', '/');
                 var destPath = Path.Combine(pluginDir, relativePath);
                 
@@ -817,6 +817,8 @@ public class PluginRepositoryService : IDisposable
 
                 File.Copy(file, destPath, overwrite: true);
             }
+
+            TryStageCanonicalPluginSharedAssembly(pluginDir);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Installed plugin {manifest.Id} to {pluginDir}");
@@ -1215,7 +1217,8 @@ public class PluginRepositoryService : IDisposable
             {
                 var fileName = Path.GetFileName(path);
                 return !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) &&
-                       !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase);
+                       !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                       !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
             })
             .ToList();
 
@@ -1263,6 +1266,36 @@ public class PluginRepositoryService : IDisposable
 
         var chars = value.Where(char.IsLetterOrDigit).ToArray();
         return new string(chars).ToLowerInvariant();
+    }
+
+    private static bool ShouldSkipPluginPayloadFile(string filePath)
+    {
+        var fileName = Path.GetFileName(filePath);
+        return fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void TryStageCanonicalPluginSharedAssembly(string pluginDirectory)
+    {
+        var sourceCandidates = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"),
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")
+        };
+
+        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
+        if (string.IsNullOrWhiteSpace(sourcePath))
+            return;
+
+        try
+        {
+            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"), overwrite: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to stage canonical plugin shared runtime into {pluginDirectory}: {ex.Message}", ex);
+        }
     }
 
     /// <summary>

@@ -4,9 +4,10 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib">
 
     <!-- Animation Durations -->
-    <Duration x:Key="AnimationDurationFast">0:0:0.167</Duration>
-    <Duration x:Key="AnimationDurationMedium">0:0:0.333</Duration>
-    <Duration x:Key="AnimationDurationSlow">0:0:0.5</Duration>
+    <Duration x:Key="AnimationDurationFast">0:0:0.1</Duration>
+    <Duration x:Key="AnimationDurationMedium">0:0:0.2</Duration>
+    <Duration x:Key="AnimationDurationSlow">0:0:0.3</Duration>
+    <Duration x:Key="AnimationDurationShimmer">0:0:1.4</Duration>
 
     <!-- Animation Easing Functions -->
     <CubicEase x:Key="AnimationEasingCubicOut" EasingMode="EaseOut" />
@@ -16,5 +17,6 @@
     <s:Double x:Key="AnimationOpacityStart">0.0</s:Double>
     <s:Double x:Key="AnimationOpacityEnd">1.0</s:Double>
     <s:Double x:Key="AnimationTranslationOffset">10.0</s:Double>
+    <s:Double x:Key="AnimationSubtleTranslationOffset">6.0</s:Double>
 
 </ResourceDictionary>

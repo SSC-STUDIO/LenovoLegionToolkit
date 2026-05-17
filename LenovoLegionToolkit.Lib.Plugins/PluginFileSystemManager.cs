@@ -194,6 +194,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
             return false;
 
         if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
             fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
         {
             return false;

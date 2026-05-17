@@ -1,8 +1,11 @@
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Features;
+using LenovoLegionToolkit.Lib.Utils;
 using Xunit;
 using Moq;
 
@@ -12,14 +15,15 @@ namespace LenovoLegionToolkit.Tests.Features;
 public class PowerModeFeatureTests : UnitTestBase
 {
     [Fact]
-    public void PowerModeState_ShouldHaveFourStates()
+    public void PowerModeState_ShouldIncludeExtremeAndGodMode()
     {
         var states = Enum.GetValues<PowerModeState>();
 
-        states.Should().HaveCount(4);
+        states.Should().HaveCount(5);
         states.Should().Contain(PowerModeState.Quiet);
         states.Should().Contain(PowerModeState.Balance);
         states.Should().Contain(PowerModeState.Performance);
+        states.Should().Contain(PowerModeState.Extreme);
         states.Should().Contain(PowerModeState.GodMode);
     }
 
@@ -39,6 +43,135 @@ public class PowerModeFeatureTests : UnitTestBase
 
         exception.PowerMode.Should().Be(PowerModeState.Performance);
         exception.Message.Should().Contain("Performance");
+    }
+
+    [Fact]
+    public async Task IsSupportedAsync_WhenResolvedAsInterface_ShouldUsePowerModeStateAvailability()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, "1");
+
+            var feature = (IFeature<PowerModeState>)RuntimeHelpers.GetUninitializedObject(typeof(PowerModeFeature));
+
+            var result = await feature.IsSupportedAsync();
+
+            result.Should().BeTrue();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, null);
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetAllStatesAsync_WhenMachineReportsExtreme_ShouldIncludeExtreme()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, "1");
+
+            var feature = new PowerModeFeature(
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
+
+            var states = await feature.GetAllStatesAsync();
+
+            states.Should().Contain(PowerModeState.Extreme);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Compatibility.SmokeSimulateLegionEnvironmentVariable, null);
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetAllStatesAsync_WhenSupportedPowerModesIsSparse_ShouldStillIncludeStandardModes()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DE",
+                Model = "Legion Pro 7 16IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Balance],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new PowerModeFeature(
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
+
+            var states = await feature.GetAllStatesAsync();
+
+            states.Should().Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetAllStatesAsync_WhenMachinePropertiesSupportExtraModes_ShouldIncludeExtremeAndGodMode()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DE",
+                Model = "Legion Pro 7 16IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData
+                {
+                    SupportsExtremeMode = true,
+                    SupportsGodModeV2 = true
+                }
+            });
+
+            var feature = new PowerModeFeature(
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
+
+            var states = await feature.GetAllStatesAsync();
+
+            states.Should().Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.Extreme, PowerModeState.GodMode]);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    private static void ResetCompatibilityCache()
+    {
+        typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
+        typeof(Compatibility).GetField("_isCompatible", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
     }
 }
 

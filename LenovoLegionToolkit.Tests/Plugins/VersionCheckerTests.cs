@@ -493,6 +493,7 @@ public class PluginMetadataTests
         metadata.Version.Should().Be("1.0.0");
         metadata.MinimumHostVersion.Should().Be("1.0.0");
         metadata.IsSystemPlugin.Should().BeFalse();
+        metadata.WpfUiVersion.Should().BeNull();
     }
 
     [Fact]
@@ -512,6 +513,8 @@ public class PluginMetadataTests
             .WithFilePath("C:\\plugins\\shell-integration\\dll")
             .Build();
 
+        metadata.WpfUiVersion = "2.1.0.0";
+
         // Assert
         metadata.Id.Should().Be("shell-integration");
         metadata.Name.Should().Be("Shell Integration");
@@ -523,5 +526,6 @@ public class PluginMetadataTests
         metadata.Author.Should().Be("LLT Team");
         metadata.Dependencies.Should().HaveCount(2);
         metadata.FilePath.Should().Be("C:\\plugins\\shell-integration\\dll");
+        metadata.WpfUiVersion.Should().Be("2.1.0.0");
     }
 }

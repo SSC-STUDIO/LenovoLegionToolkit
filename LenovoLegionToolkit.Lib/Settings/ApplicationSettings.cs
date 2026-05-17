@@ -57,6 +57,9 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
         public bool DisableUnsupportedHardwareWarning { get; set; }
         public bool ForceSoftwareRendering { get; set; }
+        public bool UseNewSensorDashboard { get; set; }
+        public bool EnableHardwareSensors { get; set; }
+        public List<string> ExcludedProcesses { get; set; } = [];
 
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
         public bool ExtensionsEnabled { get; set; } = false;

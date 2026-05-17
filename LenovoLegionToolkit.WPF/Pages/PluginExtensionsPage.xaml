@@ -122,7 +122,7 @@
     </Page.Resources>
 
     <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <Grid Margin="0,0,16,12">
+        <Grid Margin="0,0,16,12" Style="{StaticResource AppPageEntranceAnimationStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -372,7 +372,7 @@
                                                     Width="16"
                                                     Height="16"
                                                     CornerRadius="8"
-                                                    Margin="0,0,-3,-3"
+                                                    Margin="0,0,1,1"
                                                     BorderBrush="{DynamicResource ControlFillColorDefaultBrush}"
                                                     BorderThickness="2"
                                                     Visibility="{Binding IsInstalled, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -392,10 +392,8 @@
                                             <TextBlock Text="{Binding Version}"
                                                        FontSize="12"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                            <TextBlock Text="  "
-                                                       FontSize="12"
-                                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                             <TextBlock Text="{Binding StatusText}"
+                                                       Margin="8,0,0,0"
                                                        FontSize="12"
                                                        FontWeight="SemiBold"
                                                        TextTrimming="CharacterEllipsis"
@@ -812,5 +810,3 @@
         </Grid>
     </wpfui:DynamicScrollViewer>
 </Page>
-
-

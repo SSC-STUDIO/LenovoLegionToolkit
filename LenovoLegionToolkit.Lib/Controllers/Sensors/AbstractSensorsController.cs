@@ -111,7 +111,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var cpuUtilization = GetCpuUtilization(GENERIC_MAX_UTILIZATION);
         var cpuMaxCoreClock = _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false);
         var cpuCoreClock = GetCpuCoreClock();
-        var cpuCurrentTemperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
+        var cpuCurrentTemperature = await GetCpuCurrentTemperatureWithFallbackAsync().ConfigureAwait(false);
         var cpuCurrentFanSpeed = await GetCpuCurrentFanSpeedAsync().ConfigureAwait(false);
         var cpuMaxFanSpeed = _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false);
         
@@ -217,9 +217,28 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected abstract Task<int> GetGpuCurrentFanSpeedAsync();
 
+    protected virtual Task<int> GetPchCurrentTemperatureAsync() => Task.FromResult(-1);
+
+    protected virtual Task<int> GetPchCurrentFanSpeedAsync() => Task.FromResult(-1);
+
     protected abstract Task<int> GetCpuMaxFanSpeedAsync();
 
     protected abstract Task<int> GetGpuMaxFanSpeedAsync();
+
+    protected virtual Task<int> GetPchMaxFanSpeedAsync() => Task.FromResult(-1);
+
+    private async Task<int> GetCpuCurrentTemperatureWithFallbackAsync()
+    {
+        var temperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
+        if (temperature > 0)
+            return temperature;
+
+        var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
+        if (fallback > 0 && Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"CPU temperature from ACPI thermal zone fallback: {fallback}C");
+
+        return fallback;
+    }
 
     private int GetCpuUtilization(int maxUtilization)
     {
@@ -326,7 +345,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         // Try method 2: WMI query for power meter (if available)
         try
         {
-            var wattage = await GetCpuWattageFromWMIAsync().ConfigureAwait(false);
+            var wattage = await SensorReadingHelper.GetCpuWattageFromWmiAsync().ConfigureAwait(false);
             if (wattage >= 0)
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -342,37 +361,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         // Method not available, return -1
         return -1;
-    }
-
-    private static async Task<int> GetCpuWattageFromWMIAsync()
-    {
-        try
-        {
-            // Try to query Win32_PowerMeter or similar WMI class for CPU power
-            // Note: This may not be available on all systems
-var cpuPattern = "%CPU%";
-            var processorPattern = "%Processor%";
-            var result = await WMI.ReadAsync("root\\CIMV2",
-                $"SELECT * FROM Win32_PowerMeter WHERE Name LIKE {cpuPattern} OR Name LIKE {processorPattern}",
-                pdc =>
-                {
-                    // Try different property names that might contain power value
-                    var powerValue = pdc["Power"]?.Value ?? pdc["CurrentPower"]?.Value ?? pdc["PowerReading"]?.Value;
-                    if (powerValue != null)
-                    {
-                        // Power is typically in milliwatts, convert to watts
-                        var powerMw = Convert.ToDouble(powerValue);
-                        return (int)(powerMw / 1000.0);
-                    }
-                    return -1;
-                }).ConfigureAwait(false);
-            
-            return result.FirstOrDefault(-1);
-        }
-        catch
-        {
-            return -1;
-        }
     }
 
     private static async Task<(int wattage, double voltage)> GetGpuInfoFromNvidiaSmiAsync()

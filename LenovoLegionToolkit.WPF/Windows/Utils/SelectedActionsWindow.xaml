@@ -24,6 +24,7 @@
         </Grid.RowDefinitions>
 
         <wpfui:TitleBar
+            AutomationProperties.AutomationId="SelectedActionsWindowTitleBar"
             Grid.Row="0"
             Title="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
             CanMaximize="False"
@@ -150,6 +151,7 @@
                 Orientation="Horizontal">
                 <wpfui:Button
                     x:Name="_closeButton"
+                    AutomationProperties.AutomationId="SelectedActionsWindowCloseButton"
                     MinWidth="120"
                     Click="CloseButton_Click"
                     Content="{x:Static resources:Resource.Close}" />
@@ -157,4 +159,3 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
-
