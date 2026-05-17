@@ -36,12 +36,15 @@ else {
 $screenshotDirectory = Join-Path $artifactBase 'screenshots'
 $logPath = Join-Path $artifactBase 'main-app-plugin-ui-smoke.log'
 $metadataPath = Join-Path $artifactBase 'run-metadata.json'
-$smokeDllPath = Join-Path $resolvedRepositoryRoot 'Tools\MainAppPluginUi.Smoke\bin\Release\net10.0-windows\MainAppPluginUi.Smoke.dll'
+$smokeOutputRoot = Join-Path $resolvedRepositoryRoot 'Tools\MainAppPluginUi.Smoke\bin\Release'
+$smokeDllPath = Get-ChildItem -Path $smokeOutputRoot -Filter 'MainAppPluginUi.Smoke.dll' -Recurse -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1 -ExpandProperty FullName
 
 New-Item -ItemType Directory -Path $artifactBase -Force | Out-Null
 New-Item -ItemType Directory -Path $screenshotDirectory -Force | Out-Null
 
-if (-not (Test-Path $smokeDllPath)) {
+if ([string]::IsNullOrWhiteSpace($smokeDllPath) -or -not (Test-Path $smokeDllPath)) {
     throw "Smoke tool was not built: $smokeDllPath"
 }
 

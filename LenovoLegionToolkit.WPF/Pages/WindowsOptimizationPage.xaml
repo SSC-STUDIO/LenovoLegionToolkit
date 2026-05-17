@@ -507,6 +507,7 @@
                                                 x:Name="_driverMachineTypeTextBox"
                                                 Grid.Row="0"
                                                 Grid.Column="1"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverMachineTypeTextBox"
                                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                                                 ClearButtonEnabled="False"
                                                 PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />

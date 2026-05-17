@@ -1588,7 +1588,7 @@ Environment variables:
             {
                 pluginNav = WaitForPluginNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
                 Console.WriteLine($"[main-smoke] Plugin navigation element ready (attempt {attempt}/6)");
-                ActivateNavigationElement(pluginNav, "Plugin Extensions");
+                ActivateNavigationElement(pluginNav, "PluginExtensionsNavItem");
                 WaitForAnimationsToComplete();
                 Console.WriteLine($"[main-smoke] Invoked plugin navigation element (attempt {attempt}/6)");
             }
@@ -1618,7 +1618,7 @@ Environment variables:
                 BringToForeground(mainWindow);
                 DismissAnyBlockingMessageBox(mainWindow, processId);
                 if (pluginNav is not null)
-                    ActivateNavigationElement(pluginNav, "Plugin Extensions");
+                    ActivateNavigationElement(pluginNav, "PluginExtensionsNavItem");
                 else
                     PressCtrlTab();
                 WaitForAnimationsToComplete();
@@ -1893,9 +1893,7 @@ Environment variables:
                 mainWindow = ResolveLiveWindow(mainWindow);
                 var entryVisible = IsPluginMarketplaceEntryVisible(mainWindow, pluginId);
                 var loadingVisible = IsVisible(FindByAutomationId(mainWindow, "PluginLoadingIndicator"))
-                                     || IsVisible(FindByAutomationId(mainWindow, "_loadingText"))
-                                     || FindVisibleTextContains(mainWindow, "Loading plugins...")
-                                     || FindVisibleTextContains(mainWindow, "加载插件...");
+                                     || IsVisible(FindByAutomationId(mainWindow, "_loadingText"));
                 if (loadingVisible && !IsPluginMarketplaceEntryActionable(mainWindow, pluginId))
                     return false;
 
@@ -2510,22 +2508,14 @@ Environment variables:
                    || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_QuickOptimizeButton"))
                    || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_ResetStackButton"))
                    || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_StatusText"))
-                   || FindByName(mainWindow, "Run Quick Optimization") is not null
-                   || FindByName(mainWindow, "Reset Network Stack") is not null
-                   || FindByName(mainWindow, "Quick Optimize") is not null
-                   || FindByName(mainWindow, "Reset Stack") is not null;
+                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_StatusText"));
         }
 
         if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
         {
             return IsVisible(FindByAutomationId(mainWindow, "ViveToolPageRoot"))
                    || IsVisible(FindByAutomationId(mainWindow, "ViveToolImportButton"))
-                   || IsVisible(FindByAutomationId(mainWindow, "ViveToolRefreshListButton"))
-                   || FindVisibleTextContains(mainWindow, "ViVeTool")
-                   || FindVisibleTextContains(mainWindow, "Feature Flags")
-                   || FindVisibleTextContains(mainWindow, "Import")
-                   || FindVisibleTextContains(mainWindow, "Refresh List");
+                    || IsVisible(FindByAutomationId(mainWindow, "ViveToolRefreshListButton"));
         }
 
         return false;
@@ -4626,11 +4616,7 @@ Environment variables:
         var browserCacheAction = WaitForAutomationId(mainWindow, "WindowsOptimizationAction_cleanup.browserCache", TimeSpan.FromSeconds(8));
         ClickActionCheckbox(browserCacheAction, "cleanup.browserCache");
 
-        var scanButton = WaitForAutomationIdOrNames(
-            mainWindow,
-            "WindowsOptimizationScanCleanupButton",
-            new[] { "Scan", "扫描" },
-            TimeSpan.FromSeconds(8));
+        var scanButton = WaitForAutomationId(mainWindow, "WindowsOptimizationScanCleanupButton", TimeSpan.FromSeconds(8));
         Click(scanButton);
 
         WaitUntil(
@@ -4660,15 +4646,12 @@ Environment variables:
         var detailsWindow = WaitForOwnedWindow(
             processId,
             mainWindow.Current.NativeWindowHandle,
-            window => IsVisible(FindByAutomationId(window, "ActionDetailsWindowTitleBar"))
-                      || string.Equals(window.Current.Name, "Action Details", StringComparison.OrdinalIgnoreCase),
+            window => IsVisible(FindByAutomationId(window, "ActionDetailsWindowTitleBar")),
             TimeSpan.FromSeconds(10),
-            "Action Details");
+            "action details window");
 
         CapturePluginSettingsWindow(detailsWindow, "system-optimization", "action-details");
-        var closeButton = FindByAutomationId(detailsWindow, "ActionDetailsWindowCloseButton")
-                          ?? FindByName(detailsWindow, "Close")
-                          ?? FindByName(detailsWindow, "关闭");
+        var closeButton = FindByAutomationId(detailsWindow, "ActionDetailsWindowCloseButton");
         if (closeButton is not null)
             Click(closeButton);
         else
@@ -4687,15 +4670,12 @@ Environment variables:
         var selectedActionsWindow = WaitForOwnedWindow(
             processId,
             mainWindow.Current.NativeWindowHandle,
-            window => IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar"))
-                      || string.Equals(window.Current.Name, "Selected actions", StringComparison.OrdinalIgnoreCase),
+            window => IsVisible(FindByAutomationId(window, "SelectedActionsWindowTitleBar")),
             TimeSpan.FromSeconds(10),
-            "Selected Actions");
+            "selected actions window");
 
         CapturePluginSettingsWindow(selectedActionsWindow, "system-optimization", "selected-actions");
-        var closeButton = FindByAutomationId(selectedActionsWindow, "SelectedActionsWindowCloseButton")
-                          ?? FindByName(selectedActionsWindow, "Close")
-                          ?? FindByName(selectedActionsWindow, "关闭");
+        var closeButton = FindByAutomationId(selectedActionsWindow, "SelectedActionsWindowCloseButton");
         if (closeButton is not null)
             Click(closeButton);
         else
@@ -4767,10 +4747,7 @@ Environment variables:
         try
         {
             mainWindow = ResolveLiveWindow(mainWindow);
-            var condition = new AndCondition(
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
-                new PropertyCondition(AutomationElement.NameProperty, "Machine Type"));
-            var edit = FindBestMatchingDescendant(mainWindow, condition);
+            var edit = FindByAutomationId(mainWindow, "WindowsOptimizationDriverMachineTypeTextBox");
             if (edit is null || !edit.TryGetCurrentPattern(ValuePattern.Pattern, out var valuePattern))
             {
                 Console.WriteLine("[main-smoke] Driver machine type field not found; using whatever the app prefilled");
@@ -4920,23 +4897,6 @@ Environment variables:
             }
         }
 
-        var nameCandidates = new[]
-        {
-            "System Optimization",
-            "Windows Optimization",
-            "系统优化"
-        };
-
-        foreach (var name in nameCandidates)
-        {
-            var byName = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, name));
-            if (IsVisible(byName))
-            {
-                element = byName;
-                return true;
-            }
-        }
-
         element = null;
         return false;
     }
@@ -5065,23 +5025,6 @@ Environment variables:
             if (IsVisible(byId))
             {
                 element = byId;
-                return true;
-            }
-        }
-
-        var nameCandidates = new[]
-        {
-            "Plugin Extensions",
-            "插件扩展",
-            "插件拓展"
-        };
-
-        foreach (var name in nameCandidates)
-        {
-            var byName = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, name));
-            if (IsVisible(byName))
-            {
-                element = byName;
                 return true;
             }
         }

@@ -85,9 +85,11 @@
                                     x:Name="ElementImage"
                                     Grid.Row="0"
                                     Width="24"
-                                    Margin="0"
+                                    Height="24"
+                                    Margin="4,2"
                                     RenderOptions.BitmapScalingMode="HighQuality"
-                                    Source="{TemplateBinding Image}" />
+                                    Source="{TemplateBinding Image}"
+                                    Stretch="Uniform" />
 
                                 <Grid
                                     x:Name="ContentGrid"

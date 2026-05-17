@@ -217,9 +217,15 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected abstract Task<int> GetGpuCurrentFanSpeedAsync();
 
+    protected virtual Task<int> GetPchCurrentTemperatureAsync() => Task.FromResult(-1);
+
+    protected virtual Task<int> GetPchCurrentFanSpeedAsync() => Task.FromResult(-1);
+
     protected abstract Task<int> GetCpuMaxFanSpeedAsync();
 
     protected abstract Task<int> GetGpuMaxFanSpeedAsync();
+
+    protected virtual Task<int> GetPchMaxFanSpeedAsync() => Task.FromResult(-1);
 
     private async Task<int> GetCpuCurrentTemperatureWithFallbackAsync()
     {
