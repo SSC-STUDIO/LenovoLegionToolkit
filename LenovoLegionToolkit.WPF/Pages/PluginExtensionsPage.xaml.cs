@@ -1537,14 +1537,7 @@ private string _currentSearchText = string.Empty;
             Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync started for {manifest.Id}");
         }
 
-        var gateAcquired = await _onlinePluginInstallGate.WaitAsync(0);
-        if (!gateAcquired)
-        {
-            if (Lib.Utils.Log.Instance.IsTraceEnabled)
-                Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync ignored for {manifest.Id} because another online install is already running: {_currentDownloadingPluginId}");
-
-            return;
-        }
+        await _onlinePluginInstallGate.WaitAsync();
 
         var pluginViewModel = _pluginViewModels.FirstOrDefault(p => p.PluginId == manifest.Id);
 

@@ -1,9 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.WPF.Controls;
 using LenovoLegionToolkit.WPF.Controls.Dashboard;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Utils;
+using LenovoLegionToolkit.WPF.Windows.Utils;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Extensions;
@@ -34,6 +40,7 @@ public static class DashboardItemExtensions
         DashboardItem.FnLock => SymbolRegular.Keyboard24,
         DashboardItem.WinKeyLock => SymbolRegular.Keyboard24,
         DashboardItem.WhiteKeyboardBacklight => SymbolRegular.Keyboard24,
+        DashboardItem.ItsMode => SymbolRegular.Gauge24,
         _ => throw new InvalidOperationException($"Invalid DashboardItem {dashboardItem}"),
     };
 
@@ -61,6 +68,7 @@ public static class DashboardItemExtensions
         DashboardItem.FnLock => Resource.FnLockControl_Title,
         DashboardItem.WinKeyLock => Resource.WinKeyControl_Title,
         DashboardItem.WhiteKeyboardBacklight => Resource.WhiteKeyboardBacklightControl_Title,
+        DashboardItem.ItsMode => "ITS Mode",
         _ => throw new InvalidOperationException($"Invalid DashboardItem {dashboardItem}"),
     };
 
@@ -88,7 +96,53 @@ public static class DashboardItemExtensions
         DashboardItem.FnLock => [new FnLockControl()],
         DashboardItem.WinKeyLock => [new WinKeyControl()],
         DashboardItem.WhiteKeyboardBacklight => [new WhiteKeyboardBacklightControl(), new OneLevelWhiteKeyboardBacklightControl()],
+        DashboardItem.ItsMode => [new DashboardITSModeControl()],
         _ => throw new InvalidOperationException($"Invalid DashboardItem {dashboardItem}"),
     };
 }
 
+file sealed class DashboardITSModeControl : AbstractComboBoxFeatureCardControl<ITSMode>
+{
+    private readonly ITSModeFeature _itsModeFeature = IoCContainer.Resolve<ITSModeFeature>();
+
+    public DashboardITSModeControl()
+    {
+        Icon = SymbolRegular.Gauge24;
+        Title = "ITS Mode";
+        Subtitle = "Intelligent Thermal Solution";
+    }
+
+    protected override string ComboBoxItemDisplayName(ITSMode value) => value.GetDisplayName();
+
+    protected override async Task OnStateChangeAsync(ComboBox comboBox, IFeature<ITSMode> feature, ITSMode? newValue, ITSMode? oldValue)
+    {
+        if (newValue is null || oldValue is null)
+            return;
+
+        if (newValue.Value != oldValue.Value)
+        {
+            try
+            {
+                await _itsModeFeature.SetStateAsync(newValue.Value);
+                _itsModeFeature.LastItsMode = newValue.Value;
+            }
+            catch (DllNotFoundException)
+            {
+                await MessageBoxHelper.ShowAsync(this, "ITS Mode", "ITS runtime is unavailable on this system.", Resource.OK)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        await base.OnStateChangeAsync(comboBox, feature, newValue, oldValue);
+    }
+
+    protected override void OnStateChangeException(Exception exception)
+    {
+        if (exception is PowerModeUnavailableWithoutACException ex1)
+        {
+            SnackbarHelper.Show(Resource.PowerModeUnavailableWithoutACException_Title,
+                string.Format(Resource.PowerModeUnavailableWithoutACException_Message, ex1.PowerMode.GetDisplayName()),
+                SnackbarType.Warning);
+        }
+    }
+}

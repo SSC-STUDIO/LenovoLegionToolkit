@@ -19,7 +19,6 @@ public class SensorsControllerV4(GPUController gpuController) : AbstractSensorsC
         {
             var result = await WMI.LenovoFanTableData.ExistsAsync(CPU_SENSOR_ID, CPU_FAN_ID).ConfigureAwait(false);
             result &= await WMI.LenovoFanTableData.ExistsAsync(GPU_SENSOR_ID, GPU_FAN_ID).ConfigureAwait(false);
-            result &= await WMI.LenovoFanTableData.ExistsAsync(PCH_SENSOR_ID, CPU_SENSOR_ID).ConfigureAwait(false);
 
             if (result)
                 _ = await GetDataAsync().ConfigureAwait(false);

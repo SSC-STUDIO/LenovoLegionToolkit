@@ -10,6 +10,27 @@
         <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
     </Style>
 
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Auto" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style TargetType="{x:Type Page}">
+        <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Auto" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style TargetType="{x:Type UserControl}">
+        <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Auto" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />

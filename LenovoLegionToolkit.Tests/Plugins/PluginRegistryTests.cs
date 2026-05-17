@@ -475,6 +475,26 @@ public class PluginRegistryTests
         registry.MarkStopped("test-plugin");
     }
 
+    [Fact]
+    public void ReplaceWithMetadataAdapter_ShouldSwapLivePluginForAdapter()
+    {
+        // Arrange
+        var registry = new PluginRegistry();
+        var plugin = CreateMockPlugin("test-plugin", "Test Plugin");
+        registry.Register(plugin, CreateMetadata("test-plugin", name: "Metadata Name"));
+        registry.MarkStarted("test-plugin");
+
+        // Act
+        var replaced = registry.ReplaceWithMetadataAdapter("test-plugin");
+        var stored = registry.Get("test-plugin");
+
+        // Assert
+        replaced.Should().BeTrue();
+        stored.Should().BeOfType<PluginManifestAdapter>();
+        stored!.Name.Should().Be("Metadata Name");
+        registry.GetStartedPluginIds().Should().NotContain("test-plugin");
+    }
+
     #endregion
 
     #region GetStartedPluginIds Tests

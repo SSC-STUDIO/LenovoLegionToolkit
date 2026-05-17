@@ -1,8 +1,8 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$RepositoryRoot,
-    [string]$PluginIds = 'shell-integration,custom-mouse',
-    [string]$PluginSources = 'shell-integration=online,custom-mouse=local',
+    [string]$PluginIds = 'custom-mouse,shell-integration,vive-tool,network-acceleration',
+    [string]$PluginSources = '*=online',
     [ValidateSet('', 'custom', 'shell-local', 'combo-local', 'driver-download', 'system-optimization')]
     [string]$Scenario = 'custom',
     [ValidateSet('system', 'light', 'dark')]

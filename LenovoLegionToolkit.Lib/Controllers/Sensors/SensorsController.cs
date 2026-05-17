@@ -7,7 +7,9 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 public class SensorsController(
     SensorsControllerV1 controllerV1,
     SensorsControllerV2 controllerV2,
-    SensorsControllerV3 controllerV3)
+    SensorsControllerV3 controllerV3,
+    SensorsControllerV4 controllerV4,
+    SensorsControllerV5 controllerV5)
     : ISensorsController
 {
     private ISensorsController? _controller;
@@ -51,6 +53,12 @@ public class SensorsController(
     {
         if (_controller is not null)
             return _controller;
+
+        if (await controllerV5.IsSupportedAsync().ConfigureAwait(false))
+            return _controller = controllerV5;
+
+        if (await controllerV4.IsSupportedAsync().ConfigureAwait(false))
+            return _controller = controllerV4;
 
         if (await controllerV3.IsSupportedAsync().ConfigureAwait(false))
             return _controller = controllerV3;

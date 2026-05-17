@@ -84,14 +84,15 @@ public class BatteryStateTests : UnitTestBase
 public class PowerModeStateTests : UnitTestBase
 {
     [Fact]
-    public void PowerModeState_ShouldHaveFourStates()
+    public void PowerModeState_ShouldIncludeExtremeAndGodMode()
     {
         var states = Enum.GetValues<PowerModeState>();
         
-        states.Should().HaveCount(4);
+        states.Should().HaveCount(5);
         states.Should().Contain(PowerModeState.Quiet);
         states.Should().Contain(PowerModeState.Balance);
         states.Should().Contain(PowerModeState.Performance);
+        states.Should().Contain(PowerModeState.Extreme);
         states.Should().Contain(PowerModeState.GodMode);
     }
 
@@ -157,15 +158,16 @@ public class GPUStateTests : UnitTestBase
 public class FanTableTypeTests : UnitTestBase
 {
     [Fact]
-    public void FanTableType_ShouldHaveFiveTypes()
+    public void FanTableType_ShouldIncludePchTable()
     {
         var types = Enum.GetValues<FanTableType>();
         
-        types.Should().HaveCount(5);
+        types.Should().HaveCount(6);
         types.Should().Contain(FanTableType.Unknown);
         types.Should().Contain(FanTableType.CPU);
         types.Should().Contain(FanTableType.CPUSensor);
         types.Should().Contain(FanTableType.GPU);
         types.Should().Contain(FanTableType.GPU2);
+        types.Should().Contain(FanTableType.PCH);
     }
 }

@@ -23,11 +23,12 @@ public static partial class Compatibility
     [GeneratedRegex("[0-9]{2}")]
     private static partial Regex BiosVersionRegex();
 
-    private const string ALLOWED_VENDOR = "LENOVO";
+    private static readonly string[] AllowedVendors = ["LENOVO", "MOTOROLA"];
 
     private static readonly string[] AllowedModelsPrefix = [
         // Worldwide variants
         "18IAX",
+        "NX",
 
         "17ACH",
         "17ARH",
@@ -63,8 +64,13 @@ public static partial class Compatibility
         "15IRX",
         "15ITH",
 
+        "14AHP",
         "14APH",
+        "14AKP",
         "14IRP",
+
+        // ThinkBooks
+        "ThinkBook",
 
         // Chinese variants
         "G5000",
@@ -132,7 +138,7 @@ public static partial class Compatibility
 
     public static bool IsSupportedLegionMachine(MachineInformation machineInformation)
     {
-        if (string.IsNullOrEmpty(machineInformation.Vendor) || !machineInformation.Vendor.Equals(ALLOWED_VENDOR, StringComparison.InvariantCultureIgnoreCase))
+        if (string.IsNullOrEmpty(machineInformation.Vendor) || !AllowedVendors.Contains(machineInformation.Vendor, StringComparer.InvariantCultureIgnoreCase))
             return false;
 
         if (string.IsNullOrEmpty(machineInformation.Model))
@@ -492,7 +498,7 @@ public static partial class Compatibility
         if (!supportedPowerModes.Contains(PowerModeState.Extreme))
             return false;
 
-        return smartFanVersion >= 8 || legionZoneVersion >= 5;
+        return smartFanVersion is 6 or 7 or 8 || legionZoneVersion is 3 or 4 or 5;
     }
 
     private static bool GetSupportsGodModeV1(IEnumerable<PowerModeState> supportedPowerModes, int smartFanVersion, int legionZoneVersion, BiosVersion? biosVersion)

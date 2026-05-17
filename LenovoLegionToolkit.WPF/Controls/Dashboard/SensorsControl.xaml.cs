@@ -24,6 +24,7 @@ public partial class SensorsControl
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
+    private bool _sensorRuntimeAvailable = true;
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
@@ -308,9 +309,20 @@ public partial class SensorsControl
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Sensors not supported.");
 
-                Dispatcher.Invoke(() => Visibility = Visibility.Collapsed);
+                Dispatcher.Invoke(() =>
+                {
+                    _sensorRuntimeAvailable = false;
+                    SetSensorSectionsVisible(true);
+                    UpdateValues(SensorsData.Empty);
+                });
                 return;
             }
+
+            Dispatcher.Invoke(() =>
+            {
+                _sensorRuntimeAvailable = true;
+                SetSensorSectionsVisible(true);
+            });
 
             await _controller.PrepareAsync();
 
@@ -439,9 +451,13 @@ public partial class SensorsControl
         var isVisible = _cpuDetailsPanel.Visibility == Visibility.Visible;
         var newState = isVisible ? Visibility.Collapsed : Visibility.Visible;
 
-        SetVisibility("_cpuDetailsPanel", newState == Visibility.Visible);
+        if (_sensorRuntimeAvailable)
+        {
+            SetVisibility("_cpuDetailsPanel", newState == Visibility.Visible);
+            SetVisibility("_gpuDetailsPanel", newState == Visibility.Visible);
+        }
+
         SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
-        SetVisibility("_gpuDetailsPanel", newState == Visibility.Visible);
     }
 
     private string GetTemperatureText(double? temperature)
@@ -482,6 +498,25 @@ public partial class SensorsControl
             label.Tag = value;
         }
     }
-}
-}
 
+    private void SetSensorSectionsVisible(bool visible)
+    {
+        var sectionVisibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        SetVisibility("_cpuSection", visible);
+        SetVisibility("_gpuSection", visible);
+        SetVisibility("_cpuGpuSeparatorLeft", visible);
+        SetVisibility("_cpuGpuSeparatorRight", visible);
+
+        if (!visible)
+        {
+            SetVisibility("_cpuDetailsPanel", false);
+            SetVisibility("_gpuDetailsPanel", false);
+        }
+
+        if (FindName("_batterySectionColumn") is FrameworkElement batterySection)
+            batterySection.Visibility = Visibility.Visible;
+
+        Visibility = Visibility.Visible;
+    }
+}
+}

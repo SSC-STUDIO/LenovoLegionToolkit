@@ -46,6 +46,12 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="LenovoLegionToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Remove="Assets\Icon.ico" />
 		<None Remove="Assets\Default_exe.png" />
 

@@ -62,6 +62,8 @@ public class PluginInstallationService
                 throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and include a main DLL (either LenovoLegionToolkit.Plugins.*.dll or an ID-based name like custom-mouse.dll).");
             }
 
+            RemoveSharedRuntimePayloadFiles(tempDir);
+
             // Install ZIP-imported plugins to a 'local' subdirectory
             targetDir = Path.Combine(pluginsDir, "local", pluginId);
             if (Directory.Exists(targetDir))
@@ -84,6 +86,7 @@ public class PluginInstallationService
             // Move organized temp directory to target location
             Directory.CreateDirectory(Path.GetDirectoryName(targetDir)!);
             Directory.Move(tempDir, targetDir);
+            TryStageCanonicalPluginSharedAssembly(targetDir);
 
             // Validate the installed plugin
             if (!await ValidatePluginAsync(targetDir).ConfigureAwait(false))
@@ -311,7 +314,60 @@ public class PluginInstallationService
     {
         var fileName = Path.GetFileName(dllPath);
         return fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) ||
-               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase);
+               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ShouldSkipPluginPayloadFile(string filePath)
+    {
+        var fileName = Path.GetFileName(filePath);
+        return fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+               fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void RemoveSharedRuntimePayloadFiles(string rootDirectory)
+    {
+        if (!Directory.Exists(rootDirectory))
+            return;
+
+        foreach (var file in Directory.GetFiles(rootDirectory, "*.*", SearchOption.AllDirectories))
+        {
+            if (!ShouldSkipPluginPayloadFile(file))
+                continue;
+
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to remove shared plugin runtime payload file {file}: {ex.Message}", ex);
+            }
+        }
+    }
+
+    private static void TryStageCanonicalPluginSharedAssembly(string pluginDirectory)
+    {
+        var sourceCandidates = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"),
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")
+        };
+
+        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
+        if (string.IsNullOrWhiteSpace(sourcePath))
+            return;
+
+        try
+        {
+            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"), overwrite: true);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to stage canonical plugin shared runtime into {pluginDirectory}: {ex.Message}", ex);
+        }
     }
 
     private static string NormalizePluginToken(string value)
@@ -386,6 +442,9 @@ public class PluginInstallationService
 
             foreach (var file in Directory.GetFiles(sourceDir))
             {
+                if (ShouldSkipPluginPayloadFile(file))
+                    continue;
+
                 var destFile = Path.Combine(targetDir, Path.GetFileName(file));
                 if (File.Exists(destFile))
                     File.Delete(destFile);
@@ -411,6 +470,9 @@ public class PluginInstallationService
 
         foreach (var file in Directory.GetFiles(sourceDir))
         {
+            if (ShouldSkipPluginPayloadFile(file))
+                continue;
+
             var targetFile = Path.Combine(targetDir, Path.GetFileName(file));
             File.Copy(file, targetFile, true);
         }

@@ -56,6 +56,11 @@ public interface IPluginRegistry
     void MarkStopped(string pluginId);
 
     /// <summary>
+    /// Replace a live plugin instance with a metadata-backed adapter so the live assembly can be unloaded.
+    /// </summary>
+    bool ReplaceWithMetadataAdapter(string pluginId);
+
+    /// <summary>
     /// Get all started plugin IDs
     /// </summary>
     IEnumerable<string> GetStartedPluginIds();
@@ -252,6 +257,32 @@ public class PluginRegistry : IPluginRegistry
         lock (_lock)
         {
             _startedPlugins.Remove(pluginId);
+        }
+    }
+
+    public bool ReplaceWithMetadataAdapter(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        lock (_lock)
+        {
+            if (!_registeredPlugins.ContainsKey(pluginId) || !_pluginMetadataCache.TryGetValue(pluginId, out var metadata))
+                return false;
+
+            _registeredPlugins[pluginId] = new PluginManifestAdapter(new PluginManifest
+            {
+                Id = metadata.Id,
+                Name = metadata.Name,
+                Description = metadata.Description,
+                Icon = metadata.Icon,
+                IsSystemPlugin = metadata.IsSystemPlugin,
+                Dependencies = metadata.Dependencies,
+                Version = metadata.Version,
+                MinimumHostVersion = metadata.MinimumHostVersion
+            });
+            _startedPlugins.Remove(pluginId);
+            return true;
         }
     }
 

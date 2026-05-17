@@ -32,6 +32,7 @@ public class LampArrayController : IDisposable
     private IScreenCaptureProvider? _screenCaptureProvider;
     private RGBColor[,] _screenBuffer = new RGBColor[32, 18];
     private bool _auroraActive;
+    private bool _settingsHydrated;
 
     private double _brightness = 1.0;
     private double _speed = 1.0;
@@ -587,6 +588,16 @@ public class LampArrayController : IDisposable
     public async Task InitializeAsync(LampArraySettings settings)
     {
         var store = settings.Store;
+
+        _effectOverrides.Clear();
+        _lastFrameColors.Clear();
+        _currentEffect = null;
+        _targetEffect = null;
+        _transitionStartTime = 0;
+        _transitionDuration = 0;
+        StopScreenCapture();
+        _auroraActive = false;
+
         _brightness = store.Brightness;
         _speed = store.Speed;
         _smoothTransition = store.SmoothTransition;
@@ -601,18 +612,20 @@ public class LampArrayController : IDisposable
                 _effectOverrides[kvp.Key] = effect;
         }
 
+        _settingsHydrated = true;
         await StartAsync();
     }
 
     public void SaveSettings(LampArraySettings settings)
     {
+        if (!_settingsHydrated)
+            return;
+
         var store = settings.Store;
         store.Brightness = _brightness;
         store.Speed = _speed;
         store.SmoothTransition = _smoothTransition;
-
-        if (_currentEffect != null)
-            store.DefaultEffect = ConfigFromEffect(_currentEffect);
+        store.DefaultEffect = _currentEffect is null ? null : ConfigFromEffect(_currentEffect);
 
         store.PerLampEffects.Clear();
         foreach (var kvp in _effectOverrides)

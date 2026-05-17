@@ -46,7 +46,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- CPU Section -->
-                    <StackPanel Grid.Column="0">
+                    <StackPanel x:Name="_cpuSection" Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                              <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
                              <TextBlock x:Name="_cpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
@@ -119,10 +119,10 @@
                     </StackPanel>
 
                     <!-- Separator -->
-                    <Border Grid.Column="1" Width="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
+                    <Border x:Name="_cpuGpuSeparatorLeft" Grid.Column="1" Width="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
 
                     <!-- Battery Section -->
-                    <StackPanel Grid.Column="2">
+                    <StackPanel x:Name="_batterySectionColumn" Grid.Column="2">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
                             <TextBlock x:Name="_batteryModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>
@@ -204,10 +204,10 @@
                     </StackPanel>
 
                     <!-- Separator -->
-                    <Border Grid.Column="3" Width="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
+                    <Border x:Name="_cpuGpuSeparatorRight" Grid.Column="3" Width="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="16,0" />
 
                     <!-- GPU Section -->
-                    <StackPanel Grid.Column="4">
+                    <StackPanel x:Name="_gpuSection" Grid.Column="4">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16" HorizontalAlignment="Left">
                             <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Style="{StaticResource SectionTitleStyle}" Margin="0"/>
                             <TextBlock x:Name="_gpuModelName" Text="Loading..." Margin="8,0,0,0" VerticalAlignment="Bottom" Style="{StaticResource AppCaptionTextBlockStyle}" TextTrimming="CharacterEllipsis" MaxWidth="150"/>

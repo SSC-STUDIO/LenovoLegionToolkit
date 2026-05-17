@@ -9,6 +9,8 @@ using LenovoLegionToolkit.WPF.Pages;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
+using Wpf.Ui.Controls;
+using MessageBox = System.Windows.MessageBox;
 
 namespace LenovoLegionToolkit.WPF.Windows.Settings
 {
@@ -51,7 +53,7 @@ public partial class PluginSettingsWindow : BaseWindow
                 MessageBox.Show(
                     string.Format(Resource.PluginSettingsWindow_PluginNotFound, _pluginId),
                     Resource.PluginSettingsWindow_Error,
-                    MessageBoxButton.OK,
+                    System.Windows.MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 Close();
                 return;
@@ -102,6 +104,12 @@ public partial class PluginSettingsWindow : BaseWindow
                 {
                     if (_pluginSettingsHost != null)
                         _pluginSettingsHost.Content = null;
+
+                    if (HasIncompatibleWpfUiDependency(metadata))
+                    {
+                        ShowCompatibilityFallback(pluginDescription, metadata);
+                        return;
+                    }
 
                     var pluginType = plugin.GetType();
                     var getSettingsPage = pluginType.GetMethod("GetSettingsPage", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
@@ -164,9 +172,47 @@ public partial class PluginSettingsWindow : BaseWindow
             MessageBox.Show(
                 string.Format(Resource.PluginSettingsWindow_LoadError, ex.Message),
                 Resource.PluginSettingsWindow_Error,
-                MessageBoxButton.OK,
+                System.Windows.MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
+    }
+
+    private void ShowCompatibilityFallback(string pluginDescription, PluginMetadata? metadata)
+    {
+        if (_pluginSettingsContainer != null)
+            _pluginSettingsContainer.Visibility = Visibility.Collapsed;
+
+        if (_pluginSettingsHost != null)
+            _pluginSettingsHost.Content = null;
+
+        if (_emptyStateBorder != null)
+            _emptyStateBorder.Visibility = Visibility.Visible;
+
+        if (_emptyStateTitleTextBlock != null)
+            _emptyStateTitleTextBlock.Text = Resource.PluginSettingsWindow_NoConfigMessage;
+
+        if (_emptyStateHintTextBlock != null)
+        {
+            var pluginVersion = metadata?.WpfUiVersion ?? "unknown";
+            var hostVersion = typeof(SymbolIcon).Assembly.GetName().Version?.ToString() ?? "unknown";
+            _emptyStateHintTextBlock.Text =
+                $"{pluginDescription}{Environment.NewLine}{Environment.NewLine}This plugin settings UI targets Wpf.Ui {pluginVersion}, but the host is running Wpf.Ui {hostVersion}. The page is hidden to keep the app stable.";
+        }
+    }
+
+    private static bool HasIncompatibleWpfUiDependency(PluginMetadata? metadata)
+    {
+        if (metadata == null || string.IsNullOrWhiteSpace(metadata.WpfUiVersion))
+            return false;
+
+        if (!Version.TryParse(metadata.WpfUiVersion, out var pluginWpfUiVersion))
+            return false;
+
+        var hostWpfUiVersion = typeof(SymbolIcon).Assembly.GetName().Version;
+        if (hostWpfUiVersion == null)
+            return false;
+
+        return pluginWpfUiVersion.Major != hostWpfUiVersion.Major;
     }
 
     private void LocalizationHelper_PluginResourceCulturesChanged(object? sender, EventArgs e)

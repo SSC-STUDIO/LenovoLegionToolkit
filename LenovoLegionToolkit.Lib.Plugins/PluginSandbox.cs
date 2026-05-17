@@ -635,6 +635,32 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 return null;
             }
 
+            if (assemblyName.Name?.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                var sharedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(assembly =>
+                    {
+                        var loadedName = assembly.GetName();
+                        return string.Equals(loadedName.Name, assemblyName.Name, StringComparison.OrdinalIgnoreCase);
+                    });
+
+                if (sharedAssembly is not null)
+                    return sharedAssembly;
+
+                var appBaseCandidate = Path.Combine(AppContext.BaseDirectory, $"{assemblyName.Name}.dll");
+                if (File.Exists(appBaseCandidate))
+                {
+                    try
+                    {
+                        return Assembly.LoadFrom(Path.GetFullPath(appBaseCandidate));
+                    }
+                    catch
+                    {
+                        // Fall through to plugin-local resolution.
+                    }
+                }
+            }
+
             var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
             if (assemblyPath != null)
             {
