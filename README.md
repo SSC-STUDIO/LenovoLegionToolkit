@@ -702,4 +702,8 @@ Additional documentation is available in the `Docs/` directory:
 - **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
 - **Still need help?** Open a [GitHub Issue](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues)
 
+## Acknowledgment
+
+Special thanks to Bartosz Cichecki, the original creator of Lenovo Legion Toolkit, for the foundational work that helped inspire this project.
+
 Thanks in advance!

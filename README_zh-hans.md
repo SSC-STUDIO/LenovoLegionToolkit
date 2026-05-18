@@ -702,4 +702,8 @@ crowdin download --config crowdin.yml
 | [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
 
+## 致谢
+
+特别感谢 Lenovo Legion Toolkit 原作者 Bartosz Cichecki 的开创性工作，为本项目提供了重要启发。
+
 **万分感谢！**
