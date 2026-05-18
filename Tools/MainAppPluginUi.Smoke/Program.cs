@@ -2800,11 +2800,11 @@ Environment variables:
             {
                 mainWindow = ResolveLiveWindow(mainWindow);
                 var dataGrid = FindByAutomationId(mainWindow, "ViveToolFeaturesDataGrid");
-                var emptyState = FindByAutomationId(mainWindow, "ViveToolEmptyStatePanel");
+                var loadingPanel = FindByAutomationId(mainWindow, "ViveToolLoadingPanel");
                 var featureCount = FindByAutomationId(mainWindow, "ViveToolFeatureCountText");
-                return IsVisible(dataGrid)
-                       || IsVisible(emptyState)
-                       || (featureCount is not null && !string.IsNullOrWhiteSpace(ReadElementText(featureCount)));
+                return !IsVisible(loadingPanel)
+                       && IsVisible(dataGrid)
+                       && ViveToolFeatureCountShowsData(featureCount);
             },
             TimeSpan.FromSeconds(20),
             TimeSpan.FromMilliseconds(250));
@@ -2817,6 +2817,23 @@ Environment variables:
 
         CaptureMainWindow(ResolveLiveWindow(mainWindow), "vive-tool-feature-interactions");
         Console.WriteLine("[main-smoke] ViveTool feature-page interactions passed");
+    }
+
+    private static bool ViveToolFeatureCountShowsData(AutomationElement? featureCountElement)
+    {
+        if (featureCountElement is null)
+            return false;
+
+        var text = ReadElementText(featureCountElement).Trim();
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        var firstToken = text.Split(' ', '|', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        if (int.TryParse(firstToken, NumberStyles.Integer, CultureInfo.InvariantCulture, out var total))
+            return total > 0;
+
+        return !text.StartsWith("0 ", StringComparison.OrdinalIgnoreCase)
+               && !text.StartsWith("0|", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void TestDoubleClickOpensSettings(AutomationElement mainWindow, int processId, string pluginId)
