@@ -10,10 +10,10 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.GodModeSettingsWindow_Title}"
-    Width="800"
-    Height="700"
-    MinWidth="800"
-    MinHeight="500"
+    Width="980"
+    Height="780"
+    MinWidth="900"
+    MinHeight="620"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     ResizeMode="CanMinimize"
     ShowInTaskbar="False"
@@ -97,16 +97,22 @@
                             Margin="8,0,0,0"
                             VerticalAlignment="Stretch"
                             Click="EditPresetsButton_Click"
-                            Icon="Edit24"
-                            ToolTip="{x:Static resources:Resource.Edit}" />
+                            ToolTip="{x:Static resources:Resource.Edit}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Edit24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
                         <wpfui:Button
                             x:Name="_deletePresetsButton"
                             Grid.Column="2"
                             Margin="8,0,0,0"
                             VerticalAlignment="Stretch"
                             Click="DeletePresetsButton_Click"
-                            Icon="Dismiss24"
-                            ToolTip="{x:Static resources:Resource.Delete}" />
+                            ToolTip="{x:Static resources:Resource.Delete}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Delete24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
                         <wpfui:Button
                             x:Name="_addPresetsButton"
                             Grid.Column="3"
@@ -114,8 +120,11 @@
                             VerticalAlignment="Stretch"
                             Appearance="Primary"
                             Click="AddPresetsButton_Click"
-                            Content="{x:Static resources:Resource.Add}"
-                            Icon="Add24" />
+                            Content="{x:Static resources:Resource.Add}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Add24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
                     </Grid>
 
                     <TextBlock
@@ -344,6 +353,5 @@
 
     </Grid>
 </local:BaseWindow>
-
 
 

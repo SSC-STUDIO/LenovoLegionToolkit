@@ -16,6 +16,9 @@ namespace LenovoLegionToolkit.WPF.Controls.Settings
 {
 public partial class SettingsAppearanceControl
 {
+    private const string CelsiusUnit = "°C";
+    private const string FahrenheitUnit = "°F";
+
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly ThemeManager _themeManager = IoCContainer.Resolve<ThemeManager>();
     private bool _isRefreshing;
@@ -35,8 +38,8 @@ public partial class SettingsAppearanceControl
 
         _temperatureComboBox.SetItems(Enum.GetValues<TemperatureUnit>(), _settings.Store.TemperatureUnit, t => t switch
         {
-            TemperatureUnit.C => Resource.Celsius,
-            TemperatureUnit.F => Resource.Fahrenheit,
+            TemperatureUnit.C => CelsiusUnit,
+            TemperatureUnit.F => FahrenheitUnit,
             _ => new ArgumentOutOfRangeException(nameof(t))
         });
         _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
