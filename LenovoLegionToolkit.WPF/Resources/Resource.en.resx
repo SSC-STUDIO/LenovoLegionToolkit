@@ -3919,6 +3919,9 @@ You can manually save the files and restart the Explorer process in Task Manager
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
   </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Double-click to show or hide detailed sensor information.</value>
+  </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
     <value>Please select at least one cleanup option.</value>
   </data>

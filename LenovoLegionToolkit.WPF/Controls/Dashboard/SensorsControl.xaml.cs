@@ -31,6 +31,7 @@ public partial class SensorsControl
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
     private bool _sensorRuntimeAvailable = true;
+    private volatile bool _forceDetailedRefresh;
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
@@ -45,6 +46,7 @@ public partial class SensorsControl
     {
         InitializeComponent();
         InitializeContextMenu();
+        ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
@@ -336,8 +338,10 @@ public partial class SensorsControl
             {
                 try
                 {
-                    var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible);
+                    var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible) || _forceDetailedRefresh;
                     var data = await _controller.GetDataAsync(detailed);
+                    if (detailed)
+                        _forceDetailedRefresh = false;
                     Dispatcher.Invoke(() => UpdateValues(data));
                     await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
@@ -464,6 +468,32 @@ public partial class SensorsControl
         }
 
         SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
+
+        if (newState == Visibility.Visible)
+        {
+            _forceDetailedRefresh = true;
+            _ = RefreshDetailedValuesAsync();
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Sensor details toggled: {newState}.");
+    }
+
+    private async Task RefreshDetailedValuesAsync()
+    {
+        if (!_sensorRuntimeAvailable)
+            return;
+
+        try
+        {
+            var data = await _controller.GetDataAsync(true);
+            await Dispatcher.InvokeAsync(() => UpdateValues(data));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Immediate detailed sensors refresh failed.", ex);
+        }
     }
 
     private string GetTemperatureText(double? temperature)
@@ -523,6 +553,9 @@ public partial class SensorsControl
 
         Visibility = Visibility.Visible;
     }
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 }
 }
 

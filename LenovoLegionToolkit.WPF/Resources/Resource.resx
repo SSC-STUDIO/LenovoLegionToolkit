@@ -1867,6 +1867,12 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
     <value>Application</value>
   </data>
+  <data name="SettingsPage_Navigation_SmartKeys" xml:space="preserve">
+    <value>Smart Keys</value>
+  </data>
+  <data name="SettingsPage_Navigation_Display" xml:space="preserve">
+    <value>Display</value>
+  </data>
   <data name="SettingsPage_Title" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -3994,6 +4000,9 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Double-click to show or hide detailed sensor information.</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
     <value>Please select at least one cleanup option.</value>
