@@ -51,7 +51,7 @@ jobs:
           }
 
       - name: Publish test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         continue-on-error: true
         with:
           name: Test results
