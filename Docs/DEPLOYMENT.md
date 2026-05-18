@@ -260,7 +260,7 @@ git push origin vX.Y.Z
 # Create GitHub Release
 gh release create vX.Y.Z \
     --title "Lenovo Legion Toolkit vX.Y.Z" \
-    --notes "$(cat CHANGELOG.md | head -n 50)"
+    --notes-file release-notes.md
 ```
 
 ## Localization Delivery (Crowdin)
