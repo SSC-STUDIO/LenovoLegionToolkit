@@ -29,6 +29,7 @@ namespace LenovoLegionToolkit.WPF.Windows.Utils
             InitializeComponent();
             _crashReportPath = crashReportPath;
             _crashReport = CrashReportHelper.LoadCrashReport(crashReportPath);
+            _closeButton.Content = T("CrashReportNotification_Close", "Close");
 
             InitializeCrashDisplay();
         }
