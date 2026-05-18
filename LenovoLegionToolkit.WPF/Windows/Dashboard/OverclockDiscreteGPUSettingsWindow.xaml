@@ -93,24 +93,33 @@
                         Margin="8,0,0,0"
                         VerticalAlignment="Stretch"
                         Click="RenameProfileButton_Click"
-                        Icon="Edit24"
-                        ToolTip="{x:Static resources:Resource.Rename}" />
+                        ToolTip="{x:Static resources:Resource.Rename}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon Symbol="Edit24" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
                     <wpfui:Button
                         x:Name="_deleteProfileButton"
                         Grid.Column="2"
                         Margin="8,0,0,0"
                         VerticalAlignment="Stretch"
                         Click="DeleteProfileButton_Click"
-                        Icon="Dismiss24"
-                        ToolTip="{x:Static resources:Resource.Delete}" />
+                        ToolTip="{x:Static resources:Resource.Delete}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon Symbol="Delete24" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
                     <wpfui:Button
                         Grid.Column="3"
                         Margin="8,0,0,0"
                         VerticalAlignment="Stretch"
                         Appearance="Primary"
                         Click="AddProfileButton_Click"
-                        Content="{x:Static resources:Resource.Add}"
-                        Icon="Add24" />
+                        Content="{x:Static resources:Resource.Add}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon Symbol="Add24" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
                 </Grid>
 
                 <TextBlock
