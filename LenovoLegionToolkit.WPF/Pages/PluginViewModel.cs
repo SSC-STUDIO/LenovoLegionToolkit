@@ -34,6 +34,8 @@ namespace LenovoLegionToolkit.WPF.Pages
         private string _releaseDate = string.Empty;
         private string _changelog = string.Empty;
         private string _author = string.Empty;
+        private string _detailedDescription = string.Empty;
+        private string _usageGuide = string.Empty;
 
         public string NewVersion
         {
@@ -93,6 +95,38 @@ namespace LenovoLegionToolkit.WPF.Pages
             (!string.IsNullOrWhiteSpace(NewVersion) ||
              !string.IsNullOrWhiteSpace(ReleaseDate) ||
              !string.IsNullOrWhiteSpace(Changelog));
+
+        public string DetailedDescription
+        {
+            get => _detailedDescription;
+            set
+            {
+                if (_detailedDescription != value)
+                {
+                    _detailedDescription = value;
+                    OnPropertyChanged(nameof(DetailedDescription));
+                    OnPropertyChanged(nameof(HasDetailedDescription));
+                }
+            }
+        }
+
+        public bool HasDetailedDescription => !string.IsNullOrWhiteSpace(_detailedDescription);
+
+        public string UsageGuide
+        {
+            get => _usageGuide;
+            set
+            {
+                if (_usageGuide != value)
+                {
+                    _usageGuide = value;
+                    OnPropertyChanged(nameof(UsageGuide));
+                    OnPropertyChanged(nameof(HasUsageGuide));
+                }
+            }
+        }
+
+        public bool HasUsageGuide => !string.IsNullOrWhiteSpace(_usageGuide);
 
         public string StatusText
         {

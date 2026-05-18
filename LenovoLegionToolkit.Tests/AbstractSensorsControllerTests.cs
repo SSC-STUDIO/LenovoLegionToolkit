@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
-
 using Moq;
 using Xunit;
 
@@ -13,17 +13,12 @@ namespace LenovoLegionToolkit.Tests;
 
 public class AbstractSensorsControllerTests
 {
-    // 测试子类，实现抽象方法
-    private class MockSensorsController : AbstractSensorsController
+    private sealed class MockSensorsController(GPUController gpuController) : AbstractSensorsController(gpuController)
     {
-        private readonly Task<GPUState> _gpuStateTask;
-
-        public MockSensorsController(GPUController gpuController, Task<GPUState>? gpuStateTask = null) : base(gpuController)
-        {
-            _gpuStateTask = gpuStateTask ?? Task.FromResult(GPUState.Unknown);
-        }
-
         public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
+        protected override int GetCpuUtilization(int maxUtilization) => 12;
+        protected override int GetCpuCoreClock() => 3200;
+        protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(new GPUInfo(25, 1450, 2200, 7000, 9000, 60, 87, -1, 0));
         protected override Task<int> GetCpuCurrentTemperatureAsync() => Task.FromResult(50);
         protected override Task<int> GetGpuCurrentTemperatureAsync() => Task.FromResult(60);
         protected override Task<int> GetCpuCurrentFanSpeedAsync() => Task.FromResult(1000);
@@ -33,43 +28,68 @@ public class AbstractSensorsControllerTests
         protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(4000);
     }
 
+    private sealed class PartialFailureSensorsController(GPUController gpuController) : AbstractSensorsController(gpuController)
+    {
+        public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
+        protected override int GetCpuUtilization(int maxUtilization) => 18;
+        protected override int GetCpuCoreClock() => 3300;
+        protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(GPUInfo.Empty);
+        protected override Task<int> GetCpuCurrentTemperatureAsync() => Task.FromResult(55);
+        protected override Task<int> GetGpuCurrentTemperatureAsync() => throw new InvalidOperationException("GPU temperature probe failed");
+        protected override Task<int> GetCpuCurrentFanSpeedAsync() => Task.FromResult(2100);
+        protected override Task<int> GetGpuCurrentFanSpeedAsync() => throw new InvalidOperationException("GPU fan probe failed");
+        protected override Task<int> GetCpuMaxFanSpeedAsync() => Task.FromResult(5200);
+        protected override Task<int> GetGpuMaxFanSpeedAsync() => throw new InvalidOperationException("GPU max fan probe failed");
+        protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(4200);
+    }
+
+    private sealed class DetailedCacheBypassSensorsController(GPUController gpuController) : AbstractSensorsController(gpuController)
+    {
+        private int _temperatureReads;
+
+        public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
+        protected override int GetCpuUtilization(int maxUtilization) => 20;
+        protected override int GetCpuCoreClock() => 3000;
+        protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(GPUInfo.Empty);
+        protected override Task<int> GetCpuCurrentTemperatureAsync() => Task.FromResult(Interlocked.Increment(ref _temperatureReads) == 1 ? 0 : 61);
+        protected override Task<int> GetGpuCurrentTemperatureAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuCurrentFanSpeedAsync() => Task.FromResult(1000);
+        protected override Task<int> GetGpuCurrentFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxFanSpeedAsync() => Task.FromResult(3000);
+        protected override Task<int> GetGpuMaxFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(4000);
+    }
+
     [Fact]
     public async Task GetDataAsync_ShouldReturnCachedData_WhenCacheIsValid()
     {
-        // Arrange
         var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
-        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+        var controller = new MockSensorsController(gpuController);
 
-        // Act - First call, generate cache
         var data1 = await controller.GetDataAsync();
-
-        // Act - Second call, should use cache
         var data2 = await controller.GetDataAsync();
 
-        // Assert
-        data1.Should().Be(data2); // Should return same object reference (cached)
+        data1.Should().Be(data2);
+        data1.CPU.Utilization.Should().Be(12);
+        data1.CPU.CoreClock.Should().Be(3200);
         data1.CPU.Temperature.Should().Be(50);
+        data1.GPU.Utilization.Should().Be(25);
+        data1.GPU.CoreClock.Should().Be(1450);
         data1.GPU.Temperature.Should().Be(60);
     }
 
     [Fact]
     public async Task GetDataAsync_ShouldUpdateCache_WhenCacheExpires()
     {
-        // Arrange
         var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
-        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+        var controller = new MockSensorsController(gpuController);
 
-        // Act - First call, generate cache
         var data1 = await controller.GetDataAsync();
-
-        // Act - Wait for cache to expire (100ms)
         await Task.Delay(150);
-
-        // Act - Second call, should update cache
         var data2 = await controller.GetDataAsync();
 
-        // Assert
-        data1.Should().NotBe(data2); // Should return different object reference (cache updated)
+        data1.CPU.Temperature.Should().Be(50);
+        data1.GPU.Temperature.Should().Be(60);
         data2.CPU.Temperature.Should().Be(50);
         data2.GPU.Temperature.Should().Be(60);
     }
@@ -77,43 +97,58 @@ public class AbstractSensorsControllerTests
     [Fact]
     public async Task CacheAccess_ShouldBeThreadSafe()
     {
-        // Arrange
         var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
-        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+        var controller = new MockSensorsController(gpuController);
 
-        // Act - 并发调用GetDataAsync多次
         var tasks = new List<Task<SensorsData>>();
-        for (int i = 0; i < 10; i++)
-        {
+        for (var i = 0; i < 10; i++)
             tasks.Add(controller.GetDataAsync());
-        }
 
         var results = await Task.WhenAll(tasks);
 
-        // Assert - 所有调用都应该成功，没有异常
         results.Should().NotBeEmpty();
-
-        // Assert - 至少有一些调用应该使用缓存（返回相同的对象引用）
-        var distinctResults = results.Distinct().Count();
-        distinctResults.Should().BeLessThan(results.Length);
+        results.Should().OnlyContain(r => r.CPU.Temperature == 50 && r.GPU.Temperature == 60);
     }
 
     [Fact]
     public async Task FanSpeedsAsync_ShouldReturnFromCache_WhenCacheIsValid()
     {
-        // Arrange
         var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
-        var controller = new MockSensorsController(gpuController, Task.FromResult(GPUState.Unknown));
+        var controller = new MockSensorsController(gpuController);
 
-        // Act - 第一次调用GetDataAsync，生成缓存
         await controller.GetDataAsync();
-
-        // Act - 调用GetFanSpeedsAsync，应该使用缓存
         var fanSpeeds = await controller.GetFanSpeedsAsync();
 
-        // Assert
         fanSpeeds.cpuFanSpeed.Should().Be(1000);
         fanSpeeds.gpuFanSpeed.Should().Be(1500);
     }
-}
 
+    [Fact]
+    public async Task GetDataAsync_WhenGpuReadFails_ShouldStillReturnCpuData()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var controller = new PartialFailureSensorsController(gpuController);
+
+        var data = await controller.GetDataAsync();
+
+        data.CPU.Utilization.Should().Be(18);
+        data.CPU.CoreClock.Should().Be(3300);
+        data.CPU.Temperature.Should().Be(55);
+        data.CPU.FanSpeed.Should().Be(2100);
+        data.GPU.Temperature.Should().Be(-1);
+        data.GPU.FanSpeed.Should().Be(-1);
+    }
+
+    [Fact]
+    public async Task GetDataAsync_DetailedCall_ShouldBypassRecentSummaryCache()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object);
+        var controller = new DetailedCacheBypassSensorsController(gpuController);
+
+        var summary = await controller.GetDataAsync(false);
+        var detailed = await controller.GetDataAsync(true);
+
+        summary.CPU.Temperature.Should().Be(-1);
+        detailed.CPU.Temperature.Should().Be(61);
+    }
+}

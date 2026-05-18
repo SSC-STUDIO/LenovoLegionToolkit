@@ -77,6 +77,33 @@ namespace LenovoLegionToolkit.Lib.Resources {
                 return ResourceManager.GetString("AccentColorSource_System", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile will not apply without AC adapter (Full wattage) connected..
+        /// </summary>
+        public static string AmdOverclocking_Ac_Message {
+            get {
+                return ResourceManager.GetString("AmdOverclocking_Ac_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not initialized..
+        /// </summary>
+        public static string AmdOverclocking_Not_Initialized_Message {
+            get {
+                return ResourceManager.GetString("AmdOverclocking_Not_Initialized_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not supported..
+        /// </summary>
+        public static string AmdOverclocking_Not_Supported {
+            get {
+                return ResourceManager.GetString("AmdOverclocking_Not_Supported", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Off.
@@ -579,6 +606,15 @@ namespace LenovoLegionToolkit.Lib.Resources {
         public static string PowerModeState_Balance {
             get {
                 return ResourceManager.GetString("PowerModeState_Balance", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Extreme.
+        /// </summary>
+        public static string PowerModeState_Extreme {
+            get {
+                return ResourceManager.GetString("PowerModeState_Extreme", resourceCulture);
             }
         }
         

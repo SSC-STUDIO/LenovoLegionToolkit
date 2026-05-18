@@ -22,6 +22,10 @@
         </Style>
 
         <Style x:Key="DashboardSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
+
+        <Style x:Key="DashboardListSkeletonCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonListItemCardStyle}">
+            <Setter Property="Margin" Value="0,0,16,8" />
+        </Style>
     </Page.Resources>
 
     <wpfui:DynamicScrollViewer
@@ -36,6 +40,49 @@
                     Margin="0,16,16,0"
                     AutomationProperties.AutomationId="DashboardLoadingSkeleton"
                     AutomationProperties.Name="{x:Static resources:Resource.DashboardPage_Title}">
+                    <StackPanel Margin="0,0,0,8">
+                        <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Margin="0,1,12,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="220" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Border
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,12,0"
+                                    Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="250"
+                                    Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                <Border
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="164"
+                                    Margin="0,8,0,0"
+                                    Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
                     <Border Style="{StaticResource DashboardSkeletonCardStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>

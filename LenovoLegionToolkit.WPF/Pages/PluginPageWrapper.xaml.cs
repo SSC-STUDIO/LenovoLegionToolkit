@@ -12,6 +12,7 @@ using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
+using LenovoLegionToolkit.WPF.Windows.Settings;
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages
@@ -109,6 +110,13 @@ public partial class PluginPageWrapper : Page
                 ShowEmptyState(string.Format(
                     T("PluginPageWrapper_PluginUnavailable", "Plugin '{0}' is not available."),
                     _pluginId));
+                return;
+            }
+
+            var metadata = _pluginManager.GetPluginMetadata(_pluginId!);
+            if (HasIncompatibleWpfUiDependency(metadata))
+            {
+                ShowCompatibilityFallback(plugin, metadata);
                 return;
             }
 
@@ -311,6 +319,35 @@ public partial class PluginPageWrapper : Page
 
         if (emptyStateBorder != null)
             emptyStateBorder.Visibility = Visibility.Visible;
+    }
+
+    private void ShowCompatibilityFallback(IPlugin plugin, PluginMetadata? metadata)
+    {
+        var pluginName = string.IsNullOrWhiteSpace(plugin.Name) ? _pluginId ?? plugin.Id : plugin.Name;
+        var pluginVersion = metadata?.WpfUiVersion ?? "unknown";
+        var hostVersion = typeof(SymbolIcon).Assembly.GetName().Version?.ToString() ?? "unknown";
+        ShowEmptyState(string.Format(
+            T(
+                "PluginPageWrapper_IncompatibleWpfUi",
+                "Plugin '{0}' targets Wpf.Ui {1}, but the host is running Wpf.Ui {2}. The feature page is hidden to keep the app stable."),
+            pluginName,
+            pluginVersion,
+            hostVersion));
+    }
+
+    private static bool HasIncompatibleWpfUiDependency(PluginMetadata? metadata)
+    {
+        if (metadata == null || string.IsNullOrWhiteSpace(metadata.WpfUiVersion))
+            return false;
+
+        if (!Version.TryParse(metadata.WpfUiVersion, out var pluginWpfUiVersion))
+            return false;
+
+        var hostWpfUiVersion = typeof(SymbolIcon).Assembly.GetName().Version;
+        if (hostWpfUiVersion == null)
+            return false;
+
+        return pluginWpfUiVersion.Major != hostWpfUiVersion.Major;
     }
 
     private void HideEmptyState()

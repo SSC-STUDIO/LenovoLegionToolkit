@@ -7,8 +7,8 @@
     <!--  ReSharper disable Xaml.StaticResourceNotResolved  -->
 
     <Style x:Key="NavigationStoreItem" TargetType="{x:Type custom:NavigationItem}">
-        <Setter Property="MinWidth" Value="60" />
-        <Setter Property="MaxWidth" Value="80" />
+        <Setter Property="MinWidth" Value="64" />
+        <Setter Property="MaxWidth" Value="84" />
         <Setter Property="MinHeight" Value="60" />
         <Setter Property="Margin" Value="0,0,0,4" />
         <Setter Property="Padding" Value="0" />
@@ -47,7 +47,7 @@
                 <ControlTemplate TargetType="{x:Type custom:NavigationItem}">
                     <Border
                         x:Name="MainBorder"
-                        Padding="4"
+                        Padding="6"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
                         BorderBrush="{TemplateBinding BorderBrush}"
@@ -76,7 +76,7 @@
                                 <controls:SymbolIcon
                                     x:Name="ElementIcon"
                                     Grid.Row="0"
-                                    Margin="0"
+                                    Margin="0,1,0,0"
                                     FontSize="{TemplateBinding IconSize}"
                                     Foreground="{TemplateBinding IconForeground}"
                                     Symbol="{TemplateBinding Icon}" />
@@ -85,14 +85,16 @@
                                     x:Name="ElementImage"
                                     Grid.Row="0"
                                     Width="24"
-                                    Margin="0"
+                                    Height="24"
+                                    Margin="6,4"
                                     RenderOptions.BitmapScalingMode="HighQuality"
-                                    Source="{TemplateBinding Image}" />
+                                    Source="{TemplateBinding Image}"
+                                    Stretch="Uniform" />
 
                                 <Grid
                                     x:Name="ContentGrid"
                                     Grid.Row="1"
-                                    Margin="0,2,0,0">
+                                    Margin="0,4,0,0">
                                     <ContentPresenter x:Name="ElementContentPresenter" HorizontalAlignment="Center">
                                         <ContentPresenter.Content>
                                             <TextBlock
@@ -131,19 +133,19 @@
                                             Storyboard.TargetProperty="MaxHeight"
                                             From="30"
                                             To="0"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="ContentGrid"
                                             Storyboard.TargetProperty="Opacity"
                                             From="1"
                                             To="0"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="MainBorder"
                                             Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
                                             From="0"
                                             To="1"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -155,19 +157,19 @@
                                             Storyboard.TargetProperty="MaxHeight"
                                             From="0"
                                             To="30"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="ContentGrid"
                                             Storyboard.TargetProperty="Opacity"
                                             From="0"
                                             To="1"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="MainBorder"
                                             Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
                                             From="1"
                                             To="0"
-                                            Duration="0:0:.16" />
+                                            Duration="{StaticResource AnimationDurationFast}" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -211,8 +213,8 @@
 
     <Style TargetType="{x:Type custom:NavigationStore}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="MinWidth" Value="60" />
-        <Setter Property="MaxWidth" Value="80" />
+        <Setter Property="MinWidth" Value="64" />
+        <Setter Property="MaxWidth" Value="84" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -231,8 +233,8 @@
 
                             <ItemsControl
                                 Grid.Row="0"
-                                MinWidth="60"
-                                MaxWidth="80"
+                                MinWidth="64"
+                                MaxWidth="84"
                                 Focusable="False"
                                 ItemsSource="{TemplateBinding Items}"
                                 KeyboardNavigation.DirectionalNavigation="Contained"

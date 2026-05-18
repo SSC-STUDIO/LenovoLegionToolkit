@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -21,6 +22,11 @@ public interface IPluginLoader
     Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator);
 
     /// <summary>
+    /// Unload a previously loaded plugin assembly context, when applicable.
+    /// </summary>
+    bool Unload(string pluginId);
+
+    /// <summary>
     /// Check if a DLL file can be loaded as a plugin
     /// </summary>
     bool CanLoad(string filePath, string? parentDirectoryName = null);
@@ -33,6 +39,8 @@ public interface IPluginLoader
 public class PluginLoader : IPluginLoader
 {
     private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> DependencyResolutionContexts = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> PluginDependencyContexts = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, PluginAssemblyLoadContext> PluginLoadContexts = new(StringComparer.OrdinalIgnoreCase);
     private static readonly object DependencyResolverRegistrationLock = new();
     private static bool _dependencyResolverRegistered;
 
@@ -77,14 +85,17 @@ public class PluginLoader : IPluginLoader
                 return null;
             }
 
-            // Load the assembly from bytes to avoid file locking
+            // Load the main assembly from bytes to avoid file locking, but resolve plugin-local
+            // dependencies through a dedicated AssemblyLoadContext so online plugins can keep
+            // their own UI/runtime dependency graph isolated from the host.
             Assembly? assembly = null;
+            PluginAssemblyLoadContext? pluginLoadContext = null;
             try
             {
                 var assemblyBytes = File.ReadAllBytes(normalizedDllPath);
-                assembly = Assembly.Load(assemblyBytes);
+                pluginLoadContext = new PluginAssemblyLoadContext(normalizedDllPath, pluginDirectory ?? string.Empty, signatureValidator);
+                assembly = pluginLoadContext.LoadFromStream(new MemoryStream(assemblyBytes));
                 registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);
-                keepDependencyContext = true;
             }
             catch (Exception ex)
             {
@@ -117,7 +128,8 @@ public class PluginLoader : IPluginLoader
             }
 
             var validPluginTypes = pluginTypes
-                .Where(t => t != null && typeof(IPlugin).IsAssignableFrom(t)
+                .Where(t => t != null
+                    && IsPluginTypeCandidate(t)
                     && !t.IsInterface
                     && !t.IsAbstract
                     && t.GetConstructor(Type.EmptyTypes) != null)
@@ -133,7 +145,14 @@ public class PluginLoader : IPluginLoader
                 {
                     var plugin = CreatePluginInstance(pluginType, dllPath);
                     if (plugin != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(plugin.Id) && pluginLoadContext is not null)
+                            PluginLoadContexts[plugin.Id] = pluginLoadContext;
+                        if (!string.IsNullOrWhiteSpace(plugin.Id) && registeredDependencyContext is not null)
+                            PluginDependencyContexts[plugin.Id] = registeredDependencyContext.Context;
+                        keepDependencyContext = true;
                         return plugin;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -142,6 +161,7 @@ public class PluginLoader : IPluginLoader
                 }
             }
 
+            pluginLoadContext?.Unload();
             return null;
         }
         catch (Exception ex)
@@ -155,6 +175,45 @@ public class PluginLoader : IPluginLoader
             if (!keepDependencyContext && registeredDependencyContext is { IsNew: true })
                 RemovePluginDependencyResolutionContext(registeredDependencyContext.Context);
         }
+    }
+
+    public bool Unload(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        PluginLoadContexts.TryRemove(pluginId, out var loadContext);
+        PluginDependencyContexts.TryRemove(pluginId, out var dependencyContext);
+
+        if (loadContext is null && dependencyContext is null)
+            return false;
+
+        var success = true;
+
+        try
+        {
+            if (dependencyContext is not null)
+                RemovePluginDependencyResolutionContext(dependencyContext);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to remove plugin dependency resolution context for {pluginId}: {ex.Message}", ex);
+            success = false;
+        }
+
+        try
+        {
+            loadContext?.Unload();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to unload plugin load context for {pluginId}: {ex.Message}", ex);
+            success = false;
+        }
+
+        return success;
     }
 
     private static RegisteredPluginDependencyResolutionContext RegisterPluginDependencyResolutionContext(
@@ -542,6 +601,101 @@ public class PluginLoader : IPluginLoader
         PluginDependencyResolutionContext Context,
         bool IsNew);
 
+    private sealed class PluginAssemblyLoadContext : AssemblyLoadContext
+    {
+        private readonly string _pluginMainAssemblyPath;
+        private readonly string _pluginDirectory;
+        private readonly AssemblyDependencyResolver _resolver;
+        private readonly IPluginSignatureValidator _signatureValidator;
+
+        public PluginAssemblyLoadContext(string pluginMainAssemblyPath, string pluginDirectory, IPluginSignatureValidator signatureValidator)
+            : base($"Plugin:{Path.GetFileNameWithoutExtension(pluginMainAssemblyPath)}", isCollectible: true)
+        {
+            _pluginMainAssemblyPath = Path.GetFullPath(pluginMainAssemblyPath);
+            _pluginDirectory = string.IsNullOrWhiteSpace(pluginDirectory)
+                ? Path.GetDirectoryName(_pluginMainAssemblyPath) ?? string.Empty
+                : Path.GetFullPath(pluginDirectory);
+            _resolver = new AssemblyDependencyResolver(_pluginMainAssemblyPath);
+            _signatureValidator = signatureValidator;
+        }
+
+        protected override Assembly? Load(AssemblyName assemblyName)
+        {
+            var assemblySimpleName = assemblyName.Name;
+            if (string.IsNullOrWhiteSpace(assemblySimpleName))
+                return null;
+
+            // Share host contracts and host UI/runtime assemblies with the default context.
+            if (ShouldShareDefaultContextAssembly(assemblySimpleName))
+            {
+                return ResolveSharedHostAssembly(assemblyName);
+            }
+
+            var candidatePath = _resolver.ResolveAssemblyToPath(assemblyName)
+                               ?? GetPluginAssemblyCandidatePath(assemblyName, _pluginMainAssemblyPath, _pluginDirectory);
+
+            if (string.IsNullOrWhiteSpace(candidatePath) || !File.Exists(candidatePath))
+                return null;
+
+            var normalizedCandidatePath = Path.GetFullPath(candidatePath);
+            if (!IsPathWithinDirectory(normalizedCandidatePath, _pluginDirectory))
+                return null;
+
+            var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
+            if (!IsValidPluginDependencySignature(signatureResult, assemblyName, normalizedCandidatePath))
+                return null;
+
+            return LoadFromAssemblyPath(normalizedCandidatePath);
+        }
+
+        private static bool ShouldShareDefaultContextAssembly(string assemblySimpleName)
+        {
+            if (assemblySimpleName.StartsWith("Wpf.Ui", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
+                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase) &&
+                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
+        {
+            var libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
+            if (!string.IsNullOrWhiteSpace(libraryPath) && File.Exists(libraryPath))
+                return LoadUnmanagedDllFromPath(libraryPath);
+
+            return IntPtr.Zero;
+        }
+
+        private static Assembly? ResolveSharedHostAssembly(AssemblyName assemblyName)
+        {
+            var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly =>
+                {
+                    var loadedName = assembly.GetName();
+                    return string.Equals(loadedName.Name, assemblyName.Name, StringComparison.OrdinalIgnoreCase);
+                });
+
+            if (loadedAssembly is not null)
+                return loadedAssembly;
+
+            var appBaseCandidate = Path.Combine(AppContext.BaseDirectory, $"{assemblyName.Name}.dll");
+            if (!File.Exists(appBaseCandidate))
+                return null;
+
+            try
+            {
+                return Assembly.LoadFrom(Path.GetFullPath(appBaseCandidate));
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to load shared host assembly from app base: {appBaseCandidate}", ex);
+                return null;
+            }
+        }
+    }
+
     /// <summary>
     /// Create a plugin instance from a type
     /// </summary>
@@ -584,7 +738,7 @@ public class PluginLoader : IPluginLoader
             IPlugin? plugin = null;
             try
             {
-                plugin = Activator.CreateInstance(pluginType) as IPlugin;
+                plugin = (IPlugin?)Activator.CreateInstance(pluginType);
             }
             catch (Exception ex)
             {
@@ -601,6 +755,11 @@ public class PluginLoader : IPluginLoader
                 Log.Instance.Trace($"Failed to create plugin instance from type {pluginType.Name}: {ex.Message}", ex);
             return null;
         }
+    }
+
+    private static bool IsPluginTypeCandidate(Type type)
+    {
+        return typeof(IPlugin).IsAssignableFrom(type);
     }
 
     /// <summary>
@@ -634,6 +793,7 @@ public class PluginLoader : IPluginLoader
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
 
         if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
             fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
         {
             return false;

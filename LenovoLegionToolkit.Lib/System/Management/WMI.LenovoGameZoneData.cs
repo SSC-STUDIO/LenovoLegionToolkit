@@ -14,7 +14,16 @@ public static partial class WMI
         [GeneratedRegex("PCIVEN_([0-9A-F]{4})|DEV_([0-9A-F]{4})")]
         private static partial Regex DGPUHWIdRegex();
 
+        [GeneratedRegex(@"PCI\\VEN_([0-9A-F]{4})|DEV_([0-9A-F]{4})")]
+        private static partial Regex DGPUHWIdRegexV2();
+
         public static Task<bool> ExistsAsync() => WMI.ExistsAsync("root\\WMI", $"SELECT * FROM LENOVO_GAMEZONE_DATA");
+
+        public static Task<int> GetBIOSOCMode() => CallAsync("root\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+            "GetBIOSOCMode",
+            [],
+            pdc => Convert.ToInt32(pdc["Data"].Value));
 
         public static Task<int> IsSupportSmartFanAsync() => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",
@@ -98,7 +107,11 @@ public static partial class WMI
                 {
                     var matches = DGPUHWIdRegex().Matches(id);
                     if (matches.Count != 2)
-                        return HardwareId.Empty;
+                    {
+                        matches = DGPUHWIdRegexV2().Matches(id);
+                        if (matches.Count != 2)
+                            return HardwareId.Empty;
+                    }
 
                     var vendor = matches[0].Groups[1].Value;
                     var device = matches[1].Groups[2].Value;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,9 +21,17 @@ namespace LenovoLegionToolkit.WPF.Controls.Dashboard
 {
 public partial class SensorsControl
 {
+    private const string CelsiusUnit = "°C";
+    private const string FahrenheitUnit = "°F";
+    private const string GigahertzUnit = "GHz";
+    private const string MegahertzUnit = "MHz";
+    private const string RpmUnit = "RPM";
+
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
+    private bool _sensorRuntimeAvailable = true;
+    private volatile bool _forceDetailedRefresh;
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
@@ -38,6 +46,7 @@ public partial class SensorsControl
     {
         InitializeComponent();
         InitializeContextMenu();
+        ToolTip = T("SensorsControl_DetailsToggleToolTip", "Double-click to show or hide detailed sensor information.");
         _ = FetchHardwareNamesAsync();
 
         IsVisibleChanged += SensorsControl_IsVisibleChanged;
@@ -308,9 +317,20 @@ public partial class SensorsControl
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Sensors not supported.");
 
-                Dispatcher.Invoke(() => Visibility = Visibility.Collapsed);
+                Dispatcher.Invoke(() =>
+                {
+                    _sensorRuntimeAvailable = false;
+                    SetSensorSectionsVisible(true);
+                    UpdateValues(SensorsData.Empty);
+                });
                 return;
             }
+
+            Dispatcher.Invoke(() =>
+            {
+                _sensorRuntimeAvailable = true;
+                SetSensorSectionsVisible(true);
+            });
 
             await _controller.PrepareAsync();
 
@@ -318,8 +338,10 @@ public partial class SensorsControl
             {
                 try
                 {
-                    var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible);
+                    var detailed = Dispatcher.Invoke(() => _cpuDetailsPanel.Visibility == Visibility.Visible) || _forceDetailedRefresh;
                     var data = await _controller.GetDataAsync(detailed);
+                    if (detailed)
+                        _forceDetailedRefresh = false;
                     Dispatcher.Invoke(() => UpdateValues(data));
                     await Task.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
                 }
@@ -346,11 +368,11 @@ public partial class SensorsControl
         UpdateValue(_cpuUtilizationBar, _cpuUtilizationLabel, data.CPU.MaxUtilization, data.CPU.Utilization,
             $"{data.CPU.Utilization}%");
         UpdateValue(_cpuCoreClockBar, _cpuCoreClockLabel, data.CPU.MaxCoreClock, data.CPU.CoreClock,
-            $"{data.CPU.CoreClock / 1000.0:0.0} {Resource.GHz}", $"{data.CPU.MaxCoreClock / 1000.0:0.0} {Resource.GHz}");
+            $"{data.CPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.CPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
         UpdateValue(_cpuTemperatureBar, _cpuTemperatureLabel, data.CPU.MaxTemperature, data.CPU.Temperature,
             GetTemperatureText(data.CPU.Temperature), GetTemperatureText(data.CPU.MaxTemperature));
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
-            $"{data.CPU.FanSpeed} {Resource.RPM}", $"{data.CPU.MaxFanSpeed} {Resource.RPM}");
+            $"{data.CPU.FanSpeed} {RpmUnit}", $"{data.CPU.MaxFanSpeed} {RpmUnit}");
 
         if (FindName("_cpuWattage") is TextBlock cpuWattage)
         {
@@ -360,7 +382,7 @@ public partial class SensorsControl
         if (FindName("_cpuTempRange") is TextBlock cpuTempRange)
         {
              if (data.CPU.MinTemperature < int.MaxValue && data.CPU.MaxTemperatureRecord > int.MinValue)
-                 cpuTempRange.Text = $"{data.CPU.MinTemperature}°C ~ {data.CPU.MaxTemperatureRecord}°C";
+                 cpuTempRange.Text = $"{data.CPU.MinTemperature}{CelsiusUnit} ~ {data.CPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
                  cpuTempRange.Text = "N/A";
         }
@@ -383,7 +405,7 @@ public partial class SensorsControl
         
         // GPU Core Clock (Main view)
         UpdateValue(_gpuCoreClockBar, _gpuCoreClockLabel, data.GPU.MaxCoreClock, data.GPU.CoreClock,
-            $"{data.GPU.CoreClock / 1000.0:0.0} {Resource.GHz}", $"{data.GPU.MaxCoreClock / 1000.0:0.0} {Resource.GHz}");
+            $"{data.GPU.CoreClock / 1000.0:0.0} {GigahertzUnit}", $"{data.GPU.MaxCoreClock / 1000.0:0.0} {GigahertzUnit}");
 
         // GPU Memory Clock (Details view)
         if (FindName("_gpuMemoryClockBar") is System.Windows.Controls.Primitives.RangeBase memBar &&
@@ -398,14 +420,14 @@ public partial class SensorsControl
             {
                 memBar.Maximum = data.GPU.MaxMemoryClock;
                 memBar.Value = data.GPU.MemoryClock;
-                memText.Text = $"{data.GPU.MemoryClock} {Resource.MHz}";
+                memText.Text = $"{data.GPU.MemoryClock} {MegahertzUnit}";
             }
         }
 
         UpdateValue(_gpuTemperatureBar, _gpuTemperatureLabel, data.GPU.MaxTemperature, data.GPU.Temperature,
             GetTemperatureText(data.GPU.Temperature), GetTemperatureText(data.GPU.MaxTemperature));
         UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
-            $"{data.GPU.FanSpeed} {Resource.RPM}", $"{data.GPU.MaxFanSpeed} {Resource.RPM}");
+            $"{data.GPU.FanSpeed} {RpmUnit}", $"{data.GPU.MaxFanSpeed} {RpmUnit}");
 
         if (FindName("_gpuWattage") is TextBlock gpuWattage)
         {
@@ -415,7 +437,7 @@ public partial class SensorsControl
         if (FindName("_gpuTempRange") is TextBlock gpuTempRange)
         {
              if (data.GPU.MinTemperature < int.MaxValue && data.GPU.MaxTemperatureRecord > int.MinValue)
-                 gpuTempRange.Text = $"{data.GPU.MinTemperature}°C ~ {data.GPU.MaxTemperatureRecord}°C";
+                 gpuTempRange.Text = $"{data.GPU.MinTemperature}{CelsiusUnit} ~ {data.GPU.MaxTemperatureRecord}{CelsiusUnit}";
              else
                  gpuTempRange.Text = "N/A";
         }
@@ -439,15 +461,45 @@ public partial class SensorsControl
         var isVisible = _cpuDetailsPanel.Visibility == Visibility.Visible;
         var newState = isVisible ? Visibility.Collapsed : Visibility.Visible;
 
-        SetVisibility("_cpuDetailsPanel", newState == Visibility.Visible);
+        if (_sensorRuntimeAvailable)
+        {
+            SetVisibility("_cpuDetailsPanel", newState == Visibility.Visible);
+            SetVisibility("_gpuDetailsPanel", newState == Visibility.Visible);
+        }
+
         SetVisibility("_batteryDetailsPanel", newState == Visibility.Visible);
-        SetVisibility("_gpuDetailsPanel", newState == Visibility.Visible);
+
+        if (newState == Visibility.Visible)
+        {
+            _forceDetailedRefresh = true;
+            _ = RefreshDetailedValuesAsync();
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Sensor details toggled: {newState}.");
+    }
+
+    private async Task RefreshDetailedValuesAsync()
+    {
+        if (!_sensorRuntimeAvailable)
+            return;
+
+        try
+        {
+            var data = await _controller.GetDataAsync(true);
+            await Dispatcher.InvokeAsync(() => UpdateValues(data));
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Immediate detailed sensors refresh failed.", ex);
+        }
     }
 
     private string GetTemperatureText(double? temperature)
     {
         if (temperature is null)
-            return "—";
+            return "-";
 
         var temp = temperature.Value;
 
@@ -455,10 +507,10 @@ public partial class SensorsControl
         {
             temp *= 9.0 / 5.0;
             temp += 32;
-            return $"{temp:0} {Resource.Fahrenheit}";
+            return $"{temp:0} {FahrenheitUnit}";
         }
 
-        return $"{temp:0} {Resource.Celsius}";
+        return $"{temp:0} {CelsiusUnit}";
     }
 
     private static void UpdateValue(RangeBase bar, ContentControl label, double max, double value, string text, string? toolTipText = null)
@@ -482,6 +534,29 @@ public partial class SensorsControl
             label.Tag = value;
         }
     }
+
+    private void SetSensorSectionsVisible(bool visible)
+    {
+        SetVisibility("_cpuSection", visible);
+        SetVisibility("_gpuSection", visible);
+        SetVisibility("_cpuGpuSeparatorLeft", visible);
+        SetVisibility("_cpuGpuSeparatorRight", visible);
+
+        if (!visible)
+        {
+            SetVisibility("_cpuDetailsPanel", false);
+            SetVisibility("_gpuDetailsPanel", false);
+        }
+
+        if (FindName("_batterySectionColumn") is FrameworkElement batterySection)
+            batterySection.Visibility = Visibility.Visible;
+
+        Visibility = Visibility.Visible;
+    }
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 }
 }
+
 

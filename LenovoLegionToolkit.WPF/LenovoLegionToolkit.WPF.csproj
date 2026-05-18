@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-        <TargetFramework>net10.0-windows</TargetFramework>
+        <TargetFramework>$(LLTTargetFramework)</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
@@ -46,6 +46,12 @@
 		<ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="LenovoLegionToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Remove="Assets\Icon.ico" />
 		<None Remove="Assets\Default_exe.png" />
 
@@ -77,5 +83,12 @@
 	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
+
+	<Target Name="CreateSatelliteResourceOutputDirectories" BeforeTargets="_CopyFilesMarkedCopyLocal;CopyFilesToOutputDirectory">
+		<ItemGroup>
+			<SatelliteResourceOutputDirectory Include="$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubDirectory)" Condition="'%(ReferenceCopyLocalPaths.DestinationSubDirectory)' != ''" />
+		</ItemGroup>
+		<MakeDir Directories="@(SatelliteResourceOutputDirectory)" Condition="'@(SatelliteResourceOutputDirectory)' != ''" />
+	</Target>
 
 </Project>

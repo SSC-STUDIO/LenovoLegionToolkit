@@ -364,6 +364,7 @@ public class PluginManager : IPluginManager
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {pluginType.Name} requires host version {minimumHostVersion} or higher. Current host version is incompatible. Skipping.");
+                _loader.Unload(plugin.Id);
                 return;
             }
 
@@ -379,7 +380,8 @@ public class PluginManager : IPluginManager
                 Version = pluginVersion,
                 MinimumHostVersion = minimumHostVersion,
                 Author = author,
-                FilePath = pluginFilePath
+                FilePath = pluginFilePath,
+                WpfUiVersion = TryReadPluginDependencyVersion(pluginFilePath, plugin.Id, "Wpf.Ui")
             };
 
             // Check for existing plugin with same ID
@@ -391,6 +393,7 @@ public class PluginManager : IPluginManager
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Skipping plugin {plugin.Id} v{pluginVersion} from {pluginFilePath} because newer version {existingMetadata.Version} is already loaded from {existingMetadata.FilePath}.");
+                    _loader.Unload(plugin.Id);
                     return;
                 }
 
@@ -403,6 +406,7 @@ public class PluginManager : IPluginManager
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Skipping duplicate plugin {plugin.Id} v{pluginVersion} from {pluginFilePath}; plugin already registered from {existingMetadata.FilePath}.");
+                        _loader.Unload(plugin.Id);
                         return;
                     }
 
@@ -451,15 +455,20 @@ public class PluginManager : IPluginManager
                 if (!IsInstalled(plugin.Id))
                     continue;
 
-                if (plugin is not IAppStartupPlugin startupPlugin)
-                    continue;
-
                 if (!_registry.MarkStarted(plugin.Id))
                     continue;
 
                 try
                 {
-                    startupPlugin.OnAppStarted();
+                    if (plugin is IAppStartupPlugin startupPlugin)
+                    {
+                        startupPlugin.OnAppStarted();
+                    }
+                    else
+                    {
+                        _registry.MarkStopped(plugin.Id);
+                        continue;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -745,6 +754,8 @@ public class PluginManager : IPluginManager
         }
 
         _registry.MarkStopped(pluginId);
+        _registry.ReplaceWithMetadataAdapter(pluginId);
+        _loader.Unload(pluginId);
 
         // Trigger uninstall callback
         plugin?.OnUninstalled();
@@ -837,6 +848,7 @@ public class PluginManager : IPluginManager
                             var fileName = Path.GetFileName(f);
                             return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
                                    !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                                   !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) &&
                                    !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
                         });
 
@@ -882,6 +894,7 @@ public class PluginManager : IPluginManager
                     var fileName = Path.GetFileName(f);
                     return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
                            !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
+                           !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) &&
                            !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
                 });
 
@@ -1075,7 +1088,10 @@ public class PluginManager : IPluginManager
                 Log.Instance.Trace($"Unloading all plugins...");
 
             // Use registry.Clear() which triggers OnUninstalled for all plugins
+            var pluginIds = _registry.GetAll().Select(plugin => plugin.Id).ToList();
             _registry.Clear();
+            foreach (var pluginId in pluginIds)
+                _loader.Unload(pluginId);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"All plugins unloaded successfully");
@@ -1104,6 +1120,8 @@ public class PluginManager : IPluginManager
 
             plugin.Stop();
             _registry.MarkStopped(pluginId);
+            _registry.ReplaceWithMetadataAdapter(pluginId);
+            _loader.Unload(pluginId);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Plugin {pluginId} stopped successfully");
@@ -1126,7 +1144,8 @@ public class PluginManager : IPluginManager
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Stopping all plugins...");
 
-            foreach (var plugin in _registry.GetAll())
+            var plugins = _registry.GetAll().ToList();
+            foreach (var plugin in plugins)
             {
                 try
                 {
@@ -1139,10 +1158,11 @@ public class PluginManager : IPluginManager
                 }
             }
 
-            // Mark all plugins as stopped
-            foreach (var startedId in _registry.GetStartedPluginIds().ToList())
+            foreach (var pluginId in plugins.Select(plugin => plugin.Id))
             {
-                _registry.MarkStopped(startedId);
+                _registry.MarkStopped(pluginId);
+                _registry.ReplaceWithMetadataAdapter(pluginId);
+                _loader.Unload(pluginId);
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -1188,5 +1208,36 @@ public class PluginManager : IPluginManager
             return leftVersion.CompareTo(rightVersion);
 
         return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string? TryReadPluginDependencyVersion(string pluginFilePath, string pluginId, string dependencyName)
+    {
+        try
+        {
+            var pluginDirectory = Path.GetDirectoryName(pluginFilePath);
+            if (string.IsNullOrWhiteSpace(pluginDirectory))
+                return null;
+
+            var candidatePaths = new[]
+            {
+                Path.Combine(pluginDirectory, $"{dependencyName}.dll"),
+                Path.Combine(pluginDirectory, pluginId, $"{dependencyName}.dll"),
+                Path.Combine(pluginDirectory, "local", pluginId, $"{dependencyName}.dll")
+            };
+
+            foreach (var candidatePath in candidatePaths)
+            {
+                if (!File.Exists(candidatePath))
+                    continue;
+
+                return AssemblyName.GetAssemblyName(candidatePath).Version?.ToString();
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

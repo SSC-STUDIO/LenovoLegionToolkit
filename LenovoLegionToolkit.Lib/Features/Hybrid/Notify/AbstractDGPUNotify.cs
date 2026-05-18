@@ -78,18 +78,23 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
         }
 
         _ = Task.Delay(TimeSpan.FromSeconds(5), token)
-            .ContinueWith(async t =>
+            .ContinueWith(t =>
             {
                 if (!t.IsCompletedSuccessfully)
                     return;
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Event not received, notifying anyway...");
-
-                await NotifyAsync(false).ConfigureAwait(false);
-            }, token);
+                NotifyLaterAsync().Forget("notify dGPU later after missing event");
+            }, token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
 
         return Task.CompletedTask;
+    }
+
+    private async Task NotifyLaterAsync()
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Event not received, notifying anyway...");
+
+        await NotifyAsync(false).ConfigureAwait(false);
     }
 
     protected abstract Task NotifyDGPUStatusAsync(bool state);

@@ -61,6 +61,16 @@ public class PluginLoaderTests : IDisposable
         return method!;
     }
 
+    private static MethodInfo GetPrivateNestedStaticMethod(string nestedTypeName, string methodName)
+    {
+        var nestedType = typeof(PluginLoader).GetNestedType(nestedTypeName, BindingFlags.NonPublic);
+        nestedType.Should().NotBeNull();
+
+        var method = nestedType!.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+        return method!;
+    }
+
     private static string InvokePrivateStringMethod(MethodInfo method, object? argument)
     {
         var result = method.Invoke(null, new object?[] { argument });
@@ -145,6 +155,19 @@ public class PluginLoaderTests : IDisposable
     {
         // Arrange
         var filePath = "LenovoLegionToolkit.Plugins.SDK.dll";
+
+        // Act
+        var result = _loader.CanLoad(filePath);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void CanLoad_WithSharedDll_ShouldReturnFalse()
+    {
+        // Arrange
+        var filePath = "LenovoLegionToolkit.Plugins.Shared.dll";
 
         // Act
         var result = _loader.CanLoad(filePath);
@@ -500,6 +523,16 @@ public class PluginLoaderTests : IDisposable
         result.Should().Be("testplugin");
     }
 
+    [Fact]
+    public void ShouldShareDefaultContextAssembly_WithWpfUiAssembly_ShouldReturnTrue()
+    {
+        var method = GetPrivateNestedStaticMethod("PluginAssemblyLoadContext", "ShouldShareDefaultContextAssembly");
+
+        var result = InvokePrivateBoolMethod(method, "Wpf.Ui");
+
+        result.Should().BeTrue();
+    }
+
     #endregion
 
     #region IsVersionCompatible Tests
@@ -647,6 +680,40 @@ public class PluginLoaderTests : IDisposable
 
         // Assert
         contexts.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Unload_WithRegisteredDependencyContext_ShouldRemoveContext()
+    {
+        // Arrange
+        const string pluginId = "test-plugin";
+        var pluginDirectory = CreateTempDirectory();
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "TestPlugin.dll");
+        var context = RegisterDependencyResolutionContext(pluginMainAssemblyPath, pluginDirectory);
+
+        var dependencyContextsField = typeof(PluginLoader)
+            .GetField("PluginDependencyContexts", BindingFlags.NonPublic | BindingFlags.Static);
+        dependencyContextsField.Should().NotBeNull();
+
+        var dependencyContexts = dependencyContextsField!.GetValue(null)
+            .Should().BeAssignableTo<System.Collections.IDictionary>().Which;
+        dependencyContexts[pluginId] = context;
+
+        try
+        {
+            // Act
+            var unloaded = _loader.Unload(pluginId);
+
+            // Assert
+            unloaded.Should().BeTrue();
+            var contexts = GetScopedDependencyResolutionContexts(null);
+            contexts.Should().BeEmpty();
+        }
+        finally
+        {
+            dependencyContexts.Remove(pluginId);
+            RemoveDependencyResolutionContext(context);
+        }
     }
 
     #endregion

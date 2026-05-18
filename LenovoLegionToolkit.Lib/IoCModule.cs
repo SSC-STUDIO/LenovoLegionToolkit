@@ -14,6 +14,7 @@ using LenovoLegionToolkit.Lib.Features.PanelLogo;
 using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.Services;
@@ -47,6 +48,8 @@ public class IoCModule : Module
         builder.Register<GodModeSettings>();
         builder.Register<GPUOverclockSettings>();
         builder.Register<IntegrationsSettings>();
+        builder.Register<LampArraySettings>();
+        builder.Register<FanCurveSettings>().SingleInstance();
         builder.Register<PackageDownloaderSettings>();
         builder.Register<RGBKeyboardSettings>();
         builder.Register<SpectrumKeyboardSettings>();
@@ -68,6 +71,7 @@ public class IoCModule : Module
         builder.Register<IGPUModeCapabilityFeature>(true);
         builder.Register<IGPUModeFeatureFlagsFeature>(true);
         builder.Register<IGPUModeGamezoneFeature>(true);
+        builder.Register<ITSModeFeature>();
         builder.Register<InstantBootFeature>();
         builder.Register<InstantBootFeatureFlagsFeature>(true);
         builder.Register<InstantBootCapabilityFeature>(true);
@@ -126,11 +130,15 @@ public class IoCModule : Module
         builder.Register<GPUProcessManager>().As<IGPUProcessManager>();
         builder.Register<GPUController>();
         builder.Register<GPUOverclockController>();
+        builder.Register<LampArrayController>();
         builder.Register<RGBKeyboardBacklightController>();
         builder.Register<SensorsController>();
         builder.Register<SensorsControllerV1>(true);
         builder.Register<SensorsControllerV2>(true);
         builder.Register<SensorsControllerV3>(true);
+        builder.Register<SensorsControllerV4>(true);
+        builder.Register<SensorsControllerV5>(true);
+        builder.Register<SensorsGroupController>(true);
         builder.Register<SmartFnLockController>();
         builder.Register<SpectrumKeyboardBacklightController>();
         builder.Register<WindowsPowerModeController>();
@@ -151,6 +159,12 @@ public class IoCModule : Module
         builder.Register<DefaultDelayProvider>().As<IDelayProvider>().SingleInstance();
 
         builder.Register<BatteryDischargeRateMonitorService>();
+        builder.Register<AmdOverclockingController>();
+        builder.Register<LegionSpaceDisabler>();
+        builder.Register<FanCurveManager>(c => new FanCurveManager(
+            c.Resolve<SensorsGroupController>(),
+            c.Resolve<PowerModeListener>(),
+            c.Resolve<PowerModeFeature>())).SingleInstance();
         builder.Register<WindowsCleanupService>();
         builder.Register<WindowsOptimizationService>();
     }

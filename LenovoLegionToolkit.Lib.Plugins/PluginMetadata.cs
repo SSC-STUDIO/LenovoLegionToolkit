@@ -15,5 +15,5 @@ public class PluginMetadata
     public string MinimumHostVersion { get; set; } = "1.0.0";
     public string? Author { get; set; }
     public string? FilePath { get; set; }
+    public string? WpfUiVersion { get; set; }
 }
-

@@ -3,18 +3,16 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
-[![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
 
 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化应用程序。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
+本仓库是一个在 GPL-3.0 许可下持续开发的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展、驱动下载和后续 Windows 兼容维护。
+
 本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
 
-加入 Legion Series Discord 频道: https://discord.com/invite/legionseries!
-
-**中文用户可加入[LLT QQ 频道](https://pd.qq.com/s/jj0737)，频道内推送正式版/测试版更新并附带国内镜像加速下载链接。**
 
 <img src="Assets/Screenshot_zh-hans.png" width="700" />
 
@@ -22,6 +20,7 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 # 目录
   - [免责声明](#免责声明)
+  - [下载](#下载)
   - [兼容性](#兼容性)
   - [功能介绍](#功能介绍)
   - [赞助](#赞助)
@@ -40,6 +39,15 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 > [!TIP]
 > 如果你正在寻找一个 Lenovo Vantage 在 Linux 系统下的替代品，请查看 [LenovoLegionLinux](https://github.com/johnfanv2/LenovoLegionLinux) 项目。
+
+## 下载
+
+请认准当前维护仓库 `SSC-STUDIO/LenovoLegionToolkit` 的发布页下载版本。
+
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest) 下载最新版安装包。
+- **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
+- **Scoop**：使用社区维护 bucket 时可执行 `scoop install extras/lenovolegiontoolkit`。
+- **校验文件**：每个 GitHub Release 都会附带 `SHA256.txt`，建议下载和转发镜像前校验安装包。
 
 #### 接下来的步骤
 
@@ -70,17 +78,22 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 
 确切的版本号可能不同，但只要是 `10.x.x` 就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么问题很可能出在你的机器或系统配置上，而不是 LLT 本身。
 
-#### 想要帮助我们测试？
-
-加入 [Legion Series Discord](https://discord.com/invite/legionseries) 并前往 `#legion-toolkit` 子频道，Beta 测试版与未来更新将会在那里频繁更新。
-
-中文用户可加入 [LLT QQ 频道](https://pd.qq.com/s/jj0737) 并前往 `#测试版更新💻` 子频道，Beta 测试版将会经常在那里同步发布。
-
 ## 兼容性
 
-LLT 适配 2020 款及其之后的拯救者机型。
+LLT 按 `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性逻辑识别设备，目标适配 Lenovo/Motorola 的相关游戏设备。
 
-一些功能在 2020 款之前发布的机型和 Ideapad Gaming 3 笔记本可以正常工作（或者说大部分工作），但可能会遇到一些小问题。这里是测试过支持的型号列表 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
+主要支持系列包括：
+- Legion 5、Legion Slim 5、Legion Pro 5
+- Legion 7、Legion Pro 7、Legion 9
+- Legion Go
+- LOQ
+- IdeaPad Gaming（含 R7000/R9000/Y7000/Y9000 等国行命名）
+
+兼容性检查的基本条件：
+- 设备厂商为 `LENOVO` 或 `MOTOROLA`
+- 机型匹配支持的前缀或关键字（如 `16IRX`、`16IAX`、`15ACH`、`14IRP`、`17ACH`、`18IAX`、`ThinkBook`、`LOQ`、`IdeaPad Gaming`）
+
+目前重点支持 6 代（MY2021）到 9 代（MY2024）及更新机型；部分 5 代（MY2020）机型的部分功能也可使用。支持型号的实时代码清单见 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
 
 如果你在启动时看到不兼容弹窗，你可以查看底部的*贡献*部分，查看你能否帮助我适配你的机型。谨记我没有那么多的笔记本型号，所以一些功能我无法适配。
 
@@ -688,5 +701,9 @@ crowdin download --config crowdin.yml
 | [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
 | [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
+
+## 致谢
+
+特别感谢 Lenovo Legion Toolkit 原作者 Bartosz Cichecki 的开创性工作，为本项目提供了重要启发。
 
 **万分感谢！**

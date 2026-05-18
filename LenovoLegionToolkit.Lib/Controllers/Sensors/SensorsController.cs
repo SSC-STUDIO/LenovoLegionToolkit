@@ -7,7 +7,9 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 public class SensorsController(
     SensorsControllerV1 controllerV1,
     SensorsControllerV2 controllerV2,
-    SensorsControllerV3 controllerV3)
+    SensorsControllerV3 controllerV3,
+    SensorsControllerV4 controllerV4,
+    SensorsControllerV5 controllerV5)
     : ISensorsController
 {
     private ISensorsController? _controller;
@@ -50,18 +52,45 @@ public class SensorsController(
     private async Task<ISensorsController?> GetControllerAsync()
     {
         if (_controller is not null)
-            return _controller;
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Reusing selected sensors controller. [type={_controller.GetType().Name}]");
 
-        if (await controllerV3.IsSupportedAsync().ConfigureAwait(false))
+            return _controller;
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace("Selecting sensors controller...");
+
+        if (await ProbeControllerAsync(controllerV5).ConfigureAwait(false))
+            return _controller = controllerV5;
+
+        if (await ProbeControllerAsync(controllerV4).ConfigureAwait(false))
+            return _controller = controllerV4;
+
+        if (await ProbeControllerAsync(controllerV3).ConfigureAwait(false))
             return _controller = controllerV3;
 
-        if (await controllerV2.IsSupportedAsync().ConfigureAwait(false))
+        if (await ProbeControllerAsync(controllerV2).ConfigureAwait(false))
             return _controller = controllerV2;
 
-        if (await controllerV1.IsSupportedAsync().ConfigureAwait(false))
+        if (await ProbeControllerAsync(controllerV1).ConfigureAwait(false))
             return _controller = controllerV1;
 
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace("No supported sensors controller found.");
+
         return null;
+    }
+
+    private static async Task<bool> ProbeControllerAsync(ISensorsController controller)
+    {
+        var supported = await controller.IsSupportedAsync().ConfigureAwait(false);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Sensors controller probe result: {supported}. [type={controller.GetType().Name}]");
+
+        return supported;
     }
 
     private static SensorsData GetSmokeSensorsData(bool detailed)

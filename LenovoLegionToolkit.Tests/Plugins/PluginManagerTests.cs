@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace LenovoLegionToolkit.Tests.Plugins;
 [Trait("Category", TestCategories.Unit)]
 public class PluginManagerTests : IDisposable
 {
-    private readonly Mock<ApplicationSettings> _mockSettings;
+    private readonly string? _previousAppDataOverride;
     private readonly Mock<IPluginSignatureValidator> _mockSignatureValidator;
     private readonly Mock<IPluginLoader> _mockLoader;
     private readonly Mock<IPluginRegistry> _mockRegistry;
@@ -23,7 +24,9 @@ public class PluginManagerTests : IDisposable
 
     public PluginManagerTests()
     {
-        _mockSettings = new Mock<ApplicationSettings>();
+        var appDataOverride = CreateTempDirectory();
+        _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, appDataOverride);
         _mockSignatureValidator = new Mock<IPluginSignatureValidator>();
         _mockLoader = new Mock<IPluginLoader>();
         _mockRegistry = new Mock<IPluginRegistry>();
@@ -32,6 +35,8 @@ public class PluginManagerTests : IDisposable
 
     public void Dispose()
     {
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
+
         foreach (var dir in _tempDirectories.Where(Directory.Exists))
         {
             try { Directory.Delete(dir, true); }
@@ -64,7 +69,7 @@ public class PluginManagerTests : IDisposable
     {
         // Arrange & Act
         Action act = () => new PluginManager(
-            _mockSettings.Object,
+            CreateSettings(),
             null!,
             _mockLoader.Object,
             _mockRegistry.Object,
@@ -80,7 +85,7 @@ public class PluginManagerTests : IDisposable
     {
         // Arrange & Act
         Action act = () => new PluginManager(
-            _mockSettings.Object,
+            CreateSettings(),
             _mockSignatureValidator.Object,
             null!,
             _mockRegistry.Object,
@@ -96,7 +101,7 @@ public class PluginManagerTests : IDisposable
     {
         // Arrange & Act
         Action act = () => new PluginManager(
-            _mockSettings.Object,
+            CreateSettings(),
             _mockSignatureValidator.Object,
             _mockLoader.Object,
             null!,
@@ -112,7 +117,7 @@ public class PluginManagerTests : IDisposable
     {
         // Arrange & Act
         Action act = () => new PluginManager(
-            _mockSettings.Object,
+            CreateSettings(),
             _mockSignatureValidator.Object,
             _mockLoader.Object,
             _mockRegistry.Object,
@@ -298,14 +303,141 @@ public class PluginManagerTests : IDisposable
         await act.Should().NotThrowAsync();
     }
 
+    [Fact]
+    public void UninstallPlugin_WhenInstalled_ShouldUnloadPluginContext()
+    {
+        // Arrange
+        const string pluginId = "test-plugin";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(p => p.Id).Returns(pluginId);
+
+        _mockRegistry
+            .Setup(r => r.Get(pluginId))
+            .Returns(plugin.Object);
+        _mockRegistry
+            .Setup(r => r.GetAll())
+            .Returns(Array.Empty<IPlugin>());
+        _mockLoader
+            .Setup(l => l.Unload(pluginId))
+            .Returns(true);
+
+        var manager = CreateManager(settings);
+
+        // Act
+        var result = manager.UninstallPlugin(pluginId);
+
+        // Assert
+        result.Should().BeTrue();
+        _mockRegistry.Verify(r => r.MarkStopped(pluginId), Times.Once);
+        _mockRegistry.Verify(r => r.ReplaceWithMetadataAdapter(pluginId), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginId), Times.Once);
+    }
+
+    [Fact]
+    public void StopPlugin_WhenRegistered_ShouldUnloadPluginContext()
+    {
+        // Arrange
+        const string pluginId = "test-plugin";
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(p => p.Id).Returns(pluginId);
+
+        _mockRegistry
+            .Setup(r => r.Get(pluginId))
+            .Returns(plugin.Object);
+        _mockLoader
+            .Setup(l => l.Unload(pluginId))
+            .Returns(true);
+
+        var manager = CreateManager();
+
+        // Act
+        var result = manager.StopPlugin(pluginId);
+
+        // Assert
+        result.Should().BeTrue();
+        plugin.Verify(p => p.Stop(), Times.Once);
+        _mockRegistry.Verify(r => r.MarkStopped(pluginId), Times.Once);
+        _mockRegistry.Verify(r => r.ReplaceWithMetadataAdapter(pluginId), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginId), Times.Once);
+    }
+
+    [Fact]
+    public void StopAllPlugins_ShouldUnloadEachRegisteredPlugin()
+    {
+        // Arrange
+        const string pluginA = "plugin-a";
+        const string pluginB = "plugin-b";
+        var first = new Mock<IPlugin>();
+        first.SetupGet(p => p.Id).Returns(pluginA);
+        var second = new Mock<IPlugin>();
+        second.SetupGet(p => p.Id).Returns(pluginB);
+
+        _mockRegistry
+            .Setup(r => r.GetAll())
+            .Returns(new[] { first.Object, second.Object });
+        _mockLoader
+            .Setup(l => l.Unload(It.IsAny<string>()))
+            .Returns(true);
+
+        var manager = CreateManager();
+
+        // Act
+        manager.StopAllPlugins();
+
+        // Assert
+        first.Verify(p => p.Stop(), Times.Once);
+        second.Verify(p => p.Stop(), Times.Once);
+        _mockRegistry.Verify(r => r.MarkStopped(pluginA), Times.Once);
+        _mockRegistry.Verify(r => r.MarkStopped(pluginB), Times.Once);
+        _mockRegistry.Verify(r => r.ReplaceWithMetadataAdapter(pluginA), Times.Once);
+        _mockRegistry.Verify(r => r.ReplaceWithMetadataAdapter(pluginB), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginA), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginB), Times.Once);
+    }
+
+    [Fact]
+    public void UnloadAllPlugins_ShouldUnloadEachRegisteredPluginAfterClear()
+    {
+        // Arrange
+        const string pluginA = "plugin-a";
+        const string pluginB = "plugin-b";
+        var first = new Mock<IPlugin>();
+        first.SetupGet(p => p.Id).Returns(pluginA);
+        var second = new Mock<IPlugin>();
+        second.SetupGet(p => p.Id).Returns(pluginB);
+
+        _mockRegistry
+            .Setup(r => r.GetAll())
+            .Returns(new[] { first.Object, second.Object });
+        _mockLoader
+            .Setup(l => l.Unload(It.IsAny<string>()))
+            .Returns(true);
+
+        var manager = CreateManager();
+
+        // Act
+        manager.UnloadAllPlugins();
+
+        // Assert
+        _mockRegistry.Verify(r => r.Clear(), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginA), Times.Once);
+        _mockLoader.Verify(l => l.Unload(pluginB), Times.Once);
+    }
+
     #endregion
 
     #region Helper Methods
 
-    private PluginManager CreateManager()
+    private static ApplicationSettings CreateSettings() => new();
+
+    private PluginManager CreateManager(ApplicationSettings? settings = null)
     {
         return new PluginManager(
-            _mockSettings.Object,
+            settings ?? CreateSettings(),
             _mockSignatureValidator.Object,
             _mockLoader.Object,
             _mockRegistry.Object,

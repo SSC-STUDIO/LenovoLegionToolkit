@@ -11,12 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed / 修复
+- 修复传感器 CPU 功耗 WMI 查询和单位归一化，并在 Lenovo 温度传感器不可用时回退读取 ACPI thermal zone，提升 CPU 温度与功耗显示可用性 / Fixed sensor CPU wattage WMI query and unit normalization, and added ACPI thermal-zone fallback when Lenovo temperature sensors are unavailable to improve CPU temperature and power readouts
 - 修复插件 ZIP 提取中的路径遍历漏洞（Zip Slip），防止恶意插件包在提取过程中写入目标目录之外的文件 / Fixed Zip Slip path traversal vulnerability during plugin ZIP extraction to prevent malicious packages from writing files outside the intended extraction directory
 - 挪威语 `Resource.no.resx` 中 `CopiedToClipboard_Message_WithParam` 补回 `{0}` 占位符，避免格式化参数丢失 / Restored the `{0}` placeholder in Norwegian `CopiedToClipboard_Message_WithParam` so clipboard notifications preserve the formatted argument
 - 中文界面中的传感器频率单位改为标准 `GHz` 缩写 / Changed the sensor frequency unit in Chinese UI to the standard `GHz` abbreviation
 - 修复 WPF-UI 4 迁移后的主窗口顶部 `Log`/设备信息按钮位置、交互和 hover 对比度，启动语言选择窗口透明背景、About 页小窗口滚动、插件扩展统计卡和深色主题文字对比回归 / Fixed WPF-UI 4 migration regressions in title-bar `Log`/device button placement, interaction, and hover contrast, startup language-selector transparency, About-page small-window scrolling, Plugin Extensions summary cards, and dark-theme text contrast
 
 ### Improved / 改进
+- 补充 README 中社区续维护、下载渠道和 winget 安装说明，并新增中文宣发内容包与 winget 上架材料，便于发布传播和高流量下载承接 / Added README community-maintenance, download-channel, and winget installation guidance plus a Chinese promotion content pack and winget submission materials for launch communication and high-traffic download readiness
 - 加固 CI 治理：添加 CodeQL 配置文件替换行内抑制注释以使 SARIF 处理器的规则排除生效，修复 WSL/UNC 路径测试用例和测试报告发布容错，并关闭已由 PR #14 覆盖的两个 Dependabot PR / Hardened CI governance by switching CodeQL suppression to config-file-based exclusion (SARIF-compatible), fixed WSL/UNC path test cases and test reporter resilience, and closed two Dependabot PRs superseded by the WPF-UI 4 migration
 - 升级控制台页首次加载为贴近最终布局的骨架扫光动画，并为 CLI 等待主程序响应时增加不污染脚本输出的控制台加载动画 / Upgraded the Dashboard first-load state to a layout-matching shimmer skeleton and added a CLI loading animation while waiting for the main app response without polluting scripted output
 - 应用设置、自动化管道与 CLI IPC 的 JSON 序列化迁移至 `System.Text.Json`，并保持与既有配置文件格式的兼容策略（含自动化判别符）；Spectrum 配置文件导入导出同样使用该栈 / Migrated JSON serialization for application settings, automation pipelines, and CLI IPC to `System.Text.Json` while preserving compatibility strategies for existing files (including automation discriminators); Spectrum profile import/export uses the same stack
@@ -28,6 +30,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 将 CLI 迁移到 `System.CommandLine` 2.0.7 稳定 API，保留现有命令、别名、验证错误和 IPC 失败提示行为 / Migrated the CLI to the stable `System.CommandLine` 2.0.7 APIs while preserving existing commands, aliases, validation errors, and IPC failure messages
 - 插件依赖解析：调用方传入各插件版本字典时才做依赖版本区间校验（不再使用虚构默认版本）；依赖关系图中未知版本显示为 `?`；移除未使用的 WPF 动画性能监控占位 API / Plugin dependency resolution now validates declared version ranges only when callers supply per-plugin version metadata (no fabricated defaults), shows `?` for unknown versions in the dependency graph, and removes the unused WPF animation performance-monitoring placeholder API
 - 完善 `AGENTS.md` 与 `CLAUDE.md` 中关于 `CHANGELOG` 的 `[Unreleased]` 维护说明（合并/发版前整理用户可见变更；未发布迭代中的自修不必逐条堆砌）/ Clarified `[Unreleased]` changelog guidance in `AGENTS.md` and `CLAUDE.md` (consolidate user-visible changes before merge/release; avoid stacking every pre-release self-correction as its own line)
+
+## [3.6.16] - 2026-05-18
+
+### Fixed / 修复
+- Restored the single-card CPU / Battery / GPU dashboard layout, kept detailed sensor rows collapsed by default, and added double-click expansion with a tooltip.
+- Hardened sensor refresh and fallback behavior so CPU/GPU readings, detailed refreshes, and transient Lenovo WMI failures no longer hide the whole dashboard card as easily.
+- Kept the power mode selector visible when runtime reads fail by falling back to the last known or balanced mode instead of collapsing the control.
+- Fixed startup-time unobserved task failures around Lenovo WMI invalid-object errors and tightened plugin install/load compatibility for online smoke coverage.
+
+### Improved / 改进
+- Tightened the Plugin Extensions page layout, removed the redundant empty selection state, auto-selected the first plugin, and added richer descriptions plus usage guidance.
+- Extended online plugin smoke coverage to exercise install, configure/open, and uninstall flows more reliably across the default plugin set.
+- Updated release and distribution docs for the 3.6.16 train, including Chinese promotion copy plus explicit winget and Scoop maintainer workflows.
 
 ## [3.6.15] - 2026-04-29
 
@@ -1488,9 +1503,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Support / 支持
 
-- **GitHub Issues**: [Report bugs and request features](https://github.com/BartoszCichecki/LenovoLegionToolkit/issues)
-- **Discord**: [Community support and discussions](https://discord.gg/)
-- **QQ Channel**: [中文用户支持群](https://jq.qq.com/)
+- **GitHub Issues**: [Report bugs and request features](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues)
+- **Discord**: [Community support and discussions](https://discord.com/invite/legionseries)
 
 ---
 

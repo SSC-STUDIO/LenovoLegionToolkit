@@ -58,7 +58,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         using var service = CreateService(request =>
         {
             request.RequestUri.Should().NotBeNull();
-            request.RequestUri!.AbsoluteUri.Should().StartWith("https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json");
+            request.RequestUri!.AbsoluteUri.Should().StartWith("https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json");
             seenVersions.Add(request.Version);
 
             attempts++;
@@ -78,6 +78,36 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
         attempts.Should().Be(2);
         seenVersions.Should().OnlyContain(version => version == HttpVersion.Version11);
+    }
+
+    [Fact]
+    public async Task FetchAvailablePluginsAsync_ShouldPreferMirrorBeforeRawGithubSources()
+    {
+        // Arrange
+        var requestedUrls = new List<string>();
+        using var service = CreateService(request =>
+        {
+            var url = request.RequestUri?.AbsoluteUri ?? string.Empty;
+            requestedUrls.Add(url);
+
+            if (url.Contains("cdn.jsdelivr.net", StringComparison.OrdinalIgnoreCase))
+            {
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(StoreResponseJson)
+                };
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.NotFound);
+        });
+
+        // Act
+        var plugins = await service.FetchAvailablePluginsAsync();
+
+        // Assert
+        plugins.Should().ContainSingle();
+        requestedUrls.Should().NotBeEmpty();
+        requestedUrls[0].Should().Contain("cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json");
     }
 
     [Fact]
@@ -106,9 +136,9 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
-        requestedUrls.Should().Contain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json", StringComparison.OrdinalIgnoreCase));
-        requestedUrls.Should().Contain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json", StringComparison.OrdinalIgnoreCase));
         requestedUrls.Should().Contain(url => url.Contains("cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json", StringComparison.OrdinalIgnoreCase));
+        requestedUrls.Should().NotContain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json", StringComparison.OrdinalIgnoreCase));
+        requestedUrls.Should().NotContain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

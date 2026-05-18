@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-        <TargetFramework>net10.0-windows</TargetFramework>
+        <TargetFramework>$(LLTTargetFramework)</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<Platforms>x64</Platforms>
 		<Nullable>enable</Nullable>
@@ -18,18 +18,26 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools">
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="NAudio.Wasapi" />
 		<PackageReference Include="PubSub" />
+		<PackageReference Include="LibreHardwareMonitorLib" />
 		<PackageReference Include="System.Management" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" />
 		<PackageReference Include="NeoSmart.AsyncLock" />
 		<PackageReference Include="NvAPIWrapper.Net" />
 		<PackageReference Include="Octokit" />
+		<PackageReference Include="PresentMonFps-Modified" />
+		<PackageReference Include="RAMSPDToolkit-NDD" />
 		<PackageReference Include="Serilog" />
 		<PackageReference Include="Serilog.Sinks.Async" />
 		<PackageReference Include="Serilog.Sinks.File" />
 		<PackageReference Include="TaskScheduler" />
+		<PackageReference Include="UniversalFanControl.Lib" />
 		<PackageReference Include="WindowsDisplayAPI" />
+		<PackageReference Include="ZenStates-Core" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Resources\Resource.Designer.cs">

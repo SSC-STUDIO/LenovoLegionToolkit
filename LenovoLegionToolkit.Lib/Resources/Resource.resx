@@ -246,6 +246,9 @@
   <data name="PowerModeState_Balance" xml:space="preserve">
     <value>Balance</value>
   </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Extreme</value>
+  </data>
   <data name="PowerModeState_GodMode" xml:space="preserve">
     <value>Custom</value>
   </data>
@@ -471,6 +474,45 @@
   </data>
   <data name="SpeakerState_Unmute" xml:space="preserve">
     <value>Unmute</value>
+  </data>
+  <data name="AmdOverclocking_Ac_Message" xml:space="preserve">
+    <value>Profile will not apply without AC adapter (Full wattage) connected.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Initialized_Message" xml:space="preserve">
+    <value>Not initialized.</value>
+  </data>
+  <data name="AmdOverclocking_Not_Supported" xml:space="preserve">
+    <value>Not supported.</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_CPU" xml:space="preserve">
+    <value>CPU Fan</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_GPU" xml:space="preserve">
+    <value>GPU Fan</value>
+  </data>
+  <data name="CustomFanCurveControl_Fan_System" xml:space="preserve">
+    <value>System Fan</value>
+  </data>
+  <data name="FanMaxSpeedState_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="FanMaxSpeedState_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="FanMaxSpeedState_Toggle" xml:space="preserve">
+    <value>Toggle</value>
+  </data>
+  <data name="ITSMode_Intelligent_Battery_Saving" xml:space="preserve">
+    <value>Battery Saving</value>
+  </data>
+  <data name="ITSMode_Intelligent_Cooling" xml:space="preserve">
+    <value>Intelligent Cooling</value>
+  </data>
+  <data name="ITSMode_Intelligent_Extreme_Performance" xml:space="preserve">
+    <value>Extreme Performance</value>
+  </data>
+  <data name="ITSMode_Intelligent_Geek" xml:space="preserve">
+    <value>Geek</value>
   </data>
   <data name="PowerModeMappingMode_Disabled" xml:space="preserve">
     <value>Disabled</value>

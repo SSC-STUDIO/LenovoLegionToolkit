@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
 public abstract class AbstractSensorsController(GPUController gpuController) : ISensorsController
 {
-    private readonly struct GPUInfo(
+    protected readonly struct GPUInfo(
         int utilization,
         int coreClock,
         int maxCoreClock,
@@ -56,6 +57,22 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private const int CACHE_EXPIRATION_MS = 100;
 
     private bool _disposed;
+
+    protected async Task<bool> CanReadSensorSnapshotAsync()
+    {
+        try
+        {
+            await GetSensorSnapshotAsync(detailed: false).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Sensor snapshot probe failed. [type={GetType().Name}]", ex);
+
+            return false;
+        }
+    }
 
     public abstract Task<bool> IsSupportedAsync();
 
@@ -99,36 +116,60 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
-            if (_cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
+            if (!detailed && _cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
             {
                 return _cachedSensorsData.Value;
             }
         }
 
+        var (cpu, gpu) = await GetSensorSnapshotAsync(detailed).ConfigureAwait(false);
+
+        var result = new SensorsData(cpu, gpu);
+
+        // Update cache only for the fast summary path.
+        if (!detailed)
+        {
+            lock (_cacheLock)
+            {
+                _cachedSensorsData = result;
+                _lastCacheUpdateTime = now;
+            }
+        }
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
+
+        return result;
+    }
+
+    private async Task<(SensorData cpu, SensorData gpu)> GetSensorSnapshotAsync(bool detailed)
+    {
         const int GENERIC_MAX_UTILIZATION = 100;
         const int GENERIC_MAX_TEMPERATURE = 100;
 
-        var cpuUtilization = GetCpuUtilization(GENERIC_MAX_UTILIZATION);
-        var cpuMaxCoreClock = _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false);
-        var cpuCoreClock = GetCpuCoreClock();
-        var cpuCurrentTemperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
-        var cpuCurrentFanSpeed = await GetCpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        var cpuMaxFanSpeed = _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false);
-        
+        var cpuUtilization = SafeRead(() => GetCpuUtilization(GENERIC_MAX_UTILIZATION), -1, "CPU utilization");
+        var cpuMaxCoreClock = await SafeReadAsync(async () => _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false), -1, "CPU max core clock").ConfigureAwait(false);
+        var cpuCoreClock = SafeRead(GetCpuCoreClock, -1, "CPU core clock");
+        var cpuCurrentTemperature = await SafeReadAsync(GetCpuCurrentTemperatureWithFallbackAsync, -1, "CPU temperature").ConfigureAwait(false);
+        var cpuCurrentFanSpeed = await SafeReadAsync(GetCpuCurrentFanSpeedAsync, -1, "CPU fan speed").ConfigureAwait(false);
+        var cpuMaxFanSpeed = await SafeReadAsync(async () => _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "CPU max fan speed").ConfigureAwait(false);
+
         double cpuVoltage = 0;
         int cpuWattage = -1;
-        
+
         if (detailed)
         {
-            cpuVoltage = await WMI.Win32.Processor.GetVoltageAsync().ConfigureAwait(false);
-            cpuWattage = await GetCpuWattageAsync().ConfigureAwait(false);
+            cpuVoltage = await SafeReadAsync(WMI.Win32.Processor.GetVoltageAsync, 0d, "CPU voltage").ConfigureAwait(false);
+            cpuWattage = await SafeReadAsync(GetCpuWattageAsync, -1, "CPU wattage").ConfigureAwait(false);
         }
 
-        var gpuInfo = await GetGPUInfoAsync().ConfigureAwait(false);
-        var gpuCurrentTemperature = gpuInfo.Temperature >= 0 ? gpuInfo.Temperature : await GetGpuCurrentTemperatureAsync().ConfigureAwait(false);
+        var gpuInfo = await SafeReadAsync(GetGPUInfoAsync, GPUInfo.Empty, "GPU info").ConfigureAwait(false);
+        var gpuCurrentTemperature = gpuInfo.Temperature >= 0
+            ? gpuInfo.Temperature
+            : await SafeReadAsync(GetGpuCurrentTemperatureAsync, -1, "GPU temperature").ConfigureAwait(false);
         var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
-        var gpuCurrentFanSpeed = await GetGpuCurrentFanSpeedAsync().ConfigureAwait(false);
-        var gpuMaxFanSpeed = _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false);
+        var gpuCurrentFanSpeed = await SafeReadAsync(GetGpuCurrentFanSpeedAsync, -1, "GPU fan speed").ConfigureAwait(false);
+        var gpuMaxFanSpeed = await SafeReadAsync(async () => _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "GPU max fan speed").ConfigureAwait(false);
 
         // Update Min/Max records
         if (cpuVoltage > 0)
@@ -178,20 +219,8 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             gpuInfo.Voltage,
             gpuCurrentFanSpeed,
             gpuMaxFanSpeed).WithMinMax(_gpuMinVoltage, _gpuMaxVoltage, _gpuMinTemp, _gpuMaxTemp);
-            
-        var result = new SensorsData(cpu, gpu);
 
-        // Update cache
-        lock (_cacheLock)
-        {
-            _cachedSensorsData = result;
-            _lastCacheUpdateTime = now;
-        }
-
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Current data: {result} [type={GetType().Name}]");
-
-        return result;
+        return (cpu, gpu);
     }
 
     public async Task<(int cpuFanSpeed, int gpuFanSpeed)> GetFanSpeedsAsync()
@@ -217,11 +246,30 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     protected abstract Task<int> GetGpuCurrentFanSpeedAsync();
 
+    protected virtual Task<int> GetPchCurrentTemperatureAsync() => Task.FromResult(-1);
+
+    protected virtual Task<int> GetPchCurrentFanSpeedAsync() => Task.FromResult(-1);
+
     protected abstract Task<int> GetCpuMaxFanSpeedAsync();
 
     protected abstract Task<int> GetGpuMaxFanSpeedAsync();
 
-    private int GetCpuUtilization(int maxUtilization)
+    protected virtual Task<int> GetPchMaxFanSpeedAsync() => Task.FromResult(-1);
+
+    private async Task<int> GetCpuCurrentTemperatureWithFallbackAsync()
+    {
+        var temperature = await GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
+        if (temperature > 0)
+            return temperature;
+
+        var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
+        if (fallback > 0 && Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"CPU temperature from ACPI thermal zone fallback: {fallback}C");
+
+        return fallback;
+    }
+
+    protected virtual int GetCpuUtilization(int maxUtilization)
     {
         var result = (int)_percentProcessorUtilityCounter.NextValue();
         if (result < 0)
@@ -229,7 +277,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         return Math.Min(result, maxUtilization);
     }
 
-    private int GetCpuCoreClock()
+    protected virtual int GetCpuCoreClock()
     {
         var baseClock = _cpuBaseClockCache ??= GetCpuBaseClock();
         var clock = (int)(baseClock * (_percentProcessorPerformanceCounter.NextValue() / 100f));
@@ -307,12 +355,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             try
             {
                 var powerValue = _cpuPowerCounter.NextValue();
-                if (powerValue > 0)
+                var wattage = SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
+                if (wattage > 0)
                 {
-                    // Power counter typically returns value in milliwatts, convert to watts
-                    var wattage = (int)(powerValue / 1000.0);
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"CPU power from performance counter: {wattage}W (raw: {powerValue}mW)");
+                        Log.Instance.Trace($"CPU power from performance counter: {wattage}W (raw: {powerValue})");
                     return wattage;
                 }
             }
@@ -326,7 +373,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         // Try method 2: WMI query for power meter (if available)
         try
         {
-            var wattage = await GetCpuWattageFromWMIAsync().ConfigureAwait(false);
+            var wattage = await SensorReadingHelper.GetCpuWattageFromWmiAsync().ConfigureAwait(false);
             if (wattage >= 0)
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -340,48 +387,48 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 Log.Instance.Trace($"Failed to get CPU power from WMI: {ex.Message}");
         }
 
-        // Method not available, return -1
-        return -1;
-    }
-
-    private static async Task<int> GetCpuWattageFromWMIAsync()
-    {
+        // Try method 3: reuse LibreHardwareMonitor package power if that path is already available
         try
         {
-            // Try to query Win32_PowerMeter or similar WMI class for CPU power
-            // Note: This may not be available on all systems
-var cpuPattern = "%CPU%";
-            var processorPattern = "%Processor%";
-            var result = await WMI.ReadAsync("root\\CIMV2",
-                $"SELECT * FROM Win32_PowerMeter WHERE Name LIKE {cpuPattern} OR Name LIKE {processorPattern}",
-                pdc =>
+            if (IoCContainer.TryResolve<SensorsGroupController>() is { } sensorsGroupController)
+            {
+                if (!sensorsGroupController.IsLibreHardwareMonitorInitialized())
+                    _ = await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false);
+
+                if (sensorsGroupController.IsLibreHardwareMonitorInitialized())
                 {
-                    // Try different property names that might contain power value
-                    var powerValue = pdc["Power"]?.Value ?? pdc["CurrentPower"]?.Value ?? pdc["PowerReading"]?.Value;
-                    if (powerValue != null)
+                    await sensorsGroupController.UpdateAsync().ConfigureAwait(false);
+
+                    var cpuPower = await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false);
+                    if (cpuPower > 0)
                     {
-                        // Power is typically in milliwatts, convert to watts
-                        var powerMw = Convert.ToDouble(powerValue);
-                        return (int)(powerMw / 1000.0);
+                        var wattage = (int)Math.Round(cpuPower);
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"CPU power from LibreHardwareMonitor: {wattage}W (raw: {cpuPower})");
+                        return wattage;
                     }
-                    return -1;
-                }).ConfigureAwait(false);
-            
-            return result.FirstOrDefault(-1);
+                }
+            }
         }
-        catch
+        catch (Exception ex)
         {
-            return -1;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to get CPU power from LibreHardwareMonitor: {ex.Message}");
         }
+
+        // Method not available, return -1
+        return -1;
     }
 
     private static async Task<(int wattage, double voltage)> GetGpuInfoFromNvidiaSmiAsync()
     {
         try
         {
+            var executablePath = ResolveNvidiaSmiPath();
+
             var startInfo = new ProcessStartInfo
             {
-                FileName = "nvidia-smi",
+                FileName = executablePath,
                 Arguments = "-q",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -428,6 +475,16 @@ var cpuPattern = "%CPU%";
                     }
                     inPowerReadings = false; 
                 }
+                else if (inPowerReadings && (trimmed.StartsWith("Instantaneous Power Draw") || trimmed.StartsWith("Average Power Draw")))
+                {
+                    var parts = trimmed.Split(':');
+                    if (parts.Length > 1)
+                    {
+                        var val = parts[1].Trim().Split(' ')[0];
+                        if (double.TryParse(val, global::System.Globalization.CultureInfo.InvariantCulture, out var w))
+                            wattage = (int)w;
+                    }
+                }
                 else if (inVoltageReadings && trimmed.StartsWith("Graphics"))
                 {
                     var parts = trimmed.Split(':');
@@ -449,7 +506,13 @@ var cpuPattern = "%CPU%";
         }
     }
 
-    private async Task<GPUInfo> GetGPUInfoAsync()
+    private static string ResolveNvidiaSmiPath()
+    {
+        const string defaultPath = @"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe";
+        return File.Exists(defaultPath) ? defaultPath : "nvidia-smi";
+    }
+
+    protected virtual async Task<GPUInfo> GetGPUInfoAsync()
     {
         if (gpuController.IsSupported())
             await gpuController.StartAsync().ConfigureAwait(false);
@@ -702,10 +765,8 @@ var cpuPattern = "%CPU%";
                                                 
                                                 // Let's assume it is mW.
                                                 var val = Convert.ToUInt32(usageProp.GetValue(entry));
-                                                if (val > 0)
-                                                {
-                                                    currentWattage = (int)(val / 1000); // mW to W
-                                                }
+                                                if (Log.Instance.IsTraceEnabled && val > 0)
+                                                    Log.Instance.Trace($"Ignoring ambiguous GPU PowerUsageInPCM reading: {val}");
                                             }
                                         }
                                     }
@@ -755,6 +816,36 @@ var cpuPattern = "%CPU%";
         catch
         {
             return GPUInfo.Empty;
+        }
+    }
+
+    private static T SafeRead<T>(Func<T> operation, T fallback, string metricName)
+    {
+        try
+        {
+            return operation();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read {metricName}.", ex);
+
+            return fallback;
+        }
+    }
+
+    private static async Task<T> SafeReadAsync<T>(Func<Task<T>> operation, T fallback, string metricName)
+    {
+        try
+        {
+            return await operation().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to read {metricName}.", ex);
+
+            return fallback;
         }
     }
 }

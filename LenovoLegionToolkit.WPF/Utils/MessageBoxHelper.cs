@@ -42,6 +42,7 @@ public static class MessageBoxHelper
             {
                 Text = message,
                 TextWrapping = TextWrapping.Wrap,
+                Foreground = (System.Windows.Media.Brush)window.FindResource("TextFillColorPrimaryBrush"),
             },
             PrimaryButtonText = primaryButton ?? Resource.Yes,
             SecondaryButtonText = secondaryButton ?? Resource.No,
@@ -93,7 +94,8 @@ public static class MessageBoxHelper
             MaxLines = 1,
             MaxLength = 50,
             PlaceholderText = placeholder ?? string.Empty,
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = (System.Windows.Media.Brush)window.FindResource("TextFillColorPrimaryBrush"),
         };
         var messageBox = new MessageBox
         {

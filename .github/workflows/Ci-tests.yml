@@ -24,7 +24,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Cache NuGet packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
@@ -37,10 +37,10 @@ jobs:
 
       # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
       - name: Test (Unit category — fail fast)
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=LenovoLegionToolkit.Tests.Unit.trx"
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=LenovoLegionToolkit.Tests.Unit.trx"
 
       - name: Test stable paths (full suite + coverage)
-        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings LenovoLegionToolkit.Tests/coverlet.runsettings
+        run: dotnet test LenovoLegionToolkit.Tests/LenovoLegionToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=LenovoLegionToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings LenovoLegionToolkit.Tests/coverlet.runsettings
 
       - name: Check for vulnerable packages
         shell: pwsh
@@ -51,7 +51,7 @@ jobs:
           }
 
       - name: Publish test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         continue-on-error: true
         with:
           name: Test results
@@ -77,8 +77,8 @@ jobs:
             $expectedVersion = "$majorVersion.$minorVersion.$patchVersion"
           }
 
-          $cliExePath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows\win-x64\llt.exe'
-          $cliDllPath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows\win-x64\llt.dll'
+          $cliExePath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe'
+          $cliDllPath = Join-Path $PWD 'LenovoLegionToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.dll'
           if (-not (Test-Path $cliExePath)) {
             throw "CLI executable not found at $cliExePath"
           }

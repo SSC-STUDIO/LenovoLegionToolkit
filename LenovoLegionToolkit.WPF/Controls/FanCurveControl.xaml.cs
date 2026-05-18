@@ -15,6 +15,9 @@ namespace LenovoLegionToolkit.WPF.Controls
 {
 public partial class FanCurveControl : UserControl
 {
+    private const string CelsiusUnit = "°C";
+    private const string RpmUnit = "RPM";
+
     private readonly List<Slider> _sliders = [];
     private readonly InfoTooltip _customToolTip = new();
 
@@ -329,7 +332,7 @@ public partial class FanCurveControl : UserControl
                     return "-";
 
                 var rpm = value < 0 ? 0 : tableData.FanSpeeds[value];
-                return $"{temp}{Resource.Celsius} @ {rpm} {Resource.RPM}";
+                return $"{temp}{CelsiusUnit} @ {rpm} {RpmUnit}";
             }
             catch
             {

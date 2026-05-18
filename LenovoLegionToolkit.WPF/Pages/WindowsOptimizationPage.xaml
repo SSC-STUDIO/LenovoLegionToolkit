@@ -156,7 +156,7 @@
         <Style x:Key="DriverSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
     </Page.Resources>
 
-        <Grid>
+        <Grid Style="{StaticResource AppPageEntranceAnimationStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -507,6 +507,7 @@
                                                 x:Name="_driverMachineTypeTextBox"
                                                 Grid.Row="0"
                                                 Grid.Column="1"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverMachineTypeTextBox"
                                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                                                 ClearButtonEnabled="False"
                                                 PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />
@@ -1238,6 +1239,7 @@
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                                     <wpfui:Button
                                         x:Name="_scanCleanupButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationScanCleanupButton"
                                         MinWidth="120"
                                         Margin="0,0,8,0"
                                         HorizontalAlignment="Stretch"
@@ -1449,5 +1451,3 @@
         </Grid>
     </Grid>
 </Page>
-
-

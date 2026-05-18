@@ -68,7 +68,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         if (await Power.IsPowerAdapterConnectedAsync() != PowerAdapterStatus.Connected
             && TryGetSelectedItem(out var state)
-            && state is PowerModeState.Performance or PowerModeState.GodMode)
+            && state is PowerModeState.Performance or PowerModeState.Extreme or PowerModeState.GodMode)
             Warning = Resource.PowerModeControl_Warning;
         else
             Warning = string.Empty;
@@ -140,4 +140,3 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
         }
     }
 }
-

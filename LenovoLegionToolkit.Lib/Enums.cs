@@ -62,6 +62,7 @@ public enum CapabilityID
     APUsPPTPowerLimit = 0x0105FF00,
     CPUCrossLoadingPowerLimit = 0x0106FF00,
     CPUPL1Tau = 0x0107FF00,
+    CPUOverclockingEnable = 0x0108FF00,
     GPUPowerBoost = 0x0201FF00,
     GPUConfigurableTGP = 0x0202FF00,
     GPUTemperatureLimit = 0x0203FF00,
@@ -74,8 +75,23 @@ public enum CapabilityID
     FanFullSpeed = 0x04020000,
     CpuCurrentFanSpeed = 0x04030001,
     GpuCurrentFanSpeed = 0x04030002,
+    PchCurrentFanSpeed = 0x04030004,
+    PchCurrentTemperature = 0x05010000,
     CpuCurrentTemperature = 0x05040000,
     GpuCurrentTemperature = 0x05050000
+}
+
+public enum CPUOverclockingID
+{
+    PrecisionBoostOverdriveScaler = 0x414D4401,
+    PrecisionBoostOverdriveBoostFrequency = 0x414D4402,
+    AllCoreCurveOptimizer = 0x414D4403,
+}
+
+public enum CpuProfileMode
+{
+    Productivity,
+    X3DGaming
 }
 
 [Flags]
@@ -87,13 +103,30 @@ public enum DriverKey
     FnSpace = 4096,
 }
 
+public enum FanState
+{
+    Auto,
+    Manual,
+}
+
+public enum FanType
+{
+    [Display(ResourceType = typeof(Resource), Name = "CustomFanCurveControl_Fan_CPU")]
+    Cpu = 0,
+    [Display(ResourceType = typeof(Resource), Name = "CustomFanCurveControl_Fan_GPU")]
+    Gpu = 1,
+    [Display(ResourceType = typeof(Resource), Name = "CustomFanCurveControl_Fan_System")]
+    System = 2,
+}
+
 public enum FanTableType
 {
     Unknown,
     CPU,
     CPUSensor,
     GPU,
-    GPU2
+    GPU2,
+    PCH,
 }
 
 public enum FlipToStartState
@@ -155,6 +188,19 @@ public enum IGPUModeState
     Auto
 }
 
+public enum ITSMode
+{
+    None,
+    [Display(ResourceType = typeof(Resource), Name = "ITSMode_Intelligent_Cooling")]
+    ItsAuto,
+    [Display(ResourceType = typeof(Resource), Name = "ITSMode_Intelligent_Battery_Saving")]
+    MmcCool,
+    [Display(ResourceType = typeof(Resource), Name = "ITSMode_Intelligent_Extreme_Performance")]
+    MmcPerformance,
+    [Display(ResourceType = typeof(Resource), Name = "ITSMode_Intelligent_Geek")]
+    MmcGeek
+}
+
 public enum InstantBootState
 {
     [Display(ResourceType = typeof(Resource), Name = "InstantBootState_Off")]
@@ -171,7 +217,8 @@ public enum KeyboardLayout
 {
     Ansi,
     Iso,
-    Jis
+    Jis,
+    Keyboard24Zone,
 }
 
 public enum KnownFolder
@@ -184,10 +231,53 @@ public enum KnownFolder
     SavedSearches
 }
 
+public enum LampEffectType
+{
+    Static,
+    Breathe,
+    Wave,
+    Rainbow,
+    Meteor,
+    Ripple,
+    Sparkle,
+    Gradient,
+    CustomPattern,
+    RainbowWave,
+    SpiralRainbow,
+    AuroraSync,
+}
+
 public enum LightingChangeState
 {
     Panel = 0,
     Ports = 1,
+}
+
+public enum LegionSeries
+{
+    Legion_5 = 0,
+    Legion_Pro_5 = 1,
+    Legion_Slim_5 = 2,
+    Legion_7 = 3,
+    Legion_Pro_7 = 4,
+    Legion_9 = 5,
+    Legion_Go = 6,
+    Lenovo_Slim = 7,
+    Legion_Legacy = 8,
+    IdeaPad = 9,
+    IdeaPad_Gaming = 10,
+    LOQ = 11,
+    YOGA = 12,
+    ThinkBook = 13,
+    Unknown = 255
+}
+
+public enum LibreHardwareMonitorInitialState
+{
+    Fail = 0,
+    Initialized = 1,
+    Success = 2,
+    PawnIONotInstalled = 3
 }
 
 public enum MicrophoneState
@@ -259,6 +349,7 @@ public enum NotificationType
     PowerModeQuiet,
     PowerModeBalance,
     PowerModePerformance,
+    PowerModeExtreme,
     PowerModeGodMode,
     RefreshRate,
     RGBKeyboardBacklightChanged,
@@ -272,7 +363,11 @@ public enum NotificationType
     TouchpadOff,
     UpdateAvailable,
     WhiteKeyboardBacklightChanged,
-    WhiteKeyboardBacklightOff
+    WhiteKeyboardBacklightOff,
+    ITSModeAuto,
+    ITSModeCool,
+    ITSModePerformance,
+    ITSModeGeek
 }
 
 public enum NotificationPriority
@@ -340,6 +435,12 @@ public enum PanelLogoBacklightState
     On
 }
 
+public enum PawnIOState
+{
+    NotInstalled,
+    Installed,
+}
+
 public enum PortsBacklightState
 {
     [Display(ResourceType = typeof(Resource), Name = "PortsBacklightState_Off")]
@@ -373,6 +474,8 @@ public enum PowerModeState
     Balance,
     [Display(ResourceType = typeof(Resource), Name = "PowerModeState_Performance")]
     Performance,
+    [Display(ResourceType = typeof(Resource), Name = "PowerModeState_Extreme")]
+    Extreme = 223,
     [Display(ResourceType = typeof(Resource), Name = "PowerModeState_GodMode")]
     GodMode = 254
 }
@@ -459,6 +562,16 @@ public enum SpeakerState
     Mute,
     [Display(ResourceType = typeof(Resource), Name = "SpeakerState_Unmute")]
     Unmute
+}
+
+public enum FanMaxSpeedState
+{
+    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_Off")]
+    Off,
+    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_On")]
+    On,
+    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_Toggle")]
+    Toggle,
 }
 
 public enum SoftwareStatus
@@ -618,6 +731,7 @@ public enum ThermalModeState
     Quiet,
     Balance,
     Performance,
+    Extreme = 224,
     GodMode = 255
 }
 

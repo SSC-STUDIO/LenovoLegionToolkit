@@ -1,7 +1,6 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
-[![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
@@ -13,9 +12,10 @@
 
 <br />
 
+Lenovo Legion Toolkit (LLT) is an actively developed, independent project under GPL-3.0. It focuses on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensions, and ongoing Windows support.
+
 It runs no background services, uses less memory, uses virtually no CPU, and contains no telemetry. Just like Lenovo Vantage, this application is Windows only.
 
-_Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 <img src="Assets/Screenshot_main.png" width="700" />
 
@@ -23,6 +23,7 @@ _Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 # Table of Contents
   - [Disclaimer](#disclaimer)
+  - [Download](#download)
   - [Quick Start](#quick-start)
   - [Compatibility](#compatibility)
   - [Features](#features)
@@ -43,6 +44,15 @@ Please be patient and read through this readme carefully - it contains important
 
 > [!TIP]
 > If you are looking for a Vantage alternative for Linux, check [LenovoLegionLinux](https://github.com/johnfanv2/LenovoLegionLinux) project out.
+
+## Download
+
+Use the current `SSC-STUDIO/LenovoLegionToolkit` releases for maintained builds.
+
+- **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest).
+- **winget**: Once the package is accepted by Windows Package Manager, install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`.
+- **Scoop**: `scoop install extras/lenovolegiontoolkit` when using the community-maintained Scoop bucket.
+- **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
 #### Next steps
 
@@ -80,15 +90,22 @@ If for whatever reason LLT installer did not setup .NET properly:
 
 After following these steps, you can open Terminal and type: `dotnet --info`. In the output look for section `.NET runtimes installed`, in this section you should see entries for the installed runtime such as `Microsoft.NETCore.App 10.x.x` and `Microsoft.WindowsDesktop.App 10.x.x` under `C:\Program Files\dotnet\shared`.
 
-#### Want to help with testing?
-
-Join the [Legion Series Discord](https://discord.com/invite/legionseries) and head to `#legion-toolkit` channel. Beta versions of future releases are posted there frequently!
-
 ## Compatibility
 
-Lenovo Legion Toolkit is made for Lenovo Legion laptops, and other similar laptops like Ideapad Gaming, LOQ and their Chinese variants.
+Lenovo Legion Toolkit targets Lenovo/Motorola gaming devices recognized by the built-in compatibility logic in `LenovoLegionToolkit.Lib/Utils/Compatibility.cs`.
 
-Generations 6 (MY2021), 7 (MY2022), 8 (MY2023) and 9 (MY2024) are supported, although some features also work on the 5th generation (MY2020). Issues related to devices older than Gen 6 or that are not Legions are out of scope of this project.
+Main supported families:
+- Legion 5, Legion Slim 5, Legion Pro 5
+- Legion 7, Legion Pro 7, Legion 9
+- Legion Go
+- LOQ
+- IdeaPad Gaming (including Chinese variants such as R7000/R9000/Y7000/Y9000)
+
+Compatibility check requires:
+- Vendor reported as `LENOVO` or `MOTOROLA`
+- Model matching one of the supported model prefixes/keywords (for example `16IRX`, `16IAX`, `15ACH`, `14IRP`, `17ACH`, `18IAX`, `ThinkBook`, `LOQ`, `IdeaPad Gaming`)
+
+Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary support target. Some features may also work on selected 5th generation (MY2020) devices.
 
 If you are getting an incompatible message on startup, you can check the *Contribution* section down at the bottom, to see how can you help. Keep in mind, that not always I can make all options compatible with all hardware since I do not have access to it.
 
@@ -683,6 +700,10 @@ Additional documentation is available in the `Docs/` directory:
 - **Application won't start?** Check [.NET 10.0 installation](#problems-with-net)
 - **Features not working?** See [compatibility](#compatibility) section
 - **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
-- **Still need help?** Join [Discord community](https://discord.com/invite/legionseries)
+- **Still need help?** Open a [GitHub Issue](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues)
+
+## Acknowledgment
+
+Special thanks to Bartosz Cichecki, the original creator of Lenovo Legion Toolkit, for the foundational work that helped inspire this project.
 
 Thanks in advance!
