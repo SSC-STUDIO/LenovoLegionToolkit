@@ -3,18 +3,16 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
-[![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
 
 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化应用程序。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
-本仓库是原 [BartoszCichecki/LenovoLegionToolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit) 项目的社区续维护版本。原项目已于 2025 年 7 月 24 日归档并停止积极维护；本项目在 GPL-3.0 许可下继续修复、适配和扩展，包括安全加固、CI/发布自动化、新机型识别、插件扩展、驱动下载和后续 Windows 兼容维护。
+本仓库是一个在 GPL-3.0 许可下持续开发的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展、驱动下载和后续 Windows 兼容维护。
 
 本软件不运行后台服务，使用较少的内存，几乎不使用 CPU，并且不收集用户信息。本程序仅适用于 Windows。
 
-加入 Legion Series Discord 频道: https://discord.com/invite/legionseries!
 
 <img src="Assets/Screenshot_zh-hans.png" width="700" />
 
@@ -44,7 +42,7 @@ Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量�
 
 ## 下载
 
-请认准当前维护仓库 `SSC-STUDIO/LenovoLegionToolkit` 的发布页，不要从已归档的上游仓库下载旧版本。
+请认准当前维护仓库 `SSC-STUDIO/LenovoLegionToolkit` 的发布页下载版本。
 
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest) 下载最新版安装包。
 - **winget**：Windows Package Manager 审核通过后，可使用 `winget install SSC-STUDIO.LenovoLegionToolkit` 安装或更新。
@@ -79,10 +77,6 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 在完成这些步骤后，你可以打开终端并输入： `dotnet --info`。在输出中寻找 "已安装的 .NET 运行时 "部分，你应该能看到类似 `Microsoft.NETCore.App 10.x.x` 和 `Microsoft.WindowsDesktop.App 10.x.x` 的条目，位于 `C:\Program Files\dotnet\shared` 路径下。
 
 确切的版本号可能不同，但只要是 `10.x.x` 就应该没问题。如果经过上述步骤确认后，LLT 在启动时仍然报错提示找不到 .NET 之类的信息，那么问题很可能出在你的机器或系统配置上，而不是 LLT 本身。
-
-#### 想要帮助我们测试？
-
-加入 [Legion Series Discord](https://discord.com/invite/legionseries) 并前往 `#legion-toolkit` 子频道，Beta 测试版与未来更新将会在那里频繁更新。
 
 ## 兼容性
 

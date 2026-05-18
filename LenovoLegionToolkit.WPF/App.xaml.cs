@@ -92,6 +92,8 @@ public partial class App
 
         Log.Instance.IsTraceEnabled = flags.IsTraceEnabled;
 
+        ApplyStartupOverrides(flags);
+
         // Ensure native shell logger writes to the same log file
         Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
 
@@ -431,10 +433,14 @@ public partial class App
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Background initialization failed.", ex);
-
-                throw;
             }
         }, cancellationToken);
+
+        _backgroundInitializationTask = _backgroundInitializationTask.ContinueWith(t =>
+        {
+            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization task completed faulted and was observed.", t.Exception);
+        }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
     }
 
     private async Task AwaitBackgroundInitializationAsync()
@@ -1112,6 +1118,15 @@ public partial class App
         return string.IsNullOrWhiteSpace(sanitizedKey)
             ? baseName
             : $"{baseName}_{sanitizedKey}";
+    }
+
+    private static void ApplyStartupOverrides(Flags flags)
+    {
+        if (!string.IsNullOrWhiteSpace(flags.SingleInstanceKey))
+            Environment.SetEnvironmentVariable(SINGLE_INSTANCE_KEY_ENVIRONMENT_VARIABLE, flags.SingleInstanceKey);
+
+        if (!string.IsNullOrWhiteSpace(flags.IpcPipeName))
+            Environment.SetEnvironmentVariable(LenovoLegionToolkit.CLI.Lib.Constants.PIPE_NAME_ENVIRONMENT_VARIABLE, flags.IpcPipeName);
     }
 
     private static async Task LogSoftwareStatusAsync()

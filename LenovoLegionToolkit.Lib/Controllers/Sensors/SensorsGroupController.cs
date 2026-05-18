@@ -213,7 +213,10 @@ public class SensorsGroupController : IDisposable
         lock (_hardwareLock)
         {
             if (_hardwareInitialized) return;
-            if (!PawnIOHelper.IsPawnIOInstalled()) return;
+
+            var pawnIoInstalled = PawnIOHelper.IsPawnIOInstalled();
+            if (!pawnIoInstalled && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("PawnIO not detected; attempting LibreHardwareMonitor initialization without it.");
 
             try
             {
@@ -408,6 +411,13 @@ public class SensorsGroupController : IDisposable
             var temp = storage.Sensors?.FirstOrDefault(s => s.SensorType == SensorType.Temperature);
             if (temp != null) _storageTempSensors.Add(temp);
         }
+
+        if (Log.Instance.IsTraceEnabled)
+        {
+            var hardwareSummary = string.Join(", ", _hardware.Select(h => $"{h.HardwareType}:{h.Name}"));
+            Log.Instance.Trace($"LibreHardwareMonitor hardware summary: [{hardwareSummary}]");
+            Log.Instance.Trace($"LibreHardwareMonitor CPU package power sensor: {(_cpuPackagePowerSensor is null ? "not found" : _cpuPackagePowerSensor.Name)}");
+        }
     }
 
     public Task<float> GetCpuTemperatureAsync()
@@ -547,11 +557,19 @@ public class SensorsGroupController : IDisposable
 
     private async Task<LibreHardwareMonitorInitialState> InitializeAsync()
     {
-        if (_initialized) { InitialState = LibreHardwareMonitorInitialState.Initialized; return InitialState; }
+        if (_initialized)
+        {
+            InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Initialized;
+            return InitialState;
+        }
         await _initSemaphore.WaitAsync().ConfigureAwait(false);
         try
         {
-            if (_initialized) { InitialState = LibreHardwareMonitorInitialState.Initialized; return InitialState; }
+            if (_initialized)
+            {
+                InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Initialized;
+                return InitialState;
+            }
             await Task.Run(GetHardware).ConfigureAwait(false);
             _initialized = true;
             InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Success;
@@ -564,6 +582,7 @@ public class SensorsGroupController : IDisposable
 
     private void HandleInitException(string reason)
     {
+        Log.Instance.Trace($"LibreHardwareMonitor initialization failed: {reason}");
         var settings = IoCContainer.Resolve<ApplicationSettings>();
         settings.Store.EnableHardwareSensors = false;
         settings.Store.UseNewSensorDashboard = false;
@@ -646,6 +665,8 @@ public class SensorsGroupController : IDisposable
                         if (_cpuPackagePowerSensor != null)
                         {
                             float pVal = _cpuPackagePowerSensor.Value ?? INVALID_VALUE_FLOAT;
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"LibreHardwareMonitor CPU package power raw value: {pVal}");
                             if (pVal > MAX_VALID_CPU_POWER) { Task.Run(ResetSensors); _snapshotCpuPower = INVALID_VALUE_FLOAT; }
                             else if (pVal <= MIN_VALID_POWER_READING) { _snapshotCpuPower = INVALID_VALUE_FLOAT; }
                             else

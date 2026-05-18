@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -78,6 +79,18 @@ private string _currentSearchText = string.Empty;
         if (descriptionTextBlock != null)
         {
             descriptionTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Description", "Install and manage plugins to extend functionality", Resource.Culture);
+        }
+
+        var detailsLabelTextBlock = this.FindName("_detailsLabelTextBlock") as System.Windows.Controls.TextBlock;
+        if (detailsLabelTextBlock != null)
+        {
+            detailsLabelTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_DetailsLabel", "Details", Resource.Culture);
+        }
+
+        var usageGuideLabelTextBlock = this.FindName("_usageGuideLabelTextBlock") as System.Windows.Controls.TextBlock;
+        if (usageGuideLabelTextBlock != null)
+        {
+            usageGuideLabelTextBlock.Text = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_UsageGuideLabel", "Usage Guide", Resource.Culture);
         }
 
         if (_bulkInstallButton != null)
@@ -646,6 +659,10 @@ private string _currentSearchText = string.Empty;
                 }
 
                 var capabilities = ResolvePluginCapabilities(plugin, isInstalled);
+                var localizedName = GetPluginLocalizedName(plugin);
+                var localizedDescription = GetPluginLocalizedDescription(plugin);
+                var detailedDescription = GetPluginDetailedDescription(plugin, localizedDescription, capabilities);
+                var usageGuide = GetPluginUsageGuide(plugin, capabilities);
 
                 // Determine location
                 string location = string.Empty;
@@ -667,6 +684,8 @@ private string _currentSearchText = string.Empty;
                 if (existingViewModel != null)
                 {
                     // Update existing ViewModel
+                    existingViewModel.Name = localizedName;
+                    existingViewModel.Description = localizedDescription;
                     existingViewModel.IsInstalled = isInstalled;
                     existingViewModel.SetUpdateAvailable(updateAvailable);
                     existingViewModel.Version = $"v{version}";
@@ -676,6 +695,8 @@ private string _currentSearchText = string.Empty;
                     existingViewModel.ReleaseDate = releaseDate;
                     existingViewModel.Changelog = changelog;
                     existingViewModel.Author = metadata?.Author ?? string.Empty;
+                    existingViewModel.DetailedDescription = detailedDescription;
+                    existingViewModel.UsageGuide = usageGuide;
                     existingViewModel.SetIconBackgroundFromStore(iconBackground);
 
                     if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -692,11 +713,15 @@ private string _currentSearchText = string.Empty;
                 {
                     // Create new ViewModel
                     var pluginViewModel = new PluginViewModel(plugin, isInstalled, updateAvailable, version, isLocal);
+                    pluginViewModel.Name = localizedName;
+                    pluginViewModel.Description = localizedDescription;
                     pluginViewModel.Location = location;
                     pluginViewModel.NewVersion = newVersion;
                     pluginViewModel.ReleaseDate = releaseDate;
                     pluginViewModel.Changelog = changelog;
                     pluginViewModel.Author = metadata?.Author ?? string.Empty;
+                    pluginViewModel.DetailedDescription = detailedDescription;
+                    pluginViewModel.UsageGuide = usageGuide;
                     pluginViewModel.SetIconBackgroundFromStore(iconBackground);
 
                     if (Lib.Utils.Log.Instance.IsTraceEnabled)
@@ -2274,14 +2299,10 @@ private string _currentSearchText = string.Empty;
 
     private string GetPluginLocalizedName(IPlugin plugin)
     {
-        var resourceName = $"Plugin_Name_{plugin.Id}";
-        var property = typeof(Resource).GetProperty(resourceName);
-        if (property != null)
-        {
-            var value = property.GetValue(null) as string;
-            if (!string.IsNullOrWhiteSpace(value))
-                return value;
-        }
+        var value = GetPluginResourceValue("Plugin_Name", plugin.Id);
+        if (!string.IsNullOrWhiteSpace(value))
+            return value;
+
         return RemovePluginSuffix(plugin.Name);
     }
 
@@ -2421,15 +2442,141 @@ private string _currentSearchText = string.Empty;
 
 private string GetPluginLocalizedDescription(IPlugin plugin)
     {
-        var resourceName = $"Plugin_Description_{plugin.Id}";
-        var property = typeof(Resource).GetProperty(resourceName);
-        if (property != null)
+        var value = GetPluginResourceValue("Plugin_Description", plugin.Id);
+        if (!string.IsNullOrWhiteSpace(value))
+            return value;
+
+        return plugin.Description;
+    }
+
+    private string GetPluginDetailedDescription(IPlugin plugin, string fallbackDescription, PluginUiCapabilities capabilities)
+    {
+        var resourceValue = GetPluginResourceValue("Plugin_Detail", plugin.Id);
+        if (!string.IsNullOrWhiteSpace(resourceValue))
+            return resourceValue;
+
+        return plugin.Id.ToLowerInvariant() switch
         {
-            var value = property.GetValue(null) as string;
+            "custom-mouse" =>
+                "Provides a focused mouse customization workflow inside Lenovo Legion Toolkit. You can manage pointer speed, button behavior, and theme-aware cursor schemes without leaving the host app. This plugin also integrates with Windows Optimization so cursor-related actions stay grouped with the rest of your system tweaks.",
+            "shell-integration" =>
+                "Adds Lenovo Legion Toolkit hooks into the Windows shell workflow. It helps manage Nilesoft Shell registration, packaged shell assets, and related configuration files so context-menu customization stays accessible from the plugin system instead of being scattered across external folders.",
+            "network-acceleration" =>
+                "Adds an interactive network tuning surface with live telemetry, optimization targets, and saved operating modes. It is designed for quick switching between balanced, gaming, and streaming priorities while keeping the underlying actions visible before you apply them.",
+            "vive-tool" =>
+                "Brings Windows feature flag management into Lenovo Legion Toolkit. It can download or use a trusted ViVeTool runtime, import feature definitions, and expose enable or disable actions for advanced Windows experiments from a single UI surface.",
+            _ => BuildFallbackDetailedDescription(fallbackDescription, capabilities)
+        };
+    }
+
+    private string GetPluginUsageGuide(IPlugin plugin, PluginUiCapabilities capabilities)
+    {
+        var resourceValue = GetPluginResourceValue("Plugin_Guide", plugin.Id);
+        if (!string.IsNullOrWhiteSpace(resourceValue))
+            return resourceValue;
+
+        return plugin.Id.ToLowerInvariant() switch
+        {
+            "custom-mouse" =>
+                "1. Install the plugin and open Settings.\n2. Choose pointer speed, button swap, and cursor theme mode.\n3. Use \"Apply Cursor Theme Now\" when you want to force the current theme immediately.\n4. Open the plugin from Windows Optimization when you want to reach its system-tuning entry point.",
+            "shell-integration" =>
+                "1. Install the plugin and open Settings.\n2. Check whether Nilesoft Shell is detected and registered correctly.\n3. Open the config or style editor from the plugin if you need to adjust context-menu appearance.\n4. Use the Windows Optimization entry when you want to toggle the shell integration actions directly.",
+            "network-acceleration" =>
+                "1. Install the plugin and open it.\n2. Pick the target mode that matches your workload: Balanced, Gaming, or Streaming.\n3. Review the planned optimization steps and optional reset actions.\n4. Save the preferred mode or run quick optimization after checking the live telemetry and active adapter state.",
+            "vive-tool" =>
+                "1. Install the plugin and open Settings first.\n2. Download or configure the ViVeTool runtime from a trusted source.\n3. Import a feature definition file if you want a larger feature catalog.\n4. Open the feature page, search for a feature ID or name, then enable or disable it carefully and restart Windows if the feature requires it.",
+            _ => BuildFallbackUsageGuide(capabilities)
+        };
+    }
+
+    private static string BuildFallbackDetailedDescription(string fallbackDescription, PluginUiCapabilities capabilities)
+    {
+        var detail = string.IsNullOrWhiteSpace(fallbackDescription)
+            ? "This plugin extends Lenovo Legion Toolkit with additional functionality."
+            : fallbackDescription.Trim();
+
+        var capabilityNotes = new List<string>();
+        if (capabilities.SupportsSettingsPage)
+            capabilityNotes.Add("includes a settings page");
+        if (capabilities.SupportsFeaturePage)
+            capabilityNotes.Add("includes a dedicated feature page");
+        if (capabilities.SupportsOptimizationCategory)
+            capabilityNotes.Add("adds actions to Windows Optimization");
+
+        if (capabilityNotes.Count == 0)
+            return detail;
+
+        return $"{detail} It {string.Join(", ", capabilityNotes)}.";
+    }
+
+    private static string BuildFallbackUsageGuide(PluginUiCapabilities capabilities)
+    {
+        var steps = new List<string> { "1. Install the plugin from the marketplace." };
+
+        if (capabilities.SupportsSettingsPage)
+            steps.Add("2. Open Settings to review the plugin configuration.");
+        if (capabilities.SupportsFeaturePage || capabilities.SupportsOptimizationCategory)
+            steps.Add("3. Use Open to enter the plugin's working surface and verify the available actions.");
+
+        steps.Add($"{steps.Count + 1}. Uninstall it from this page when you no longer need it.");
+        return string.Join("\n", steps);
+    }
+
+    private string? GetPluginResourceValue(string prefix, string pluginId)
+    {
+        foreach (var key in EnumeratePluginResourceKeys(prefix, pluginId))
+        {
+            var value = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, string.Empty, Resource.Culture);
             if (!string.IsNullOrWhiteSpace(value))
                 return value;
         }
-        return plugin.Description;
+
+        return null;
+    }
+
+    private static IEnumerable<string> EnumeratePluginResourceKeys(string prefix, string pluginId)
+    {
+        var normalized = NormalizePluginResourceSuffix(pluginId);
+        if (!string.IsNullOrWhiteSpace(normalized))
+            yield return $"{prefix}_{normalized}";
+
+        var compact = pluginId.Replace("-", string.Empty, StringComparison.Ordinal)
+                              .Replace("_", string.Empty, StringComparison.Ordinal)
+                              .Replace(" ", string.Empty, StringComparison.Ordinal);
+        if (!string.Equals(compact, normalized, StringComparison.OrdinalIgnoreCase))
+            yield return $"{prefix}_{compact}";
+
+        foreach (var alias in GetPluginResourceAliases(pluginId))
+            yield return $"{prefix}_{alias}";
+    }
+
+    private static string NormalizePluginResourceSuffix(string pluginId)
+    {
+        var parts = pluginId
+            .Split(['-', '_', ' '], StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => char.ToUpperInvariant(part[0]) + part[1..])
+            .ToArray();
+
+        return string.Concat(parts);
+    }
+
+    private static IEnumerable<string> GetPluginResourceAliases(string pluginId)
+    {
+        switch (pluginId.ToLowerInvariant())
+        {
+            case "custom-mouse":
+                yield return "CustomMouse";
+                break;
+            case "shell-integration":
+                yield return "ShellIntegration";
+                break;
+            case "network-acceleration":
+                yield return "NetworkAcceleration";
+                break;
+            case "vive-tool":
+                yield return "ViveTool";
+                break;
+        }
     }
 
 

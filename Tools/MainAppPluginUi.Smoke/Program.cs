@@ -27,6 +27,8 @@ internal static class Program
     private const string PluginImportFilesEnvironmentVariable = "LLT_PLUGIN_IMPORT_FILES";
     private const string PluginSignatureModeEnvironmentVariable = "LLT_PLUGIN_SIGNATURE_MODE";
     private const string SingleInstanceKeyEnvironmentVariable = "LLT_SINGLE_INSTANCE_KEY";
+    private const string SingleInstanceKeySwitch = "--single-instance-key";
+    private const string IpcPipeNameSwitch = "--ipc-pipe-name";
     private const string PluginSourcesEnvironmentVariable = "LLT_SMOKE_PLUGIN_SOURCES";
     private const string ScreenshotModeEnvironmentVariable = "LLT_SMOKE_SCREENSHOTS";
     private const string ScreenshotDirectoryEnvironmentVariable = "LLT_SMOKE_SCREENSHOT_DIR";
@@ -47,6 +49,8 @@ internal static class Program
     private const byte VkEnter = 0x0D;
     private const byte VkSpace = 0x20;
     private const byte VkTab = 0x09;
+    private const byte VkA = 0x41;
+    private const byte VkBack = 0x08;
     private const uint KeyEventExtendedKey = 0x0001;
     private const uint KeyEventKeyUp = 0x0002;
     private const int SwRestore = 9;
@@ -172,6 +176,10 @@ internal static class Program
         MessageBoxType PopupType,
         string WindowName,
         string DismissMethod);
+
+    private sealed record MarketplaceReadiness(
+        AutomationElement Window,
+        bool Ready);
 
     [DllImport("user32.dll")]
     private static extern bool SetCursorPos(int x, int y);
@@ -1096,6 +1104,11 @@ Environment variables:
         startInfo.EnvironmentVariables[SmokeAutomationEnvironmentVariable] = "1";
         startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
 
+        var singleInstanceKey = Path.GetFileName(sandboxState.RootDirectory);
+        startInfo.Arguments = string.IsNullOrWhiteSpace(startInfo.Arguments)
+            ? $"{SingleInstanceKeySwitch}={singleInstanceKey} {IpcPipeNameSwitch}={Constants.PIPE_NAME}"
+            : $"{startInfo.Arguments} {SingleInstanceKeySwitch}={singleInstanceKey} {IpcPipeNameSwitch}={Constants.PIPE_NAME}";
+
         if (localPluginPackageBundle.Packages.Count > 0)
         {
             startInfo.EnvironmentVariables[PluginImportFilesEnvironmentVariable] =
@@ -1594,21 +1607,49 @@ Environment variables:
             new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
 
         var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, condition).Cast<AutomationElement>().ToArray();
+        var candidates = new List<AutomationElement>();
         foreach (var window in windows)
         {
             if (TryHandleCompatibilityWindow(window))
                 continue;
 
-            if (FindByAutomationId(window, "MainNavigationStore") is not null
-                || FindByAutomationId(window, "_navigationStore") is not null
-                || FindByAutomationId(window, "MainRootFrame") is not null)
-            {
+            candidates.Add(window);
+        }
+
+        foreach (var window in candidates)
+        {
+            if (WindowTitleLooksLikeMainShell(window) && HasMainShellMarkers(window))
                 return window;
-            }
+        }
+
+        foreach (var window in candidates)
+        {
+            if (HasMainNavigationMarkers(window))
+                return window;
         }
 
         return null;
     }
+
+    private static bool WindowTitleLooksLikeMainShell(AutomationElement window)
+    {
+        try
+        {
+            return (window.Current.Name ?? string.Empty).Contains("Lenovo Legion Toolkit", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
+    }
+
+    private static bool HasMainShellMarkers(AutomationElement window) =>
+        HasMainNavigationMarkers(window)
+        || FindByAutomationId(window, "MainRootFrame") is not null;
+
+    private static bool HasMainNavigationMarkers(AutomationElement window) =>
+        FindByAutomationId(window, "MainNavigationStore") is not null
+        || FindByAutomationId(window, "_navigationStore") is not null;
 
     private static bool TryHandleCompatibilityWindow(AutomationElement window)
     {
@@ -1647,9 +1688,18 @@ Environment variables:
             {
                 pluginNav = WaitForPluginNavigationElement(mainWindow, TimeSpan.FromSeconds(8));
                 Console.WriteLine($"[main-smoke] Plugin navigation element ready (attempt {attempt}/6)");
-                ActivateNavigationElement(pluginNav, "PluginExtensionsNavItem");
-                WaitForAnimationsToComplete();
-                Console.WriteLine($"[main-smoke] Invoked plugin navigation element (attempt {attempt}/6)");
+                if (TryActivateNavigationElement(pluginNav, "PluginExtensionsNavItem"))
+                {
+                    WaitForAnimationsToComplete();
+                    Console.WriteLine($"[main-smoke] Invoked plugin navigation element (attempt {attempt}/6)");
+                }
+                else
+                {
+                    Console.WriteLine($"[main-smoke] Plugin navigation element was not directly activatable; trying keyboard navigation fallback (attempt {attempt}/6)");
+                    BringToForeground(mainWindow);
+                    PressCtrlTab();
+                    WaitForAnimationsToComplete();
+                }
             }
             catch (TimeoutException)
             {
@@ -1676,10 +1726,14 @@ Environment variables:
             {
                 BringToForeground(mainWindow);
                 DismissAnyBlockingMessageBox(mainWindow, processId);
-                if (pluginNav is not null)
-                    ActivateNavigationElement(pluginNav, "PluginExtensionsNavItem");
+                if (pluginNav is not null && TryActivateNavigationElement(pluginNav, "PluginExtensionsNavItem"))
+                {
+                    Console.WriteLine($"[main-smoke] Re-invoked plugin navigation element (attempt {attempt}/6)");
+                }
                 else
+                {
                     PressCtrlTab();
+                }
                 WaitForAnimationsToComplete();
             }
 
@@ -1747,14 +1801,20 @@ Environment variables:
         if (!refresh)
             return;
 
-        var cardReady = WaitUntil(
-            () =>
-            {
-                mainWindow = ResolveLiveWindow(mainWindow);
-                return IsPluginMarketplaceReady(mainWindow);
-            },
-            TimeSpan.FromSeconds(60),
-            TimeSpan.FromMilliseconds(350));
+        var readiness = WaitForPluginMarketplaceReadyAfterRefresh(mainWindow, TimeSpan.FromSeconds(60));
+        mainWindow = readiness.Window;
+        var cardReady = readiness.Ready;
+        if (!cardReady)
+        {
+            Console.WriteLine("[main-smoke] Plugin marketplace controls were not visible after refresh; retrying Plugin Extensions navigation once.");
+            mainWindow = ResolveLiveWindow(mainWindow);
+            BringToForeground(mainWindow);
+            PressCtrlTab();
+            WaitForAnimationsToComplete(TimeSpan.FromMilliseconds(500));
+            readiness = WaitForPluginMarketplaceReadyAfterRefresh(mainWindow, TimeSpan.FromSeconds(20));
+            mainWindow = readiness.Window;
+            cardReady = readiness.Ready;
+        }
 
         if (!cardReady)
         {
@@ -1764,6 +1824,21 @@ Environment variables:
 
         CaptureMainWindow(mainWindow, refresh ? "plugin-extensions-refreshed" : "plugin-extensions");
         ObserveStep(refresh ? "Plugin Extensions refreshed" : "Plugin Extensions visible", mainWindow);
+    }
+
+    private static MarketplaceReadiness WaitForPluginMarketplaceReadyAfterRefresh(AutomationElement mainWindow, TimeSpan timeout)
+    {
+        var liveWindow = mainWindow;
+        var ready = WaitUntil(
+            () =>
+            {
+                liveWindow = ResolveLiveWindow(liveWindow);
+                return IsPluginMarketplaceReady(liveWindow);
+            },
+            timeout,
+            TimeSpan.FromMilliseconds(350));
+
+        return new MarketplaceReadiness(liveWindow, ready);
     }
 
     private static void TryCapturePluginExtensionsLoadingSkeleton(AutomationElement mainWindow, int processId)
@@ -1802,6 +1877,15 @@ Environment variables:
 
     private static void ActivateNavigationElement(AutomationElement element, string label)
     {
+        if (TryActivateNavigationElement(element, label))
+            return;
+
+        DumpAutomationSnapshot(element, 120);
+        throw new InvalidOperationException($"Failed to activate navigation element '{label}'.");
+    }
+
+    private static bool TryActivateNavigationElement(AutomationElement element, string label)
+    {
         try
         {
             element.SetFocus();
@@ -1815,6 +1899,7 @@ Environment variables:
         try
         {
             Click(element);
+            return true;
         }
         catch (InvalidOperationException) when (!IsInteractable(element))
         {
@@ -1830,7 +1915,7 @@ Environment variables:
             try
             {
                 MouseClick(textDescendant);
-                return;
+                return true;
             }
             catch
             {
@@ -1841,7 +1926,7 @@ Environment variables:
         try
         {
             MouseClick(element);
-            return;
+            return true;
         }
         catch
         {
@@ -1851,12 +1936,11 @@ Environment variables:
         try
         {
             DoubleClick(element);
-            return;
+            return true;
         }
         catch
         {
-            DumpAutomationSnapshot(element, 120);
-            throw new InvalidOperationException($"Failed to activate navigation element '{label}'.");
+            return false;
         }
     }
 
@@ -1954,17 +2038,24 @@ Environment variables:
     {
         var rootReady = IsVisible(FindByAutomationId(mainWindow, "PluginExtensionsPageRoot"));
         var searchReady = IsVisible(FindByAutomationId(mainWindow, "PluginSearchTextBox"));
+        var filterReady = IsVisible(FindByAutomationId(mainWindow, "PluginFilterComboBox"));
+        var bulkImportReady = IsVisible(FindByAutomationId(mainWindow, "PluginBulkImportButton"));
         var listReady = IsVisible(FindByAutomationId(mainWindow, "PluginListBox"));
+        var titleLooksCorrect = (mainWindow.Current.Name ?? string.Empty)
+            .Contains("Plugin Extensions", StringComparison.OrdinalIgnoreCase);
         var hasActionButtons =
             GetPluginIdsByButtonPrefix(mainWindow, "PluginInstallButton_").Any()
             || GetPluginIdsByButtonPrefix(mainWindow, "PluginOpenButton_").Any()
             || GetPluginIdsByButtonPrefix(mainWindow, "PluginConfigureButton_").Any()
             || GetPluginIdsByButtonPrefix(mainWindow, "PluginUninstallButton_").Any();
 
-        if (hasActionButtons || (searchReady && listReady) || rootReady)
+        if (rootReady || (titleLooksCorrect && searchReady && (filterReady || bulkImportReady)) || (searchReady && listReady && hasActionButtons))
             return true;
 
-        return TryFindMarketplacePluginCard(mainWindow, out _);
+        if (!titleLooksCorrect)
+            return false;
+
+        return searchReady && (filterReady || bulkImportReady) && TryFindMarketplacePluginCard(mainWindow, out _);
     }
 
     private static void WaitForPluginMarketplaceInteractionReady(AutomationElement mainWindow, string pluginId, TimeSpan timeout)
@@ -2172,9 +2263,31 @@ Environment variables:
         if (localPlans.Count == 0)
             return;
 
-        var bulkImportButton = WaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(20));
-        Click(bulkImportButton);
-        Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", localPlans.Select(plan => plan.PluginId))}]");
+        var pendingPlans = localPlans
+            .Where(plan => !IsPluginInstalled(mainWindow, sandboxState, plan.PluginId))
+            .ToArray();
+
+        if (pendingPlans.Length == 0)
+        {
+            Console.WriteLine($"[main-smoke] Local plugins already installed; skipping bulk import click for: [{string.Join(", ", localPlans.Select(plan => plan.PluginId))}]");
+        }
+        else
+        {
+            mainWindow = ResolveLiveWindow(mainWindow);
+            var bulkImportButton = TryWaitForAutomationId(mainWindow, "PluginBulkImportButton", TimeSpan.FromSeconds(12));
+
+            if (bulkImportButton is not null)
+            {
+                Click(bulkImportButton);
+                Console.WriteLine($"[main-smoke] Clicked local bulk import for: [{string.Join(", ", pendingPlans.Select(plan => plan.PluginId))}]");
+            }
+            else
+            {
+                Console.WriteLine("[main-smoke] Local bulk import button was not available; installing local plugins through individual marketplace cards.");
+                foreach (var plan in pendingPlans)
+                    InstallPluginFromMarketplace(mainWindow, sandboxState, plan.PluginId);
+            }
+        }
 
         foreach (var plan in localPlans)
         {
@@ -2405,6 +2518,10 @@ Environment variables:
             && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
             TestNetworkAccelerationFeatureInteractions(mainWindow);
 
+        if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
+            && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
+            TestViveToolFeatureInteractions(mainWindow);
+
         if (returnToMarketplace)
             NavigateToPluginExtensionsPage(mainWindow, refresh: false);
     }
@@ -2454,6 +2571,10 @@ Environment variables:
         if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
             && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
             TestNetworkAccelerationFeatureInteractions(mainWindow);
+
+        if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
+            && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
+            TestViveToolFeatureInteractions(mainWindow);
 
         if (returnToMarketplace)
             NavigateToPluginExtensionsPage(mainWindow, refresh: false);
@@ -2663,6 +2784,41 @@ Environment variables:
         Console.WriteLine("[main-smoke] Network feature-page interactions passed");
     }
 
+    private static void TestViveToolFeatureInteractions(AutomationElement mainWindow)
+    {
+        var searchTextBox = WaitForAutomationId(mainWindow, "ViveToolSearchTextBox", TimeSpan.FromSeconds(15));
+        var statusFilter = WaitForAutomationId(mainWindow, "ViveToolStatusFilterComboBox", TimeSpan.FromSeconds(15));
+        var refreshButton = WaitForAutomationId(mainWindow, "ViveToolRefreshListButton", TimeSpan.FromSeconds(15));
+
+        SetTextBoxValue(searchTextBox, "1");
+        Thread.Sleep(700);
+        SelectComboBoxItemByNames(statusFilter, "All Statuses", "All");
+        Click(refreshButton);
+
+        var refreshed = WaitUntil(
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                var dataGrid = FindByAutomationId(mainWindow, "ViveToolFeaturesDataGrid");
+                var emptyState = FindByAutomationId(mainWindow, "ViveToolEmptyStatePanel");
+                var featureCount = FindByAutomationId(mainWindow, "ViveToolFeatureCountText");
+                return IsVisible(dataGrid)
+                       || IsVisible(emptyState)
+                       || (featureCount is not null && !string.IsNullOrWhiteSpace(ReadElementText(featureCount)));
+            },
+            TimeSpan.FromSeconds(20),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!refreshed)
+        {
+            DumpAutomationSnapshot(mainWindow, 320);
+            throw new InvalidOperationException("ViveTool feature-page interaction failed: refresh/search result state was not observed.");
+        }
+
+        CaptureMainWindow(ResolveLiveWindow(mainWindow), "vive-tool-feature-interactions");
+        Console.WriteLine("[main-smoke] ViveTool feature-page interactions passed");
+    }
+
     private static void TestDoubleClickOpensSettings(AutomationElement mainWindow, int processId, string pluginId)
     {
         mainWindow = ResolveLiveWindowAndDismissPopups(mainWindow, processId);
@@ -2697,6 +2853,9 @@ Environment variables:
         if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
             TestNetworkAccelerationSettingsInteractions(settingsWindow);
 
+        if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
+            TestViveToolSettingsInteractions(settingsWindow);
+
         CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
     }
 
@@ -2715,7 +2874,9 @@ Environment variables:
         AutomationElement? settingsWindow = null;
         var activationModes = pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
             ? new[] { "invoke", "keyboard", "mouse", "mouse" }
-            : new[] { "invoke", "mouse" };
+            : pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
+                ? new[] { "mouse", "invoke", "mouse" }
+                : new[] { "invoke", "mouse" };
 
         for (var attempt = 0; attempt < activationModes.Length && settingsWindow is null; attempt++)
         {
@@ -2925,6 +3086,9 @@ Environment variables:
 
         if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
             return new[] { "Shell Integration Settings", "Shell Integration 设置" };
+
+        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
+            return new[] { "Network Acceleration Settings" };
 
         return Array.Empty<string>();
     }
@@ -3236,6 +3400,39 @@ Environment variables:
         Console.WriteLine("[main-smoke] Network settings-page interactions passed");
     }
 
+    private static void TestViveToolSettingsInteractions(AutomationElement settingsWindow)
+    {
+        if (PluginSettingsCompatibilityFallbackVisible(settingsWindow))
+        {
+            Console.WriteLine("[main-smoke] ViveTool settings page is compatibility-gated by host/plugin Wpf.Ui mismatch; accepting stable fallback.");
+            return;
+        }
+
+        var statusText = WaitForAutomationId(settingsWindow, "ViveToolSettingsStatusText", TimeSpan.FromSeconds(15));
+        var pathTextBox = WaitForAutomationId(settingsWindow, "ViveToolSettingsPathTextBox", TimeSpan.FromSeconds(15));
+        var refreshButton = WaitForAutomationId(settingsWindow, "ViveToolSettingsRefreshStatusButton", TimeSpan.FromSeconds(15));
+
+        Click(refreshButton);
+
+        var settingsRefreshed = WaitUntil(
+            () =>
+            {
+                var status = ReadElementText(statusText);
+                var path = ReadElementText(pathTextBox);
+                return !string.IsNullOrWhiteSpace(status) || !string.IsNullOrWhiteSpace(path);
+            },
+            TimeSpan.FromSeconds(12),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!settingsRefreshed)
+        {
+            DumpAutomationSnapshot(settingsWindow, 260);
+            throw new InvalidOperationException("ViveTool settings-page interaction failed: refreshed status/path was not observed.");
+        }
+
+        Console.WriteLine("[main-smoke] ViveTool settings-page interactions passed");
+    }
+
     private static AutomationElement WaitForPluginSettingsWindow(
         int processId,
         int mainWindowHandle,
@@ -3413,6 +3610,10 @@ Environment variables:
     {
         return FindByAutomationId(window, "_pluginSettingsFrame") is not null
                || FindByAutomationId(window, "_pluginNameTextBlock") is not null
+               || FindByAutomationId(window, "PluginSettingsCloseButton") is not null
+               || FindByAutomationId(window, "NetworkAcceleration_SettingsRoot") is not null
+               || FindByAutomationId(window, "NetworkAcceleration_SaveSettingsButton") is not null
+               || FindByAutomationId(window, "NetworkAcceleration_AutoOptimizeCheckBox") is not null
                || (window.Current.Name?.Contains("settings", StringComparison.OrdinalIgnoreCase) ?? false)
                || (window.Current.Name?.Contains("设置", StringComparison.Ordinal) ?? false);
     }
@@ -3717,7 +3918,16 @@ Environment variables:
 
     private static bool TryDismissMessageBox(AutomationElement mainWindow, int processId, TimeSpan timeout)
     {
-        var mainWindowHandle = mainWindow.Current.NativeWindowHandle;
+        if (!TryGetNativeWindowHandle(mainWindow, out var mainWindowHandle))
+        {
+            mainWindow = TryFindMainShellWindow(processId) ?? mainWindow;
+            if (!TryGetNativeWindowHandle(mainWindow, out mainWindowHandle))
+            {
+                Console.WriteLine("[main-smoke] MessageBox detection skipped because the main window handle is temporarily unavailable.");
+                return false;
+            }
+        }
+
         var messageBox = DetectMessageBoxWindow(processId, mainWindowHandle, timeout);
 
         if (messageBox is null)
@@ -4021,6 +4231,7 @@ Environment variables:
 
     private static void EnsurePluginMarketplaceEntrySelected(AutomationElement mainWindow, string pluginId)
     {
+        EnsurePluginMarketplaceView(mainWindow);
         mainWindow = ResolveLiveWindow(mainWindow);
         if (IsPluginMarketplaceEntryActionable(mainWindow, pluginId))
             return;
@@ -4103,6 +4314,31 @@ Environment variables:
 
         if (!selected)
             throw new TimeoutException($"Plugin marketplace detail actions did not appear after selecting '{pluginId}'.");
+    }
+
+    private static void EnsurePluginMarketplaceView(AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        if (IsPluginMarketplaceReady(mainWindow))
+            return;
+
+        NavigateToPluginExtensionsPage(mainWindow, refresh: false);
+        mainWindow = ResolveLiveWindow(mainWindow);
+
+        var ready = WaitUntil(
+            () =>
+            {
+                mainWindow = ResolveLiveWindow(mainWindow);
+                return IsPluginMarketplaceReady(mainWindow);
+            },
+            TimeSpan.FromSeconds(12),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!ready)
+        {
+            DumpAutomationSnapshot(mainWindow, 260);
+            throw new TimeoutException("Failed to restore Plugin Extensions marketplace view.");
+        }
     }
 
     private static bool TrySelectElementOrAncestor(AutomationElement element)
@@ -4306,7 +4542,11 @@ Environment variables:
 
         var category = WaitForOptimizationCategory(mainWindow, pluginId, definition, TimeSpan.FromSeconds(30));
         if (category is not null)
+        {
+            TryScrollElementIntoView(category);
             ExpandIfNeeded(category);
+            TryScrollElementIntoView(category);
+        }
 
         var settingsButton = WaitForOptimizationSettingsButton(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
         Console.WriteLine($"[main-smoke] Optimization settings button ready ({pluginId}): {settingsButton.Current.AutomationId}");
@@ -4338,7 +4578,7 @@ Environment variables:
         try
         {
             return definition.ActionAutomationIds
-                .Select(actionId => WaitForAutomationId(mainWindow, actionId, timeout))
+                .Select(actionId => WaitForAutomationIdWithScroll(mainWindow, actionId, timeout))
                 .ToArray();
         }
         catch (TimeoutException) when (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
@@ -4373,7 +4613,7 @@ Environment variables:
                     {
                         foreach (var actionPrefix in actionPrefixes)
                         {
-                            var fallback = TryWaitForAutomationIdPrefix(mainWindow, actionPrefix + candidateSuffix, timeout);
+                            var fallback = TryWaitForAutomationIdPrefixWithScroll(mainWindow, actionPrefix + candidateSuffix, timeout);
                             if (fallback is not null)
                             {
                                 Console.WriteLine($"[main-smoke] custom-mouse optimization action resolved by prefix fallback: requested='{actionId}' candidate='{actionPrefix + candidateSuffix}' actual='{fallback.Current.AutomationId}' name='{fallback.Current.Name}'");
@@ -4382,7 +4622,7 @@ Environment variables:
                         }
                     }
 
-                    return WaitForAutomationId(mainWindow, actionId, timeout);
+                    return WaitForAutomationIdWithScroll(mainWindow, actionId, timeout);
                 })
                 .ToArray();
 
@@ -4419,7 +4659,7 @@ Environment variables:
                     {
                         foreach (var actionPrefix in actionPrefixes)
                         {
-                            var fallback = TryWaitForAutomationIdPrefix(mainWindow, actionPrefix + candidateSuffix, timeout);
+                            var fallback = TryWaitForAutomationIdPrefixWithScroll(mainWindow, actionPrefix + candidateSuffix, timeout);
                             if (fallback is not null)
                             {
                                 Console.WriteLine($"[main-smoke] shell-integration optimization action resolved by prefix fallback: requested='{actionId}' candidate='{actionPrefix + candidateSuffix}' actual='{fallback.Current.AutomationId}' name='{fallback.Current.Name}'");
@@ -4428,7 +4668,7 @@ Environment variables:
                         }
                     }
 
-                    return WaitForAutomationId(mainWindow, actionId, timeout);
+                    return WaitForAutomationIdWithScroll(mainWindow, actionId, timeout);
                 })
                 .ToArray();
 
@@ -4984,6 +5224,31 @@ Environment variables:
         }
     }
 
+    private static void SetTextBoxValue(AutomationElement textBox, string value)
+    {
+        EnsureElementInteractable(textBox, "text box");
+
+        if (textBox.TryGetCurrentPattern(ValuePattern.Pattern, out var valuePattern))
+        {
+            ((ValuePattern)valuePattern).SetValue(value);
+            return;
+        }
+
+        try
+        {
+            textBox.SetFocus();
+            Thread.Sleep(80);
+            PressCtrlA();
+            PressVirtualKey(VkBack);
+            foreach (var character in value)
+                SendUnicodeCharacter(character);
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException)
+        {
+            throw new InvalidOperationException("Failed to set text box value.", ex);
+        }
+    }
+
     private static void TryCaptureDriverDownloadLoadingSkeleton(AutomationElement mainWindow)
     {
         if (_screenshotMode != ScreenshotMode.Always)
@@ -5297,6 +5562,79 @@ Environment variables:
                ?? throw new InvalidOperationException($"Automation element '{automationId}' disappeared after wait.");
     }
 
+    private static AutomationElement WaitForAutomationIdWithScroll(AutomationElement root, string automationId, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () =>
+            {
+                var element = FindByAutomationId(root, automationId);
+                if (element is null)
+                    return false;
+
+                if (IsInteractable(element))
+                    return true;
+
+                TryScrollElementIntoView(element);
+                return IsInteractable(element);
+            },
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            throw new TimeoutException($"Timed out waiting for automation element '{automationId}'.");
+
+        var resolved = FindByAutomationId(root, automationId);
+        if (resolved is null)
+            throw new InvalidOperationException($"Automation element '{automationId}' disappeared after wait.");
+
+        if (!IsInteractable(resolved))
+        {
+            TryScrollElementIntoView(resolved);
+            Thread.Sleep(150);
+        }
+
+        if (!IsInteractable(resolved))
+            throw new InvalidOperationException($"Automation element '{automationId}' was not interactable after scroll wait.");
+
+        return resolved;
+    }
+
+    private static AutomationElement? TryWaitForAutomationIdPrefixWithScroll(AutomationElement root, string automationIdPrefix, TimeSpan timeout)
+    {
+        var found = WaitUntil(
+            () =>
+            {
+                var element = FindByAutomationIdPrefix(root, automationIdPrefix)
+                              ?? FindByAutomationIdPrefixIncludingOffscreen(root, automationIdPrefix);
+                if (element is null)
+                    return false;
+
+                if (IsInteractable(element))
+                    return true;
+
+                TryScrollElementIntoView(element);
+                return IsInteractable(element);
+            },
+            timeout,
+            TimeSpan.FromMilliseconds(250));
+
+        if (!found)
+            return null;
+
+        var resolved = FindByAutomationIdPrefix(root, automationIdPrefix)
+                       ?? FindByAutomationIdPrefixIncludingOffscreen(root, automationIdPrefix);
+        if (resolved is null)
+            return null;
+
+        if (!IsInteractable(resolved))
+        {
+            TryScrollElementIntoView(resolved);
+            Thread.Sleep(150);
+        }
+
+        return IsInteractable(resolved) ? resolved : null;
+    }
+
     private static AutomationElement? TryWaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
     {
         try
@@ -5335,6 +5673,18 @@ Environment variables:
         }
 
         throw new InvalidOperationException($"Automation element set was not interactable after wait: '{string.Join("', '", candidates)}'.");
+    }
+
+    private static AutomationElement? TryWaitForAnyAutomationId(AutomationElement root, IReadOnlyList<string> automationIds, TimeSpan timeout)
+    {
+        try
+        {
+            return WaitForAnyAutomationId(root, automationIds, timeout);
+        }
+        catch (TimeoutException)
+        {
+            return null;
+        }
     }
 
     private static AutomationElement WaitForAutomationIdOrNames(AutomationElement root, string automationId, string[] names, TimeSpan timeout)
@@ -5428,6 +5778,44 @@ Environment variables:
         }
 
         return null;
+    }
+
+    private static AutomationElement? FindByAutomationIdPrefixIncludingOffscreen(AutomationElement root, string automationIdPrefix)
+    {
+        try
+        {
+            return root.FindAll(TreeScope.Descendants, Condition.TrueCondition)
+                .Cast<AutomationElement>()
+                .Where(element =>
+                {
+                    try
+                    {
+                        var automationId = element.Current.AutomationId ?? string.Empty;
+                        return automationId.StartsWith(automationIdPrefix, StringComparison.Ordinal);
+                    }
+                    catch (Exception ex) when (IsRecoverableAutomationException(ex))
+                    {
+                        return false;
+                    }
+                })
+                .OrderBy(element => element.Current.AutomationId, StringComparer.Ordinal)
+                .FirstOrDefault();
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            var liveRoot = ResolveLiveWindow(root);
+            if (ReferenceEquals(liveRoot, root))
+                return null;
+
+            try
+            {
+                return FindByAutomationIdPrefixIncludingOffscreen(liveRoot, automationIdPrefix);
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 
     private static AutomationElement? FindByName(AutomationElement root, string name)
@@ -6338,6 +6726,34 @@ Environment variables:
         Thread.Sleep(220);
     }
 
+    private static void PressCtrlA()
+    {
+        keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkA, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkA, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(80);
+    }
+
+    private static void PressVirtualKey(byte virtualKey)
+    {
+        keybd_event(virtualKey, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(60);
+    }
+
+    private static void SendUnicodeCharacter(char character)
+    {
+        keybd_event((byte)character, 0, KeyEventExtendedKey, UIntPtr.Zero);
+        Thread.Sleep(40);
+        keybd_event((byte)character, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
+        Thread.Sleep(60);
+    }
+
     private static void PressNavigationKey(AutomationElement element, byte virtualKey)
     {
         try
@@ -6418,6 +6834,24 @@ Environment variables:
         catch
         {
             return false;
+        }
+    }
+
+    private static void TryScrollElementIntoView(AutomationElement? element)
+    {
+        if (element is null)
+            return;
+
+        try
+        {
+            if (element.TryGetCurrentPattern(ScrollItemPattern.Pattern, out var scrollItemPattern))
+            {
+                ((ScrollItemPattern)scrollItemPattern).ScrollIntoView();
+                Thread.Sleep(150);
+            }
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex) || ex is InvalidOperationException)
+        {
         }
     }
 

@@ -50,7 +50,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar Grid.Row="0" Height="38">
+        <wpfui:TitleBar Grid.Row="0" Height="38" Title="">
             <wpfui:TitleBar.CenterContent>
                 <TextBlock
                     x:Name="_title"

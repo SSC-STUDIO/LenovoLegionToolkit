@@ -143,18 +143,18 @@ public partial class MainWindow
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = 16,
             FontWeight = FontWeights.Medium,
-            Foreground = (Brush)Application.Current.FindResource("TextFillColorPrimaryBrush"),
             TextWrapping = TextWrapping.WrapWithOverflow
         };
+        snackbarTitle.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
 
         var snackbarMessage = new TextBlock
         {
             Name = "_snackbarMessage",
             Margin = new Thickness(0, 6, 0, 0),
             FontSize = 14,
-            Foreground = (Brush)Application.Current.FindResource("TextFillColorSecondaryBrush"),
             TextWrapping = TextWrapping.WrapWithOverflow
         };
+        snackbarMessage.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
 
         var panel = new StackPanel
         {
@@ -178,7 +178,6 @@ public partial class MainWindow
         }
         else
         {
-            // If there is no page title, only show the app name
             Title = appName;
             _title.Text = appName;
         }

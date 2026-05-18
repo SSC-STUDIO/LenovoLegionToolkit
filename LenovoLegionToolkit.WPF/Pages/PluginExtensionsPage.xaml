@@ -559,6 +559,32 @@
                                        Style="{StaticResource AppBodyTextBlockStyle}"
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
+                            <StackPanel Margin="0,14,0,0"
+                                        Visibility="{Binding HasDetailedDescription, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock x:Name="_detailsLabelTextBlock"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{Binding DetailedDescription}"
+                                           Margin="0,8,0,0"
+                                           TextWrapping="Wrap"
+                                           Style="{StaticResource AppBodyTextBlockStyle}"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,14,0,0"
+                                        Visibility="{Binding HasUsageGuide, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock x:Name="_usageGuideLabelTextBlock"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{Binding UsageGuide}"
+                                           Margin="0,8,0,0"
+                                           TextWrapping="Wrap"
+                                           Style="{StaticResource AppBodyTextBlockStyle}"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+
                             <Border Height="1"
                                     Margin="0,14,0,12"
                                     Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
@@ -624,32 +650,6 @@
                                              Maximum="100"
                                              Minimum="0" />
                             </StackPanel>
-                        </StackPanel>
-
-                        <StackPanel
-                            Margin="0,4,0,0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding PluginId, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                            <wpfui:SymbolIcon
-                                Symbol="Apps24"
-                                FontSize="40"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                HorizontalAlignment="Center"
-                                Margin="0,0,0,12" />
-                            <TextBlock
-                                Text="Select a plugin"
-                                Style="{StaticResource AppSectionTitleTextBlockStyle}"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                HorizontalAlignment="Center"
-                                TextAlignment="Center" />
-                            <TextBlock
-                                Margin="0,6,0,0"
-                                Text="Choose a plugin from the list to view details and available actions."
-                                Style="{StaticResource AppPageDescriptionTextBlockStyle}"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                HorizontalAlignment="Center"
-                                TextAlignment="Center" />
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>

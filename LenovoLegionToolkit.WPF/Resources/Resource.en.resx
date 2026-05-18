@@ -2004,6 +2004,9 @@ Requires restart.</value>
   <data name="CrashReportNotification_OpenReport" xml:space="preserve">
     <value>Open Report</value>
   </data>
+  <data name="CrashReportNotification_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="CrashReportNotification_ReportPath" xml:space="preserve">
     <value>Crash report saved to: {0}</value>
   </data>
@@ -3559,6 +3562,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
     <value>What's New:</value>
   </data>
+  <data name="PluginExtensionsPage_DetailsLabel" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="PluginExtensionsPage_UsageGuideLabel" xml:space="preserve">
+    <value>Usage Guide</value>
+  </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Refresh plugin list</value>
   </data>
@@ -3909,6 +3918,9 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="SensorsControl_RateRange" xml:space="preserve">
     <value>Rate Range</value>
+  </data>
+  <data name="SensorsControl_DetailsToggleToolTip" xml:space="preserve">
+    <value>Double-click to show or hide detailed sensor information.</value>
   </data>
   <data name="WindowsOptimizationPage_Cleanup_NoSelection_Warning" xml:space="preserve">
     <value>Please select at least one cleanup option.</value>
