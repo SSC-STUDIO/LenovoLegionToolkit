@@ -98,9 +98,20 @@ Join the [Legion Series Discord](https://discord.com/invite/legionseries) and he
 
 ## Compatibility
 
-Lenovo Legion Toolkit is made for Lenovo Legion laptops, and other similar laptops like Ideapad Gaming, LOQ and their Chinese variants.
+Lenovo Legion Toolkit targets Lenovo/Motorola gaming devices recognized by the built-in compatibility logic in `LenovoLegionToolkit.Lib/Utils/Compatibility.cs`.
 
-Generations 6 (MY2021), 7 (MY2022), 8 (MY2023) and 9 (MY2024) are supported, although some features also work on the 5th generation (MY2020). Issues related to devices older than Gen 6 or that are not Legions are out of scope of this project.
+Main supported families:
+- Legion 5, Legion Slim 5, Legion Pro 5
+- Legion 7, Legion Pro 7, Legion 9
+- Legion Go
+- LOQ
+- IdeaPad Gaming (including Chinese variants such as R7000/R9000/Y7000/Y9000)
+
+Compatibility check requires:
+- Vendor reported as `LENOVO` or `MOTOROLA`
+- Model matching one of the supported model prefixes/keywords (for example `16IRX`, `16IAX`, `15ACH`, `14IRP`, `17ACH`, `18IAX`, `ThinkBook`, `LOQ`, `IdeaPad Gaming`)
+
+Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary support target. Some features may also work on selected 5th generation (MY2020) devices.
 
 If you are getting an incompatible message on startup, you can check the *Contribution* section down at the bottom, to see how can you help. Keep in mind, that not always I can make all options compatible with all hardware since I do not have access to it.
 

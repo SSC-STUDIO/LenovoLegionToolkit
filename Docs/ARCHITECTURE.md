@@ -217,7 +217,11 @@ Automatic Actions Execution
 ## Platform Compatibility
 
 - **Windows**: 10 (1809+), 11 (x64 only)
-- **Hardware**: Legion Gen 6-9, Ideapad Gaming, LOQ series
+- **Hardware (code-driven detection)**:
+  - Vendor: `LENOVO` or `MOTOROLA`
+  - Primary families: Legion 5/Slim 5/Pro 5, Legion 7/Pro 7/9, Legion Go, LOQ, IdeaPad Gaming
+  - Chinese model naming variants are recognized (for example `R7000`, `R9000`, `Y7000`, `Y9000`)
+  - Detection source: `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` (`AllowedModelsPrefix`, `MachineTypeMap`, `ModelKeywordMap`)
 - **Dependencies**: .NET 10.0 Desktop Runtime, Lenovo drivers
 
 ## Performance Characteristics

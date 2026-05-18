@@ -86,9 +86,20 @@ LLT 在后台运行时效果最好，所以去设置中启用_开机启动_和_�
 
 ## 兼容性
 
-LLT 适配 2020 款及其之后的拯救者机型。
+LLT 按 `LenovoLegionToolkit.Lib/Utils/Compatibility.cs` 中的内置兼容性逻辑识别设备，目标适配 Lenovo/Motorola 的相关游戏设备。
 
-一些功能在 2020 款之前发布的机型和 Ideapad Gaming 3 笔记本可以正常工作（或者说大部分工作），但可能会遇到一些小问题。这里是测试过支持的型号列表 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
+主要支持系列包括：
+- Legion 5、Legion Slim 5、Legion Pro 5
+- Legion 7、Legion Pro 7、Legion 9
+- Legion Go
+- LOQ
+- IdeaPad Gaming（含 R7000/R9000/Y7000/Y9000 等国行命名）
+
+兼容性检查的基本条件：
+- 设备厂商为 `LENOVO` 或 `MOTOROLA`
+- 机型匹配支持的前缀或关键字（如 `16IRX`、`16IAX`、`15ACH`、`14IRP`、`17ACH`、`18IAX`、`ThinkBook`、`LOQ`、`IdeaPad Gaming`）
+
+目前重点支持 6 代（MY2021）到 9 代（MY2024）及更新机型；部分 5 代（MY2020）机型的部分功能也可使用。支持型号的实时代码清单见 [Compatibility.cs](https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LenovoLegionToolkit.Lib/Utils/Compatibility.cs)。
 
 如果你在启动时看到不兼容弹窗，你可以查看底部的*贡献*部分，查看你能否帮助我适配你的机型。谨记我没有那么多的笔记本型号，所以一些功能我无法适配。
 
