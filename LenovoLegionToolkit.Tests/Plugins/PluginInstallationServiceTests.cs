@@ -63,14 +63,31 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(pluginId, includeSharedRuntimeFiles: true);
+        var canonicalSharedAssemblyPath = Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll");
+        var assemblySourcePath = Assembly.GetExecutingAssembly().Location;
+        var createdCanonicalSharedAssembly = false;
 
-        var result = await service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+        if (!File.Exists(canonicalSharedAssemblyPath))
+        {
+            File.Copy(assemblySourcePath, canonicalSharedAssemblyPath, overwrite: true);
+            createdCanonicalSharedAssembly = true;
+        }
 
-        result.Should().BeTrue();
+        try
+        {
+            var result = await service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
 
-        var installedPluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
-        File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")).Should().BeTrue();
-        File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")).Should().BeFalse();
+            result.Should().BeTrue();
+
+            var installedPluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
+            File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")).Should().BeTrue();
+            File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")).Should().BeFalse();
+        }
+        finally
+        {
+            if (createdCanonicalSharedAssembly && File.Exists(canonicalSharedAssemblyPath))
+                File.Delete(canonicalSharedAssemblyPath);
+        }
     }
 
     [Fact]
