@@ -404,10 +404,16 @@ public class PluginInstallationService
             using var stream = File.OpenRead(manifestPath);
             using var document = JsonDocument.Parse(stream);
 
-            if (!document.RootElement.TryGetProperty("id", out var idElement))
-                return null;
+            string? pluginId = null;
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (!string.Equals(property.Name, "id", StringComparison.OrdinalIgnoreCase))
+                    continue;
 
-            var pluginId = idElement.GetString();
+                pluginId = property.Value.GetString();
+                break;
+            }
+
             return string.IsNullOrWhiteSpace(pluginId) ? null : pluginId.Trim();
         }
         catch (Exception ex)

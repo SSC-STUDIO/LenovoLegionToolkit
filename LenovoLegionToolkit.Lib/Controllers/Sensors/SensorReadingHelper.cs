@@ -67,7 +67,7 @@ internal static class SensorReadingHelper
     {
         try
         {
-            var readings = await WMI.ReadAsync("root\\CIMV2",
+            var readings = await WMI.ReadAsync("root\\CIMV2\\power",
                 query,
                 pdc => NormalizePowerReadingToWatts(
                     pdc["Power"]?.Value

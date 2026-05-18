@@ -254,12 +254,12 @@ LLT follows SemVer format: `MAJOR.MINOR.PATCH`
 # Update version in Directory.Build.props
 # Update CHANGELOG.md with changes
 # Create git tag
-git tag -a v3.6.3 -m "Release v3.6.3"
-git push origin v3.6.3
+git tag -a vX.Y.Z -m "Release vX.Y.Z"
+git push origin vX.Y.Z
 
 # Create GitHub Release
-gh release create v3.6.3 \
-    --title "Lenovo Legion Toolkit v3.6.3" \
+gh release create vX.Y.Z \
+    --title "Lenovo Legion Toolkit vX.Y.Z" \
     --notes "$(cat CHANGELOG.md | head -n 50)"
 ```
 
@@ -314,25 +314,45 @@ The maintainer-side manifest draft lives under `Packaging/winget`. The canonical
 Before submitting a new version:
 
 1. Publish a stable GitHub Release with `LenovoLegionToolkit_vX.Y.Z_Setup.exe` and `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`.
-2. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
-3. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` unless winget review requires a rename before first acceptance.
-4. Validate locally on Windows:
+2. Do not draft a new version manifest until the release asset URL and installer SHA256 are final.
+3. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
+4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` unless winget review requires a rename before first acceptance.
+5. Validate locally on Windows:
    ```powershell
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget uninstall SSC-STUDIO.LenovoLegionToolkit
    ```
-5. Submit the version folder to `microsoft/winget-pkgs` and wait for automated validation.
+6. Submit the version folder to `microsoft/winget-pkgs` and wait for automated validation.
 
 Use the GitHub Release URL as the winget installer source. Do not use mirror URLs in winget manifests.
+
+### Scoop Submission
+
+The maintainer workflow for Scoop lives under `Packaging/scoop`. The canonical submission target is the upstream `ScoopInstaller/Extras` bucket.
+
+Before submitting a new version:
+
+1. Publish a stable GitHub Release with the final installer and checksum file.
+2. Do not draft or submit a Scoop manifest update until the installer URL and SHA256 are final.
+3. Update the community `lenovolegiontoolkit` manifest in `ScoopInstaller/Extras` with the new version, URL, and hash.
+4. Validate on a clean machine:
+   ```powershell
+   scoop bucket add extras
+   scoop install extras/lenovolegiontoolkit
+   scoop update extras/lenovolegiontoolkit
+   scoop uninstall lenovolegiontoolkit
+   ```
+5. Submit the manifest update to `ScoopInstaller/Extras`.
 
 ### High-Traffic Release Readiness
 
 When promoting a release on Chinese social platforms or after winget acceptance:
 
 - Pin the current GitHub Release URL, winget command, and SHA256 file in all announcement posts.
-- Link to the active `SSC-STUDIO/LenovoLegionToolkit` repository and explicitly state that `BartoszCichecki/LenovoLegionToolkit` is archived.
+- Link to the active `SSC-STUDIO/LenovoLegionToolkit` repository in all promotion content.
 - Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
+- Mention Scoop as a community-maintained channel, not the canonical release source.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
 - Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
@@ -374,10 +394,10 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 1. **GitHub Release Rollback**
    ```bash
    # Revert to previous version
-   gh release delete v3.6.4 --yes
-   gh release create v3.6.3 \
-       --title "Lenovo Legion Toolkit v3.6.3 (Hotfix)" \
-       --notes "Emergency rollback from v3.6.4"
+   gh release delete vX.Y.Z --yes
+   gh release create vA.B.C \
+       --title "Lenovo Legion Toolkit vA.B.C (Hotfix)" \
+       --notes "Emergency rollback from vX.Y.Z"
    ```
 
 2. **winget Update**
@@ -390,7 +410,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 
 ```bash
 # Checkout previous stable tag
-git checkout v3.6.2
+git checkout vA.B.C
 dotnet build --configuration Release
 # Deploy as hotfix release
 ```

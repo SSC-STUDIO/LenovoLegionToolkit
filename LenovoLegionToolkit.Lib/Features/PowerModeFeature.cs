@@ -25,9 +25,12 @@ public class PowerModeFeature(
     PowerModeListener powerModeListener)
     : AbstractWmiFeature<PowerModeState>(WMI.LenovoGameZoneData.GetSmartFanModeAsync, WMI.LenovoGameZoneData.SetSmartFanModeAsync, WMI.LenovoGameZoneData.IsSupportSmartFanAsync, 1), IFeature<PowerModeState>
 {
+    private PowerModeState? _lastKnownState;
+
     public bool AllowAllPowerModesOnBattery { get; set; }
 
     async Task<bool> IFeature<PowerModeState>.IsSupportedAsync() => await IsSupportedAsync().ConfigureAwait(false);
+    async Task<PowerModeState> IFeature<PowerModeState>.GetStateAsync() => await GetStateAsync().ConfigureAwait(false);
 
     public new async Task<bool> IsSupportedAsync()
     {
@@ -37,9 +40,29 @@ public class PowerModeFeature(
         return (await GetAllStatesAsync().ConfigureAwait(false)).Length > 0;
     }
 
+    public new async Task<PowerModeState> GetStateAsync()
+    {
+        try
+        {
+            var state = await ReadStateCoreAsync().ConfigureAwait(false);
+            _lastKnownState = state;
+            return state;
+        }
+        catch (Exception ex)
+        {
+            var fallbackState = await GetFallbackStateAsync().ConfigureAwait(false);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Falling back to {fallbackState} after power mode state read failure [feature={nameof(PowerModeFeature)}]", ex);
+
+            return fallbackState;
+        }
+    }
+
     public override async Task<PowerModeState[]> GetAllStatesAsync()
     {
         var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+        var supportedPowerModes = mi.SupportedPowerModes ?? [];
         var states = new List<PowerModeState>
         {
             PowerModeState.Quiet,
@@ -47,16 +70,16 @@ public class PowerModeFeature(
             PowerModeState.Performance
         };
 
-        foreach (var supportedPowerMode in mi.SupportedPowerModes)
+        foreach (var supportedPowerMode in supportedPowerModes)
         {
             if (!states.Contains(supportedPowerMode))
                 states.Add(supportedPowerMode);
         }
 
-        if (mi.Properties.SupportsExtremeMode || mi.SupportedPowerModes.Contains(PowerModeState.Extreme))
+        if (mi.Properties.SupportsExtremeMode || supportedPowerModes.Contains(PowerModeState.Extreme))
             states.Add(PowerModeState.Extreme);
 
-        if (mi.Properties.SupportsGodMode || mi.SupportedPowerModes.Contains(PowerModeState.GodMode))
+        if (mi.Properties.SupportsGodMode || supportedPowerModes.Contains(PowerModeState.GodMode))
             states.Add(PowerModeState.GodMode);
 
         return [.. states.Distinct()];
@@ -110,6 +133,7 @@ public class PowerModeFeature(
 
         thermalModeListener.SuppressNext();
         await base.SetStateAsync(state).ConfigureAwait(false);
+        _lastKnownState = state;
 
         await powerModeListener.NotifyAsync(state).ConfigureAwait(false);
     }
@@ -128,5 +152,31 @@ public class PowerModeFeature(
             return;
 
         await godModeController.ApplyStateAsync().ConfigureAwait(false);
+    }
+
+    internal virtual Task<PowerModeState> ReadStateCoreAsync() => base.GetStateAsync();
+
+    private async Task<PowerModeState> GetFallbackStateAsync()
+    {
+        if (_lastKnownState.HasValue)
+            return _lastKnownState.Value;
+
+        try
+        {
+            var allStates = await GetAllStatesAsync().ConfigureAwait(false);
+
+            if (allStates.Contains(PowerModeState.Balance))
+                return PowerModeState.Balance;
+
+            if (allStates.Length > 0)
+                return allStates[0];
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to compute fallback power mode state [feature={nameof(PowerModeFeature)}]", ex);
+        }
+
+        return PowerModeState.Balance;
     }
 }

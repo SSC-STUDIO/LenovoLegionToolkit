@@ -10,14 +10,45 @@ namespace LenovoLegionToolkit.Lib.System.Management;
 
 public static partial class WMI
 {
+    private static bool IsAccessDenied(ManagementException ex) =>
+        ex.ErrorCode == ManagementStatus.AccessDenied
+        || ex.Message.Contains("Access denied", StringComparison.OrdinalIgnoreCase)
+        || ex.Message.Contains("拒绝访问", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsInvalidObject(ManagementException ex) =>
+        ex.ErrorCode == ManagementStatus.InvalidObject
+        || ex.Message.Contains("Invalid object", StringComparison.OrdinalIgnoreCase)
+        || ex.Message.Contains("无效的对象", StringComparison.OrdinalIgnoreCase);
+
     internal static async Task<bool> ExistsAsync(string scope, FormattableString query)
     {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         try
         {
-            var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
             var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsync().ConfigureAwait(false);
             return managementObjects.Any();
+        }
+        catch (ManagementException ex) when (IsAccessDenied(ex))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI exists probe denied. [scope={scope}, query={queryFormatted}]", ex);
+
+            return false;
+        }
+        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI exists probe unavailable. [scope={scope}, query={queryFormatted}]", ex);
+
+            return false;
+        }
+        catch (ManagementException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI exists probe failed. [scope={scope}, query={queryFormatted}]", ex);
+
+            return false;
         }
         catch
         {
@@ -103,16 +134,27 @@ public static partial class WMI
     private static async Task<ManagementBaseObject> CallInternalAsync(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams)
     {
         var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
-        var mos = new ManagementObjectSearcher(scope, queryFormatted);
-        var managementObjects = await mos.GetAsync().ConfigureAwait(false);
-        var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                var mos = new ManagementObjectSearcher(scope, queryFormatted);
+                var managementObjects = await mos.GetAsync().ConfigureAwait(false);
+                var managementObject = managementObjects.FirstOrDefault() ?? throw new InvalidOperationException("No results in query");
 
-        var mo = (ManagementObject)managementObject;
-        var methodParamsObject = mo.GetMethodParameters(methodName);
-        foreach (var pair in methodParams)
-            methodParamsObject[pair.Key] = pair.Value;
+                var mo = (ManagementObject)managementObject;
+                var methodParamsObject = mo.GetMethodParameters(methodName);
+                foreach (var pair in methodParams)
+                    methodParamsObject[pair.Key] = pair.Value;
 
-        return mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+                return mo.InvokeMethod(methodName, methodParamsObject, new InvokeMethodOptions());
+            }
+            catch (ManagementException ex) when (attempt < 2 && IsInvalidObject(ex))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"WMI call hit an invalid object, retrying. [scope={scope}, query={queryFormatted}, methodName={methodName}, attempt={attempt}]", ex);
+            }
+        }
     }
 
     internal class WMIPropertyValueFormatter : IFormatProvider, ICustomFormatter

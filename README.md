@@ -1,7 +1,6 @@
 # Lenovo Legion Toolkit
 
 [![Build](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/LenovoLegionToolkit/actions/workflows/Build.yml)
-[![Join Discord](https://img.shields.io/discord/761178912230473768?label=Legion%20Series%20Discord)](https://discord.com/invite/legionseries)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 ---
@@ -13,11 +12,10 @@
 
 <br />
 
-Lenovo Legion Toolkit (LLT) is a community-maintained continuation of the original [BartoszCichecki/LenovoLegionToolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit) project, which was archived on July 24, 2025. This fork keeps the GPL-3.0 project moving with compatibility fixes, security hardening, updated CI/release automation, newer device detection, plugin extensions, and ongoing Windows support.
+Lenovo Legion Toolkit (LLT) is an actively developed, independent project under GPL-3.0. It focuses on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensions, and ongoing Windows support.
 
 It runs no background services, uses less memory, uses virtually no CPU, and contains no telemetry. Just like Lenovo Vantage, this application is Windows only.
 
-_Join the Legion Series Discord: https://discord.com/invite/legionseries!_
 
 <img src="Assets/Screenshot_main.png" width="700" />
 
@@ -49,7 +47,7 @@ Please be patient and read through this readme carefully - it contains important
 
 ## Download
 
-Use the current `SSC-STUDIO/LenovoLegionToolkit` releases, not the archived upstream repository, for maintained builds.
+Use the current `SSC-STUDIO/LenovoLegionToolkit` releases for maintained builds.
 
 - **GitHub Releases**: Download the latest installer from [Releases](https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/latest).
 - **winget**: Once the package is accepted by Windows Package Manager, install or update with `winget install SSC-STUDIO.LenovoLegionToolkit`.
@@ -91,10 +89,6 @@ If for whatever reason LLT installer did not setup .NET properly:
 > If you installed LLT from Scoop, the required .NET runtime should have been installed automatically as a dependency. If anything fails, use `scoop update` to update all packages and try to reinstall LLT with `--force` argument.
 
 After following these steps, you can open Terminal and type: `dotnet --info`. In the output look for section `.NET runtimes installed`, in this section you should see entries for the installed runtime such as `Microsoft.NETCore.App 10.x.x` and `Microsoft.WindowsDesktop.App 10.x.x` under `C:\Program Files\dotnet\shared`.
-
-#### Want to help with testing?
-
-Join the [Legion Series Discord](https://discord.com/invite/legionseries) and head to `#legion-toolkit` channel. Beta versions of future releases are posted there frequently!
 
 ## Compatibility
 
@@ -706,6 +700,6 @@ Additional documentation is available in the `Docs/` directory:
 - **Application won't start?** Check [.NET 10.0 installation](#problems-with-net)
 - **Features not working?** See [compatibility](#compatibility) section
 - **Logs needed?** Follow [log collection](#how-to-collect-logs) guide
-- **Still need help?** Join [Discord community](https://discord.com/invite/legionseries)
+- **Still need help?** Open a [GitHub Issue](https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues)
 
 Thanks in advance!

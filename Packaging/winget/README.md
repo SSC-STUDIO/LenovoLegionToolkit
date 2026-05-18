@@ -17,17 +17,18 @@ This folder keeps the maintainer-side winget manifest draft for `SSC-STUDIO.Leno
    `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
 2. Confirm the release also includes:
    `LenovoLegionToolkit_vX.Y.Z_SHA256.txt`
-3. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
-4. Validate the manifest locally:
+3. Do not create or submit a new version manifest until the final release asset URL and SHA256 are available.
+4. Copy the installer SHA256 from the release checksum file into the winget installer manifest.
+5. Validate the manifest locally:
    ```powershell
    winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    ```
-5. Test install and uninstall from the manifest on a clean Windows machine:
+6. Test install and uninstall from the manifest on a clean Windows machine:
    ```powershell
    winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
    winget uninstall SSC-STUDIO.LenovoLegionToolkit
    ```
-6. Submit the manifest folder to `microsoft/winget-pkgs`.
+7. Submit the manifest folder to `microsoft/winget-pkgs`.
 
 ## Notes
 

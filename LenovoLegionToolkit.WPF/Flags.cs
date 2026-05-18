@@ -11,6 +11,8 @@ namespace LenovoLegionToolkit.WPF;
 public class Flags
 {
     public const string DisableUpdateCheckerSwitch = "--disable-update-checker";
+    public const string SingleInstanceKeySwitch = "--single-instance-key";
+    public const string IpcPipeNameSwitch = "--ipc-pipe-name";
 
     public bool IsTraceEnabled { get; }
     public bool Minimized { get; }
@@ -28,6 +30,8 @@ public class Flags
     public bool ProxyAllowAllCerts { get; }
     public bool DisableUpdateChecker { get; }
     public bool DisableConflictingSoftwareWarning { get; }
+    public string? SingleInstanceKey { get; }
+    public string? IpcPipeName { get; }
 
     public Flags(IEnumerable<string> startupArgs)
     {
@@ -49,6 +53,8 @@ public class Flags
         ProxyAllowAllCerts = BoolValue(args, "--proxy-allow-all-certs");
         DisableUpdateChecker = BoolValue(args, DisableUpdateCheckerSwitch);
         DisableConflictingSoftwareWarning = BoolValue(args, "--disable-conflicting-software-warning");
+        SingleInstanceKey = StringValue(args, SingleInstanceKeySwitch);
+        IpcPipeName = StringValue(args, IpcPipeNameSwitch);
     }
 
     private static string[] LoadExternalArgs()
@@ -88,5 +94,7 @@ public class Flags
         $" {nameof(ProxyPassword)}: [REDACTED]," +
         $" {nameof(ProxyAllowAllCerts)}: {ProxyAllowAllCerts}," +
         $" {nameof(DisableUpdateChecker)}: {DisableUpdateChecker}, " +
-        $" {nameof(DisableConflictingSoftwareWarning)}: {DisableConflictingSoftwareWarning}";
+        $" {nameof(DisableConflictingSoftwareWarning)}: {DisableConflictingSoftwareWarning}," +
+        $" {nameof(SingleInstanceKey)}: {SingleInstanceKey}," +
+        $" {nameof(IpcPipeName)}: {IpcPipeName}";
 }

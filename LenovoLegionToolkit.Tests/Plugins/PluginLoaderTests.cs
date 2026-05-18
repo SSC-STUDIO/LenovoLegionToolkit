@@ -61,6 +61,16 @@ public class PluginLoaderTests : IDisposable
         return method!;
     }
 
+    private static MethodInfo GetPrivateNestedStaticMethod(string nestedTypeName, string methodName)
+    {
+        var nestedType = typeof(PluginLoader).GetNestedType(nestedTypeName, BindingFlags.NonPublic);
+        nestedType.Should().NotBeNull();
+
+        var method = nestedType!.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+        return method!;
+    }
+
     private static string InvokePrivateStringMethod(MethodInfo method, object? argument)
     {
         var result = method.Invoke(null, new object?[] { argument });
@@ -511,6 +521,16 @@ public class PluginLoaderTests : IDisposable
 
         // Assert
         result.Should().Be("testplugin");
+    }
+
+    [Fact]
+    public void ShouldShareDefaultContextAssembly_WithWpfUiAssembly_ShouldReturnTrue()
+    {
+        var method = GetPrivateNestedStaticMethod("PluginAssemblyLoadContext", "ShouldShareDefaultContextAssembly");
+
+        var result = InvokePrivateBoolMethod(method, "Wpf.Ui");
+
+        result.Should().BeTrue();
     }
 
     #endregion

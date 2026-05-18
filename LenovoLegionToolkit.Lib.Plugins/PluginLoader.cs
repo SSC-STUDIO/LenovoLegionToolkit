@@ -625,10 +625,8 @@ public class PluginLoader : IPluginLoader
             if (string.IsNullOrWhiteSpace(assemblySimpleName))
                 return null;
 
-            // Share host contracts and host runtime assemblies with the default context.
-            if (assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
-                !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase) &&
-                !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase))
+            // Share host contracts and host UI/runtime assemblies with the default context.
+            if (ShouldShareDefaultContextAssembly(assemblySimpleName))
             {
                 return ResolveSharedHostAssembly(assemblyName);
             }
@@ -648,6 +646,16 @@ public class PluginLoader : IPluginLoader
                 return null;
 
             return LoadFromAssemblyPath(normalizedCandidatePath);
+        }
+
+        private static bool ShouldShareDefaultContextAssembly(string assemblySimpleName)
+        {
+            if (assemblySimpleName.StartsWith("Wpf.Ui", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
+                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase) &&
+                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase);
         }
 
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)

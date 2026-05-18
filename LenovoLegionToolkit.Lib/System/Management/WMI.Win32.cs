@@ -86,10 +86,11 @@ public static partial class WMI
                             {
                                 return (voltageRaw & 0x7F) / 10.0;
                             }
-                            else
-                            {
-                                return voltageRaw / 1000.0;
-                            }
+
+                            // Without the capability bit, SMBIOS encodes the legacy voltage set
+                            // rather than a raw millivolt reading. These values are not useful as
+                            // live core-voltage telemetry, so treat them as unavailable.
+                            return 0.0;
                         }
                         return 0.0;
                     }).ConfigureAwait(false);

@@ -73,7 +73,31 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")).Should().BeFalse();
     }
 
-    private string CreatePluginZipPackage(string pluginId, bool includeSharedRuntimeFiles = false)
+    [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldHonorManifestIdEvenWhenJsonUsesPascalCase()
+    {
+        const string manifestPluginId = "shell-integration";
+        var pluginManager = new Mock<IPluginManager>();
+        var service = new PluginInstallationService(pluginManager.Object);
+        var pluginsRoot = CreateTempDirectory();
+        var zipPath = CreatePluginZipPackage(
+            manifestPluginId,
+            manifestContent: """
+                             {
+                               "Id": "shell-integration",
+                               "Name": "Shell Integration",
+                               "Version": "1.0.11"
+                             }
+                             """);
+
+        var result = await service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        result.Should().BeTrue();
+        Directory.Exists(Path.Combine(pluginsRoot, "local", manifestPluginId)).Should().BeTrue();
+        pluginManager.Verify(manager => manager.InstallPlugin(manifestPluginId), Times.Once);
+    }
+
+    private string CreatePluginZipPackage(string pluginId, bool includeSharedRuntimeFiles = false, string? manifestContent = null)
     {
         var packageDirectory = CreateTempDirectory();
         var packageRoot = Path.Combine(packageDirectory, "package");
@@ -84,13 +108,14 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         File.Copy(assemblySourcePath, Path.Combine(packageRoot, assemblyFileName), overwrite: true);
         File.WriteAllText(
             Path.Combine(packageRoot, "plugin.json"),
-            $$"""
-              {
-                "id": "{{pluginId}}",
-                "name": "Test Local Plugin",
-                "version": "1.0.0"
-              }
-              """);
+            manifestContent
+            ?? $$"""
+                 {
+                   "id": "{{pluginId}}",
+                   "name": "Test Local Plugin",
+                   "version": "1.0.0"
+                 }
+                 """);
 
         if (includeSharedRuntimeFiles)
         {

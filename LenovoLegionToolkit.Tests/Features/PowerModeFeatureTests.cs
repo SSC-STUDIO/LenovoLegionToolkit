@@ -168,10 +168,126 @@ public class PowerModeFeatureTests : UnitTestBase
         }
     }
 
+    [Fact]
+    public async Task GetAllStatesAsync_WhenSupportedPowerModesIsNull_ShouldStillReturnStandardModes()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DE",
+                Model = "Legion Pro 7 16IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = null!,
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new PowerModeFeature(
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
+
+            var states = await feature.GetAllStatesAsync();
+
+            states.Should().Contain([PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance]);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenRuntimeReadFails_ShouldFallBackToBalance()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DF",
+                Model = "Legion Y9000P IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new TestPowerModeFeature(() => throw new InvalidOperationException("WMI access denied"));
+
+            var state = await feature.GetStateAsync();
+
+            state.Should().Be(PowerModeState.Balance);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenRuntimeReadFailsAfterSuccess_ShouldUseLastKnownState()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DF",
+                Model = "Legion Y9000P IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var invocationCount = 0;
+            var feature = new TestPowerModeFeature(() =>
+            {
+                invocationCount++;
+                return invocationCount switch
+                {
+                    1 => Task.FromResult(PowerModeState.Performance),
+                    _ => throw new InvalidOperationException("WMI access denied"),
+                };
+            });
+
+            var firstState = await feature.GetStateAsync();
+            var secondState = await feature.GetStateAsync();
+
+            firstState.Should().Be(PowerModeState.Performance);
+            secondState.Should().Be(PowerModeState.Performance);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
     private static void ResetCompatibilityCache()
     {
         typeof(Compatibility).GetField("_machineInformation", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
         typeof(Compatibility).GetField("_isCompatible", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
+    }
+
+    private sealed class TestPowerModeFeature(Func<Task<PowerModeState>> readState) : PowerModeFeature(
+        null!,
+        null!,
+        null!,
+        null!,
+        null!)
+    {
+        internal override Task<PowerModeState> ReadStateCoreAsync() => readState();
     }
 }
 
