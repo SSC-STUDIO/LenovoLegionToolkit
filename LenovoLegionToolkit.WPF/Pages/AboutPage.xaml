@@ -86,7 +86,6 @@
                 <wpfui:HyperlinkButton Content="Autofac" NavigateUri="https://github.com/autofac/Autofac" />
                 <wpfui:HyperlinkButton Content="Ben.Demystifier" NavigateUri="https://github.com/benaadams/Ben.Demystifier" />
                 <wpfui:HyperlinkButton Content="ColorPicker" NavigateUri="https://github.com/PixiEditor/ColorPicker" />
-                <wpfui:HyperlinkButton Content="CoordinateSharp" NavigateUri="https://github.com/Tronald/CoordinateSharp" />
                 <wpfui:HyperlinkButton Content="CsWin32" NavigateUri="https://github.com/microsoft/CsWin32" />
                 <wpfui:HyperlinkButton Content="Humanizer" NavigateUri="https://github.com/Humanizr/Humanizer" />
             </StackPanel>
@@ -135,6 +134,5 @@
         </StackPanel>
     </wpfui:DynamicScrollViewer>
 </Page>
-
 
 

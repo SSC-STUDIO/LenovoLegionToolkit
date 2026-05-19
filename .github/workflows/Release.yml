@@ -81,11 +81,23 @@ jobs:
         dotnet publish LenovoLegionToolkit.WPF/LenovoLegionToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
         if ($LASTEXITCODE -ne 0) { throw "WPF publish failed." }
 
-        dotnet publish LenovoLegionToolkit.SpectrumTester/LenovoLegionToolkit.SpectrumTester.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
-        if ($LASTEXITCODE -ne 0) { throw "Spectrum Tester publish failed." }
-
         dotnet publish LenovoLegionToolkit.CLI/LenovoLegionToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
+
+        $prunePaths = @(
+          (Join-Path $env:BUILD_OUTPUT 'x86'),
+          (Join-Path $env:BUILD_OUTPUT 'arm64'),
+          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.exe'),
+          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.dll'),
+          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.deps.json'),
+          (Join-Path $env:BUILD_OUTPUT 'SpectrumTester.runtimeconfig.json')
+        )
+
+        foreach ($path in $prunePaths) {
+          if (Test-Path $path) {
+            Remove-Item -Recurse -Force $path
+          }
+        }
 
     - name: Smoke CLI help and version
       shell: pwsh

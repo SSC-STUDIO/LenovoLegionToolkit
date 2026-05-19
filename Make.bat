@@ -2,6 +2,7 @@
 setlocal enabledelayedexpansion
 
 set ERROR_COUNT=0
+set BUILD_DIR=Build
 
 REM Check build mode
 IF "%1"=="-d" (
@@ -21,14 +22,15 @@ IF "%VERSION%"=="" (
 
 SET PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 6"
 
-dotnet publish LenovoLegionToolkit.WPF -c release -o Build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
+
+dotnet publish LenovoLegionToolkit.WPF -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
-dotnet publish LenovoLegionToolkit.SpectrumTester -c release -o Build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+dotnet publish LenovoLegionToolkit.CLI -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
-dotnet publish LenovoLegionToolkit.CLI -c release -o Build /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
 
 iscc MakeInstaller.iss /DMyAppVersion=%VERSION%
 IF %ERRORLEVEL% NEQ 0 (
@@ -82,6 +84,20 @@ echo To debug: Open solution in VS 2022 and attach to process
 echo.
 
 GOTO END
+
+:PRUNE_RELEASE_OUTPUT
+set TARGET_DIR=%~1
+if "%TARGET_DIR%"=="" exit /b 0
+
+if exist "%TARGET_DIR%\x86" rmdir /s /q "%TARGET_DIR%\x86"
+if exist "%TARGET_DIR%\arm64" rmdir /s /q "%TARGET_DIR%\arm64"
+
+if exist "%TARGET_DIR%\SpectrumTester.exe" del /q "%TARGET_DIR%\SpectrumTester.exe"
+if exist "%TARGET_DIR%\SpectrumTester.dll" del /q "%TARGET_DIR%\SpectrumTester.dll"
+if exist "%TARGET_DIR%\SpectrumTester.deps.json" del /q "%TARGET_DIR%\SpectrumTester.deps.json"
+if exist "%TARGET_DIR%\SpectrumTester.runtimeconfig.json" del /q "%TARGET_DIR%\SpectrumTester.runtimeconfig.json"
+
+exit /b 0
 
 :END
 echo.
