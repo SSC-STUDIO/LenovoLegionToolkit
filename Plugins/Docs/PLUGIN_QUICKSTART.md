@@ -5,7 +5,7 @@ This is the shortest path for creating a new plugin in this repository.
 ## 1. Check The Environment
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
+.\llt-plugin.cmd doctor
 ```
 
 If host references are missing:
@@ -25,7 +25,7 @@ Pick one archetype:
 Example:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   init `
   --template feature-settings `
   --folder MyPlugin `
@@ -46,7 +46,7 @@ This generates:
 ## 3. Build The Plugin
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   build `
   --plugin my-plugin
 ```
@@ -54,7 +54,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 ## 4. Preview In The Host Shell
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   preview `
   --plugin my-plugin `
   --theme system `
@@ -64,7 +64,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 Use `dev` for the normal inner loop:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   dev `
   --plugin my-plugin `
   --theme system `
@@ -82,7 +82,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 ## 5. Validate Author Requirements
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   validate `
   --plugin my-plugin `
   --profile contributor
@@ -91,7 +91,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 ## 6. Pack A Local ZIP
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   package `
   --plugin my-plugin `
   --build-first
@@ -102,7 +102,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 If the plugin should become an official plugin:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   promote `
   --plugin my-plugin
 ```
@@ -110,7 +110,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
 That ensures the `store` object in `plugin.manifest.json` is ready and writes the legacy `store-entry.json` compatibility file. After that, validate with:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   validate `
   --plugin my-plugin `
   --profile official-candidate

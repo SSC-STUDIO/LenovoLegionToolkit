@@ -12,15 +12,10 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
-$cliProject = Join-Path $repoRoot "Tools\PluginTooling.Cli\PluginTooling.Cli.csproj"
-$dotnet = if ($env:DOTNET_HOST_PATH) { $env:DOTNET_HOST_PATH } else { "dotnet" }
+$toolingScript = Join-Path $repoRoot "Scripts\Invoke-PluginTooling.ps1"
 
 $arguments = @(
-    "run",
-    "--project", $cliProject,
-    "--",
     "validate",
-    "--repository-root", $repoRoot,
     "--profile", $Profile,
     "--configuration", $Configuration
 )
@@ -47,8 +42,9 @@ foreach ($id in $PluginIds) {
 }
 
 if ($normalizedPluginIds.Count -gt 0) {
-    $arguments += @("--plugin-ids", ($normalizedPluginIds | Select-Object -Unique) -join ",")
+    $pluginIdsValue = (($normalizedPluginIds | Select-Object -Unique) -join ",")
+    $arguments += @("--plugin-ids", $pluginIdsValue)
 }
 
-& $dotnet @arguments
+& powershell -NoProfile -ExecutionPolicy Bypass -File $toolingScript @arguments
 exit $LASTEXITCODE

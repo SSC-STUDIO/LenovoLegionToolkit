@@ -500,6 +500,8 @@ public sealed class StoreGenerationRequest
     public string? AssetRoot { get; init; }
     public IReadOnlyList<string> PluginIds { get; init; } = Array.Empty<string>();
     public DateTimeOffset? ReleaseDate { get; init; }
+    public bool MergeExisting { get; init; }
+    public bool RequireAssets { get; init; }
 }
 
 public sealed record StoreCheckResult(string StorePath, bool Matches, string Message);

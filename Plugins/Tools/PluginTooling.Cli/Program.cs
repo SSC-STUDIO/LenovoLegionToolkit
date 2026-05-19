@@ -265,7 +265,7 @@ static async Task<int> ProgramMainAsync(string[] args)
         var generator = new StoreJsonGenerator();
         var pluginIds = OptionalValue(argv, "--plugin-ids")?
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            ?? Array.Empty<string>();
+            ?? (OptionalValue(argv, "--plugin") is { } pluginId ? [pluginId] : Array.Empty<string>());
 
         var request = new StoreGenerationRequest
         {
@@ -275,6 +275,8 @@ static async Task<int> ProgramMainAsync(string[] args)
             AssetRoot = OptionalValue(argv, "--asset-root"),
             PluginIds = pluginIds,
             ReleaseDate = ParseReleaseDate(OptionalValue(argv, "--release-date")),
+            MergeExisting = HasFlag(argv, "--merge-existing"),
+            RequireAssets = HasFlag(argv, "--require-assets"),
         };
 
         if (HasFlag(argv, "--check"))
@@ -385,6 +387,6 @@ plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile c
 plugin-tooling package --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
 plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>]
 plugin-tooling promote --plugin <plugin-id> [--overwrite]
-plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--check]
+plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--merge-existing] [--require-assets] [--check]
 """);
 }

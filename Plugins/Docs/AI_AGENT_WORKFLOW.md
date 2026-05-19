@@ -7,10 +7,10 @@ This document is for AI agents and automation running against the plugin reposit
 1. Read the machine-wide workstation context from `/mnt/c/Users/96152/.agents/skills/workstation-context/SKILL.md`.
 2. Check `git status --short --branch`.
 3. Preserve unrelated dirty changes. Do not revert user work.
-4. Prefer the Windows `dotnet.exe` from WSL for WPF builds:
+4. Use the repository tooling shim for plugin commands. It publishes the CLI once under `Build/tooling` and reuses the executable:
 
-```sh
-'/mnt/c/Program Files/dotnet/dotnet.exe' build LenovoLegionToolkit-Plugins.sln --configuration Release --nologo
+```bat
+llt-plugin.cmd doctor
 ```
 
 ## Agent Evidence Paths
@@ -18,19 +18,16 @@ This document is for AI agents and automation running against the plugin reposit
 Use `artifacts/agent/` for machine-readable reports:
 
 ```sh
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   doctor \
-  --repository-root . \
   --json-report-path artifacts/agent/doctor.json
 
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   inspect \
-  --repository-root . \
   --json-report-path artifacts/agent/inspect.json
 
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   validate \
-  --repository-root . \
   --profile contributor \
   --skip-build \
   --skip-tests \
@@ -40,9 +37,8 @@ dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
 Run full candidate validation when the repository is ready for a slower check:
 
 ```sh
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   validate \
-  --repository-root . \
   --profile official-candidate \
   --json-report-path artifacts/agent/validate-official.json
 ```
@@ -54,9 +50,8 @@ Root `store.json` should be reproducible from `plugin.manifest.json` store metad
 Check without writing:
 
 ```sh
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   generate-store \
-  --repository-root . \
   --check \
   --release-date 2026-04-21T15:03:21.2902122+00:00
 ```
@@ -64,10 +59,20 @@ dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
 Regenerate only when the store diff is intentional:
 
 ```sh
-dotnet run --project Tools/PluginTooling.Cli/PluginTooling.Cli.csproj -- \
+./llt-plugin.cmd \
   generate-store \
-  --repository-root . \
   --release-date 2026-04-21T15:03:21.2902122+00:00
+```
+
+When updating only a selected release set, preserve the other published entries and fail if the expected ZIP is missing:
+
+```sh
+./llt-plugin.cmd \
+  generate-store \
+  --plugin-ids custom-mouse,shell-integration \
+  --asset-root Build/release-assets \
+  --merge-existing \
+  --require-assets
 ```
 
 Do not hand-edit root `store.json` for normal plugin authoring.

@@ -26,17 +26,16 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Build plugin tooling CLI
+      - name: Prime plugin tooling CLI
         shell: pwsh
         run: |
-          dotnet build .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -c Release --nologo
+          .\Scripts\Invoke-PluginTooling.ps1 --help
 
       - name: Validate official candidates
         shell: pwsh
         run: |
-          dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+          .\Scripts\Invoke-PluginTooling.ps1 `
             validate `
-            --repository-root $PWD.Path `
             --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
             --profile official-candidate
 
@@ -45,9 +44,8 @@ jobs:
         run: |
           $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           foreach ($pluginId in $pluginIds) {
-            dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+            .\Scripts\Invoke-PluginTooling.ps1 `
               build `
-              --repository-root $PWD.Path `
               --plugin $pluginId
           }
 
@@ -57,9 +55,8 @@ jobs:
           $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           New-Item -ItemType Directory -Path .\Build\release-assets -Force | Out-Null
           foreach ($pluginId in $pluginIds) {
-            dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+            .\Scripts\Invoke-PluginTooling.ps1 `
               package `
-              --repository-root $PWD.Path `
               --plugin $pluginId `
               --output-dir .\Build\release-assets
           }
@@ -102,11 +99,13 @@ jobs:
       - name: Regenerate store.json
         shell: pwsh
         run: |
-          dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+          .\Scripts\Invoke-PluginTooling.ps1 `
             generate-store `
-            --repository-root $PWD.Path `
+            --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
             --asset-root .\Build\release-assets `
-            --output .\store.json
+            --output .\store.json `
+            --merge-existing `
+            --require-assets
 
       - name: Commit updated store.json
         shell: pwsh

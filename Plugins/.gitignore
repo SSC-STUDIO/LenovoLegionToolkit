@@ -8,3 +8,6 @@ artifacts-plugin-completion-check.log
 *.user
 *.DotSettings.user
 TestResults/
+task_plan.md
+findings.md
+progress.md

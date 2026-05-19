@@ -3,7 +3,7 @@ setlocal
 
 set SCRIPT_DIR=%~dp0
 set REPO_ROOT=%SCRIPT_DIR:~0,-1%
-set TOOLING=%REPO_ROOT%\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj
+set TOOLING_SCRIPT=%REPO_ROOT%\Scripts\Invoke-PluginTooling.ps1
 
-dotnet run --project "%TOOLING%" -- %* --repository-root "%REPO_ROOT%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%TOOLING_SCRIPT%" %*
 exit /b %ERRORLEVEL%

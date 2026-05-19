@@ -11,7 +11,7 @@ REM ============================================================
 SET SCRIPT_DIR=%~dp0
 SET REPO_ROOT=%SCRIPT_DIR:~0,-1%
 SET SOLUTION=%REPO_ROOT%\LenovoLegionToolkit-Plugins.sln
-SET TOOLING=%REPO_ROOT%\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj
+SET TOOLING_SCRIPT=%REPO_ROOT%\Scripts\Invoke-PluginTooling.ps1
 
 IF "%1"=="-h" GOTO HELP
 IF "%1"=="/h" GOTO HELP
@@ -56,26 +56,26 @@ dotnet build "%SOLUTION%" -c Debug
 EXIT /B %ERRORLEVEL%
 
 :CHECK
-dotnet run --project "%TOOLING%" -- validate --repository-root "%REPO_ROOT%" --profile official-candidate
+CALL :RUN_TOOLING validate --profile official-candidate
 EXIT /B %ERRORLEVEL%
 
 :VALIDATE
 SHIFT
-dotnet run --project "%TOOLING%" -- validate --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING validate %*
 EXIT /B %ERRORLEVEL%
 
 :DOCTOR
-dotnet run --project "%TOOLING%" -- doctor --repository-root "%REPO_ROOT%"
+CALL :RUN_TOOLING doctor
 EXIT /B %ERRORLEVEL%
 
 :NEW
 SHIFT
-dotnet run --project "%TOOLING%" -- init --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING init %*
 EXIT /B %ERRORLEVEL%
 
 :INIT
 SHIFT
-dotnet run --project "%TOOLING%" -- init --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING init %*
 EXIT /B %ERRORLEVEL%
 
 :UI
@@ -95,17 +95,17 @@ EXIT /B %ERRORLEVEL%
 
 :PREVIEW
 SHIFT
-dotnet run --project "%TOOLING%" -- preview --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING preview %*
 EXIT /B %ERRORLEVEL%
 
 :DEV
 SHIFT
-dotnet run --project "%TOOLING%" -- dev --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING dev %*
 EXIT /B %ERRORLEVEL%
 
 :TEST_PLUGIN
 SHIFT
-dotnet run --project "%TOOLING%" -- test --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING test %*
 EXIT /B %ERRORLEVEL%
 
 :WORKBENCH_SMOKE
@@ -134,26 +134,30 @@ EXIT /B 1
 
 :PACK
 SHIFT
-dotnet run --project "%TOOLING%" -- package --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING package %*
 EXIT /B %ERRORLEVEL%
 
 :PACKAGE
 SHIFT
-dotnet run --project "%TOOLING%" -- package --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING package %*
 EXIT /B %ERRORLEVEL%
 
 :MIGRATE
 SHIFT
-dotnet run --project "%TOOLING%" -- migrate --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING migrate %*
 EXIT /B %ERRORLEVEL%
 
 :PROMOTE
 SHIFT
-dotnet run --project "%TOOLING%" -- promote --repository-root "%REPO_ROOT%" %*
+CALL :RUN_TOOLING promote %*
 EXIT /B %ERRORLEVEL%
 
 :CLEAN
 dotnet clean "%SOLUTION%"
+EXIT /B %ERRORLEVEL%
+
+:RUN_TOOLING
+powershell -NoProfile -ExecutionPolicy Bypass -File "%TOOLING_SCRIPT%" %*
 EXIT /B %ERRORLEVEL%
 
 :HELP
@@ -162,12 +166,12 @@ ECHO Lenovo Legion Toolkit Plugins Tooling Wrapper
 ECHO ============================================================
 ECHO.
 ECHO Preferred commands:
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- dev --plugin my-plugin --theme system
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- validate --profile contributor --plugin my-plugin
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- preview --plugin my-plugin --theme system
-ECHO   dotnet run --project Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- package --plugin my-plugin --build-first
+ECHO   llt-plugin.cmd doctor
+ECHO   llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+ECHO   llt-plugin.cmd dev --plugin my-plugin --theme system
+ECHO   llt-plugin.cmd validate --profile contributor --plugin my-plugin
+ECHO   llt-plugin.cmd preview --plugin my-plugin --theme system
+ECHO   llt-plugin.cmd package --plugin my-plugin --build-first
 ECHO   dotnet build LenovoLegionToolkit-Plugins.sln -c Release
 ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
 ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
@@ -200,7 +204,7 @@ ECHO   make.bat smoke        - run UI smoke flow
 ECHO   make.bat clean        - dotnet clean solution
 ECHO.
 ECHO Notes:
-ECHO   - The plugin-tooling CLI is the standard author entry point.
+ECHO   - llt-plugin.cmd publishes and reuses a stable CLI executable under Build\tooling.
 ECHO   - plugin.manifest.json is the authoring source of truth; plugin.json is emitted for host compatibility.
 ECHO   - store.json should be treated as generated release output; official metadata lives in plugin.manifest.json store metadata.
 ECHO   - PluginWorkbench loads plugin build outputs or local ZIPs without needing the main repo checkout.

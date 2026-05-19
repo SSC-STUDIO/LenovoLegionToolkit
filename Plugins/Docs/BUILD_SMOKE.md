@@ -1,41 +1,65 @@
-# 插件 Smoke Build
+# Plugin Build Smoke
 
-用于快速验证插件侧能否正常编译。
+Use this checklist when you need a quick confidence pass before packaging or publishing plugins.
 
-## 命令
-
-```powershell
-# 自定义鼠标插件 smoke
-
-dotnet build Plugins/CustomMouse/LenovoLegionToolkit.Plugins.CustomMouse.csproj -nologo
-```
+## Environment
 
 ```powershell
-# ShellIntegration 插件 smoke（需要主仓库编译产物）
-# 先在 LenovoLegionToolkit 仓库执行 scripts\smoke-build.ps1
-
-dotnet build Plugins/ShellIntegration/LenovoLegionToolkit.Plugins.ShellIntegration.csproj -nologo
+.\llt-plugin.cmd doctor
 ```
 
-## 建议
+If host references are missing:
 
-- 先执行主仓库 `scripts\smoke-build.ps1`，插件会自动回退到主仓库的 Debug 输出作为依赖（若 Dependencies\Host 为空）。
-- 确认已安装 Windows Desktop 工作负载（插件包含 WPF 控件）。
-- 若处于离线或内网环境，建议配置 NuGet 源镜像以减少恢复失败。
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
+```
 
-## 常见失败与处理
+## Fast Checks
 
-- **找不到 SDK / SDK 版本不匹配**
-  - 报错示例：`error NETSDK1045` / `SDK not found`
-  - 处理：安装/更新 .NET SDK（建议使用项目要求的主版本）。
+Build a single plugin:
 
-- **缺少 Windows Desktop 工作负载**
-  - 报错示例：`NETSDK1136` / `WindowsDesktop` related workload missing
-  - 处理：
-    ```powershell
-    dotnet workload install windowsdesktop
-    ```
+```powershell
+.\llt-plugin.cmd build --plugin custom-mouse
+```
 
-- **无法访问 nuget.org**
-  - 报错示例：`NU1301` / `NU1900` 等
-  - 处理：检查网络代理或临时离线环境设置，再重试。
+Run that plugin's tests:
+
+```powershell
+.\llt-plugin.cmd test --plugin custom-mouse
+```
+
+Validate contributor requirements:
+
+```powershell
+.\llt-plugin.cmd validate --plugin custom-mouse --profile contributor
+```
+
+Create a local ZIP:
+
+```powershell
+.\llt-plugin.cmd package --plugin custom-mouse --build-first
+```
+
+## Official Candidate Check
+
+```powershell
+.\llt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
+```
+
+Before writing root `store.json` for a selected release set, build the ZIPs first and require them:
+
+```powershell
+.\llt-plugin.cmd generate-store `
+  --plugin-ids custom-mouse `
+  --asset-root .\Build\release-assets `
+  --merge-existing `
+  --require-assets `
+  --check
+```
+
+## Common Failures
+
+- Missing .NET SDK: install the .NET 10 SDK.
+- Missing Windows Desktop workload: install or repair the Windows Desktop workload.
+- Missing host files: run `Scripts\ensure-host-dependencies.ps1`.
+- Missing release asset: run `llt-plugin.cmd package --plugin <id> --build-first` before `generate-store --require-assets`.

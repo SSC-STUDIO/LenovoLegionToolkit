@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Toolchain
+- **Plugin Toolchain Stabilization**: Replaced direct `dotnet run` plugin-tooling entry points with a cached `Build/tooling` CLI shim, made the legacy build workflow package-only, and hardened selected-plugin `store.json` generation so release jobs merge existing entries and fail when expected ZIP assets are missing.
+
 ### Changed / 变更
 - **WPF-UI 4.3.0 Migration / WPF-UI 4.3.0 迁移**: Updated official plugins and the standalone PluginWorkbench to WPF-UI `4.3.0`, migrated WPF UI icon/theme API usages, hardened SDK host-window type probing for the removed `UiWindow` type, and ensured the new `Wpf.Ui.Abstractions.dll` sidecar is copied into plugin build outputs / 将官方插件与独立 PluginWorkbench 更新到 WPF-UI `4.3.0`，迁移 WPF UI 图标与主题 API 用法，增强 SDK 对已移除 `UiWindow` 类型的宿主窗口探测兼容性，并确保新的 `Wpf.Ui.Abstractions.dll` sidecar 进入插件构建输出
 - **Plugin Author Toolchain Rewrite / 插件作者工具链重构**: Added `plugin.manifest.json` as the unified authoring manifest, introduced VS Code-style `init`, `dev`, `test`, `package`, and `migrate` commands, synchronized legacy `plugin.json`/`store-entry.json` compatibility outputs, and strengthened validation/package checks for contributions and required ZIP contents / 新增 `plugin.manifest.json` 作为统一作者清单，引入接近 VS Code 插件开发流程的 `init`、`dev`、`test`、`package` 与 `migrate` 命令，同步旧版 `plugin.json`/`store-entry.json` 兼容输出，并加强贡献点与 ZIP 必需内容的校验和打包检查

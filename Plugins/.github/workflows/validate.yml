@@ -122,10 +122,10 @@ jobs:
           "plugin_ids=$($selection -join ',')" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Selected plugin ids: $($selection -join ',')"
 
-      - name: Build plugin tooling CLI
+      - name: Prime plugin tooling CLI
         shell: pwsh
         run: |
-          dotnet build .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -c Release --nologo
+          .\Scripts\Invoke-PluginTooling.ps1 --help
 
       - name: Validate selected plugins
         shell: pwsh
@@ -136,8 +136,7 @@ jobs:
             exit 0
           }
 
-          dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+          .\Scripts\Invoke-PluginTooling.ps1 `
             validate `
-            --repository-root $PWD.Path `
             --plugin-ids $pluginIds `
             --profile contributor

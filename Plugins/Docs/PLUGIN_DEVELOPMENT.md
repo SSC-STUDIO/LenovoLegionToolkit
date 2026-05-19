@@ -12,14 +12,16 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 ### Standard Commands
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- doctor
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- dev --plugin my-plugin --theme system
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- build --plugin my-plugin
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- preview --plugin my-plugin --theme system
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- validate --plugin my-plugin --profile contributor
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- package --plugin my-plugin --build-first
+.\llt-plugin.cmd doctor
+.\llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+.\llt-plugin.cmd dev --plugin my-plugin --theme system
+.\llt-plugin.cmd build --plugin my-plugin
+.\llt-plugin.cmd preview --plugin my-plugin --theme system
+.\llt-plugin.cmd validate --plugin my-plugin --profile contributor
+.\llt-plugin.cmd package --plugin my-plugin --build-first
 ```
+
+`llt-plugin.cmd` publishes the tooling CLI into `Build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
 
 ### Validation Profile
 
@@ -60,7 +62,7 @@ The `store` object contains:
 Create or synchronize the initial store metadata with:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- promote --plugin my-plugin
+.\llt-plugin.cmd promote --plugin my-plugin
 ```
 
 `promote` also writes `store-entry.json` for compatibility with older release tooling.
@@ -73,7 +75,7 @@ dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- promo
 Example:
 
 ```powershell
-dotnet run --project .\Tools\PluginTooling.Cli\PluginTooling.Cli.csproj -- `
+.\llt-plugin.cmd `
   validate `
   --plugin my-plugin `
   --profile official-candidate
@@ -162,7 +164,7 @@ Manual official publishing should:
 2. build them
 3. package stable ZIP assets
 4. publish GitHub releases
-5. regenerate root `store.json`
+5. regenerate root `store.json` with `generate-store --plugin-ids <ids> --merge-existing --require-assets`
 
 ## Notes
 
