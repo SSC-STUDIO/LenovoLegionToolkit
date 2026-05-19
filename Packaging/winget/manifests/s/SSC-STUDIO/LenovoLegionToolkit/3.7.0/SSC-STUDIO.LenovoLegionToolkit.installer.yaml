@@ -10,6 +10,6 @@ ReleaseDate: 2026-05-19
 Installers:
 - Architecture: x64
   InstallerUrl: https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/download/v3.7.0/LenovoLegionToolkit_v3.7.0_Setup.exe
-  InstallerSha256: 427EF232854C02458BAEC34C027D560A615E3E3564540D811BB57B444BFBF932
+  InstallerSha256: C96E4B05366922ABFFD8455EF60F2844B2E6ACFC7C3995DF365B934079572A03
 ManifestType: installer
 ManifestVersion: 1.10.0
