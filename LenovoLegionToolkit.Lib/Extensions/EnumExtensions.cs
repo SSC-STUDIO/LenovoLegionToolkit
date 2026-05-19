@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 
 namespace LenovoLegionToolkit.Lib.Extensions;
 
@@ -22,7 +24,26 @@ public static class EnumExtensions
         if (displayAttribute.ResourceType?.GetProperty(displayAttribute.Name, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) is string str)
             return str;
 
+        if (TryGetResourceManagerString(displayAttribute.ResourceType, displayAttribute.Name) is { } localizedName)
+            return localizedName;
+
         return displayAttribute.Name;
+    }
+
+    private static string? TryGetResourceManagerString(Type? resourceType, string name)
+    {
+        try
+        {
+            if (resourceType?.GetProperty("ResourceManager", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(null) is not ResourceManager resourceManager)
+                return null;
+
+            var culture = resourceType.GetProperty("Culture", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(null) as CultureInfo;
+            return resourceManager.GetString(name, culture);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public static string GetFlagsDisplayName(this Enum enumValue, Enum? excluding = null)

@@ -28,6 +28,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
     public class ApplicationSettingsStore
     {
         public Theme Theme { get; set; }
+        public ThemeStylePreset ThemeStylePreset { get; set; } = ThemeStylePreset.Default;
         public RGBColor? AccentColor { get; set; }
         public AccentColorSource AccentColorSource { get; set; }
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;

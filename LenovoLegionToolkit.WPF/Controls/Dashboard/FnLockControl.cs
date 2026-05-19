@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -22,13 +23,12 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;
 
         if (e.SpecialKey is SpecialKey.FnLockOn or SpecialKey.FnLockOff)
             await RefreshAsync();
-    });
+    }, "refresh FnLock control");
 }
-

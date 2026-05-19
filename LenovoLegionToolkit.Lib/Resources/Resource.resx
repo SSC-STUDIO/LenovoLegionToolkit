@@ -544,4 +544,16 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Weekly</value>
   </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>Current Style</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>Official Cool</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>Midnight Neon</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>Forest Tech</value>
+  </data>
 </root>

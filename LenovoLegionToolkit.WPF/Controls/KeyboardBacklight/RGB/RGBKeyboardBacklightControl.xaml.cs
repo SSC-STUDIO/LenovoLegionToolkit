@@ -46,13 +46,13 @@ public partial class RGBKeyboardBacklightControl : AbstractRefreshingControl
         }));
     }
 
-    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;
 
         await RefreshAsync();
-    });
+    }, "refresh RGB keyboard backlight control");
 
     private void RGBKeyboardBacklightControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {

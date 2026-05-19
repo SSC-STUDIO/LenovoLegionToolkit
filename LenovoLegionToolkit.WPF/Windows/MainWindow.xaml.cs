@@ -22,6 +22,7 @@ using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Pages;
+using LenovoLegionToolkit.WPF.ViewModels;
 using NavigationItem = LenovoLegionToolkit.WPF.Controls.Custom.NavigationItem;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
@@ -43,7 +44,6 @@ namespace LenovoLegionToolkit.WPF.Windows
 {
 public partial class MainWindow
 {
-    private const string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
     private const int WmNchittest = 0x0084;
     private const int HtClient = 1;
 
@@ -644,9 +644,7 @@ public partial class MainWindow
 
     private static bool ShouldKeepUnsupportedNavigationItems()
     {
-        var value = Environment.GetEnvironmentVariable(KeepUnsupportedNavigationItemsEnvironmentVariable);
-        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+        return KeyboardBacklightViewModel.ShouldKeepUnsupportedNavigationItems();
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()

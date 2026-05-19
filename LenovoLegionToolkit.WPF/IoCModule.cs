@@ -17,6 +17,7 @@ public class IoCModule : Module
         builder.Register<MainThreadDispatcher>();
 
         builder.Register<SpectrumScreenCapture>();
+        builder.Register<LanguagePackManager>();
 
         builder.Register<ThemeManager>().AutoActivate();
         builder.Register<NotificationsManager>().AutoActivate();

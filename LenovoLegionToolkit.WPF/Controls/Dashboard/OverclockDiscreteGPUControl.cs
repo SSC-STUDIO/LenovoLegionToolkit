@@ -7,6 +7,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
 using Wpf.Ui.Controls;
@@ -96,11 +97,11 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
         await RefreshAsync();
     }
 
-    private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         Visibility = Visibility.Visible;
         await RefreshAsync();
-    });
+    }, "refresh discrete GPU overclock control");
 
     private async void Toggle_Click(object sender, RoutedEventArgs e)
     {

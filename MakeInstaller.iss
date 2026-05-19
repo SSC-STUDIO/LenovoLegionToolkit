@@ -10,6 +10,14 @@
   #define MyAppVersion "0.0.0"
 #endif
 
+#ifndef MyAppSourceDir
+  #define MyAppSourceDir "Build"
+#endif
+
+#ifndef MyAppOutputBaseFilename
+  #define MyAppOutputBaseFilename "LenovoLegionToolkitSetup"
+#endif
+
 [Setup]
 UsedUserAreasWarning=false
 AppId={{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}
@@ -23,7 +31,7 @@ DefaultDirName={userpf}\{#MyAppNameCompact}
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
 PrivilegesRequired=admin
-OutputBaseFilename=LenovoLegionToolkitSetup
+OutputBaseFilename={#MyAppOutputBaseFilename}
 Compression=lzma2/ultra64  
 SolidCompression=yes
 WizardStyle=modern
@@ -103,7 +111,7 @@ Name: "vi";      MessagesFile: "InnoDependencies\Vietnamese.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]

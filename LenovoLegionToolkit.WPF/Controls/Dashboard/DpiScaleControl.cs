@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
@@ -36,10 +37,9 @@ public class DpiScaleControl : AbstractComboBoxFeatureCardControl<DpiScale>
         return LocalizationHelper.ForceLeftToRight(str);
     }
 
-    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
             await RefreshAsync();
-    });
+    }, "refresh DPI scale control");
 }
-

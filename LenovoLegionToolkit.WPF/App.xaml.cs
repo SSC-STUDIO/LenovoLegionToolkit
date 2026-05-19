@@ -218,6 +218,7 @@ public partial class App
         PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => Application.Current?.MainWindow));
 
         IoCContainer.Resolve<HttpClientFactory>().SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
+        IoCContainer.Resolve<LanguagePackManager>().ProcessPendingUninstall();
 
         IoCContainer.Resolve<PowerModeFeature>().AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
         IoCContainer.Resolve<RGBKeyboardBacklightController>().ForceDisable = flags.ForceDisableRgbKeyboardSupport;

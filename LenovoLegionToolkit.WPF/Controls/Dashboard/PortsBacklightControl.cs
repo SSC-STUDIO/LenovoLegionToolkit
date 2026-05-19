@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -22,12 +23,11 @@ public class PortsBacklightControl : AbstractToggleFeatureCardControl<PortsBackl
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (e.State != LightingChangeState.Ports)
             return;
 
         await RefreshAsync();
-    });
+    }, "refresh ports backlight control");
 }
-

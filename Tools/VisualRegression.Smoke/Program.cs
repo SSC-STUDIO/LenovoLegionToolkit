@@ -54,13 +54,13 @@ internal static partial class Program
             Directory.CreateDirectory(appDataDirectory);
             Directory.CreateDirectory(pluginsDirectory);
 
-            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme);
+            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle);
             SeedPluginStoreCache(repoRoot, appDataDirectory);
 
             _pipeName = $"{Constants.DEFAULT_PIPE_NAME}-{Path.GetFileName(outputRoot)}-{Environment.ProcessId}";
 
             var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
-            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(sandboxRoot));
+            process = StartApp(runtimeDirectory, appDataDirectory, pluginsDirectory, Path.GetFileName(sandboxRoot), options.KeepUnsupportedNavigationItems);
             _processId = process.Id;
 
             Console.WriteLine($"[visual-smoke] Process: {_processId}");
@@ -76,13 +76,39 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
             CapturePage(currentDirectory, mainWindow, "dashboard");
 
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "keyboard",
-                ["_keyboardItem"],
-                ["Keyboard", "Keyboard Backlight"],
-                root => root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
-                        || FindVisibleTextContains(root, "No compatible keyboards")
-                        || FindVisibleTextContains(root, "Keyboard Backlight")));
+            if (options.SettingsOnly)
+            {
+                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                    "settings",
+                    [],
+                    ["Settings"],
+                    root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+
+                WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+                WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+                if (options.KeepApp)
+                {
+                    Console.WriteLine("[visual-smoke] Leaving app running for inspection.");
+                    process = null;
+                    return 0;
+                }
+
+                TryCloseProcess(process);
+                process = null;
+                return 0;
+            }
+
+            if (options.ExpectKeyboardNavigation)
+            {
+                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+                    "keyboard",
+                    ["_keyboardItem"],
+                    ["Keyboard", "Keyboard Backlight"],
+                    root => root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
+                            || FindVisibleTextContains(root, "No compatible keyboards")
+                            || FindVisibleTextContains(root, "Keyboard Backlight")));
+            }
 
             NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                 "automation",
@@ -814,7 +840,7 @@ internal static partial class Program
         Thread.Sleep(900);
     }
 
-    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string pluginsDirectory, string sandboxKey)
+    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string pluginsDirectory, string sandboxKey, bool keepUnsupportedNavigationItems)
     {
         var dllPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.dll");
         var runtimeConfigPath = Path.Combine(runtimeDirectory, "Lenovo Legion Toolkit.runtimeconfig.json");
@@ -851,12 +877,13 @@ internal static partial class Program
         startInfo.EnvironmentVariables[SingleInstanceKeyEnvironmentVariable] = sandboxKey;
         startInfo.EnvironmentVariables[Constants.PIPE_NAME_ENVIRONMENT_VARIABLE] = _pipeName;
         startInfo.EnvironmentVariables[RelaxedIpcAclEnvironmentVariable] = "1";
-        startInfo.EnvironmentVariables[KeepUnsupportedNavigationItemsEnvironmentVariable] = "1";
+        if (keepUnsupportedNavigationItems)
+            startInfo.EnvironmentVariables[KeepUnsupportedNavigationItemsEnvironmentVariable] = "1";
 
         return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process.");
     }
 
-    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme)
+    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle)
     {
         var baselineAppData = Path.Combine(repoRoot, "Build", "wpf-navigation-smoke-2026-05-08", "sandbox", "appdata");
         CopyIfExists(Path.Combine(baselineAppData, "settings.json"), Path.Combine(appDataDirectory, "settings.json"));
@@ -868,6 +895,7 @@ internal static partial class Program
             : new JsonObject();
 
         root["Theme"] = theme;
+        root["ThemeStylePreset"] = themeStyle;
         root["WindowSize"] = new JsonObject
         {
             ["Width"] = WindowWidth,
@@ -1252,7 +1280,16 @@ internal static partial class Program
         public int Bottom;
     }
 
-    private sealed record SmokeOptions(string RepoRoot, string OutputDirectory, string Configuration, string Theme, bool KeepApp)
+    private sealed record SmokeOptions(
+        string RepoRoot,
+        string OutputDirectory,
+        string Configuration,
+        string Theme,
+        string ThemeStyle,
+        bool SettingsOnly,
+        bool KeepApp,
+        bool KeepUnsupportedNavigationItems,
+        bool ExpectKeyboardNavigation)
     {
         public static SmokeOptions Parse(IReadOnlyList<string> args)
         {
@@ -1261,8 +1298,12 @@ internal static partial class Program
             var outputDirectory = ReadOption(args, "--output-dir")
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
             var theme = ReadOption(args, "--theme") ?? "Dark";
+            var themeStyle = ReadOption(args, "--theme-style") ?? "Default";
+            var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, keepApp);
+            var keepUnsupportedNavigationItems = !args.Contains("--respect-unsupported-navigation", StringComparer.OrdinalIgnoreCase);
+            var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, settingsOnly, keepApp, keepUnsupportedNavigationItems, expectKeyboardNavigation);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, string name)

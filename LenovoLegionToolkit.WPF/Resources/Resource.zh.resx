@@ -1264,8 +1264,32 @@
   <data name="SettingsPage_Language_Message" xml:space="preserve">
     <value>选择语言</value>
   </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>安装语言</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>语言安装失败</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>正在安装语言</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>使用下载按钮安装此语言包。</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>语言未安装</value>
+  </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
     <value>语言</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>卸载语言</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>语言卸载失败</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>正在卸载语言</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
     <value>总是最小化到托盘。开启后需右键点击托盘图标点击关闭以关闭软件。</value>
@@ -4053,4 +4077,4 @@
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>应用 {0} 失败：{1}</value>
   </data>
-<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>强制软件渲染</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>检测到远程桌面或无显示器输出时使用软件渲染。建议重启。</value></data></root>
+<data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve"><value>即将推出</value></data><data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve"><value>扩展商店将在未来更新中提供。</value></data><data name="PluginExtensionsPage_OpenPluginFailed" xml:space="preserve"><value>无法打开插件：{0}</value></data><data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve"><value>强制软件渲染</value></data><data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve"><value>检测到远程桌面或无显示器输出时使用软件渲染。建议重启。</value></data><data name="SettingsPage_ThemeStyle_Title" xml:space="preserve"><value>&#x4E3B;&#x9898;&#x98CE;&#x683C;</value></data><data name="SettingsPage_ThemeStyle_Description" xml:space="preserve"><value>&#x9009;&#x62E9;&#x5E94;&#x7528;&#x7684;&#x89C6;&#x89C9;&#x98CE;&#x683C;&#x9884;&#x8BBE;&#x3002;&#x4E3B;&#x9898;&#x6A21;&#x5F0F;&#x548C;&#x5F3A;&#x8C03;&#x8272;&#x4F1A;&#x7EE7;&#x7EED;&#x751F;&#x6548;&#x3002;</value></data></root>

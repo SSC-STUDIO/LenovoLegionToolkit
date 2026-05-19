@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -18,13 +19,12 @@ public class WhiteKeyboardBacklightControl : AbstractComboBoxFeatureCardControl<
         _listener.Changed += ListenerChanged;
     }
 
-    private void ListenerChanged(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void ListenerChanged(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;
 
         if (e.DriverKey.HasFlag(DriverKey.FnSpace))
             await RefreshAsync();
-    });
+    }, "refresh white keyboard backlight control");
 }
-

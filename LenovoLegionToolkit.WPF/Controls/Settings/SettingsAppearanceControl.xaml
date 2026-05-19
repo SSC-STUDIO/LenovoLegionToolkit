@@ -18,13 +18,47 @@
                 <custom:CardControl.Header>
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Language_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Language_Message}" />
                 </custom:CardControl.Header>
-                <ComboBox
-                    x:Name="_langComboBox"
-                    MinWidth="160"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Language_Title}"
-                    MaxDropDownHeight="Auto"
-                    SelectionChanged="LangComboBox_SelectionChanged" />
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox
+                        x:Name="_langComboBox"
+                        Grid.Column="0"
+                        MinWidth="160"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Language_Title}"
+                        MaxDropDownHeight="Auto"
+                        SelectionChanged="LangComboBox_SelectionChanged" />
+
+                    <wpfui:Button
+                        x:Name="_installLanguageButton"
+                        Grid.Column="2"
+                        MinWidth="40"
+                        Appearance="Secondary"
+                        Click="InstallLanguageButton_Click"
+                        ToolTip="{x:Static resources:Resource.SettingsPage_Language_Install}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
+
+                    <wpfui:Button
+                        x:Name="_uninstallLanguageButton"
+                        Grid.Column="4"
+                        MinWidth="40"
+                        Appearance="Secondary"
+                        Click="UninstallLanguageButton_Click"
+                        ToolTip="{x:Static resources:Resource.SettingsPage_Language_Uninstall}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon Symbol="Delete24" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
+                </Grid>
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="Temperature24">
@@ -51,6 +85,19 @@
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Theme_Title}"
                     MaxDropDownHeight="Auto"
                     SelectionChanged="ThemeComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8" Icon="PaintBrush24">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_ThemeStyle_Description}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_themeStylePresetComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}"
+                    MaxDropDownHeight="Auto"
+                    SelectionChanged="ThemeStylePresetComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="Color24">

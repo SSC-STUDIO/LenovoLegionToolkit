@@ -42,6 +42,24 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public void Update_ShouldPreferFullInstallerWhenEnglishOnlyInstallerIsPresent()
+    {
+        // Arrange
+        const string englishPackageUrl = "https://example.com/LenovoLegionToolkit_v3.7.0_English_Setup.exe";
+        const string fullPackageUrl = "https://example.com/LenovoLegionToolkit_v3.7.0_Setup.exe";
+        var release = CreateRelease(
+            body: string.Empty,
+            ("LenovoLegionToolkit_v3.7.0_English_Setup.exe", englishPackageUrl),
+            ("LenovoLegionToolkit_v3.7.0_Setup.exe", fullPackageUrl));
+
+        // Act
+        var update = new Update(release);
+
+        // Assert
+        update.Url.Should().Be(fullPackageUrl);
+    }
+
+    [Fact]
     public void Update_ShouldParsePackageSpecificHashFromReleaseBody()
     {
         // Arrange

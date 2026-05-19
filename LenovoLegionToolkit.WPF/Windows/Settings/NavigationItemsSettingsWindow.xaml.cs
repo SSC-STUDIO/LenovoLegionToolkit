@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.WPF.ViewModels;
 using LenovoLegionToolkit.WPF.Windows;
 
 namespace LenovoLegionToolkit.WPF.Windows.Settings
@@ -17,14 +18,16 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         Loaded += NavigationItemsSettingsWindow_Loaded;
     }
 
-    private void NavigationItemsSettingsWindow_Loaded(object sender, RoutedEventArgs e)
+    private async void NavigationItemsSettingsWindow_Loaded(object sender, RoutedEventArgs e)
     {
         _isInitializing = true;
         
         // Initialize the toggle states of all navigation items
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
-        
-        _keyboardToggle.IsChecked = GetNavigationItemVisibility("keyboard", visibilitySettings);
+
+        var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync();
+        _keyboardCard.Visibility = keyboardSupported ? Visibility.Visible : Visibility.Collapsed;
+        _keyboardToggle.IsChecked = keyboardSupported && GetNavigationItemVisibility("keyboard", visibilitySettings);
         _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
         _macroToggle.IsChecked = GetNavigationItemVisibility("macro", visibilitySettings);
         _windowsOptimizationToggle.IsChecked = GetNavigationItemVisibility("windowsOptimization", visibilitySettings);

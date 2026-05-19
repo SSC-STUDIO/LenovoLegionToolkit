@@ -11,31 +11,42 @@ public partial class KeyboardBacklightPage
 {
     private readonly KeyboardBacklightViewModel _viewModel = new();
 
-    public KeyboardBacklightPage() => InitializeComponent();
+    public KeyboardBacklightPage()
+    {
+        InitializeComponent();
+        _titleTextBlock.Visibility = Visibility.Collapsed;
+    }
 
     private async void KeyboardBacklightPage_Initialized(object? sender, EventArgs e)
     {
         _titleTextBlock.Visibility = Visibility.Collapsed;
 
-        await Task.Delay(TimeSpan.FromSeconds(1));
-
-        _titleTextBlock.Visibility = Visibility.Visible;
-
         await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
 
         if (_viewModel.IsSpectrumSupported)
         {
+            _titleTextBlock.Visibility = Visibility.Visible;
             var control = new SpectrumKeyboardBacklightControl();
             _content.Children.Add(control);
         }
         else if (_viewModel.IsRGBSupported)
         {
+            _titleTextBlock.Visibility = Visibility.Visible;
             var control = new RGBKeyboardBacklightControl();
             _content.Children.Add(control);
         }
         else
         {
-            _noKeyboardsText.Visibility = Visibility.Visible;
+            if (KeyboardBacklightViewModel.ShouldKeepUnsupportedNavigationItems())
+            {
+                _titleTextBlock.Visibility = Visibility.Visible;
+                _noKeyboardsText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _titleTextBlock.Visibility = Visibility.Collapsed;
+                _content.Visibility = Visibility.Collapsed;
+            }
         }
 
         _loader.IsLoading = false;

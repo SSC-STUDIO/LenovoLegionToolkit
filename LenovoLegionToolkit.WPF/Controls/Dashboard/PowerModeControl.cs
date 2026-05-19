@@ -9,6 +9,7 @@ using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
@@ -52,7 +53,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     private async void ThermalModeListener_Changed(object? sender, ThermalModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
     {
-        await Dispatcher.InvokeAsync(async () =>
+        await Dispatcher.InvokeTaskAsync(async () =>
         {
             if (IsLoaded && IsVisible)
                 await RefreshAsync();
@@ -61,7 +62,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     private async void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(async () =>
     {
-        await Dispatcher.InvokeAsync(async () =>
+        await Dispatcher.InvokeTaskAsync(async () =>
         {
             if (IsLoaded && IsVisible)
                 await RefreshAsync();

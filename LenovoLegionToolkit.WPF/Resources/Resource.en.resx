@@ -1804,8 +1804,32 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Language_Message" xml:space="preserve">
     <value>Select language.</value>
   </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>Install language</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>Language installation failed</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>Installing language</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>Use the download button to install this language pack.</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>Language not installed</value>
+  </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>Uninstall language</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>Language uninstall failed</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>Uninstalling language</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
     <value>Always minimize to tray. Close with right click on tray icon.</value>
@@ -4041,5 +4065,11 @@ You can manually save the files and restart the Explorer process in Task Manager
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
     <value>Failed to apply {0}: {1}</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Title" xml:space="preserve">
+    <value>Theme style</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_Description" xml:space="preserve">
+    <value>Choose the visual style preset for the app. Theme mode and accent color still apply on top.</value>
   </data>
 </root>

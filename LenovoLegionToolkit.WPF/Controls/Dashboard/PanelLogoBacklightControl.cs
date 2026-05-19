@@ -1,5 +1,6 @@
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -22,12 +23,11 @@ public class PanelLogoBacklightControl : AbstractToggleFeatureCardControl<PanelL
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, LightingChangeListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (e.State != LightingChangeState.Panel)
             return;
 
         await RefreshAsync();
-    });
+    }, "refresh panel logo backlight control");
 }
-

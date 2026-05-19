@@ -711,6 +711,18 @@ public enum AccentColorSource
     Custom
 }
 
+public enum ThemeStylePreset
+{
+    [Display(ResourceType = typeof(Resource), Name = "ThemeStylePreset_Default")]
+    Default,
+    [Display(ResourceType = typeof(Resource), Name = "ThemeStylePreset_Official")]
+    Official,
+    [Display(ResourceType = typeof(Resource), Name = "ThemeStylePreset_Midnight")]
+    Midnight,
+    [Display(ResourceType = typeof(Resource), Name = "ThemeStylePreset_Forest")]
+    Forest
+}
+
 public enum WindowBackdropStyle
 {
     [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_Windows")]

@@ -2,6 +2,7 @@ using System;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Listeners;
+using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
@@ -20,10 +21,9 @@ public class HDRAutomationStepControl : AbstractComboBoxAutomationStepCardContro
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (IsLoaded)
             await RefreshAsync();
-    });
+    }, "refresh HDR automation step");
 }
-

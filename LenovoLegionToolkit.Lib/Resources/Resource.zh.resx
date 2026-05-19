@@ -502,4 +502,16 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>每周</value>
   </data>
+  <data name="ThemeStylePreset_Default" xml:space="preserve">
+    <value>&#x5F53;&#x524D;&#x98CE;&#x683C;</value>
+  </data>
+  <data name="ThemeStylePreset_Official" xml:space="preserve">
+    <value>&#x5B98;&#x65B9;&#x70AB;&#x9177;</value>
+  </data>
+  <data name="ThemeStylePreset_Midnight" xml:space="preserve">
+    <value>&#x9713;&#x591C;&#x5149;&#x5F71;</value>
+  </data>
+  <data name="ThemeStylePreset_Forest" xml:space="preserve">
+    <value>&#x68EE;&#x6797;&#x79D1;&#x6280;</value>
+  </data>
 </root>

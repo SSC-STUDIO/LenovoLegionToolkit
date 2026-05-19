@@ -10,6 +10,8 @@ namespace LenovoLegionToolkit.WPF.ViewModels;
 
 public partial class KeyboardBacklightViewModel : ObservableObject
 {
+    public static readonly string KeepUnsupportedNavigationItemsEnvironmentVariable = "LLT_KEEP_UNSUPPORTED_NAVIGATION_ITEMS";
+
     [ObservableProperty]
     private bool _isLoading = true;
 
@@ -32,16 +34,14 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
         try
         {
-            var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-            if (await spectrumController.IsSupportedAsync())
+            if (await IsSpectrumSupportedAsync())
             {
                 IsSpectrumSupported = true;
                 IsLoading = false;
                 return;
             }
 
-            var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-            if (await rgbController.IsSupportedAsync())
+            if (await IsRgbSupportedAsync())
             {
                 IsRGBSupported = true;
                 IsLoading = false;
@@ -65,14 +65,51 @@ public partial class KeyboardBacklightViewModel : ObservableObject
 
     public static async Task<bool> IsSupportedAsync()
     {
-        var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
-        if (await spectrumController.IsSupportedAsync())
+        if (ShouldKeepUnsupportedNavigationItems())
             return true;
 
-        var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
-        if (await rgbController.IsSupportedAsync())
+        if (await IsSpectrumSupportedAsync())
             return true;
 
-        return false;
+        return await IsRgbSupportedAsync();
+    }
+
+    public static bool ShouldKeepUnsupportedNavigationItems()
+    {
+        var value = Environment.GetEnvironmentVariable(KeepUnsupportedNavigationItemsEnvironmentVariable);
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static async Task<bool> IsSpectrumSupportedAsync()
+    {
+        try
+        {
+            var spectrumController = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
+            return await spectrumController.IsSupportedAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to check Spectrum keyboard support.", ex);
+
+            return false;
+        }
+    }
+
+    private static async Task<bool> IsRgbSupportedAsync()
+    {
+        try
+        {
+            var rgbController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
+            return await rgbController.IsSupportedAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to check RGB keyboard support.", ex);
+
+            return false;
+        }
     }
 }

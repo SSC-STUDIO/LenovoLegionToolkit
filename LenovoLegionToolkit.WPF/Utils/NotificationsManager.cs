@@ -38,47 +38,59 @@ public class NotificationsManager : IDisposable
 
     private void OnNotificationReceived(NotificationMessage notification)
     {
-        Dispatcher.Invoke(async () =>
+        _ = Dispatcher.InvokeAsync(async () =>
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Notification {notification} received");
-
-            if (_settings.Store.DontShowNotifications)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Notifications are disabled.");
-
-                return;
-            }
-
-            // Map priority: High (2) -> 0, Normal (1) -> 1, Low (0) -> 2
-            var priorityValue = 2 - (int)notification.Priority;
-            _queue.Enqueue(notification, priorityValue);
-
-            if (_isShowing)
-                return;
-
-            _isShowing = true;
             try
             {
-                while (_queue.Count > 0)
-                {
-                    var nextNotification = _queue.Dequeue();
-                    try
-                    {
-                        await ProcessNotification(nextNotification);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Instance.Error($"Failed to process notification {nextNotification}", ex);
-                    }
-                }
+                await HandleNotificationAsync(notification);
             }
-            finally
+            catch (Exception ex)
             {
-                _isShowing = false;
+                Log.Instance.Error($"Failed to enqueue notification {notification}", ex);
             }
         });
+    }
+
+    private async Task HandleNotificationAsync(NotificationMessage notification)
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Notification {notification} received");
+
+        if (_settings.Store.DontShowNotifications)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Notifications are disabled.");
+
+            return;
+        }
+
+        // Map priority: High (2) -> 0, Normal (1) -> 1, Low (0) -> 2
+        var priorityValue = 2 - (int)notification.Priority;
+        _queue.Enqueue(notification, priorityValue);
+
+        if (_isShowing)
+            return;
+
+        _isShowing = true;
+        try
+        {
+            while (_queue.Count > 0)
+            {
+                var nextNotification = _queue.Dequeue();
+                try
+                {
+                    await ProcessNotification(nextNotification);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error($"Failed to process notification {nextNotification}", ex);
+                }
+            }
+        }
+        finally
+        {
+            _isShowing = false;
+        }
     }
 
     private async Task ProcessNotification(NotificationMessage notification)

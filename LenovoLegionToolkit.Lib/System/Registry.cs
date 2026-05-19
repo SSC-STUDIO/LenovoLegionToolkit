@@ -22,7 +22,7 @@ public static class Registry
     public static IAsyncDisposable ObserveKey(string hive, string subKey, bool includeSubtreeChanges, Action handler)
     {
         var cancellationTokenSource = new CancellationTokenSource();
-        var task = Task.Run(() => Handler(cancellationTokenSource.Token), cancellationTokenSource.Token);
+        var task = Task.Run(() => Handler(cancellationTokenSource.Token));
 
         return new LambdaAsyncDisposable(async () =>
         {

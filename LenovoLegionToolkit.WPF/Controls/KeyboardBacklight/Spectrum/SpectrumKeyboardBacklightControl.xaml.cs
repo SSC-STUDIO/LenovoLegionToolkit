@@ -92,7 +92,7 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
         scaleTransform.ScaleY = scale;
     }
 
-    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.InvokeTask(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;
@@ -120,16 +120,13 @@ public partial class SpectrumKeyboardBacklightControl : AbstractRefreshingContro
                 await RefreshProfileAsync();
                 break;
         }
-    });
+    }, "refresh spectrum keyboard backlight control");
 
     private async void BrightnessSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => await _changeBrightnessDispatcher.DispatchAsync(async () =>
     {
-        await Dispatcher.InvokeAsync(async () =>
-        {
-            var value = (int)_brightnessSlider.Value;
-            if (await _controller.GetBrightnessAsync() != value)
-                await _controller.SetBrightnessAsync(value);
-        });
+        var value = await Dispatcher.InvokeAsync(() => (int)_brightnessSlider.Value);
+        if (await _controller.GetBrightnessAsync() != value)
+            await _controller.SetBrightnessAsync(value);
     });
 
     private async void ProfileButton_OnClick(object sender, RoutedEventArgs e)

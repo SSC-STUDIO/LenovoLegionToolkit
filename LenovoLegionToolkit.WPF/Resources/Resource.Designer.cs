@@ -4952,6 +4952,51 @@ namespace LenovoLegionToolkit.WPF.Resources {
                 return ResourceManager.GetString("SettingsPage_Language_Message", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Install language.
+        /// </summary>
+        public static string SettingsPage_Language_Install {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_Install", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Language installation failed.
+        /// </summary>
+        public static string SettingsPage_Language_InstallFailed {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_InstallFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Installing language.
+        /// </summary>
+        public static string SettingsPage_Language_Installing {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_Installing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use the download button to install this language pack..
+        /// </summary>
+        public static string SettingsPage_Language_NotInstalled_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_NotInstalled_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Language not installed.
+        /// </summary>
+        public static string SettingsPage_Language_NotInstalled_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_NotInstalled_Title", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Language.
@@ -4959,6 +5004,33 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_Language_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_Language_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall language.
+        /// </summary>
+        public static string SettingsPage_Language_Uninstall {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_Uninstall", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Language uninstall failed.
+        /// </summary>
+        public static string SettingsPage_Language_UninstallFailed {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_UninstallFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstalling language.
+        /// </summary>
+        public static string SettingsPage_Language_Uninstalling {
+            get {
+                return ResourceManager.GetString("SettingsPage_Language_Uninstalling", resourceCulture);
             }
         }
         
@@ -5096,6 +5168,24 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SettingsPage_Theme_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_Theme_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the visual style preset for the app. Theme mode and accent color still apply on top..
+        /// </summary>
+        public static string SettingsPage_ThemeStyle_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_ThemeStyle_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Theme style.
+        /// </summary>
+        public static string SettingsPage_ThemeStyle_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_ThemeStyle_Title", resourceCulture);
             }
         }
         

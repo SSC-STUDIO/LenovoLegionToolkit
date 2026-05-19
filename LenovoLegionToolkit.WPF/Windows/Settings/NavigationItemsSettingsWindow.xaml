@@ -56,7 +56,10 @@
                     Text="{x:Static resources:Resource.NavigationItemsSettingsWindow_Description}"
                     TextWrapping="Wrap" />
 
-                <custom:CardControl Margin="0,0,0,8">
+                <custom:CardControl
+                    x:Name="_keyboardCard"
+                    Margin="0,0,0,8"
+                    Visibility="Collapsed">
                     <custom:CardControl.Header>
                         <controls:CardHeaderControl 
                             Title="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}" 

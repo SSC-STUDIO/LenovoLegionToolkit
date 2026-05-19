@@ -1264,8 +1264,32 @@
   <data name="SettingsPage_Language_Message" xml:space="preserve">
     <value>選擇語言</value>
   </data>
+  <data name="SettingsPage_Language_Install" xml:space="preserve">
+    <value>安裝語言</value>
+  </data>
+  <data name="SettingsPage_Language_InstallFailed" xml:space="preserve">
+    <value>語言安裝失敗</value>
+  </data>
+  <data name="SettingsPage_Language_Installing" xml:space="preserve">
+    <value>正在安裝語言</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Message" xml:space="preserve">
+    <value>使用下載按鈕安裝此語言包。</value>
+  </data>
+  <data name="SettingsPage_Language_NotInstalled_Title" xml:space="preserve">
+    <value>語言未安裝</value>
+  </data>
   <data name="SettingsPage_Language_Title" xml:space="preserve">
     <value>語言</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstall" xml:space="preserve">
+    <value>卸載語言</value>
+  </data>
+  <data name="SettingsPage_Language_UninstallFailed" xml:space="preserve">
+    <value>語言卸載失敗</value>
+  </data>
+  <data name="SettingsPage_Language_Uninstalling" xml:space="preserve">
+    <value>正在卸載語言</value>
   </data>
   <data name="SettingsPage_MinimizeOnClose_Message" xml:space="preserve">
     <value>總是最小化到托盤。開啓後需右鍵點擊托盤圖標點擊關閉以關閉軟件。</value>

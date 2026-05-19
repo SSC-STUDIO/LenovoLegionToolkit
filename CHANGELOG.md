@@ -12,6 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 暂无待发布变更 / No unreleased changes yet.
 
+## [3.7.1] - 2026-05-20
+
+### Added / 新增
+- Added app theme style presets with persisted settings: Current Style, Official Cool, Midnight Neon, and Forest Tech.
+- Added optional online language-pack install/uninstall support and release packaging for full, English-only, and per-language assets.
+
+### Fixed / 修复
+- Hide the advanced Keyboard Backlight navigation and settings entry on devices that do not support Spectrum/RGB keyboard lighting, preventing empty unsupported pages from appearing in normal use.
+- Hardened enum display localization so newly added resource keys resolve correctly even before generated resource designer files are refreshed.
+- Improved dispatcher, notification, and registry observer async handling to reduce unobserved task failures during startup and UI refresh.
+
+### Improved / 改进
+- Expanded visual regression smoke options for theme-style screenshots, settings-only captures, and unsupported-hardware navigation checks.
+- Updated release automation to build full and English-only installers, portable ZIPs, language-pack ZIPs, and consolidated SHA256 files.
+- Cleaned Plugin Extensions dead import code and tightened UI action dispatch paths across dashboard, automation, keyboard, and display controls.
+
 ## [3.7.0] - 2026-05-19
 
 ### Fixed / 修复
